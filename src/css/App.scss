@@ -2,5 +2,29 @@
     margin:0;
     padding: 0;
     box-sizing: border-box;
+    }
+    
+
+@import "./variables";
+@import "../../node_modules/bootstrap/scss/bootstrap";
+@import "./mixin";
+@import "./nav";
+@import "./utils";
+
+body{
+
+    font-family: 'Roboto', sans-serif;
 }
 
+.App{
+    display: grid;
+    background-color: $white-color;
+
+    @include responsive(800px){
+        grid-template-columns: .25fr 1fr;
+        .main-layout{
+            grid-column: 2/3;
+            // background-color: lighten($primary-color,40);
+        }
+    }
+}
