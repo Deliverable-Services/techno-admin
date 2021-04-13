@@ -11096,4 +11096,44 @@ body {
     grid-column: 2/3;
   }
 }
+
+.login-page {
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  right: 0;
+  left: 0;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+}
+
+.login-page .form-container {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  min-width: 300px;
+  -webkit-box-shadow: 0 4px 24px rgba(0, 0, 0, 0.24);
+          box-shadow: 0 4px 24px rgba(0, 0, 0, 0.24);
+  width: 100%;
+}
+
+@media (min-width: 800px) {
+  .login-page .form-container .form-control {
+    min-width: 350px;
+  }
+}
 /*# sourceMappingURL=App.css.map */

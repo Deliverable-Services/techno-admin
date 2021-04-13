@@ -14,7 +14,7 @@ nav{
 
     
 
-    @include responsive(800px){
+    @include responsive($desktop-breakpoint){
         position: sticky;
         width: 100%;
         transform: translateX(0);

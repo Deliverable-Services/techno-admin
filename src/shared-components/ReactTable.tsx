@@ -1,6 +1,7 @@
 import React, { ReactElement } from 'react'
 import { Container, Dropdown, Pagination, Table } from 'react-bootstrap'
 import { AiOutlineSearch } from 'react-icons/ai'
+import { BiSad } from 'react-icons/bi'
 import { GoSettings } from 'react-icons/go'
 import { IoMdArrowDropdown, IoMdArrowDropup } from 'react-icons/io'
 import { useAsyncDebounce, useFilters, useGlobalFilter, useSortBy, useTable } from 'react-table'
@@ -62,6 +63,8 @@ function ReactTable({ data, columns }: Props): ReactElement {
     } = useTable({ columns, data }, useFilters, useGlobalFilter, useSortBy,)
 
 
+
+
     return (
 
         <Container fluid className="px-0">
@@ -89,24 +92,27 @@ function ReactTable({ data, columns }: Props): ReactElement {
 
                     <Dropdown.Menu className="p-2">
                         {
-                            allColumns.map((column) => (
-                                <div key={column.id} className="custom-control custom-checkbox">
+                            allColumns.map((column) => {
 
-                                    <input type="checkbox" {...column.getToggleHiddenProps()} className="d-none" id={column.id} />
+                                column.disableGlobalFilter = !column.isVisible
 
-                                    {/* <BForm.Check type="checkbox" className="text-primary text-uppercase" label={column.Header} {...column.getToggleHiddenProps()} /> */}
+                                return (
+                                    <div key={column.id} className="custom-control custom-checkbox">
+
+                                        <input type="checkbox" {...column.getToggleHiddenProps()} className="d-none" id={column.id}
+                                        />
+
+                                        <div className="custom-control custom-checkbox ">
+                                            <input type="checkbox" className="custom-control-input" id={column.id} {...column.getToggleHiddenProps()}
+                                            />
+
+                                            <label className="custom-control-label" htmlFor={column.id}><p>{column.Header}</p></label>
+                                        </div>
 
 
-
-                                    <div className="custom-control custom-checkbox ">
-                                        <input type="checkbox" className="custom-control-input" id={column.id} {...column.getToggleHiddenProps()} />
-
-                                        <label className="custom-control-label" htmlFor={column.id}><p>{column.Header}</p></label>
                                     </div>
-
-
-                                </div>
-                            ))
+                                )
+                            })
                         }
                     </Dropdown.Menu>
                 </Dropdown>
@@ -147,6 +153,8 @@ function ReactTable({ data, columns }: Props): ReactElement {
                                 rows.map(row => {
                                     // Prepare the row for display
                                     prepareRow(row)
+                                    // console.log("row", rows.length)
+                                    // if (!rows.length) return <h1>No data</h1>
                                     return (
                                         // Apply the row props
                                         <tr {...row.getRowProps()}>
@@ -163,6 +171,11 @@ function ReactTable({ data, columns }: Props): ReactElement {
                                         </tr>
                                     )
                                 })}
+                            {/* {rows.length === 0 ?
+                                <Container fluid className="d-flex justify-content-center w-100 align-item-center">
+                                    <span className="text-primary display-3">No data found</span>
+                                </Container>
+                                : ""} */}
                         </tbody>
 
                     </Table>
@@ -171,15 +184,27 @@ function ReactTable({ data, columns }: Props): ReactElement {
 
                 {/* pagination  */}
 
-                <Container fluid className="d-flex justify-content-end">
-                    <Pagination>
-                        <Pagination.First />
-                        <Pagination.Prev />
-                        <Pagination.Item active ><span className="text-secondary">1</span></Pagination.Item>
-                        <Pagination.Next />
-                        <Pagination.Last />
-                    </Pagination>
-                </Container>
+                {
+                    rows.length === 0 ?
+                        <Container fluid className="d-flex justify-content-center display-3">
+                            <div className="d-flex flex-column align-items-center">
+
+                                <BiSad color={primaryColor} />
+                                <span className="text-primary display-3">No data found</span>
+                            </div>
+                        </Container>
+                        :
+                        <Container fluid className="d-flex justify-content-end">
+                            <Pagination>
+                                <Pagination.First />
+                                <Pagination.Prev />
+                                <Pagination.Item active ><span className="text-secondary">1</span></Pagination.Item>
+                                <Pagination.Next />
+                                <Pagination.Last />
+                            </Pagination>
+                        </Container>
+                }
+
             </Container>
         </Container>
     )

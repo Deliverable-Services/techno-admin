@@ -7,7 +7,7 @@ import useToggle from "../../hooks/useToggle"
 import ReactTable from "../../shared-components/ReactTable"
 import { secondaryColor } from "../../utils/constants"
 import { mockData } from "../../utils/mockData"
-import BrandsCreateUpdateForm from "./BrandsCreateUpdateForm"
+import CouponsCreateUpdateForm from "./CouponsCreateUpdateForm"
 
 const Brands = () => {
     const { setStatusCreate, setStatusDefault, status, setStatusEdit } = useToggle()
@@ -61,19 +61,19 @@ const Brands = () => {
                 )
             }
         ],
-        []
+        [setStatusEdit]
     )
 
     return (
         <>
             <Container fluid className="component-wrapper px-0 py-2">
                 <Container className="d-flex justify-content-between py-2">
-                    <h2 className="text-primary font-weight-bold">Brands</h2>
+                    <h2 className="text-primary font-weight-bold">Coupons</h2>
                     {
                         status !== "default" ?
                             <Button variant="primary" onClick={setStatusDefault}  >
                                 <div className="text-secondary">
-                                    <BiArrowFromRight size={24} /> <b>Back</b>
+                                    <BiArrowFromRight size={25} /> <b>Back</b>
                                 </div>
                             </Button> :
                             <Button variant="primary" onClick={setStatusCreate}>
@@ -91,14 +91,14 @@ const Brands = () => {
                     {
                         status === "creating" &&
                         <Container fluid className="mt-2 py-4">
-                            <BrandsCreateUpdateForm />
+                            <CouponsCreateUpdateForm />
                         </Container>
                     }
 
                     {
                         status === "editing" &&
                         <Container fluid className="mt-2 py-4">
-                            <BrandsCreateUpdateForm title="test title" description="test description" />
+                            <CouponsCreateUpdateForm title="test title" description="test description" />
                         </Container>
                     }
 

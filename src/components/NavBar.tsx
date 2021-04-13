@@ -35,7 +35,7 @@ const manageLinks: Array<INavLink> = [
     },
     {
         title: "Services",
-        path: "/serivces",
+        path: "/servicies",
         icon: <RiServiceFill />
     },
     {

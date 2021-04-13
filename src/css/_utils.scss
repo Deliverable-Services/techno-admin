@@ -92,7 +92,7 @@ background-color: rgba($color: $primary-color, $alpha: .2);
     background-color: transparent;
     color: rgba($color: $primary-color, $alpha: .5);
     
-    @include responsive(800px){
+    @include responsive($desktop-breakpoint){
         width: 50%;
     }
     input{
