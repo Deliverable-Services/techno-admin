@@ -127,45 +127,24 @@ background-color: rgba($color: $primary-color, $alpha: .2);
     width: 6rem;
     object-fit: contain;
 }
-// .column-hide-container{
-//     position: absolute;
-//     background-color: red;
-//     right: 0;
-//     top:100%;
-// }
-
-// .tableFixed{
-//     width: 100%;
-//     max-height: 10rem;
-//     height: 100%;
-//     overflow: auto;
-
-//      table{
-//       width: 100%;
-//       white-space: nowrap;
-//       border-collapse: collapse;
-//       background-color:white;
-//       td,th{
-//         padding: .1rem .3rem;
-//         text-align:left;
-//         width:70px;
-//         font-size: .7rem;
-//         font-family: "Nunito", sans-serif;
-//       }
-//       tr:nth-child(2n+2){
-//         background-color: #EEEEEE; 
-//       }
-//       th{
-//         position: sticky;
-//         top: 0;
-//         background-color: white;
-//         font-size: .8rem;
-//         border-bottom: 1px solid #8E8E8E;
-//       }
-//     }
-    
 
 
-// }
+.tab-btn{
+    background: $primary-color;
+    color:$secondary-color;
+    font-size: 1rem;
 
+}
+
+.tab-btn-row{
+    display: grid;
+    grid-template-columns: repeat(3,1fr);
+    gap:  .5rem;
+    @include responsive($desktop-breakpoint){
+        grid-template-columns: repeat(5,1fr);
+    }
+    @include responsive($large-screen-breakpoint){
+        grid-template-columns: repeat(6,1fr);
+    }
+}
 

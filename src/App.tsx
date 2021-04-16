@@ -1,9 +1,13 @@
 import { useEffect, useState } from "react";
-import { Container } from "react-bootstrap";
+import { Container, Spinner } from "react-bootstrap";
 import { Route, Switch, useHistory, useLocation } from "react-router-dom";
-import BrandModels from "./components/BrandModels";
+import { IsDesktopContext } from "./context/IsDesktopContext";
+import useMeQuery from "./hooks/useMeQuery";
+import ErrorToast from "./shared-components/ErrorToast/ErrorToast";
+import { showErrorToast } from "./utils/showErrorToast";
 // ------pages components-------- 
 import Brands from "./components/Brands";
+import BrandModels from "./components/BrandModels";
 import Categories from "./components/Categories";
 import Coupons from "./components/Coupons";
 import Faqs from "./components/Faqs";
@@ -13,8 +17,9 @@ import Plans from "./components/Plans";
 import Services from "./components/Servicies";
 import TopBar from "./components/TopBar";
 import Users from "./components/Users";
-import { IsDesktopContext } from "./context/IsDesktopContext";
-import ErrorToast from "./shared-components/ErrorToast/ErrorToast";
+import VerifyOtp from "./components/VerifyOtp";
+import Dashboard from "./components/Dashboard";
+import Orders from "./components/Orders";
 
 
 
@@ -43,26 +48,40 @@ const App = () => {
   const [isNavOpen, setIsNavOpen] = useState<boolean>(false)
   const { pathname } = useLocation()
 
+  function showNavTopBar(): boolean {
+
+    if (pathname.includes("login") || pathname.includes("verify-otp"))
+      return false
+    else
+      return true
+  }
+
+
+
   return (
     <IsDesktopContext.Provider value={isDesktop}>
       <div className="App">
-        {pathname !== "/login" &&
-          <NavBar isNavOpen={isNavOpen} setIsNavOpen={setIsNavOpen} />}
+        {
+          showNavTopBar() ?
+            <NavBar isNavOpen={isNavOpen} setIsNavOpen={setIsNavOpen} /> : ""}
         <Container fluid className="main-layout p-0">
           {
-            pathname !== "/login" &&
-            <TopBar isNavOpen={isNavOpen} setIsNavOpen={setIsNavOpen} />}
+            showNavTopBar() ?
+              <TopBar isNavOpen={isNavOpen} setIsNavOpen={setIsNavOpen} /> : ""}
 
           <Switch>
+            <PrivateRoute path="/" exact component={Dashboard} />
             <PrivateRoute path="/brands" exact component={Brands} />
-            <Route path="/brand-models" exact component={BrandModels} />
-            <Route path="/categories" exact component={Categories} />
-            <Route path="/users" exact component={Users} />
-            <Route path="/servicies" exact component={Services} />
-            <Route path="/faqs" exact component={Faqs} />
-            <Route path="/plans" exact component={Plans} />
-            <Route path="/coupons" exact component={Coupons} />
+            <PrivateRoute path="/brand-models" exact component={BrandModels} />
+            <PrivateRoute path="/categories" exact component={Categories} />
+            <PrivateRoute path="/users" exact component={Users} />
+            <PrivateRoute path="/servicies" exact component={Services} />
+            <PrivateRoute path="/faqs" exact component={Faqs} />
+            <PrivateRoute path="/plans" exact component={Plans} />
+            <PrivateRoute path="/coupons" exact component={Coupons} />
+            <PrivateRoute path="/orders" exact component={Orders} />
             <Route path="/login" exact component={LoginPage} />
+            <Route path="/verify-otp/:id" exact component={VerifyOtp} />
           </Switch>
           <ErrorToast />
         </Container>
@@ -72,12 +91,23 @@ const App = () => {
 }
 
 const PrivateRoute = ({ component: Component, ...rest }: any) => {
+  const { data, isFetching, isLoading, error } = useMeQuery()
   const history = useHistory()
-  const isAuthenticated = true
+  console.log(data)
+
+
   useEffect(() => {
-    if (!isAuthenticated)
-      history.push("/login")
-  }, [isAuthenticated])
+
+    if (!isLoading && !isFetching) {
+      if (!data)
+        history.push("/login")
+    }
+
+  }, [data, history, isLoading, isFetching])
+
+  if (isLoading || isFetching) {
+    return <Container fluid className="d-flex justify-content-center align-items-center mt-4"><Spinner animation="border" /></Container>
+  }
   return (
     <Route {...rest} render={(props) => (
 

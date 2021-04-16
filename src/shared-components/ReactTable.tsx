@@ -1,5 +1,5 @@
 import React, { ReactElement } from 'react'
-import { Container, Dropdown, Pagination, Table } from 'react-bootstrap'
+import { Container, Dropdown, Table } from 'react-bootstrap'
 import { AiOutlineSearch } from 'react-icons/ai'
 import { BiSad } from 'react-icons/bi'
 import { GoSettings } from 'react-icons/go'
@@ -194,15 +194,7 @@ function ReactTable({ data, columns }: Props): ReactElement {
                             </div>
                         </Container>
                         :
-                        <Container fluid className="d-flex justify-content-end">
-                            <Pagination>
-                                <Pagination.First />
-                                <Pagination.Prev />
-                                <Pagination.Item active ><span className="text-secondary">1</span></Pagination.Item>
-                                <Pagination.Next />
-                                <Pagination.Last />
-                            </Pagination>
-                        </Container>
+                        null
                 }
 
             </Container>

@@ -2,22 +2,23 @@ import { useMemo, useState } from "react"
 import { Button, Container, Modal } from "react-bootstrap"
 import { AiFillDelete, AiFillEdit, AiFillPlusSquare } from "react-icons/ai"
 import { BiArrowFromRight } from "react-icons/bi"
+import { useQuery } from "react-query"
 import { Cell } from "react-table"
 import useToggle from "../../hooks/useToggle"
+import IsLoading from "../../shared-components/isLoading"
+import TablePagination from "../../shared-components/Pagination"
 import ReactTable from "../../shared-components/ReactTable"
 import { secondaryColor } from "../../utils/constants"
-import { mockData } from "../../utils/mockData"
 import BrandModelsUpdateCreateForm from "./BrandModelsUpdateCreateForm"
 
 const Brands = () => {
+
+    const { data, isLoading, isFetching } = useQuery("brand-models")
+
     const { setStatusCreate, setStatusDefault, status, setStatusEdit } = useToggle()
+    const [selectedRowId, setSelectedRowId] = useState<string>("")
     const [deletePopup, setDeletePopup] = useState(false)
-    const data: any = useMemo(
-        () => [
-            ...mockData
-        ],
-        []
-    )
+
     const columns = useMemo(
         () => [
             {
@@ -44,25 +45,34 @@ const Brands = () => {
             },
             {
                 Header: 'Actions',
-                Cell: () => (
-                    <div className="d-flex">
-                        <button onClick={() => {
-                            setStatusEdit()
-                        }}>
-                            <AiFillEdit color={secondaryColor} size={24} />
-                        </button>
-                        <button className="ml-2" onClick={() => {
+                Cell: (data: Cell) => {
 
-                            setDeletePopup(true)
-                        }}>
-                            <AiFillDelete color="red" size={24} />
-                        </button>
-                    </div>
-                )
+                    return (
+                        <div className="d-flex">
+                            <button onClick={() => {
+                                setSelectedRowId(data.row.values.id)
+                                setStatusEdit()
+                            }}>
+                                <AiFillEdit color={secondaryColor} size={24} />
+                            </button>
+                            <button className="ml-2" onClick={() => {
+
+                                setDeletePopup(true)
+                            }}>
+                                <AiFillDelete color="red" size={24} />
+                            </button>
+                        </div>
+                    )
+                }
             }
         ],
         []
     )
+
+    if (isLoading || isFetching)
+        return <IsLoading />
+
+
 
     return (
         <>
@@ -98,13 +108,21 @@ const Brands = () => {
                     {
                         status === "editing" &&
                         <Container fluid className="mt-2 py-4">
-                            <BrandModelsUpdateCreateForm title="test title" description="test description" />
+                            <BrandModelsUpdateCreateForm id={selectedRowId} />
                         </Container>
                     }
 
                     {
-                        status === "default" &&
-                        <ReactTable data={data} columns={columns} />
+                        (status === "default") &&
+                        <>
+                            <ReactTable data={(data as any).data} columns={columns} />
+                            {
+                                (data as any).data.length > 0 ?
+                                    <TablePagination />
+                                    : null
+                            }
+                        </>
+
                     }
 
                 </Container>

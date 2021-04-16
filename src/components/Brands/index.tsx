@@ -5,24 +5,20 @@ import { BiArrowFromRight } from "react-icons/bi"
 import { useQuery } from "react-query"
 import { Cell } from "react-table"
 import useToggle from "../../hooks/useToggle"
+import IsLoading from "../../shared-components/isLoading"
+import TablePagination from "../../shared-components/Pagination"
 import ReactTable from "../../shared-components/ReactTable"
 import { secondaryColor } from "../../utils/constants"
-import { mockData } from "../../utils/mockData"
-import BrandsCreateUpdateForm from "./BrandsCreateUpdateForm"
+import BrandsUpdateCreateForm from "./BrandsCreateUpdateForm"
 
 const Brands = () => {
 
-    const { data: apiData } = useQuery("brands")
-
+    const { data, isLoading, isFetching } = useQuery("brands")
 
     const { setStatusCreate, setStatusDefault, status, setStatusEdit } = useToggle()
+    const [selectedRowId, setSelectedRowId] = useState<string>("")
     const [deletePopup, setDeletePopup] = useState(false)
-    const data: any = useMemo(
-        () => [
-            ...mockData
-        ],
-        []
-    )
+
     const columns = useMemo(
         () => [
             {
@@ -42,7 +38,6 @@ const Brands = () => {
             {
                 Header: 'Name',
                 accessor: 'name',
-
             },
             {
                 Header: 'User',
@@ -50,31 +45,40 @@ const Brands = () => {
             },
             {
                 Header: 'Actions',
-                Cell: () => (
-                    <div className="d-flex">
-                        <button onClick={() => {
-                            setStatusEdit()
-                        }}>
-                            <AiFillEdit color={secondaryColor} size={24} />
-                        </button>
-                        <button className="ml-2" onClick={() => {
+                Cell: (data: Cell) => {
 
-                            setDeletePopup(true)
-                        }}>
-                            <AiFillDelete color="red" size={24} />
-                        </button>
-                    </div>
-                )
+                    return (
+                        <div className="d-flex">
+                            <button onClick={() => {
+                                setSelectedRowId(data.row.values.id)
+                                setStatusEdit()
+                            }}>
+                                <AiFillEdit color={secondaryColor} size={24} />
+                            </button>
+                            <button className="ml-2" onClick={() => {
+
+                                setDeletePopup(true)
+                            }}>
+                                <AiFillDelete color="red" size={24} />
+                            </button>
+                        </div>
+                    )
+                }
             }
         ],
-        [setStatusEdit]
+        []
     )
+
+    if (isLoading || isFetching)
+        return <IsLoading />
+
+
 
     return (
         <>
             <Container fluid className="component-wrapper px-0 py-2">
                 <Container className="d-flex justify-content-between py-2">
-                    <h2 className="text-primary font-weight-bold">Brands</h2>
+                    <h2 className="text-primary font-weight-bold">Brand Models</h2>
                     {
                         status !== "default" ?
                             <Button variant="primary" onClick={setStatusDefault}  >
@@ -97,20 +101,28 @@ const Brands = () => {
                     {
                         status === "creating" &&
                         <Container fluid className="mt-2 py-4">
-                            <BrandsCreateUpdateForm />
+                            <BrandsUpdateCreateForm />
                         </Container>
                     }
 
                     {
                         status === "editing" &&
                         <Container fluid className="mt-2 py-4">
-                            <BrandsCreateUpdateForm title="test title" description="test description" />
+                            <BrandsUpdateCreateForm id={selectedRowId} />
                         </Container>
                     }
 
                     {
-                        status === "default" &&
-                        <ReactTable data={data} columns={columns} />
+                        (status === "default") &&
+                        <>
+                            <ReactTable data={(data as any).data} columns={columns} />
+                            {
+                                (data as any).data.length > 0 ?
+                                    <TablePagination />
+                                    : null
+                            }
+                        </>
+
                     }
 
                 </Container>

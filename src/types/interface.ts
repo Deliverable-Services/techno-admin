@@ -14,3 +14,7 @@ export interface INavBar {
 export interface ILogo {
     color?: string
 }
+
+export interface ICreateUpdateForm {
+    id?: string
+}

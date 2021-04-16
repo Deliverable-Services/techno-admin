@@ -6,6 +6,7 @@ type InputFieldProps = InputHTMLAttributes<HTMLInputElement> & {
     label?: string;
     name: string;
     as?: ElementType<any> | undefined;
+    error?: string
     isFile?: boolean,
     setFieldValue?: (field: string, value: any, shouldValidate?: boolean | undefined) => void
 };
@@ -15,6 +16,7 @@ type InputFieldProps = InputHTMLAttributes<HTMLInputElement> & {
 
 export const InputField: React.FC<InputFieldProps> = ({
     isFile,
+    error,
     label,
     as = "input",
     setFieldValue,
@@ -52,6 +54,12 @@ export const InputField: React.FC<InputFieldProps> = ({
                     /> :
                     <Form.Control {...field} {...props} id={field.name} as={as} />
 
+            }
+            {
+                error &&
+                <Form.Text className="text-danger">
+                    {error}
+                </Form.Text>
             }
         </Form.Group>
 

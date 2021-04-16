@@ -1,0 +1,47 @@
+
+.head-row{
+    display: grid;
+    width: 100%;
+    grid-template-columns: 1fr;
+    gap: .5rem 0;
+
+    @include responsive($desktop-breakpoint){
+    grid-template-columns: repeat(3,1fr);    
+    gap: .5rem;
+    }
+
+    @include responsive($large-screen-breakpoint){
+      grid-template-columns: repeat(4,1fr);
+    gap: .5rem;
+    }
+}
+.charts-row{
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: .5rem 0;
+    @include responsive($large-screen-breakpoint){
+        grid-template-columns: repeat(2,1fr);
+        gap: 1rem .5rem;
+    }
+}
+.card{
+    font-size: 1em;
+}
+
+.chart-container{
+    width: 100%;
+    margin-bottom: .5rem;
+    // background-color: red;
+    height:20rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    @include responsive($desktop-breakpoint){
+        
+        min-width:120px;
+    }
+
+    @include responsive($large-screen-breakpoint){
+        min-width: 220px;
+    }
+}
