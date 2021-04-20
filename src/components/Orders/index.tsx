@@ -8,17 +8,24 @@ interface Props {
 
 }
 
-const isActiveTab = (id: string, key: string): { variant: string, color: string } => {
+// const isActiveTab = (id: string, key: string): { variant: string, color: string } => {
+//     if (id === key)
+//         return {
+//             variant: "primary",
+//             color: "text-secondary"
+//         }
+//     else
+//         return {
+//             variant: "light",
+//             color: "text-primary"
+//         }
+// }
+const isActiveTab = (id: string, key: string): string => {
+    const classname = "tab-link"
     if (id === key)
-        return {
-            variant: "primary",
-            color: "text-secondary"
-        }
+        return `${classname} isActive`
     else
-        return {
-            variant: "light",
-            color: "text-primary"
-        }
+        return classname
 }
 
 const Orders = (props: Props) => {
@@ -81,7 +88,7 @@ const Orders = (props: Props) => {
             </Container>
             <Container fluid>
                 <div className="tab-btn-row">
-                    <Button variant={isActiveTab("1", key).variant} className={`${isActiveTab("1", key).color}`}
+                    {/* <Button variant={isActiveTab("1", key).variant} className={`${isActiveTab("1", key).color}`}
                         onClick={() => setKey("1")}
                     >All</Button>
                     <Button variant={isActiveTab("2", key).variant} className={`${isActiveTab("2", key).color} `}
@@ -91,6 +98,20 @@ const Orders = (props: Props) => {
                         onClick={() => setKey("3")}
                     >Cancelled</Button>
                     <Button variant={isActiveTab("4", key).variant} className={`${isActiveTab("4", key).color} `}
+                        onClick={() => setKey("4")}
+                    >Completed</Button> */}
+
+                    <Button variant="light" className={`${isActiveTab("1", key)}`}
+                        onClick={() => setKey("1")}
+                    >All</Button>
+
+                    <Button variant="light" className={`${isActiveTab("2", key)} `}
+                        onClick={() => setKey("2")}
+                    >Ongoing</Button>
+                    <Button variant="light" className={`${isActiveTab("3", key)} `}
+                        onClick={() => setKey("3")}
+                    >Cancelled</Button>
+                    <Button variant="light" className={`${isActiveTab("4", key)} `}
                         onClick={() => setKey("4")}
                     >Completed</Button>
 

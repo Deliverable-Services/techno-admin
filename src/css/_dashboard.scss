@@ -1,17 +1,29 @@
-
+.dashboard-page{
+    display: flex;
+    flex-direction: column;
+    @include responsive(600px){
+        flex-direction: row-reverse;
+        .status-container{
+            flex:.6
+        }
+        .charts-container{
+            flex:1;
+        }
+        }
+}
 .head-row{
     display: grid;
     width: 100%;
     grid-template-columns: 1fr;
+    grid-template-rows: repeat( auto-fit, minmax(100px, 8rem) );
     gap: .5rem 0;
 
     @include responsive($desktop-breakpoint){
-    grid-template-columns: repeat(3,1fr);    
+        grid-column: 2/3;
     gap: .5rem;
     }
 
     @include responsive($large-screen-breakpoint){
-      grid-template-columns: repeat(4,1fr);
     gap: .5rem;
     }
 }
@@ -20,12 +32,15 @@
     grid-template-columns: 1fr;
     gap: .5rem 0;
     @include responsive($large-screen-breakpoint){
-        grid-template-columns: repeat(2,1fr);
         gap: 1rem .5rem;
     }
 }
 .card{
     font-size: 1em;
+    transition: all .5s ease;
+    &:hover{
+        box-shadow: 0 4px 24px rgba($color: $black, $alpha: 0.24);
+    }
 }
 
 .chart-container{

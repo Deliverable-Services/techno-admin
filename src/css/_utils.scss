@@ -50,8 +50,8 @@ background-color: rgba($color: $primary-color, $alpha: .2);
     box-shadow: 0 4px 24px rgba($color: #000, $alpha: .24);
     background-color: $white-color;
     .profile{
-        height: 24px;
-        width:24px;
+        height: 2rem;
+        width:2rem;
       
     }
 
@@ -125,7 +125,12 @@ background-color: rgba($color: $primary-color, $alpha: .2);
 .table-image{
     height: 2.5em;
     width: 6rem;
-    object-fit: contain;
+    object-fit: cover;
+}
+.form-image{
+    height: 3.5em;
+    width: 8rem;
+    object-fit: cover;
 }
 
 
@@ -147,4 +152,18 @@ background-color: rgba($color: $primary-color, $alpha: .2);
         grid-template-columns: repeat(6,1fr);
     }
 }
+.tab-link{
+    color:$light-dark;
 
+    &.isActive{
+        // display: none;
+        color:$primary-color;
+        background-color: transparent;
+        font-weight: 700;
+        border:none;
+        border-bottom: 2px solid $secondary-color;
+        transition: all .3s ease;
+     box-shadow: none;
+
+    }
+}

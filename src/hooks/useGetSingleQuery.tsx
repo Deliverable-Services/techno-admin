@@ -20,9 +20,11 @@ const getSingle: QueryFunction = async ({ queryKey }) => {
 
 const useGetSingleQuery = ({ id, key }: IUseGetSingle) => {
 
-    const data = useQuery([key, id], getSingle)
+    const allData = useQuery([key, id], getSingle, {
 
-    return data
+    })
+
+    return allData
 }
 
 export default useGetSingleQuery

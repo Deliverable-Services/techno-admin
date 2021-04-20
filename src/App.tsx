@@ -93,7 +93,6 @@ const App = () => {
 const PrivateRoute = ({ component: Component, ...rest }: any) => {
   const { data, isFetching, isLoading, error } = useMeQuery()
   const history = useHistory()
-  console.log(data)
 
 
   useEffect(() => {

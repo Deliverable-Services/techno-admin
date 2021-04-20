@@ -1,5 +1,5 @@
-import { useContext } from 'react'
-import { Container } from 'react-bootstrap'
+import React, { useContext } from 'react'
+import { Button, Container, Dropdown } from 'react-bootstrap'
 import { BiMenuAltLeft } from 'react-icons/bi'
 import { BsBell } from 'react-icons/bs'
 import { IsDesktopContext } from '../context/IsDesktopContext'
@@ -7,9 +7,11 @@ import Logo from '../shared-components/Logo'
 import { INavBar } from '../types/interface'
 import { primaryColor } from '../utils/constants'
 import profile from '../assets/profile.svg'
+import useTokenStore from '../hooks/useTokenStore'
 
 const TopBar = ({ isNavOpen, setIsNavOpen }: INavBar) => {
     const isDesktop = useContext(IsDesktopContext)
+    const removeToken = useTokenStore(state => state.removeToken)
     const openNavBar = () => {
         if (setIsNavOpen) {
             setIsNavOpen(true)
@@ -35,18 +37,29 @@ const TopBar = ({ isNavOpen, setIsNavOpen }: INavBar) => {
                     <Logo /> : null
             }
 
-            <div className={isDesktop ? "d-flex ml-auto" : "d-flex"}>
+            <div className={isDesktop ? "d-flex align-items-center ml-auto" : "d-flex align-items-center"}>
                 <div className="notification">
                     <BsBell size={24} />
                     <div className="circle bg-primary text-secondary d-flex  justify-content-center">
                         <p><b>1</b></p>
                     </div>
                 </div>
-                <div className="profile ml-4">
-                    <button>
+
+                {/* <button>
                         <img src={profile} alt="profile" />
-                    </button>
-                </div>
+                    </button> */}
+                <Dropdown className="ml-4">
+                    <Dropdown.Toggle id="dropdown-basic" className="filter-button bg-transparent border-0 text-primary">
+
+                        <img src={profile} alt="profile" className="profile" />
+
+                    </Dropdown.Toggle>
+
+                    <Dropdown.Menu>
+                        <Dropdown.Item onClick={() => removeToken()}>Sign Out</Dropdown.Item>
+                    </Dropdown.Menu>
+                </Dropdown>
+
             </div>
         </Container>
     )

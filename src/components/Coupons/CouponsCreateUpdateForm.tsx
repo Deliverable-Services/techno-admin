@@ -1,49 +1,115 @@
+import axios from "axios"
 import bsCustomFileInput from "bs-custom-file-input"
 import { Form, Formik } from 'formik'
 import { useEffect } from 'react'
-import { Button } from 'react-bootstrap'
+import { Alert, Button, Col, Row, Spinner } from 'react-bootstrap'
+import { useMutation, useQuery } from "react-query"
+import useGetSingleQuery from "../../hooks/useGetSingleQuery"
 import { InputField } from '../../shared-components/InputFeild'
+import IsLoading from "../../shared-components/isLoading"
+import { ICreateUpdateForm } from "../../types/interface"
+import { adminApiBaseUrl } from "../../utils/constants"
+import { queryClient } from "../../utils/queryClient"
 
-interface IBrandsCreateUpdateForm {
-    title?: string,
-    description?: string
+
+const key = "services"
+
+
+const createUpdataBrand = ({ formdata, id }: { formdata: any, id: string }) => {
+    if (!id) {
+        return axios.post(`${adminApiBaseUrl}${key}`, formdata, {
+            headers: { "Content-Type": "applicatioin/json" },
+
+        })
+    }
+
+    return axios.post(`${adminApiBaseUrl}${key}/${id}`, formdata, {
+        headers: { "Content-Type": "application/json" },
+
+    })
 }
 
-const BrandsCreateUpdateForm = ({ description = "", title = "" }: IBrandsCreateUpdateForm) => {
+const BrandsCreateUpdateForm = ({ id = "" }: ICreateUpdateForm) => {
+    console.log(id)
 
     useEffect(() => {
         bsCustomFileInput.init()
     }, [])
+    const { data, isLoading: dataLoading } = useGetSingleQuery({ id, key })
+    const { mutate, isLoading, error, status } = useMutation(createUpdataBrand, {
+        onSuccess: () => {
+            setTimeout(() =>
+                queryClient.invalidateQueries(key)
+                , 500)
+        }
+    })
+
+
+
+    const apiData = data && (data as any).data;
+
+    console.log("apiData", apiData)
+
+
+
+
+    if (dataLoading)
+        return <IsLoading />
+
+
     return (
+        <Row>
+            <Col md={6} className="mx-auto">
 
-        <Formik
-            initialValues={{ title, description, image: null }}
-            onSubmit={(values) => {
-                console.log(values)
-            }}>
-            {({ setFieldValue }) => (
-                <Form>
-                    <InputField
-                        name="title"
-                        placeholder="Title"
-                        label="Title"
-                    />
+                <Formik
+                    initialValues={{ title: apiData ? apiData[0].title : "", coupon_code: apiData ? apiData[0].coupon_code : "", description: apiData ? apiData[0].description : "", terms: apiData ? apiData[0].terms : "" }}
+                    onSubmit={(values) => {
 
-                    <InputField name="description" placeholder="description" label="Description" />
-                    <InputField name="image" placeholder="image" label="Choose Brand" isFile setFieldValue={setFieldValue} />
-                    {/* <input type="file" name="image" id="image" onChange={(e: ChangeEvent) => {
-                        const input = (e.currentTarget as HTMLInputElement).files
-                        if (input) {
-                            setFieldValue("image", input[0])
-                        }
-                    }} /> */}
-                    <Button type="submit">Submit</Button>
+                        // console.log("values", values)
 
-                </Form>
+                        mutate({ formdata: values, id })
+                    }}>
+                    {({ setFieldValue }) => (
+                        <Form>
+                            <div className="form-container px-3 py-2 rounded">
+                                <h1 className="text-primary my-3"><b>{id ? "Update Coupon " : "Create Coupon"}</b></h1>
+                                {status === "success" &&
+                                    <Alert variant="success">{id ? "Coupon updated successfully" : "Coupon created successfully"}</Alert>
+                                }
+                                {error &&
+                                    <Alert variant="danger">{(error as Error).message}</Alert>
+                                }
+                                <InputField
+                                    name="title"
+                                    placeholder="Title"
+                                    label="Title"
+                                    required
+                                />
 
-            )}
-        </Formik>
+                                {
+                                    !id &&
+                                    <InputField name="coupon_code" placeholder="Coupon Code" label="Coupon Code" required />
+                                }
+                                {
+                                    !id &&
+                                    <InputField name="description" placeholder="Description" label="Descrition" as="textarea" />
+                                }
 
+                                {
+                                    !id &&
+                                    <InputField name="terms" placeholder="Terms" label="Terms" as="textarea" />
+                                }
+                                <Button type="submit" disabled={isLoading}>
+                                    {isLoading ? <Spinner animation="border" size="sm" /> : "Submit"}
+                                </Button>
+                            </div>
+                        </Form>
+
+                    )}
+                </Formik>
+
+            </Col>
+        </Row>
     )
 }
 

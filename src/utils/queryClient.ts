@@ -8,7 +8,7 @@ export const defaultQueryFn: QueryFunction = async ({ queryKey }) => {
 
 
 
-    const r = await axios.get(`${adminApiBaseUrl}${queryKey[0]}`);
+    const r = await axios.get(`${adminApiBaseUrl}${queryKey[0]}?page=${queryKey[1]}`);
 
     if (r.status !== 200) {
         console.log("status", r.status)
@@ -23,12 +23,13 @@ export const queryClient = new QueryClient({
     defaultOptions: {
         queries: {
 
-            retry: false,
+            // refetchOnWindowFocus: "always",
             staleTime: 60 * 1000 * 5,
             queryFn: defaultQueryFn,
             onError: (error) => {
                 showErrorToast((error as Error).message)
-            }
+            },
+            keepPreviousData: true
         },
     },
 });
