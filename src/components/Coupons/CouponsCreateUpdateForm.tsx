@@ -58,8 +58,8 @@ const BrandsCreateUpdateForm = ({ id = "" }: ICreateUpdateForm) => {
 
 
     return (
-        <Row>
-            <Col md={6} className="mx-auto">
+        <Row className="px-3 rounded">
+            <Col className=" box-shadow pb-3 mx-auto">
 
                 <Formik
                     initialValues={{ title: apiData ? apiData[0].title : "", coupon_code: apiData ? apiData[0].coupon_code : "", description: apiData ? apiData[0].description : "", terms: apiData ? apiData[0].terms : "" }}
@@ -71,14 +71,14 @@ const BrandsCreateUpdateForm = ({ id = "" }: ICreateUpdateForm) => {
                     }}>
                     {({ setFieldValue }) => (
                         <Form>
-                            <div className="form-container px-3 py-2 rounded">
-                                <h1 className="text-primary my-3"><b>{id ? "Update Coupon " : "Create Coupon"}</b></h1>
-                                {status === "success" &&
-                                    <Alert variant="success">{id ? "Coupon updated successfully" : "Coupon created successfully"}</Alert>
-                                }
-                                {error &&
-                                    <Alert variant="danger">{(error as Error).message}</Alert>
-                                }
+                            <h1 className="text-primary text-center my-3"><b>{id ? "Update Coupon " : "Create Coupon"}</b></h1>
+                            {status === "success" &&
+                                <Alert variant="success">{id ? "Coupon updated successfully" : "Coupon created successfully"}</Alert>
+                            }
+                            {error &&
+                                <Alert variant="danger">{(error as Error).message}</Alert>
+                            }
+                            <div className="form-container  py-2 ">
                                 <InputField
                                     name="title"
                                     placeholder="Title"
@@ -99,10 +99,14 @@ const BrandsCreateUpdateForm = ({ id = "" }: ICreateUpdateForm) => {
                                     !id &&
                                     <InputField name="terms" placeholder="Terms" label="Terms" as="textarea" />
                                 }
-                                <Button type="submit" disabled={isLoading}>
-                                    {isLoading ? <Spinner animation="border" size="sm" /> : "Submit"}
-                                </Button>
                             </div>
+                            <Row className="d-flex justify-content-center">
+                                <Col md="6">
+                                    <Button type="submit" disabled={isLoading} className="w-100">
+                                        {isLoading ? <Spinner animation="border" size="sm" /> : "Submit"}
+                                    </Button>
+                                </Col>
+                            </Row>
                         </Form>
 
                     )}

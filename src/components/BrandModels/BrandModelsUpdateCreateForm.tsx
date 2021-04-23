@@ -2,7 +2,7 @@ import axios from "axios"
 import bsCustomFileInput from "bs-custom-file-input"
 import { Form, Formik } from 'formik'
 import { useEffect } from 'react'
-import { Alert, Button, Col, Row, Spinner } from 'react-bootstrap'
+import { Alert, Button, Col, Container, Row, Spinner } from 'react-bootstrap'
 import { useMutation, useQuery } from "react-query"
 import useGetSingleQuery from "../../hooks/useGetSingleQuery"
 import { InputField } from '../../shared-components/InputFeild'
@@ -60,8 +60,8 @@ const BrandsCreateUpdateForm = ({ id = "" }: ICreateUpdateForm) => {
 
 
     return (
-        <Row>
-            <Col md={6} className="mx-auto">
+        <Row className="px-3 rounded">
+            <Col className=" box-shadow mx-auto pb-3">
 
                 <Formik
                     initialValues={{ name: apiData ? apiData.name : "", url: apiData ? apiData.url : "", image: "", brand_id: "" }}
@@ -80,14 +80,14 @@ const BrandsCreateUpdateForm = ({ id = "" }: ICreateUpdateForm) => {
                     }}>
                     {({ setFieldValue }) => (
                         <Form>
-                            <div className="form-container px-3 py-2 rounded">
-                                <h1 className="text-primary my-3"><b>{id ? "Update Brand Model" : "Create Brand Model"}</b></h1>
-                                {status === "success" &&
-                                    <Alert variant="success">{id ? "Brand model updated successfully" : "Brand model created successfully"}</Alert>
-                                }
-                                {error &&
-                                    <Alert variant="danger">{(error as Error).message}</Alert>
-                                }
+                            <h1 className="text-primary my-3 text-center"><b>{id ? "Update Brand Model" : "Create Brand Model"}</b></h1>
+                            {status === "success" &&
+                                <Alert variant="success">{id ? "Brand model updated successfully" : "Brand model created successfully"}</Alert>
+                            }
+                            {error &&
+                                <Alert variant="danger">{(error as Error).message}</Alert>
+                            }
+                            <div className="form-container py-2 ">
                                 <InputField
                                     name="name"
                                     placeholder="Name"
@@ -107,10 +107,14 @@ const BrandsCreateUpdateForm = ({ id = "" }: ICreateUpdateForm) => {
                                     !id &&
                                     <InputField name="brand_id" placeholder="Brand" label="Choose Brand" as="select" selectData={!isBrandLoading && (brands).data} />
                                 }
-                                <Button type="submit" disabled={isLoading} >
-                                    {isLoading ? <Spinner animation="border" size="sm" /> : "Submit"}
-                                </Button>
                             </div>
+                            <Row className="d-flex justify-content-center">
+                                <Col md="6">
+                                    <Button type="submit" disabled={isLoading} className="w-100">
+                                        {isLoading ? <Spinner animation="border" size="sm" /> : "Submit"}
+                                    </Button>
+                                </Col>
+                            </Row>
                         </Form>
 
                     )}

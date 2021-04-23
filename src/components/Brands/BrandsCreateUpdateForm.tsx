@@ -55,8 +55,8 @@ const BrandsCreateUpdateForm = ({ id = "" }: ICreateUpdateForm) => {
 
 
     return (
-        <Row>
-            <Col md={6} className="mx-auto">
+        <Row className="px-3 rounded">
+            <Col className=" box-shadow py-3 mx-auto">
 
                 <Formik
                     initialValues={{ name: data ? apiData.name : "", url: data ? apiData.url : "", logo: "" }}
@@ -72,14 +72,14 @@ const BrandsCreateUpdateForm = ({ id = "" }: ICreateUpdateForm) => {
                     }}>
                     {({ setFieldValue }) => (
                         <Form>
-                            <div className="form-container px-3 py-2 rounded">
-                                <h1 className="text-primary my-3"><b>{id ? "Update Brand" : "Create Brand"}</b></h1>
-                                {status === "success" &&
-                                    <Alert variant="success">{id ? "Brand updated successfully" : "Brand created successfully"}</Alert>
-                                }
-                                {error &&
-                                    <Alert variant="danger">{(error as Error).message}</Alert>
-                                }
+                            <h1 className="text-primary text-center my-3"><b>{id ? "Update Brand" : "Create Brand"}</b></h1>
+                            {status === "success" &&
+                                <Alert variant="success">{id ? "Brand updated successfully" : "Brand created successfully"}</Alert>
+                            }
+                            {error &&
+                                <Alert variant="danger">{(error as Error).message}</Alert>
+                            }
+                            <div className="form-container ">
 
 
                                 <InputField
@@ -96,10 +96,16 @@ const BrandsCreateUpdateForm = ({ id = "" }: ICreateUpdateForm) => {
 
                                     <InputField name="logo" placeholder="logo" label="Choose Brand Logo" isFile setFieldValue={setFieldValue} />
                                 }
-                                <Button type="submit" disabled={isLoading}>
-                                    {isLoading ? <Spinner animation="border" size="sm" /> : "Submit"}
-                                </Button>
                             </div>
+
+                            <Row className="d-flex justify-content-center">
+                                <Col md="6">
+                                    <Button type="submit" disabled={isLoading} className="w-100">
+                                        {isLoading ? <Spinner animation="border" size="sm" /> : "Submit"}
+                                    </Button>
+                                </Col>
+                            </Row>
+
                         </Form>
 
                     )}

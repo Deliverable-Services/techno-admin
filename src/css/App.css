@@ -1,4 +1,6 @@
-*, *:after, *:before {
+*,
+*:after,
+*:before {
   margin: 0;
   padding: 0;
   -webkit-box-sizing: border-box;
@@ -10938,11 +10940,17 @@ img {
   width: 100%;
 }
 
-h1, h2, h3, h4, h5, button {
+h1,
+h2,
+h3,
+h4,
+h5,
+button {
   font-family: 'Montserrat', sans-serif;
 }
 
-p, td {
+p,
+td {
   font-family: 'Nunito', sans-serif;
 }
 
@@ -11126,6 +11134,11 @@ p, td {
           box-shadow: none;
 }
 
+.box-shadow {
+  -webkit-box-shadow: 0 4px 24px rgba(0, 0, 0, 0.24);
+          box-shadow: 0 4px 24px rgba(0, 0, 0, 0.24);
+}
+
 .dashboard-page {
   display: -webkit-box;
   display: -ms-flexbox;
@@ -11273,25 +11286,22 @@ body {
 }
 
 .form-container {
-  display: -webkit-box;
-  display: -ms-flexbox;
-  display: flex;
+  display: -ms-grid;
+  display: grid;
+  -ms-grid-columns: 1fr;
+      grid-template-columns: 1fr;
   -webkit-box-orient: vertical;
   -webkit-box-direction: normal;
       -ms-flex-direction: column;
           flex-direction: column;
-  -webkit-box-align: center;
-      -ms-flex-align: center;
-          align-items: center;
-  min-width: 300px;
-  -webkit-box-shadow: 0 4px 24px rgba(0, 0, 0, 0.24);
-          box-shadow: 0 4px 24px rgba(0, 0, 0, 0.24);
+  gap: .5rem;
   width: 100%;
 }
 
 @media (min-width: 800px) {
-  .form-container .form-control {
-    min-width: 350px;
+  .form-container {
+    -ms-grid-columns: 1fr 1fr;
+        grid-template-columns: 1fr 1fr;
   }
 }
 /*# sourceMappingURL=App.css.map */

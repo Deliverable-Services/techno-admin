@@ -1,46 +1,55 @@
-li{
+li {
     list-style: none;
 }
 
-button{
+button {
     border: none;
     outline: none;
     background-color: transparent;
 }
 
-a{
+a {
     text-decoration: none;
-    color:$white-color;
-    &:hover{
+    color: $white-color;
+
+    &:hover {
         text-decoration: none;
     }
 }
 
-img{
+img {
     height: 100%;
     width: 100%;
 }
 
-h1,h2,h3,h4,h5,button{
-   font-family: 'Montserrat', sans-serif;;
+h1,
+h2,
+h3,
+h4,
+h5,
+button {
+    font-family: 'Montserrat', sans-serif;
+    ;
 }
 
-p,td{
+p,
+td {
     font-family: 'Nunito', sans-serif;
 }
 
-.text-primary{
-    color:$primary-color;
+.text-primary {
+    color: $primary-color;
 }
 
-.bg-light-secondary{
-background-color: rgba($color: $secondary-color, $alpha: .2);
-}
-.bg-light-primary{
-background-color: rgba($color: $primary-color, $alpha: .2);
+.bg-light-secondary {
+    background-color: rgba($color: $secondary-color, $alpha: .2);
 }
 
-.top-bar{
+.bg-light-primary {
+    background-color: rgba($color: $primary-color, $alpha: .2);
+}
+
+.top-bar {
     position: sticky;
     top: 0;
     z-index: 49;
@@ -49,121 +58,136 @@ background-color: rgba($color: $primary-color, $alpha: .2);
     max-height: 60px;
     box-shadow: 0 4px 24px rgba($color: #000, $alpha: .24);
     background-color: $white-color;
-    .profile{
+
+    .profile {
         height: 2rem;
-        width:2rem;
-      
+        width: 2rem;
+
     }
 
-    .notification{
+    .notification {
         position: relative;
+
         // transform:rotate(10deg);
-        &:hover{
+        &:hover {
             cursor: pointer;
         }
-        .circle{
+
+        .circle {
             position: absolute;
             height: 24px;
             width: 24px;
             border-radius: 50%;
             top: -10px;
             right: -10px;
-           
+
             // background: $primary-color;
         }
     }
 }
 
-.logo{
+.logo {
     width: 6rem;
 }
 
-.component-wrapper{
+.component-wrapper {
     // box-shadow: 0 10px 30px rgba($color: $dark-color, $alpha: .2);
     background-color: $white-color;
     // border:2px solid rgba($color: $dark-color, $alpha: 0.2)
 }
 
-.search-input{
+.search-input {
     display: flex;
     align-items: center;
     padding: 0 .2rem;
     width: 100%;
     background-color: transparent;
     color: rgba($color: $primary-color, $alpha: .5);
-    
-    @include responsive($desktop-breakpoint){
+
+    @include responsive($desktop-breakpoint) {
         width: 50%;
     }
-    input{
-        border:none;
-        outline:none;
-        padding:.3rem .1rem;
-        flex:1;
+
+    input {
+        border: none;
+        outline: none;
+        padding: .3rem .1rem;
+        flex: 1;
         background-color: transparent;
-        color:$primary-color;
-        &::placeholder{
+        color: $primary-color;
+
+        &::placeholder {
             letter-spacing: .2rem;
             font-size: 1.2rem;
             color: rgba($color: $primary-color, $alpha: .5);
         }
     }
-    .filter-button{
+
+    .filter-button {
         background-color: transparent;
-        color:$primary-color
+        color: $primary-color
     }
 }
 
 
-.overlay{
-    position:fixed ;
+.overlay {
+    position: fixed;
     height: 100%;
     width: 100%;
     background-color: rgba($color: #000000, $alpha: .7);
     z-index: 50;
 }
-.table-image{
+
+.table-image {
     height: 2.5em;
     width: 6rem;
     object-fit: cover;
 }
-.form-image{
+
+.form-image {
     height: 3.5em;
     width: 8rem;
     object-fit: cover;
 }
 
 
-.tab-btn{
+.tab-btn {
     background: $primary-color;
-    color:$secondary-color;
+    color: $secondary-color;
     font-size: 1rem;
 
 }
 
-.tab-btn-row{
+.tab-btn-row {
     display: grid;
-    grid-template-columns: repeat(3,1fr);
-    gap:  .5rem;
-    @include responsive($desktop-breakpoint){
-        grid-template-columns: repeat(5,1fr);
+    grid-template-columns: repeat(3, 1fr);
+    gap: .5rem;
+
+    @include responsive($desktop-breakpoint) {
+        grid-template-columns: repeat(5, 1fr);
     }
-    @include responsive($large-screen-breakpoint){
-        grid-template-columns: repeat(6,1fr);
+
+    @include responsive($large-screen-breakpoint) {
+        grid-template-columns: repeat(6, 1fr);
     }
 }
-.tab-link{
-    color:$light-dark;
 
-    &.isActive{
+.tab-link {
+    color: $light-dark;
+
+    &.isActive {
         // display: none;
-        color:$primary-color;
+        color: $primary-color;
         background-color: transparent;
         font-weight: 700;
-        border:none;
+        border: none;
         border-bottom: 2px solid $secondary-color;
         transition: all .3s ease;
-     box-shadow: none;
+        box-shadow: none;
 
     }
+}
+
+.box-shadow {
+    box-shadow: 0 4px 24px rgba($color: $black, $alpha: 0.24);
 }

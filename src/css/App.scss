@@ -1,9 +1,11 @@
-*,*:after,*:before{
-    margin:0;
+*,
+*:after,
+*:before {
+    margin: 0;
     padding: 0;
     box-sizing: border-box;
-    }
-    
+}
+
 
 @import "./variables";
 @import "../../node_modules/bootstrap/scss/bootstrap";
@@ -12,18 +14,19 @@
 @import "./utils";
 @import "./dashboard";
 
-body{
+body {
 
     font-family: 'Roboto', sans-serif;
 }
 
-.App{
+.App {
     display: grid;
     background-color: $white-color;
 
-    @include responsive($desktop-breakpoint){
+    @include responsive($desktop-breakpoint) {
         grid-template-columns: .25fr 1fr;
-        .main-layout{
+
+        .main-layout {
             grid-column: 2/3;
             // background-color: lighten($primary-color,40);
         }
@@ -31,29 +34,28 @@ body{
 }
 
 
-.login-page{
+.login-page {
     position: fixed;
-    top:0;
-    bottom:0;
-    right:0;
-    left:0;
+    top: 0;
+    bottom: 0;
+    right: 0;
+    left: 0;
     display: flex;
     align-items: center;
     justify-content: center;
 }
 
-.form-container{
-    display: flex;
+.form-container {
+    display: grid;
+    grid-template-columns: 1fr;
     flex-direction: column;
-    align-items: center;
-    min-width: 300px;
-    box-shadow: 0 4px 24px rgba($color: $black, $alpha: 0.24);    
-    width:100%;
-    @include responsive($desktop-breakpoint){
-        .form-control{
-            
-        min-width: 350px;
+    gap: .5rem;
+    width: 100%;
 
-        }
+    @include responsive($desktop-breakpoint) {
+        grid-template-columns: 1fr 1fr;
+        // .form-control {
+
+        // }
     }
 }
