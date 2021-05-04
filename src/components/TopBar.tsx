@@ -8,10 +8,12 @@ import { INavBar } from '../types/interface'
 import { primaryColor } from '../utils/constants'
 import profile from '../assets/profile.svg'
 import useTokenStore from '../hooks/useTokenStore'
+import useUserProfileStore from '../hooks/useUserProfileStore'
 
 const TopBar = ({ isNavOpen, setIsNavOpen }: INavBar) => {
     const isDesktop = useContext(IsDesktopContext)
     const removeToken = useTokenStore(state => state.removeToken)
+    const removeUser = useUserProfileStore(state => state.removeUser)
     const openNavBar = () => {
         if (setIsNavOpen) {
             setIsNavOpen(true)
@@ -56,7 +58,10 @@ const TopBar = ({ isNavOpen, setIsNavOpen }: INavBar) => {
                     </Dropdown.Toggle>
 
                     <Dropdown.Menu>
-                        <Dropdown.Item onClick={() => removeToken()}>Sign Out</Dropdown.Item>
+                        <Dropdown.Item onClick={() => {
+                            removeUser()
+                            removeToken()
+                        }}>Sign Out</Dropdown.Item>
                     </Dropdown.Menu>
                 </Dropdown>
 

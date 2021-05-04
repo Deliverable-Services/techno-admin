@@ -1,6 +1,5 @@
-import axios from "axios";
 import { QueryClient, QueryFunction } from "react-query";
-import { adminApiBaseUrl } from "./constants";
+import API from "./API";
 import { showErrorToast } from "./showErrorToast";
 
 export const defaultQueryFn: QueryFunction = async ({ queryKey }) => {
@@ -8,13 +7,12 @@ export const defaultQueryFn: QueryFunction = async ({ queryKey }) => {
 
 
 
-    const r = await axios.get(`${adminApiBaseUrl}${queryKey[0]}?page=${queryKey[1]}`);
+    const r = await API.get(`${queryKey[0]}?page=${queryKey[1]}`);
 
     if (r.status !== 200) {
-        console.log("status", r.status)
+        showErrorToast(r.status.toString())
         throw new Error();
     }
-
 
     return await r.data;
 };
@@ -26,8 +24,11 @@ export const queryClient = new QueryClient({
             // refetchOnWindowFocus: "always",
             staleTime: 60 * 1000 * 5,
             queryFn: defaultQueryFn,
-            onError: (error) => {
-                showErrorToast((error as Error).message)
+            onError: (error: any) => {
+
+
+                showErrorToast((error as Error).message || "unauthorized")
+
             },
             keepPreviousData: true
         },

@@ -8,6 +8,7 @@ import useGetSingleQuery from "../../hooks/useGetSingleQuery"
 import { InputField } from '../../shared-components/InputFeild'
 import IsLoading from "../../shared-components/isLoading"
 import { ICreateUpdateForm } from "../../types/interface"
+import API from "../../utils/API"
 import { adminApiBaseUrl } from "../../utils/constants"
 import { queryClient } from "../../utils/queryClient"
 
@@ -17,13 +18,13 @@ const key = "brands"
 
 const createUpdataBrand = ({ formdata, id }: { formdata: FormData, id: string }) => {
     if (!id) {
-        return axios.post(`${adminApiBaseUrl}${key}`, formdata, {
+        return API.post(`${key}`, formdata, {
             headers: { "Content-Type": "multipart/form-data" },
 
         })
     }
 
-    return axios.post(`${adminApiBaseUrl}${key}/${id}`, formdata, {
+    return API.post(`${key}/${id}`, formdata, {
         headers: { "Content-Type": "multipart/form-data" },
 
     })
@@ -42,6 +43,8 @@ const BrandsCreateUpdateForm = ({ id = "" }: ICreateUpdateForm) => {
                 , 500)
         }
     })
+
+    console.log("data", data)
 
 
 

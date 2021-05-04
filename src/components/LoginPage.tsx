@@ -1,13 +1,12 @@
-import axios from 'axios'
 import { Form, Formik } from 'formik'
-import { FormEvent, useEffect } from 'react'
+import { useEffect } from 'react'
 import { Button, Container, Spinner } from 'react-bootstrap'
 import { useMutation } from 'react-query'
 import { useHistory } from 'react-router'
 import * as Yup from 'yup'
 import { InputField } from '../shared-components/InputFeild'
 import Logo from '../shared-components/Logo'
-import { appApiBaseUrl } from '../utils/constants'
+import API from '../utils/API'
 
 interface Props {
 
@@ -18,7 +17,7 @@ const LoginSchema = Yup.object().shape({
 })
 
 const sendOtp = (formData: FormData) => {
-    return axios.post(`${appApiBaseUrl}auth/send-otp`, formData, {
+    return API.post(`auth/send-otp`, formData, {
         headers: { "Content-Type": "multipart/form-data" },
 
     })
@@ -33,7 +32,7 @@ const LoginPage = (props: Props) => {
     useEffect(() => {
         if (data) {
             console.log("send-otp", data.data)
-            history.push(`/verify-otp/${data.data.user.phone}`)
+            history.push(`/verify-otp/${data.data.user.phone}/${data.data.user.otp}`)
         }
 
     }, [data])
@@ -57,7 +56,7 @@ const LoginPage = (props: Props) => {
                     ({ errors }) => {
                         return (
                             <Form >
-                                <div className="form-container px-3 py-5 rounded">
+                                <div className="d-flex flex-column align-items-center justify-content-between px-3 py-5 box-shadow rounded">
 
                                     <div className="logo-container">
                                         <Logo />

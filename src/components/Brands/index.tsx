@@ -9,6 +9,7 @@ import useToggle from "../../hooks/useToggle"
 import IsLoading from "../../shared-components/isLoading"
 import TablePagination from "../../shared-components/Pagination"
 import ReactTable from "../../shared-components/ReactTable"
+import API from "../../utils/API"
 import { adminApiBaseUrl, baseUploadUrl, secondaryColor } from "../../utils/constants"
 import { queryClient } from "../../utils/queryClient"
 import { showErrorToast } from "../../utils/showErrorToast"
@@ -21,7 +22,7 @@ const key = "brands"
 
 const deleteBrand = (id: string) => {
 
-    return axios.delete(`${adminApiBaseUrl}${key}/${id}`, {
+    return API.delete(`${key}/${id}`, {
         headers: { "Content-Type": "multipart/form-data" },
 
     })
@@ -35,8 +36,12 @@ const Brands = () => {
     const [selectedRowId, setSelectedRowId] = useState<string>("")
     const [page, setPage] = useState<number>(1)
     const [deletePopup, setDeletePopup] = useState(false)
-    const { data, isLoading, isFetching } = useQuery<any>([key, page])
+    const { data, isLoading, isFetching, error } = useQuery<any>([key, page], {
+        onError: (err: any) => {
 
+            showErrorToast(err.response.data.message)
+        }
+    })
 
     const { mutate, isLoading: isDeleteLoading } = useMutation(deleteBrand, {
         onSuccess: () => {
@@ -151,9 +156,12 @@ const Brands = () => {
 
 
                                     <>
-                                        <ReactTable data={data.data} columns={columns} />
                                         {
-                                            data.data.length > 0 ?
+                                            !error &&
+                                            <ReactTable data={data.data} columns={columns} />
+                                        }
+                                        {
+                                            !error && data.data.length > 0 ?
                                                 <TablePagination
                                                     currentPage={(data).current_page}
                                                     lastPage={(data).last_page}

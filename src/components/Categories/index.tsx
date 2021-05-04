@@ -1,4 +1,3 @@
-import axios from "axios"
 import { useMemo, useState } from "react"
 import { Button, Container, Modal, Spinner } from "react-bootstrap"
 import { AiFillDelete, AiFillEdit, AiFillPlusSquare } from "react-icons/ai"
@@ -9,7 +8,8 @@ import useToggle from "../../hooks/useToggle"
 import IsLoading from "../../shared-components/isLoading"
 import TablePagination from "../../shared-components/Pagination"
 import ReactTable from "../../shared-components/ReactTable"
-import { adminApiBaseUrl, baseUploadUrl, secondaryColor } from "../../utils/constants"
+import API from "../../utils/API"
+import { secondaryColor } from "../../utils/constants"
 import { queryClient } from "../../utils/queryClient"
 import { showErrorToast } from "../../utils/showErrorToast"
 import UpdateCreateForm from "./CategoriesCreateUpdateForm"
@@ -21,7 +21,7 @@ const key = "categories"
 
 const deleteBrandModels = (id: string) => {
 
-    return axios.delete(`${adminApiBaseUrl}${key}/${id}`, {
+    return API.delete(`${key}/${id}`, {
         headers: { "Content-Type": "multipart/form-data" },
 
     })
@@ -29,7 +29,7 @@ const deleteBrandModels = (id: string) => {
 
 }
 
-const BrandModels = () => {
+const Categories = () => {
     // const { data: brands } = useQuery("brands")
     const { setStatusCreate, setStatusDefault, status, setStatusEdit } = useToggle()
     const [selectedRowId, setSelectedRowId] = useState<string>("")
@@ -182,4 +182,4 @@ const BrandModels = () => {
     )
 }
 
-export default BrandModels
+export default Categories

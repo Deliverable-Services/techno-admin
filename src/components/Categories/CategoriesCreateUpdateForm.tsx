@@ -8,6 +8,7 @@ import useGetSingleQuery from "../../hooks/useGetSingleQuery"
 import { InputField } from '../../shared-components/InputFeild'
 import IsLoading from "../../shared-components/isLoading"
 import { ICreateUpdateForm } from "../../types/interface"
+import API from "../../utils/API"
 import { adminApiBaseUrl } from "../../utils/constants"
 import { queryClient } from "../../utils/queryClient"
 
@@ -18,13 +19,13 @@ const key = "categories"
 
 const createUpdataCategories = ({ formdata, id }: { formdata: { name: any }, id: string }) => {
     if (!id) {
-        return axios.post(`${adminApiBaseUrl}${key}`, formdata, {
+        return API.post(`${key}`, formdata, {
             headers: { "Content-Type": "application/json" },
 
         })
     }
 
-    return axios.post(`${adminApiBaseUrl}${key}/${id}`, formdata, {
+    return API.post(`${key}/${id}`, formdata, {
         headers: { "Content-Type": "application/json" },
 
     })
@@ -78,6 +79,7 @@ const CategoriesCreateUpdateForm = ({ id = "" }: ICreateUpdateForm) => {
                             {error &&
                                 <Alert variant="danger">{(error as Error).message}</Alert>
                             }
+
                             <div className="form-container py-2">
                                 <InputField
                                     name="name"
@@ -85,6 +87,7 @@ const CategoriesCreateUpdateForm = ({ id = "" }: ICreateUpdateForm) => {
                                     label="Name"
                                     required
                                 />
+
 
                             </div>
                             <Row className="d-flex justify-content-center">

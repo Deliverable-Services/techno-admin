@@ -1,42 +1,41 @@
-import axios from "axios"
 import bsCustomFileInput from "bs-custom-file-input"
 import { Form, Formik } from 'formik'
 import { useEffect } from 'react'
 import { Alert, Button, Col, Row, Spinner } from 'react-bootstrap'
-import { useMutation, useQuery } from "react-query"
+import { useMutation } from "react-query"
 import useGetSingleQuery from "../../hooks/useGetSingleQuery"
 import { InputField } from '../../shared-components/InputFeild'
 import IsLoading from "../../shared-components/isLoading"
 import { ICreateUpdateForm } from "../../types/interface"
-import { adminApiBaseUrl } from "../../utils/constants"
+import API from "../../utils/API"
 import { queryClient } from "../../utils/queryClient"
 
 
-const key = "services"
+const key = "coupons"
 
 
-const createUpdataBrand = ({ formdata, id }: { formdata: any, id: string }) => {
+const createUpdataCoupons = ({ formdata, id }: { formdata: any, id: string }) => {
     if (!id) {
-        return axios.post(`${adminApiBaseUrl}${key}`, formdata, {
+        return API.post(`${key}`, formdata, {
             headers: { "Content-Type": "applicatioin/json" },
 
         })
     }
 
-    return axios.post(`${adminApiBaseUrl}${key}/${id}`, formdata, {
+    return API.post(`${key}/${id}`, formdata, {
         headers: { "Content-Type": "application/json" },
 
     })
 }
 
-const BrandsCreateUpdateForm = ({ id = "" }: ICreateUpdateForm) => {
-    console.log(id)
+const CouponCreateUpdateForm = ({ id = "" }: ICreateUpdateForm) => {
+
 
     useEffect(() => {
         bsCustomFileInput.init()
     }, [])
     const { data, isLoading: dataLoading } = useGetSingleQuery({ id, key })
-    const { mutate, isLoading, error, status } = useMutation(createUpdataBrand, {
+    const { mutate, isLoading, error, status } = useMutation(createUpdataCoupons, {
         onSuccess: () => {
             setTimeout(() =>
                 queryClient.invalidateQueries(key)
@@ -46,7 +45,7 @@ const BrandsCreateUpdateForm = ({ id = "" }: ICreateUpdateForm) => {
 
 
 
-    const apiData = data && (data as any).data;
+    const apiData = data && (data as any);
 
     console.log("apiData", apiData)
 
@@ -62,7 +61,7 @@ const BrandsCreateUpdateForm = ({ id = "" }: ICreateUpdateForm) => {
             <Col className=" box-shadow pb-3 mx-auto">
 
                 <Formik
-                    initialValues={{ title: apiData ? apiData[0].title : "", coupon_code: apiData ? apiData[0].coupon_code : "", description: apiData ? apiData[0].description : "", terms: apiData ? apiData[0].terms : "" }}
+                    initialValues={{ title: apiData ? apiData.title : "", coupon_code: apiData ? apiData.coupon_code : "", description: apiData ? apiData.description : "", terms: apiData ? apiData.terms : "" }}
                     onSubmit={(values) => {
 
                         // console.log("values", values)
@@ -92,12 +91,12 @@ const BrandsCreateUpdateForm = ({ id = "" }: ICreateUpdateForm) => {
                                 }
                                 {
                                     !id &&
-                                    <InputField name="description" placeholder="Description" label="Descrition" as="textarea" />
+                                    <InputField name="description" placeholder="Description" label="Descrition" as="textarea" required />
                                 }
 
                                 {
                                     !id &&
-                                    <InputField name="terms" placeholder="Terms" label="Terms" as="textarea" />
+                                    <InputField name="terms" placeholder="Terms" label="Terms" as="textarea" required />
                                 }
                             </div>
                             <Row className="d-flex justify-content-center">
@@ -117,4 +116,4 @@ const BrandsCreateUpdateForm = ({ id = "" }: ICreateUpdateForm) => {
     )
 }
 
-export default BrandsCreateUpdateForm
+export default CouponCreateUpdateForm

@@ -4,7 +4,6 @@ import { Route, Switch, useHistory, useLocation } from "react-router-dom";
 import { IsDesktopContext } from "./context/IsDesktopContext";
 import useMeQuery from "./hooks/useMeQuery";
 import ErrorToast from "./shared-components/ErrorToast/ErrorToast";
-import { showErrorToast } from "./utils/showErrorToast";
 // ------pages components-------- 
 import Brands from "./components/Brands";
 import BrandModels from "./components/BrandModels";
@@ -20,13 +19,22 @@ import Users from "./components/Users";
 import VerifyOtp from "./components/VerifyOtp";
 import Dashboard from "./components/Dashboard";
 import Orders from "./components/Orders";
+import useTokenStore from "./hooks/useTokenStore";
+import axios from "axios";
+import API from "./utils/API";
+
 
 
 
 const App = () => {
-
-
   const [isDesktop, setIsDesktop] = useState<boolean>(false)
+
+  //adding token to every request
+  const token = useTokenStore(state => state.accessToken);
+
+  if (token)
+    API.defaults.headers.common['Authorization'] = `Bearer ${token}`
+
   useEffect(() => {
 
     updateDimensions();
@@ -81,7 +89,7 @@ const App = () => {
             <PrivateRoute path="/coupons" exact component={Coupons} />
             <PrivateRoute path="/orders" exact component={Orders} />
             <Route path="/login" exact component={LoginPage} />
-            <Route path="/verify-otp/:id" exact component={VerifyOtp} />
+            <Route path="/verify-otp/:id/:otp" exact component={VerifyOtp} />
           </Switch>
           <ErrorToast />
         </Container>

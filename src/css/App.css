@@ -11298,6 +11298,11 @@ body {
   width: 100%;
 }
 
+.form-container.single-col {
+  -ms-grid-columns: 1fr;
+      grid-template-columns: 1fr;
+}
+
 @media (min-width: 800px) {
   .form-container {
     -ms-grid-columns: 1fr 1fr;

@@ -6,8 +6,10 @@ import { useMutation } from 'react-query'
 import { useHistory, useParams } from 'react-router'
 import * as Yup from "yup"
 import useTokenStore from '../hooks/useTokenStore'
+import useUserProfileStore from '../hooks/useUserProfileStore'
 import { InputField } from '../shared-components/InputFeild'
 import Logo from '../shared-components/Logo'
+import API from '../utils/API'
 import { appApiBaseUrl } from '../utils/constants'
 
 interface Props {
@@ -20,31 +22,31 @@ const VerifySchema = Yup.object().shape({
 
 
 const verifyOtp = (formData: FormData) => {
-    return axios.post(`${appApiBaseUrl}auth/verify-otp`, formData, {
+    return API.post(`auth/verify-otp`, formData, {
         headers: { "Content-Type": "multipart/form-data" },
 
     })
 }
 
 const VerifyOtp = (props: Props) => {
-    const setToken = useTokenStore(state => state.setToken)
-    const { mutate, data, isLoading, error } = useMutation(verifyOtp)
-    const params: { id: string } = useParams()
+
+    const params: { id: string, otp: string } = useParams()
     const history = useHistory()
-    useEffect(() => {
-        if (data) {
-            console.log("verify-otp", data)
+    const setToken = useTokenStore(state => state.setToken)
+    const setUser = useUserProfileStore(state => state.setUser)
+
+    const { mutate, data, isLoading, error } = useMutation(verifyOtp, {
+        onSuccess: (data) => {
             setToken(data.data.token)
+            setUser(data.data.user)
             history.push("/")
         }
+    })
 
-
-
-    }, [data])
 
     return (
         <Container fluid className="login-page" >
-            <Formik initialValues={{ otp: "" }} onSubmit={values => {
+            <Formik initialValues={{ otp: params.otp || "" }} onSubmit={values => {
 
                 const formData = new FormData()
                 formData.append("phone", params.id)
@@ -62,7 +64,7 @@ const VerifyOtp = (props: Props) => {
 
                         return (
                             <Form >
-                                <div className="form-container px-3 py-5 rounded">
+                                <div className="d-flex flex-column align-items-center box-shadow px-3 py-5 rounded">
 
                                     <div className="logo-container">
                                         <Logo />

@@ -52,8 +52,13 @@ body {
     gap: .5rem;
     width: 100%;
 
+    &.single-col {
+    grid-template-columns: 1fr;
+}
+
     @include responsive($desktop-breakpoint) {
         grid-template-columns: 1fr 1fr;
+
         // .form-control {
 
         // }

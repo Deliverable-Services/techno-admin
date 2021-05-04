@@ -1,6 +1,5 @@
-import axios from 'axios'
 import { QueryFunction, useQuery } from 'react-query'
-import { adminApiBaseUrl } from '../utils/constants'
+import API from '../utils/API'
 
 
 interface IUseGetSingle {
@@ -8,10 +7,8 @@ interface IUseGetSingle {
     id: string
 }
 const getSingle: QueryFunction = async ({ queryKey }) => {
-    if (!queryKey[1])
-        return
 
-    const r = await axios.get(`${adminApiBaseUrl}${queryKey[0]}/${queryKey[1]}`)
+    const r = await API.get(`${queryKey[0]}`)
 
 
     return r.data
@@ -20,9 +17,7 @@ const getSingle: QueryFunction = async ({ queryKey }) => {
 
 const useGetSingleQuery = ({ id, key }: IUseGetSingle) => {
 
-    const allData = useQuery([key, id], getSingle, {
-
-    })
+    const allData = useQuery(`${key}/${id}`, getSingle)
 
     return allData
 }

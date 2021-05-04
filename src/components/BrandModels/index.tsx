@@ -9,6 +9,7 @@ import useToggle from "../../hooks/useToggle"
 import IsLoading from "../../shared-components/isLoading"
 import TablePagination from "../../shared-components/Pagination"
 import ReactTable from "../../shared-components/ReactTable"
+import API from "../../utils/API"
 import { adminApiBaseUrl, baseUploadUrl, secondaryColor } from "../../utils/constants"
 import { queryClient } from "../../utils/queryClient"
 import { showErrorToast } from "../../utils/showErrorToast"
@@ -22,7 +23,7 @@ const key = "brand-models"
 
 const deleteBrandModels = (id: string) => {
 
-    return axios.delete(`${adminApiBaseUrl}${key}/${id}`, {
+    return API.delete(`${key}/${id}`, {
         headers: { "Content-Type": "multipart/form-data" },
 
     })
