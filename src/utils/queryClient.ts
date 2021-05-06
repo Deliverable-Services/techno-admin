@@ -26,8 +26,8 @@ export const queryClient = new QueryClient({
             queryFn: defaultQueryFn,
             onError: (error: any) => {
 
-
-                showErrorToast((error as Error).message || "unauthorized")
+                if (error.response.status !== 401)
+                    showErrorToast((error as Error).message || "unauthorized")
 
             },
             keepPreviousData: true

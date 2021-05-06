@@ -24,7 +24,7 @@ body {
     background-color: $white-color;
 
     @include responsive($desktop-breakpoint) {
-        grid-template-columns: .25fr 1fr;
+        grid-template-columns: $navWidth 1fr;
 
         .main-layout {
             grid-column: 2/3;
@@ -53,8 +53,8 @@ body {
     width: 100%;
 
     &.single-col {
-    grid-template-columns: 1fr;
-}
+        grid-template-columns: 1fr;
+    }
 
     @include responsive($desktop-breakpoint) {
         grid-template-columns: 1fr 1fr;

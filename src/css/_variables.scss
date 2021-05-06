@@ -4,13 +4,12 @@ $light-color:rgb(207, 207, 207);
 $white-color:rgb(255, 255, 255);
 $dark-color:rgb(0, 0, 0);
 $light-dark:#6F6F6F;
+$navWidth:18rem;
 // break points
 $desktop-breakpoint:800px;
 $large-screen-breakpoint:1280px;
 
 //bootstarp changes
-$theme-colors: (
-    "primary": #214D70,
+$theme-colors: ("primary": #214D70,
     "secondary": #ECB054,
-    "success":rgb(49, 214, 123)
-);
+    "success":rgb(49, 214, 123));

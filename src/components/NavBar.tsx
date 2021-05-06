@@ -65,6 +65,11 @@ const mainLinks: Array<INavLink> = [
         path: "/subscriptions",
         icon: <FaAddressCard />
     },
+    {
+        title: "Advertisements",
+        path: "/advertisements",
+        icon: <FaAddressCard />
+    },
 
 ]
 

@@ -10865,9 +10865,8 @@ nav {
 
 @media (min-width: 800px) {
   nav {
-    position: -webkit-sticky;
-    position: sticky;
-    width: 100%;
+    position: fixed;
+    min-width: 18rem;
     -webkit-transform: translateX(0);
             transform: translateX(0);
     border-top-right-radius: 10px;
@@ -11258,8 +11257,8 @@ body {
 
 @media (min-width: 800px) {
   .App {
-    -ms-grid-columns: .25fr 1fr;
-        grid-template-columns: .25fr 1fr;
+    -ms-grid-columns: 18rem 1fr;
+        grid-template-columns: 18rem 1fr;
   }
   .App .main-layout {
     -ms-grid-column: 2;

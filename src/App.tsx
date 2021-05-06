@@ -1,9 +1,10 @@
 import { useEffect, useState } from "react";
-import { Container, Spinner } from "react-bootstrap";
-import { Route, Switch, useHistory, useLocation } from "react-router-dom";
+import { Container } from "react-bootstrap";
+import { Route, Switch, useLocation } from "react-router-dom";
 import { IsDesktopContext } from "./context/IsDesktopContext";
-import useMeQuery from "./hooks/useMeQuery";
 import ErrorToast from "./shared-components/ErrorToast/ErrorToast";
+import useTokenStore from "./hooks/useTokenStore";
+import API from "./utils/API";
 // ------pages components-------- 
 import Brands from "./components/Brands";
 import BrandModels from "./components/BrandModels";
@@ -19,10 +20,10 @@ import Users from "./components/Users";
 import VerifyOtp from "./components/VerifyOtp";
 import Dashboard from "./components/Dashboard";
 import Orders from "./components/Orders";
-import useTokenStore from "./hooks/useTokenStore";
-import axios from "axios";
-import API from "./utils/API";
-
+import Advertisements from './components/Advertisements';
+import { QueryFunction } from "react-query";
+import { queryClient } from "./utils/queryClient";
+import { PrivateRoute } from "./shared-components/PrivateRoute";
 
 
 
@@ -72,6 +73,7 @@ const App = () => {
         {
           showNavTopBar() ?
             <NavBar isNavOpen={isNavOpen} setIsNavOpen={setIsNavOpen} /> : ""}
+        <div></div>
         <Container fluid className="main-layout p-0">
           {
             showNavTopBar() ?
@@ -88,6 +90,7 @@ const App = () => {
             <PrivateRoute path="/plans" exact component={Plans} />
             <PrivateRoute path="/coupons" exact component={Coupons} />
             <PrivateRoute path="/orders" exact component={Orders} />
+            <PrivateRoute path="/advertisements" exact component={Advertisements} />
             <Route path="/login" exact component={LoginPage} />
             <Route path="/verify-otp/:id/:otp" exact component={VerifyOtp} />
           </Switch>
@@ -98,30 +101,6 @@ const App = () => {
   );
 }
 
-const PrivateRoute = ({ component: Component, ...rest }: any) => {
-  const { data, isFetching, isLoading, error } = useMeQuery()
-  const history = useHistory()
 
-
-  useEffect(() => {
-
-    if (!isLoading && !isFetching) {
-      if (!data)
-        history.push("/login")
-    }
-
-  }, [data, history, isLoading, isFetching])
-
-  if (isLoading || isFetching) {
-    return <Container fluid className="d-flex justify-content-center align-items-center mt-4"><Spinner animation="border" /></Container>
-  }
-  return (
-    <Route {...rest} render={(props) => (
-
-      <Component {...props} />
-
-    )} />
-  )
-}
 
 export default App;
