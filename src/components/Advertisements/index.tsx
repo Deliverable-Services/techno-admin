@@ -2,20 +2,44 @@ import React, { useState } from 'react'
 import { Container, Button, Row, Col, Card, Modal, Spinner } from 'react-bootstrap'
 import { AiFillDelete, AiFillEdit, AiFillPlusSquare } from 'react-icons/ai'
 import { BiArrowFromRight } from 'react-icons/bi'
+import { useMutation } from 'react-query'
 import useToggle from '../../hooks/useToggle'
+import API from '../../utils/API'
 import { secondaryColor } from '../../utils/constants'
+import { queryClient } from '../../utils/queryClient'
+import { showErrorToast } from '../../utils/showErrorToast'
 import UpdateCreateForm from './AdvertisementUpdateCreateForm';
 import LatestAd from './LatestAd'
 
-interface Props {
+const deleteBanner = (id: string) => {
+
+    return API.delete(`banners/${id}`, {
+        headers: { "Content-Type": "multipart/form-data" },
+
+    })
+
 
 }
-
-const Advertisements = (props: Props) => {
+const Advertisements = () => {
 
     const { setStatusCreate, setStatusDefault, status, setStatusEdit } = useToggle()
     const [selectedRowId, setSelectedRowId] = useState<string>("")
     const [deletePopup, setDeletePopup] = useState(false)
+
+    const { mutate, isLoading: isDeleteLoading } = useMutation(deleteBanner, {
+        onSuccess: () => {
+
+            queryClient.invalidateQueries("banners/list")
+            setDeletePopup(false)
+        },
+        onError: () => {
+
+            showErrorToast("Something went wrong deleteing the records")
+        }
+    })
+
+
+
     return (
         <>
             <Container fluid className="component-wrapper px-0 py-2">
@@ -77,12 +101,12 @@ const Advertisements = (props: Props) => {
           </Button>
                     <Button variant="danger" onClick={() => {
 
-                        // mutate(selectedRowId)
+                        mutate(selectedRowId)
                     }}>
                         {
-                            // isDeleteLoading ?
-                            // <Spinner animation="border" size="sm" /> :
-                            "Delete"
+                            isDeleteLoading ?
+                                <Spinner animation="border" size="sm" /> :
+                                "Delete"
                         }
                     </Button>
                 </Modal.Footer>

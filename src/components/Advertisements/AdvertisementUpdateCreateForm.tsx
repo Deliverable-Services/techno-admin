@@ -43,7 +43,7 @@ const AdvertisementCreateUpdateForm = ({ id = "" }: ICreateUpdateForm) => {
     const { mutate, isLoading, error, status } = useMutation(createUpdataAdvertisement, {
         onSuccess: () => {
             setTimeout(() =>
-                queryClient.invalidateQueries("banner/list")
+                queryClient.invalidateQueries("banners/list")
                 , 500)
         }
     })

@@ -1,11 +1,13 @@
 import React, { useState } from 'react'
 import { Container, Row, Col, Card, Dropdown } from 'react-bootstrap'
 import { AiFillEdit, AiFillDelete } from 'react-icons/ai'
+import { BiSad } from 'react-icons/bi';
 import { QueryFunction, useQuery } from 'react-query';
 import IsLoading from '../../shared-components/isLoading';
 import API from '../../utils/API';
-import { baseUploadUrl, secondaryColor } from '../../utils/constants'
+import { baseUploadUrl, primaryColor, secondaryColor } from '../../utils/constants'
 import { types } from './AdvertisementTypes';
+import moment from 'moment';
 
 interface Props {
     setSelectedRowId: React.Dispatch<React.SetStateAction<string>>;
@@ -64,32 +66,44 @@ const LatestAd: React.FC<Props> = ({ setDeletePopup, setStatusEdit, setSelectedR
 
                 <Row >
                     {
-                        data.data.map((ad: any) => (
+                        data.data.length > 0 ?
+                            data.data.map((ad: any) => (
 
-                            <Col md={6} className="mb-3">
-                                <Card >
-                                    <Card.Img variant="top" src={`${baseUploadUrl}banners/${ad.image}`} style={{ height: "12rem", objectFit: "cover" }} className="advertisement-image" />
-                                    <Card.Body className="d-flex align-items-center justify-content-between">
-                                        <Card.Title className="m-0">{ad.name}</Card.Title>
-                                        <div className="advertisements-actions ">
+                                <Col md={6} className="mb-3">
+                                    <Card >
+                                        <Card.Img variant="top" src={`${baseUploadUrl}banners/${ad.image}`} style={{ height: "12rem", }} className="advertisement-image" />
+                                        <Card.Body className="d-flex align-items-start justify-content-between">
+                                            <div>
+                                                <Card.Title className="m-0">{ad.name}</Card.Title>
+                                                <span className="text-muted">From:{moment(ad.valid_from).format("DD-MM-YYYY")}</span><br />
+                                                <span className="text-muted">To:{moment(ad.valid_to).format("DD-MM-YYYY")}</span>
+                                            </div>
+                                            <div className="advertisements-actions ">
 
-                                            <button onClick={() => {
-                                                setSelectedRowId(ad.id)
-                                                setStatusEdit()
-                                            }}>
-                                                <AiFillEdit color={secondaryColor} size={24} />
-                                            </button>
-                                            <button className="ml-2" onClick={() => {
-                                                setSelectedRowId(ad.id)
-                                                setDeletePopup(true)
-                                            }}>
-                                                <AiFillDelete color="red" size={24} />
-                                            </button>
-                                        </div>
-                                    </Card.Body>
-                                </Card>
-                            </Col>
-                        ))
+                                                <button onClick={() => {
+                                                    setSelectedRowId(ad.id)
+                                                    setStatusEdit()
+                                                }}>
+                                                    <AiFillEdit color={secondaryColor} size={24} />
+                                                </button>
+                                                <button className="ml-2" onClick={() => {
+                                                    setSelectedRowId(ad.id)
+                                                    setDeletePopup(true)
+                                                }}>
+                                                    <AiFillDelete color="red" size={24} />
+                                                </button>
+                                            </div>
+                                        </Card.Body>
+                                    </Card>
+                                </Col>
+                            )) :
+                            <Container fluid className="d-flex justify-content-center display-3">
+                                <div className="d-flex flex-column align-items-center">
+
+                                    <BiSad color={primaryColor} />
+                                    <span className="text-primary display-3">No data found</span>
+                                </div>
+                            </Container>
                     }
                 </Row>
             </Container>
