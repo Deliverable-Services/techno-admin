@@ -42,14 +42,18 @@ const AdvertisementCreateUpdateForm = ({ id = "" }: ICreateUpdateForm) => {
     const { data, isLoading: dataLoading } = useGetSingleQuery({ id, key })
     const { mutate, isLoading, error, status } = useMutation(createUpdataAdvertisement, {
         onSuccess: () => {
-            setTimeout(() =>
+            setTimeout(() => {
+
                 queryClient.invalidateQueries("banners/list")
+                if (id)
+                    queryClient.invalidateQueries(`${key}/${id}`)
+            }
                 , 500)
         }
     })
 
 
-    console.log(data)
+
 
     const apiData = data && (data as any);
 
@@ -67,13 +71,13 @@ const AdvertisementCreateUpdateForm = ({ id = "" }: ICreateUpdateForm) => {
             <Col className=" box-shadow mx-auto pb-3">
 
                 <Formik
-                    initialValues={{ name: apiData ? apiData.name : "", deeplink: apiData ? apiData.url : "", image: "", type: "", valid_to: "", valid_from: "" }}
+                    initialValues={{ name: apiData ? apiData.name : "", deeplink: apiData ? apiData.deeplink : "", image: "", type: "", valid_to: "", valid_from: "" }}
                     onSubmit={(values) => {
                         const formdata = new FormData()
                         formdata.append("name", values.name)
+                        formdata.append("deeplink", values.deeplink)
                         if (!id) {
                             formdata.append("image", values.image)
-                            formdata.append("deeplink", values.deeplink)
                             formdata.append("type", values.type)
                             formdata.append("valid_to", values.valid_to)
                             formdata.append("valid_from", values.valid_from)
@@ -100,10 +104,8 @@ const AdvertisementCreateUpdateForm = ({ id = "" }: ICreateUpdateForm) => {
                                     required
                                 />
 
-                                {
-                                    !id &&
-                                    <InputField name="deeplink" placeholder="Deep Link" label="Deep Link" required />
-                                }
+                                <InputField name="deeplink" placeholder="Deep Link" label="Deep Link" required />
+
                                 {
                                     !id &&
                                     <DatePicker name="valid_from" setFieldValue={setFieldValue} label="Valid From" inputProps={{ placeholder: "Valid from", required: true }} />

@@ -1,6 +1,7 @@
 import axios, { AxiosError } from 'axios'
-import { useState } from 'react'
 import { QueryFunction, useQuery } from 'react-query'
+import { useHistory } from "react-router-dom"
+import API from '../utils/API'
 import { appApiBaseUrl } from '../utils/constants'
 import { queryClient } from '../utils/queryClient'
 import { showErrorToast } from '../utils/showErrorToast'
@@ -23,7 +24,10 @@ const getProfile: QueryFunction = async ({ queryKey }) => {
 
 
 const useMeQuery = () => {
+    const history = useHistory()
     const token = useTokenStore(state => state.accessToken)
+    const setToken = useTokenStore(state => state.setToken)
+    const removeToken = useTokenStore(state => state.removeToken)
     const setUser = useUserProfileStore(state => state.setUser)
 
 
@@ -31,6 +35,31 @@ const useMeQuery = () => {
         retry: false,
         onSuccess: (data: any) => {
             setUser(data)
+        },
+        onError: async (err: AxiosError | Error) => {
+            if (axios.isAxiosError(err)) {
+                const { response } = err;
+
+                if (response?.status === 401) {
+                    try {
+                        const res = await API.post('/auth/refresh');
+                        const data = await res.data;
+                        if (data) {
+                            setToken(data.access_token)
+                            queryClient.invalidateQueries("profile")
+                        }
+                    } catch (error) {
+                        history.push('./login')
+                        showErrorToast(error.message)
+                    }
+
+                } else {
+                    history.push('/login')
+                }
+
+            } else {
+                history.push("./login")
+            }
         }
     })
 

@@ -9,7 +9,7 @@ import { secondaryColor } from '../../utils/constants'
 import { queryClient } from '../../utils/queryClient'
 import { showErrorToast } from '../../utils/showErrorToast'
 import UpdateCreateForm from './AdvertisementUpdateCreateForm';
-import LatestAd from './LatestAd'
+import AdCardsContainer from './AdCardsContainer'
 
 const deleteBanner = (id: string) => {
 
@@ -84,7 +84,7 @@ const Advertisements = () => {
                     {
                         (status === "default") &&
 
-                        <LatestAd setDeletePopup={setDeletePopup} setSelectedRowId={setSelectedRowId} setStatusEdit={setStatusEdit} />
+                        <AdCardsContainer setDeletePopup={setDeletePopup} setSelectedRowId={setSelectedRowId} setStatusEdit={setStatusEdit} />
 
                     }
 

@@ -8,6 +8,7 @@ import API from '../../utils/API';
 import { baseUploadUrl, primaryColor, secondaryColor } from '../../utils/constants'
 import { types } from './AdvertisementTypes';
 import moment from 'moment';
+import useCurrentAdTypeSelectedStore from './useCurrentAdTypeSelectedStore';
 
 interface Props {
     setSelectedRowId: React.Dispatch<React.SetStateAction<string>>;
@@ -24,12 +25,12 @@ const getBanners: QueryFunction = async ({ queryKey }) => {
 }
 
 const LatestAd: React.FC<Props> = ({ setDeletePopup, setStatusEdit, setSelectedRowId }) => {
-
-    const [selectedType, setSelectedType] = useState(types[0])
+    const selectedType = useCurrentAdTypeSelectedStore(state => state.type)
+    const setSelectedType = useCurrentAdTypeSelectedStore(state => state.setCurrentType)
+    // const [selectedType, setSelectedType] = useState(types[0])
 
     const { data, isLoading, isFetching } = useQuery<any>([key, selectedType.id], getBanners)
 
-    console.log(data)
 
     if (isLoading || isFetching)
         return <IsLoading />
@@ -74,9 +75,8 @@ const LatestAd: React.FC<Props> = ({ setDeletePopup, setStatusEdit, setSelectedR
                                         <Card.Img variant="top" src={`${baseUploadUrl}banners/${ad.image}`} style={{ height: "12rem", }} className="advertisement-image" />
                                         <Card.Body className="d-flex align-items-start justify-content-between">
                                             <div>
-                                                <Card.Title className="m-0">{ad.name}</Card.Title>
-                                                <span className="text-muted">From:{moment(ad.valid_from).format("DD-MM-YYYY")}</span><br />
-                                                <span className="text-muted">To:{moment(ad.valid_to).format("DD-MM-YYYY")}</span>
+                                                <Card.Title className="m-0 text-primary">{ad.name}</Card.Title>
+                                                <span className="text-muted">({moment(ad.valid_from).format("DD/MM/YY")}-{moment(ad.valid_to).format("DD/MM/YY")})</span>
                                             </div>
                                             <div className="advertisements-actions ">
 

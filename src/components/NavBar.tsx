@@ -6,7 +6,7 @@ import { ImCross } from "react-icons/im"
 import { SiBrandfolder } from "react-icons/si"
 import { IoLogoModelS } from "react-icons/io"
 import { FaAddressCard, FaBoxes, FaDiceFour, FaQuestionCircle, FaRegLightbulb, FaUsers } from "react-icons/fa"
-import { RiCoupon3Line, RiDashboardFill, RiServiceFill } from "react-icons/ri"
+import { RiAdvertisementFill, RiCoupon3Line, RiDashboardFill, RiServiceFill } from "react-icons/ri"
 import { useContext } from "react"
 import { IsDesktopContext } from "../context/IsDesktopContext"
 
@@ -68,7 +68,7 @@ const mainLinks: Array<INavLink> = [
     {
         title: "Advertisements",
         path: "/advertisements",
-        icon: <FaAddressCard />
+        icon: <RiAdvertisementFill />
     },
 
 ]
