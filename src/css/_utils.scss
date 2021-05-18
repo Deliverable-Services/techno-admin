@@ -28,13 +28,17 @@ h3,
 h4,
 h5,
 button {
-    font-family: 'Montserrat', sans-serif;
+    font-family: 'Roboto', sans-serif;
     ;
 }
 
 p,
 td {
-    font-family: 'Nunito', sans-serif;
+    font-family: 'Roboto', sans-serif;
+}
+
+td {
+    text-transform: uppercase;
 }
 
 .text-primary {
@@ -56,8 +60,12 @@ td {
     width: 100%;
     height: 10vh;
     max-height: 60px;
-    box-shadow: 0 4px 24px rgba($color: #000, $alpha: .24);
+    // box-shadow: 0 4px 24px rgba($color: #000, $alpha: .24);
     background-color: $white-color;
+
+    // @include responsive($desktop-breakpoint) {
+    //     position: relative;
+    // }
 
     .profile {
         height: 2rem;

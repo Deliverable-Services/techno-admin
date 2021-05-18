@@ -23,8 +23,7 @@ const TopBar = ({ isNavOpen, setIsNavOpen }: INavBar) => {
   return (
     <Container
       fluid
-      className="top-bar d-flex align-items-center justify-content-between w-100"
-    >
+      className="top-bar d-flex align-items-center justify-content-between">
       {!isDesktop ? (
         <div className="menu-hamburger">
           {!isNavOpen ? (
@@ -36,9 +35,11 @@ const TopBar = ({ isNavOpen, setIsNavOpen }: INavBar) => {
           ) : null}
         </div>
       ) : null}
+      {
+        !isDesktop &&
+        <Logo />
 
-      <Logo />
-
+      }
       <div
         className={
           isDesktop
@@ -78,8 +79,9 @@ const TopBar = ({ isNavOpen, setIsNavOpen }: INavBar) => {
           </Dropdown.Menu>
         </Dropdown>
       </div>
-    </Container>
+    </Container >
   );
 };
 
 export default TopBar;
+

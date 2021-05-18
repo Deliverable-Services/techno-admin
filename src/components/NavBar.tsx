@@ -94,13 +94,12 @@ const NavBar = ({ isNavOpen, setIsNavOpen }: INavBar) => {
   return (
     <>
       <nav className={isNavOpen ? "active" : ""}>
-        {!isDesktop ? (
-          <div className="menu-hamburger">
-            <ImCross size={20} onClick={closeNavBar} color="white" />
-          </div>
+        {isDesktop ? (
+          <Logo />
         ) : null}
-        <div className="all-links mt-5">
-          <ul className="mt-5 pt-5">
+
+        <div className="all-links">
+          <ul className="pt-4">
             <Navlink
               title="Dashboard"
               path="/"

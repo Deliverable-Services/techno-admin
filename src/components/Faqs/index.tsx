@@ -1,23 +1,59 @@
 import { useMemo, useState } from "react"
-import { Button, Container, Modal } from "react-bootstrap"
+import { Button, Container, Modal, Spinner } from "react-bootstrap"
 import { AiFillDelete, AiFillEdit, AiFillPlusSquare } from "react-icons/ai"
 import { BiArrowFromRight } from "react-icons/bi"
+import { useMutation, useQuery } from "react-query"
 import { Cell } from "react-table"
 import useToggle from "../../hooks/useToggle"
+import IsLoading from "../../shared-components/isLoading"
+import TablePagination from "../../shared-components/Pagination"
 import ReactTable from "../../shared-components/ReactTable"
+import API from "../../utils/API"
 import { secondaryColor } from "../../utils/constants"
-import { mockData } from "../../utils/mockData"
-import FaqsCreateUpdateForm from "./FaqsCreateUpdateForm"
+import { queryClient } from "../../utils/queryClient"
+import { showErrorToast } from "../../utils/showErrorToast"
+import UpdateCreateForm from "./FaqsCreateUpdateForm"
 
-const Brands = () => {
+
+const key = "faqs"
+
+
+
+const deleteFaq = (id: string) => {
+
+    return API.delete(`${key}/${id}`, {
+        headers: { "Content-Type": "multipart/form-data" },
+
+    })
+
+
+}
+
+const Faqs = () => {
+
     const { setStatusCreate, setStatusDefault, status, setStatusEdit } = useToggle()
+    const [selectedRowId, setSelectedRowId] = useState<string>("")
+    const [page, setPage] = useState<number>(1)
     const [deletePopup, setDeletePopup] = useState(false)
-    const data: any = useMemo(
-        () => [
-            ...mockData
-        ],
-        []
-    )
+    const { data, isLoading, isFetching, error } = useQuery<any>([key, page], {
+        onError: (err: any) => {
+
+            showErrorToast(err.response.data.message)
+        }
+    })
+
+    const { mutate, isLoading: isDeleteLoading } = useMutation(deleteFaq, {
+        onSuccess: () => {
+
+            queryClient.invalidateQueries(key)
+            setDeletePopup(false)
+        },
+        onError: () => {
+
+            showErrorToast("Something went wrong deleteing the records")
+        }
+    })
+
     const columns = useMemo(
         () => [
             {
@@ -25,50 +61,59 @@ const Brands = () => {
                 accessor: 'id',  //accessor is the "key" in the data
             },
             {
-                Header: 'Image',
-                accessor: 'imageScr',
+                Header: 'Title',
+                accessor: 'title', //accessor is the "key" in the data
+            },
+            {
+                Header: 'Description',
+                accessor: 'description'
+            },
+            {
+                Header: 'Is Active?',
+                accessor: 'is_active',
                 Cell: (data: Cell) =>
                     <div className="table-image">
-                        <img src={data.row.values.imageScr} alt="name" />
+                        <p>{data.row.values.is_active == "1" ? "Yes" : "No"}</p>
                     </div>
 
 
             },
-            {
-                Header: 'Name',
-                accessor: 'name',
-            },
-            {
-                Header: 'User',
-                accessor: 'created_by',
-            },
+
             {
                 Header: 'Actions',
-                Cell: () => (
-                    <div className="d-flex">
-                        <button onClick={() => {
-                            setStatusEdit()
-                        }}>
-                            <AiFillEdit color={secondaryColor} size={24} />
-                        </button>
-                        <button className="ml-2" onClick={() => {
+                Cell: (data: Cell) => {
 
-                            setDeletePopup(true)
-                        }}>
-                            <AiFillDelete color="red" size={24} />
-                        </button>
-                    </div>
-                )
+                    return (
+                        <div className="d-flex">
+                            <button onClick={() => {
+                                setSelectedRowId(data.row.values.id)
+                                setStatusEdit()
+                            }}>
+                                <AiFillEdit color={secondaryColor} size={24} />
+                            </button>
+                            <button className="ml-2" onClick={() => {
+                                setSelectedRowId(data.row.values.id)
+                                setDeletePopup(true)
+                            }}>
+                                <AiFillDelete color="red" size={24} />
+                            </button>
+                        </div>
+                    )
+                }
             }
         ],
-        [setStatusEdit]
+        []
     )
+
+
+
+
 
     return (
         <>
             <Container fluid className="component-wrapper px-0 py-2">
-                <Container className="d-flex justify-content-between py-2">
-                    <h2 className="text-primary font-weight-bold">Faqs</h2>
+                <Container fluid className="d-flex justify-content-between py-2">
+                    <h2 className="text-primary font-weight-bold">FAQs</h2>
                     {
                         status !== "default" ?
                             <Button variant="primary" onClick={setStatusDefault}  >
@@ -91,20 +136,44 @@ const Brands = () => {
                     {
                         status === "creating" &&
                         <Container fluid className="mt-2 py-4">
-                            <FaqsCreateUpdateForm />
+                            <UpdateCreateForm />
                         </Container>
                     }
 
                     {
                         status === "editing" &&
                         <Container fluid className="mt-2 py-4">
-                            <FaqsCreateUpdateForm title="test title" description="test description" />
+                            <UpdateCreateForm id={selectedRowId} />
                         </Container>
                     }
 
                     {
-                        status === "default" &&
-                        <ReactTable data={data} columns={columns} />
+                        (status === "default") &&
+                        <>
+                            {
+                                (isLoading || isFetching) ?
+                                    <IsLoading /> :
+
+
+                                    <>
+                                        {
+                                            !error &&
+                                            <ReactTable data={data.data} columns={columns} />
+                                        }
+                                        {
+                                            !error && data.data.length > 0 ?
+                                                <TablePagination
+                                                    currentPage={(data).current_page}
+                                                    lastPage={(data).last_page}
+                                                    setPage={setPage}
+                                                    hasNextPage={!!(data).next_page_url}
+                                                    hasPrevPage={!!(data).prev_page_url}
+                                                />
+                                                : null
+                                        }  </>
+                            }
+                        </>
+
                     }
 
                 </Container>
@@ -117,14 +186,21 @@ const Brands = () => {
                 <Modal.Footer>
                     <Button variant="bg-light" onClick={() => setDeletePopup(false)}>
                         Close
-          </Button>
-                    <Button variant="danger" onClick={() => setDeletePopup(false)}>
-                        Delete
-          </Button>
+                    </Button>
+                    <Button variant="danger" onClick={() => {
+
+                        mutate(selectedRowId)
+                    }}>
+                        {
+                            isDeleteLoading ?
+                                <Spinner animation="border" size="sm" /> :
+                                "Delete"
+                        }
+                    </Button>
                 </Modal.Footer>
             </Modal>
         </>
     )
 }
 
-export default Brands
+export default Faqs

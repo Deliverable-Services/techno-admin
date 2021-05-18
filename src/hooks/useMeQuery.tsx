@@ -37,29 +37,8 @@ const useMeQuery = () => {
             setUser(data)
         },
         onError: async (err: AxiosError | Error) => {
-            if (axios.isAxiosError(err)) {
-                const { response } = err;
+            history.push('/login')
 
-                if (response?.status === 401) {
-                    try {
-                        const res = await API.post('/auth/refresh');
-                        const data = await res.data;
-                        if (data) {
-                            setToken(data.access_token)
-                            queryClient.invalidateQueries("profile")
-                        }
-                    } catch (error) {
-                        history.push('./login')
-                        showErrorToast(error.message)
-                    }
-
-                } else {
-                    history.push('/login')
-                }
-
-            } else {
-                history.push("./login")
-            }
         }
     })
 

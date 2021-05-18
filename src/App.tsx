@@ -64,12 +64,12 @@ const App = () => {
           ""
         )}
         <div></div>
+        {showNavTopBar() ? (
+          <TopBar isNavOpen={isNavOpen} setIsNavOpen={setIsNavOpen} />
+        ) : (
+          ""
+        )}
         <Container fluid className="main-layout">
-          {showNavTopBar() ? (
-            <TopBar isNavOpen={isNavOpen} setIsNavOpen={setIsNavOpen} />
-          ) : (
-            ""
-          )}
 
           <Switch>
             <PrivateRoute path="/" exact component={Dashboard} />

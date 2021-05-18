@@ -19,10 +19,10 @@ nav {
     transform: translateX(0);
     border-top-right-radius: 10px;
     border-bottom-right-radius: 10px;
-    box-shadow: 4px 0 24px rgba($color: #000000, $alpha: 0.24);
     background-color: transparent;
+
     .logo-wrapper {
-      width: 100%;
+      width: auto;
       padding: 0 1rem;
     }
   }
@@ -39,27 +39,37 @@ nav {
 
   p {
     color: $secondary-color;
-    opacity: 0.6;
-    letter-spacing: 0.2rem;
-    font-size: 1.2rem;
+    letter-spacing: 0.5px;
+    font-size: 0.7rem;
     padding: 0 1rem;
+    text-transform: uppercase;
+    font-weight: 700;
   }
 
   .navLink {
     // background-color: red;
     width: 100%;
-    color: $light-dark;
+    // color: $light-dark;
+    color: #555;
     // letter-spacing: 2px;
     transition: all 0.3s ease;
-    font-size: 1.2rem;
-    padding: 0 1rem;
-    letter-spacing: 0.2rem;
+    font-size: 1rem;
+    padding: 3px 20px;
+    letter-spacing: 0.2px;
+
+    svg {
+      margin-right: 10px;
+      height: 20px;
+      width: 20px;
+    }
 
     &.active,
     &:hover {
       color: $primary-color;
       font-weight: 600;
-      border-left: 4px solid $secondary-color;
+      border-left: 4px solid $primary-color;
+      -webkit-transition: all 0.3s ease;
+      transition: all 0.3s ease;
     }
   }
 }

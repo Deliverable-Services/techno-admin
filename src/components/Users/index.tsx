@@ -115,7 +115,7 @@ const Users = () => {
         <>
             <Container fluid className="component-wrapper px-0 py-2">
                 <Container fluid className="d-flex justify-content-between py-2">
-                    <h2 className="text-primary font-weight-bold">Categories</h2>
+                    <h2 className="text-primary font-weight-bold">Users</h2>
                     {
                         status !== "default" ?
                             <Button variant="primary" onClick={setStatusDefault}  >
@@ -185,7 +185,7 @@ const Users = () => {
                 <Modal.Footer>
                     <Button variant="bg-light" onClick={() => setDeletePopup(false)}>
                         Close
-          </Button>
+                    </Button>
                     <Button variant="danger" onClick={() => {
 
                         mutate(selectedRowId)
