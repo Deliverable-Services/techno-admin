@@ -19,6 +19,7 @@ const key = "bookings"
 
 
 
+
 const deleteFaq = (id: string) => {
 
     return API.delete(`${key}/${id}`, {
@@ -29,7 +30,7 @@ const deleteFaq = (id: string) => {
 
 }
 
-const Faqs = () => {
+const Orders = () => {
 
     const { setStatusCreate, setStatusDefault, status, setStatusEdit } = useToggle()
     const [selectedRowId, setSelectedRowId] = useState<string>("")
@@ -54,6 +55,19 @@ const Faqs = () => {
         }
     })
 
+    const Status = ({ status }: { status: string }) => {
+        const setColor = () => {
+            if (status === "cancelled" || status === "error_payment") return "red";
+
+            if (status === "pending" || status === "pending_payment") return "orange";
+
+            return "green";
+        }
+        return (
+            <p style={{ color: setColor() }}>{status}</p>
+        )
+    }
+
     const columns = useMemo(
         () => [
             {
@@ -71,10 +85,7 @@ const Faqs = () => {
             {
                 Header: 'Order Status',
                 accessor: 'status',
-                // Cell: (data: Cell) =>
-                //     <div >
-                //         <p>{data.row.values.status}</p>
-                //     </div>
+                Cell: (data: Cell) => <Status status={data.row.values.status} />
 
 
             },
@@ -206,4 +217,4 @@ const Faqs = () => {
     )
 }
 
-export default Faqs
+export default Orders
