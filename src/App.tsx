@@ -1,30 +1,29 @@
 import { useEffect, useState } from "react";
 import { Container } from "react-bootstrap";
 import { Route, Switch, useLocation } from "react-router-dom";
-import { IsDesktopContext } from "./context/IsDesktopContext";
-import ErrorToast from "./shared-components/ErrorToast/ErrorToast";
-import useTokenStore from "./hooks/useTokenStore";
-import API from "./utils/API";
+import Advertisements from "./components/Advertisements";
+import BrandModels from "./components/BrandModels";
 // ------pages components--------
 import Brands from "./components/Brands";
-import BrandModels from "./components/BrandModels";
 import Categories from "./components/Categories";
 import Coupons from "./components/Coupons";
+import Dashboard from "./components/Dashboard";
 import Faqs from "./components/Faqs";
 import LoginPage from "./components/LoginPage";
 import NavBar from "./components/NavBar";
+import Orders from "./components/Orders";
+import AssignAgent from "./components/Orders/assignAgent";
+import SingleOrder from "./components/Orders/single";
 import Plans from "./components/Plans";
 import Services from "./components/Servicies";
 import TopBar from "./components/TopBar";
 import Users from "./components/Users";
 import VerifyOtp from "./components/VerifyOtp";
-import Dashboard from "./components/Dashboard";
-import Orders from "./components/Orders";
-import SingleOrder from "./components/Orders/single";
-import Advertisements from "./components/Advertisements";
-import { QueryFunction } from "react-query";
-import { queryClient } from "./utils/queryClient";
+import { IsDesktopContext } from "./context/IsDesktopContext";
+import useTokenStore from "./hooks/useTokenStore";
+import ErrorToast from "./shared-components/ErrorToast/ErrorToast";
 import { PrivateRoute } from "./shared-components/PrivateRoute";
+import API from "./utils/API";
 
 const App = () => {
   const [isDesktop, setIsDesktop] = useState<boolean>(false);
@@ -84,6 +83,7 @@ const App = () => {
             <PrivateRoute path="/coupons" exact component={Coupons} />
             <PrivateRoute path="/orders" exact component={Orders} />
             <PrivateRoute path="/orders/:id" exact component={SingleOrder} />
+            <PrivateRoute path="/orders/assign-agent/:id" exact component={AssignAgent} />
             <PrivateRoute
               path="/advertisements"
               exact

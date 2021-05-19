@@ -17,7 +17,7 @@ const getSingle: QueryFunction = async ({ queryKey }) => {
 
 const useGetSingleQuery = ({ id, key }: IUseGetSingle) => {
 
-    const allData = useQuery(`${key}/${id}`, getSingle, {
+    const allData = useQuery<any>(`${key}/${id}`, getSingle, {
         enabled: !!id
     })
 

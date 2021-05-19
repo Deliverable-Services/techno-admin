@@ -1,9 +1,10 @@
-import React, { useEffect } from 'react'
-import { Container, Table, Badge } from 'react-bootstrap';
-import { AiOutlineArrowUp } from 'react-icons/ai';
+import React from 'react';
+import { Badge, Button, Container, OverlayTrigger } from 'react-bootstrap';
 import { useHistory, useParams } from 'react-router-dom';
 import useGetSingleQuery from '../../hooks/useGetSingleQuery';
-import { ChartLine, ChartArea, ChartBar } from '../Dashboard/Chart';
+import IsLoading from '../../shared-components/isLoading';
+import moment from 'moment';
+import { Tooltip } from 'recharts';
 
 const key = "bookings"
 
@@ -79,11 +80,24 @@ const data = {
 }
 
 const SingleOrder = () => {
-    // const { id }: { id: string } = useParams()
-    // const history = useHistory()
+    const { id }: { id: string } = useParams()
+    const history = useHistory()
 
-    // const { data } = useGetSingleQuery({ id, key })
+    const { data, isLoading, isFetching } = useGetSingleQuery({ id, key })
 
+    const statusBadgeVairant = (status: string) => {
+        const _status = status.toLowerCase()
+
+        if (_status === "cancelled") return "danger";
+
+        if (_status === "pending" || _status === "pending_payment") return "warning";
+
+        return "success";
+    }
+
+    if (isLoading || isFetching) {
+        return <IsLoading />
+    }
     // console.log(data);
     return (
         <Container fluid className="component-wrapper px-0 py-2">
@@ -94,9 +108,21 @@ const SingleOrder = () => {
                     <h2 className="text-primary text-muted font-weight-bold">Order</h2>
                     <h2 className="text-primary ml-2">#{data.id}</h2>
                     <Badge variant="primary" className="mx-3 px-3 py-2 text-uppercase">{data.order_type}</Badge>
-                    <Badge variant="danger" className="px-3 py-2 text-uppercase">{data.status}</Badge>
+                    <Badge variant={statusBadgeVairant(data.status)} className="px-3 py-2 text-uppercase">{data.status}</Badge>
                 </div>
+                <Button variant="primary"
+                    onClick={() => history.push(`assign-agent/${id}`)}
+                >
+                    <div className="text-secondary">
+                        Assign
+                    </div>
+                </Button>
             </Container>
+            {data.cancellation_reason &&
+                <Container fluid>
+                    <p className="text-danger">{data.cancellation_reason}</p>
+                </Container>
+            }
             <div className="dashboard-page w-100">
 
                 <Container fluid className="status-container mt-2">
@@ -129,61 +155,88 @@ const SingleOrder = () => {
 
 
                         </div>
-                        <div className="card p-2 d-flex">
-                            <div className="d-flex flex-column">
-                                <div className="text-primary">
-                                    <h3>Agent</h3>
-                                </div>
-                                <div className="d-flex flex-column" style={{ fontSize: 18 }}>
-                                    <div>
-                                        <span className="text-muted">Name :</span>
-                                        <span className="text-primary ml-2"><b>{data.agent.name}</b></span>
+                        {
+                            data.agent &&
+                            <div className="card p-2 d-flex">
+                                <div className="d-flex flex-column">
+                                    <div className="text-primary">
+                                        <h3>Agent</h3>
                                     </div>
-                                    <div>
-                                        <span className="text-muted">Email :</span>
-                                        <span className="text-primary ml-2"><b>{data.agent.email}</b></span>
+                                    <div className="d-flex flex-column" style={{ fontSize: 18 }}>
+                                        <div>
+                                            <span className="text-muted">Name :</span>
+                                            <span className="text-primary ml-2"><b>{data.agent.name}</b></span>
+                                        </div>
+                                        <div>
+                                            <span className="text-muted">Email :</span>
+                                            <span className="text-primary ml-2"><b>{data.agent.email}</b></span>
+                                        </div>
+                                        <div>
+                                            <span className="text-muted">Phone :</span>
+                                            <span className="text-primary ml-2"><b>{data.agent.phone}</b></span>
+                                        </div>
+
                                     </div>
-                                    <div>
-                                        <span className="text-muted">Phone :</span>
-                                        <span className="text-primary ml-2"><b>{data.agent.phone}</b></span>
-                                    </div>
+
 
                                 </div>
 
 
                             </div>
-
-
-                        </div>
+                        }
                     </div>
                 </Container>
                 <Container fluid className="charts-container mt-2">
-                    <div className="card p-2 d-flex">
+
+
+                    <div className="card p-2 d-flex mt-3">
                         <div className="d-flex flex-column">
                             <div className="text-primary">
-                                <h5>Plan</h5>
+                                <h5>Order Summary</h5>
                             </div>
                             <div className="d-flex flex-column w-100" style={{ fontSize: 18 }}>
                                 <table className="w-100">
                                     <tbody>
                                         <tr>
-                                            <td className="text-muted">Name</td>
-                                            <td className="text-primary font-weight-bold text-right">{data.plan.name}</td>
+                                            <td className="text-muted">Ref Id</td>
+                                            <td className="text-primary font-weight-bold text-right">{data.ref_id}</td>
                                         </tr>
                                         <tr>
-                                            <td className="text-muted py-2">Description</td>
-                                            <td className="py-2 text-right text-lowercase">₹{data.plan.description}</td>
+                                            <td className="text-muted py-2">Scheduled At</td>
+                                            <td className="text-primary py-2 font-weight-bold text-right">{data.scheduled_at ? moment(data.scheduled_at).format("DD/MM/YY(hh:mm)") : "NA"}</td>
                                         </tr>
-                                        <tr>
-                                            <td className="text-muted pt-3">Price</td>
-                                            <td className="text-primary pt-2 font-weight-bold text-right" style={{ fontSize: "24px" }}>₹{data.plan.price}</td>
-                                        </tr>
+                                        {
+                                            data.address &&
+                                            <tr>
+                                                <td className="text-muted py-2">Address</td>
+                                                <td className="text-primary py-2 text-right">
+                                                    <address className="font-italic font-weight-light text-capitalize">
+                                                        {data.address.address}{", "}<br />
+                                                        {data.address.city}{", "}
+                                                        {data.address.pincode}{" "}
+
+                                                    </address>
+                                                </td>
+                                            </tr>
+
+                                        }
+                                        {
+                                            data.vehicle &&
+                                            <tr>
+                                                <td className="text-muted py-2">Vehicle Name</td>
+                                                <td className="text-primary py-2 text-right">{data.vehicle.name}</td>
+                                            </tr>
+
+                                        }
+
                                     </tbody>
                                 </table>
 
                             </div>
                         </div>
                     </div>
+
+
                     <div className="card p-2 d-flex mt-3">
                         <div className="d-flex flex-column">
                             <div className="text-primary">
@@ -210,39 +263,37 @@ const SingleOrder = () => {
                             </div>
                         </div>
                     </div>
-                    {/* <Table size='sm' className="w-100">
-                        <tbody>
-                            <tr>
-                                <td className="text-muted">Ref Id</td>
-                                <td className="text-right"><b>{data.ref_id}</b></td>
-                            </tr>
-                            <tr>
-                                <td className="text-muted">Order Type</td>
-                                <td className="text-right"><b>{data.order_type}</b></td>
-                            </tr>
-                            <tr>
-                                <td className="text-muted">Status</td>
-                                <td className="text-right"><b>{data.status}</b></td>
-                            </tr>
-                            <tr>
-                                <td className="text-muted">Scheduled At</td>
-                                <td className="text-right"><b>{data.scheduled_at}</b></td>
-                            </tr>
-                            <tr>
-                                <td className="text-muted">Total cost</td>
-                                <td className="text-right"><b>{data.total_cost}</b></td>
-                            </tr>
-                            <tr>
-                                <td className="text-muted">Discount</td>
-                                <td className="text-right"><b>{data.discount}</b></td>
-                            </tr>
-                            <tr>
-                                <td className="text-muted">Payable Amount</td>
-                                <td className="text-right"><b>{data.payable_amount}</b></td>
-                            </tr>
 
-                        </tbody>
-                    </Table> */}
+                    {
+                        data.plan &&
+                        <div className="card p-2 d-flex mt-3">
+                            <div className="d-flex flex-column">
+                                <div className="text-primary">
+                                    <h5>Plan</h5>
+                                </div>
+                                <div className="d-flex flex-column w-100" style={{ fontSize: 18 }}>
+                                    <table className="w-100">
+                                        <tbody>
+                                            <tr>
+                                                <td className="text-muted">Name</td>
+                                                <td className="text-primary font-weight-bold text-right">{data.plan.name}</td>
+                                            </tr>
+                                            <tr>
+                                                <td className="text-muted py-2">Description</td>
+                                                <td className="text-right font-weight-light text-capitalize">{data.plan.description}</td>
+                                            </tr>
+                                            <tr>
+                                                <td className="text-muted pt-3">Price</td>
+                                                <td className="text-primary pt-2 font-weight-bold text-right" style={{ fontSize: "24px" }}>₹{data.plan.price}</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+
+                                </div>
+                            </div>
+                        </div>
+                    }
+
 
                 </Container>
             </div>
