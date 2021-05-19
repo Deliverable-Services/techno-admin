@@ -21,10 +21,6 @@ const Dashboard = (props: Props) => {
     return (
         <>
             <Container fluid className="component-wrapper px-0 py-2">
-                {/* <Container className="d-flex justify-content-between py-2 m-0">
-                    <h2 className="text-primary font-weight-bold">Dashboard</h2>
-
-                </Container> */}
 
 
                 <div className="dashboard-page w-100">
@@ -39,7 +35,7 @@ const Dashboard = (props: Props) => {
                                         <div className="d-flex flex-column">
                                             <div className="lead">
                                                 Total Users
-                                    </div>
+                                            </div>
                                             <div className="d-flex align-items-end">
 
                                                 <p className=" display-4 text-primary m-0">3050</p>
@@ -61,10 +57,6 @@ const Dashboard = (props: Props) => {
                             }
                         </div>
                     </Container>
-                    {/* <Container fluid className="d-flex justify-content-between py-2 my-1 ">
-                    <h2 className="text-primary font-weight-bold">Analytics</h2>
-
-                </Container> */}
                     <Container fluid className="charts-container mt-2">
 
                         <h2 className="text-primary font-weight-bold">Analytics</h2>
@@ -75,7 +67,7 @@ const Dashboard = (props: Props) => {
                                     <h4 className="text-primary">
                                         <strong>
                                             Bookings
-                                </strong>
+                                        </strong>
                                     </h4>
                                     <div>
                                         <Form.Control as="select" custom onChange={handleChartOneChange} className="bg-transparent">
@@ -96,7 +88,7 @@ const Dashboard = (props: Props) => {
                                     <h4 className="text-primary">
                                         <strong>
                                             Chart Title
-                                </strong></h4>
+                                        </strong></h4>
                                     <div>
                                         <Form.Control as="select" custom onChange={handleChartTwoChange} className="bg-transparent">
                                             <option value="1">Option 1</option>
@@ -115,7 +107,7 @@ const Dashboard = (props: Props) => {
                                     <h4 className="text-primary">
                                         <strong>
                                             Chart Title
-                                </strong></h4>
+                                        </strong></h4>
                                     <div>
                                         <Form.Control as="select" custom onChange={handleChartTwoChange} className="bg-transparent">
                                             <option value="1">Option 1</option>
@@ -134,7 +126,7 @@ const Dashboard = (props: Props) => {
                                     <h4 className="text-primary">
                                         <strong>
                                             Chart Title
-                                </strong></h4>
+                                        </strong></h4>
                                     <div>
                                         <Form.Control as="select" custom onChange={handleChartTwoChange} className="bg-transparent">
                                             <option value="1">Option 1</option>

@@ -3,6 +3,7 @@ import { Button, Container, Modal, Spinner } from "react-bootstrap"
 import { AiFillDelete, AiFillEdit, AiFillPlusSquare } from "react-icons/ai"
 import { BiArrowFromRight } from "react-icons/bi"
 import { useMutation, useQuery } from "react-query"
+import { useHistory } from "react-router-dom"
 import { Cell } from "react-table"
 import useToggle from "../../hooks/useToggle"
 import IsLoading from "../../shared-components/isLoading"
@@ -31,8 +32,7 @@ const deleteFaq = (id: string) => {
 }
 
 const Orders = () => {
-
-    const { setStatusCreate, setStatusDefault, status, setStatusEdit } = useToggle()
+    const history = useHistory()
     const [selectedRowId, setSelectedRowId] = useState<string>("")
     const [page, setPage] = useState<number>(1)
     const [deletePopup, setDeletePopup] = useState(false)
@@ -96,21 +96,9 @@ const Orders = () => {
 
                     return (
                         <div className="d-flex">
-                            <Button>
+                            <Button onClick={() => history.push(`/orders/${data.row.values.id}`)}>
                                 View
                             </Button>
-                            {/* <button onClick={() => {
-                                setSelectedRowId(data.row.values.id)
-                                setStatusEdit()
-                            }}>
-                                <AiFillEdit color={secondaryColor} size={24} />
-                            </button>
-                            <button className="ml-2" onClick={() => {
-                                setSelectedRowId(data.row.values.id)
-                                setDeletePopup(true)
-                            }}>
-                                <AiFillDelete color="red" size={24} />
-                            </button> */}
                         </div>
                     )
                 }
@@ -127,8 +115,8 @@ const Orders = () => {
         <>
             <Container fluid className="component-wrapper px-0 py-2">
                 <Container fluid className="d-flex justify-content-between py-2">
-                    <h2 className="text-primary font-weight-bold">FAQs</h2>
-                    {
+                    <h2 className="text-primary font-weight-bold">Orders</h2>
+                    {/* {
                         status !== "default" ?
                             <Button variant="primary" onClick={setStatusDefault}  >
                                 <div className="text-secondary">
@@ -141,54 +129,37 @@ const Orders = () => {
                                     <AiFillPlusSquare size={24} /> <b>Create</b>
                                 </div>
                             </Button>
-                    }
+                    } */}
 
                 </Container>
 
                 <Container fluid className="h-100 p-0">
 
-                    {
-                        status === "creating" &&
-                        <Container fluid className="mt-2 py-4">
-                            {/* <UpdateCreateForm /> */}
-                        </Container>
-                    }
-
-                    {
-                        status === "editing" &&
-                        <Container fluid className="mt-2 py-4">
-                            {/* <UpdateCreateForm id={selectedRowId} /> */}
-                        </Container>
-                    }
-
-                    {
-                        (status === "default") &&
-                        <>
-                            {
-                                (isLoading || isFetching) ?
-                                    <IsLoading /> :
+                    <>
+                        {
+                            (isLoading || isFetching) ?
+                                <IsLoading /> :
 
 
-                                    <>
-                                        {
-                                            !error &&
-                                            <ReactTable data={data.data} columns={columns} />
-                                        }
-                                        {
-                                            !error && data.data.length > 0 ?
-                                                <TablePagination
-                                                    currentPage={(data).current_page}
-                                                    lastPage={(data).last_page}
-                                                    setPage={setPage}
-                                                    hasNextPage={!!(data).next_page_url}
-                                                    hasPrevPage={!!(data).prev_page_url}
-                                                />
-                                                : null
-                                        }  </>
-                            }
-                        </>
+                                <>
+                                    {
+                                        !error &&
+                                        <ReactTable data={data.data} columns={columns} />
+                                    }
+                                    {
+                                        !error && data.data.length > 0 ?
+                                            <TablePagination
+                                                currentPage={(data).current_page}
+                                                lastPage={(data).last_page}
+                                                setPage={setPage}
+                                                hasNextPage={!!(data).next_page_url}
+                                                hasPrevPage={!!(data).prev_page_url}
+                                            />
+                                            : null
+                                    }  </>
+                        }
+                    </>
 
-                    }
 
                 </Container>
             </Container>

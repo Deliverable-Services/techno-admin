@@ -10861,6 +10861,7 @@ nav {
   transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
   z-index: 100;
   padding: 1rem 0;
+  border-right: 1px solid rgba(0, 0, 0, 0.25);
 }
 
 @media (min-width: 800px) {
@@ -11263,7 +11264,6 @@ body {
 .App {
   display: -ms-grid;
   display: grid;
-  background-color: white;
 }
 
 .App .main-layout {
@@ -11285,7 +11285,6 @@ body {
     -ms-grid-column: 2;
     -ms-grid-column-span: 1;
     grid-column: 2/3;
-    min-height: 100vh;
   }
 }
 

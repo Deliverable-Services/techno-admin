@@ -20,6 +20,7 @@ import Users from "./components/Users";
 import VerifyOtp from "./components/VerifyOtp";
 import Dashboard from "./components/Dashboard";
 import Orders from "./components/Orders";
+import SingleOrder from "./components/Orders/single";
 import Advertisements from "./components/Advertisements";
 import { QueryFunction } from "react-query";
 import { queryClient } from "./utils/queryClient";
@@ -82,6 +83,7 @@ const App = () => {
             <PrivateRoute path="/plans" exact component={Plans} />
             <PrivateRoute path="/coupons" exact component={Coupons} />
             <PrivateRoute path="/orders" exact component={Orders} />
+            <PrivateRoute path="/orders/:id" exact component={SingleOrder} />
             <PrivateRoute
               path="/advertisements"
               exact
