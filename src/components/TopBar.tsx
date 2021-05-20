@@ -1,19 +1,36 @@
 import React, { useContext } from "react";
-import { Button, Container, Dropdown } from "react-bootstrap";
+import { Container, Dropdown } from "react-bootstrap";
 import { BiMenuAltLeft } from "react-icons/bi";
 import { BsBell } from "react-icons/bs";
-import { IsDesktopContext } from "../context/IsDesktopContext";
-import Logo from "../shared-components/Logo";
-import { INavBar } from "../types/interface";
-import { primaryColor } from "../utils/constants";
+import { useMutation } from "react-query";
+import { useHistory } from "react-router-dom";
 import profile from "../assets/profile.svg";
+import { IsDesktopContext } from "../context/IsDesktopContext";
 import useTokenStore from "../hooks/useTokenStore";
 import useUserProfileStore from "../hooks/useUserProfileStore";
+import Logo from "../shared-components/Logo";
+import { INavBar } from "../types/interface";
+import API from "../utils/API";
+import { primaryColor } from "../utils/constants";
+import { queryClient } from "../utils/queryClient";
+
+const logout = () => {
+  return API.post("/auth/logout")
+}
 
 const TopBar = ({ isNavOpen, setIsNavOpen }: INavBar) => {
   const isDesktop = useContext(IsDesktopContext);
+  const history = useHistory()
   const removeToken = useTokenStore((state) => state.removeToken);
   const removeUser = useUserProfileStore((state) => state.removeUser);
+
+  const { mutate, isLoading } = useMutation(logout, {
+    onSuccess: () => {
+      removeUser();
+      removeToken();
+      history.push("/login")
+    }
+  })
   const openNavBar = () => {
     if (setIsNavOpen) {
       setIsNavOpen(true);
@@ -64,17 +81,21 @@ const TopBar = ({ isNavOpen, setIsNavOpen }: INavBar) => {
             id="dropdown-basic"
             className="filter-button bg-transparent border-0 text-primary"
           >
-            <img src={profile} alt="profile" className="profile" />
+            {
+              isLoading ? "Loading" :
+                <img src={profile} alt="profile" className="profile" />
+            }
           </Dropdown.Toggle>
 
           <Dropdown.Menu>
             <Dropdown.Item
-              onClick={() => {
-                removeUser();
-                removeToken();
-              }}
+              onClick={
+                () => mutate()
+              }
             >
-              Sign Out
+              {
+                isLoading ? "Loading" : "SignOut"
+              }
             </Dropdown.Item>
           </Dropdown.Menu>
         </Dropdown>

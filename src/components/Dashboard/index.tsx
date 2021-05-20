@@ -1,16 +1,16 @@
+import moment, { Moment } from 'moment'
 import React, { useState } from 'react'
-import { Container, Form, Tooltip } from 'react-bootstrap'
-import { AiFillCar, AiOutlineArrowUp, AiOutlineConsoleSql } from 'react-icons/ai'
+import { Container, Form } from 'react-bootstrap'
+import { DateRangePicker, FocusedInputShape } from 'react-dates'
+import "react-dates/initialize"
+import { AiOutlineArrowUp } from 'react-icons/ai'
+import { BiSad } from 'react-icons/bi'
 import { BsCalendar } from 'react-icons/bs'
 import { useQuery } from 'react-query'
-import { ResponsiveContainer, LineChart, XAxis, YAxis, Legend, Line } from 'recharts'
 import IsLoading from '../../shared-components/isLoading'
 import API from '../../utils/API'
 import { primaryColor } from '../../utils/constants'
-import { ChartLine, ChartArea, ChartBar } from "./Chart"
-import "react-dates/initialize"
-import { DateRangePicker, FocusedInputShape } from 'react-dates';
-import moment, { Moment } from 'moment'
+import { ChartArea, ChartBar, ChartLine } from "./Chart"
 
 const getAnalytics = async () => {
     const r = await API.get('analytics');
@@ -42,7 +42,19 @@ const Dashboard = () => {
 
     if (isLoading || isFetching) return <IsLoading />
 
-    if ((!isLoading || !isFetching) && !data) return <h1 className="text-primary">No data found</h1>
+
+    if (!data && (!isLoading || !isFetching)) {
+        return (
+            <Container fluid className="d-flex justify-content-center display-3">
+                <div className="d-flex flex-column align-items-center">
+
+                    <BiSad color={primaryColor} />
+                    <span className="text-primary display-3">Something went wrong</span>
+                </div>
+            </Container>
+        )
+    }
+
 
     return (
         <>

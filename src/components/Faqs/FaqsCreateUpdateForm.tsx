@@ -45,7 +45,6 @@ const BrandsCreateUpdateForm = ({ id = "" }: ICreateUpdateForm) => {
         }
     })
 
-    console.log("data", data)
 
 
 

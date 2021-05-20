@@ -7,10 +7,11 @@ export const defaultQueryFn: QueryFunction = async ({ queryKey }) => {
 
 
 
-    const r = await API.get(`${queryKey[0]}?page=${queryKey[1]}`);
+    const r = await API.get<any>(`${queryKey[0]}?page=${queryKey[1]}`);
 
     if (r.status !== 200) {
         showErrorToast(r.status.toString())
+        queryClient.invalidateQueries("profile")
         throw new Error();
     }
 
@@ -25,10 +26,8 @@ export const queryClient = new QueryClient({
             staleTime: 60 * 1000 * 5,
             queryFn: defaultQueryFn,
             onError: (error: any) => {
-
-                if (error.response.status !== 401)
-                    showErrorToast((error as Error).message || "unauthorized")
-
+                showErrorToast(error.message)
+                queryClient.invalidateQueries("profile")
             },
             keepPreviousData: true
         },

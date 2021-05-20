@@ -1,7 +1,7 @@
 import { useMemo, useState } from "react"
 import { Button, Container, Modal, Spinner } from "react-bootstrap"
-import { AiFillDelete, AiFillEdit, AiFillPlusSquare } from "react-icons/ai"
-import { BiArrowFromRight } from "react-icons/bi"
+import { AiFillEdit, AiFillPlusSquare } from "react-icons/ai"
+import { BiArrowFromRight, BiSad } from "react-icons/bi"
 import { ImBlocked } from "react-icons/im"
 import { useMutation, useQuery } from "react-query"
 import { Cell } from "react-table"
@@ -10,7 +10,7 @@ import IsLoading from "../../shared-components/isLoading"
 import TablePagination from "../../shared-components/Pagination"
 import ReactTable from "../../shared-components/ReactTable"
 import API from "../../utils/API"
-import { secondaryColor } from "../../utils/constants"
+import { primaryColor, secondaryColor } from "../../utils/constants"
 import { queryClient } from "../../utils/queryClient"
 import { showErrorToast } from "../../utils/showErrorToast"
 import UpdateCreateForm from "./UsersCreateUpdateForm"
@@ -106,6 +106,19 @@ const Users = () => {
         ],
         []
     )
+
+
+    if (!data && (!isLoading || !isFetching)) {
+        return (
+            <Container fluid className="d-flex justify-content-center display-3">
+                <div className="d-flex flex-column align-items-center">
+
+                    <BiSad color={primaryColor} />
+                    <span className="text-primary display-3">Something went wrong</span>
+                </div>
+            </Container>
+        )
+    }
 
 
 

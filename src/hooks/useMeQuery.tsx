@@ -1,17 +1,12 @@
-import axios, { AxiosError } from 'axios'
+import axios from 'axios'
 import { QueryFunction, useQuery } from 'react-query'
 import { useHistory } from "react-router-dom"
-import API from '../utils/API'
 import { appApiBaseUrl } from '../utils/constants'
-import { queryClient } from '../utils/queryClient'
-import { showErrorToast } from '../utils/showErrorToast'
 import useTokenStore from './useTokenStore'
 import useUserProfileStore from './useUserProfileStore'
 
 
 const getProfile: QueryFunction = async ({ queryKey }) => {
-    if (!queryKey[1])
-        return false
 
     const r = await axios.get(`${appApiBaseUrl}${queryKey[0]}`, {
         headers: {
@@ -35,10 +30,6 @@ const useMeQuery = () => {
         retry: false,
         onSuccess: (data: any) => {
             setUser(data)
-        },
-        onError: async (err: AxiosError | Error) => {
-            history.push('/login')
-
         }
     })
 

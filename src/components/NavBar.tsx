@@ -1,26 +1,25 @@
-import { INavBar, INavLink } from "../types/interface";
-import Logo from "../shared-components/Logo";
-import Navlink from "../shared-components/Navlink";
-import Overlay from "../shared-components/Overlay";
-import { ImCross } from "react-icons/im";
-import { SiBrandfolder } from "react-icons/si";
-import { IoLogoModelS } from "react-icons/io";
+import { useContext } from "react";
 import {
   FaAddressCard,
   FaBoxes,
   FaDiceFour,
   FaQuestionCircle,
   FaRegLightbulb,
-  FaUsers,
+  FaUsers
 } from "react-icons/fa";
+import { IoLogoModelS } from "react-icons/io";
 import {
   RiAdvertisementFill,
   RiCoupon3Line,
   RiDashboardFill,
-  RiServiceFill,
+  RiServiceFill
 } from "react-icons/ri";
-import { useContext } from "react";
+import { SiBrandfolder } from "react-icons/si";
 import { IsDesktopContext } from "../context/IsDesktopContext";
+import Logo from "../shared-components/Logo";
+import Navlink from "../shared-components/Navlink";
+import Overlay from "../shared-components/Overlay";
+import { INavBar, INavLink } from "../types/interface";
 
 const manageLinks: Array<INavLink> = [
   {
