@@ -1,12 +1,16 @@
 import React, { useState } from 'react'
 import { Container, Form, Tooltip } from 'react-bootstrap'
-import { AiFillCar, AiOutlineArrowUp } from 'react-icons/ai'
+import { AiFillCar, AiOutlineArrowUp, AiOutlineConsoleSql } from 'react-icons/ai'
+import { BsCalendar } from 'react-icons/bs'
 import { useQuery } from 'react-query'
 import { ResponsiveContainer, LineChart, XAxis, YAxis, Legend, Line } from 'recharts'
 import IsLoading from '../../shared-components/isLoading'
 import API from '../../utils/API'
 import { primaryColor } from '../../utils/constants'
 import { ChartLine, ChartArea, ChartBar } from "./Chart"
+import "react-dates/initialize"
+import { DateRangePicker, FocusedInputShape } from 'react-dates';
+import moment, { Moment } from 'moment'
 
 const getAnalytics = async () => {
     const r = await API.get('analytics');
@@ -14,13 +18,25 @@ const getAnalytics = async () => {
     return r.data
 }
 
+interface IDates {
+    start_date: Moment | null;
+    end_date: Moment | null,
+    focusedInput: FocusedInputShape | null
+}
+
 
 const Dashboard = () => {
     const [chartOneSelect, setChartOneSelect] = useState<string>("1")
     const [chartTwoSelect, setChartTwoSelect] = useState<string>("")
-
+    const [dates, setDates] = useState<IDates>({
+        start_date: null,
+        end_date: null,
+        focusedInput: null
+    })
+    const [start_date, setStartDate] = useState<Moment | null>(moment())
+    const [end_date, setEndDate] = useState<Moment | null>(null)
+    const [focusedInput, setFocusInput] = useState<FocusedInputShape | null>(null)
     const { data, isLoading, isFetching } = useQuery<any>("analytics", getAnalytics)
-    console.log("data -ana", data);
     const handleChartOneChange = (e: any) => setChartOneSelect(e.target.value)
     const handleChartTwoChange = (e: any) => setChartTwoSelect(e.target.value)
 
@@ -31,7 +47,24 @@ const Dashboard = () => {
     return (
         <>
             <Container fluid className="component-wrapper px-0 py-2">
-
+                <Container fluid className="d-flex align-items-center justify-content-end">
+                    <div>
+                        <BsCalendar color={primaryColor} size={24} className="mr-3" />
+                    </div>
+                    <DateRangePicker
+                        startDate={start_date}
+                        startDateId={"start_date"}
+                        endDate={end_date}
+                        endDateId={"end_date"}
+                        onDatesChange={({ startDate, endDate }) => {
+                            if (startDate) setStartDate(startDate)
+                            if (endDate) setEndDate(endDate)
+                        }
+                        }
+                        focusedInput={focusedInput}
+                        onFocusChange={focusedInput => setFocusInput(focusedInput)}
+                    />
+                </Container>
 
                 <div className="dashboard-page w-100">
 

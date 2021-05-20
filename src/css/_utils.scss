@@ -201,13 +201,36 @@ td {
 }
 
 
-// .advertisement-image {
-//     position: relative;
+.DateInput_input {
+    font-size: 18px;
+    padding: 6px 11px 9px;
+}
 
+.CalendarDay__default:hover {
+    background-color: $secondary-color;
+}
 
-//     &:hover {
+// Will edit everything selected including everything between a range of dates
+.CalendarDay__selected_span {
+    background: rgba($color: $primary-color, $alpha: .5); //background
+    color: $white; //text
+}
 
+// Will edit selected date or the endpoints of a range of dates
+.CalendarDay__selected {
+    background: $primary-color;
+    color: $secondary-color;
+}
 
+// Will edit when hovered over. _span style also has this property
+.CalendarDay__selected:hover {
+    background: $secondary-color;
+    color: $primary-color;
+}
 
-//     }
-// }
+// Will edit when the second date (end date) in a range of dates
+// is not yet selected. Edits the dates between your mouse and said date
+.CalendarDay__hovered_span:hover,
+.CalendarDay__hovered_span {
+    background: rgba($color: $secondary-color, $alpha: .5);
+}

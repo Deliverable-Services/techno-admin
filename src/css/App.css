@@ -11149,6 +11149,35 @@ td {
           box-shadow: 0 4px 24px rgba(0, 0, 0, 0.24);
 }
 
+.DateInput_input {
+  font-size: 18px;
+  padding: 6px 11px 9px;
+}
+
+.CalendarDay__default:hover {
+  background-color: #ECB054;
+}
+
+.CalendarDay__selected_span {
+  background: rgba(33, 77, 112, 0.5);
+  color: #fff;
+}
+
+.CalendarDay__selected {
+  background: #214D70;
+  color: #ECB054;
+}
+
+.CalendarDay__selected:hover {
+  background: #ECB054;
+  color: #214D70;
+}
+
+.CalendarDay__hovered_span:hover,
+.CalendarDay__hovered_span {
+  background: rgba(236, 176, 84, 0.5);
+}
+
 .dashboard-page {
   display: -webkit-box;
   display: -ms-flexbox;

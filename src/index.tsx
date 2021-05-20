@@ -2,6 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import "react-datetime/css/react-datetime.css";
+import "react-dates/lib/css/_datepicker.css"
 import './css/App.css'
 import './index.css';
 import App from './App';
