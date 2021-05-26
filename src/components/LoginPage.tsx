@@ -49,14 +49,14 @@ const LoginPage = (props: Props) => {
         {({ errors }) => {
           return (
             <Form>
-              <div className="d-flex flex-column align-items-center justify-content-between px-3 py-5 box-shadow rounded">
-                <div className="logo-container">
-                  <Logo />
-                </div>
+              <div className="w-100 mb-4">
+                <Logo />
+              </div>
 
-                <h1 className="text-primary my-3">
+              <div className="d-flex flex-column align-items-start justify-content-between px-3 py-3 box-shadow rounded">
+                <h2 className="text-primary">
                   <b>Login</b>
-                </h1>
+                </h2>
                 <p>
                   We will send you a 4-digit verification code to this number
                 </p>
