@@ -15,12 +15,12 @@ import { primaryColor } from "../utils/constants";
 import { queryClient } from "../utils/queryClient";
 
 const logout = () => {
-  return API.post("/auth/logout")
-}
+  return API.post("/auth/logout");
+};
 
 const TopBar = ({ isNavOpen, setIsNavOpen }: INavBar) => {
   const isDesktop = useContext(IsDesktopContext);
-  const history = useHistory()
+  const history = useHistory();
   const removeToken = useTokenStore((state) => state.removeToken);
   const removeUser = useUserProfileStore((state) => state.removeUser);
 
@@ -28,9 +28,9 @@ const TopBar = ({ isNavOpen, setIsNavOpen }: INavBar) => {
     onSuccess: () => {
       removeUser();
       removeToken();
-      history.push("/login")
-    }
-  })
+      history.push("/login");
+    },
+  });
   const openNavBar = () => {
     if (setIsNavOpen) {
       setIsNavOpen(true);
@@ -40,7 +40,8 @@ const TopBar = ({ isNavOpen, setIsNavOpen }: INavBar) => {
   return (
     <Container
       fluid
-      className="top-bar d-flex align-items-center justify-content-between">
+      className="top-bar d-flex align-items-center justify-content-between"
+    >
       {!isDesktop ? (
         <div className="menu-hamburger">
           {!isNavOpen ? (
@@ -52,11 +53,7 @@ const TopBar = ({ isNavOpen, setIsNavOpen }: INavBar) => {
           ) : null}
         </div>
       ) : null}
-      {
-        !isDesktop &&
-        <Logo />
-
-      }
+      {!isDesktop && <Logo />}
       <div
         className={
           isDesktop
@@ -66,7 +63,7 @@ const TopBar = ({ isNavOpen, setIsNavOpen }: INavBar) => {
       >
         <div className="notification">
           <BsBell size={24} />
-          <div className="circle bg-primary text-secondary d-flex  justify-content-center">
+          <div className="circle bg-primary text-white d-flex  justify-content-center">
             <p>
               <b>1</b>
             </p>
@@ -81,28 +78,22 @@ const TopBar = ({ isNavOpen, setIsNavOpen }: INavBar) => {
             id="dropdown-basic"
             className="filter-button bg-transparent border-0 text-primary"
           >
-            {
-              isLoading ? "Loading" :
-                <img src={profile} alt="profile" className="profile" />
-            }
+            {isLoading ? (
+              "Loading"
+            ) : (
+              <img src={profile} alt="profile" className="profile" />
+            )}
           </Dropdown.Toggle>
 
           <Dropdown.Menu>
-            <Dropdown.Item
-              onClick={
-                () => mutate()
-              }
-            >
-              {
-                isLoading ? "Loading" : "SignOut"
-              }
+            <Dropdown.Item onClick={() => mutate()}>
+              {isLoading ? "Loading" : "SignOut"}
             </Dropdown.Item>
           </Dropdown.Menu>
         </Dropdown>
       </div>
-    </Container >
+    </Container>
   );
 };
 
 export default TopBar;
-

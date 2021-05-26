@@ -38,9 +38,7 @@
 .card {
   font-size: 1em;
   transition: all 0.5s ease;
-  &:hover {
-    box-shadow: 0 4px 24px rgba($color: $black, $alpha: 0.24);
-  }
+  border: 0;
 }
 
 .chart-container {
@@ -57,5 +55,28 @@
 
   @include responsive($large-screen-breakpoint) {
     min-width: 220px;
+  }
+}
+
+.page-item.active {
+  .page-link {
+    .text-secondary {
+      color: $white-color !important;
+    }
+  }
+}
+
+.table {
+  thead {
+    th {
+      padding: 10px;
+      color: #222;
+    }
+  }
+
+  td {
+    padding: 10px 10px 10px 10px;
+    color: #666;
+    text-transform: initial;
   }
 }

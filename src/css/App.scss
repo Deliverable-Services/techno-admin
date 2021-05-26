@@ -1,11 +1,10 @@
 *,
 *:after,
 *:before {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
 }
-
 
 @import "./variables";
 @import "../../node_modules/bootstrap/scss/bootstrap";
@@ -15,71 +14,66 @@
 @import "./dashboard";
 
 body {
-
-    font-family: 'Roboto', sans-serif;
-    background-color: rgb(242, 244, 248);
+  font-family: "Lato", sans-serif;
+  background-color: #e3e8ee;
 }
 
 .App {
-    display: grid;
-    // background-color: $white-color;
+  display: grid;
+  background-color: $grey-color;
+
+  .main-layout {
+    border-radius: 12px;
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
+    margin-bottom: 50px;
+    padding: 10px 10px;
+    margin-right: 10px;
+    background-color: $white-color;
+  }
+
+  @include responsive($desktop-breakpoint) {
+    grid-template-columns: $navWidth 1fr;
 
     .main-layout {
-        background-color: #fff;
-        border-radius: 10px;
-        border-top-right-radius: 0;
-        border-bottom-right-radius: 0;
-        margin-bottom: 50px;
-        // margin-top: 80px;
-        padding: 10px 10px;
-        margin-right: 10px;
-        // -webkit-box-shadow: 0 10px 25px 0 rgb(0 0 0 / 3%);
-        // box-shadow: 0 10px 25px 0 rgba(0, 0, 0, .1);
-        // box-shadow: 0 7px 14px 0 rgba(0, 0, 0, 0.1), 0 3px 6px 0 rgba(0, 0, 0, 3%);
-
+      grid-column: 2/3;
+      // min-height: 100vh;
+      // background-color: lighten($primary-color,40);
+      // -webkit-box-shadow: 0 10px 25px 0 rgb(0 0 0 / 3%);
+      // box-shadow: 0 10px 25px 0 rgba(0, 0, 0, 0.1);
+      // box-shadow: 0 7px 14px 0 rgba(0, 0, 0, 0.1), 0 3px 6px 0 rgba(0, 0, 0, 3%);
     }
-
-    @include responsive($desktop-breakpoint) {
-        grid-template-columns: $navWidth 1fr;
-
-        .main-layout {
-            grid-column: 2/3;
-            // min-height: 100vh;
-            // background-color: lighten($primary-color,40);
-        }
-    }
+  }
 }
 
-
-
-
 .login-page {
-    position: fixed;
-    top: 0;
-    bottom: 0;
-    right: 0;
-    left: 0;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  right: 0;
+  left: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #fff;
 }
 
 .form-container {
-    display: grid;
+  display: grid;
+  grid-template-columns: 1fr;
+  flex-direction: column;
+  gap: 0.5rem;
+  width: 100%;
+
+  &.single-col {
     grid-template-columns: 1fr;
-    flex-direction: column;
-    gap: .5rem;
-    width: 100%;
+  }
 
-    &.single-col {
-        grid-template-columns: 1fr;
-    }
+  @include responsive($desktop-breakpoint) {
+    grid-template-columns: 1fr 1fr;
 
-    @include responsive($desktop-breakpoint) {
-        grid-template-columns: 1fr 1fr;
+    // .form-control {
 
-        // .form-control {
-
-        // }
-    }
+    // }
+  }
 }

@@ -1,25 +1,25 @@
 li {
-    list-style: none;
+  list-style: none;
 }
 
 button {
-    border: none;
-    outline: none;
-    background-color: transparent;
+  border: none;
+  outline: none;
+  background-color: transparent;
 }
 
 a {
-    text-decoration: none;
-    color: $white-color;
+  text-decoration: none;
+  color: $white-color;
 
-    &:hover {
-        text-decoration: none;
-    }
+  &:hover {
+    text-decoration: none;
+  }
 }
 
 img {
-    height: 100%;
-    width: 100%;
+  height: 100%;
+  width: 100%;
 }
 
 h1,
@@ -28,209 +28,211 @@ h3,
 h4,
 h5,
 button {
-    font-family: 'Roboto', sans-serif;
-    ;
+  font-family: "Lato", sans-serif;
 }
 
+h2 {
+  font-size: 25px;
+  font-weight: 900 !important;
+}
 p,
 td {
-    font-family: 'Roboto', sans-serif;
+  font-family: "Lato", sans-serif;
 }
 
 td {
-    text-transform: uppercase;
+  text-transform: uppercase;
 }
 
 .text-primary {
-    color: $primary-color;
+  color: $primary-color;
 }
 
 .bg-light-secondary {
-    background-color: rgba($color: $secondary-color, $alpha: .2);
+  background-color: rgba($color: $secondary-color, $alpha: 0.2);
 }
 
 .bg-light-primary {
-    background-color: rgba($color: $primary-color, $alpha: .2);
+  background-color: rgba($color: $primary-color, $alpha: 0.2);
+}
+
+.bg-grey-primary {
+  background-color: rgba($color: $grey-color, $alpha: 0.6);
 }
 
 .top-bar {
-    position: sticky;
-    top: 0;
-    z-index: 49;
-    width: 100%;
-    height: 10vh;
-    max-height: 60px;
-    // box-shadow: 0 4px 24px rgba($color: #000, $alpha: .24);
-    background-color: $white-color;
+  position: sticky;
+  top: 0;
+  z-index: 49;
+  width: 100%;
+  height: 65px;
+  max-height: 65px;
+  background-color: $grey-color;
 
-    // @include responsive($desktop-breakpoint) {
-    //     position: relative;
-    // }
+  .profile {
+    height: 1.5rem;
+    width: 1.5rem;
+  }
 
-    .profile {
-        height: 2rem;
-        width: 2rem;
+  .notification {
+    position: relative;
 
+    &:hover {
+      cursor: pointer;
     }
 
-    .notification {
-        position: relative;
+    .circle {
+      position: absolute;
+      height: 20px;
+      width: 20px;
+      border-radius: 50%;
+      top: -10px;
+      right: -10px;
 
-        // transform:rotate(10deg);
-        &:hover {
-            cursor: pointer;
-        }
-
-        .circle {
-            position: absolute;
-            height: 24px;
-            width: 24px;
-            border-radius: 50%;
-            top: -10px;
-            right: -10px;
-
-            // background: $primary-color;
-        }
+      p {
+        font-size: 13px;
+      }
     }
+  }
 }
 
 .logo {
-    width: 6rem;
+  width: 6rem;
 }
 
 .component-wrapper {
-    // box-shadow: 0 10px 30px rgba($color: $dark-color, $alpha: .2);
-    background-color: $white-color;
-    // border:2px solid rgba($color: $dark-color, $alpha: 0.2)
+  // box-shadow: 0 10px 30px rgba($color: $dark-color, $alpha: .2);
+  background-color: $white-color;
+  // border:2px solid rgba($color: $dark-color, $alpha: 0.2)
 }
 
 .search-input {
-    display: flex;
-    align-items: center;
-    padding: 0 .2rem;
-    width: 100%;
+  display: flex;
+  align-items: center;
+  padding: 5px 10px;
+  width: 100%;
+  background-color: transparent;
+  color: rgba($color: $dark-color, $alpha: 0.5);
+  overflow: hidden;
+  border-radius: 12px !important;
+  background-color: #eee;
+
+  @include responsive($desktop-breakpoint) {
+    width: 50%;
+  }
+
+  input {
+    border: none;
+    outline: none;
+    padding: 0.3rem 0.1rem;
+    flex: 1;
     background-color: transparent;
-    color: rgba($color: $primary-color, $alpha: .5);
+    color: $dark-color;
+    padding-left: 10px;
 
-    @include responsive($desktop-breakpoint) {
-        width: 50%;
+    &::placeholder {
+      letter-spacing: 0rem;
+      font-size: 1.1rem;
+      color: rgba($color: $dark-color, $alpha: 0.2);
     }
+  }
 
-    input {
-        border: none;
-        outline: none;
-        padding: .3rem .1rem;
-        flex: 1;
-        background-color: transparent;
-        color: $primary-color;
-
-        &::placeholder {
-            letter-spacing: .2rem;
-            font-size: 1.2rem;
-            color: rgba($color: $primary-color, $alpha: .5);
-        }
-    }
-
-    .filter-button {
-        background-color: transparent;
-        color: $primary-color
-    }
+  .filter-button {
+    background-color: transparent;
+    color: $primary-color;
+    outline: 0;
+  }
 }
 
-
 .overlay {
-    position: fixed;
-    height: 100%;
-    width: 100%;
-    background-color: rgba($color: #000000, $alpha: .7);
-    z-index: 50;
+  position: fixed;
+  height: 100%;
+  width: 100%;
+  background-color: rgba($color: #000000, $alpha: 0.7);
+  z-index: 50;
 }
 
 .table-image {
-    height: 2.5em;
-    width: 6rem;
-    object-fit: cover;
+  height: 2.5em;
+  width: 6rem;
+  object-fit: cover;
 }
 
 .form-image {
-    height: 3.5em;
-    width: 8rem;
-    object-fit: cover;
+  height: 3.5em;
+  width: 8rem;
+  object-fit: cover;
 }
 
-
 .tab-btn {
-    background: $primary-color;
-    color: $secondary-color;
-    font-size: 1rem;
-
+  background: $primary-color;
+  color: $secondary-color;
+  font-size: 1rem;
 }
 
 .tab-btn-row {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: .5rem;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0.5rem;
 
-    @include responsive($desktop-breakpoint) {
-        grid-template-columns: repeat(5, 1fr);
-    }
+  @include responsive($desktop-breakpoint) {
+    grid-template-columns: repeat(5, 1fr);
+  }
 
-    @include responsive($large-screen-breakpoint) {
-        grid-template-columns: repeat(6, 1fr);
-    }
+  @include responsive($large-screen-breakpoint) {
+    grid-template-columns: repeat(6, 1fr);
+  }
 }
 
 .tab-link {
-    color: $light-dark;
+  color: $light-dark;
 
-    &.isActive {
-        // display: none;
-        color: $primary-color;
-        background-color: transparent;
-        font-weight: 700;
-        border: none;
-        border-bottom: 2px solid $secondary-color;
-        transition: all .3s ease;
-        box-shadow: none;
-
-    }
+  &.isActive {
+    // display: none;
+    color: $primary-color;
+    background-color: transparent;
+    font-weight: 700;
+    border: none;
+    border-bottom: 2px solid $secondary-color;
+    transition: all 0.3s ease;
+    box-shadow: none;
+  }
 }
 
 .box-shadow {
-    box-shadow: 0 4px 24px rgba($color: $black, $alpha: 0.24);
+  box-shadow: 0 4px 24px rgba($color: $black, $alpha: 0.4);
 }
 
-
 .DateInput_input {
-    font-size: 18px;
-    padding: 6px 11px 9px;
+  font-size: 18px;
+  padding: 6px 11px 9px;
 }
 
 .CalendarDay__default:hover {
-    background-color: $secondary-color;
+  background-color: $secondary-color;
 }
 
 // Will edit everything selected including everything between a range of dates
 .CalendarDay__selected_span {
-    background: rgba($color: $primary-color, $alpha: .5); //background
-    color: $white; //text
+  background: rgba($color: $primary-color, $alpha: 0.5); //background
+  color: $white; //text
 }
 
 // Will edit selected date or the endpoints of a range of dates
 .CalendarDay__selected {
-    background: $primary-color;
-    color: $secondary-color;
+  background: $primary-color;
+  color: $secondary-color;
 }
 
 // Will edit when hovered over. _span style also has this property
 .CalendarDay__selected:hover {
-    background: $secondary-color;
-    color: $primary-color;
+  background: $secondary-color;
+  color: $primary-color;
 }
 
 // Will edit when the second date (end date) in a range of dates
 // is not yet selected. Edits the dates between your mouse and said date
 .CalendarDay__hovered_span:hover,
 .CalendarDay__hovered_span {
-    background: rgba($color: $secondary-color, $alpha: .5);
+  background: rgba($color: $secondary-color, $alpha: 0.5);
 }

@@ -1,89 +1,89 @@
-import { Form, Formik } from 'formik'
-import { useEffect } from 'react'
-import { Button, Container, Spinner } from 'react-bootstrap'
-import { useMutation } from 'react-query'
-import { useHistory } from 'react-router'
-import * as Yup from 'yup'
-import { InputField } from '../shared-components/InputFeild'
-import Logo from '../shared-components/Logo'
-import API from '../utils/API'
+import { Form, Formik } from "formik";
+import { useEffect } from "react";
+import { Button, Container, Spinner } from "react-bootstrap";
+import { useMutation } from "react-query";
+import { useHistory } from "react-router";
+import * as Yup from "yup";
+import { InputField } from "../shared-components/InputFeild";
+import Logo from "../shared-components/Logo";
+import API from "../utils/API";
 
-interface Props {
-
-}
-const phoneRegExp = /^[6-9]\d{9}$/
+interface Props {}
+const phoneRegExp = /^[6-9]\d{9}$/;
 const LoginSchema = Yup.object().shape({
-    phone: Yup.string().matches(phoneRegExp, 'Phone number is not valid').required("Phone number required")
-})
+  phone: Yup.string()
+    .matches(phoneRegExp, "Phone number is not valid")
+    .required("Phone number required"),
+});
 
 const sendOtp = (formData: FormData) => {
-    return API.post(`auth/send-otp`, formData, {
-        headers: { "Content-Type": "multipart/form-data" },
-
-    })
-}
+  return API.post(`auth/send-otp`, formData, {
+    headers: { "Content-Type": "multipart/form-data" },
+  });
+};
 
 const LoginPage = (props: Props) => {
+  const history = useHistory();
 
-    const history = useHistory()
+  const { mutate, data, isLoading } = useMutation(sendOtp);
 
-    const { mutate, data, isLoading } = useMutation(sendOtp)
+  useEffect(() => {
+    if (data) {
+      console.log("send-otp", data.data);
+      history.push(`/verify-otp/${data.data.user.phone}/${data.data.user.otp}`);
+    }
+  }, [data]);
 
-    useEffect(() => {
-        if (data) {
-            console.log("send-otp", data.data)
-            history.push(`/verify-otp/${data.data.user.phone}/${data.data.user.otp}`)
-        }
+  return (
+    <Container fluid className="login-page">
+      <Formik
+        initialValues={{ phone: "" }}
+        onSubmit={(values) => {
+          const formData = new FormData();
+          formData.append("phone", values.phone);
 
-    }, [data])
+          mutate(formData);
+        }}
+        validationSchema={LoginSchema}
+      >
+        {({ errors }) => {
+          return (
+            <Form>
+              <div className="d-flex flex-column align-items-center justify-content-between px-3 py-5 box-shadow rounded">
+                <div className="logo-container">
+                  <Logo />
+                </div>
 
+                <h1 className="text-primary my-3">
+                  <b>Login</b>
+                </h1>
+                <p>
+                  We will send you a 4-digit verification code to this number
+                </p>
+                <InputField
+                  name="phone"
+                  placeholder="Enter your phone number"
+                  label="Phone number"
+                  type="text"
+                  error={errors.phone}
+                />
 
+                <Button variant="primary" type="submit" className="my-2">
+                  {isLoading ? (
+                    <Spinner animation="border" variant="secondary" size="sm" />
+                  ) : (
+                    <div className="text-white">
+                      <b>Send OTP</b>
+                    </div>
+                  )}
+                </Button>
+              </div>
+            </Form>
+          );
+        }}
+      </Formik>
+    </Container>
+  );
+};
 
-    return (
-        <Container fluid className="login-page" >
-            <Formik initialValues={{ phone: "" }}
-                onSubmit={values => {
-                    const formData = new FormData()
-                    formData.append("phone", values.phone)
-
-                    mutate(formData)
-
-                }}
-                validationSchema={LoginSchema}
-            >
-
-                {
-                    ({ errors }) => {
-                        return (
-                            <Form >
-                                <div className="d-flex flex-column align-items-center justify-content-between px-3 py-5 box-shadow rounded">
-
-                                    <div className="logo-container">
-                                        <Logo />
-                                    </div>
-
-                                    <h1 className="text-primary my-3"><b>Login</b></h1>
-                                    <p >We will send you a 4-digit
-                                        verification code to this number</p>
-                                    <InputField name="phone" placeholder="Enter your phone number" label="Phone number" type="text" error={errors.phone} />
-
-                                    <Button variant="primary" type="submit" className="my-2">
-                                        {
-                                            isLoading ?
-                                                <Spinner animation="border" variant="secondary" size="sm" /> :
-                                                <div className="text-secondary">
-                                                    <b>Send OTP</b>
-                                                </div>
-                                        }
-                                    </Button>
-                                </div>
-                            </Form>
-                        )
-                    }
-                }
-            </Formik>
-        </Container>
-    )
-}
-
-export default LoginPage
+export default LoginPage;

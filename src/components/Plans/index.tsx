@@ -1,225 +1,204 @@
-import { useMemo, useState } from "react"
-import { Button, Container, Modal, Spinner } from "react-bootstrap"
-import { AiFillDelete, AiFillEdit, AiFillPlusSquare } from "react-icons/ai"
-import { BiArrowFromRight, BiSad } from "react-icons/bi"
-import { useMutation, useQuery } from "react-query"
-import { Cell } from "react-table"
-import useToggle from "../../hooks/useToggle"
-import IsLoading from "../../shared-components/isLoading"
-import TablePagination from "../../shared-components/Pagination"
-import ReactTable from "../../shared-components/ReactTable"
-import API from "../../utils/API"
-import { primaryColor, secondaryColor } from "../../utils/constants"
-import { queryClient } from "../../utils/queryClient"
-import { showErrorToast } from "../../utils/showErrorToast"
-import UpdateCreateForm from "./PlansCreateUpdateForm"
+import { useMemo, useState } from "react";
+import { Button, Container, Modal, Spinner } from "react-bootstrap";
+import { AiFillDelete, AiFillEdit, AiFillPlusSquare } from "react-icons/ai";
+import { BiArrowFromRight, BiSad } from "react-icons/bi";
+import { useMutation, useQuery } from "react-query";
+import { Cell } from "react-table";
+import useToggle from "../../hooks/useToggle";
+import IsLoading from "../../shared-components/isLoading";
+import TablePagination from "../../shared-components/Pagination";
+import ReactTable from "../../shared-components/ReactTable";
+import API from "../../utils/API";
+import { primaryColor, secondaryColor } from "../../utils/constants";
+import { queryClient } from "../../utils/queryClient";
+import { showErrorToast } from "../../utils/showErrorToast";
+import UpdateCreateForm from "./PlansCreateUpdateForm";
 
-
-const key = "plans"
-
-
+const key = "plans";
 
 const deletePlan = (id: string) => {
-
-    return API.delete(`${key}/${id}`, {
-        headers: { "Content-Type": "multipart/form-data" },
-
-    })
-
-
-}
+  return API.delete(`${key}/${id}`, {
+    headers: { "Content-Type": "multipart/form-data" },
+  });
+};
 
 const Plans = () => {
-    // const { data: brands } = useQuery("brands")
-    const { setStatusCreate, setStatusDefault, status, setStatusEdit } = useToggle()
-    const [selectedRowId, setSelectedRowId] = useState<string>("")
-    const [page, setPage] = useState<number>(1)
-    const [deletePopup, setDeletePopup] = useState(false)
-    const { data, isLoading, isFetching } = useQuery([key, page])
+  // const { data: brands } = useQuery("brands")
+  const { setStatusCreate, setStatusDefault, status, setStatusEdit } =
+    useToggle();
+  const [selectedRowId, setSelectedRowId] = useState<string>("");
+  const [page, setPage] = useState<number>(1);
+  const [deletePopup, setDeletePopup] = useState(false);
+  const { data, isLoading, isFetching } = useQuery([key, page]);
 
+  const { mutate, isLoading: isDeleteLoading } = useMutation(deletePlan, {
+    onSuccess: () => {
+      queryClient.invalidateQueries(key);
+      setDeletePopup(false);
+    },
+    onError: () => {
+      showErrorToast("Something went wrong deleteing the records");
+    },
+  });
 
-    const { mutate, isLoading: isDeleteLoading } = useMutation(deletePlan, {
-        onSuccess: () => {
+  const columns = useMemo(
+    () => [
+      {
+        Header: "#Id",
+        accessor: "id", //accessor is the "key" in the data
+      },
 
-            queryClient.invalidateQueries(key)
-            setDeletePopup(false)
+      {
+        Header: "Name",
+        accessor: "name",
+      },
+
+      {
+        Header: "Description",
+        accessor: "description",
+      },
+      {
+        Header: "Price",
+        accessor: "price",
+      },
+      {
+        Header: "Is Active",
+        accessor: "is_active",
+        Cell: (data: Cell) => {
+          return <p>{data.row.values.is_active === 0 ? "No" : "Yes"}</p>;
         },
-        onError: () => {
+      },
+      {
+        Header: "Is Popular",
+        accessor: "is_popular",
+        Cell: (data: Cell) => {
+          return <p>{data.row.values.is_popular === 0 ? "No" : "Yes"}</p>;
+        },
+      },
+      {
+        Header: "Actions",
+        Cell: (data: Cell) => {
+          return (
+            <div className="d-flex">
+              <button
+                onClick={() => {
+                  setSelectedRowId(data.row.values.id);
+                  setStatusEdit();
+                }}
+              >
+                <AiFillEdit color={secondaryColor} size={24} />
+              </button>
+              <button
+                className="ml-2"
+                onClick={() => {
+                  setSelectedRowId(data.row.values.id);
+                  setDeletePopup(true);
+                }}
+              >
+                <AiFillDelete color="red" size={24} />
+              </button>
+            </div>
+          );
+        },
+      },
+    ],
+    []
+  );
 
-            showErrorToast("Something went wrong deleteing the records")
-        }
-    })
-
-    const columns = useMemo(
-        () => [
-            {
-                Header: '#Id',
-                accessor: 'id',  //accessor is the "key" in the data
-            },
-
-            {
-                Header: 'Name',
-                accessor: 'name',
-            },
-
-            {
-                Header: 'Description',
-                accessor: 'description'
-            },
-            {
-                Header: 'Price',
-                accessor: 'price',
-            },
-            {
-                Header: 'Is Active',
-                accessor: 'is_active',
-                Cell: (data: Cell) => {
-                    return (
-                        <p>{data.row.values.is_active === 0 ? "No" : "Yes"}</p>
-                    )
-                }
-            },
-            {
-                Header: 'Is Popular',
-                accessor: 'is_popular',
-                Cell: (data: Cell) => {
-                    return (
-                        <p>{data.row.values.is_popular === 0 ? "No" : "Yes"}</p>
-                    )
-                }
-            },
-            {
-                Header: 'Actions',
-                Cell: (data: Cell) => {
-
-                    return (
-                        <div className="d-flex">
-                            <button onClick={() => {
-                                setSelectedRowId(data.row.values.id)
-                                setStatusEdit()
-                            }}>
-                                <AiFillEdit color={secondaryColor} size={24} />
-                            </button>
-                            <button className="ml-2" onClick={() => {
-                                setSelectedRowId(data.row.values.id)
-                                setDeletePopup(true)
-                            }}>
-                                <AiFillDelete color="red" size={24} />
-                            </button>
-                        </div>
-                    )
-                }
-            }
-        ],
-        []
-    )
-
-
-    if (!data && (!isLoading || !isFetching)) {
-        return (
-            <Container fluid className="d-flex justify-content-center display-3">
-                <div className="d-flex flex-column align-items-center">
-
-                    <BiSad color={primaryColor} />
-                    <span className="text-primary display-3">Something went wrong</span>
-                </div>
-            </Container>
-        )
-    }
-
-
-
-
-
+  if (!data && (!isLoading || !isFetching)) {
     return (
-        <>
-            <Container fluid className="component-wrapper px-0 py-2">
-                <Container fluid className="d-flex justify-content-between py-2">
-                    <h2 className="text-primary font-weight-bold">Plans</h2>
-                    {
-                        status !== "default" ?
-                            <Button variant="primary" onClick={setStatusDefault}  >
-                                <div className="text-secondary">
-                                    <BiArrowFromRight size={25} /> <b>Back</b>
-                                </div>
-                            </Button> :
-                            <Button variant="primary" onClick={setStatusCreate}>
-                                <div className="text-secondary">
+      <Container fluid className="d-flex justify-content-center display-3">
+        <div className="d-flex flex-column align-items-center">
+          <BiSad color={primaryColor} />
+          <span className="text-primary display-3">Something went wrong</span>
+        </div>
+      </Container>
+    );
+  }
 
-                                    <AiFillPlusSquare size={24} /> <b>Create</b>
-                                </div>
-                            </Button>
-                    }
+  return (
+    <>
+      <Container fluid className="component-wrapper px-0 py-2">
+        <Container fluid className="d-flex justify-content-between py-2">
+          <h2 className="font-weight-bold">Plans</h2>
+          {status !== "default" ? (
+            <Button variant="primary" onClick={setStatusDefault}>
+              <div className="text-white">
+                <BiArrowFromRight size={25} /> <b>Back</b>
+              </div>
+            </Button>
+          ) : (
+            <Button variant="primary" onClick={setStatusCreate}>
+              <div className="text-white">
+                <AiFillPlusSquare size={24} /> <b>Create</b>
+              </div>
+            </Button>
+          )}
+        </Container>
 
-                </Container>
-
-                <Container fluid className="h-100 p-0">
-
-                    {
-                        status === "creating" &&
-                        <Container fluid className="mt-2 py-4">
-                            <UpdateCreateForm />
-                        </Container>
-                    }
-
-                    {
-                        status === "editing" &&
-                        <Container fluid className="mt-2 py-4">
-                            <UpdateCreateForm id={selectedRowId} />
-                        </Container>
-                    }
-
-                    {
-                        (status === "default") &&
-                        <>
-                            {
-                                (isLoading || isFetching) ?
-                                    <IsLoading /> :
-
-
-                                    <>
-                                        <ReactTable data={(data as any).data} columns={columns} />
-                                        {
-                                            (data as any).data.length > 0 ?
-                                                <TablePagination
-                                                    currentPage={(data as any).current_page}
-                                                    lastPage={(data as any).last_page}
-                                                    setPage={setPage}
-                                                    hasNextPage={!!(data as any).next_page_url}
-                                                    hasPrevPage={!!(data as any).prev_page_url}
-                                                />
-                                                : null
-                                        }  </>
-                            }
-                        </>
-
-                    }
-
-                </Container>
+        <Container fluid className="h-100 p-0">
+          {status === "creating" && (
+            <Container fluid className="mt-2 py-4">
+              <UpdateCreateForm />
             </Container>
-            <Modal show={deletePopup} onHide={() => setDeletePopup(false)}>
-                <Modal.Header closeButton>
-                    <Modal.Title>Are you sure?</Modal.Title>
-                </Modal.Header>
-                <Modal.Body>Do you really want to delete this record? This process cannot be undone</Modal.Body>
-                <Modal.Footer>
-                    <Button variant="bg-light" onClick={() => setDeletePopup(false)}>
-                        Close
-                    </Button>
-                    <Button variant="danger" onClick={() => {
+          )}
 
-                        mutate(selectedRowId)
-                    }}>
-                        {
-                            isDeleteLoading ?
-                                <Spinner animation="border" size="sm" /> :
-                                "Delete"
-                        }
-                    </Button>
-                </Modal.Footer>
-            </Modal>
-        </>
-    )
-}
+          {status === "editing" && (
+            <Container fluid className="mt-2 py-4">
+              <UpdateCreateForm id={selectedRowId} />
+            </Container>
+          )}
 
-export default Plans
+          {status === "default" && (
+            <>
+              {isLoading || isFetching ? (
+                <IsLoading />
+              ) : (
+                <>
+                  <ReactTable data={(data as any).data} columns={columns} />
+                  {(data as any).data.length > 0 ? (
+                    <TablePagination
+                      currentPage={(data as any).current_page}
+                      lastPage={(data as any).last_page}
+                      setPage={setPage}
+                      hasNextPage={!!(data as any).next_page_url}
+                      hasPrevPage={!!(data as any).prev_page_url}
+                    />
+                  ) : null}{" "}
+                </>
+              )}
+            </>
+          )}
+        </Container>
+      </Container>
+      <Modal show={deletePopup} onHide={() => setDeletePopup(false)}>
+        <Modal.Header closeButton>
+          <Modal.Title>Are you sure?</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          Do you really want to delete this record? This process cannot be
+          undone
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="bg-light" onClick={() => setDeletePopup(false)}>
+            Close
+          </Button>
+          <Button
+            variant="danger"
+            onClick={() => {
+              mutate(selectedRowId);
+            }}
+          >
+            {isDeleteLoading ? (
+              <Spinner animation="border" size="sm" />
+            ) : (
+              "Delete"
+            )}
+          </Button>
+        </Modal.Footer>
+      </Modal>
+    </>
+  );
+};
+
+export default Plans;

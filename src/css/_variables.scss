@@ -1,15 +1,18 @@
-$primary-color: #214D70;
-$secondary-color: #ECB054;
-$light-color:rgb(207, 207, 207);
-$white-color:rgb(255, 255, 255);
-$dark-color:rgb(0, 0, 0);
-$light-dark:#6F6F6F;
-$navWidth:18rem;
+$primary-color: #2d72d9;
+$secondary-color: #2d72d9;
+$light-color: rgb(207, 207, 207);
+$white-color: rgb(255, 255, 255);
+$grey-color: #e3e8ee;
+$dark-color: rgb(0, 0, 0);
+$light-dark: #6f6f6f;
+$navWidth: 18rem;
 // break points
-$desktop-breakpoint:800px;
-$large-screen-breakpoint:1280px;
+$desktop-breakpoint: 800px;
+$large-screen-breakpoint: 1280px;
 
 //bootstarp changes
-$theme-colors: ("primary": #214D70,
-    "secondary": #ECB054,
-    "success":rgb(49, 214, 123));
+$theme-colors: (
+  "primary": #2d72d9,
+  "secondary": #2d72d9,
+  "success": rgb(49, 214, 123),
+);

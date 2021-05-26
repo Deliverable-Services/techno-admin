@@ -1,5 +1,5 @@
 nav {
-  background-color: $white-color;
+  background-color: $grey-color;
   min-width: 300px;
   width: 25vh;
   height: 100vh;
@@ -11,7 +11,6 @@ nav {
   transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
   z-index: 100;
   padding: 1rem 0;
-  border-right: 1px solid rgba(#000, $alpha: .25);
 
   @include responsive($desktop-breakpoint) {
     position: fixed;
@@ -20,7 +19,7 @@ nav {
     transform: translateX(0);
     border-top-right-radius: 10px;
     border-bottom-right-radius: 10px;
-    background-color: transparent;
+    background-color: $grey-color;
 
     .logo-wrapper {
       width: auto;
@@ -48,15 +47,14 @@ nav {
   }
 
   .navLink {
-    // background-color: red;
     width: 100%;
-    // color: $light-dark;
     color: #555;
-    // letter-spacing: 2px;
     transition: all 0.3s ease;
     font-size: 1rem;
+    font-weight: 500;
     padding: 3px 20px;
-    letter-spacing: 0.2px;
+    letter-spacing: 0px;
+    border-left: 4px solid transparent;
 
     svg {
       margin-right: 10px;
@@ -67,7 +65,6 @@ nav {
     &.active,
     &:hover {
       color: $primary-color;
-      font-weight: 600;
       border-left: 4px solid $primary-color;
       -webkit-transition: all 0.3s ease;
       transition: all 0.3s ease;
