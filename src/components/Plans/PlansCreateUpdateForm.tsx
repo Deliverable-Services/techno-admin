@@ -30,7 +30,7 @@ const createUpdataCoupons = ({
   });
 };
 
-const CouponCreateUpdateForm = ({ id = "" }: ICreateUpdateForm) => {
+const PlanCreateUpdateForm = ({ id = "" }: ICreateUpdateForm) => {
   useEffect(() => {
     bsCustomFileInput.init();
   }, []);
@@ -123,4 +123,4 @@ const CouponCreateUpdateForm = ({ id = "" }: ICreateUpdateForm) => {
   );
 };
 
-export default CouponCreateUpdateForm;
+export default PlanCreateUpdateForm;

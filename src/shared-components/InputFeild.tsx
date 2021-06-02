@@ -61,7 +61,7 @@ export const InputField: React.FC<InputFieldProps> = ({
                         /> :
                         as === "select" ?
                             <Form.Control {...field} id={field.name} as="select">
-                                <option value="">{label}</option>
+                                <option value="" disabled>{label}</option>
                                 {
                                     selectData && selectData.map((data: any) => (
                                         <option value={data[selectValueKey || "id"]}>{data[selectTitleKey || "name"]}</option>

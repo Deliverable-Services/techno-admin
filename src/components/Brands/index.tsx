@@ -1,12 +1,17 @@
 import axios from "axios";
+import moment from "moment";
 import { useMemo, useState } from "react";
 import { Button, Container, Modal, Spinner } from "react-bootstrap";
 import { AiFillDelete, AiFillEdit, AiFillPlusSquare } from "react-icons/ai";
 import { BiArrowFromRight, BiSad } from "react-icons/bi";
 import { useMutation, useQuery } from "react-query";
+import { useHistory } from "react-router-dom";
 import { Cell } from "react-table";
 import useToggle from "../../hooks/useToggle";
+import CreatedUpdatedAt from "../../shared-components/CreatedUpdatedAt";
+import IsActiveBadge from "../../shared-components/IsActiveBadge";
 import IsLoading from "../../shared-components/isLoading";
+import PageHeading from "../../shared-components/PageHeading";
 import TablePagination from "../../shared-components/Pagination";
 import ReactTable from "../../shared-components/ReactTable";
 import API from "../../utils/API";
@@ -29,8 +34,7 @@ const deleteBrand = (id: string) => {
 };
 
 const Brands = () => {
-  const { setStatusCreate, setStatusDefault, status, setStatusEdit } =
-    useToggle();
+  const history = useHistory()
   const [selectedRowId, setSelectedRowId] = useState<string>("");
   const [page, setPage] = useState<number>(1);
   const [deletePopup, setDeletePopup] = useState(false);
@@ -49,6 +53,13 @@ const Brands = () => {
       showErrorToast("Something went wrong deleteing the records");
     },
   });
+
+  const _onCreateClick = () => {
+    history.push("/brands/create-edit")
+  }
+  const _onEditClick = (id: string) => {
+    history.push("/brands/create-edit", { id })
+  }
 
   const columns = useMemo(
     () => [
@@ -77,14 +88,40 @@ const Brands = () => {
         accessor: "url",
       },
       {
+        Header: "Is Active?",
+        accessor: "is_active",
+        Cell: (data: Cell) => {
+          return (
+            <IsActiveBadge value={data.row.values.is_active} />
+          )
+        }
+      },
+      {
+        Header: "Created At",
+        accessor: "created_at",
+        Cell: (data: Cell) => {
+          return (
+            <CreatedUpdatedAt date={data.row.values.created_at} />
+          )
+        }
+      },
+      {
+        Header: "Updated At",
+        accessor: "updated_at",
+        Cell: (data: Cell) => {
+          return (
+            <CreatedUpdatedAt date={data.row.values.updated_at} />
+          )
+        }
+      },
+      {
         Header: "Actions",
         Cell: (data: Cell) => {
           return (
             <div className="d-flex">
               <button
                 onClick={() => {
-                  setSelectedRowId(data.row.values.id);
-                  setStatusEdit();
+                  _onEditClick(data.row.values.id);
                 }}
               >
                 <AiFillEdit color={secondaryColor} size={24} />
@@ -120,54 +157,24 @@ const Brands = () => {
   return (
     <>
       <Container fluid className="component-wrapper px-0 py-2">
-        <Container fluid className="d-flex justify-content-between py-2">
-          <h2 className="font-weight-bold">Brands</h2>
-          {status !== "default" ? (
-            <Button variant="primary" onClick={setStatusDefault}>
-              <div className="text-white">
-                <BiArrowFromRight size={25} /> <b>Back</b>
-              </div>
-            </Button>
-          ) : (
-            <Button variant="primary" onClick={setStatusCreate}>
-              <div className="text-white">
-                <AiFillPlusSquare size={24} /> <b>Create</b>
-              </div>
-            </Button>
-          )}
-        </Container>
+        <PageHeading title="Brands" onClick={_onCreateClick} />
 
         <Container fluid className="h-100 p-0">
-          {status === "creating" && (
-            <Container fluid className="mt-2 py-4">
-              <UpdateCreateForm />
-            </Container>
-          )}
 
-          {status === "editing" && (
-            <Container fluid className="mt-2 py-4">
-              <UpdateCreateForm id={selectedRowId} />
-            </Container>
-          )}
-
-          {status === "default" && (
+          {isLoading || isFetching ? (
+            <IsLoading />
+          ) : (
             <>
-              {isLoading || isFetching ? (
-                <IsLoading />
-              ) : (
-                <>
-                  {!error && <ReactTable data={data.data} columns={columns} />}
-                  {!error && data.data.length > 0 ? (
-                    <TablePagination
-                      currentPage={data.current_page}
-                      lastPage={data.last_page}
-                      setPage={setPage}
-                      hasNextPage={!!data.next_page_url}
-                      hasPrevPage={!!data.prev_page_url}
-                    />
-                  ) : null}{" "}
-                </>
-              )}
+              {!error && <ReactTable data={data.data} columns={columns} />}
+              {!error && data.data.length > 0 ? (
+                <TablePagination
+                  currentPage={data.current_page}
+                  lastPage={data.last_page}
+                  setPage={setPage}
+                  hasNextPage={!!data.next_page_url}
+                  hasPrevPage={!!data.prev_page_url}
+                />
+              ) : null}{" "}
             </>
           )}
         </Container>

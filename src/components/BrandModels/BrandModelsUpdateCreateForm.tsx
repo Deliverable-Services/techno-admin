@@ -1,15 +1,15 @@
-import axios from "axios";
 import bsCustomFileInput from "bs-custom-file-input";
 import { Form, Formik } from "formik";
 import { useEffect } from "react";
-import { Alert, Button, Col, Container, Row, Spinner } from "react-bootstrap";
+import { Alert, Button, Col, Row, Spinner } from "react-bootstrap";
 import { useMutation, useQuery } from "react-query";
+import { useLocation } from "react-router-dom";
 import useGetSingleQuery from "../../hooks/useGetSingleQuery";
+import BackButton from "../../shared-components/BackButton";
 import { InputField } from "../../shared-components/InputFeild";
 import IsLoading from "../../shared-components/isLoading";
-import { ICreateUpdateForm } from "../../types/interface";
 import API from "../../utils/API";
-import { adminApiBaseUrl } from "../../utils/constants";
+import { isActiveArray } from "../../utils/arrays";
 import { queryClient } from "../../utils/queryClient";
 
 const key = "brand-models";
@@ -32,7 +32,9 @@ const createUpdataBrand = ({
   });
 };
 
-const BrandsCreateUpdateForm = ({ id = "" }: ICreateUpdateForm) => {
+const BrandModlesCreateUpdateForm = () => {
+  const { state } = useLocation()
+  const id = state ? (state as any).id : null
   useEffect(() => {
     bsCustomFileInput.init();
   }, []);
@@ -52,57 +54,50 @@ const BrandsCreateUpdateForm = ({ id = "" }: ICreateUpdateForm) => {
   if (dataLoading) return <IsLoading />;
 
   return (
-    <Row className="rounded">
-      <Col className="mx-auto">
-        <Formik
-          initialValues={{
-            name: apiData ? apiData.name : "",
-            url: apiData ? apiData.url : "",
-            image: "",
-            brand_id: "",
-          }}
-          onSubmit={(values) => {
-            const formdata = new FormData();
-            formdata.append("name", values.name);
-            if (!id) {
-              formdata.append("image", values.image);
+    <>
+      <BackButton title="Brands Model" />
+      <Row className="rounded">
+        <Col className="mx-auto">
+          <Formik
+            initialValues={apiData || {}}
+            onSubmit={(values) => {
+              const formdata = new FormData();
+              formdata.append("name", values.name);
+              if (values.image)
+                formdata.append("image", values.image);
               formdata.append("url", values.url);
               formdata.append("brand_id", values.brand_id);
-            }
-            // console.log("values", values)
+              formdata.append("is_active", values.is_active);
 
-            mutate({ formdata, id });
-          }}
-        >
-          {({ setFieldValue }) => (
-            <Form>
-              {status === "success" && (
-                <Alert variant="success">
-                  {id
-                    ? "Brand model updated successfully"
-                    : "Brand model created successfully"}
-                </Alert>
-              )}
-              {error && (
-                <Alert variant="danger">{(error as Error).message}</Alert>
-              )}
-              <div className={`form-container  py-2 `}>
-                <InputField
-                  name="name"
-                  placeholder="Name"
-                  label="Name"
-                  required
-                />
+              mutate({ formdata, id });
+            }}
+          >
+            {({ setFieldValue }) => (
+              <Form>
+                {status === "success" && (
+                  <Alert variant="success">
+                    {id
+                      ? "Brand model updated successfully"
+                      : "Brand model created successfully"}
+                  </Alert>
+                )}
+                {error && (
+                  <Alert variant="danger">{(error as Error).message}</Alert>
+                )}
+                <div className={`form-container  py-2 `}>
+                  <InputField
+                    name="name"
+                    placeholder="Name"
+                    label="Name"
+                    required
+                  />
 
-                {!id && (
                   <InputField
                     name="url"
                     placeholder="Url"
                     label="Url"
                     required
                   />
-                )}
-                {!id && (
                   <InputField
                     name="image"
                     placeholder="image"
@@ -110,8 +105,6 @@ const BrandsCreateUpdateForm = ({ id = "" }: ICreateUpdateForm) => {
                     isFile
                     setFieldValue={setFieldValue}
                   />
-                )}
-                {!id && (
                   <InputField
                     name="brand_id"
                     placeholder="Brand"
@@ -119,25 +112,27 @@ const BrandsCreateUpdateForm = ({ id = "" }: ICreateUpdateForm) => {
                     as="select"
                     selectData={!isBrandLoading && brands.data}
                   />
-                )}
-              </div>
-              <Row className="d-flex justify-content-start">
-                <Col md="2">
-                  <Button type="submit" disabled={isLoading} className="w-100">
-                    {isLoading ? (
-                      <Spinner animation="border" size="sm" />
-                    ) : (
-                      "Submit"
-                    )}
-                  </Button>
-                </Col>
-              </Row>
-            </Form>
-          )}
-        </Formik>
-      </Col>
-    </Row>
+
+                  <InputField as="select" selectData={isActiveArray} name="is_active" label="Is active?" placeholder="Choose is active" />
+                </div>
+                <Row className="d-flex justify-content-start">
+                  <Col md="2">
+                    <Button type="submit" disabled={isLoading} className="w-100">
+                      {isLoading ? (
+                        <Spinner animation="border" size="sm" />
+                      ) : (
+                        "Submit"
+                      )}
+                    </Button>
+                  </Col>
+                </Row>
+              </Form>
+            )}
+          </Formik>
+        </Col>
+      </Row>
+    </>
   );
 };
 
-export default BrandsCreateUpdateForm;
+export default BrandModlesCreateUpdateForm;

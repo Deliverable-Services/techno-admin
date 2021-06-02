@@ -4,11 +4,14 @@ import { Form, Formik } from "formik";
 import { useEffect } from "react";
 import { Alert, Button, Col, Row, Spinner } from "react-bootstrap";
 import { useMutation, useQuery } from "react-query";
+import { useLocation } from "react-router-dom";
 import useGetSingleQuery from "../../hooks/useGetSingleQuery";
+import BackButton from "../../shared-components/BackButton";
 import { InputField } from "../../shared-components/InputFeild";
 import IsLoading from "../../shared-components/isLoading";
 import { ICreateUpdateForm } from "../../types/interface";
 import API from "../../utils/API";
+import { isActiveArray } from "../../utils/arrays";
 import { adminApiBaseUrl } from "../../utils/constants";
 import { queryClient } from "../../utils/queryClient";
 
@@ -18,22 +21,23 @@ const createUpdataServices = ({
   formdata,
   id,
 }: {
-  formdata: any;
+  formdata: FormData;
   id: string;
 }) => {
   if (!id) {
     return API.post(`${key}`, formdata, {
-      headers: { "Content-Type": "applicatioin/json" },
+      headers: { "Content-Type": "multipart/form-data" },
     });
   }
 
   return API.post(`${key}/${id}`, formdata, {
-    headers: { "Content-Type": "application/json" },
+    headers: { "Content-Type": "multipart/form-data" },
   });
 };
 
-const ServicesCreateUpdateForm = ({ id = "" }: ICreateUpdateForm) => {
-  console.log("id", id);
+const ServicesCreateUpdateForm = () => {
+  const { state } = useLocation()
+  const id = state ? (state as any).id : null
   useEffect(() => {
     bsCustomFileInput.init();
   }, []);
@@ -51,24 +55,29 @@ const ServicesCreateUpdateForm = ({ id = "" }: ICreateUpdateForm) => {
 
   const apiData = data && (data as any);
 
-  console.log("apiData", apiData);
 
   if (dataLoading) return <IsLoading />;
 
   return (
+
     <Row className="rounded">
+      <BackButton title="Services" />
       <Col className="mx-auto">
         <Formik
-          initialValues={{
-            name: apiData ? apiData.name : "",
-            url: apiData ? apiData.url : "",
-            price: apiData ? apiData.price : "",
-            category_id: "",
-          }}
+          initialValues={apiData || {}}
           onSubmit={(values) => {
             // console.log("values", values)
-
-            mutate({ formdata: values, id });
+            const formdata = new FormData()
+            formdata.append("name", values.name);
+            formdata.append("url", values.url);
+            formdata.append("details", values.details);
+            formdata.append("order", values.order);
+            formdata.append("is_active", values.is_active);
+            formdata.append("category_id", values.category_id);
+            formdata.append("price", values.price);
+            if (values.image)
+              formdata.append("image", values.image);
+            mutate({ formdata, id });
           }}
         >
           {({ setFieldValue }) => (
@@ -91,41 +100,41 @@ const ServicesCreateUpdateForm = ({ id = "" }: ICreateUpdateForm) => {
                   required
                 />
 
-                {!id && (
-                  <InputField
-                    name="url"
-                    placeholder="Url"
-                    label="Url"
-                    required
-                  />
-                )}
-                {!id && (
-                  <InputField
-                    name="price"
-                    placeholder="Price"
-                    label="Price"
-                    type="number"
-                  />
-                )}
-                {!id && (
-                  <InputField
-                    name="category_id"
-                    placeholder="Category"
-                    label="Choose Category"
-                    as="select"
-                    selectData={
-                      !isCategoriesLoading && (categories as any).data
-                    }
-                  />
-                )}
-                {!id && (
-                  <InputField
-                    name="details"
-                    placeholder="Details"
-                    label="Details"
-                    as="textarea"
-                  />
-                )}
+                <InputField
+                  name="url"
+                  placeholder="Url"
+                  label="Url"
+                  required
+                />
+                <InputField
+                  name="price"
+                  placeholder="Price"
+                  label="Price"
+                  type="number"
+                />
+                <InputField
+                  name="category_id"
+                  placeholder="Category"
+                  label="Choose Category"
+                  as="select"
+                  selectData={
+                    !isCategoriesLoading && (categories as any).data
+                  }
+                />
+                <InputField as="select" selectData={isActiveArray} name="is_active" label="Is active?" placeholder="Choose is active" />
+                <InputField
+                  name="image"
+                  placeholder="image"
+                  label="Choose Service Image"
+                  isFile
+                  setFieldValue={setFieldValue}
+                />
+                <InputField
+                  name="details"
+                  placeholder="Details"
+                  label="Details"
+                  as="textarea"
+                />
               </div>
               <Row className="d-flex justify-content-start">
                 <Col md="2">

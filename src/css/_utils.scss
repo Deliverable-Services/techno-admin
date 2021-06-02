@@ -35,6 +35,7 @@ h2 {
   font-size: 25px;
   font-weight: 900 !important;
 }
+
 p,
 td {
   font-family: "Lato", sans-serif;
@@ -221,13 +222,13 @@ td {
 // Will edit selected date or the endpoints of a range of dates
 .CalendarDay__selected {
   background: $primary-color;
-  color: $secondary-color;
+  color: $white;
 }
 
 // Will edit when hovered over. _span style also has this property
 .CalendarDay__selected:hover {
   background: $secondary-color;
-  color: $primary-color;
+  color: $white;
 }
 
 // Will edit when the second date (end date) in a range of dates

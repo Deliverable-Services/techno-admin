@@ -3,12 +3,17 @@ import { Container } from "react-bootstrap";
 import { Route, Switch, useLocation } from "react-router-dom";
 import Advertisements from "./components/Advertisements";
 import BrandModels from "./components/BrandModels";
+import BrandModlesCreateUpdateForm from "./components/BrandModels/BrandModelsUpdateCreateForm";
 // ------pages components--------
 import Brands from "./components/Brands";
+import BrandsCreateUpdateForm from "./components/Brands/BrandsCreateUpdateForm";
 import Categories from "./components/Categories";
+import CategoriesCreateUpdateForm from "./components/Categories/CategoriesCreateUpdateForm";
 import Coupons from "./components/Coupons";
+import CouponCreateUpdateForm from "./components/Coupons/CouponsCreateUpdateForm";
 import Dashboard from "./components/Dashboard";
 import Faqs from "./components/Faqs";
+import FaqCreateUpdateForm from "./components/Faqs/FaqsCreateUpdateForm";
 import LoginPage from "./components/LoginPage";
 import NavBar from "./components/NavBar";
 import Orders from "./components/Orders";
@@ -16,8 +21,10 @@ import AssignAgent from "./components/Orders/assignAgent";
 import SingleOrder from "./components/Orders/single";
 import Plans from "./components/Plans";
 import Services from "./components/Servicies";
+import ServicesCreateUpdateForm from "./components/Servicies/ServiciesCreateUpdateForm";
 import TopBar from "./components/TopBar";
 import Users from "./components/Users";
+import UserCreateUpdateForm from "./components/Users/UsersCreateUpdateForm";
 import VerifyOtp from "./components/VerifyOtp";
 import { IsDesktopContext } from "./context/IsDesktopContext";
 import useTokenStore from "./hooks/useTokenStore";
@@ -77,11 +84,18 @@ const App = () => {
             <PrivateRoute path="/brand-models" exact component={BrandModels} />
             <PrivateRoute path="/categories" exact component={Categories} />
             <PrivateRoute path="/users" exact component={Users} />
-            <PrivateRoute path="/servicies" exact component={Services} />
+            <PrivateRoute path="/services" exact component={Services} />
             <PrivateRoute path="/faqs" exact component={Faqs} />
             <PrivateRoute path="/plans" exact component={Plans} />
             <PrivateRoute path="/coupons" exact component={Coupons} />
             <PrivateRoute path="/orders" exact component={Orders} />
+            <PrivateRoute path="/brands/create-edit" exact component={BrandsCreateUpdateForm} />
+            <PrivateRoute path="/brand-models/create-edit" exact component={BrandModlesCreateUpdateForm} />
+            <PrivateRoute path="/categories/create-edit" exact component={CategoriesCreateUpdateForm} />
+            <PrivateRoute path="/users/create-edit" exact component={UserCreateUpdateForm} />
+            <PrivateRoute path="/services/create-edit" exact component={ServicesCreateUpdateForm} />
+            <PrivateRoute path="/coupons/create-edit" exact component={CouponCreateUpdateForm} />
+            <PrivateRoute path="/faqs/create-edit" exact component={FaqCreateUpdateForm} />
             <PrivateRoute path="/orders/:id" exact component={SingleOrder} />
             <PrivateRoute path="/orders/assign-agent/:id" exact component={AssignAgent} />
             <PrivateRoute

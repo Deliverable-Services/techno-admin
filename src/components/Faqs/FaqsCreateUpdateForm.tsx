@@ -11,11 +11,14 @@ import {
   Form as BForm,
 } from "react-bootstrap";
 import { useMutation } from "react-query";
+import { useLocation } from "react-router-dom";
 import useGetSingleQuery from "../../hooks/useGetSingleQuery";
+import BackButton from "../../shared-components/BackButton";
 import { InputField } from "../../shared-components/InputFeild";
 import IsLoading from "../../shared-components/isLoading";
 import { ICreateUpdateForm } from "../../types/interface";
 import API from "../../utils/API";
+import { isActiveArray } from "../../utils/arrays";
 import { adminApiBaseUrl } from "../../utils/constants";
 import { queryClient } from "../../utils/queryClient";
 
@@ -39,7 +42,9 @@ const createUpdataFaq = ({
   });
 };
 
-const BrandsCreateUpdateForm = ({ id = "" }: ICreateUpdateForm) => {
+const FaqCreateUpdateForm = () => {
+  const { state } = useLocation()
+  const id = state ? (state as any).id : null
   useEffect(() => {
     bsCustomFileInput.init();
   }, []);
@@ -47,7 +52,10 @@ const BrandsCreateUpdateForm = ({ id = "" }: ICreateUpdateForm) => {
   const { mutate, isLoading, error, status } = useMutation(createUpdataFaq, {
     onSuccess: (data) => {
       console.log("mutate", data);
-      setTimeout(() => queryClient.invalidateQueries(key), 500);
+      setTimeout(() => {
+        queryClient.invalidateQueries(key)
+        queryClient.invalidateQueries(`${key}/${id}`)
+      }, 500);
     },
   });
 
@@ -57,18 +65,15 @@ const BrandsCreateUpdateForm = ({ id = "" }: ICreateUpdateForm) => {
 
   return (
     <Row className="rounded">
+      <BackButton title="Faqs" />
       <Col className="mx-auto">
         <Formik
-          initialValues={{
-            title: data ? apiData.title : "",
-            description: data ? apiData.description : "",
-            is_active: data ? apiData.is_active : "",
-          }}
+          initialValues={apiData || {}}
           onSubmit={(values) => {
             const formdata = new FormData();
             formdata.append("title", values.title);
             formdata.append("description", values.description);
-            if (!id) formdata.append("is_active", values.is_active);
+            formdata.append("is_active", values.is_active);
 
             mutate({ formdata, id });
           }}
@@ -91,18 +96,13 @@ const BrandsCreateUpdateForm = ({ id = "" }: ICreateUpdateForm) => {
                   required
                 />
 
-                {!id && (
-                  <InputField
-                    name="is_active"
-                    placeholder="Is Active?"
-                    label="Choose is Faq active?"
-                    as="select"
-                    selectData={[
-                      { id: 1, name: "Yes" },
-                      { id: 0, name: "NO" },
-                    ]}
-                  />
-                )}
+                <InputField
+                  name="is_active"
+                  placeholder="Is Active?"
+                  label="Is Active?"
+                  as="select"
+                  selectData={isActiveArray}
+                />
 
                 <InputField
                   name="description"
@@ -133,4 +133,4 @@ const BrandsCreateUpdateForm = ({ id = "" }: ICreateUpdateForm) => {
   );
 };
 
-export default BrandsCreateUpdateForm;
+export default FaqCreateUpdateForm;

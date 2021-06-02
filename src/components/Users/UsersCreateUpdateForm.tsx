@@ -30,7 +30,7 @@ const createUpdateUser = ({
   });
 };
 
-const CategoriesCreateUpdateForm = ({ id = "" }: ICreateUpdateForm) => {
+const UserCreateUpdateForm = ({ id = "" }: ICreateUpdateForm) => {
   useEffect(() => {
     bsCustomFileInput.init();
   }, []);
@@ -111,4 +111,4 @@ const CategoriesCreateUpdateForm = ({ id = "" }: ICreateUpdateForm) => {
   );
 };
 
-export default CategoriesCreateUpdateForm;
+export default UserCreateUpdateForm;

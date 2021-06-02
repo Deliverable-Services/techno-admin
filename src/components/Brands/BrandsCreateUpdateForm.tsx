@@ -1,15 +1,15 @@
-import axios from "axios";
 import bsCustomFileInput from "bs-custom-file-input";
 import { Form, Formik } from "formik";
 import { useEffect } from "react";
 import { Alert, Button, Col, Row, Spinner } from "react-bootstrap";
 import { useMutation } from "react-query";
+import { useLocation } from "react-router-dom";
 import useGetSingleQuery from "../../hooks/useGetSingleQuery";
+import BackButton from "../../shared-components/BackButton";
 import { InputField } from "../../shared-components/InputFeild";
 import IsLoading from "../../shared-components/isLoading";
-import { ICreateUpdateForm } from "../../types/interface";
 import API from "../../utils/API";
-import { adminApiBaseUrl } from "../../utils/constants";
+import { isActiveArray } from "../../utils/arrays";
 import { queryClient } from "../../utils/queryClient";
 
 const key = "brands";
@@ -32,7 +32,9 @@ const createUpdataBrand = ({
   });
 };
 
-const BrandsCreateUpdateForm = ({ id = "" }: ICreateUpdateForm) => {
+const BrandsCreateUpdateForm = () => {
+  const { state } = useLocation()
+  const id = state ? (state as any).id : null;
   useEffect(() => {
     bsCustomFileInput.init();
   }, []);
@@ -50,45 +52,45 @@ const BrandsCreateUpdateForm = ({ id = "" }: ICreateUpdateForm) => {
   if (dataLoading) return <IsLoading />;
 
   return (
-    <Row className="rounded">
-      <Col className="mx-auto">
-        <Formik
-          initialValues={{
-            name: data ? apiData.name : "",
-            url: data ? apiData.url : "",
-            logo: "",
-          }}
-          onSubmit={(values) => {
-            const formdata = new FormData();
-            formdata.append("name", values.name);
-            formdata.append("url", values.url);
-            if (!id) formdata.append("logo", values.logo);
+    <>
+      <BackButton title="Brands" />
+      <Row className="rounded">
+        <Col className="mx-auto">
+          <Formik
+            initialValues={apiData || {}}
 
-            mutate({ formdata, id });
-          }}
-        >
-          {({ setFieldValue }) => (
-            <Form>
-              {status === "success" && (
-                <Alert variant="success">
-                  {id
-                    ? "Brand updated successfully"
-                    : "Brand created successfully"}
-                </Alert>
-              )}
-              {error && (
-                <Alert variant="danger">{(error as Error).message}</Alert>
-              )}
-              <div className="form-container ">
-                <InputField
-                  name="name"
-                  placeholder="Name"
-                  label="Name"
-                  required
-                />
+            onSubmit={(values) => {
+              const formdata = new FormData();
+              formdata.append("name", values.name);
+              formdata.append("url", values.url);
+              if (values.logo)
+                formdata.append("logo", values.logo);
+              formdata.append("is_active", values.is_active);
 
-                <InputField name="url" placeholder="Url" label="Url" required />
-                {!id && (
+              mutate({ formdata, id });
+            }}
+          >
+            {({ setFieldValue }) => (
+              <Form>
+                {status === "success" && (
+                  <Alert variant="success">
+                    {id
+                      ? "Brand updated successfully"
+                      : "Brand created successfully"}
+                  </Alert>
+                )}
+                {error && (
+                  <Alert variant="danger">{(error as Error).message}</Alert>
+                )}
+                <div className="form-container ">
+                  <InputField
+                    name="name"
+                    placeholder="Name"
+                    label="Name"
+                    required
+                  />
+
+                  <InputField name="url" placeholder="Url" label="Url" required />
                   <InputField
                     name="logo"
                     placeholder="logo"
@@ -96,25 +98,27 @@ const BrandsCreateUpdateForm = ({ id = "" }: ICreateUpdateForm) => {
                     isFile
                     setFieldValue={setFieldValue}
                   />
-                )}
-              </div>
 
-              <Row className="d-flex justify-content-start">
-                <Col md="2">
-                  <Button type="submit" disabled={isLoading} className="w-100">
-                    {isLoading ? (
-                      <Spinner animation="border" size="sm" />
-                    ) : (
-                      "Submit"
-                    )}
-                  </Button>
-                </Col>
-              </Row>
-            </Form>
-          )}
-        </Formik>
-      </Col>
-    </Row>
+                  <InputField as="select" selectData={isActiveArray} name="is_active" label="Is active?" placeholder="Choose is active" />
+                </div>
+
+                <Row className="d-flex justify-content-start">
+                  <Col md="2">
+                    <Button type="submit" disabled={isLoading} className="w-100">
+                      {isLoading ? (
+                        <Spinner animation="border" size="sm" />
+                      ) : (
+                        "Submit"
+                      )}
+                    </Button>
+                  </Col>
+                </Row>
+              </Form>
+            )}
+          </Formik>
+        </Col>
+      </Row>
+    </>
   );
 };
 

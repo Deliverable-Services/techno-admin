@@ -1,15 +1,15 @@
-import axios from "axios";
 import bsCustomFileInput from "bs-custom-file-input";
 import { Form, Formik } from "formik";
 import { useEffect } from "react";
 import { Alert, Button, Col, Row, Spinner } from "react-bootstrap";
-import { useMutation, useQuery } from "react-query";
+import { useMutation } from "react-query";
+import { useLocation } from "react-router-dom";
 import useGetSingleQuery from "../../hooks/useGetSingleQuery";
+import BackButton from "../../shared-components/BackButton";
 import { InputField } from "../../shared-components/InputFeild";
 import IsLoading from "../../shared-components/isLoading";
-import { ICreateUpdateForm } from "../../types/interface";
 import API from "../../utils/API";
-import { adminApiBaseUrl } from "../../utils/constants";
+import { isActiveArray } from "../../utils/arrays";
 import { queryClient } from "../../utils/queryClient";
 
 const key = "categories";
@@ -18,7 +18,7 @@ const createUpdataCategories = ({
   formdata,
   id,
 }: {
-  formdata: { name: any };
+  formdata: FormData;
   id: string;
 }) => {
   if (!id) {
@@ -28,11 +28,13 @@ const createUpdataCategories = ({
   }
 
   return API.post(`${key}/${id}`, formdata, {
-    headers: { "Content-Type": "application/json" },
+    headers: { "Content-Type": "multipart/form-data" },
   });
 };
 
-const CategoriesCreateUpdateForm = ({ id = "" }: ICreateUpdateForm) => {
+const CategoriesCreateUpdateForm = () => {
+  const { state } = useLocation()
+  const id = state ? (state as any).id : null
   useEffect(() => {
     bsCustomFileInput.init();
   }, []);
@@ -48,57 +50,87 @@ const CategoriesCreateUpdateForm = ({ id = "" }: ICreateUpdateForm) => {
 
   const apiData = data && (data as any);
 
-  console.log("apiData", data);
 
   if (dataLoading) return <IsLoading />;
 
   return (
-    <Row className="rounded">
-      <Col className="mx-auto">
-        <Formik
-          initialValues={{ name: apiData ? apiData.name : "" }}
-          onSubmit={(values) => {
-            console.log(values);
-            mutate({ formdata: values, id });
-          }}
-        >
-          {() => (
-            <Form className="w-100">
-              {status === "success" && (
-                <Alert variant="success">
-                  {id
-                    ? "Category updated successfully"
-                    : "Category created successfully"}
-                </Alert>
-              )}
-              {error && (
-                <Alert variant="danger">{(error as Error).message}</Alert>
-              )}
+    <>
+      <BackButton title="Categories" />
+      <Row className="rounded">
+        <Col className="mx-auto">
+          <Formik
+            initialValues={apiData || {}}
+            onSubmit={(values) => {
+              const formdata = new FormData()
+              formdata.append("name", values.name);
+              formdata.append("url", values.url);
+              formdata.append("order", values.order);
+              formdata.append("is_active", values.is_active);
+              if (values.logo)
+                formdata.append("logo", values.logo);
 
-              <div className="form-container py-2">
-                <InputField
-                  name="name"
-                  placeholder="Name"
-                  label="Name"
-                  required
-                />
-              </div>
-              <Row className="d-flex justify-content-start">
-                <Col md="2">
-                  <Button type="submit" disabled={isLoading} className="w-100">
-                    {isLoading ? (
-                      <Spinner animation="border" size="sm" />
-                    ) : (
-                      "Submit"
-                    )}
-                  </Button>
-                </Col>
-              </Row>
-            </Form>
-          )}
-        </Formik>
-      </Col>
-    </Row>
+              mutate({ formdata, id });
+            }}
+          >
+            {({ setFieldValue }) => (
+              <Form className="w-100">
+                {status === "success" && (
+                  <Alert variant="success">
+                    {id
+                      ? "Category updated successfully"
+                      : "Category created successfully"}
+                  </Alert>
+                )}
+                {error && (
+                  <Alert variant="danger">{(error as Error).message}</Alert>
+                )}
+
+                <div className="form-container py-2">
+                  <InputField
+                    name="name"
+                    placeholder="Name"
+                    label="Name"
+                    required
+                  />
+                  <InputField
+                    name="url"
+                    placeholder="Url"
+                    label="Url"
+                    required
+                  />
+                  <InputField
+                    name="order"
+                    placeholder="order"
+                    label="order"
+                    required
+                  />
+
+                  <InputField as="select" selectData={isActiveArray} name="is_active" label="Is active?" placeholder="Choose is active" />
+                  {/* <InputField
+                    name="logo"
+                    placeholder="logo"
+                    label="Choose Category Logo"
+                    isFile
+                    setFieldValue={setFieldValue}
+                  /> */}
+                </div>
+                <Row className="d-flex justify-content-start">
+                  <Col md="2">
+                    <Button type="submit" disabled={isLoading} className="w-100">
+                      {isLoading ? (
+                        <Spinner animation="border" size="sm" />
+                      ) : (
+                        "Submit"
+                      )}
+                    </Button>
+                  </Col>
+                </Row>
+              </Form>
+            )}
+          </Formik>
+        </Col>
+      </Row>
+    </>
   );
 };
 
