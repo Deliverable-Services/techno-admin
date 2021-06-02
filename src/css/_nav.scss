@@ -1,5 +1,5 @@
 nav {
-  background-color: $grey-color;
+  background-color: #f9fbfd;
   min-width: 300px;
   width: 25vh;
   height: 100vh;
@@ -19,7 +19,6 @@ nav {
     transform: translateX(0);
     border-top-right-radius: 10px;
     border-bottom-right-radius: 10px;
-    background-color: $grey-color;
 
     .logo-wrapper {
       width: auto;

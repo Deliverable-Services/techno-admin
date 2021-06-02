@@ -11175,7 +11175,7 @@ a.text-text-muted:hover, a.text-text-muted:focus {
 }
 
 nav {
-  background-color: #e3e8ee;
+  background-color: #f9fbfd;
   min-width: 300px;
   width: 25vh;
   height: 100vh;
@@ -11199,7 +11199,6 @@ nav {
             transform: translateX(0);
     border-top-right-radius: 10px;
     border-bottom-right-radius: 10px;
-    background-color: #e3e8ee;
   }
   nav .logo-wrapper {
     width: auto;
@@ -11316,6 +11315,10 @@ td {
   color: #12263f;
 }
 
+.text-grey {
+  color: #677788;
+}
+
 .text-muted {
   color: #95aac9;
 }
@@ -11329,7 +11332,7 @@ td {
 }
 
 .bg-grey-primary {
-  background-color: rgba(227, 232, 238, 0.6);
+  background-color: rgba(140, 152, 164, 0.6);
 }
 
 .top-bar {
@@ -11340,7 +11343,7 @@ td {
   width: 100%;
   height: 65px;
   max-height: 65px;
-  background-color: #e3e8ee;
+  background-color: #f9fbfd;
 }
 
 .top-bar .profile {
@@ -11371,10 +11374,6 @@ td {
 
 .logo {
   width: 6rem;
-}
-
-.component-wrapper {
-  background-color: white;
 }
 
 .search-input {
@@ -11614,7 +11613,39 @@ td {
   font-size: 1em;
   -webkit-transition: all 0.5s ease;
   transition: all 0.5s ease;
-  border: 0;
+  -webkit-box-shadow: 0 6px 12px rgba(140, 152, 164, 0.1);
+          box-shadow: 0 6px 12px rgba(140, 152, 164, 0.1);
+  background-color: #fff;
+  border: 0.0625rem solid rgba(231, 234, 243, 0.7) !important;
+  border-radius: 0.75rem !important;
+  padding: 0px !important;
+}
+
+.card.hoverable:hover {
+  -webkit-box-shadow: 0 6px 12px rgba(140, 152, 164, 0.25) !important;
+          box-shadow: 0 6px 12px rgba(140, 152, 164, 0.25) !important;
+}
+
+.card.stats-card .lead {
+  text-transform: uppercase;
+  font-size: 13px;
+  font-weight: 600;
+  color: #8c98a4;
+}
+
+.card.stats-card .tag {
+  font-size: 11px;
+}
+
+.card .card-header {
+  background-color: transparent;
+  border-bottom: 1px solid #d2ddec;
+  padding: 20px 20px 0 20px;
+  font-weight: 600;
+}
+
+.card .card-content {
+  padding: 20px;
 }
 
 .chart-container {
@@ -11699,15 +11730,25 @@ td {
           box-shadow: none;
 }
 
+.tag {
+  padding: 3px 6px;
+  border-radius: 4px;
+}
+
+.tag.tag-success {
+  background-color: rgba(0, 201, 167, 0.1);
+  color: #00c9a7;
+}
+
 body {
   font-family: "Lato", sans-serif;
-  background-color: #e3e8ee;
+  background-color: #f9fbfd;
 }
 
 .App {
   display: -ms-grid;
   display: grid;
-  background-color: #e3e8ee;
+  background-color: #f9fbfd;
 }
 
 .App .main-layout {
@@ -11717,7 +11758,6 @@ body {
   margin-bottom: 50px;
   padding: 10px 10px;
   margin-right: 10px;
-  background-color: white;
 }
 
 @media (min-width: 800px) {

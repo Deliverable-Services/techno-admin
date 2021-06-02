@@ -15,12 +15,12 @@
 
 body {
   font-family: "Lato", sans-serif;
-  background-color: #e3e8ee;
+  background-color: #f9fbfd;
 }
 
 .App {
   display: grid;
-  background-color: $grey-color;
+  background-color: #f9fbfd;
 
   .main-layout {
     border-radius: 12px;
@@ -29,7 +29,6 @@ body {
     margin-bottom: 50px;
     padding: 10px 10px;
     margin-right: 10px;
-    background-color: $white-color;
   }
 
   @include responsive($desktop-breakpoint) {
