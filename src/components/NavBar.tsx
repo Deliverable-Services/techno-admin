@@ -5,14 +5,14 @@ import {
   FaDiceFour,
   FaQuestionCircle,
   FaRegLightbulb,
-  FaUsers
+  FaUsers,
 } from "react-icons/fa";
 import { IoLogoModelS } from "react-icons/io";
 import {
   RiAdvertisementFill,
   RiCoupon3Line,
   RiDashboardFill,
-  RiServiceFill
+  RiServiceFill,
 } from "react-icons/ri";
 import { SiBrandfolder } from "react-icons/si";
 import { IsDesktopContext } from "../context/IsDesktopContext";
@@ -63,6 +63,7 @@ const manageLinks: Array<INavLink> = [
     icon: <RiCoupon3Line />,
   },
 ];
+
 const mainLinks: Array<INavLink> = [
   {
     title: "Orders",
@@ -93,9 +94,7 @@ const NavBar = ({ isNavOpen, setIsNavOpen }: INavBar) => {
   return (
     <>
       <nav className={isNavOpen ? "active" : ""}>
-        {isDesktop ? (
-          <Logo />
-        ) : null}
+        {isDesktop ? <Logo /> : null}
 
         <div className="all-links">
           <ul className="pt-4">
@@ -107,9 +106,9 @@ const NavBar = ({ isNavOpen, setIsNavOpen }: INavBar) => {
             />
           </ul>
 
-          <p className=" mb-2">Manage</p>
+          <p className="text-muted mb-2">Main</p>
           <ul>
-            {manageLinks.map(({ title, path, icon }) => (
+            {mainLinks.map(({ title, path, icon }) => (
               <Navlink
                 path={path}
                 title={title}
@@ -119,9 +118,10 @@ const NavBar = ({ isNavOpen, setIsNavOpen }: INavBar) => {
               />
             ))}
           </ul>
-          <p className="mb-2">Main</p>
+
+          <p className="text-muted mb-2">Manage</p>
           <ul>
-            {mainLinks.map(({ title, path, icon }) => (
+            {manageLinks.map(({ title, path, icon }) => (
               <Navlink
                 path={path}
                 title={title}

@@ -104,15 +104,20 @@
 .table {
   thead {
     th {
-      padding: 10px;
-      color: #222;
+      padding: 20px;
+      color: $text-muted;
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: 0.4px;
+      border: 0;
     }
   }
 
   td {
-    padding: 10px 10px 10px 10px;
-    color: #666;
+    padding: 10px 20px;
     text-transform: initial;
+    color: $text-primary;
+    border-bottom: 1px solid #edf2f9;
   }
 }
 

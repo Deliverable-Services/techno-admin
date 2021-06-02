@@ -47,18 +47,19 @@ nav {
 
   .navLink {
     width: 100%;
-    color: #555;
+    color: $text-grey;
     transition: all 0.3s ease;
     font-size: 1rem;
     font-weight: 500;
-    padding: 3px 20px;
+    padding: 5px 20px;
+    font-weight: 600;
     letter-spacing: 0px;
     border-left: 4px solid transparent;
 
     svg {
       margin-right: 10px;
-      height: 20px;
-      width: 20px;
+      height: 16px;
+      width: 16px;
     }
 
     &.active,

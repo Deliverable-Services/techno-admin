@@ -61,8 +61,10 @@ function ReactTable({ data, columns }: Props): ReactElement {
 
   return (
     <Container className="px-0">
-      {/* search and column hiding */}
-      <Container fluid className="d-flex align-items-center position-relative">
+      <Container
+        fluid
+        className="card-header pb-3 d-flex align-items-center position-relative"
+      >
         <div className="w-100">
           <div className="search-input">
             <AiOutlineSearch size={24} />
@@ -114,103 +116,101 @@ function ReactTable({ data, columns }: Props): ReactElement {
         </Dropdown>
       </Container>
 
-      <Container fluid className="mt-4    ">
-        {/*-------------------- table---------------------  */}
-        <div className="tableFixed">
-          <Table
-            className="table-fixed"
-            {...getTableProps()}
-            responsive
-            hover
-            size="sm"
-          >
-            <thead className="bg-grey-primary">
-              {
-                // Loop over the header rows
-                headerGroups.map((headerGroup) => (
-                  // Apply the header row props
-                  <tr {...headerGroup.getHeaderGroupProps()}>
-                    {
-                      // Loop over the headers in each row
-                      headerGroup.headers.map((column) => (
-                        // Apply the header cell props
-                        <th
-                          {...column.getHeaderProps(
-                            column.getSortByToggleProps()
-                          )}
-                        >
-                          {
-                            // Render the header
-                            column.render("Header")
-                          }
-                          <span>
-                            {column.isSorted ? (
-                              column.isSortedDesc ? (
-                                <IoMdArrowDropup />
-                              ) : (
-                                <IoMdArrowDropdown />
-                              )
+      {/*-------------------- table---------------------  */}
+      <div className="tableFixed">
+        <Table
+          className="table-fixed"
+          {...getTableProps()}
+          responsive
+          hover
+          size="sm"
+        >
+          <thead className="bg-grey-primary">
+            {
+              // Loop over the header rows
+              headerGroups.map((headerGroup) => (
+                // Apply the header row props
+                <tr {...headerGroup.getHeaderGroupProps()}>
+                  {
+                    // Loop over the headers in each row
+                    headerGroup.headers.map((column) => (
+                      // Apply the header cell props
+                      <th
+                        {...column.getHeaderProps(
+                          column.getSortByToggleProps()
+                        )}
+                      >
+                        {
+                          // Render the header
+                          column.render("Header")
+                        }
+                        <span>
+                          {column.isSorted ? (
+                            column.isSortedDesc ? (
+                              <IoMdArrowDropup />
                             ) : (
-                              ""
-                            )}
-                          </span>
-                        </th>
-                      ))
+                              <IoMdArrowDropdown />
+                            )
+                          ) : (
+                            ""
+                          )}
+                        </span>
+                      </th>
+                    ))
+                  }
+                </tr>
+              ))
+            }
+          </thead>
+          {/* Apply the table body props */}
+          <tbody {...getTableBodyProps()}>
+            {
+              // Loop over the table rows
+              rows.map((row) => {
+                // Prepare the row for display
+                prepareRow(row);
+                // console.log("row", rows.length)
+                // if (!rows.length) return <h1>No data</h1>
+                return (
+                  // Apply the row props
+                  <tr {...row.getRowProps()}>
+                    {
+                      // Loop over the rows cells
+                      row.cells.map((cell) => {
+                        // Apply the cell props
+                        return (
+                          <td {...cell.getCellProps()}>
+                            {
+                              // Render the cell contents
+                              cell.render("Cell")
+                            }
+                          </td>
+                        );
+                      })
                     }
                   </tr>
-                ))
-              }
-            </thead>
-            {/* Apply the table body props */}
-            <tbody {...getTableBodyProps()}>
-              {
-                // Loop over the table rows
-                rows.map((row) => {
-                  // Prepare the row for display
-                  prepareRow(row);
-                  // console.log("row", rows.length)
-                  // if (!rows.length) return <h1>No data</h1>
-                  return (
-                    // Apply the row props
-                    <tr {...row.getRowProps()}>
-                      {
-                        // Loop over the rows cells
-                        row.cells.map((cell) => {
-                          // Apply the cell props
-                          return (
-                            <td {...cell.getCellProps()}>
-                              {
-                                // Render the cell contents
-                                cell.render("Cell")
-                              }
-                            </td>
-                          );
-                        })
-                      }
-                    </tr>
-                  );
-                })
-              }
-              {/* {rows.length === 0 ?
+                );
+              })
+            }
+            {/* {rows.length === 0 ?
                                 <Container fluid className="d-flex justify-content-center w-100 align-item-center">
                                     <span className="text-primary display-3">No data found</span>
                                 </Container>
                                 : ""} */}
-            </tbody>
-          </Table>
-        </div>
+          </tbody>
+        </Table>
+      </div>
 
-        {/* pagination  */}
+      {/* pagination  */}
 
-        {rows.length === 0 ? (
-          <Container fluid className="d-flex justify-content-center display-3">
-            <div className="d-flex flex-column align-items-center">
-              <BiSad color={primaryColor} />
-              <span className="text-primary display-3">No data found</span>
-            </div>
-          </Container>
-        ) : null}
-      </Container>
+      {rows.length === 0 ? (
+        <Container fluid className="d-flex justify-content-center display-3">
+          <div className="d-flex flex-column align-items-center">
+            <BiSad color={primaryColor} />
+            <span className="text-primary display-3">No data found</span>
+          </div>
+        </Container>
+      ) : null}
     </Container>
   );
 }

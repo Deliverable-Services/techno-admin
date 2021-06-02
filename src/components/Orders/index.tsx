@@ -104,25 +104,9 @@ const Orders = () => {
 
   return (
     <>
-      <Container fluid className="component-wrapper px-0 py-2">
-        <Container fluid className="d-flex justify-content-between py-2">
-          <h2 className="font-weight-bold">Orders</h2>
-          {/* {
-                        status !== "default" ?
-                            <Button variant="primary" onClick={setStatusDefault}  >
-                                <div className="text-secondary">
-                                    <BiArrowFromRight size={25} /> <b>Back</b>
-                                </div>
-                            </Button> :
-                            <Button variant="primary" onClick={setStatusCreate}>
-                                <div className="text-secondary">
+      <h2 className="font-weight-bold mb-4">Orders</h2>
 
-                                    <AiFillPlusSquare size={24} /> <b>Create</b>
-                                </div>
-                            </Button>
-                    } */}
-        </Container>
-
+      <Container fluid className="card component-wrapper px-0 py-2">
         <Container fluid className="h-100 p-0">
           <>
             {isLoading || isFetching ? (
