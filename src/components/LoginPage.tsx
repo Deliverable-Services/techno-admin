@@ -49,17 +49,17 @@ const LoginPage = (props: Props) => {
         {({ errors }) => {
           return (
             <Form>
-              <div className="w-100 mb-4">
-                <Logo />
-              </div>
-
-              <div className="d-flex flex-column align-items-start justify-content-between px-3 py-3 box-shadow rounded">
-                <h2 className="text-primary">
-                  <b>Login</b>
-                </h2>
-                <p>
-                  We will send you a 4-digit verification code to this number
-                </p>
+              <div
+                className="d-flex flex-column align-items-center justify-content-between px-3 py-3"
+                style={{
+                  width: "450px",
+                }}
+              >
+                <h1 className="text-black">
+                  <b>Sign In</b>
+                </h1>
+                <p className="text-muted">OTP will be send to your number.</p>
+                <br />
                 <InputField
                   name="phone"
                   placeholder="Enter your phone number"
@@ -68,12 +68,16 @@ const LoginPage = (props: Props) => {
                   error={errors.phone}
                 />
 
-                <Button variant="primary" type="submit" className="my-2">
+                <Button
+                  variant="primary"
+                  type="submit"
+                  className="full-width my-2"
+                >
                   {isLoading ? (
                     <Spinner animation="border" variant="secondary" size="sm" />
                   ) : (
                     <div className="text-white">
-                      <b>Send OTP</b>
+                      <b>Submit</b>
                     </div>
                   )}
                 </Button>

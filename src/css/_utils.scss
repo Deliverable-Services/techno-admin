@@ -8,6 +8,15 @@ button {
   background-color: transparent;
 }
 
+button.full-width {
+  width: 100%;
+  font-size: 15px;
+  font-weight: 500;
+  padding-top: 10px;
+  padding-bottom: 10px;
+  letter-spacing: 0.3px;
+}
+
 a {
   text-decoration: none;
   color: $white-color;
@@ -47,6 +56,14 @@ td {
 
 .text-primary {
   color: $primary-color;
+}
+
+.text-black {
+  color: $text-primary;
+}
+
+.text-muted {
+  color: $text-muted;
 }
 
 .bg-light-secondary {

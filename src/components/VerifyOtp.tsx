@@ -54,15 +54,19 @@ const VerifyOtp = (props: Props) => {
         {({ errors }) => {
           return (
             <Form>
-              <div className="d-flex flex-column align-items-center box-shadow px-3 py-5 rounded">
-                <div className="logo-container">
-                  <Logo />
-                </div>
-
-                <h1 className="text-primary my-3">
-                  <b>Verify OTP</b>
+              <div
+                className="d-flex flex-column align-items-center px-3 py-5"
+                style={{
+                  width: "450px",
+                }}
+              >
+                <h1 className="text-black">
+                  <b>Verify</b>
                 </h1>
-                <p>Please enter the code sent on your mobile number</p>
+                <p className="text-muted">
+                  Please enter the code sent on your mobile number
+                </p>
+                <br />
                 {error && (
                   <Alert variant="danger">
                     {(error as any).response.data.error}
@@ -75,12 +79,16 @@ const VerifyOtp = (props: Props) => {
                   label="Verify Otp"
                   error={errors.otp}
                 />
-                <Button variant="primary" type="submit" className="my-2">
+                <Button
+                  variant="primary"
+                  type="submit"
+                  className="full-width my-2"
+                >
                   {isLoading ? (
                     <Spinner animation="border" variant="secondary" size="sm" />
                   ) : (
                     <div className="text-white">
-                      <b>Verify OTP</b>
+                      <b>Verify</b>
                     </div>
                   )}
                 </Button>

@@ -1,5 +1,8 @@
-$primary-color: #2d72d9;
-$secondary-color: #2d72d9;
+$primary-color: #2c7be5;
+$secondary-color: #2c7be5;
+$text-primary: #12263f;
+$text-muted: #95aac9;
+$input-border: #d2ddec;
 $light-color: rgb(207, 207, 207);
 $white-color: rgb(255, 255, 255);
 $grey-color: #e3e8ee;
@@ -12,7 +15,9 @@ $large-screen-breakpoint: 1280px;
 
 //bootstarp changes
 $theme-colors: (
-  "primary": #2d72d9,
-  "secondary": #2d72d9,
+  "primary": #2c7be5,
+  "text-primary": #12263f,
+  "text-muted": #95aac9,
+  "secondary": #2c7be5,
   "success": rgb(49, 214, 123),
 );
