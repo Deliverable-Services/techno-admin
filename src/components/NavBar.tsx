@@ -5,7 +5,8 @@ import {
   FaDiceFour,
   FaQuestionCircle,
   FaRegLightbulb,
-  FaUsers
+  FaUsers,
+  FaMoneyCheck
 } from "react-icons/fa";
 import { IoLogoModelS } from "react-icons/io";
 import {
@@ -78,6 +79,11 @@ const mainLinks: Array<INavLink> = [
     title: "Advertisements",
     path: "/advertisements",
     icon: <RiAdvertisementFill />,
+  },
+  {
+    title: "Transactions",
+    path: "/transactions",
+    icon: <FaMoneyCheck />,
   },
 ];
 

@@ -12,6 +12,10 @@ import Faqs from "./components/Faqs";
 import LoginPage from "./components/LoginPage";
 import NavBar from "./components/NavBar";
 import Orders from "./components/Orders";
+import Transactions from "./components/Transactions";
+import TransactionUpdateForm from "./components/Transactions/TransactionUpdateForm";
+import Subscriptions from "./components/Subscriptions";
+import SingleSubscriptions from "./components/Subscriptions/single";
 import AssignAgent from "./components/Orders/assignAgent";
 import SingleOrder from "./components/Orders/single";
 import Plans from "./components/Plans";
@@ -82,6 +86,10 @@ const App = () => {
             <PrivateRoute path="/plans" exact component={Plans} />
             <PrivateRoute path="/coupons" exact component={Coupons} />
             <PrivateRoute path="/orders" exact component={Orders} />
+            <PrivateRoute path="/transactions" exact component={Transactions} />
+            <PrivateRoute path="/transactions/:id" exact component={TransactionUpdateForm} />
+            <PrivateRoute path="/subscriptions" exact component={Subscriptions} />
+            <PrivateRoute path="/subscriptions/:id" exact component={SingleSubscriptions} />
             <PrivateRoute path="/orders/:id" exact component={SingleOrder} />
             <PrivateRoute path="/orders/assign-agent/:id" exact component={AssignAgent} />
             <PrivateRoute
