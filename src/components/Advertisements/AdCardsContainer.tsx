@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Container, Row, Col, Card, Dropdown } from "react-bootstrap";
+import { Container, Row, Col, Card, Dropdown, Table } from "react-bootstrap";
 import { AiFillEdit, AiFillDelete } from "react-icons/ai";
 import { BiSad } from "react-icons/bi";
 import { QueryFunction, useQuery } from "react-query";
@@ -13,11 +13,12 @@ import {
 import { types } from "./AdvertisementTypes";
 import moment from "moment";
 import useCurrentAdTypeSelectedStore from "./useCurrentAdTypeSelectedStore";
+import { useHistory } from "react-router-dom";
+import IsActiveBadge from "../../shared-components/IsActiveBadge";
 
 interface Props {
   setSelectedRowId: React.Dispatch<React.SetStateAction<string>>;
   setDeletePopup: React.Dispatch<React.SetStateAction<boolean>>;
-  setStatusEdit: () => void;
 }
 const key = "banners/list";
 
@@ -31,7 +32,6 @@ const getBanners: QueryFunction = async ({ queryKey }) => {
 
 const LatestAd: React.FC<Props> = ({
   setDeletePopup,
-  setStatusEdit,
   setSelectedRowId,
 }) => {
   const selectedType = useCurrentAdTypeSelectedStore((state) => state.type);
@@ -39,12 +39,15 @@ const LatestAd: React.FC<Props> = ({
     (state) => state.setCurrentType
   );
   // const [selectedType, setSelectedType] = useState(types[0])
+  const history = useHistory()
 
   const { data, isLoading, isFetching } = useQuery<any>(
     [key, selectedType.id],
     getBanners
   );
-
+  const _onEditClick = (id: string) => {
+    history.push("/advertisements/create-edit", { id })
+  }
   if (isLoading || isFetching) return <IsLoading />;
 
   return (
@@ -85,35 +88,64 @@ const LatestAd: React.FC<Props> = ({
                     style={{ height: "12rem" }}
                     className="advertisement-image"
                   />
-                  <Card.Body className="d-flex align-items-start justify-content-between">
-                    <div>
-                      <Card.Title className="m-0 text-primary">
-                        {ad.name}
-                      </Card.Title>
-                      <span className="text-muted">
-                        ({moment(ad.valid_from).format("DD/MM/YY")}-
-                        {moment(ad.valid_to).format("DD/MM/YY")})
-                      </span>
+                  <Card.Body >
+                    <div className="d-flex w-100 justify-content-between">
+                      <h4 >{ad.name}</h4>
+                      <div className="advertisements-actions ">
+                        <button
+                          onClick={() => {
+                            setSelectedRowId(ad.id);
+                            _onEditClick(ad.id)
+                          }}
+                        >
+                          <AiFillEdit color={secondaryColor} size={24} />
+                        </button>
+                        <button
+                          className="ml-2"
+                          onClick={() => {
+                            setSelectedRowId(ad.id);
+                            setDeletePopup(true);
+                          }}
+                        >
+                          <AiFillDelete color="red" size={24} />
+                        </button>
+                      </div >
                     </div>
-                    <div className="advertisements-actions ">
-                      <button
-                        onClick={() => {
-                          setSelectedRowId(ad.id);
-                          setStatusEdit();
-                        }}
-                      >
-                        <AiFillEdit color={secondaryColor} size={24} />
-                      </button>
-                      <button
-                        className="ml-2"
-                        onClick={() => {
-                          setSelectedRowId(ad.id);
-                          setDeletePopup(true);
-                        }}
-                      >
-                        <AiFillDelete color="red" size={24} />
-                      </button>
-                    </div>
+                    <table className="w-100">
+                      <tbody>
+                        <tr>
+                          <td className="text-muted">Valid From</td>
+                          <td className="text-black font-weight-bold text-right">
+                            {moment(ad.valid_from).format("DD/MM/YY")}
+                          </td>
+                        </tr>
+                        <tr>
+                          <td className="text-muted py-1">Valid To</td>
+                          <td className="text-black py-1 font-weight-bold text-right">
+                            {moment(ad.valid_to).format("DD/MM/YY")}
+                          </td>
+                        </tr>
+                        <tr>
+                          <td className="text-muted">Is Active?</td>
+                          <td className="text-black font-weight-bold text-right">
+                            <IsActiveBadge value={ad.is_active} />
+                          </td>
+                        </tr>
+                        <tr>
+                          <td className="text-muted py-1">Updated At</td>
+                          <td className="text-black py-1 font-weight-bold text-right">
+                            {moment(ad.updated_at).format("DD/MM/YY")}
+                          </td>
+                        </tr>
+                        <tr>
+                          <td className="text-muted">Created At</td>
+                          <td className="text-black font-weight-bold text-right">
+                            {moment(ad.created_at).format("DD/MM/YY")}
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
+
                   </Card.Body>
                 </Card>
               </Col>

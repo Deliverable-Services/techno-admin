@@ -1,6 +1,6 @@
 import { useMemo, useState } from "react";
-import { Button, Container, Modal, Spinner } from "react-bootstrap";
-import { AiFillDelete, AiFillEdit } from "react-icons/ai";
+import { Button, Container, Modal, Spinner, Form } from "react-bootstrap";
+import { AiFillDelete, AiFillEdit, AiFillPlusSquare } from "react-icons/ai";
 import { BiSad } from "react-icons/bi";
 import { useMutation, useQuery } from "react-query";
 import { useHistory } from "react-router-dom";
@@ -25,16 +25,35 @@ const key = "users";
 const disableUser = (id: string) => {
 
   return API.post(`${key}/${id}`, {
-    headers: { "Content-Type": "multipart/form-data" },
+    disable: 1
   });
 };
+
+const queryFn = async (page: number, role: string) => {
+  const params: any = { page }
+
+  if (role) params["role"] = role
+  const r = await API.get<any>(`users`, {
+    params
+  });
+
+  return r.data
+}
 
 const Users = () => {
   const history = useHistory()
   const [selectedRowId, setSelectedRowId] = useState<string>("");
   const [page, setPage] = useState<number>(1);
+  const [role, setRole] = useState("")
+  console.log({ role })
   const [deletePopup, setDeletePopup] = useState(false);
-  const { data, isLoading, isFetching, error } = useQuery<any>([key, page], {
+
+  // const { data, isLoading, isFetching, error } = useQuery<any>([key, page], {
+  //   onError: (err: any) => {
+  //     showErrorToast(err.response.data.message);
+  //   },
+  // });
+  const { data, isLoading, isFetching, error } = useQuery<any>([key, page, role], () => queryFn(page, role), {
     onError: (err: any) => {
       showErrorToast(err.response.data.message);
     },
@@ -64,12 +83,12 @@ const Users = () => {
         accessor: "id", //accessor is the "key" in the data
       },
       {
-        Header: "Logo",
-        accessor: "logo",
+        Header: "Profile Pic",
+        accessor: "profile_pic",
         Cell: (data: Cell) => (
           <div className="table-image">
             <img
-              src={`${baseUploadUrl}brands/${data.row.values.logo}`}
+              src={`${baseUploadUrl}users/${data.row.values.profile_pic}`}
               alt="name"
             />
           </div>
@@ -80,15 +99,19 @@ const Users = () => {
         accessor: "name",
       },
       {
-        Header: "Url",
-        accessor: "url",
+        Header: "Phone",
+        accessor: "phone",
       },
       {
-        Header: "Is Active?",
-        accessor: "is_active",
+        Header: "Role",
+        accessor: "role",
+      },
+      {
+        Header: " Disabled?",
+        accessor: "disabled",
         Cell: (data: Cell) => {
           return (
-            <IsActiveBadge value={data.row.values.is_active} />
+            <IsActiveBadge value={data.row.values.disabled} />
           )
         }
       },
@@ -153,8 +176,25 @@ const Users = () => {
   return (
     <>
       <Container fluid className="component-wrapper px-0 py-2">
-        <PageHeading title="Users" onClick={_onCreateClick} />
-
+        <Container fluid className="d-flex justify-content-between py-2">
+          <h2 className="font-weight-bold">Users</h2>
+          <div className="d-flex">
+            <Form.Control as="select" className="mr-4"
+              onChange={(e) => {
+                setRole(e.target.value)
+              }}
+            >
+              <option value="">All</option>
+              <option value="admin">Admin</option>
+              <option value="customer">Customer</option>
+            </Form.Control>
+            <Button variant="primary" onClick={_onCreateClick}>
+              <div className="text-white d-flex ">
+                <AiFillPlusSquare size={25} /> <b>Create</b>
+              </div>
+            </Button>
+          </div>
+        </Container>
         <Container fluid className="h-100 p-0">
 
           {isLoading || isFetching ? (

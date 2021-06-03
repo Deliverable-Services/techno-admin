@@ -14,6 +14,10 @@ import { queryClient } from "../../utils/queryClient";
 import { types } from "./AdvertisementTypes";
 import DateTime from "react-datetime";
 import DatePicker from "../../shared-components/DatePicker";
+import { useLocation } from "react-router-dom";
+import BackButton from "../../shared-components/BackButton";
+import { stableValueHash } from "react-query/types/core/utils";
+import { isActiveArray } from "../../utils/arrays";
 
 const key = "banners";
 
@@ -35,7 +39,9 @@ const createUpdataAdvertisement = ({
   });
 };
 
-const AdvertisementCreateUpdateForm = ({ id = "" }: ICreateUpdateForm) => {
+const AdvertisementCreateUpdateForm = () => {
+  const { state } = useLocation()
+  const id = state ? (state as any).id : null
   useEffect(() => {
     bsCustomFileInput.init();
   }, []);
@@ -59,27 +65,17 @@ const AdvertisementCreateUpdateForm = ({ id = "" }: ICreateUpdateForm) => {
 
   return (
     <Row className="rounded">
+      <BackButton title="Advertisements" />
       <Col className="mx-auto">
         <Formik
-          initialValues={{
-            name: apiData ? apiData.name : "",
-            deeplink: apiData ? apiData.deeplink : "",
-            image: "",
-            type: "",
-            valid_to: "",
-            valid_from: "",
-          }}
+          initialValues={apiData || {}}
           onSubmit={(values) => {
+            const { image, ...rest } = values;
+            console.log({ values })
             const formdata = new FormData();
-            formdata.append("name", values.name);
-            formdata.append("deeplink", values.deeplink);
-            if (!id) {
+            for (let k in rest) formdata.append(k, rest[k])
+            if (image)
               formdata.append("image", values.image);
-              formdata.append("type", values.type);
-              formdata.append("valid_to", values.valid_to);
-              formdata.append("valid_from", values.valid_from);
-            }
-            // console.log("values", values)
 
             mutate({ formdata, id });
           }}
@@ -103,6 +99,12 @@ const AdvertisementCreateUpdateForm = ({ id = "" }: ICreateUpdateForm) => {
                   label="Name"
                   required
                 />
+                <InputField
+                  name="title"
+                  placeholder="Title"
+                  label="Title"
+                  required
+                />
 
                 <InputField
                   name="deeplink"
@@ -110,41 +112,53 @@ const AdvertisementCreateUpdateForm = ({ id = "" }: ICreateUpdateForm) => {
                   label="Deep Link"
                   required
                 />
+                <InputField
+                  type="number"
+                  name="order"
+                  placeholder="Order"
+                  label="Order"
+                  required
+                />
 
-                {!id && (
-                  <DatePicker
-                    name="valid_from"
-                    setFieldValue={setFieldValue}
-                    label="Valid From"
-                    inputProps={{ placeholder: "Valid from", required: true }}
-                  />
-                )}
-                {!id && (
-                  <DatePicker
-                    name="valid_to"
-                    setFieldValue={setFieldValue}
-                    label="Valid To"
-                    inputProps={{ placeholder: "Valid to", required: true }}
-                  />
-                )}
-                {!id && (
-                  <InputField
-                    name="image"
-                    placeholder="image"
-                    label="Image"
-                    isFile
-                    setFieldValue={setFieldValue}
-                  />
-                )}
-                {!id && (
-                  <InputField
-                    name="type"
-                    placeholder="Advertisement type"
-                    label="Choose Type"
-                    as="select"
-                    selectData={types}
-                  />
-                )}
+
+                <DatePicker
+                  name="valid_from"
+                  label="Valid From"
+                />
+                <DatePicker
+                  name="valid_to"
+                  label="Valid To"
+                />
+                <InputField
+                  name="image"
+                  placeholder="image"
+                  label="Image"
+                  isFile
+                  setFieldValue={setFieldValue}
+                />
+                <InputField as="select" selectData={isActiveArray} name="is_active" label="Is active?" placeholder="Choose is active" />
+                <InputField
+                  name="type"
+                  placeholder="Advertisement type"
+                  label="Choose Type"
+                  as="select"
+                  selectData={types}
+                />
+
+                <InputField
+                  as="textarea"
+                  name="description"
+                  placeholder="Description"
+                  label="Description"
+                  required
+                />
+                <InputField
+                  as="textarea"
+                  name="terms"
+                  placeholder="Terms"
+                  label="Terms"
+                  required
+                />
               </div>
               <Row className="d-flex justify-content-start">
                 <Col md="2">

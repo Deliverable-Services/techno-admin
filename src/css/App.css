@@ -11203,9 +11203,6 @@ nav {
     -ms-overflow-style: none;
     scrollbar-width: none;
   }
-  nav::-webkit-scrollbar {
-    width: 0;
-  }
   nav .logo-wrapper {
     width: auto;
     padding: 0 1rem;
@@ -11311,7 +11308,7 @@ td {
 }
 
 td {
-  text-transform: uppercase;
+  text-transform: capitalize;
 }
 
 .text-primary {

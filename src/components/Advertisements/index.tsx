@@ -1,22 +1,14 @@
 import React, { useState } from "react";
 import {
-  Container,
-  Button,
-  Row,
-  Col,
-  Card,
-  Modal,
-  Spinner,
+  Button, Container, Modal,
+  Spinner
 } from "react-bootstrap";
-import { AiFillDelete, AiFillEdit, AiFillPlusSquare } from "react-icons/ai";
-import { BiArrowFromRight } from "react-icons/bi";
 import { useMutation } from "react-query";
-import useToggle from "../../hooks/useToggle";
+import { useHistory } from "react-router-dom";
+import PageHeading from "../../shared-components/PageHeading";
 import API from "../../utils/API";
-import { secondaryColor } from "../../utils/constants";
 import { queryClient } from "../../utils/queryClient";
 import { showErrorToast } from "../../utils/showErrorToast";
-import UpdateCreateForm from "./AdvertisementUpdateCreateForm";
 import AdCardsContainer from "./AdCardsContainer";
 
 const deleteBanner = (id: string) => {
@@ -25,10 +17,12 @@ const deleteBanner = (id: string) => {
   });
 };
 const Advertisements = () => {
-  const { setStatusCreate, setStatusDefault, status, setStatusEdit } =
-    useToggle();
+  const history = useHistory()
   const [selectedRowId, setSelectedRowId] = useState<string>("");
   const [deletePopup, setDeletePopup] = useState(false);
+  const _onCreateClick = () => {
+    history.push("/advertisements/create-edit")
+  }
 
   const { mutate, isLoading: isDeleteLoading } = useMutation(deleteBanner, {
     onSuccess: () => {
@@ -43,49 +37,12 @@ const Advertisements = () => {
   return (
     <>
       <Container fluid className="component-wrapper px-0 py-2">
-        <Container fluid className="d-flex justify-content-between py-2">
-          <h2 className="font-weight-bold">Advertisements</h2>
-          {status !== "default" ? (
-            <Button variant="primary" onClick={setStatusDefault}>
-              <div className="text-white">
-                <BiArrowFromRight size={25} /> <b>Back</b>
-              </div>
-            </Button>
-          ) : (
-            <Button
-              variant="primary"
-              onClick={() => {
-                setSelectedRowId("");
-                setStatusCreate();
-              }}
-            >
-              <div className="text-white">
-                <AiFillPlusSquare size={24} /> <b>Create</b>
-              </div>
-            </Button>
-          )}
-        </Container>
-
+        <PageHeading title="Advertisements" onClick={_onCreateClick} />
         <Container fluid className="h-100 p-0">
-          {status === "creating" && (
-            <Container fluid className="mt-2 py-4">
-              <UpdateCreateForm />
-            </Container>
-          )}
-
-          {status === "editing" && (
-            <Container fluid className="mt-2 py-4">
-              <UpdateCreateForm id={selectedRowId} />
-            </Container>
-          )}
-
-          {status === "default" && (
-            <AdCardsContainer
-              setDeletePopup={setDeletePopup}
-              setSelectedRowId={setSelectedRowId}
-              setStatusEdit={setStatusEdit}
-            />
-          )}
+          <AdCardsContainer
+            setDeletePopup={setDeletePopup}
+            setSelectedRowId={setSelectedRowId}
+          />
         </Container>
       </Container>
       <Modal show={deletePopup} onHide={() => setDeletePopup(false)}>

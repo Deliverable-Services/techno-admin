@@ -2,14 +2,14 @@ import React from 'react'
 import { Badge } from 'react-bootstrap'
 
 interface Props {
-    value: number
+    value: any
 }
 
 const IsActiveBadge = ({ value }: Props) => {
     return (
-        <Badge variant={value == 1 ? "primary" : "danger"}>
+        <Badge variant={parseInt(value) === 1 ? "primary" : "danger"}>
             {
-                value == 1 ? "Yes" : "No"
+                parseInt(value) == 1 ? "Yes" : "No"
             }
         </Badge>
     )
