@@ -3,7 +3,9 @@ import { Form, Formik } from "formik";
 import { useEffect } from "react";
 import { Alert, Button, Col, Row, Spinner } from "react-bootstrap";
 import { useMutation } from "react-query";
+import { useLocation } from "react-router-dom";
 import useGetSingleQuery from "../../hooks/useGetSingleQuery";
+import BackButton from "../../shared-components/BackButton";
 import { InputField } from "../../shared-components/InputFeild";
 import IsLoading from "../../shared-components/isLoading";
 import { ICreateUpdateForm } from "../../types/interface";
@@ -30,7 +32,9 @@ const createUpdateUser = ({
   });
 };
 
-const UserCreateUpdateForm = ({ id = "" }: ICreateUpdateForm) => {
+const UserCreateUpdateForm = () => {
+  const { state } = useLocation()
+  const id = state ? (state as any).id : null
   useEffect(() => {
     bsCustomFileInput.init();
   }, []);
@@ -47,13 +51,11 @@ const UserCreateUpdateForm = ({ id = "" }: ICreateUpdateForm) => {
 
   return (
     <Row className="rounded">
+      <BackButton title="Users" />
       <Col className="mx-auto">
         <Formik
-          initialValues={{
-            name: apiData ? apiData.name : "",
-            phone: apiData ? apiData.phone : "",
-            email: apiData ? apiData.email : "",
-          }}
+          initialValues={apiData || {}}
+
           onSubmit={(values) => {
             console.log(values);
             mutate({ formdata: values, id });
