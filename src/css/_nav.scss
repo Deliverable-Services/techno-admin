@@ -19,6 +19,14 @@ nav {
     transform: translateX(0);
     border-top-right-radius: 10px;
     border-bottom-right-radius: 10px;
+    overflow: auto;
+
+    &::-webkit-scrollbar {
+      width: 0;
+    }
+
+    -ms-overflow-style: none;
+    scrollbar-width: none;
 
     .logo-wrapper {
       width: auto;

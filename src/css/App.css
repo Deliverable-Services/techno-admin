@@ -11199,6 +11199,12 @@ nav {
             transform: translateX(0);
     border-top-right-radius: 10px;
     border-bottom-right-radius: 10px;
+    overflow: auto;
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+  nav::-webkit-scrollbar {
+    width: 0;
   }
   nav .logo-wrapper {
     width: auto;
