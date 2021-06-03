@@ -10,6 +10,7 @@ import {
   useGlobalFilter,
   useSortBy,
   useTable,
+  useRowSelect,
 } from "react-table";
 import { primaryColor } from "../utils/constants";
 
@@ -22,6 +23,7 @@ interface ISearchInput {
   globalFilter: any;
   setGlobalFilter: any;
 }
+
 
 function SearchInput({
   preGlobalFilteredRows,
@@ -43,8 +45,25 @@ function SearchInput({
       }}
       placeholder={`Search ${count} records...`}
     />
-  );
+  )
 }
+
+const IndeterminateCheckbox = React.forwardRef(
+  ({ indeterminate, ...rest }: any, ref) => {
+    const defaultRef = React.useRef<HTMLDivElement>(null)
+    const resolvedRef = defaultRef || ref
+    //console.log("mm", resolvedRef)
+    // React.useEffect(() => {
+    //   resolvedRef.current.indeterminate = indeterminate
+    // }, [resolvedRef, indeterminate])
+
+    return (
+      <>
+        <input type="checkbox" ref={resolvedRef} {...rest} />
+      </>
+    )
+  }
+)
 
 function ReactTable({ data, columns }: Props): ReactElement {
   const {
@@ -57,8 +76,33 @@ function ReactTable({ data, columns }: Props): ReactElement {
     state,
     preGlobalFilteredRows,
     setGlobalFilter,
-  } = useTable({ columns, data }, useFilters, useGlobalFilter, useSortBy);
-
+    selectedFlatRows,
+    state: { selectedRowIds },
+  } = useTable({ columns, data }, useFilters, useGlobalFilter, useSortBy, useRowSelect,
+    hooks => {
+      hooks.visibleColumns.push(columns => [
+        // Let's make a column for selection
+        {
+          id: 'selection',
+          // The header can use the table's getToggleAllRowsSelectedProps method
+          // to render a checkbox
+          Header: ({ getToggleAllRowsSelectedProps }) => (
+            <div>
+              <IndeterminateCheckbox {...getToggleAllRowsSelectedProps()} />
+            </div>
+          ),
+          // The cell can use the individual row's getToggleRowSelectedProps method
+          // to the render a checkbox
+          Cell: ({ row }) => (
+            <div>
+              <IndeterminateCheckbox {...row.getToggleRowSelectedProps()} />
+            </div>
+          ),
+        },
+        ...columns,
+      ])
+    });
+  { console.log("flatRow", selectedFlatRows) }
   return (
     <Container className="px-0">
       {/* search and column hiding */}
