@@ -20,6 +20,7 @@ import Orders from "./components/Orders";
 import AssignAgent from "./components/Orders/assignAgent";
 import SingleOrder from "./components/Orders/single";
 import Plans from "./components/Plans";
+import PlanCreateUpdateForm from "./components/Plans/PlansCreateUpdateForm";
 import Services from "./components/Servicies";
 import ServicesCreateUpdateForm from "./components/Servicies/ServiciesCreateUpdateForm";
 import TopBar from "./components/TopBar";
@@ -94,6 +95,7 @@ const App = () => {
             <PrivateRoute path="/categories/create-edit" exact component={CategoriesCreateUpdateForm} />
             <PrivateRoute path="/users/create-edit" exact component={UserCreateUpdateForm} />
             <PrivateRoute path="/services/create-edit" exact component={ServicesCreateUpdateForm} />
+            <PrivateRoute path="/plans/create-edit" exact component={PlanCreateUpdateForm} />
             <PrivateRoute path="/coupons/create-edit" exact component={CouponCreateUpdateForm} />
             <PrivateRoute path="/faqs/create-edit" exact component={FaqCreateUpdateForm} />
             <PrivateRoute path="/orders/:id" exact component={SingleOrder} />

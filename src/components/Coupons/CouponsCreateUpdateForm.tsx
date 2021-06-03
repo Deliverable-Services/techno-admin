@@ -3,13 +3,16 @@ import { Form, Formik } from "formik";
 import { useEffect } from "react";
 import { Alert, Button, Col, Row, Spinner } from "react-bootstrap";
 import { useMutation } from "react-query";
+import { useLocation } from "react-router-dom";
 import useGetSingleQuery from "../../hooks/useGetSingleQuery";
+import BackButton from "../../shared-components/BackButton";
 import { InputField } from "../../shared-components/InputFeild";
 import IsLoading from "../../shared-components/isLoading";
 import { ICreateUpdateForm } from "../../types/interface";
 import API from "../../utils/API";
+import { conditionType, isActiveArray } from "../../utils/arrays";
 import { queryClient } from "../../utils/queryClient";
-
+import DatePicker from "../../shared-components/DatePicker";
 const key = "coupons";
 
 const createUpdataCoupons = ({
@@ -30,7 +33,9 @@ const createUpdataCoupons = ({
   });
 };
 
-const CouponCreateUpdateForm = ({ id = "" }: ICreateUpdateForm) => {
+const CouponCreateUpdateForm = () => {
+  const { state } = useLocation()
+  const id = state ? (state as any).id : null
   useEffect(() => {
     bsCustomFileInput.init();
   }, []);
@@ -52,16 +57,13 @@ const CouponCreateUpdateForm = ({ id = "" }: ICreateUpdateForm) => {
 
   return (
     <Row className="rounded">
+      <BackButton title="Coupons" />
       <Col className="mx-auto">
         <Formik
-          initialValues={{
-            title: apiData ? apiData.title : "",
-            coupon_code: apiData ? apiData.coupon_code : "",
-            description: apiData ? apiData.description : "",
-            terms: apiData ? apiData.terms : "",
-          }}
+          initialValues={apiData || {}}
+
           onSubmit={(values) => {
-            // console.log("values", values)
+            console.log("values", values)
 
             mutate({ formdata: values, id });
           }}
@@ -86,33 +88,48 @@ const CouponCreateUpdateForm = ({ id = "" }: ICreateUpdateForm) => {
                   required
                 />
 
-                {!id && (
-                  <InputField
-                    name="coupon_code"
-                    placeholder="Coupon Code"
-                    label="Coupon Code"
-                    required
-                  />
-                )}
-                {!id && (
-                  <InputField
-                    name="description"
-                    placeholder="Description"
-                    label="Descrition"
-                    as="textarea"
-                    required
-                  />
-                )}
+                <InputField
+                  name="coupon_code"
+                  placeholder="Coupon Code"
+                  label="Coupon Code"
+                  required
+                />
+                <InputField
+                  type="number"
+                  name="condition"
+                  placeholder="Condition"
+                  label="Condition"
+                  required
+                />
+                <DatePicker
+                  name="valid_from"
+                  setFieldValue={setFieldValue}
+                  label="Valid From"
+                  inputProps={{ placeholder: "Valid from", required: true }}
+                />
+                <DatePicker
+                  name="valid_to"
+                  setFieldValue={setFieldValue}
+                  label="Valid To"
+                  inputProps={{ placeholder: "Valid to", required: true }}
+                />
+                <InputField as="select" selectData={isActiveArray} name="is_active" label="Is active?" placeholder="Choose is active" />
+                <InputField as="select" selectData={conditionType} name="condition_type" label="Condition Type" placeholder="Condition Type" />
+                <InputField
+                  name="description"
+                  placeholder="Description"
+                  label="Descrition"
+                  as="textarea"
+                  required
+                />
 
-                {!id && (
-                  <InputField
-                    name="terms"
-                    placeholder="Terms"
-                    label="Terms"
-                    as="textarea"
-                    required
-                  />
-                )}
+                <InputField
+                  name="terms"
+                  placeholder="Terms"
+                  label="Terms"
+                  as="textarea"
+                  required
+                />
               </div>
               <Row className="d-flex justify-content-center">
                 <Col md="2">

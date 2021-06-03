@@ -2,12 +2,15 @@ import bsCustomFileInput from "bs-custom-file-input";
 import { Form, Formik } from "formik";
 import { useEffect } from "react";
 import { Alert, Button, Col, Row, Spinner } from "react-bootstrap";
-import { useMutation } from "react-query";
+import { useMutation, useQuery } from "react-query";
+import { useLocation } from "react-router-dom";
 import useGetSingleQuery from "../../hooks/useGetSingleQuery";
+import BackButton from "../../shared-components/BackButton";
 import { InputField } from "../../shared-components/InputFeild";
 import IsLoading from "../../shared-components/isLoading";
 import { ICreateUpdateForm } from "../../types/interface";
 import API from "../../utils/API";
+import { isActiveArray } from "../../utils/arrays";
 import { queryClient } from "../../utils/queryClient";
 
 const key = "plans";
@@ -16,24 +19,28 @@ const createUpdataCoupons = ({
   formdata,
   id,
 }: {
-  formdata: any;
+  formdata: FormData;
   id: string;
 }) => {
   if (!id) {
     return API.post(`${key}`, formdata, {
-      headers: { "Content-Type": "applicatioin/json" },
+      headers: { "Content-Type": "multipart/form-data" },
     });
   }
 
   return API.post(`${key}/${id}`, formdata, {
-    headers: { "Content-Type": "application/json" },
+    headers: { "Content-Type": "multipart/form-data" },
   });
 };
 
-const PlanCreateUpdateForm = ({ id = "" }: ICreateUpdateForm) => {
+const PlanCreateUpdateForm = () => {
+  const { state } = useLocation()
+  const id = state ? (state as any).id : null
   useEffect(() => {
     bsCustomFileInput.init();
   }, []);
+
+  const { data: categories, isLoading: isCategoriesLoading } = useQuery<any>(["categories"]);
   const { data, isLoading: dataLoading } = useGetSingleQuery({ id, key });
   const { mutate, isLoading, error, status } = useMutation(
     createUpdataCoupons,
@@ -52,17 +59,24 @@ const PlanCreateUpdateForm = ({ id = "" }: ICreateUpdateForm) => {
 
   return (
     <Row className="rounded">
+      <BackButton title="Plans" />
       <Col className="mx-auto">
         <Formik
-          initialValues={{
-            name: apiData ? apiData.name : "",
-            description: apiData ? apiData.description : "",
-            price: apiData ? apiData.price : "",
-          }}
-          onSubmit={(values) => {
-            // console.log("values", values)
+          initialValues={apiData || {}}
 
-            mutate({ formdata: values, id });
+          onSubmit={(values) => {
+            const formdata = new FormData();
+            formdata.append("name", values.name);
+            formdata.append("price", values.price);
+            formdata.append("is_active", values.is_active);
+            formdata.append("is_popular", values.is_popular);
+            formdata.append("description", values.description);
+            formdata.append("allowed_usage", values.allowed_usage);
+            formdata.append("category_id", values.category_id);
+            if (values.image)
+              formdata.append("image", values.image);
+
+            mutate({ formdata, id });
           }}
         >
           {({ setFieldValue }) => (
@@ -85,24 +99,46 @@ const PlanCreateUpdateForm = ({ id = "" }: ICreateUpdateForm) => {
                   required
                 />
 
-                {!id && (
-                  <InputField
-                    type="number"
-                    name="price"
-                    placeholder="Price"
-                    label="Price"
-                    required
-                  />
-                )}
-                {!id && (
-                  <InputField
-                    name="description"
-                    placeholder="Description"
-                    label="Descrition"
-                    as="textarea"
-                    required
-                  />
-                )}
+                <InputField
+                  type="number"
+                  name="price"
+                  placeholder="Price"
+                  label="Price"
+                  required
+                />
+                <InputField
+                  type="number"
+                  name="allowed_usage"
+                  placeholder="Allowed Usage"
+                  label="Allowed Usage"
+                  required
+                />
+
+                <InputField
+                  name="image"
+                  placeholder="image"
+                  label="Choose Plan Image"
+                  isFile
+                  setFieldValue={setFieldValue}
+                />
+
+                <InputField
+                  name="category_id"
+                  placeholder="Category"
+                  label="Choose Category"
+                  as="select"
+                  selectData={!isCategoriesLoading && categories.data}
+                />
+
+                <InputField as="select" selectData={isActiveArray} name="is_active" label="Is active?" placeholder="Choose is active" />
+                <InputField as="select" selectData={isActiveArray} name="is_popular" label="Is Popular?" placeholder="Choose is popular" />
+                <InputField
+                  name="description"
+                  placeholder="Description"
+                  label="Descrition"
+                  as="textarea"
+                  required
+                />
               </div>
               <Row className="d-flex justify-content-start">
                 <Col md="2">

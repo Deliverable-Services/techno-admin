@@ -1,18 +1,24 @@
 import { useMemo, useState } from "react";
 import { Button, Container, Modal, Spinner } from "react-bootstrap";
-import { AiFillDelete, AiFillEdit, AiFillPlusSquare } from "react-icons/ai";
-import { BiArrowFromRight, BiSad } from "react-icons/bi";
+import { AiFillDelete, AiFillEdit } from "react-icons/ai";
+import { BiSad } from "react-icons/bi";
 import { useMutation, useQuery } from "react-query";
+import { useHistory } from "react-router-dom";
 import { Cell } from "react-table";
-import useToggle from "../../hooks/useToggle";
+import CreatedUpdatedAt from "../../shared-components/CreatedUpdatedAt";
+import IsActiveBadge from "../../shared-components/IsActiveBadge";
 import IsLoading from "../../shared-components/isLoading";
+import PageHeading from "../../shared-components/PageHeading";
 import TablePagination from "../../shared-components/Pagination";
 import ReactTable from "../../shared-components/ReactTable";
 import API from "../../utils/API";
-import { primaryColor, secondaryColor } from "../../utils/constants";
+import {
+  baseUploadUrl,
+  primaryColor,
+  secondaryColor
+} from "../../utils/constants";
 import { queryClient } from "../../utils/queryClient";
 import { showErrorToast } from "../../utils/showErrorToast";
-import UpdateCreateForm from "./CouponsCreateUpdateForm";
 
 const key = "coupons";
 
@@ -23,13 +29,15 @@ const deleteCoupon = (id: string) => {
 };
 
 const Coupons = () => {
-  // const { data: brands } = useQuery("brands")
-  const { setStatusCreate, setStatusDefault, status, setStatusEdit } =
-    useToggle();
+  const history = useHistory()
   const [selectedRowId, setSelectedRowId] = useState<string>("");
   const [page, setPage] = useState<number>(1);
   const [deletePopup, setDeletePopup] = useState(false);
-  const { data, isLoading, isFetching } = useQuery([key, page]);
+  const { data, isLoading, isFetching, error } = useQuery<any>([key, page], {
+    onError: (err: any) => {
+      showErrorToast(err.response.data.message);
+    },
+  });
 
   const { mutate, isLoading: isDeleteLoading } = useMutation(deleteCoupon, {
     onSuccess: () => {
@@ -41,25 +49,79 @@ const Coupons = () => {
     },
   });
 
+  const _onCreateClick = () => {
+    history.push("/coupons/create-edit")
+  }
+  const _onEditClick = (id: string) => {
+    history.push("/coupons/create-edit", { id })
+  }
+
   const columns = useMemo(
     () => [
       {
         Header: "#Id",
         accessor: "id", //accessor is the "key" in the data
       },
-
       {
         Header: "Title",
         accessor: "title",
       },
-
       {
-        Header: "Code",
-        accessor: "code",
+        Header: "Coupon Code",
+        accessor: "coupon_code",
       },
       {
-        Header: "Description",
-        accessor: "description",
+        Header: "Condition",
+        accessor: "condition",
+      },
+      {
+        Header: "Conditioin Type",
+        accessor: "condition_type",
+      },
+      {
+        Header: "Valid From",
+        accessor: "valid_from",
+        Cell: (data: Cell) => {
+          return (
+            <CreatedUpdatedAt date={data.row.values.valid_from} />
+          )
+        }
+      },
+      {
+        Header: "Valid To",
+        accessor: "valid_to",
+        Cell: (data: Cell) => {
+          return (
+            <CreatedUpdatedAt date={data.row.values.valid_to} />
+          )
+        }
+      },
+      {
+        Header: "Is Active?",
+        accessor: "is_active",
+        Cell: (data: Cell) => {
+          return (
+            <IsActiveBadge value={data.row.values.is_active} />
+          )
+        }
+      },
+      {
+        Header: "Created At",
+        accessor: "created_at",
+        Cell: (data: Cell) => {
+          return (
+            <CreatedUpdatedAt date={data.row.values.created_at} />
+          )
+        }
+      },
+      {
+        Header: "Updated At",
+        accessor: "updated_at",
+        Cell: (data: Cell) => {
+          return (
+            <CreatedUpdatedAt date={data.row.values.updated_at} />
+          )
+        }
       },
       {
         Header: "Actions",
@@ -68,8 +130,7 @@ const Coupons = () => {
             <div className="d-flex">
               <button
                 onClick={() => {
-                  setSelectedRowId(data.row.values.id);
-                  setStatusEdit();
+                  _onEditClick(data.row.values.id);
                 }}
               >
                 <AiFillEdit color={secondaryColor} size={24} />
@@ -105,54 +166,24 @@ const Coupons = () => {
   return (
     <>
       <Container fluid className="component-wrapper px-0 py-2">
-        <Container fluid className="d-flex justify-content-between py-2">
-          <h2 className="font-weight-bold">Coupons</h2>
-          {status !== "default" ? (
-            <Button variant="primary" onClick={setStatusDefault}>
-              <div className="text-white">
-                <BiArrowFromRight size={25} /> <b>Back</b>
-              </div>
-            </Button>
-          ) : (
-            <Button variant="primary" onClick={setStatusCreate}>
-              <div className="text-white">
-                <AiFillPlusSquare size={24} /> <b>Create</b>
-              </div>
-            </Button>
-          )}
-        </Container>
+        <PageHeading title="Coupons" onClick={_onCreateClick} />
 
         <Container fluid className="h-100 p-0">
-          {status === "creating" && (
-            <Container fluid className="mt-2 py-4">
-              <UpdateCreateForm />
-            </Container>
-          )}
 
-          {status === "editing" && (
-            <Container fluid className="mt-2 py-4">
-              <UpdateCreateForm id={selectedRowId} />
-            </Container>
-          )}
-
-          {status === "default" && (
+          {isLoading || isFetching ? (
+            <IsLoading />
+          ) : (
             <>
-              {isLoading || isFetching ? (
-                <IsLoading />
-              ) : (
-                <>
-                  <ReactTable data={(data as any).data} columns={columns} />
-                  {(data as any).data.length > 0 ? (
-                    <TablePagination
-                      currentPage={(data as any).current_page}
-                      lastPage={(data as any).last_page}
-                      setPage={setPage}
-                      hasNextPage={!!(data as any).next_page_url}
-                      hasPrevPage={!!(data as any).prev_page_url}
-                    />
-                  ) : null}{" "}
-                </>
-              )}
+              {!error && <ReactTable data={data.data} columns={columns} />}
+              {!error && data.data.length > 0 ? (
+                <TablePagination
+                  currentPage={data.current_page}
+                  lastPage={data.last_page}
+                  setPage={setPage}
+                  hasNextPage={!!data.next_page_url}
+                  hasPrevPage={!!data.prev_page_url}
+                />
+              ) : null}{" "}
             </>
           )}
         </Container>

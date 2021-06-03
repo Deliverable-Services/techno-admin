@@ -3,3 +3,9 @@ export const isActiveArray = [
     { id: 0, name: "No" },
 ]
 
+
+export const conditionType = [
+    { id: "percentage", name: "Percentage" },
+    { id: "discount", name: "Discount" },
+]
+
