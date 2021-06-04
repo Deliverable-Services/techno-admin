@@ -1,21 +1,17 @@
 import { useMemo, useState } from "react";
 import { Button, Container, Modal, Spinner } from "react-bootstrap";
-import { AiFillDelete, AiFillEdit } from "react-icons/ai";
 import { BiSad } from "react-icons/bi";
 import { useMutation, useQuery } from "react-query";
 import { useHistory } from "react-router-dom";
 import { Cell } from "react-table";
 import CreatedUpdatedAt from "../../shared-components/CreatedUpdatedAt";
-import IsActiveBadge from "../../shared-components/IsActiveBadge";
 import IsLoading from "../../shared-components/isLoading";
 import PageHeading from "../../shared-components/PageHeading";
 import TablePagination from "../../shared-components/Pagination";
 import ReactTable from "../../shared-components/ReactTable";
 import API from "../../utils/API";
 import {
-  baseUploadUrl,
-  primaryColor,
-  secondaryColor
+  primaryColor
 } from "../../utils/constants";
 import { queryClient } from "../../utils/queryClient";
 import { showErrorToast } from "../../utils/showErrorToast";
