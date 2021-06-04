@@ -119,9 +119,10 @@ const Orders = () => {
 
   return (
     <>
-      <Container fluid className="component-wrapper px-0 py-2">
-        <Container fluid className="d-flex justify-content-between py-2">
-          <h2 className="font-weight-bold">Orders</h2>
+      <h2 className="font-weight-bold mb-4">Subscriptions</h2>
+      <Container fluid className="card component-wrapper px-0 py-2">
+        <Container fluid className="h-100 p-0">
+
           {/* {
                         status !== "default" ?
                             <Button variant="primary" onClick={setStatusDefault}  >

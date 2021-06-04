@@ -155,8 +155,9 @@ const Services = () => {
 
   return (
     <>
-      <Container fluid className="component-wrapper px-0 py-2">
-        <PageHeading title="Services" onClick={_onCreateClick} />
+      <PageHeading title="Services" onClick={_onCreateClick} />
+      <Container fluid className="card component-wrapper px-0 py-2">
+
 
         <Container fluid className="h-100 p-0">
 

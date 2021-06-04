@@ -98,23 +98,27 @@ const Categories = () => {
 
   return (
     <>
-      <Container fluid className="component-wrapper px-0 py-2">
-        <Container fluid className="d-flex justify-content-between py-2">
-          <h2 className="font-weight-bold">Categories</h2>
-          {status !== "default" ? (
-            <Button variant="primary" onClick={setStatusDefault}>
-              <div className="text-white">
-                <BiArrowFromRight size={25} /> <b>Back</b>
-              </div>
-            </Button>
-          ) : (
-            <Button variant="primary" onClick={setStatusCreate}>
-              <div className="text-white">
-                <AiFillPlusSquare size={24} /> <b>Create</b>
-              </div>
-            </Button>
-          )}
-        </Container>
+      <h2 className="font-weight-bold">Transactions</h2>
+
+      <Container fluid className="d-flex justify-content-between py-2">
+
+        {status !== "default" ? (
+          <Button variant="primary" className="pos-btn" onClick={setStatusDefault}>
+            <div className="text-white">
+              <BiArrowFromRight size={25} /> <b>Back</b>
+            </div>
+          </Button>
+        ) : (
+          <Button variant="primary" className="pos-btn" onClick={setStatusCreate}>
+            <div className="text-white">
+              <AiFillPlusSquare size={24} /> <b>Create</b>
+            </div>
+          </Button>
+        )}
+      </Container>
+
+      <Container fluid className="card component-wrapper px-0 py-2">
+
 
         <Container fluid className="h-100 p-0">
           {status === "creating" && (
