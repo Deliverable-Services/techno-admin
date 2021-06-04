@@ -36,6 +36,7 @@ import useTokenStore from "./hooks/useTokenStore";
 import ErrorToast from "./shared-components/ErrorToast/ErrorToast";
 import { PrivateRoute } from "./shared-components/PrivateRoute";
 import API from "./utils/API";
+import AdvertisementCreateUpdateForm from "./components/Advertisements/AdvertisementUpdateCreateForm";
 
 const App = () => {
   const [isDesktop, setIsDesktop] = useState<boolean>(false);
@@ -94,6 +95,7 @@ const App = () => {
             <PrivateRoute path="/plans" exact component={Plans} />
             <PrivateRoute path="/coupons" exact component={Coupons} />
             <PrivateRoute path="/orders" exact component={Orders} />
+            <PrivateRoute path="/advertisements" exact component={Advertisements} />
             <PrivateRoute path="/brands/create-edit" exact component={BrandsCreateUpdateForm} />
             <PrivateRoute path="/brand-models/create-edit" exact component={BrandModlesCreateUpdateForm} />
             <PrivateRoute path="/categories/create-edit" exact component={CategoriesCreateUpdateForm} />
@@ -102,17 +104,13 @@ const App = () => {
             <PrivateRoute path="/plans/create-edit" exact component={PlanCreateUpdateForm} />
             <PrivateRoute path="/coupons/create-edit" exact component={CouponCreateUpdateForm} />
             <PrivateRoute path="/faqs/create-edit" exact component={FaqCreateUpdateForm} />
+            <PrivateRoute path="/advertisements/create-edit" exact component={AdvertisementCreateUpdateForm} />
             <PrivateRoute path="/transactions" exact component={Transactions} />
             <PrivateRoute path="/transactions/:id" exact component={TransactionUpdateForm} />
             <PrivateRoute path="/subscriptions" exact component={Subscriptions} />
             <PrivateRoute path="/subscriptions/:id" exact component={SingleSubscriptions} />
             <PrivateRoute path="/orders/:id" exact component={SingleOrder} />
             <PrivateRoute path="/orders/assign-agent/:id" exact component={AssignAgent} />
-            <PrivateRoute
-              path="/advertisements"
-              exact
-              component={Advertisements}
-            />
             <Route path="/login" exact component={LoginPage} />
             <Route path="/verify-otp/:id/:otp" exact component={VerifyOtp} />
           </Switch>

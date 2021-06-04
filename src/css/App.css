@@ -12431,11 +12431,14 @@ nav {
     -ms-overflow-style: none;
     scrollbar-width: none;
   }
+<<<<<<< HEAD
+=======
 
   nav::-webkit-scrollbar {
     width: 0;
   }
 
+>>>>>>> 8d0206458aa0a2a829812b7c1156ed1f14cf8116
   nav .logo-wrapper {
     width: auto;
     padding: 0 1rem;
@@ -12542,7 +12545,7 @@ td {
 }
 
 td {
-  text-transform: uppercase;
+  text-transform: capitalize;
 }
 
 .text-primary {
@@ -12744,6 +12747,10 @@ td {
     -ms-grid-columns: (1fr);
     grid-template-columns: repeat(6, 1fr);
   }
+}
+
+.react-bootstrap-table table {
+  table-layout: auto;
 }
 
 .tab-link {
@@ -13033,6 +13040,7 @@ body {
     -ms-grid-column: 2;
     -ms-grid-column-span: 1;
     grid-column: 2/3;
+    max-width: calc(100vw - 19.8rem);
   }
 }
 

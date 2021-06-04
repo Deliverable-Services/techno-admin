@@ -103,15 +103,11 @@ const CouponCreateUpdateForm = () => {
                 />
                 <DatePicker
                   name="valid_from"
-                  setFieldValue={setFieldValue}
                   label="Valid From"
-                  inputProps={{ placeholder: "Valid from", required: true }}
                 />
                 <DatePicker
                   name="valid_to"
-                  setFieldValue={setFieldValue}
                   label="Valid To"
-                  inputProps={{ placeholder: "Valid to", required: true }}
                 />
                 <InputField as="select" selectData={isActiveArray} name="is_active" label="Is active?" placeholder="Choose is active" />
                 <InputField as="select" selectData={conditionType} name="condition_type" label="Condition Type" placeholder="Condition Type" />

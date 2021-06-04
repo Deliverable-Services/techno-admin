@@ -212,7 +212,7 @@ function ReactTable({ data, columns }: Props): ReactElement {
 
 
   return (
-    <Container className="px-0">
+    <div>
       <Container
         fluid
         className="card-header pb-3 d-flex align-items-center position-relative"
@@ -372,7 +372,7 @@ function ReactTable({ data, columns }: Props): ReactElement {
           </div>
         </Container>
       ) : null}
-    </Container>
+    </div>
   );
 }
 

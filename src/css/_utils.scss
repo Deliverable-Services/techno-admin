@@ -51,7 +51,7 @@ td {
 }
 
 td {
-  text-transform: uppercase;
+  text-transform: capitalize;
 }
 
 .text-primary {
@@ -198,6 +198,10 @@ td {
   @include responsive($large-screen-breakpoint) {
     grid-template-columns: repeat(6, 1fr);
   }
+}
+
+.react-bootstrap-table table {
+  table-layout: auto;
 }
 
 .tab-link {

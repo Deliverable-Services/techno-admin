@@ -21,9 +21,10 @@ nav {
     border-bottom-right-radius: 10px;
     overflow: auto;
 
-    &::-webkit-scrollbar {
-      width: 0;
-    }
+    // this is to hide scroll bar 
+    // &::-webkit-scrollbar {
+    //   width: 0;
+    // }
 
     -ms-overflow-style: none;
     scrollbar-width: none;
