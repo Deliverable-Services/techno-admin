@@ -104,7 +104,7 @@ function ReactTable({ data, columns }: Props): ReactElement {
     });
   { console.log("flatRow", selectedFlatRows) }
   return (
-    <Container className="px-0">
+    <div>
       <Container
         fluid
         className="card-header pb-3 d-flex align-items-center position-relative"
@@ -161,89 +161,89 @@ function ReactTable({ data, columns }: Props): ReactElement {
       </Container>
 
       {/*-------------------- table---------------------  */}
-      <div className="tableFixed">
-        <Table
-          className="table-fixed"
-          {...getTableProps()}
-          responsive
-          hover
-          size="sm"
-        >
-          <thead className="bg-grey-primary">
-            {
-              // Loop over the header rows
-              headerGroups.map((headerGroup) => (
-                // Apply the header row props
-                <tr {...headerGroup.getHeaderGroupProps()}>
-                  {
-                    // Loop over the headers in each row
-                    headerGroup.headers.map((column) => (
-                      // Apply the header cell props
-                      <th
-                        {...column.getHeaderProps(
-                          column.getSortByToggleProps()
-                        )}
-                      >
-                        {
-                          // Render the header
-                          column.render("Header")
-                        }
-                        <span>
-                          {column.isSorted ? (
-                            column.isSortedDesc ? (
-                              <IoMdArrowDropup />
-                            ) : (
-                              <IoMdArrowDropdown />
-                            )
+      {/* <div className="tableFixed"> */}
+      <Table
+        // className="table-fixed"
+        {...getTableProps()}
+        responsive
+        hover
+        size="sm"
+      >
+        <thead className="bg-grey-primary">
+          {
+            // Loop over the header rows
+            headerGroups.map((headerGroup) => (
+              // Apply the header row props
+              <tr {...headerGroup.getHeaderGroupProps()}>
+                {
+                  // Loop over the headers in each row
+                  headerGroup.headers.map((column) => (
+                    // Apply the header cell props
+                    <th
+                      {...column.getHeaderProps(
+                        column.getSortByToggleProps()
+                      )}
+                    >
+                      {
+                        // Render the header
+                        column.render("Header")
+                      }
+                      <span>
+                        {column.isSorted ? (
+                          column.isSortedDesc ? (
+                            <IoMdArrowDropup />
                           ) : (
-                            ""
-                          )}
-                        </span>
-                      </th>
-                    ))
+                            <IoMdArrowDropdown />
+                          )
+                        ) : (
+                          ""
+                        )}
+                      </span>
+                    </th>
+                  ))
+                }
+              </tr>
+            ))
+          }
+        </thead>
+        {/* Apply the table body props */}
+        <tbody {...getTableBodyProps()}>
+          {
+            // Loop over the table rows
+            rows.map((row) => {
+              // Prepare the row for display
+              prepareRow(row);
+              // console.log("row", rows.length)
+              // if (!rows.length) return <h1>No data</h1>
+              return (
+                // Apply the row props
+                <tr {...row.getRowProps()}>
+                  {
+                    // Loop over the rows cells
+                    row.cells.map((cell) => {
+                      // Apply the cell props
+                      return (
+                        <td {...cell.getCellProps()}>
+                          {
+                            // Render the cell contents
+                            cell.render("Cell")
+                          }
+                        </td>
+                      );
+                    })
                   }
                 </tr>
-              ))
-            }
-          </thead>
-          {/* Apply the table body props */}
-          <tbody {...getTableBodyProps()}>
-            {
-              // Loop over the table rows
-              rows.map((row) => {
-                // Prepare the row for display
-                prepareRow(row);
-                // console.log("row", rows.length)
-                // if (!rows.length) return <h1>No data</h1>
-                return (
-                  // Apply the row props
-                  <tr {...row.getRowProps()}>
-                    {
-                      // Loop over the rows cells
-                      row.cells.map((cell) => {
-                        // Apply the cell props
-                        return (
-                          <td {...cell.getCellProps()}>
-                            {
-                              // Render the cell contents
-                              cell.render("Cell")
-                            }
-                          </td>
-                        );
-                      })
-                    }
-                  </tr>
-                );
-              })
-            }
-            {/* {rows.length === 0 ?
+              );
+            })
+          }
+          {/* {rows.length === 0 ?
                                 <Container fluid className="d-flex justify-content-center w-100 align-item-center">
                                     <span className="text-primary display-3">No data found</span>
                                 </Container>
                                 : ""} */}
-          </tbody>
-        </Table>
-      </div>
+        </tbody>
+      </Table>
+      {/* </div> */}
 
       {/* pagination  */}
 
@@ -255,7 +255,7 @@ function ReactTable({ data, columns }: Props): ReactElement {
           </div>
         </Container>
       ) : null}
-    </Container>
+    </div>
   );
 }
 

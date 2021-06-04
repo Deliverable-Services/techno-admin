@@ -11494,6 +11494,10 @@ td {
   }
 }
 
+.react-bootstrap-table table {
+  table-layout: auto;
+}
+
 .tab-link {
   color: #6f6f6f;
 }
@@ -11778,6 +11782,7 @@ body {
     -ms-grid-column: 2;
     -ms-grid-column-span: 1;
     grid-column: 2/3;
+    max-width: calc(100vw - 19.8rem);
   }
 }
 

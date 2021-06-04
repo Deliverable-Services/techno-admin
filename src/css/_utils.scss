@@ -200,6 +200,10 @@ td {
   }
 }
 
+.react-bootstrap-table table {
+  table-layout: auto;
+}
+
 .tab-link {
   color: $light-dark;
 

@@ -1,5 +1,5 @@
 import { useMemo, useState } from "react";
-import { Button, Container, Modal, Spinner } from "react-bootstrap";
+import { Badge, Button, Container, Modal, Spinner } from "react-bootstrap";
 import { BiSad } from "react-icons/bi";
 import { useMutation, useQuery } from "react-query";
 import { useHistory } from "react-router-dom";
@@ -43,14 +43,14 @@ const Orders = () => {
   });
 
   const Status = ({ status }: { status: string }) => {
-    const setColor = () => {
-      if (status === "cancelled" || status === "error_payment") return "red";
+    const setVairant = () => {
+      if (status === "cancelled" || status === "error_payment") return "danger";
 
-      if (status === "pending" || status === "pending_payment") return "orange";
+      if (status === "pending" || status === "pending_payment") return "warning";
 
-      return "green";
+      return "success";
     };
-    return <p style={{ color: setColor() }}>{status}</p>;
+    return <Badge variant={setVairant()}>{status}</Badge>;
   };
 
   const columns = useMemo(
@@ -66,13 +66,22 @@ const Orders = () => {
       {
         Header: "Agent Name",
         accessor: "agent.name",
+        Cell: (data: Cell) => <p>{data.row.values["agent.name"] || "NA"}</p>
+
       },
       {
         Header: "Order Status",
         accessor: "status",
         Cell: (data: Cell) => <Status status={data.row.values.status} />,
       },
-
+      {
+        Header: "Inside Cart",
+        accessor: "inside_cart",
+      },
+      {
+        Header: "Total Cost",
+        accessor: "total_cost",
+      },
       {
         Header: "Actions",
         Cell: (data: Cell) => {

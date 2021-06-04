@@ -52,8 +52,10 @@ const UserVehicles = () => {
 
 
     return (
-        <Row className="rounded mt-3">
-            <PageHeading title="User Vehicles" onClick={() => console.log("create clicked")} />
+        <Row className="rounded mt-3"
+        // style={{ borderTop: "1px solid rgba(0,0,0,.25" }}
+        >
+            <PageHeading title="User Vehicles" />
 
             {
                 apiData && apiData.vehicles && apiData.vehicles.length > 0 ?

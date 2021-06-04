@@ -1,4 +1,5 @@
 import React from 'react';
+import Map from '../../shared-components/Map';
 
 interface Props {
     address: any
@@ -6,16 +7,15 @@ interface Props {
 
 const AddressCard = ({ address }: Props) => {
     return (
-        <div className="d-flex justify-content-between p-2"
+        <div className="d-flex justify-content-between p-2 flex-column"
         >
-            <div className="map-area" style={{ backgroundColor: "lightblue", flex: .5 }}
+            <div className="map-area"
 
             >
-                <p>Map area</p>
-                {address.lat}
-                {address.lan}
+                {/* map goes here */}
+                <Map lat={address.lat} lng={address.lng} />
             </div>
-            <div className="text-right">
+            <div className="">
                 <span className="text-black font-weight-bold">{address.name}</span>
                 <br />
                 <span className="text-muted">{address.address},</span>

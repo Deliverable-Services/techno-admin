@@ -53,7 +53,7 @@ const UserAddress = () => {
 
     return (
         <Row className="rounded mt-3">
-            <PageHeading title="User Addresses" onClick={() => console.log("create clicked")} />
+            <PageHeading title="User Addresses" />
             {
                 apiData && apiData.addresses && apiData.addresses.length > 0 ?
 
