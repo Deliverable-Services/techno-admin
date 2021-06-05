@@ -1,4 +1,5 @@
 $primary-color: #2c7be5;
+$ripple-color:#2c7be5;
 $secondary-color: #2c7be5;
 $text-primary: #12263f;
 $text-grey: #677788;
@@ -17,8 +18,7 @@ $success-bg: rgba(0, 201, 167, 0.1);
 $success-color: #00c9a7;
 
 //bootstarp changes
-$theme-colors: (
-  "primary": #2c7be5,
+$theme-colors: ("primary": #2c7be5,
   "text-primary": #12263f,
   "text-muted": #95aac9,
   "secondary": #2c7be5,

@@ -191,10 +191,10 @@ const SingleOrder = () => {
       <div className="dashboard-page w-100">
         <Container fluid className="status-container mt-2">
           <div className="head-row">
-            <div className="card p-2 view-padding d-flex">
+            <div style={{ margin: "4% 0 -12% 0" }} className="card p-2 view-padding right-div d-flex">
               <div className="d-flex flex-column">
                 <div className="text-primary">
-                  <p className="view-heading">USER</p>
+                  <p className="view-heading view-top-pad">USER</p>
                 </div>
                 <div className="d-flex flex-column" style={{ fontSize: 18 }}>
                   <table className="w-100">

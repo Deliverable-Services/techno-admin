@@ -104,11 +104,29 @@ body {
   margin-bottom: 20px !important;
 }
 
-
-
 .view-subheading {
   font-weight: 400;
 }
+
+// @keyframes ripple {
+  //   0% {
+  //     box-shadow: 0 0 0 0rem rgba($ripple-color, 0.2),
+  //                 0 0 0 1rem rgba($ripple-color, 0.2),
+  //                 0 0 0 2rem rgba($ripple-color, 0.2),
+  //                 0 0 0 5rem rgba($ripple-color, 0.2);
+  //   }
+  //   100% {
+  //     box-shadow: 0 0 0 1rem rgba($ripple-color, 0.2),
+  //                 0 0 0 2rem rgba($ripple-color, 0.2),
+  //                 0 0 0 5rem rgba($ripple-color, 0.2),
+  //                 0 0 0 8rem rgba($ripple-color, 0);
+  //   }
+  // }
+
+  // .progressbar-css-ripple
+  // {
+  //   animation: ripple 3s linear infinite;
+  // }
 
 .form-container {
   display: grid;
