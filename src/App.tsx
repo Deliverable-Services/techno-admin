@@ -34,6 +34,7 @@ import VerifyOtp from "./components/VerifyOtp";
 import { IsDesktopContext } from "./context/IsDesktopContext";
 import useTokenStore from "./hooks/useTokenStore";
 import ErrorToast from "./shared-components/ErrorToast/ErrorToast";
+import MsgToast from "./shared-components/MsgToast/MsgToast";
 import { PrivateRoute } from "./shared-components/PrivateRoute";
 import API from "./utils/API";
 import AdvertisementCreateUpdateForm from "./components/Advertisements/AdvertisementUpdateCreateForm";
@@ -115,6 +116,7 @@ const App = () => {
             <Route path="/verify-otp/:id/:otp" exact component={VerifyOtp} />
           </Switch>
           <ErrorToast />
+          <MsgToast />
         </Container>
       </div>
     </IsDesktopContext.Provider>
