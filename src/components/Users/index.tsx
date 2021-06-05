@@ -175,26 +175,27 @@ const Users = () => {
 
   return (
     <>
-      <Container fluid className="component-wrapper px-0 py-2">
-        <Container fluid className="d-flex justify-content-between py-2">
-          <h2 className="font-weight-bold">Users</h2>
-          <div className="d-flex">
-            <Form.Control as="select" className="mr-4"
-              onChange={(e) => {
-                setRole(e.target.value)
-              }}
-            >
-              <option value="">All</option>
-              <option value="admin">Admin</option>
-              <option value="customer">Customer</option>
-            </Form.Control>
-            <Button variant="primary" onClick={_onCreateClick}>
-              <div className="text-white d-flex ">
-                <AiFillPlusSquare size={25} /> <b>Create</b>
-              </div>
-            </Button>
-          </div>
-        </Container>
+      <Container fluid className="d-flex justify-content-between py-2">
+        <h2 className="font-weight-bold">Users</h2>
+        <div className="d-flex">
+          <Form.Control as="select" className="mr-4"
+            onChange={(e) => {
+              setRole(e.target.value)
+            }}
+          >
+            <option value="">All</option>
+            <option value="admin">Admin</option>
+            <option value="customer">Customer</option>
+          </Form.Control>
+          <Button variant="primary" onClick={_onCreateClick}>
+            <div className="text-white d-flex ">
+              <AiFillPlusSquare size={25} /> <b>Create</b>
+            </div>
+          </Button>
+        </div>
+      </Container>
+      <Container fluid className="card component-wrapper px-0 py-2">
+
         <Container fluid className="h-100 p-0">
 
           {isLoading || isFetching ? (

@@ -4,7 +4,10 @@ import { useHistory, useParams } from "react-router-dom";
 import useGetSingleQuery from "../../hooks/useGetSingleQuery";
 import IsLoading from "../../shared-components/isLoading";
 import moment from "moment";
-import { Tooltip } from "recharts";
+
+import { FaRegDotCircle, FaDotCircle } from "react-icons/fa";
+import "react-step-progress-bar/styles.css";
+import { ProgressBar, Step } from "react-step-progress-bar";
 
 const key = "bookings";
 
@@ -129,33 +132,95 @@ const SingleOrder = () => {
           <p className="text-danger">{data.cancellation_reason}</p>
         </Container>
       )}
+      <div className="progressbar-css">
+        <ProgressBar
+          percent={33}
+        >
+          <Step>
+            {({ accomplished, index }) => (
+              <>
+                <div
+                  className={`indexedStep ${accomplished ? "accomplished" : null}`}
+                >
+                </div>
+                {accomplished ? <FaDotCircle /> : <FaDotCircle />}
+
+              </>
+            )}
+          </Step>
+          <Step>
+            {({ accomplished, index }) => (
+              <>
+                <div
+                  className={`indexedStep ${accomplished ? "accomplished" : null}`}
+                >
+                </div>
+                {accomplished ? <FaDotCircle /> : <FaRegDotCircle />}
+
+              </>
+
+            )}
+          </Step>
+          <Step>
+            {({ accomplished, index }) => (
+              <>
+                <div
+                  className={`indexedStep ${accomplished ? "accomplished" : null}`}
+                >
+                </div>
+                {accomplished ? <FaDotCircle /> : <FaRegDotCircle />}
+
+              </>
+            )}
+          </Step>
+          <Step>
+            {({ accomplished, index }) => (
+              <>
+                <div
+                  className={`indexedStep ${accomplished ? "accomplished" : null}`}
+                >
+                </div>
+                {accomplished ? <FaDotCircle /> : <FaRegDotCircle />}
+
+              </>
+            )}
+          </Step>
+        </ProgressBar>
+      </div>
+
       <div className="dashboard-page w-100">
         <Container fluid className="status-container mt-2">
           <div className="head-row">
-            <div className="card p-2 d-flex">
+            <div className="card p-2 view-padding d-flex">
               <div className="d-flex flex-column">
                 <div className="text-primary">
-                  <h3>User</h3>
+                  <p className="view-heading">USER</p>
                 </div>
                 <div className="d-flex flex-column" style={{ fontSize: 18 }}>
-                  <div>
-                    <span className="text-muted">Name :</span>
-                    <span className="text-primary ml-2">
-                      <b>{data.user.name}</b>
-                    </span>
-                  </div>
-                  <div>
-                    <span className="text-muted">Email :</span>
-                    <span className="text-primary ml-2">
-                      <b>{data.user.email}</b>
-                    </span>
-                  </div>
-                  <div>
-                    <span className="text-muted">Phone :</span>
-                    <span className="text-primary ml-2">
-                      <b>{data.user.phone}</b>
-                    </span>
-                  </div>
+                  <table className="w-100">
+                    <tbody>
+                      <tr>
+                        <td className="text-muted"><p className="view-heading">Name</p></td>
+                        <td className="text-right">
+                          <p className="view-subheading">{data.user.name}</p>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td className="text-muted "><p className="view-heading">Email</p></td>
+                        <td className="text-primary  font-weight-bold text-right">
+                          <p className="view-subheading">
+                            {data.user.email}</p>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td className="text-muted "><p className="view-heading phone-padd">Phone</p></td>
+                        <td className="text-primary  font-weight-bold text-right">
+                          <p className="view-subheading">
+                            {data.user.phone}</p>
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
                 </div>
               </div>
             </div>
@@ -191,10 +256,10 @@ const SingleOrder = () => {
           </div>
         </Container>
         <Container fluid className="charts-container mt-2">
-          <div className="card p-2 d-flex mt-3">
+          <div className="card view-padding p-2 d-flex mt-3">
             <div className="d-flex flex-column">
-              <div className="text-primary">
-                <h5>Order Summary</h5>
+              <div className="view-heading  view-top-pad">
+                ORDER SUMMARY
               </div>
               <div
                 className="d-flex flex-column w-100"
@@ -203,17 +268,18 @@ const SingleOrder = () => {
                 <table className="w-100">
                   <tbody>
                     <tr>
-                      <td className="text-muted">Ref Id</td>
-                      <td className="text-primary font-weight-bold text-right">
-                        {data.ref_id}
+                      <td className="text-muted"><p className="view-heading">Ref Id</p></td>
+                      <td className="text-right">
+                        <p className="view-subheading">{data.ref_id}</p>
                       </td>
                     </tr>
                     <tr>
-                      <td className="text-muted py-2">Scheduled At</td>
-                      <td className="text-primary py-2 font-weight-bold text-right">
-                        {data.scheduled_at
-                          ? moment(data.scheduled_at).format("DD/MM/YY(hh:mm)")
-                          : "NA"}
+                      <td className="text-muted "><p className="view-heading">Scheduled At</p></td>
+                      <td className="text-primary  font-weight-bold text-right">
+                        <p className="view-subheading">
+                          {data.scheduled_at
+                            ? moment(data.scheduled_at).format("DD/MM/YY(hh:mm)")
+                            : "NA"}</p>
                       </td>
                     </tr>
                     {data.address && (
@@ -245,10 +311,10 @@ const SingleOrder = () => {
             </div>
           </div>
 
-          <div className="card p-2 d-flex mt-3">
+          <div className="card view-padding p-2 d-flex mt-3">
             <div className="d-flex flex-column">
-              <div className="text-primary">
-                <h5>Payment Summary</h5>
+              <div className="view-heading  view-top-pad">
+                PAYMENT SUMMARY
               </div>
               <div
                 className="d-flex flex-column w-100"
@@ -257,24 +323,24 @@ const SingleOrder = () => {
                 <table className="w-100">
                   <tbody>
                     <tr>
-                      <td className="text-muted">Total Cost</td>
-                      <td className="text-primary font-weight-bold text-right">
-                        ₹{data.total_cost}
+                      <td className="view-heading">Total Cost</td>
+                      <td className="text-right">
+                        <p className="view-subheading">₹{data.total_cost}</p>
                       </td>
                     </tr>
                     <tr>
-                      <td className="text-muted py-2">Discount</td>
-                      <td className="text-success py-2 font-weight-bold text-right">
-                        ₹{data.discount}
+                      <td className="view-heading">Discount</td>
+                      <td className="text-success font-weight-bold text-right">
+                        <p className="view-subheading">₹{data.discount}</p>
                       </td>
                     </tr>
                     <tr>
-                      <td className="text-muted pt-3">Total Payable Amount</td>
+                      <td className="view-heading pt-3">Total Payable Amount</td>
                       <td
                         className="text-primary pt-2 font-weight-bold text-right"
                         style={{ fontSize: "24px" }}
                       >
-                        ₹{data.payable_amount}
+                        <p className="view-subheading">₹{data.payable_amount}</p>
                       </td>
                     </tr>
                   </tbody>

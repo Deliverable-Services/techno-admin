@@ -60,6 +60,56 @@ body {
   background-color: #fff;
 }
 
+.progressbar-css {
+  width: 65% !important;
+  margin: 0 auto;
+}
+
+.RSPBprogressBar {
+  height: 3px !important;
+  margin: 50px 0px;
+}
+
+// .indexedStep {
+//   color: white;
+//   width: 20px;
+//   height: 20px;
+//   font-size: 12px;
+//   background-color: rgba(211, 211, 211, 0.8);
+//   border-radius: 50%;
+//   display: flex;
+//   justify-content: center;
+//   align-items: center;
+// }
+
+.indexedStep.accomplished {
+  background-color: rgb(0, 83, 155);
+}
+
+.view-padding {
+  padding: 15px 15px !important;
+}
+
+.view-heading,
+.view-subheading {
+  letter-spacing: .02em !important;
+  font-size: .9rem !important;
+  font-weight: 600;
+  color: #6c757d;
+  font-family: "Lato", sans-serif;
+  margin-bottom: 0.5rem !important;
+}
+
+.view-top-pad {
+  margin-bottom: 20px !important;
+}
+
+
+
+.view-subheading {
+  font-weight: 400;
+}
+
 .form-container {
   display: grid;
   grid-template-columns: 1fr;
