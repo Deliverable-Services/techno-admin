@@ -1,23 +1,21 @@
+import Checkbox from '@material-ui/core/Checkbox';
 import React, { ReactElement } from "react";
+import { DragDropContext, Draggable, Droppable } from "react-beautiful-dnd";
 import { Container, Dropdown, Table } from "react-bootstrap";
+import { DndProvider } from 'react-dnd';
+import { HTML5Backend } from 'react-dnd-html5-backend';
 import { AiOutlineSearch } from "react-icons/ai";
 import { BiSad } from "react-icons/bi";
 import { GoSettings } from "react-icons/go";
 import { IoMdArrowDropdown, IoMdArrowDropup } from "react-icons/io";
-import { DndProvider, useDrag, useDrop } from 'react-dnd'
-import { HTML5Backend } from 'react-dnd-html5-backend'
-import update from 'immutability-helper'
-import Checkbox from '@material-ui/core/Checkbox';
-
 import {
   useAsyncDebounce,
   useFilters,
-  useGlobalFilter,
-  useSortBy,
-  useTable,
-  useRowSelect,
+  useGlobalFilter, useRowSelect, useSortBy,
+  useTable
 } from "react-table";
 import { primaryColor } from "../utils/constants";
+
 
 interface Props {
   data: any;
@@ -84,6 +82,26 @@ const IndeterminateCheckbox = React.forwardRef(
 function ReactTable({ data, columns }: Props): ReactElement {
 
   const [records, setRecords] = React.useState(data)
+  const updateMyData = (rowIndex: any, columnID: any, newValue: any) => {
+    setRecords((oldData: any) =>
+      oldData.map((row: any, index: any) => {
+        if (index === rowIndex) {
+          return {
+            ...oldData[rowIndex],
+            [columnID]: newValue
+          };
+        }
+        return row;
+      })
+    );
+  };
+
+  const reorderData = (startIndex: any, endIndex: any) => {
+    const newData = [...records];
+    const [movedRow] = newData.splice(startIndex, 1);
+    newData.splice(endIndex, 0, movedRow);
+    setRecords(newData);
+  };
 
   const getRowId = React.useCallback(row => {
     return row.id
@@ -102,10 +120,14 @@ function ReactTable({ data, columns }: Props): ReactElement {
     setGlobalFilter,
     selectedFlatRows,
     state: { selectedRowIds },
-  } = useTable({ columns, data }, useFilters, useGlobalFilter, useSortBy, useRowSelect, getRowId,
+  } = useTable({ columns, data: records }, useFilters,
+    useGlobalFilter,
+    useSortBy,
+    useRowSelect,
+    getRowId,
     hooks => {
       hooks.visibleColumns.push(columns => [
-        // Let's make a column for selection
+
         {
           id: 'selection',
           // The header can use the table's getToggleAllRowsSelectedProps method
@@ -128,88 +150,13 @@ function ReactTable({ data, columns }: Props): ReactElement {
     });
 
 
-  const moveRow = (dragIndex: any, hoverIndex: any) => {
-    const dragRecord = records[dragIndex]
-    setRecords(
-      update(records, {
-        $splice: [
-          [dragIndex, 1],
-          [hoverIndex, 0, dragRecord],
-        ],
-      })
-    )
-  }
 
-  { console.log("flatRow", selectedFlatRows) }
-  const DND_ITEM_TYPE: any = 'row'
-  const Row = ({ row, index, moveRow }: any) => {
-    const dropRef = React.useRef<HTMLDivElement>(null)
-    const dragRef = React.useRef<HTMLDivElement>(null)
-
-    const [, drop] = useDrop({
-      accept: DND_ITEM_TYPE,
-      hover(item: any, monitor: any) {
-        if (!dropRef.current) {
-          return
-        }
-        const dragIndex = item.index
-        const hoverIndex = index
-        // Don't replace items with themselves
-        if (dragIndex === hoverIndex) {
-          return
-        }
-        // Determine rectangle on screen
-        const hoverBoundingRect = dropRef.current.getBoundingClientRect()
-        // Get vertical middle
-        const hoverMiddleY =
-          (hoverBoundingRect.bottom - hoverBoundingRect.top) / 2
-        // Determine mouse position
-        const clientOffset = monitor.getClientOffset()
-        // Get pixels to the top
-        const hoverClientY = clientOffset.y - hoverBoundingRect.top
-        // Only perform the move when the mouse has crossed half of the items height
-        // When dragging downwards, only move when the cursor is below 50%
-        // When dragging upwards, only move when the cursor is above 50%
-        // Dragging downwards
-        if (dragIndex < hoverIndex && hoverClientY < hoverMiddleY) {
-          return
-        }
-        // Dragging upwards
-        if (dragIndex > hoverIndex && hoverClientY > hoverMiddleY) {
-          return
-        }
-        // Time to actually perform the action
-        moveRow(dragIndex, hoverIndex)
-        // Note: we're mutating the monitor item here!
-        // Generally it's better to avoid mutations,
-        // but it's good here for the sake of performance
-        // to avoid expensive index searches.
-        item.index = hoverIndex
-      },
-    })
-
-    // const [{ isDragging }, drag, preview] = useDrag({
-    //   item: { type: DND_ITEM_TYPE, index },
-    //   // collect: (monitor: any) => ({
-    //   //   isDragging: monitor.isDragging(),
-    //   // }),
-    // })
-
-    // const opacity = isDragging ? 0 : 1
-
-    // preview(drop(dropRef))
-    // drag(dragRef)
-
-    return (
-      <tr ref={"dropRef"} style={{}}>
-        <td ref={"dragRef"}>move</td>
-        {row.cells.map((cell: any) => {
-          return <td {...cell.getCellProps()}>{cell.render('Cell')}</td>
-        })}
-      </tr>
-    )
-  }
-
+  const handleDragEnd = (result: any) => {
+    const { source, destination } = result;
+    console.log({ result })
+    if (!destination) return;
+    reorderData(source.index, destination.index);
+  };
 
   return (
     <div>
@@ -269,7 +216,7 @@ function ReactTable({ data, columns }: Props): ReactElement {
       </Container>
 
       {/*-------------------- table---------------------  */}
-      <DndProvider backend={HTML5Backend}>
+      <DndProvider backend={HTML5Backend} >
         <div className="tableFixed">
 
           <Table
@@ -317,47 +264,57 @@ function ReactTable({ data, columns }: Props): ReactElement {
               }
             </thead>
             {/* Apply the table body props */}
-            <tbody {...getTableBodyProps()}>
-              {
-                // Loop over the table rows
-                rows.map((row, index) => {
-                  // Prepare the row for display
-                  prepareRow(row);
-                  // console.log("row", rows.length)
-                  // if (!rows.length) return <h1>No data</h1>
-                  <Row
-                    index={index}
-                    row={row}
-                    moveRow={moveRow}
-                    {...row.getRowProps()}
-                  />
-                  return (
-                    // Apply the row props
-                    <tr {...row.getRowProps()}>
-                      {
-                        // Loop over the rows cells
-                        row.cells.map((cell) => {
-                          // Apply the cell props
-                          return (
-                            <td {...cell.getCellProps()}>
-                              {
-                                // Render the cell contents
-                                cell.render("Cell")
-                              }
-                            </td>
-                          );
-                        })
-                      }
-                    </tr>
-                  );
-                })
-              }
-              {/* {rows.length === 0 ?
+            <DragDropContext onDragEnd={handleDragEnd}>
+              <Droppable droppableId="table-body">
+                {(provided, snapshot) => (
+                  <tbody ref={provided.innerRef} {...provided.droppableProps}>
+                    {rows.map((row, i) => {
+                      prepareRow(row);
+                      return (
+                        <Draggable
+                          draggableId={row.id}
+                          key={row.id}
+                          index={i}
+                        >
+                          {(provided, snapshot) => {
+                            return (
+                              <tr
+                                ref={provided.innerRef}
+                                {...row.getRowProps()}
+                                {...provided.draggableProps}
+                                {...provided.dragHandleProps}
+                                style={{
+                                  ...provided.draggableProps.style,
+                                  opacity: snapshot.isDragging
+                                    ? ".5"
+                                    : "1",
+                                }}
+                              >
+                                {row.cells.map(cell => (
+                                  <td {...cell.getCellProps()}>
+                                    {cell.render("Cell", {
+                                      dragHandleProps: provided.dragHandleProps,
+                                      isSomethingDragging: snapshot.isDragging
+                                    })
+                                    }
+                                  </td>
+                                ))}
+                              </tr>
+                            );
+                          }}
+                        </Draggable>
+                      );
+                    })}
+                    {provided.placeholder}
+                  </tbody>
+                )}
+              </Droppable>
+            </DragDropContext>
+            {/* {rows.length === 0 ?
                                 <Container fluid className="d-flex justify-content-center w-100 align-item-center">
                                     <span className="text-primary display-3">No data found</span>
                                 </Container>
                                 : ""} */}
-            </tbody>
           </Table>
 
         </div>

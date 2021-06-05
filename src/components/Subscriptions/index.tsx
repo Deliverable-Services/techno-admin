@@ -13,14 +13,12 @@ import { queryClient } from "../../utils/queryClient";
 import { showErrorToast } from "../../utils/showErrorToast";
 // import UpdateCreateForm from "./FaqsCreateUpdateForm"
 import moment from 'moment'
+import PageHeading from "../../shared-components/PageHeading";
+import { Badge } from "react-bootstrap";
+import CreatedUpdatedAt from "../../shared-components/CreatedUpdatedAt";
 
 const key = "user-subscriptions";
 
-const deleteFaq = (id: string) => {
-  return API.delete(`${key}/${id}`, {
-    headers: { "Content-Type": "multipart/form-data" },
-  });
-};
 
 const Orders = () => {
   const history = useHistory();
@@ -33,26 +31,26 @@ const Orders = () => {
     },
   });
 
-  const { mutate, isLoading: isDeleteLoading } = useMutation(deleteFaq, {
-    onSuccess: () => {
-      queryClient.invalidateQueries(key);
-      setDeletePopup(false);
-    },
-    onError: () => {
-      showErrorToast("Something went wrong deleteing the records");
-    },
-  });
 
   const Status = ({ status }: { status: string }) => {
-    const setColor = () => {
-      if (status === "cancelled" || status === "error_payment") return "red";
+    const setVariant = () => {
+      if (status === "active") return "success";
 
-      if (status === "pending" || status === "pending_payment") return "orange";
 
-      return "green";
+      return "danger";
     };
-    return <p style={{ color: setColor() }}>{status}</p>;
+    return <Badge variant={setVariant()} className="p-1">{status.toUpperCase()}</Badge>;
   };
+
+
+  const _onPlanClick = (id: string) => {
+    if (!id) return
+    history.push("/plans/create-edit", { id })
+  }
+  const _onUserClick = (id: string) => {
+    if (!id) return
+    history.push("/users/create-edit", { id })
+  }
 
   const columns = useMemo(
     () => [
@@ -63,10 +61,30 @@ const Orders = () => {
       {
         Header: "User Name",
         accessor: "user.name", //accessor is the "key" in the data
+        Cell: (data: Cell) => {
+          return (
+            <p
+              className="text-primary"
+              style={{ cursor: "pointer" }}
+              onClick={() => _onUserClick((data.row.original as any).user_id)}
+
+            >{data.row.values["user.name"]}</p>
+          )
+        }
       },
       {
         Header: "Plan ID",
-        accessor: "plan_id", //accessor is the "key" in the data
+        accessor: "plan.name", //accessor is the "key" in the data
+        Cell: (data: Cell) => {
+          return (
+            <p
+              className="text-primary"
+              style={{ cursor: "pointer" }}
+              onClick={() => _onPlanClick((data.row.original as any).plan_id)}
+
+            >{data.row.values["plan.name"]}</p>
+          )
+        }
       },
       {
         Header: "Allowed Usage",
@@ -82,26 +100,48 @@ const Orders = () => {
         accessor: "used", //accessor is the "key" in the data
       },
       {
-        Header: "Created At",
-        accessor: "created_at", //accessor is the "key" in the data
-        Cell: (data: Cell) => moment(data.row.values.created_at).format('DD MMMM YYYY'),
-      },
-
-
-      {
-        Header: "Actions",
+        Header: "Last Used",
+        accessor: "last_used_at",
         Cell: (data: Cell) => {
           return (
-            <div className="d-flex">
-              <Button
-                onClick={() => history.push(`/subscriptions/${data.row.values.id}`)}
-              >
-                View
-              </Button>
-            </div>
-          );
-        },
+            <CreatedUpdatedAt date={data.row.values.last_used_at} />
+          )
+        }
       },
+      {
+        Header: "Created At",
+        accessor: "created_at",
+        Cell: (data: Cell) => {
+          return (
+            <CreatedUpdatedAt date={data.row.values.created_at} />
+          )
+        }
+      },
+      {
+        Header: "Updated At",
+        accessor: "updated_at",
+        Cell: (data: Cell) => {
+          return (
+            <CreatedUpdatedAt date={data.row.values.updated_at} />
+          )
+        }
+      },
+
+
+      // {
+      //   Header: "Actions",
+      //   Cell: (data: Cell) => {
+      //     return (
+      //       <div className="d-flex">
+      //         <Button
+      //           onClick={() => history.push(`/subscriptions/${data.row.values.id}`)}
+      //         >
+      //           View
+      //         </Button>
+      //       </div>
+      //     );
+      //   },
+      // },
     ],
     []
   );
@@ -119,75 +159,31 @@ const Orders = () => {
 
   return (
     <>
-      <h2 className="font-weight-bold mb-4">Subscriptions</h2>
-      <Container fluid className="card component-wrapper px-0 py-2">
-        <Container fluid className="h-100 p-0">
-
-          {/* {
-                        status !== "default" ?
-                            <Button variant="primary" onClick={setStatusDefault}  >
-                                <div className="text-secondary">
-                                    <BiArrowFromRight size={25} /> <b>Back</b>
-                                </div>
-                            </Button> :
-                            <Button variant="primary" onClick={setStatusCreate}>
-                                <div className="text-secondary">
-
-                                    <AiFillPlusSquare size={24} /> <b>Create</b>
-                                </div>
-                            </Button>
-                    } */}
-        </Container>
+      <Container fluid className="component-wrapper px-0 py-2">
+        <PageHeading title="User Subscriptions" />
 
         <Container fluid className="h-100 p-0">
-          <>
-            {isLoading || isFetching ? (
-              <IsLoading />
-            ) : (
-              <>
-                {!error && <ReactTable data={data.data} columns={columns} />}
-                {!error && data.data.length > 0 ? (
-                  <TablePagination
-                    currentPage={data.current_page}
-                    lastPage={data.last_page}
-                    setPage={setPage}
-                    hasNextPage={!!data.next_page_url}
-                    hasPrevPage={!!data.prev_page_url}
-                  />
-                ) : null}{" "}
-              </>
-            )}
-          </>
+
+          {isLoading || isFetching ? (
+            <IsLoading />
+          ) : (
+            <>
+              {!error && <ReactTable data={data.data} columns={columns} />}
+              {!error && data.data.length > 0 ? (
+                <TablePagination
+                  currentPage={data.current_page}
+                  lastPage={data.last_page}
+                  setPage={setPage}
+                  hasNextPage={!!data.next_page_url}
+                  hasPrevPage={!!data.prev_page_url}
+                />
+              ) : null}{" "}
+            </>
+          )}
         </Container>
       </Container>
-      <Modal show={deletePopup} onHide={() => setDeletePopup(false)}>
-        <Modal.Header closeButton>
-          <Modal.Title>Are you sure?</Modal.Title>
-        </Modal.Header>
-        <Modal.Body>
-          Do you really want to delete this record? This process cannot be
-          undone
-        </Modal.Body>
-        <Modal.Footer>
-          <Button variant="bg-light" onClick={() => setDeletePopup(false)}>
-            Close
-          </Button>
-          <Button
-            variant="danger"
-            onClick={() => {
-              mutate(selectedRowId);
-            }}
-          >
-            {isDeleteLoading ? (
-              <Spinner animation="border" size="sm" />
-            ) : (
-              "Delete"
-            )}
-          </Button>
-        </Modal.Footer>
-      </Modal>
     </>
   );
-};
+}
 
 export default Orders;

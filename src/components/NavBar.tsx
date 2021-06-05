@@ -72,7 +72,7 @@ const mainLinks: Array<INavLink> = [
     icon: <FaBoxes />,
   },
   {
-    title: "Subscriptions",
+    title: "User Subscriptions",
     path: "/subscriptions",
     icon: <FaAddressCard />,
   },
