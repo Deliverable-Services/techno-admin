@@ -103,6 +103,8 @@ function ReactTable({ data, columns }: Props): ReactElement {
     setRecords(newData);
   };
 
+  React.useEffect(() => setRecords(data), [data])
+
   const getRowId = React.useCallback(row => {
     return row.id
   }, [])

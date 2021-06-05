@@ -5,33 +5,43 @@ import React from "react";
 import { Container, Button, Alert, Col, Row, Spinner } from "react-bootstrap";
 import { AiFillPlusSquare } from "react-icons/ai";
 import { BiArrowFromRight } from "react-icons/bi";
-import { useMutation } from "react-query";
+import { useMutation, useQuery } from "react-query";
 import { useHistory, useParams } from "react-router-dom";
 import { InputField } from "../../shared-components/InputFeild";
+import IsLoading from "../../shared-components/isLoading";
 import isLoading from "../../shared-components/isLoading";
 import API from "../../utils/API";
 import { queryClient } from "../../utils/queryClient";
 
 const key = "bookings";
 
-const agents = [
-  {
-    id: 2,
-    name: "Hitesh",
-  },
-  {
-    id: 2,
-    name: "Hitesh",
-  },
-  {
-    id: 2,
-    name: "Hitesh",
-  },
-  {
-    id: 2,
-    name: "Hitesh",
-  },
-];
+const getAgents = async () => {
+  const r = await API.get("/users", {
+    params: {
+      role: "agent"
+    }
+  })
+  return r.data
+}
+
+// const agents = [
+//   {
+//     id: 2,
+//     name: "Hitesh",
+//   },
+//   {
+//     id: 2,
+//     name: "Hitesh",
+//   },
+//   {
+//     id: 2,
+//     name: "Hitesh",
+//   },
+//   {
+//     id: 2,
+//     name: "Hitesh",
+//   },
+// ];
 
 const assignAgent = ({
   formdata,
@@ -49,6 +59,7 @@ const AssignAgent = () => {
   const { id }: { id: string } = useParams();
 
   const history = useHistory();
+  const { data: agents, isLoading: isAgentLoading } = useQuery("agent", () => getAgents())
   const { data, mutate, isLoading, error, status } = useMutation(assignAgent, {
     onSuccess: (data) => {
       setTimeout(() => {
@@ -58,6 +69,8 @@ const AssignAgent = () => {
       }, 500);
     },
   });
+
+  if (isAgentLoading) return <IsLoading />;
 
   return (
     <Container>
@@ -94,7 +107,7 @@ const AssignAgent = () => {
                       placeholder="Select Agent"
                       label="Select Agent"
                       as="select"
-                      selectData={agents}
+                      selectData={agents.data}
                     />
                   </Col>
                 </Row>

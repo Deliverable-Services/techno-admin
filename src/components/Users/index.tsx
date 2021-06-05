@@ -2,7 +2,7 @@ import { useMemo, useState } from "react";
 import { Button, Container, Modal, Spinner, Form } from "react-bootstrap";
 import { AiFillDelete, AiFillEdit, AiFillPlusSquare } from "react-icons/ai";
 import { BiSad } from "react-icons/bi";
-import { useMutation, useQuery } from "react-query";
+import { QueryFunction, useMutation, useQuery } from "react-query";
 import { useHistory } from "react-router-dom";
 import { Cell } from "react-table";
 import CreatedUpdatedAt from "../../shared-components/CreatedUpdatedAt";
@@ -12,6 +12,7 @@ import PageHeading from "../../shared-components/PageHeading";
 import TablePagination from "../../shared-components/Pagination";
 import ReactTable from "../../shared-components/ReactTable";
 import API from "../../utils/API";
+import { userRoles } from "../../utils/arrays";
 import {
   baseUploadUrl,
   primaryColor,
@@ -75,6 +76,8 @@ const Users = () => {
   const _onEditClick = (id: string) => {
     history.push("/users/create-edit", { id })
   }
+
+  console.log({ data, isLoading, isFetching })
 
   const columns = useMemo(
     () => [
@@ -185,8 +188,9 @@ const Users = () => {
               }}
             >
               <option value="">All</option>
-              <option value="admin">Admin</option>
-              <option value="customer">Customer</option>
+              {userRoles.map(role => (
+                <option value={role.id}>{role.name}</option>
+              ))}
             </Form.Control>
             <Button variant="primary" onClick={_onCreateClick}>
               <div className="text-white d-flex ">

@@ -124,10 +124,12 @@ const AdvertisementCreateUpdateForm = () => {
                 <DatePicker
                   name="valid_from"
                   label="Valid From"
+                  setFieldValue={setFieldValue}
                 />
                 <DatePicker
                   name="valid_to"
                   label="Valid To"
+                  setFieldValue={setFieldValue}
                 />
                 <InputField
                   name="image"
