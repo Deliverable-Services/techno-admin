@@ -13,6 +13,7 @@ import API from "../../utils/API";
 import { conditionType, isActiveArray } from "../../utils/arrays";
 import { queryClient } from "../../utils/queryClient";
 import DatePicker from "../../shared-components/DatePicker";
+import TextEditor from "../../shared-components/TextEditor";
 const key = "coupons";
 
 const createUpdataCoupons = ({
@@ -104,31 +105,29 @@ const CouponCreateUpdateForm = () => {
                 <DatePicker
                   name="valid_from"
                   label="Valid From"
+                  setFieldValue={setFieldValue}
                 />
                 <DatePicker
                   name="valid_to"
                   label="Valid To"
+                  setFieldValue={setFieldValue}
                 />
                 <InputField as="select" selectData={isActiveArray} name="is_active" label="Is active?" placeholder="Choose is active" />
                 <InputField as="select" selectData={conditionType} name="condition_type" label="Condition Type" placeholder="Condition Type" />
-                <InputField
-                  name="description"
-                  placeholder="Description"
-                  label="Descrition"
-                  as="textarea"
-                  required
-                />
-
-                <InputField
-                  name="terms"
-                  placeholder="Terms"
-                  label="Terms"
-                  as="textarea"
-                  required
-                />
               </div>
+              <TextEditor
+                name="description"
+                label="Description"
+                setFieldValue={setFieldValue}
+              />
+
+              <TextEditor
+                name="terms"
+                label="Terms"
+                setFieldValue={setFieldValue}
+              />
               <Row className="d-flex justify-content-center">
-                <Col md="2">
+                <Col md="6">
                   <Button type="submit" disabled={isLoading} className="w-100">
                     {isLoading ? (
                       <Spinner animation="border" size="sm" />

@@ -9,6 +9,7 @@ import useGetSingleQuery from "../../hooks/useGetSingleQuery";
 import BackButton from "../../shared-components/BackButton";
 import { InputField } from "../../shared-components/InputFeild";
 import IsLoading from "../../shared-components/isLoading";
+import TextEditor from "../../shared-components/TextEditor";
 import { ICreateUpdateForm } from "../../types/interface";
 import API from "../../utils/API";
 import { isActiveArray } from "../../utils/arrays";
@@ -68,13 +69,8 @@ const ServicesCreateUpdateForm = () => {
           onSubmit={(values) => {
             // console.log("values", values)
             const formdata = new FormData()
-            formdata.append("name", values.name);
-            formdata.append("url", values.url);
-            formdata.append("details", values.details);
-            formdata.append("order", values.order);
-            formdata.append("is_active", values.is_active);
-            formdata.append("category_id", values.category_id);
-            formdata.append("price", values.price);
+            const { image, ...rest } = values;
+            for (let k in rest) formdata.append(k, rest[k])
             if (values.image)
               formdata.append("image", values.image);
             mutate({ formdata, id });
@@ -129,13 +125,12 @@ const ServicesCreateUpdateForm = () => {
                   isFile
                   setFieldValue={setFieldValue}
                 />
-                <InputField
-                  name="details"
-                  placeholder="Details"
-                  label="Details"
-                  as="textarea"
-                />
               </div>
+              <TextEditor
+                name="details"
+                label="Details"
+                setFieldValue={setFieldValue}
+              />
               <Row className="d-flex justify-content-start">
                 <Col md="2">
                   <Button type="submit" disabled={isLoading} className="w-100">

@@ -1,8 +1,7 @@
-import { Field, useField } from 'formik';
+import { useField } from 'formik';
 import moment from 'moment';
-import React from 'react'
-import { Form } from 'react-bootstrap'
-import DateTime from 'react-datetime';
+import React, { useState } from 'react';
+import { Form } from 'react-bootstrap';
 
 
 
@@ -10,12 +9,18 @@ interface Props {
     label?: string;
     name: string;
     error?: string;
+    setFieldValue: (field: string, value: any, shouldValidate?: boolean | undefined) => void,
 }
 
 const DatePicker: React.FC<Props> = ({
-    label, name, error, ...props
+    label, name, error, setFieldValue, ...props
 }) => {
     const [field] = useField({ ...props, name });
+    const [value, setValue] = useState(moment(field.value).format("YYYY-MM-DDThh:mm"))
+    const handleChange = (e: any) => {
+        setFieldValue(name, e.target.value)
+        setValue(e.target.value)
+    }
     return (
         <div className="w-100">
             <Form.Group>
@@ -35,7 +40,7 @@ const DatePicker: React.FC<Props> = ({
                     //             setFieldValue(field.name, moment(value._d).format("YYYY-MM-DD hh:mm:ss"))
                     //     }}
                     // />
-                    <Form.Control {...field} {...props} id={field.name} type="datetime-local" />
+                    <Form.Control id={field.name} value={value} onChange={handleChange} type="datetime-local" />
 
                 }
                 {

@@ -53,10 +53,12 @@ const Transactions = () => {
   }
 
   const _onUserClick = (id: string) => {
+    if (!id) return
     history.push("/users/create-edit", { id })
   }
 
   const _onOrderClick = (id: string) => {
+    if (!id) return
     history.push(`/orders/${id}`)
   }
   const columns = useMemo(

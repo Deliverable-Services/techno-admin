@@ -11,6 +11,8 @@ import IsLoading from "../../shared-components/isLoading";
 import API from "../../utils/API";
 import { isActiveArray } from "../../utils/arrays";
 import { queryClient } from "../../utils/queryClient";
+import { showErrorToast } from "../../utils/showErrorToast";
+import { showMsgToast } from "../../utils/showMsgToast";
 
 const key = "brands";
 
@@ -42,10 +44,13 @@ const BrandsCreateUpdateForm = () => {
   const { mutate, isLoading, error, status } = useMutation(createUpdataBrand, {
     onSuccess: () => {
       setTimeout(() => queryClient.invalidateQueries(key), 500);
+      showMsgToast("Message of success")
     },
+    onError: () => {
+      showErrorToast("Failed!")
+    }
   });
 
-  console.log("data", data);
 
   const apiData = data as any;
 
@@ -63,9 +68,9 @@ const BrandsCreateUpdateForm = () => {
               const formdata = new FormData();
               formdata.append("name", values.name);
               formdata.append("url", values.url);
+              formdata.append("is_active", values.is_active);
               if (values.logo)
                 formdata.append("logo", values.logo);
-              formdata.append("is_active", values.is_active);
 
               mutate({ formdata, id });
             }}

@@ -8,6 +8,7 @@ import useGetSingleQuery from "../../hooks/useGetSingleQuery";
 import BackButton from "../../shared-components/BackButton";
 import { InputField } from "../../shared-components/InputFeild";
 import IsLoading from "../../shared-components/isLoading";
+import TextEditor from "../../shared-components/TextEditor";
 import { ICreateUpdateForm } from "../../types/interface";
 import API from "../../utils/API";
 import { isActiveArray } from "../../utils/arrays";
@@ -132,14 +133,12 @@ const PlanCreateUpdateForm = () => {
 
                 <InputField as="select" selectData={isActiveArray} name="is_active" label="Is active?" placeholder="Choose is active" />
                 <InputField as="select" selectData={isActiveArray} name="is_popular" label="Is Popular?" placeholder="Choose is popular" />
-                <InputField
-                  name="description"
-                  placeholder="Description"
-                  label="Descrition"
-                  as="textarea"
-                  required
-                />
               </div>
+              <TextEditor
+                name="description"
+                label="Description"
+                setFieldValue={setFieldValue}
+              />
               <Row className="d-flex justify-content-start">
                 <Col md="2">
                   <Button type="submit" disabled={isLoading} className="w-100">

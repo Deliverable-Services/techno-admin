@@ -13,4 +13,5 @@ export const conditionType = [
 export const userRoles = [
     { id: "admin", name: "Admin" },
     { id: "customer", name: "Customer" },
+    { id: "agent", name: "Agent" },
 ]

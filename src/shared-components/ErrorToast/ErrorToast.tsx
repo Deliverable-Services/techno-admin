@@ -1,4 +1,4 @@
-import { Toast } from 'react-bootstrap'
+import { Alert, Toast } from 'react-bootstrap'
 import { useErrorToastStore } from './useErrorToastStore'
 
 interface Props {
@@ -18,14 +18,15 @@ const ErrorToast = (props: Props) => {
                         setTimeout(() => hideToast(t.id), 5000)
 
                         return (
-                            <Toast className=" bg-danger" style={{ bottom: "2%", right: "2%", zIndex: 1001, minWidth: "200px" }} onClose={() => hideToast(t.id)} key={t.id}>
-                                <Toast.Header className="d-flex justify-content-between" >
-                                    <strong>Error</strong>
-                                    <span></span>
-                                    <span>{" "}</span>
-                                </Toast.Header>
-                                <Toast.Body>{t.message}</Toast.Body>
-                            </Toast>
+                            <Alert variant="danger">{t.message}</Alert>
+                            // <Toast className=" bg-danger" style={{ bottom: "2%", right: "2%", zIndex: 1001, minWidth: "200px" }} onClose={() => hideToast(t.id)} key={t.id}>
+                            //     <Toast.Header className="d-flex justify-content-between" >
+                            //         <strong>Error</strong>
+                            //         <span></span>
+                            //         <span>{" "}</span>
+                            //     </Toast.Header>
+                            //     <Toast.Body>{t.message}</Toast.Body>
+                            // </Toast>
                         )
                     })
                 }

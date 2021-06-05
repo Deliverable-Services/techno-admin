@@ -6,9 +6,8 @@ interface IUseGetSingle {
     key: string,
     id: string
 }
-const getSingle: QueryFunction = async ({ queryKey }) => {
-
-    const r = await API.get(`${queryKey[0]}`)
+const getSingle = async (key: any, id: any) => {
+    const r = await API.get(`${key}/${id}`)
 
 
     return r.data
@@ -17,7 +16,7 @@ const getSingle: QueryFunction = async ({ queryKey }) => {
 
 const useGetSingleQuery = ({ id, key }: IUseGetSingle) => {
 
-    const allData = useQuery<any>(`${key}/${id}`, getSingle, {
+    const allData = useQuery<any>([key], () => getSingle(key, id), {
         enabled: !!id,
     })
 

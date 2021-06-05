@@ -25,6 +25,7 @@ interface IDates {
 }
 
 const Dashboard = () => {
+
   const [chartOneSelect, setChartOneSelect] = useState<string>("1");
   const [chartTwoSelect, setChartTwoSelect] = useState<string>("");
   const [dates, setDates] = useState<IDates>({
@@ -42,6 +43,7 @@ const Dashboard = () => {
   );
   const handleChartOneChange = (e: any) => setChartOneSelect(e.target.value);
   const handleChartTwoChange = (e: any) => setChartTwoSelect(e.target.value);
+
 
   if (isLoading || isFetching) return <IsLoading />;
 

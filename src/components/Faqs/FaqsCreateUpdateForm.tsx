@@ -16,6 +16,7 @@ import useGetSingleQuery from "../../hooks/useGetSingleQuery";
 import BackButton from "../../shared-components/BackButton";
 import { InputField } from "../../shared-components/InputFeild";
 import IsLoading from "../../shared-components/isLoading";
+import TextEditor from "../../shared-components/TextEditor";
 import { ICreateUpdateForm } from "../../types/interface";
 import API from "../../utils/API";
 import { isActiveArray } from "../../utils/arrays";
@@ -103,16 +104,13 @@ const FaqCreateUpdateForm = () => {
                   as="select"
                   selectData={isActiveArray}
                 />
-
-                <InputField
-                  name="description"
-                  placeholder="Description"
-                  label="Description"
-                  required
-                  as="textarea"
-                />
-                {/* <InputField name="is_active" placeholder="isActive" label="Is Active?" /> */}
               </div>
+              <TextEditor
+                name="description"
+                label="Description"
+                setFieldValue={setFieldValue}
+              />
+              {/* <InputField name="is_active" placeholder="isActive" label="Is Active?" /> */}
 
               <Row className="d-flex justify-content-start">
                 <Col md="2">

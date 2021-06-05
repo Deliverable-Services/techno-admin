@@ -2,7 +2,7 @@ import { useMemo, useState } from "react";
 import { Button, Container, Modal, Spinner, Form } from "react-bootstrap";
 import { AiFillDelete, AiFillEdit, AiFillPlusSquare } from "react-icons/ai";
 import { BiSad } from "react-icons/bi";
-import { useMutation, useQuery } from "react-query";
+import { QueryFunction, useMutation, useQuery } from "react-query";
 import { useHistory } from "react-router-dom";
 import { Cell } from "react-table";
 import CreatedUpdatedAt from "../../shared-components/CreatedUpdatedAt";
@@ -12,6 +12,7 @@ import PageHeading from "../../shared-components/PageHeading";
 import TablePagination from "../../shared-components/Pagination";
 import ReactTable from "../../shared-components/ReactTable";
 import API from "../../utils/API";
+import { userRoles } from "../../utils/arrays";
 import {
   baseUploadUrl,
   primaryColor,
@@ -75,6 +76,8 @@ const Users = () => {
   const _onEditClick = (id: string) => {
     history.push("/users/create-edit", { id })
   }
+
+  console.log({ data, isLoading, isFetching })
 
   const columns = useMemo(
     () => [
@@ -175,27 +178,27 @@ const Users = () => {
 
   return (
     <>
-      <Container fluid className="d-flex justify-content-between py-2">
-        <h2 className="font-weight-bold">Users</h2>
-        <div className="d-flex">
-          <Form.Control as="select" className="mr-4"
-            onChange={(e) => {
-              setRole(e.target.value)
-            }}
-          >
-            <option value="">All</option>
-            <option value="admin">Admin</option>
-            <option value="customer">Customer</option>
-          </Form.Control>
-          <Button variant="primary" onClick={_onCreateClick}>
-            <div className="text-white d-flex ">
-              <AiFillPlusSquare size={25} /> <b>Create</b>
-            </div>
-          </Button>
-        </div>
-      </Container>
-      <Container fluid className="card component-wrapper px-0 py-2">
-
+      <Container fluid className="component-wrapper px-0 py-2">
+        <Container fluid className="d-flex justify-content-between py-2">
+          <h2 className="font-weight-bold">Users</h2>
+          <div className="d-flex">
+            <Form.Control as="select" className="mr-4"
+              onChange={(e) => {
+                setRole(e.target.value)
+              }}
+            >
+              <option value="">All</option>
+              {userRoles.map(role => (
+                <option value={role.id}>{role.name}</option>
+              ))}
+            </Form.Control>
+            <Button variant="primary" onClick={_onCreateClick}>
+              <div className="text-white d-flex ">
+                <AiFillPlusSquare size={25} /> <b>Create</b>
+              </div>
+            </Button>
+          </div>
+        </Container>
         <Container fluid className="h-100 p-0">
 
           {isLoading || isFetching ? (
