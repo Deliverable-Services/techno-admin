@@ -5,7 +5,7 @@ interface Props {
 
 }
 
-const ErrorToast = (props: Props) => {
+const MsgToast = (props: Props) => {
     const { toasts, hideToast } = useMsgToastStore()
 
 
@@ -37,4 +37,4 @@ const ErrorToast = (props: Props) => {
 
 }
 
-export default ErrorToast
+export default MsgToast
