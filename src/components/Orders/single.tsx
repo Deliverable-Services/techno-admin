@@ -11,6 +11,7 @@ import { ProgressBar, Step } from "react-step-progress-bar";
 
 const key = "bookings";
 
+
 const data = {
   id: 9,
   ref_id: "1620658428-2",
