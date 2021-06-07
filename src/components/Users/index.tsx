@@ -5,6 +5,7 @@ import { BiSad } from "react-icons/bi";
 import { useMutation, useQuery } from "react-query";
 import { useHistory } from "react-router-dom";
 import { Cell } from "react-table";
+import BreadCrumb from "../../shared-components/BreadCrumb";
 import CreatedUpdatedAt from "../../shared-components/CreatedUpdatedAt";
 import IsActiveBadge from "../../shared-components/IsActiveBadge";
 import IsLoading from "../../shared-components/isLoading";
@@ -19,7 +20,9 @@ import {
 } from "../../utils/constants";
 import { queryClient } from "../../utils/queryClient";
 import { showErrorToast } from "../../utils/showErrorToast";
-
+interface IFilter {
+  role: string | null
+}
 const key = "users";
 
 const disableUser = (id: string) => {
@@ -28,32 +31,21 @@ const disableUser = (id: string) => {
     disable: 1
   });
 };
-
-const queryFn = async (page: number, role: string) => {
-  const params: any = { page }
-
-  if (role) params["role"] = role
-  const r = await API.get<any>(`users`, {
-    params
-  });
-
-  return r.data
+const INITIAL_FILTER = {
+  role: ""
 }
+
 
 const Users = () => {
   const history = useHistory()
   const [selectedRowId, setSelectedRowId] = useState<string>("");
   const [page, setPage] = useState<number>(1);
   const [role, setRole] = useState("")
-  console.log({ role })
   const [deletePopup, setDeletePopup] = useState(false);
 
-  // const { data, isLoading, isFetching, error } = useQuery<any>([key, page], {
-  //   onError: (err: any) => {
-  //     showErrorToast(err.response.data.message);
-  //   },
-  // });
-  const { data, isLoading, isFetching, error } = useQuery<any>([key, page, role], () => queryFn(page, role), {
+  const [filter, setFilter] = useState<IFilter>(INITIAL_FILTER)
+
+  const { data, isLoading, isFetching, error } = useQuery<any>([key, page, filter], {
     onError: (err: any) => {
       showErrorToast(err.response.data.message);
     },
@@ -68,6 +60,14 @@ const Users = () => {
       showErrorToast("Something went wrong deleteing the records");
     },
   });
+  const _onFilterChange = (idx: string, value: any) => {
+    setFilter((prev) => {
+      return {
+        ...prev,
+        [idx]: value
+      }
+    })
+  }
 
   const _onCreateClick = () => {
     history.push("/users/create-edit")
@@ -177,27 +177,74 @@ const Users = () => {
 
   return (
     <>
-      <Container fluid className="component-wrapper px-0 py-2">
-        <Container fluid className="d-flex justify-content-between py-2">
-          <h2 className="font-weight-bold">Users</h2>
-          <div className="d-flex">
-            <Form.Control as="select" className="mr-4"
-              onChange={(e) => {
-                setRole(e.target.value)
-              }}
-            >
-              <option value="">All</option>
-              {userRoles.map(role => (
-                <option value={role.id}>{role.name}</option>
-              ))}
-            </Form.Control>
-            <Button variant="primary" onClick={_onCreateClick}>
-              <div className="text-white d-flex ">
-                <AiFillPlusSquare size={25} /> <b>Create</b>
-              </div>
-            </Button>
+      <Container fluid className="d-flex justify-content-between py-2">
+        <h2 className="font-weight-bold">Users</h2>
+        <div className="d-flex">
+          <Form.Control as="select" className="mr-4"
+            onChange={(e) => {
+              setRole(e.target.value)
+            }}
+          >
+            <option value="">All</option>
+            {userRoles.map(role => (
+              <option value={role.id}>{role.name}</option>
+            ))}
+          </Form.Control>
+          <Button variant="primary" onClick={_onCreateClick}>
+            <div className="text-white d-flex ">
+              <AiFillPlusSquare size={25} /> <b>Create</b>
+            </div>
+          </Button>
+        </div>
+      </Container>
+
+
+      {
+        (!isLoading || !isFetching) &&
+        <Container fluid>
+          <div>
+            <div className="filter">
+              <BreadCrumb
+                onFilterChange={_onFilterChange}
+                value=""
+                currentValue={filter.role}
+                dataLength={data.data.length}
+                idx="role"
+                title="All"
+              />
+              <BreadCrumb
+                onFilterChange={_onFilterChange}
+                value="admin"
+                currentValue={filter.role}
+                dataLength={data.data.length}
+                idx="role"
+                title="Admin"
+              />
+              <BreadCrumb
+                onFilterChange={_onFilterChange}
+                value="customer"
+                currentValue={filter.role}
+                dataLength={data.data.length}
+                idx="role"
+                title="Customer"
+
+              />
+              <BreadCrumb
+                onFilterChange={_onFilterChange}
+                value="agent"
+                currentValue={filter.role}
+                dataLength={data.data.length}
+                idx="role"
+                title="Agent"
+                isLast
+
+              />
+            </div>
           </div>
         </Container>
+
+      }
+      <Container fluid className="component-wrapper px-0 py-2">
         <Container fluid className="h-100 p-0">
 
           {isLoading || isFetching ? (

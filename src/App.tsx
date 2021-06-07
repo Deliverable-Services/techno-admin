@@ -38,6 +38,8 @@ import MsgToast from "./shared-components/MsgToast/MsgToast";
 import { PrivateRoute } from "./shared-components/PrivateRoute";
 import API from "./utils/API";
 import AdvertisementCreateUpdateForm from "./components/Advertisements/AdvertisementUpdateCreateForm";
+import Issues from "./components/Issues";
+import SingleIssue from "./components/Issues/single";
 
 const App = () => {
   const [isDesktop, setIsDesktop] = useState<boolean>(false);
@@ -107,10 +109,12 @@ const App = () => {
             <PrivateRoute path="/faqs/create-edit" exact component={FaqCreateUpdateForm} />
             <PrivateRoute path="/advertisements/create-edit" exact component={AdvertisementCreateUpdateForm} />
             <PrivateRoute path="/transactions" exact component={Transactions} />
+            <PrivateRoute path="/issues" exact component={Issues} />
             <PrivateRoute path="/transactions/:id" exact component={TransactionUpdateForm} />
             <PrivateRoute path="/subscriptions" exact component={Subscriptions} />
             <PrivateRoute path="/subscriptions/:id" exact component={SingleSubscriptions} />
             <PrivateRoute path="/orders/:id" exact component={SingleOrder} />
+            <PrivateRoute path="/issues/:id" exact component={SingleIssue} />
             <PrivateRoute path="/orders/assign-agent/:id" exact component={AssignAgent} />
             <Route path="/login" exact component={LoginPage} />
             <Route path="/verify-otp/:id/:otp" exact component={VerifyOtp} />

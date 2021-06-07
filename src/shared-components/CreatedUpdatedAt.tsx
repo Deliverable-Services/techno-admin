@@ -7,12 +7,23 @@ interface Props {
 
 const CreatedUpdatedAt = ({ date }: Props) => {
     return (
-        <p>
-            {
-                date ?
-                    moment(date).format("DD:MM:YY") : "NA"
-            }
-        </p>
+        <>
+            <span>
+                {
+                    date ?
+                        moment(date).format("DD:MM:YY") : "NA"
+                }
+            </span>
+            <br />
+            <span>
+                (
+                {
+                    date ?
+                        moment(date).format("hh:mm") : "NA"
+                }
+                )
+            </span>
+        </>
     )
 }
 

@@ -3,11 +3,20 @@ import API from "./API";
 import { showErrorToast } from "./showErrorToast";
 
 export const defaultQueryFn: QueryFunction = async ({ queryKey }) => {
+    console.log({ queryKey })
+    const params = {};
+    //@ts-ignore
+    for (let k in queryKey[2]) {
+        if (queryKey[2][k])
+            params[k] = queryKey[2][k]
+    }
 
 
+    console.log({ params })
 
-
-    const r = await API.get<any>(`${queryKey[0]}?page=${queryKey[1]}`);
+    const r = await API.get<any>(`${queryKey[0]}?page=${queryKey[1]}`, {
+        params
+    });
 
     if (r.status !== 200) {
         showErrorToast(r.status.toString())

@@ -86,7 +86,7 @@ const Orders = () => {
         accessor: "allowed_usage", //accessor is the "key" in the data
       },
       {
-        Header: "Order Status",
+        Header: "Status",
         accessor: "status", //accessor is the "key" in the data
         Cell: (data: Cell) => <Status status={data.row.values.status} />,
       },

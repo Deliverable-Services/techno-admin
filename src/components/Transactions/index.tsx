@@ -4,6 +4,7 @@ import { BiSad } from "react-icons/bi";
 import { useMutation, useQuery } from "react-query";
 import { useHistory } from "react-router-dom";
 import { Cell } from "react-table";
+import BreadCrumb from "../../shared-components/BreadCrumb";
 import CreatedUpdatedAt from "../../shared-components/CreatedUpdatedAt";
 import IsLoading from "../../shared-components/isLoading";
 import PageHeading from "../../shared-components/PageHeading";
@@ -18,39 +19,34 @@ import { showErrorToast } from "../../utils/showErrorToast";
 
 const key = "transactions";
 
-const deleteBrand = (id: string) => {
-  return API.delete(`${key}/${id}`, {
-    headers: { "Content-Type": "multipart/form-data" },
-  });
-};
-
+interface IFilter {
+  status: string | null
+}
+const INITIAL_FILTER = {
+  status: ""
+}
 const Transactions = () => {
   const history = useHistory()
   const [selectedRowId, setSelectedRowId] = useState<string>("");
   const [page, setPage] = useState<number>(1);
   const [deletePopup, setDeletePopup] = useState(false);
+  const [filter, setFilter] = useState<IFilter>(INITIAL_FILTER)
+  console.log({ filter })
   const { data, isLoading, isFetching, error } = useQuery<any>([key, page], {
     onError: (err: any) => {
       showErrorToast(err.response.data.message);
     },
   });
 
-  const { mutate, isLoading: isDeleteLoading } = useMutation(deleteBrand, {
-    onSuccess: () => {
-      queryClient.invalidateQueries(key);
-      setDeletePopup(false);
-    },
-    onError: () => {
-      showErrorToast("Something went wrong deleteing the records");
-    },
-  });
+  const _onFilterChange = (idx: string, value: any) => {
+    setFilter((prev) => {
+      return {
+        ...prev,
+        [idx]: value
+      }
+    })
+  }
 
-  const _onCreateClick = () => {
-    history.push("/brands/create-edit")
-  }
-  const _onEditClick = (id: string) => {
-    history.push("/brands/create-edit", { id })
-  }
 
   const _onUserClick = (id: string) => {
     if (!id) return
@@ -173,6 +169,40 @@ const Transactions = () => {
     <>
       <PageHeading title="Transactions" />
 
+      {
+        (!isLoading || !isFetching) &&
+        <div>
+          <div>
+            <div className="filter">
+              <BreadCrumb
+                onFilterChange={_onFilterChange}
+                value=""
+                currentValue={filter.status}
+                dataLength={data.data.length}
+                idx="status"
+                title="All"
+              />
+              <BreadCrumb
+                onFilterChange={_onFilterChange}
+                value="success"
+                currentValue={filter.status}
+                dataLength={data.data.length}
+                idx="status"
+                title="Success"
+              />
+              <BreadCrumb
+                onFilterChange={_onFilterChange}
+                value="failed"
+                currentValue={filter.status}
+                dataLength={data.data.length}
+                idx="status"
+                title="Failed"
+              />
+            </div>
+          </div>
+        </div>
+
+      }
       <Container fluid className="card component-wrapper px-0 py-2">
         <Container fluid className="h-100 p-0">
           {isLoading || isFetching ? (
@@ -193,32 +223,6 @@ const Transactions = () => {
           )}
         </Container>
       </Container>
-      <Modal show={deletePopup} onHide={() => setDeletePopup(false)}>
-        <Modal.Header closeButton>
-          <Modal.Title>Are you sure?</Modal.Title>
-        </Modal.Header>
-        <Modal.Body>
-          Do you really want to delete this record? This process cannot be
-          undone
-        </Modal.Body>
-        <Modal.Footer>
-          <Button variant="bg-light" onClick={() => setDeletePopup(false)}>
-            Close
-          </Button>
-          <Button
-            variant="danger"
-            onClick={() => {
-              mutate(selectedRowId);
-            }}
-          >
-            {isDeleteLoading ? (
-              <Spinner animation="border" size="sm" />
-            ) : (
-              "Delete"
-            )}
-          </Button>
-        </Modal.Footer>
-      </Modal>
     </>
   );
 };

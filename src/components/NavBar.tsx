@@ -8,6 +8,7 @@ import {
   FaUsers,
   FaMoneyCheck
 } from "react-icons/fa";
+import { GoIssueOpened } from "react-icons/go";
 import { IoLogoModelS } from "react-icons/io";
 import {
   RiAdvertisementFill,
@@ -85,6 +86,11 @@ const mainLinks: Array<INavLink> = [
     title: "Transactions",
     path: "/transactions",
     icon: <FaMoneyCheck />,
+  },
+  {
+    title: "Issues",
+    path: "/issues",
+    icon: <GoIssueOpened />,
   },
 ];
 

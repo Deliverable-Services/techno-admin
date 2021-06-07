@@ -5,6 +5,7 @@ import { useMutation, useQuery } from "react-query";
 import { useHistory } from "react-router-dom";
 import { Cell } from "react-table";
 import IsLoading from "../../shared-components/isLoading";
+import PageHeading from "../../shared-components/PageHeading";
 import TablePagination from "../../shared-components/Pagination";
 import ReactTable from "../../shared-components/ReactTable";
 import API from "../../utils/API";
@@ -113,8 +114,7 @@ const Orders = () => {
 
   return (
     <>
-      <h2 className="font-weight-bold mb-4">Orders</h2>
-
+      <PageHeading title="Orders" />
       <Container fluid className="card component-wrapper px-0 py-2">
         <Container fluid className="h-100 p-0">
           <>
