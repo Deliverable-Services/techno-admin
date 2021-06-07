@@ -5,10 +5,9 @@ import { useMutation } from "react-query";
 import { useHistory } from "react-router";
 import * as Yup from "yup";
 import { InputField } from "../shared-components/InputFeild";
-import Logo from "../shared-components/Logo";
 import API from "../utils/API";
 
-interface Props {}
+interface Props { }
 const phoneRegExp = /^[6-9]\d{9}$/;
 const LoginSchema = Yup.object().shape({
   phone: Yup.string()

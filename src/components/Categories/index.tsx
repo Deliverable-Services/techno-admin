@@ -4,7 +4,7 @@ import { AiFillDelete, AiFillEdit } from "react-icons/ai";
 import { BiSad } from "react-icons/bi";
 import { useMutation, useQuery } from "react-query";
 import { useHistory } from "react-router-dom";
-import { Cell } from "react-table";
+import { Cell, TableState } from "react-table";
 import CreatedUpdatedAt from "../../shared-components/CreatedUpdatedAt";
 import IsActiveBadge from "../../shared-components/IsActiveBadge";
 import IsLoading from "../../shared-components/isLoading";
@@ -13,12 +13,12 @@ import TablePagination from "../../shared-components/Pagination";
 import ReactTable from "../../shared-components/ReactTable";
 import API from "../../utils/API";
 import {
-  baseUploadUrl,
   primaryColor,
   secondaryColor
 } from "../../utils/constants";
 import { queryClient } from "../../utils/queryClient";
 import { showErrorToast } from "../../utils/showErrorToast";
+import { showMsgToast } from "../../utils/showMsgToast";
 
 const key = "categories";
 
@@ -28,11 +28,41 @@ const deleteBrandModels = (id: string) => {
   });
 };
 
+const updateOrder = async (id: string, destinationIndex: any, row: any) => {
+  const finalIn = (parseInt(destinationIndex) + 1).toString()
+  const formdata = new FormData()
+  for (let k in row) formdata.append(k, row[k])
+  formdata.append("order", finalIn)
+
+  try {
+
+    const { data } = await API.post(`${key}/${id}`, formdata, {
+      headers: { "Content-Type": "multipart/form-data" },
+    });
+
+    if (data) {
+      showMsgToast("Successfully updated order")
+      queryClient.invalidateQueries(key)
+    }
+  } catch (error) {
+    showErrorToast(error.message)
+  }
+
+}
+
+const initialTableState: Partial<TableState<object>> = {
+  sortBy: [{
+    id: "order",
+    desc: false
+  }]
+}
+
 const Categories = () => {
   const history = useHistory()
   const [selectedRowId, setSelectedRowId] = useState<string>("");
   const [page, setPage] = useState<number>(1);
   const [deletePopup, setDeletePopup] = useState(false);
+
   const { data, isLoading, isFetching, error } = useQuery<any>([key, page], {
     onError: (err: any) => {
       showErrorToast(err.response.data.message);
@@ -49,6 +79,19 @@ const Categories = () => {
     },
   });
 
+
+  // //@ts-ignore  
+  // const { mutate: mutateOrder, isLoading: isOrderLoading } = useMutation(updateOrder, {
+  //   onSuccess: () => {
+  //     queryClient.invalidateQueries(key);
+  //     showMsgToast("Order Updated SuccessFully")
+  //   },
+  //   onError: () => {
+  //     showErrorToast("Something went wrong updating  the order");
+  //   },
+  // });
+
+
   const _onCreateClick = () => {
     history.push("/categories/create-edit")
   }
@@ -62,18 +105,6 @@ const Categories = () => {
         Header: "#Id",
         accessor: "id", //accessor is the "key" in the data
       },
-      // {
-      //   Header: "Logo",
-      //   accessor: "logo", //accessor is the "key" in the data
-      //   Cell: (data: Cell) => (
-      //     <div className="table-image">
-      //       <img
-      //         src={`${baseUploadUrl}categories/${data.row.values.logo}`}
-      //         alt="name"
-      //       />
-      //     </div>
-      //   ),
-      // },
       {
         Header: "Name",
         accessor: "name",
@@ -81,6 +112,11 @@ const Categories = () => {
       {
         Header: "Url",
         accessor: "url",
+      },
+      {
+        Header: "Order",
+        accessor: "order",
+        isSortedDesc: true
       },
       {
         Header: "Is Active?",
@@ -159,7 +195,7 @@ const Categories = () => {
             <IsLoading />
           ) : (
             <>
-              {!error && <ReactTable data={data.data} columns={columns} />}
+              {!error && <ReactTable data={data.data} columns={columns} updateOrder={updateOrder} initialState={initialTableState} />}
               {!error && data.data.length > 0 ? (
                 <TablePagination
                   currentPage={data.current_page}

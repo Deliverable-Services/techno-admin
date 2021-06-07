@@ -1,15 +1,11 @@
-import { Formik, Form } from "formik";
-// import { error } from "node:console";
-// import { StringDecoder } from "node:string_decoder";
+import { Form, Formik } from "formik";
 import React from "react";
-import { Container, Button, Alert, Col, Row, Spinner } from "react-bootstrap";
-import { AiFillPlusSquare } from "react-icons/ai";
+import { Alert, Button, Col, Container, Row, Spinner } from "react-bootstrap";
 import { BiArrowFromRight } from "react-icons/bi";
 import { useMutation, useQuery } from "react-query";
 import { useHistory, useParams } from "react-router-dom";
 import { InputField } from "../../shared-components/InputFeild";
 import IsLoading from "../../shared-components/isLoading";
-import isLoading from "../../shared-components/isLoading";
 import API from "../../utils/API";
 import { queryClient } from "../../utils/queryClient";
 
@@ -23,25 +19,6 @@ const getAgents = async () => {
   })
   return r.data
 }
-
-// const agents = [
-//   {
-//     id: 2,
-//     name: "Hitesh",
-//   },
-//   {
-//     id: 2,
-//     name: "Hitesh",
-//   },
-//   {
-//     id: 2,
-//     name: "Hitesh",
-//   },
-//   {
-//     id: 2,
-//     name: "Hitesh",
-//   },
-// ];
 
 const assignAgent = ({
   formdata,

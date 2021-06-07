@@ -1,16 +1,7 @@
 import React from "react";
-import { AreaChart } from "recharts";
-import { BarChart, Bar } from "recharts";
-import { Area } from "recharts";
-import { ResponsiveContainer } from "recharts";
 import {
-    LineChart,
-    Line,
-    XAxis,
-    YAxis,
-    CartesianGrid,
-    Tooltip,
-    Legend
+    Area, AreaChart, Bar, BarChart, Legend, Line, LineChart, ResponsiveContainer, Tooltip, XAxis,
+    YAxis
 } from "recharts";
 import { primaryColor, secondaryColor } from "../../utils/constants";
 
@@ -102,4 +93,5 @@ const ChartBar = () => {
             </BarChart></ResponsiveContainer>
     )
 }
-export { ChartLine, ChartArea, ChartBar }
+export { ChartLine, ChartArea, ChartBar };
+

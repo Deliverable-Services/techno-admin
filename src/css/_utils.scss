@@ -256,3 +256,43 @@ td {
 .CalendarDay__hovered_span {
   background: rgba($color: $secondary-color, $alpha: 0.5);
 }
+
+
+
+.pagination {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  padding-left: 0;
+  list-style: none;
+  border-radius: 0.25rem;
+
+  margin: 0 auto;
+  padding: 20px;
+
+}
+
+
+.pagination .page-item:first-child {
+  margin-right: 20px;
+}
+
+.pagination .page-item:last-child {
+  margin-left: 20px;
+}
+
+
+.page-item.active .page-link {
+  z-index: 3;
+  color: #000 !important;
+  // background-color: unset !important;
+  border-bottom: 1px solid $primary-color !important;
+}
+
+
+.page-item.disabled .page-link {
+  pointer-events: none;
+  cursor: auto;
+  color: #95aac9 !important;
+  background-color: unset !important;
+}

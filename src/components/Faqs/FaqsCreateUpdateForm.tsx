@@ -1,4 +1,3 @@
-import axios from "axios";
 import bsCustomFileInput from "bs-custom-file-input";
 import { Form, Formik } from "formik";
 import { useEffect } from "react";
@@ -7,8 +6,7 @@ import {
   Button,
   Col,
   Row,
-  Spinner,
-  Form as BForm,
+  Spinner
 } from "react-bootstrap";
 import { useMutation } from "react-query";
 import { useLocation } from "react-router-dom";
@@ -17,10 +15,8 @@ import BackButton from "../../shared-components/BackButton";
 import { InputField } from "../../shared-components/InputFeild";
 import IsLoading from "../../shared-components/isLoading";
 import TextEditor from "../../shared-components/TextEditor";
-import { ICreateUpdateForm } from "../../types/interface";
 import API from "../../utils/API";
 import { isActiveArray } from "../../utils/arrays";
-import { adminApiBaseUrl } from "../../utils/constants";
 import { queryClient } from "../../utils/queryClient";
 
 const key = "faqs";

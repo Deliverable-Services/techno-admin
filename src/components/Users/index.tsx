@@ -1,14 +1,13 @@
 import { useMemo, useState } from "react";
-import { Button, Container, Modal, Spinner, Form } from "react-bootstrap";
+import { Button, Container, Form, Modal, Spinner } from "react-bootstrap";
 import { AiFillDelete, AiFillEdit, AiFillPlusSquare } from "react-icons/ai";
 import { BiSad } from "react-icons/bi";
-import { QueryFunction, useMutation, useQuery } from "react-query";
+import { useMutation, useQuery } from "react-query";
 import { useHistory } from "react-router-dom";
 import { Cell } from "react-table";
 import CreatedUpdatedAt from "../../shared-components/CreatedUpdatedAt";
 import IsActiveBadge from "../../shared-components/IsActiveBadge";
 import IsLoading from "../../shared-components/isLoading";
-import PageHeading from "../../shared-components/PageHeading";
 import TablePagination from "../../shared-components/Pagination";
 import ReactTable from "../../shared-components/ReactTable";
 import API from "../../utils/API";

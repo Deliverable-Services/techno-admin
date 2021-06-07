@@ -13,7 +13,6 @@ import TablePagination from "../../shared-components/Pagination";
 import ReactTable from "../../shared-components/ReactTable";
 import API from "../../utils/API";
 import {
-  baseUploadUrl,
   primaryColor,
   secondaryColor
 } from "../../utils/constants";

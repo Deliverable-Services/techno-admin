@@ -1,4 +1,5 @@
 import Checkbox from '@material-ui/core/Checkbox';
+import { AxiosResponse } from 'axios';
 import React, { ReactElement } from "react";
 import { DragDropContext, Draggable, Droppable } from "react-beautiful-dnd";
 import { Container, Dropdown, Table } from "react-bootstrap";
@@ -8,7 +9,9 @@ import { AiOutlineSearch } from "react-icons/ai";
 import { BiSad } from "react-icons/bi";
 import { GoSettings } from "react-icons/go";
 import { IoMdArrowDropdown, IoMdArrowDropup } from "react-icons/io";
+import { UseMutateAsyncFunction } from 'react-query';
 import {
+  TableState,
   useAsyncDebounce,
   useFilters,
   useGlobalFilter, useRowSelect, useSortBy,
@@ -20,6 +23,8 @@ import { primaryColor } from "../utils/constants";
 interface Props {
   data: any;
   columns: Array<any>;
+  updateOrder?: any,
+  initialState?: Partial<TableState<object>>,
 }
 interface ISearchInput {
   preGlobalFilteredRows: any;
@@ -79,7 +84,7 @@ const IndeterminateCheckbox = React.forwardRef(
   }
 )
 
-function ReactTable({ data, columns }: Props): ReactElement {
+function ReactTable({ data, columns, updateOrder, initialState }: Props): ReactElement {
 
   const [records, setRecords] = React.useState(data)
   const updateMyData = (rowIndex: any, columnID: any, newValue: any) => {
@@ -122,7 +127,13 @@ function ReactTable({ data, columns }: Props): ReactElement {
     setGlobalFilter,
     selectedFlatRows,
     state: { selectedRowIds },
-  } = useTable({ columns, data: records }, useFilters,
+  } = useTable({
+    columns,
+    data: records,
+    initialState
+
+  },
+    useFilters,
     useGlobalFilter,
     useSortBy,
     useRowSelect,
@@ -158,6 +169,12 @@ function ReactTable({ data, columns }: Props): ReactElement {
     console.log({ result })
     if (!destination) return;
     reorderData(source.index, destination.index);
+
+    const row = records[result.draggableId];
+    console.log({ row })
+
+    if (updateOrder)
+      updateOrder(row.id, destination.index, row)
   };
 
   return (
@@ -236,9 +253,10 @@ function ReactTable({ data, columns }: Props): ReactElement {
                   <tr {...headerGroup.getHeaderGroupProps()}>
                     {
                       // Loop over the headers in each row
-                      headerGroup.headers.map((column) => (
+                      headerGroup.headers.map((column) => {
+
                         // Apply the header cell props
-                        <th
+                        return <th
                           {...column.getHeaderProps(
                             column.getSortByToggleProps()
                           )}
@@ -259,7 +277,7 @@ function ReactTable({ data, columns }: Props): ReactElement {
                             )}
                           </span>
                         </th>
-                      ))
+                      })
                     }
                   </tr>
                 ))
@@ -293,6 +311,7 @@ function ReactTable({ data, columns }: Props): ReactElement {
                                 }}
                               >
                                 {row.cells.map(cell => (
+
                                   <td {...cell.getCellProps()}>
                                     {cell.render("Cell", {
                                       dragHandleProps: provided.dragHandleProps,

@@ -69,7 +69,7 @@ const Services = () => {
           <div className="table-image">
             <img
               src={`${baseUploadUrl}services/${data.row.values.image}`}
-              alt="image"
+              alt={data.row.values.image}
             />
           </div>
         ),

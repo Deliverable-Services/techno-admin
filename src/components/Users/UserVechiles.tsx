@@ -1,18 +1,8 @@
 
-import bsCustomFileInput from "bs-custom-file-input";
-import { Form, Formik } from "formik";
-import { useEffect } from "react";
-import { Alert, Button, Col, Row, Spinner } from "react-bootstrap";
-import { useMutation } from "react-query";
+import { Col, Row } from "react-bootstrap";
 import { useLocation } from "react-router-dom";
 import useGetSingleQuery from "../../hooks/useGetSingleQuery";
-import BackButton from "../../shared-components/BackButton";
-import { InputField } from "../../shared-components/InputFeild";
-import IsLoading from "../../shared-components/isLoading";
 import PageHeading from "../../shared-components/PageHeading";
-import API from "../../utils/API";
-import { isActiveArray, userRoles } from "../../utils/arrays";
-import { queryClient } from "../../utils/queryClient";
 import VehicleCard from "./VehicleCard";
 
 const key = "users";

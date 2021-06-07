@@ -1,15 +1,13 @@
-import axios from "axios";
 import bsCustomFileInput from "bs-custom-file-input";
 import { Form, Formik } from "formik";
 import { useEffect } from "react";
 import { Alert, Button, Col, Row, Spinner } from "react-bootstrap";
-import { useMutation, useQuery } from "react-query";
+import { useMutation } from "react-query";
 import useGetSingleQuery from "../../hooks/useGetSingleQuery";
 import { InputField } from "../../shared-components/InputFeild";
 import IsLoading from "../../shared-components/isLoading";
 import { ICreateUpdateForm } from "../../types/interface";
 import API from "../../utils/API";
-import { adminApiBaseUrl } from "../../utils/constants";
 import { queryClient } from "../../utils/queryClient";
 
 const key = "categories";

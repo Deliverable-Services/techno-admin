@@ -69,7 +69,7 @@ const BrandModels = () => {
           <div className="table-image">
             <img
               src={`${baseUploadUrl}brands/${data.row.values.image}`}
-              alt="image"
+              alt={data.row.values.image}
             />
           </div>
         ),
@@ -84,7 +84,7 @@ const BrandModels = () => {
       },
       {
         Header: "Brand",
-        accessor: "brand_id",
+        accessor: "brand.name",
       },
       {
         Header: "Is Active?",

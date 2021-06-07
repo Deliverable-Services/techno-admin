@@ -1,20 +1,20 @@
-import React, { useState } from "react";
-import { Container, Row, Col, Card, Dropdown, Table } from "react-bootstrap";
-import { AiFillEdit, AiFillDelete } from "react-icons/ai";
+import moment from "moment";
+import React from "react";
+import { Card, Col, Container, Dropdown, Row } from "react-bootstrap";
+import { AiFillDelete, AiFillEdit } from "react-icons/ai";
 import { BiSad } from "react-icons/bi";
 import { QueryFunction, useQuery } from "react-query";
+import { useHistory } from "react-router-dom";
+import IsActiveBadge from "../../shared-components/IsActiveBadge";
 import IsLoading from "../../shared-components/isLoading";
 import API from "../../utils/API";
 import {
   baseUploadUrl,
   primaryColor,
-  secondaryColor,
+  secondaryColor
 } from "../../utils/constants";
 import { types } from "./AdvertisementTypes";
-import moment from "moment";
 import useCurrentAdTypeSelectedStore from "./useCurrentAdTypeSelectedStore";
-import { useHistory } from "react-router-dom";
-import IsActiveBadge from "../../shared-components/IsActiveBadge";
 
 interface Props {
   setSelectedRowId: React.Dispatch<React.SetStateAction<string>>;

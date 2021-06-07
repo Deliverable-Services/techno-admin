@@ -6,14 +6,13 @@ import { useMutation } from "react-query";
 import { useLocation } from "react-router-dom";
 import useGetSingleQuery from "../../hooks/useGetSingleQuery";
 import BackButton from "../../shared-components/BackButton";
+import DatePicker from "../../shared-components/DatePicker";
 import { InputField } from "../../shared-components/InputFeild";
 import IsLoading from "../../shared-components/isLoading";
-import { ICreateUpdateForm } from "../../types/interface";
+import TextEditor from "../../shared-components/TextEditor";
 import API from "../../utils/API";
 import { conditionType, isActiveArray } from "../../utils/arrays";
 import { queryClient } from "../../utils/queryClient";
-import DatePicker from "../../shared-components/DatePicker";
-import TextEditor from "../../shared-components/TextEditor";
 const key = "coupons";
 
 const createUpdataCoupons = ({

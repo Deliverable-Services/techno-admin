@@ -1,23 +1,18 @@
-import axios from "axios";
 import bsCustomFileInput from "bs-custom-file-input";
 import { Form, Formik } from "formik";
 import { useEffect } from "react";
-import { Alert, Button, Col, Container, Row, Spinner } from "react-bootstrap";
-import { useMutation, useQuery } from "react-query";
+import { Alert, Button, Col, Row, Spinner } from "react-bootstrap";
+import { useMutation } from "react-query";
+import { useLocation } from "react-router-dom";
 import useGetSingleQuery from "../../hooks/useGetSingleQuery";
+import BackButton from "../../shared-components/BackButton";
+import DatePicker from "../../shared-components/DatePicker";
 import { InputField } from "../../shared-components/InputFeild";
 import IsLoading from "../../shared-components/isLoading";
-import { ICreateUpdateForm } from "../../types/interface";
 import API from "../../utils/API";
-import { adminApiBaseUrl } from "../../utils/constants";
+import { isActiveArray } from "../../utils/arrays";
 import { queryClient } from "../../utils/queryClient";
 import { types } from "./AdvertisementTypes";
-import DateTime from "react-datetime";
-import DatePicker from "../../shared-components/DatePicker";
-import { useLocation } from "react-router-dom";
-import BackButton from "../../shared-components/BackButton";
-import { stableValueHash } from "react-query/types/core/utils";
-import { isActiveArray } from "../../utils/arrays";
 
 const key = "banners";
 

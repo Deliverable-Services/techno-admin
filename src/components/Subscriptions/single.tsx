@@ -1,84 +1,11 @@
 import React from "react";
-import { Badge, Button, Container, OverlayTrigger } from "react-bootstrap";
+import { Container } from "react-bootstrap";
 import { useHistory, useParams } from "react-router-dom";
 import useGetSingleQuery from "../../hooks/useGetSingleQuery";
 import IsLoading from "../../shared-components/isLoading";
-import moment from "moment";
-import { Tooltip } from "recharts";
 
 const key = "user-subscriptions";
 
-const data = {
-  id: 9,
-  ref_id: "1620658428-2",
-  order_type: "normal",
-  status: "cancelled",
-  inside_cart: 0,
-  total_cost: 150,
-  discount: 0,
-  payable_amount: 150,
-  pickup_at: null,
-  scheduled_at: "2021-05-20 01:01:00",
-  closed_at: null,
-  plan_id: 2,
-  user_id: 2,
-  coupon_id: null,
-  vehicle_id: null,
-  address_id: null,
-  cancelled_by: null,
-  cancellation_reason: "Something went wrong",
-  agent_id: 2,
-  created_at: "2021-05-10T14:53:48.000000Z",
-  updated_at: "2021-05-19T10:29:57.000000Z",
-  agent: {
-    id: 2,
-    name: "Dishant A",
-    email: "dishantagnihotri@gmail.com",
-    phone: "7018064278",
-    device_id: null,
-    disabled: 0,
-    password: null,
-    two_factor_secret: null,
-    two_factor_recovery_codes: null,
-    email_verified_at: null,
-    otp: null,
-    otp_generated_at: null,
-    created_at: "2021-05-10T08:07:05.000000Z",
-    updated_at: "2021-05-19T10:37:18.000000Z",
-  },
-  user: {
-    id: 2,
-    name: "Dishant A",
-    email: "dishantagnihotri@gmail.com",
-    phone: "7018064278",
-    device_id: null,
-    disabled: 0,
-    password: null,
-    two_factor_secret: null,
-    two_factor_recovery_codes: null,
-    email_verified_at: null,
-    otp: null,
-    otp_generated_at: null,
-    created_at: "2021-05-10T08:07:05.000000Z",
-    updated_at: "2021-05-19T10:37:18.000000Z",
-  },
-  vehicle: null,
-  address: null,
-  plan: {
-    id: 2,
-    name: "All Washing",
-    description:
-      "Each time a friend signs up through your referral link we’ll reward you both ₹5",
-    price: "1400",
-    is_active: 1,
-    is_popular: 0,
-    allowed_usage: 1,
-    category_id: null,
-    created_at: "2021-05-10T08:22:06.000000Z",
-    updated_at: "2021-05-10T08:22:06.000000Z",
-  },
-  coupon: null,
-};
 
 const SingleOrder = () => {
   const { id }: { id: string } = useParams();
@@ -86,16 +13,16 @@ const SingleOrder = () => {
 
   const { data, isLoading, isFetching } = useGetSingleQuery({ id, key });
 
-  const statusBadgeVairant = (status: string) => {
-    const _status = status.toLowerCase();
+  // const statusBadgeVairant = (status: string) => {
+  //   const _status = status.toLowerCase();
 
-    if (_status === "cancelled") return "danger";
+  //   if (_status === "cancelled") return "danger";
 
-    if (_status === "pending" || _status === "pending_payment")
-      return "warning";
+  //   if (_status === "pending" || _status === "pending_payment")
+  //     return "warning";
 
-    return "success";
-  };
+  //   return "success";
+  // };
 
   if (isLoading || isFetching) {
     return <IsLoading />;

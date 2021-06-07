@@ -69,7 +69,7 @@ const Plans = () => {
           <div className="table-image">
             <img
               src={`${baseUploadUrl}plans/${data.row.values.image}`}
-              alt="image"
+              alt={data.row.values.image}
             />
           </div>
         ),

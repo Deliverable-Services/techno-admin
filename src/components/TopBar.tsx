@@ -12,7 +12,6 @@ import Logo from "../shared-components/Logo";
 import { INavBar } from "../types/interface";
 import API from "../utils/API";
 import { primaryColor } from "../utils/constants";
-import { queryClient } from "../utils/queryClient";
 
 const logout = () => {
   return API.post("/auth/logout");

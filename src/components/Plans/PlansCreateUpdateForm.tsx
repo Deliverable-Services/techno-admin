@@ -9,7 +9,6 @@ import BackButton from "../../shared-components/BackButton";
 import { InputField } from "../../shared-components/InputFeild";
 import IsLoading from "../../shared-components/isLoading";
 import TextEditor from "../../shared-components/TextEditor";
-import { ICreateUpdateForm } from "../../types/interface";
 import API from "../../utils/API";
 import { isActiveArray } from "../../utils/arrays";
 import { queryClient } from "../../utils/queryClient";
