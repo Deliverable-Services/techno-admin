@@ -125,31 +125,6 @@ const Transactions = () => {
           )
         }
       },
-      // {
-      //   Header: "Actions",
-      //   Cell: (data: Cell) => {
-      //     return (
-      //       <div className="d-flex">
-      //         <button
-      //           onClick={() => {
-      //             _onEditClick(data.row.values.id);
-      //           }}
-      //         >
-      //           <AiFillEdit color={secondaryColor} size={24} />
-      //         </button>
-      //         <button
-      //           className="ml-2"
-      //           onClick={() => {
-      //             setSelectedRowId(data.row.values.id);
-      //             setDeletePopup(true);
-      //           }}
-      //         >
-      //           <AiFillDelete color="red" size={24} />
-      //         </button>
-      //       </div>
-      //     );
-      //   },
-      // },
     ],
     []
   );

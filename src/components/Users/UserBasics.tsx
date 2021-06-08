@@ -86,19 +86,16 @@ const UserBasics = () => {
                                     name="name"
                                     placeholder="Name"
                                     label="Name"
-                                    required
                                 />
                                 <InputField
                                     name="phone"
                                     placeholder="phone"
                                     label="Phone"
-                                    required
                                 />
                                 <InputField
                                     name="email"
                                     placeholder="Email"
                                     label="Email"
-                                    required
                                 />
                                 <InputField as="select" selectData={isActiveArray} name="disabled" label="Disabled?" placeholder="Is User Disabled?" />
                                 <InputField as="select" selectData={userRoles} name="role" label="Role" placeholder="Role" />

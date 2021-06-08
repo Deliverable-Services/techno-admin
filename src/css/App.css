@@ -11862,8 +11862,10 @@ td {
   font-family: "Lato", sans-serif;
 }
 
-td {
+td,
+th {
   text-transform: capitalize;
+  white-space: nowrap;
 }
 
 .text-primary {

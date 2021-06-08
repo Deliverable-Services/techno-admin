@@ -15,3 +15,21 @@ export const userRoles = [
     { id: "customer", name: "Customer" },
     { id: "agent", name: "Agent" },
 ]
+export const InsideCart = [
+    { id: "1", name: 1 },
+    { id: "2", name: 2 },
+    { id: "3", name: 3 },
+]
+
+export const RowsPerPage = [
+    { id: "25", name: 25 },
+    { id: "35", name: 35 },
+    { id: "45", name: 45 },
+]
+export const OrderStatus = [
+    { id: "", name: "All" },
+    { id: "success", name: "Success" },
+    { id: "pending", name: "Pending" },
+    { id: "error_payment", name: "Payment Error" },
+    { id: "failed", name: "Failed" },
+]
