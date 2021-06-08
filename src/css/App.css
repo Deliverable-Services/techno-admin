@@ -12137,6 +12137,50 @@ th {
   background-color: unset !important;
 }
 
+.delete-button {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  -webkit-box-pack: justify;
+      -ms-flex-pack: justify;
+          justify-content: space-between;
+  width: 200px;
+  position: fixed;
+  bottom: 2%;
+  right: 0;
+  background-color: rgba(235, 65, 65, 0.479);
+  padding: 6px;
+  -webkit-transition: right .3s ease;
+  transition: right .3s ease;
+  -webkit-animation: slide 0.3s ease;
+          animation: slide 0.3s ease;
+}
+
+@-webkit-keyframes slide {
+  0% {
+    -webkit-transform: translateX(100%);
+            transform: translateX(100%);
+  }
+  100% {
+    -webkit-transform: translateX(0);
+            transform: translateX(0);
+  }
+}
+
+@keyframes slide {
+  0% {
+    -webkit-transform: translateX(100%);
+            transform: translateX(100%);
+  }
+  100% {
+    -webkit-transform: translateX(0);
+            transform: translateX(0);
+  }
+}
+
 .dashboard-page {
   display: -webkit-box;
   display: -ms-flexbox;

@@ -208,7 +208,7 @@ const Users = () => {
                 onFilterChange={_onFilterChange}
                 value=""
                 currentValue={filter.role}
-                dataLength={data.data.length}
+                dataLength={data?.length}
                 idx="role"
                 title="All"
               />
@@ -216,7 +216,7 @@ const Users = () => {
                 onFilterChange={_onFilterChange}
                 value="admin"
                 currentValue={filter.role}
-                dataLength={data.data.length}
+                dataLength={data?.length}
                 idx="role"
                 title="Admin"
               />
@@ -224,7 +224,7 @@ const Users = () => {
                 onFilterChange={_onFilterChange}
                 value="customer"
                 currentValue={filter.role}
-                dataLength={data.data.length}
+                dataLength={data?.length}
                 idx="role"
                 title="Customer"
 
@@ -233,7 +233,7 @@ const Users = () => {
                 onFilterChange={_onFilterChange}
                 value="agent"
                 currentValue={filter.role}
-                dataLength={data.data.length}
+                dataLength={data?.length}
                 idx="role"
                 title="Agent"
                 isLast
@@ -251,14 +251,17 @@ const Users = () => {
             <IsLoading />
           ) : (
             <>
-              {!error && <ReactTable data={data.data} columns={columns} />}
-              {!error && data.data.length > 0 ? (
+              {!error && <ReactTable
+                data={data}
+                columns={columns}
+              />}
+              {!error && data.length > 0 ? (
                 <TablePagination
-                  currentPage={data.current_page}
-                  lastPage={data.last_page}
+                  currentPage={data?.current_page}
+                  lastPage={data?.last_page}
                   setPage={setPage}
-                  hasNextPage={!!data.next_page_url}
-                  hasPrevPage={!!data.prev_page_url}
+                  hasNextPage={!!data?.next_page_url}
+                  hasPrevPage={!!data?.prev_page_url}
                 />
               ) : null}{" "}
             </>

@@ -12,6 +12,7 @@ import IsLoading from "../../shared-components/isLoading";
 import TablePagination from "../../shared-components/Pagination";
 import ReactTable from "../../shared-components/ReactTable";
 import API from "../../utils/API";
+import LightBox from 'react-lightbox-component';
 import { userRoles } from "../../utils/arrays";
 import {
   baseUploadUrl,
@@ -93,12 +94,16 @@ const Users = () => {
         Header: "Image",
         accessor: "image",
         Cell: (data: Cell) => (
-          <div className="table-image">
-            <img
-              src={`${baseUploadUrl}banners/${data.row.values.image}`}
-              alt={data.row.values.name}
-            />
-          </div>
+          <LightBox
+            images={[
+              {
+                src: `${baseUploadUrl}banners/${data.row.values.image}`,
+                title: data.row.values.image,
+              }
+            ]}
+            thumbnailWidth='100px'
+            thumbnailHeight='50px'
+          />
         ),
       },
       {
@@ -217,7 +222,7 @@ const Users = () => {
                 onFilterChange={_onFilterChange}
                 value="latest"
                 currentValue={filter.type}
-                dataLength={data.data.length}
+                dataLength={data?.length}
                 idx="type"
                 title="Latest"
               />
@@ -225,7 +230,7 @@ const Users = () => {
                 onFilterChange={_onFilterChange}
                 value="trending"
                 currentValue={filter.type}
-                dataLength={data.data.length}
+                dataLength={data?.length}
                 idx="type"
                 title="Trending"
                 isLast
@@ -242,14 +247,17 @@ const Users = () => {
             <IsLoading />
           ) : (
             <>
-              {!error && <ReactTable data={data.data} columns={columns} />}
-              {!error && data.data.length > 0 ? (
+              {!error && <ReactTable
+                data={data}
+                columns={columns}
+              />}
+              {!error && data.length > 0 ? (
                 <TablePagination
-                  currentPage={data.current_page}
-                  lastPage={data.last_page}
+                  currentPage={data?.current_page}
+                  lastPage={data?.last_page}
                   setPage={setPage}
-                  hasNextPage={!!data.next_page_url}
-                  hasPrevPage={!!data.prev_page_url}
+                  hasNextPage={!!data?.next_page_url}
+                  hasPrevPage={!!data?.prev_page_url}
                 />
               ) : null}{" "}
             </>

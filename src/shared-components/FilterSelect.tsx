@@ -10,17 +10,29 @@ interface Props {
     valueSelector?: string;
     nameSelector?: string;
     defaultSelectTitle?: string;
-    isDefaultDisabled?: boolean
+    isDefaultDisabled?: boolean;
+    width?: string
 
 }
 
-const FilterSelect = ({ onFilterChange, defaultSelectTitle = "All", isDefaultDisabled = false, label, currentValue, idx, data, valueSelector = "id", nameSelector = "name" }: Props) => {
+const FilterSelect = ({
+    onFilterChange,
+    width = "200px",
+    defaultSelectTitle = "All",
+    isDefaultDisabled = false,
+    label,
+    currentValue,
+    idx,
+    data,
+    valueSelector = "id",
+    nameSelector = "name"
+}: Props) => {
     return (
         <Form.Group>
             <Form.Label className="text-muted font-weight-bold">{label}</Form.Label>
             <Form.Control as="select" value={currentValue} id={idx} onChange={e => onFilterChange(idx, e.target.value)}
                 style={{
-                    width: "200px",
+                    width,
                     fontSize: 14
                 }}
 

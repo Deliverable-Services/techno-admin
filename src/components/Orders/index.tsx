@@ -1,59 +1,50 @@
 import { useMemo, useState } from "react";
-import { Badge, Button, Col, Container, Modal, Row, Spinner } from "react-bootstrap";
+import { Badge, Button, Col, Container, Row } from "react-bootstrap";
 import { BiSad } from "react-icons/bi";
-import { useMutation, useQuery } from "react-query";
+import { useQuery } from "react-query";
 import { useHistory } from "react-router-dom";
 import { Cell } from "react-table";
+import useOrderStoreFilter from "../../hooks/useOrderFilterStore";
 import BreadCrumb from "../../shared-components/BreadCrumb";
 import FilterSelect from "../../shared-components/FilterSelect";
 import IsLoading from "../../shared-components/isLoading";
 import PageHeading from "../../shared-components/PageHeading";
 import TablePagination from "../../shared-components/Pagination";
 import ReactTable from "../../shared-components/ReactTable";
-import API from "../../utils/API";
-import { InsideCart, OrderStatus, RowsPerPage } from "../../utils/arrays";
+import { IInitialTableState } from "../../types/interface";
+import { InsideCart, RowsPerPage } from "../../utils/arrays";
 import { primaryColor } from "../../utils/constants";
-import { queryClient } from "../../utils/queryClient";
 import { showErrorToast } from "../../utils/showErrorToast";
 // import UpdateCreateForm from "./FaqsCreateUpdateForm"
 
 const key = "bookings";
 
-interface IFilter {
-  status: string | null;
-  user_id: string | null;
-  agent_id: string | null;
-  inside_cart: string | null;
-  rows_per_page: string | null;
-}
-const INITIAL_FILTER = {
-  status: "",
-  user_id: "",
-  agent_id: "",
-  inside_cart: "",
-  rows_per_page: "25"
-
-}
 
 const Orders = () => {
   const history = useHistory();
-  const [selectedRowId, setSelectedRowId] = useState<string>("");
   const [page, setPage] = useState<number>(1);
-  const [filter, setFilter] = useState<IFilter>(INITIAL_FILTER)
-  console.log({ filter })
-  const { data, isLoading, isFetching, error } = useQuery<any>([key, page], {
+  const [selectedRows, setSelectedRows] = useState([])
+  const filter = useOrderStoreFilter(state => state.filter)
+  const NumberOfRows = useOrderStoreFilter(state => state.rows_per_page)
+  const onFilterChange = useOrderStoreFilter(state => state.onFilterChange)
+  const onRowsChange = useOrderStoreFilter(state => state.onRowsChange)
+  const resetFilter = useOrderStoreFilter(state => state.resetFilter)
+  const InitialTableState: IInitialTableState = {
+    pageSize: parseInt(NumberOfRows)
+  }
+  const { data, isLoading, isFetching, error } = useQuery<any>([key, page, filter], {
     onError: (err: any) => {
       showErrorToast(err.response.data.message);
     },
   });
-  const { data: Customers, isLoading: isCustomerLoading } = useQuery<any>(["users", page, {
+  const { data: Customers, isLoading: isCustomerLoading } = useQuery<any>(["users", 1, {
     role: "customer"
   }], {
     onError: (err: any) => {
       showErrorToast(err.response.data.message);
     },
   });
-  const { data: Agents, isLoading: isAgentLoading } = useQuery<any>(["users", page, {
+  const { data: Agents, isLoading: isAgentLoading } = useQuery<any>(["users", 1, {
     role: "agent"
   }], {
     onError: (err: any) => {
@@ -61,14 +52,6 @@ const Orders = () => {
     },
   });
 
-  const _onFilterChange = (idx: string, value: any) => {
-    setFilter((prev) => {
-      return {
-        ...prev,
-        [idx]: value
-      }
-    })
-  }
   const Status = ({ status }: { status: string }) => {
     const setVairant = () => {
       if (status === "cancelled" || status === "error_payment") return "danger";
@@ -177,42 +160,42 @@ const Orders = () => {
           <Container >
             <div className="filter">
               <BreadCrumb
-                onFilterChange={_onFilterChange}
+                onFilterChange={onFilterChange}
                 value=""
                 currentValue={filter.status}
-                dataLength={data.data.length}
+                dataLength={data?.length}
                 idx="status"
                 title="All"
               />
               <BreadCrumb
-                onFilterChange={_onFilterChange}
+                onFilterChange={onFilterChange}
                 value="success"
                 currentValue={filter.status}
-                dataLength={data.data.length}
+                dataLength={data?.length}
                 idx="status"
                 title="Success"
               />
               <BreadCrumb
-                onFilterChange={_onFilterChange}
+                onFilterChange={onFilterChange}
                 value="pending"
                 currentValue={filter.status}
-                dataLength={data.data.length}
+                dataLength={data?.length}
                 idx="status"
                 title="Pending"
               />
               <BreadCrumb
-                onFilterChange={_onFilterChange}
+                onFilterChange={onFilterChange}
                 value="error_payment"
                 currentValue={filter.status}
-                dataLength={data.data.length}
+                dataLength={data?.length}
                 idx="status"
                 title="Payment Errors"
               />
               <BreadCrumb
-                onFilterChange={_onFilterChange}
+                onFilterChange={onFilterChange}
                 value="failed"
                 currentValue={filter.status}
-                dataLength={data.data.length}
+                dataLength={data?.length}
                 idx="status"
                 title="Failed"
                 isLast
@@ -225,53 +208,56 @@ const Orders = () => {
               <Col md="auto">
                 <FilterSelect
                   currentValue={filter.user_id}
-                  data={!isCustomerLoading && Customers && Customers.data}
+                  data={!isCustomerLoading && Customers}
                   label="Customers"
                   idx="user_id"
-                  onFilterChange={_onFilterChange}
+                  onFilterChange={onFilterChange}
 
                 />
               </Col>
               <Col md="auto">
                 <FilterSelect
                   currentValue={filter.agent_id}
-                  data={!isAgentLoading && Agents && Agents.data}
+                  data={!isAgentLoading && Agents}
                   label="Agents"
                   idx="agent_id"
-                  onFilterChange={_onFilterChange}
+                  onFilterChange={onFilterChange}
 
                 />
               </Col>
-              {/* <Col md="auto">
-                <FilterSelect
-                  currentValue={filter.status}
-                  data={OrderStatus}
-                  label="Order Status"
-                  idx="status"
-                  onFilterChange={_onFilterChange}
-
-                />
-              </Col> */}
               <Col md="auto">
                 <FilterSelect
                   currentValue={filter.inside_cart}
                   data={InsideCart}
                   label="Inside Cart"
                   idx="inside_cart"
-                  onFilterChange={_onFilterChange}
+                  width="80px"
+                  onFilterChange={onFilterChange}
 
                 />
               </Col>
               <Col md="auto">
                 <FilterSelect
-                  currentValue={filter.rows_per_page}
+                  currentValue={NumberOfRows}
                   data={RowsPerPage}
                   label="Rows Per Page"
                   idx="rows_per_page"
-                  onFilterChange={_onFilterChange}
-                  defaultSelectTitle="Select Rows Per Page"
+                  onFilterChange={onRowsChange}
+                  defaultSelectTitle="Rows"
+                  width="100px"
                   isDefaultDisabled
                 />
+              </Col>
+              <Col md="auto" className="d-flex align-items-center mt-1 justify-content-center">
+                <Button onClick={() => resetFilter()}
+                  variant="light"
+                  style={{
+                    backgroundColor: "#eee",
+                    fontSize: 14
+                  }}
+                >
+                  Reset Filters
+                </Button>
               </Col>
             </Row>
           </Container>
@@ -285,14 +271,19 @@ const Orders = () => {
               <IsLoading />
             ) : (
               <>
-                {!error && <ReactTable data={data.data} columns={columns} />}
-                {!error && data.data.length > 0 ? (
+                {!error && <ReactTable
+                  data={data}
+                  columns={columns}
+                  initialState={InitialTableState}
+                  setSelectedRows={setSelectedRows}
+                />}
+                {!error && data.length > 0 ? (
                   <TablePagination
-                    currentPage={data.current_page}
-                    lastPage={data.last_page}
+                    currentPage={data?.current_page}
+                    lastPage={data?.last_page}
                     setPage={setPage}
-                    hasNextPage={!!data.next_page_url}
-                    hasPrevPage={!!data.prev_page_url}
+                    hasNextPage={!!data?.next_page_url}
+                    hasPrevPage={!!data?.prev_page_url}
                   />
                 ) : null}{" "}
               </>
@@ -300,6 +291,15 @@ const Orders = () => {
           </>
         </Container>
       </Container>
+      {
+        selectedRows.length > 0 &&
+        <div className="delete-button rounded">
+          <span><b>Delete {selectedRows.length} rows</b></span>
+          <Button variant="danger">
+            Delete
+          </Button>
+        </div>
+      }
     </>
   );
 };

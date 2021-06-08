@@ -31,6 +31,7 @@ const deleteBrand = (id: string) => {
 const Brands = () => {
   const history = useHistory()
   const [selectedRowId, setSelectedRowId] = useState<string>("");
+  const [selectedRows, setSelectedRows] = useState([])
   const [page, setPage] = useState<number>(1);
   const [deletePopup, setDeletePopup] = useState(false);
   const { data, isLoading, isFetching, error } = useQuery<any>([key, page], {
@@ -161,14 +162,18 @@ const Brands = () => {
             <IsLoading />
           ) : (
             <>
-              {!error && <ReactTable data={data.data} columns={columns} />}
-              {!error && data.data.length > 0 ? (
+              {!error && <ReactTable
+                data={data}
+                columns={columns}
+                setSelectedRows={setSelectedRows}
+              />}
+              {!error && data.length > 0 ? (
                 <TablePagination
-                  currentPage={data.current_page}
-                  lastPage={data.last_page}
+                  currentPage={data?.current_page}
+                  lastPage={data?.last_page}
                   setPage={setPage}
-                  hasNextPage={!!data.next_page_url}
-                  hasPrevPage={!!data.prev_page_url}
+                  hasNextPage={!!data?.next_page_url}
+                  hasPrevPage={!!data?.prev_page_url}
                 />
               ) : null}{" "}
             </>
@@ -201,6 +206,15 @@ const Brands = () => {
           </Button>
         </Modal.Footer>
       </Modal>
+      {
+        selectedRows.length > 0 &&
+        <div className="delete-button rounded">
+          <span><b>Delete {selectedRows.length} rows</b></span>
+          <Button variant="danger">
+            Delete
+          </Button>
+        </div>
+      }
     </>
   );
 };

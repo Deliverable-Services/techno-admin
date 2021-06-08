@@ -195,14 +195,17 @@ const Categories = () => {
             <IsLoading />
           ) : (
             <>
-              {!error && <ReactTable data={data.data} columns={columns} updateOrder={updateOrder} initialState={initialTableState} />}
-              {!error && data.data.length > 0 ? (
+              {!error && <ReactTable
+                data={data}
+                columns={columns}
+              />}
+              {!error && data.length > 0 ? (
                 <TablePagination
-                  currentPage={data.current_page}
-                  lastPage={data.last_page}
+                  currentPage={data?.current_page}
+                  lastPage={data?.last_page}
                   setPage={setPage}
-                  hasNextPage={!!data.next_page_url}
-                  hasPrevPage={!!data.prev_page_url}
+                  hasNextPage={!!data?.next_page_url}
+                  hasPrevPage={!!data?.prev_page_url}
                 />
               ) : null}{" "}
             </>

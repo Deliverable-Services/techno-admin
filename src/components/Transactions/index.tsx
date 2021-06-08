@@ -27,9 +27,8 @@ const INITIAL_FILTER = {
 }
 const Transactions = () => {
   const history = useHistory()
-  const [selectedRowId, setSelectedRowId] = useState<string>("");
+  const [selectedRows, setSelectedRows] = useState([]);
   const [page, setPage] = useState<number>(1);
-  const [deletePopup, setDeletePopup] = useState(false);
   const [filter, setFilter] = useState<IFilter>(INITIAL_FILTER)
   console.log({ filter })
   const { data, isLoading, isFetching, error } = useQuery<any>([key, page], {
@@ -153,7 +152,7 @@ const Transactions = () => {
                 onFilterChange={_onFilterChange}
                 value=""
                 currentValue={filter.status}
-                dataLength={data.data.length}
+                dataLength={data?.length}
                 idx="status"
                 title="All"
               />
@@ -161,7 +160,7 @@ const Transactions = () => {
                 onFilterChange={_onFilterChange}
                 value="success"
                 currentValue={filter.status}
-                dataLength={data.data.length}
+                dataLength={data?.length}
                 idx="status"
                 title="Success"
               />
@@ -169,7 +168,7 @@ const Transactions = () => {
                 onFilterChange={_onFilterChange}
                 value="failed"
                 currentValue={filter.status}
-                dataLength={data.data.length}
+                dataLength={data?.length}
                 idx="status"
                 title="Failed"
               />
@@ -184,14 +183,18 @@ const Transactions = () => {
             <IsLoading />
           ) : (
             <>
-              {!error && <ReactTable data={data.data} columns={columns} />}
-              {!error && data.data.length > 0 ? (
+              {!error && <ReactTable
+                data={data}
+                columns={columns}
+                setSelectedRows={setSelectedRows}
+              />}
+              {!error && data.length > 0 ? (
                 <TablePagination
-                  currentPage={data.current_page}
-                  lastPage={data.last_page}
+                  currentPage={data?.current_page}
+                  lastPage={data?.last_page}
                   setPage={setPage}
-                  hasNextPage={!!data.next_page_url}
-                  hasPrevPage={!!data.prev_page_url}
+                  hasNextPage={!!data?.next_page_url}
+                  hasPrevPage={!!data?.prev_page_url}
                 />
               ) : null}{" "}
             </>

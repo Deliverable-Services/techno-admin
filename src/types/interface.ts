@@ -1,4 +1,5 @@
 import { IconBaseProps } from "react-icons/lib";
+import { TableState } from "react-table";
 
 export interface INavLink {
     title: string,
@@ -35,3 +36,5 @@ export type User = {
     two_factor_secret: string | null
     updated_at: string | null
 }
+
+export type IInitialTableState = Partial<TableState<object>>

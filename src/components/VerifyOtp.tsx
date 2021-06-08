@@ -11,6 +11,7 @@ import { InputField } from "../shared-components/InputFeild";
 import Logo from "../shared-components/Logo";
 import API from "../utils/API";
 import { appApiBaseUrl } from "../utils/constants";
+import { showMsgToast } from "../utils/showMsgToast";
 
 interface Props { }
 
@@ -33,8 +34,9 @@ const VerifyOtp = (props: Props) => {
   const { mutate, data, isLoading, error } = useMutation(verifyOtp, {
     onSuccess: (data) => {
       console.log({ data })
-      setToken(data.data.token);
-      setUser(data.data.user);
+      setToken(data.data.data.token);
+      setUser(data.data.data.user);
+      showMsgToast(data.data.message)
       history.push("/");
     },
   });

@@ -25,13 +25,10 @@ interface Props {
   columns: Array<any>;
   updateOrder?: any,
   initialState?: Partial<TableState<object>>,
+  isDraggable?: boolean
+  setSelectedRows?: React.Dispatch<React.SetStateAction<any[]>>
 }
 interface ISearchInput {
-  preGlobalFilteredRows: any;
-  globalFilter: any;
-  setGlobalFilter: any;
-}
-interface dragInter {
   preGlobalFilteredRows: any;
   globalFilter: any;
   setGlobalFilter: any;
@@ -84,7 +81,7 @@ const IndeterminateCheckbox = React.forwardRef(
   }
 )
 
-function ReactTable({ data, columns, updateOrder, initialState }: Props): ReactElement {
+function ReactTable({ data, columns, updateOrder, initialState, isDraggable = false, setSelectedRows }: Props): ReactElement {
 
   const [records, setRecords] = React.useState(data)
   const updateMyData = (rowIndex: any, columnID: any, newValue: any) => {
@@ -130,8 +127,7 @@ function ReactTable({ data, columns, updateOrder, initialState }: Props): ReactE
   } = useTable({
     columns,
     data: records,
-    initialState
-
+    initialState,
   },
     useFilters,
     useGlobalFilter,
@@ -143,6 +139,7 @@ function ReactTable({ data, columns, updateOrder, initialState }: Props): ReactE
 
         {
           id: 'selection',
+
           // The header can use the table's getToggleAllRowsSelectedProps method
           // to render a checkbox
           Header: ({ getToggleAllRowsSelectedProps }) => (
@@ -163,6 +160,19 @@ function ReactTable({ data, columns, updateOrder, initialState }: Props): ReactE
     });
 
 
+  React.useEffect(() => {
+    function filterRows() {
+      let data = []
+      selectedFlatRows.map(d => {
+        data.push(d.original)
+      })
+
+      return data
+    }
+
+    if (setSelectedRows)
+      setSelectedRows(filterRows)
+  }, [selectedRowIds])
 
   const handleDragEnd = (result: any) => {
     const { source, destination } = result;
@@ -205,7 +215,6 @@ function ReactTable({ data, columns, updateOrder, initialState }: Props): ReactE
           <Dropdown.Menu className="p-2">
             {allColumns.map((column) => {
               column.disableGlobalFilter = !column.isVisible;
-
               return (
                 <div key={column.id} className="custom-control custom-checkbox">
                   <input
@@ -290,41 +299,32 @@ function ReactTable({ data, columns, updateOrder, initialState }: Props): ReactE
                   <tbody ref={provided.innerRef} {...provided.droppableProps}>
                     {rows.map((row, i) => {
                       prepareRow(row);
-                      return (
-                        <Draggable
-                          draggableId={row.id}
-                          key={row.id}
-                          index={i}
-                        >
-                          {(provided, snapshot) => {
-                            return (
-                              <tr
-                                ref={provided.innerRef}
-                                {...row.getRowProps()}
-                                {...provided.draggableProps}
-                                {...provided.dragHandleProps}
-                                style={{
-                                  ...provided.draggableProps.style,
-                                  opacity: snapshot.isDragging
-                                    ? ".5"
-                                    : "1",
-                                }}
-                              >
-                                {row.cells.map(cell => (
 
-                                  <td {...cell.getCellProps()}>
-                                    {cell.render("Cell", {
-                                      dragHandleProps: provided.dragHandleProps,
-                                      isSomethingDragging: snapshot.isDragging
-                                    })
-                                    }
-                                  </td>
-                                ))}
-                              </tr>
-                            );
-                          }}
-                        </Draggable>
-                      );
+                      if (isDraggable)
+                        return (
+                          <Draggable
+                            draggableId={row.id}
+                            key={row.id}
+                            index={i}
+                          >
+                            {(provided, snapshot) => {
+                              return (
+                                <DnDRow
+                                  provided={provided}
+                                  row={row}
+                                  snapshot={snapshot}
+                                />
+                              );
+                            }}
+                          </Draggable>
+
+                        );
+                      else
+                        return (
+                          <Row
+                            row={row}
+                          />
+                        )
                     })}
                     {provided.placeholder}
                   </tbody>
@@ -353,5 +353,46 @@ function ReactTable({ data, columns, updateOrder, initialState }: Props): ReactE
     </div>
   );
 }
+
+const DnDRow = ({ provided, row, snapshot }: any) => (
+
+  <tr
+    ref={provided.innerRef}
+    {...row.getRowProps()}
+    {...provided.draggableProps}
+    {...provided.dragHandleProps}
+    style={{
+      ...provided.draggableProps.style,
+      opacity: snapshot.isDragging
+        ? ".5"
+        : "1",
+    }}
+  >
+    {row.cells.map(cell => (
+
+      <td {...cell.getCellProps()}>
+        {cell.render("Cell", {
+          dragHandleProps: provided.dragHandleProps,
+          isSomethingDragging: snapshot.isDragging
+        })
+        }
+      </td>
+    ))}
+  </tr>
+)
+const Row = ({ row }: any) => (
+
+  <tr
+    {...row.getRowProps()}
+  >
+    {row.cells.map(cell => (
+
+      <td {...cell.getCellProps()}>
+        {cell.render("Cell")}
+
+      </td>
+    ))}
+  </tr>
+)
 
 export default ReactTable;
