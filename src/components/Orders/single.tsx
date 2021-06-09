@@ -1,11 +1,15 @@
+import { AxiosError } from "axios";
 import moment from "moment";
-import React from "react";
-import { Badge, Button, Container } from "react-bootstrap";
+import React, { useState } from "react";
+import { Badge, Button, Col, Container, Row } from "react-bootstrap";
 import { FaDotCircle, FaRegDotCircle } from "react-icons/fa";
+import { useQuery } from "react-query";
 import { useHistory, useParams } from "react-router-dom";
 import { ProgressBar, Step } from "react-step-progress-bar";
 import "react-step-progress-bar/styles.css";
+import { handleApiError } from "../../hooks/handleApiErrors";
 import useGetSingleQuery from "../../hooks/useGetSingleQuery";
+import FilterSelect from "../../shared-components/FilterSelect";
 import IsLoading from "../../shared-components/isLoading";
 
 
@@ -16,18 +20,38 @@ const key = "bookings";
 const SingleOrder = () => {
   const { id }: { id: string } = useParams();
   const history = useHistory();
-
   const { data, isLoading, isFetching } = useGetSingleQuery({ id, key });
+
+  const [form, setForm] = useState({
+    agent_id: data?.agent_id
+  })
+
+  console.log({ form })
+
+  const _onformChange = (idx: string, value: any) => {
+    setForm(prev => ({
+      ...prev,
+      [idx]: value
+    }))
+  }
+
+  const { data: Agents, isLoading: isAgentLoading } = useQuery<any>(["users", 1, {
+    role: "agent"
+  }], {
+    onError: (error: AxiosError) => {
+      handleApiError(error, history)
+    },
+  });
 
   const statusBadgeVairant = (status: string) => {
     const _status = status.toLowerCase();
 
-    if (_status === "cancelled") return "danger";
+    if (_status === "success") return "success";
 
     if (_status === "pending" || _status === "pending_payment")
       return "warning";
 
-    return "success";
+    return "danger";
   };
 
   if (isLoading || isFetching) {
@@ -39,7 +63,7 @@ const SingleOrder = () => {
       <Container fluid className="d-flex justify-content-between py-2">
         <div className="d-flex align-items-center">
           <h2 className="text-muted font-weight-bold">Order</h2>
-          <h2 className="ml-2">#{data.id}</h2>
+          <h2 className="ml-2">#{data.ref_id}</h2>
           <Badge variant="primary" className="mx-3 px-3 py-2 text-uppercase">
             {data.order_type}
           </Badge>
@@ -50,19 +74,35 @@ const SingleOrder = () => {
             {data.status}
           </Badge>
         </div>
-        <Button
+        <Container>
+          <Row>
+
+            <Col md="auto">
+              <FilterSelect
+                currentValue={form.agent_id}
+                data={!isAgentLoading && Agents}
+                label="Agents"
+                idx="agent_id"
+                onFilterChange={_onformChange}
+
+              />
+            </Col>
+
+          </Row>
+        </Container>
+        {/* <Button
           variant="primary"
           onClick={() => history.push(`assign-agent/${id}`)}
         >
           <div className="text-white">Assign</div>
-        </Button>
+        </Button> */}
       </Container>
       {data.cancellation_reason && (
         <Container fluid>
           <p className="text-danger">{data.cancellation_reason}</p>
         </Container>
       )}
-      <div className="progressbar-css">
+      {/* <div className="progressbar-css">
         <ProgressBar
           percent={33}
         >
@@ -116,7 +156,7 @@ const SingleOrder = () => {
             )}
           </Step>
         </ProgressBar>
-      </div>
+      </div> */}
 
       <div className="dashboard-page w-100">
         <Container fluid className="status-container mt-2">
