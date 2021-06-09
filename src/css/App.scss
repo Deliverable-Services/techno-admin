@@ -30,6 +30,8 @@ body {
     margin-bottom: 50px;
     padding: 10px 10px;
     margin-right: 10px;
+    width: 100%;
+    max-width: 100vw;
   }
 
   @include responsive($desktop-breakpoint) {
@@ -58,6 +60,7 @@ body {
   justify-content: center;
   border-top: 3px solid $primary-color;
   background-color: #fff;
+  width: 100vw;
 }
 
 .progressbar-css {

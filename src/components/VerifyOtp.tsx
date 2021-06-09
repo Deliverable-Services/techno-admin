@@ -1,4 +1,4 @@
-import axios from "axios";
+import axios, { AxiosError } from "axios";
 import { Form, Formik } from "formik";
 import { useEffect } from "react";
 import { Alert, Button, Container, Spinner } from "react-bootstrap";
@@ -11,6 +11,7 @@ import { InputField } from "../shared-components/InputFeild";
 import Logo from "../shared-components/Logo";
 import API from "../utils/API";
 import { appApiBaseUrl } from "../utils/constants";
+import { showErrorToast } from "../utils/showErrorToast";
 import { showMsgToast } from "../utils/showMsgToast";
 
 interface Props {}
@@ -27,17 +28,21 @@ const verifyOtp = (formData: FormData) => {
 
 const VerifyOtp = (props: Props) => {
   const params: { id: string; otp: string } = useParams();
+  console.log(params);
   const history = useHistory();
   const setToken = useTokenStore((state) => state.setToken);
   const setUser = useUserProfileStore((state) => state.setUser);
 
-  const { mutate, data, isLoading, error } = useMutation(verifyOtp, {
+  const { mutate, isLoading } = useMutation(verifyOtp, {
     onSuccess: (data) => {
       console.log({ data });
       console.log({ data });
       setToken(data.data.token);
       setUser(data.data.user);
       history.push("/");
+    },
+    onError: (error: AxiosError) => {
+      showErrorToast(error.message);
     },
   });
 
@@ -70,11 +75,6 @@ const VerifyOtp = (props: Props) => {
                   Please enter the code sent on your mobile number
                 </p>
                 <br />
-                {error && (
-                  <Alert variant="danger">
-                    {(error as any).response.data.error}
-                  </Alert>
-                )}
 
                 <InputField
                   name="otp"

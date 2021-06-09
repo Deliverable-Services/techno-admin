@@ -15,7 +15,7 @@ const ErrorToast = (props: Props) => {
             <div className="position-fixed" style={{ bottom: "2%", right: "2%", zIndex: 1001, minWidth: "200px" }} >
                 {
                     toasts.map((t) => {
-                        setTimeout(() => hideToast(t.id), 5000)
+                        setTimeout(() => hideToast(t.id), 3000)
 
                         return (
                             <Alert variant="danger">{t.message}</Alert>
