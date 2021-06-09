@@ -71,7 +71,7 @@ const BrandModels = () => {
         Cell: (data: Cell) => (
           <div className="table-image">
             <img
-              src={`${baseUploadUrl}brands/${data.row.values.image}`}
+              src={`${baseUploadUrl}brand-models/${data.row.values.image}`}
               alt={data.row.values.image}
             />
           </div>

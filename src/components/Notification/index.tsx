@@ -1,3 +1,4 @@
+
 import { AxiosError } from "axios";
 import React, { useMemo, useState } from "react";
 import { Button, Container, Modal, Spinner } from "react-bootstrap";
@@ -30,13 +31,10 @@ const deleteBrand = (id: string) => {
   });
 };
 
-const Brands = () => {
+const Notifications = () => {
   const history = useHistory()
-  const [selectedRowId, setSelectedRowId] = useState<string>("");
   const [selectedRows, setSelectedRows] = useState([])
-  console.log(selectedRows.map(item => item.id))
   const [page, setPage] = useState<number>(1);
-  const [deletePopup, setDeletePopup] = useState(false);
   const { data, isLoading, isFetching, error } = useQuery<any>([key, page], {
     onError: (error: AxiosError) => {
       handleApiError(error, history)
@@ -46,7 +44,6 @@ const Brands = () => {
   const { mutate, isLoading: isDeleteLoading } = useMutation(deleteBrand, {
     onSuccess: () => {
       queryClient.invalidateQueries(key);
-      setDeletePopup(false);
       showMsgToast("Brands deleted successfully")
     },
     onError: (error: AxiosError) => {
@@ -55,10 +52,10 @@ const Brands = () => {
   });
 
   const _onCreateClick = () => {
-    history.push("/brands/create-edit")
+    history.push("/push-notifications/create-edit")
   }
   const _onEditClick = (id: string) => {
-    history.push("/brands/create-edit", { id })
+    history.push("/push-notifications/create-edit", { id })
   }
 
   const columns = useMemo(
@@ -68,23 +65,11 @@ const Brands = () => {
         accessor: "id", //accessor is the "key" in the data
       },
       {
-        Header: "Logo",
-        accessor: "logo",
-        Cell: (data: Cell) => (
-          <div className="table-image">
-            <img
-              src={`${baseUploadUrl}brands/${data.row.values.logo}`}
-              alt="name"
-            />
-          </div>
-        ),
-      },
-      {
         Header: "Name",
         accessor: "name",
       },
       {
-        Header: "Url",
+        Header: "Title",
         accessor: "url",
       },
       {
@@ -95,6 +80,12 @@ const Brands = () => {
             <IsActiveBadge value={data.row.values.is_active} />
           )
         }
+      },
+      {
+        Header: "Sent",
+        accessor: "is_sent",
+        Cell: (data: Cell) => "false"
+
       },
       {
         Header: "Created At",
@@ -126,15 +117,6 @@ const Brands = () => {
               >
                 <AiFillEdit color={secondaryColor} size={24} />
               </button>
-              <button
-                className="ml-2"
-                onClick={() => {
-                  setSelectedRowId(data.row.values.id);
-                  setDeletePopup(true);
-                }}
-              >
-                <AiFillDelete color="red" size={24} />
-              </button>
             </div>
           );
         },
@@ -156,7 +138,7 @@ const Brands = () => {
 
   return (
     <>
-      <PageHeading title="Brands" onClick={_onCreateClick} />
+      <PageHeading title="Notifications" onClick={_onCreateClick} />
       <Container fluid className="card component-wrapper px-0 py-2">
 
 
@@ -184,32 +166,6 @@ const Brands = () => {
           )}
         </Container>
       </Container>
-      <Modal show={deletePopup} onHide={() => setDeletePopup(false)}>
-        <Modal.Header closeButton>
-          <Modal.Title>Are you sure?</Modal.Title>
-        </Modal.Header>
-        <Modal.Body>
-          Do you really want to delete this record? This process cannot be
-          undone
-        </Modal.Body>
-        <Modal.Footer>
-          <Button variant="bg-light" onClick={() => setDeletePopup(false)}>
-            Close
-          </Button>
-          <Button
-            variant="danger"
-            onClick={() => {
-              mutate(selectedRowId);
-            }}
-          >
-            {isDeleteLoading ? (
-              <Spinner animation="border" size="sm" />
-            ) : (
-              "Delete"
-            )}
-          </Button>
-        </Modal.Footer>
-      </Modal>
       {
         selectedRows.length > 0 &&
         <div className="delete-button rounded">
@@ -223,4 +179,4 @@ const Brands = () => {
   );
 };
 
-export default Brands;
+export default Notifications;

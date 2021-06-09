@@ -14,9 +14,10 @@ import {
   TableState,
   useAsyncDebounce,
   useFilters,
-  useGlobalFilter, useRowSelect, useSortBy,
+  useGlobalFilter, usePagination, useRowSelect, useSortBy,
   useTable
 } from "react-table";
+import { RowsPerPage } from '../utils/arrays';
 import { primaryColor } from "../utils/constants";
 
 
@@ -123,15 +124,17 @@ function ReactTable({ data, columns, updateOrder, initialState, isDraggable = fa
     preGlobalFilteredRows,
     setGlobalFilter,
     selectedFlatRows,
-    state: { selectedRowIds },
+    setPageSize,
+    state: { selectedRowIds, pageSize },
   } = useTable({
     columns,
     data: records,
-    initialState,
+    initialState: { ...initialState, pageSize: 25 },
   },
     useFilters,
     useGlobalFilter,
     useSortBy,
+    usePagination,
     useRowSelect,
     getRowId,
     hooks => {
@@ -159,7 +162,6 @@ function ReactTable({ data, columns, updateOrder, initialState, isDraggable = fa
       ])
     });
 
-
   React.useEffect(() => {
     function filterRows() {
       let data = []
@@ -176,12 +178,10 @@ function ReactTable({ data, columns, updateOrder, initialState, isDraggable = fa
 
   const handleDragEnd = (result: any) => {
     const { source, destination } = result;
-    console.log({ result })
     if (!destination) return;
     reorderData(source.index, destination.index);
 
     const row = records[result.draggableId];
-    console.log({ row })
 
     if (updateOrder)
       updateOrder(row.id, destination.index, row)
@@ -204,43 +204,66 @@ function ReactTable({ data, columns, updateOrder, initialState, isDraggable = fa
           </div>
         </div>
 
-        <Dropdown>
-          <Dropdown.Toggle
-            id="dropdown-basic"
-            className="filter-button bg-transparent border-0 text-primary"
-          >
-            <GoSettings size={24} color={primaryColor} />
-          </Dropdown.Toggle>
+        <div className="d-flex">
+          <div className="d-flex align-items-center justify-content-center">
+            <span className="text-muted">Records </span>
+            <select
+              className="text-primary font-weight-bold"
+              style={{
 
-          <Dropdown.Menu className="p-2">
-            {allColumns.map((column) => {
-              column.disableGlobalFilter = !column.isVisible;
-              return (
-                <div key={column.id} className="custom-control custom-checkbox">
-                  <input
-                    type="checkbox"
-                    {...column.getToggleHiddenProps()}
-                    className="d-none"
-                    id={column.id}
-                  />
+                border: "none",
 
-                  <div className="custom-control custom-checkbox ">
+              }}
+              value={pageSize}
+              onChange={e => {
+                setPageSize(parseInt(e.target.value))
+              }}
+            >
+              {RowsPerPage.map(item => (
+                <option key={item.id} value={item.id}>
+                  {item.name}
+                </option>
+              ))}
+            </select>
+          </div>
+          <Dropdown>
+            <Dropdown.Toggle
+              id="dropdown-basic"
+              className="filter-button bg-transparent border-0 text-primary"
+            >
+              <GoSettings size={20} color={primaryColor} /> <span className="text-muted my-auto">Filter</span>
+            </Dropdown.Toggle>
+
+            <Dropdown.Menu className="p-2">
+              {allColumns.map((column) => {
+                column.disableGlobalFilter = !column.isVisible;
+                return (
+                  <div key={column.id} className="custom-control custom-checkbox">
                     <input
                       type="checkbox"
-                      className="custom-control-input"
-                      id={column.id}
                       {...column.getToggleHiddenProps()}
+                      className="d-none"
+                      id={column.id}
                     />
 
-                    <label className="custom-control-label" htmlFor={column.id}>
-                      <p>{column.Header}</p>
-                    </label>
+                    <div className="custom-control custom-checkbox ">
+                      <input
+                        type="checkbox"
+                        className="custom-control-input"
+                        id={column.id}
+                        {...column.getToggleHiddenProps()}
+                      />
+
+                      <label className="custom-control-label" htmlFor={column.id}>
+                        <p>{column.Header}</p>
+                      </label>
+                    </div>
                   </div>
-                </div>
-              );
-            })}
-          </Dropdown.Menu>
-        </Dropdown>
+                );
+              })}
+            </Dropdown.Menu>
+          </Dropdown>
+        </div>
       </Container>
 
       {/*-------------------- table---------------------  */}

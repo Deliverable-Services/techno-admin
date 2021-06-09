@@ -1,9 +1,11 @@
+import { AxiosError } from "axios";
 import bsCustomFileInput from "bs-custom-file-input";
 import { Form, Formik } from "formik";
 import { useEffect } from "react";
 import { Alert, Button, Col, Row, Spinner } from "react-bootstrap";
 import { useMutation, useQuery } from "react-query";
-import { useLocation } from "react-router-dom";
+import { useHistory, useLocation } from "react-router-dom";
+import { handleApiError } from "../../hooks/handleApiErrors";
 import useGetSingleQuery from "../../hooks/useGetSingleQuery";
 import BackButton from "../../shared-components/BackButton";
 import { InputField } from "../../shared-components/InputFeild";
@@ -11,6 +13,7 @@ import IsLoading from "../../shared-components/isLoading";
 import API from "../../utils/API";
 import { isActiveArray } from "../../utils/arrays";
 import { queryClient } from "../../utils/queryClient";
+import { showMsgToast } from "../../utils/showMsgToast";
 
 const key = "brand-models";
 
@@ -34,6 +37,7 @@ const createUpdataBrand = ({
 
 const BrandModlesCreateUpdateForm = () => {
   const { state } = useLocation()
+  const history = useHistory()
   const id = state ? (state as any).id : null
   useEffect(() => {
     bsCustomFileInput.init();
@@ -41,13 +45,17 @@ const BrandModlesCreateUpdateForm = () => {
 
   const { data: brands, isLoading: isBrandLoading } = useQuery<any>(["brands"]);
   const { data, isLoading: dataLoading } = useGetSingleQuery({ id, key });
-  const { mutate, isLoading, error, status } = useMutation(createUpdataBrand, {
+  const { mutate, isLoading } = useMutation(createUpdataBrand, {
     onSuccess: () => {
       setTimeout(() => queryClient.invalidateQueries(key), 500);
+      if (id) return showMsgToast("Brand Model updated successfully")
+      showMsgToast("Brand Model created successfully")
     },
+    onError: (error: AxiosError) => {
+      handleApiError(error, history)
+    }
   });
 
-  console.log(data);
 
   const apiData = data && (data as any);
 
@@ -62,28 +70,16 @@ const BrandModlesCreateUpdateForm = () => {
             initialValues={apiData || {}}
             onSubmit={(values) => {
               const formdata = new FormData();
-              formdata.append("name", values.name);
-              if (values.image)
+              const { image, ...rest } = values;
+              for (let k in rest) formdata.append(k, rest[k]);
+              if (values.image && typeof values.image !== "string")
                 formdata.append("image", values.image);
-              formdata.append("url", values.url);
-              formdata.append("brand_id", values.brand_id);
-              formdata.append("is_active", values.is_active);
 
               mutate({ formdata, id });
             }}
           >
             {({ setFieldValue }) => (
               <Form>
-                {status === "success" && (
-                  <Alert variant="success">
-                    {id
-                      ? "Brand model updated successfully"
-                      : "Brand model created successfully"}
-                  </Alert>
-                )}
-                {error && (
-                  <Alert variant="danger">{(error as Error).message}</Alert>
-                )}
                 <div className={`form-container  py-2 `}>
                   <InputField
                     name="name"
@@ -110,7 +106,7 @@ const BrandModlesCreateUpdateForm = () => {
                     placeholder="Brand"
                     label="Choose Brand"
                     as="select"
-                    selectData={!isBrandLoading && brands.data}
+                    selectData={!isBrandLoading && brands}
                   />
 
                   <InputField as="select" selectData={isActiveArray} name="is_active" label="Is active?" placeholder="Choose is active" />

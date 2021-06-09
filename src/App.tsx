@@ -40,6 +40,8 @@ import API from "./utils/API";
 import AdvertisementCreateUpdateForm from "./components/Advertisements/AdvertisementUpdateCreateForm";
 import Issues from "./components/Issues";
 import SingleIssue from "./components/Issues/single";
+import Notifications from "./components/Notification";
+import NotificationCreateUpdateForm from "./components/Notification/NotificationCreateUpdateForm";
 
 const App = () => {
   const [isDesktop, setIsDesktop] = useState<boolean>(false);
@@ -110,6 +112,8 @@ const App = () => {
             <PrivateRoute path="/advertisements/create-edit" exact component={AdvertisementCreateUpdateForm} />
             <PrivateRoute path="/transactions" exact component={Transactions} />
             <PrivateRoute path="/issues" exact component={Issues} />
+            <PrivateRoute path="/push-notifications" exact component={Notifications} />
+            <PrivateRoute path="/push-notifications/create-edit" exact component={NotificationCreateUpdateForm} />
             <PrivateRoute path="/transactions/:id" exact component={TransactionUpdateForm} />
             <PrivateRoute path="/subscriptions" exact component={Subscriptions} />
             <PrivateRoute path="/subscriptions/:id" exact component={SingleSubscriptions} />

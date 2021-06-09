@@ -6,6 +6,7 @@ import { useHistory } from "react-router-dom";
 import { Cell } from "react-table";
 import useOrderStoreFilter from "../../hooks/useOrderFilterStore";
 import BreadCrumb from "../../shared-components/BreadCrumb";
+import CreatedUpdatedAt from "../../shared-components/CreatedUpdatedAt";
 import FilterSelect from "../../shared-components/FilterSelect";
 import IsLoading from "../../shared-components/isLoading";
 import PageHeading from "../../shared-components/PageHeading";
@@ -141,6 +142,7 @@ const Orders = () => {
       {
         Header: "Scheduled At",
         accessor: "scheduled_at",
+        Cell: (data: Cell) => <CreatedUpdatedAt date={data.row.values.scheduled_at} />
       },
       {
         Header: "Inside Cart",
@@ -157,6 +159,7 @@ const Orders = () => {
       {
         Header: "Created At",
         accessor: "created_at",
+        Cell: (data: Cell) => <CreatedUpdatedAt date={data.row.values.created_at} />
       },
       {
         Header: "Actions",
@@ -274,7 +277,7 @@ const Orders = () => {
                             onFilterChange={onFilterChange}
                           />
                         </Col>
-                        <Col md="auto">
+                        {/* <Col md="auto">
                           <FilterSelect
                             currentValue={NumberOfRows}
                             data={RowsPerPage}
@@ -285,7 +288,7 @@ const Orders = () => {
                             width="100px"
                             isDefaultDisabled
                           />
-                        </Col>
+                        </Col> */}
                         <Col
                           md="auto"
                           className="d-flex align-items-center mt-1 justify-content-center"

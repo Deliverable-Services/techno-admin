@@ -1,29 +1,55 @@
 import { AxiosError } from "axios";
 import moment from "moment";
 import React, { useState } from "react";
-import { Badge, Button, Col, Container, Row } from "react-bootstrap";
+import { Badge, Button, Col, Container, Form, Row } from "react-bootstrap";
+import { BiArrowFromRight, BiDownload } from "react-icons/bi";
 import { FaDotCircle, FaRegDotCircle } from "react-icons/fa";
-import { useQuery } from "react-query";
+import { useMutation, useQuery } from "react-query";
 import { useHistory, useParams } from "react-router-dom";
 import { ProgressBar, Step } from "react-step-progress-bar";
 import "react-step-progress-bar/styles.css";
 import { handleApiError } from "../../hooks/handleApiErrors";
 import useGetSingleQuery from "../../hooks/useGetSingleQuery";
-import FilterSelect from "../../shared-components/FilterSelect";
 import IsLoading from "../../shared-components/isLoading";
+import API from "../../utils/API";
+import { OrderStatus } from "../../utils/arrays";
+import { queryClient } from "../../utils/queryClient";
+import { showMsgToast } from "../../utils/showMsgToast";
 
 const key = "bookings";
+
+
+const assignAgent = ({
+  formdata,
+  id,
+}: {
+  formdata: { agent_id: string };
+  id: string;
+}) => {
+  return API.post(`bookings/${id}/assign-agent`, formdata, {
+    headers: { "Content-Type": "application/json" },
+  });
+};
 
 const SingleOrder = () => {
   const { id }: { id: string } = useParams();
   const history = useHistory();
   const { data, isLoading, isFetching } = useGetSingleQuery({ id, key });
 
+  const { mutate, isLoading: isAsigningLoading } = useMutation(assignAgent, {
+    onSuccess: (data) => {
+      showMsgToast("Agent assigned successfully")
+      setTimeout(() => {
+        queryClient.invalidateQueries(key);
+        queryClient.invalidateQueries(`${key}/${id}`);
+      }, 500);
+    },
+  });
   const [form, setForm] = useState({
-    agent_id: data?.agent_id
+    agent_id: data?.agent_id,
+    status: data?.status
   })
 
-  console.log({ form })
 
   const _onformChange = (idx: string, value: any) => {
     setForm(prev => ({
@@ -39,6 +65,11 @@ const SingleOrder = () => {
       handleApiError(error, history)
     },
   });
+
+  const _onUserClick = (id: string) => {
+    if (!id) return;
+    history.push("/users/create-edit", { id });
+  };
 
   const statusBadgeVairant = (status: string) => {
     const _status = status.toLowerCase();
@@ -71,78 +102,133 @@ const SingleOrder = () => {
             {data.status}
           </Badge>
         </div>
-        <Container>
-          <Row>
+        <div>
+          <Button variant="success">
+            <div className="text-white">
+              <BiDownload size={24} /> <b>Invoice</b>
+            </div>
+          </Button>
+          <Button className="ml-2" onClick={() => history.goBack()}>
+            <div className="text-white">
+              <BiArrowFromRight size={25} /> <b>Back</b>
+            </div>
+          </Button>
+        </div>
+      </Container>
+      <Container>
+        <Row>
 
+          {
+            !form.agent_id &&
             <Col md="auto">
-              <FilterSelect
-                currentValue={form.agent_id}
-                data={!isAgentLoading && Agents}
-                label="Agents"
-                idx="agent_id"
-                onFilterChange={_onformChange}
+              <Form.Group>
+                <Form.Label className="text-muted font-weight-bold">{form.agent_id ? "Change Agent" : "Assign Agent"}</Form.Label>
+                <Form.Control as="select" value={form.agent_id || ""} onChange={
+                  (e) => {
+                    _onformChange("agent_id", e.target.value)
+                    mutate({ formdata: { agent_id: e.target.value }, id })
+                  }
+                }
+                  style={{
+                    width: "200px",
+                    fontSize: 14
+                  }}
 
-              />
+                >
+                  <option value="" >Select Agent</option>
+                  <option value="2"> agent</option>
+                  {
+                    !isAgentLoading && Agents.map(item => (
+                      <option value={item["id"]}>{item["name"]}</option>
+                    ))
+                  }
+                </Form.Control>
+              </Form.Group>
             </Col>
+          }
+          <Col md="auto">
+            <Form.Group>
+              <Form.Label className="text-muted font-weight-bold">Change Status</Form.Label>
+              <Form.Control as="select" value={form.status} onChange={
+                (e) => {
+                  _onformChange("status", e.target.value)
+                  // mutate({ formdata: { agent_id: e.target.value }, id })
+                }
+              }
+                style={{
+                  width: "200px",
+                  fontSize: 14
+                }}
 
-          </Row>
-        </Container>
-        {/* <Button
-          variant="primary"
-          onClick={() => history.push(`assign-agent/${id}`)}
-        >
-          <div className="text-white">Assign</div>
-        </Button> */}
+              >
+                <option value="" disabled>Select Status</option>
+                {
+                  OrderStatus.map(item => {
+                    if (item.id !== "")
+                      return (
+                        <option value={item["id"]}>{item["name"]}</option>
+                      )
+                  })
+                }
+              </Form.Control>
+            </Form.Group>
+          </Col>
+
+        </Row>
       </Container>
       {data.cancellation_reason && (
         <Container fluid>
           <p className="text-danger">{data.cancellation_reason}</p>
         </Container>
       )}
-      <div className="progressbar-css">
-        <ProgressBar percent={33}>
-          <Step>
+      <div className="w-75 mx-auto">
+        <ProgressBar
+          filledBackground="linear-gradient(to right, #fefb72, #f0bb31)"
+          percent={80}
+        >
+          <Step transition="scale">
             {({ accomplished, index }) => (
-              <>
-                <div
-                  className={`indexedStep ${accomplished ? "accomplished" : null
-                    }`}
-                ></div>
-                {accomplished ? <FaDotCircle /> : <FaDotCircle />}
-              </>
+              <div
+                className={`transitionStep ${accomplished ? "accomplished" : null}`}
+              >
+                🌑
+              </div>
             )}
           </Step>
-          <Step>
+          <Step transition="scale">
             {({ accomplished, index }) => (
-              <>
-                <div
-                  className={`indexedStep ${accomplished ? "accomplished" : null
-                    }`}
-                ></div>
-                {accomplished ? <FaDotCircle /> : <FaRegDotCircle />}
-              </>
+              <div
+                className={`transitionStep ${accomplished ? "accomplished" : null}`}
+              >
+                🌒
+              </div>
             )}
           </Step>
-          <Step>
+          <Step transition="scale">
             {({ accomplished, index }) => (
-              <>
-                <div
-                  className={`indexedStep ${accomplished ? "accomplished" : null
-                    }`}
-                ></div>
-                {accomplished ? <FaDotCircle /> : <FaRegDotCircle />}
-              </>
+              <div
+                className={`transitionStep ${accomplished ? "accomplished" : null}`}
+              >
+                🌓
+              </div>
             )}
           </Step>
-          <Step>
+          <Step transition="scale">
             {({ accomplished, index }) => (
-              <>
-                <div
-                  className={`indexedStep ${accomplished ? "accomplished" : null
-                    }`}
-                ></div>
-                {accomplished ? <FaDotCircle /> : <FaRegDotCircle />}
-              </>
+              <div
+                className={`transitionStep ${accomplished ? "accomplished" : null}`}
+              >
+                🌔
+              </div>
+            )}
+          </Step>
+          <Step transition="scale">
+            {({ accomplished, index }) => (
+              <div
+                className={`transitionStep ${accomplished ? "accomplished" : null}`}
+              >
+                🌕
+              </div>
             )}
           </Step>
         </ProgressBar>
@@ -157,7 +243,9 @@ const SingleOrder = () => {
             >
               <div className="d-flex flex-column">
                 <div className="text-primary">
-                  <p className="view-heading view-top-pad">USER</p>
+                  <p className=" font-weight-bold text-primary"
+                    style={{ cursor: "pointer" }}
+                    onClick={() => _onUserClick(data.user_id)}>User</p>
                 </div>
                 <div className="d-flex flex-column" style={{ fontSize: 18 }}>
                   <table className="w-100">
@@ -192,30 +280,45 @@ const SingleOrder = () => {
               </div>
             </div>
             {data.agent && (
-              <div className="card p-2 d-flex">
+              <div
+                className="card p-2  view-padding right-div d-flex "
+                style={{ marginTop: "15%" }}
+              >
                 <div className="d-flex flex-column">
                   <div className="text-primary">
-                    <h3>Agent</h3>
+                    <p className=" font-weight-bold text-primary"
+                      style={{ cursor: "pointer" }}
+                      onClick={() => _onUserClick(data.agent_id)}>Agent</p>
                   </div>
                   <div className="d-flex flex-column" style={{ fontSize: 18 }}>
-                    <div>
-                      <span className="text-muted">Name :</span>
-                      <span className="text-primary ml-2">
-                        <b>{data.agent.name}</b>
-                      </span>
-                    </div>
-                    <div>
-                      <span className="text-muted">Email :</span>
-                      <span className="text-primary ml-2">
-                        <b>{data.agent.email}</b>
-                      </span>
-                    </div>
-                    <div>
-                      <span className="text-muted">Phone :</span>
-                      <span className="text-primary ml-2">
-                        <b>{data.agent.phone}</b>
-                      </span>
-                    </div>
+                    <table className="w-100">
+                      <tbody>
+                        <tr>
+                          <td className="text-muted">
+                            <p className="view-heading">Name</p>
+                          </td>
+                          <td className="text-right">
+                            <p className="view-subheading">{data.agent.name}</p>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td className="text-muted ">
+                            <p className="view-heading">Email</p>
+                          </td>
+                          <td className="text-primary  font-weight-bold text-right">
+                            <p className="view-subheading">{data.agent.email}</p>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td className="text-muted ">
+                            <p className="view-heading phone-padd">Phone</p>
+                          </td>
+                          <td className="text-primary  font-weight-bold text-right">
+                            <p className="view-subheading">{data.agent.phone}</p>
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
                   </div>
                 </div>
               </div>

@@ -1,3 +1,4 @@
+import { AxiosError } from "axios";
 import { useMemo, useState } from "react";
 import { Button, Container, Modal, Spinner } from "react-bootstrap";
 import { AiFillDelete, AiFillEdit } from "react-icons/ai";
@@ -5,6 +6,7 @@ import { BiSad } from "react-icons/bi";
 import { useMutation, useQuery } from "react-query";
 import { useHistory } from "react-router-dom";
 import { Cell } from "react-table";
+import { handleApiError } from "../../hooks/handleApiErrors";
 import CreatedUpdatedAt from "../../shared-components/CreatedUpdatedAt";
 import IsActiveBadge from "../../shared-components/IsActiveBadge";
 import IsLoading from "../../shared-components/isLoading";
@@ -18,6 +20,7 @@ import {
 } from "../../utils/constants";
 import { queryClient } from "../../utils/queryClient";
 import { showErrorToast } from "../../utils/showErrorToast";
+import { showMsgToast } from "../../utils/showMsgToast";
 
 const key = "coupons";
 
@@ -30,11 +33,13 @@ const deleteCoupon = (id: string) => {
 const Coupons = () => {
   const history = useHistory()
   const [selectedRowId, setSelectedRowId] = useState<string>("");
+  const [selectedRows, setSelectedRows] = useState([])
+  console.log(selectedRows.map(item => item.id))
   const [page, setPage] = useState<number>(1);
   const [deletePopup, setDeletePopup] = useState(false);
   const { data, isLoading, isFetching, error } = useQuery<any>([key, page], {
-    onError: (err: any) => {
-      showErrorToast(err.response.data.message);
+    onError: (error: AxiosError) => {
+      handleApiError(error, history)
     },
   });
 
@@ -42,9 +47,10 @@ const Coupons = () => {
     onSuccess: () => {
       queryClient.invalidateQueries(key);
       setDeletePopup(false);
+      showMsgToast("Coupons deleted successfully")
     },
-    onError: () => {
-      showErrorToast("Something went wrong deleteing the records");
+    onError: (error: AxiosError) => {
+      handleApiError(error, history)
     },
   });
 
@@ -178,6 +184,7 @@ const Coupons = () => {
               {!error && <ReactTable
                 data={data}
                 columns={columns}
+                setSelectedRows={setSelectedRows}
               />}
               {!error && data.length > 0 ? (
                 <TablePagination
@@ -218,6 +225,15 @@ const Coupons = () => {
           </Button>
         </Modal.Footer>
       </Modal>
+      {
+        selectedRows.length > 0 &&
+        <div className="delete-button rounded">
+          <span><b>Delete {selectedRows.length} rows</b></span>
+          <Button variant="danger">
+            Delete
+          </Button>
+        </div>
+      }
     </>
   );
 };
