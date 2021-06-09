@@ -12404,6 +12404,8 @@ body {
   margin-bottom: 50px;
   padding: 10px 10px;
   margin-right: 10px;
+  width: 100%;
+  max-width: 100vw;
 }
 
 @media (min-width: 800px) {
@@ -12436,6 +12438,7 @@ body {
           justify-content: center;
   border-top: 3px solid #2c7be5;
   background-color: #fff;
+  width: 100vw;
 }
 
 .progressbar-css {
