@@ -37,8 +37,7 @@ body {
 
     .main-layout {
       grid-column: 2/3;
-      max-width: calc(100vw - #{$navWidth*1.1});
-      ;
+      max-width: calc(100vw - #{$navWidth * 1.1});
       // min-height: 100vh;
       // background-color: lighten($primary-color,40);
       // -webkit-box-shadow: 0 10px 25px 0 rgb(0 0 0 / 3%);
@@ -93,8 +92,8 @@ body {
 
 .view-heading,
 .view-subheading {
-  letter-spacing: .02em !important;
-  font-size: .9rem !important;
+  letter-spacing: 0.02em !important;
+  font-size: 0.9rem !important;
   font-weight: 600;
   color: #6c757d;
   font-family: "Lato", sans-serif;
@@ -147,4 +146,9 @@ body {
 
     // }
   }
+}
+
+hr {
+  margin-top: 0 !important;
+  margin-bottom: 0 !important;
 }

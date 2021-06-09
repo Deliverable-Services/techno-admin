@@ -14,7 +14,6 @@ import { showErrorToast } from "../../utils/showErrorToast";
 
 const key = "user-subscriptions";
 
-
 const Orders = () => {
   const history = useHistory();
   const [selectedRowId, setSelectedRowId] = useState<string>("");
@@ -26,26 +25,27 @@ const Orders = () => {
     },
   });
 
-
   const Status = ({ status }: { status: string }) => {
     const setVariant = () => {
       if (status === "active") return "success";
 
-
       return "danger";
     };
-    return <Badge variant={setVariant()} className="p-1">{status.toUpperCase()}</Badge>;
+    return (
+      <Badge variant={setVariant()} className="p-1">
+        {status.toUpperCase()}
+      </Badge>
+    );
   };
 
-
   const _onPlanClick = (id: string) => {
-    if (!id) return
-    history.push("/plans/create-edit", { id })
-  }
+    if (!id) return;
+    history.push("/plans/create-edit", { id });
+  };
   const _onUserClick = (id: string) => {
-    if (!id) return
-    history.push("/users/create-edit", { id })
-  }
+    if (!id) return;
+    history.push("/users/create-edit", { id });
+  };
 
   const columns = useMemo(
     () => [
@@ -62,10 +62,11 @@ const Orders = () => {
               className="text-primary"
               style={{ cursor: "pointer" }}
               onClick={() => _onUserClick((data.row.original as any).user_id)}
-
-            >{data.row.values["user.name"]}</p>
-          )
-        }
+            >
+              {data.row.values["user.name"]}
+            </p>
+          );
+        },
       },
       {
         Header: "Plan ID",
@@ -76,10 +77,11 @@ const Orders = () => {
               className="text-primary"
               style={{ cursor: "pointer" }}
               onClick={() => _onPlanClick((data.row.original as any).plan_id)}
-
-            >{data.row.values["plan.name"]}</p>
-          )
-        }
+            >
+              {data.row.values["plan.name"]}
+            </p>
+          );
+        },
       },
       {
         Header: "Allowed Usage",
@@ -91,6 +93,10 @@ const Orders = () => {
         Cell: (data: Cell) => <Status status={data.row.values.status} />,
       },
       {
+        Header: "Transaction Id",
+        accessor: "transaction_id", //accessor is the "key" in the data
+      },
+      {
         Header: "No. Times Used",
         accessor: "used", //accessor is the "key" in the data
       },
@@ -98,30 +104,23 @@ const Orders = () => {
         Header: "Last Used",
         accessor: "last_used_at",
         Cell: (data: Cell) => {
-          return (
-            <CreatedUpdatedAt date={data.row.values.last_used_at} />
-          )
-        }
+          return <CreatedUpdatedAt date={data.row.values.last_used_at} />;
+        },
       },
       {
         Header: "Created At",
         accessor: "created_at",
         Cell: (data: Cell) => {
-          return (
-            <CreatedUpdatedAt date={data.row.values.created_at} />
-          )
-        }
+          return <CreatedUpdatedAt date={data.row.values.created_at} />;
+        },
       },
       {
         Header: "Updated At",
         accessor: "updated_at",
         Cell: (data: Cell) => {
-          return (
-            <CreatedUpdatedAt date={data.row.values.updated_at} />
-          )
-        }
+          return <CreatedUpdatedAt date={data.row.values.updated_at} />;
+        },
       },
-
 
       // {
       //   Header: "Actions",
@@ -155,18 +154,14 @@ const Orders = () => {
   return (
     <>
       <Container fluid className="component-wrapper px-0 py-2">
-        <PageHeading title="User Subscriptions" />
+        <PageHeading title="Subscriptions" />
 
         <Container fluid className="h-100 p-0">
-
           {isLoading || isFetching ? (
             <IsLoading />
           ) : (
             <>
-              {!error && <ReactTable
-                data={data}
-                columns={columns}
-              />}
+              {!error && <ReactTable data={data} columns={columns} />}
               {!error && data.length > 0 ? (
                 <TablePagination
                   currentPage={data?.current_page}
@@ -182,6 +177,6 @@ const Orders = () => {
       </Container>
     </>
   );
-}
+};
 
 export default Orders;

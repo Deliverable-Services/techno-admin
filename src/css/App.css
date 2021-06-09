@@ -12458,8 +12458,8 @@ body {
 
 .view-heading,
 .view-subheading {
-  letter-spacing: .02em !important;
-  font-size: .9rem !important;
+  letter-spacing: 0.02em !important;
+  font-size: 0.9rem !important;
   font-weight: 600;
   color: #6c757d;
   font-family: "Lato", sans-serif;
@@ -12497,5 +12497,10 @@ body {
     -ms-grid-columns: 1fr 1fr;
         grid-template-columns: 1fr 1fr;
   }
+}
+
+hr {
+  margin-top: 0 !important;
+  margin-bottom: 0 !important;
 }
 /*# sourceMappingURL=App.css.map */

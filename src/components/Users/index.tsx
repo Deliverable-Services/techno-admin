@@ -16,40 +16,41 @@ import { userRoles } from "../../utils/arrays";
 import {
   baseUploadUrl,
   primaryColor,
-  secondaryColor
+  secondaryColor,
 } from "../../utils/constants";
 import { queryClient } from "../../utils/queryClient";
 import { showErrorToast } from "../../utils/showErrorToast";
 interface IFilter {
-  role: string | null
+  role: string | null;
 }
 const key = "users";
 
 const disableUser = (id: string) => {
-
   return API.post(`${key}/${id}`, {
-    disable: 1
+    disable: 1,
   });
 };
 const INITIAL_FILTER = {
-  role: ""
-}
-
+  role: "",
+};
 
 const Users = () => {
-  const history = useHistory()
+  const history = useHistory();
   const [selectedRowId, setSelectedRowId] = useState<string>("");
   const [page, setPage] = useState<number>(1);
-  const [role, setRole] = useState("")
+  const [role, setRole] = useState("");
   const [deletePopup, setDeletePopup] = useState(false);
 
-  const [filter, setFilter] = useState<IFilter>(INITIAL_FILTER)
+  const [filter, setFilter] = useState<IFilter>(INITIAL_FILTER);
 
-  const { data, isLoading, isFetching, error } = useQuery<any>([key, page, filter], {
-    onError: (err: any) => {
-      showErrorToast(err.response.data.message);
-    },
-  });
+  const { data, isLoading, isFetching, error } = useQuery<any>(
+    [key, page, filter],
+    {
+      onError: (err: any) => {
+        showErrorToast(err.response.data.message);
+      },
+    }
+  );
 
   const { mutate, isLoading: isDeleteLoading } = useMutation(disableUser, {
     onSuccess: () => {
@@ -64,19 +65,19 @@ const Users = () => {
     setFilter((prev) => {
       return {
         ...prev,
-        [idx]: value
-      }
-    })
-  }
+        [idx]: value,
+      };
+    });
+  };
 
   const _onCreateClick = () => {
-    history.push("/users/create-edit")
-  }
+    history.push("/users/create-edit");
+  };
   const _onEditClick = (id: string) => {
-    history.push("/users/create-edit", { id })
-  }
+    history.push("/users/create-edit", { id });
+  };
 
-  console.log({ data, isLoading, isFetching })
+  console.log({ data, isLoading, isFetching });
 
   const columns = useMemo(
     () => [
@@ -112,28 +113,15 @@ const Users = () => {
         Header: " Disabled?",
         accessor: "disabled",
         Cell: (data: Cell) => {
-          return (
-            <IsActiveBadge value={data.row.values.disabled} />
-          )
-        }
+          return <IsActiveBadge value={data.row.values.disabled} />;
+        },
       },
       {
         Header: "Created At",
         accessor: "created_at",
         Cell: (data: Cell) => {
-          return (
-            <CreatedUpdatedAt date={data.row.values.created_at} />
-          )
-        }
-      },
-      {
-        Header: "Updated At",
-        accessor: "updated_at",
-        Cell: (data: Cell) => {
-          return (
-            <CreatedUpdatedAt date={data.row.values.updated_at} />
-          )
-        }
+          return <CreatedUpdatedAt date={data.row.values.created_at} />;
+        },
       },
       {
         Header: "Actions",
@@ -180,13 +168,15 @@ const Users = () => {
       <Container fluid className="d-flex justify-content-between py-2">
         <h2 className="font-weight-bold">Users</h2>
         <div className="d-flex">
-          <Form.Control as="select" className="mr-4"
+          <Form.Control
+            as="select"
+            className="mr-4"
             onChange={(e) => {
-              setRole(e.target.value)
+              setRole(e.target.value);
             }}
           >
             <option value="">All</option>
-            {userRoles.map(role => (
+            {userRoles.map((role) => (
               <option value={role.id}>{role.name}</option>
             ))}
           </Form.Control>
@@ -198,9 +188,7 @@ const Users = () => {
         </div>
       </Container>
 
-
-      {
-        (!isLoading || !isFetching) &&
+      {(!isLoading || !isFetching) && (
         <Container fluid>
           <div>
             <div className="filter">
@@ -227,7 +215,6 @@ const Users = () => {
                 dataLength={data?.length}
                 idx="role"
                 title="Customer"
-
               />
               <BreadCrumb
                 onFilterChange={_onFilterChange}
@@ -237,24 +224,18 @@ const Users = () => {
                 idx="role"
                 title="Agent"
                 isLast
-
               />
             </div>
           </div>
         </Container>
-
-      }
+      )}
       <Container fluid className="component-wrapper px-0 py-2">
         <Container fluid className="h-100 p-0">
-
           {isLoading || isFetching ? (
             <IsLoading />
           ) : (
             <>
-              {!error && <ReactTable
-                data={data}
-                columns={columns}
-              />}
+              {!error && <ReactTable data={data} columns={columns} />}
               {!error && data.length > 0 ? (
                 <TablePagination
                   currentPage={data?.current_page}

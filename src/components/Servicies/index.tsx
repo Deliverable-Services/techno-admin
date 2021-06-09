@@ -15,7 +15,7 @@ import API from "../../utils/API";
 import {
   baseUploadUrl,
   primaryColor,
-  secondaryColor
+  secondaryColor,
 } from "../../utils/constants";
 import { queryClient } from "../../utils/queryClient";
 import { showErrorToast } from "../../utils/showErrorToast";
@@ -29,7 +29,7 @@ const deleteService = (id: string) => {
 };
 
 const Services = () => {
-  const history = useHistory()
+  const history = useHistory();
   const [selectedRowId, setSelectedRowId] = useState<string>("");
   const [page, setPage] = useState<number>(1);
   const [deletePopup, setDeletePopup] = useState(false);
@@ -50,11 +50,11 @@ const Services = () => {
   });
 
   const _onCreateClick = () => {
-    history.push("/services/create-edit")
-  }
+    history.push("/services/create-edit");
+  };
   const _onEditClick = (id: string) => {
-    history.push("/services/create-edit", { id })
-  }
+    history.push("/services/create-edit", { id });
+  };
 
   const columns = useMemo(
     () => [
@@ -87,31 +87,29 @@ const Services = () => {
         accessor: "category.name",
       },
       {
+        Header: "Url",
+        accessor: "url",
+      },
+      {
         Header: "Is Active?",
         accessor: "is_active",
         Cell: (data: Cell) => {
-          return (
-            <IsActiveBadge value={data.row.values.is_active} />
-          )
-        }
+          return <IsActiveBadge value={data.row.values.is_active} />;
+        },
       },
       {
         Header: "Created At",
         accessor: "created_at",
         Cell: (data: Cell) => {
-          return (
-            <CreatedUpdatedAt date={data.row.values.created_at} />
-          )
-        }
+          return <CreatedUpdatedAt date={data.row.values.created_at} />;
+        },
       },
       {
         Header: "Updated At",
         accessor: "updated_at",
         Cell: (data: Cell) => {
-          return (
-            <CreatedUpdatedAt date={data.row.values.updated_at} />
-          )
-        }
+          return <CreatedUpdatedAt date={data.row.values.updated_at} />;
+        },
       },
       {
         Header: "Actions",
@@ -157,19 +155,12 @@ const Services = () => {
     <>
       <PageHeading title="Services" onClick={_onCreateClick} />
       <Container fluid className="card component-wrapper px-0 py-2">
-
-
         <Container fluid className="h-100 p-0">
-
           {isLoading || isFetching ? (
             <IsLoading />
           ) : (
-
             <>
-              {!error && <ReactTable
-                data={data}
-                columns={columns}
-              />}
+              {!error && <ReactTable data={data} columns={columns} />}
               {!error && data.length > 0 ? (
                 <TablePagination
                   currentPage={data?.current_page}
@@ -180,7 +171,6 @@ const Services = () => {
                 />
               ) : null}{" "}
             </>
-
           )}
         </Container>
       </Container>

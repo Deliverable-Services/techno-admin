@@ -8,10 +8,7 @@ import "react-step-progress-bar/styles.css";
 import useGetSingleQuery from "../../hooks/useGetSingleQuery";
 import IsLoading from "../../shared-components/isLoading";
 
-
 const key = "bookings";
-
-
 
 const SingleOrder = () => {
   const { id }: { id: string } = useParams();
@@ -63,18 +60,16 @@ const SingleOrder = () => {
         </Container>
       )}
       <div className="progressbar-css">
-        <ProgressBar
-          percent={33}
-        >
+        <ProgressBar percent={33}>
           <Step>
             {({ accomplished, index }) => (
               <>
                 <div
-                  className={`indexedStep ${accomplished ? "accomplished" : null}`}
-                >
-                </div>
+                  className={`indexedStep ${
+                    accomplished ? "accomplished" : null
+                  }`}
+                ></div>
                 {accomplished ? <FaDotCircle /> : <FaDotCircle />}
-
               </>
             )}
           </Step>
@@ -82,24 +77,11 @@ const SingleOrder = () => {
             {({ accomplished, index }) => (
               <>
                 <div
-                  className={`indexedStep ${accomplished ? "accomplished" : null}`}
-                >
-                </div>
+                  className={`indexedStep ${
+                    accomplished ? "accomplished" : null
+                  }`}
+                ></div>
                 {accomplished ? <FaDotCircle /> : <FaRegDotCircle />}
-
-              </>
-
-            )}
-          </Step>
-          <Step>
-            {({ accomplished, index }) => (
-              <>
-                <div
-                  className={`indexedStep ${accomplished ? "accomplished" : null}`}
-                >
-                </div>
-                {accomplished ? <FaDotCircle /> : <FaRegDotCircle />}
-
               </>
             )}
           </Step>
@@ -107,11 +89,23 @@ const SingleOrder = () => {
             {({ accomplished, index }) => (
               <>
                 <div
-                  className={`indexedStep ${accomplished ? "accomplished" : null}`}
-                >
-                </div>
+                  className={`indexedStep ${
+                    accomplished ? "accomplished" : null
+                  }`}
+                ></div>
                 {accomplished ? <FaDotCircle /> : <FaRegDotCircle />}
-
+              </>
+            )}
+          </Step>
+          <Step>
+            {({ accomplished, index }) => (
+              <>
+                <div
+                  className={`indexedStep ${
+                    accomplished ? "accomplished" : null
+                  }`}
+                ></div>
+                {accomplished ? <FaDotCircle /> : <FaRegDotCircle />}
               </>
             )}
           </Step>
@@ -121,7 +115,10 @@ const SingleOrder = () => {
       <div className="dashboard-page w-100">
         <Container fluid className="status-container mt-2">
           <div className="head-row">
-            <div style={{ margin: "4% 0 -12% 0" }} className="card p-2 view-padding right-div d-flex">
+            <div
+              style={{ margin: "4% 0 -12% 0" }}
+              className="card p-2 view-padding right-div d-flex"
+            >
               <div className="d-flex flex-column">
                 <div className="text-primary">
                   <p className="view-heading view-top-pad">USER</p>
@@ -130,23 +127,27 @@ const SingleOrder = () => {
                   <table className="w-100">
                     <tbody>
                       <tr>
-                        <td className="text-muted"><p className="view-heading">Name</p></td>
+                        <td className="text-muted">
+                          <p className="view-heading">Name</p>
+                        </td>
                         <td className="text-right">
                           <p className="view-subheading">{data.user.name}</p>
                         </td>
                       </tr>
                       <tr>
-                        <td className="text-muted "><p className="view-heading">Email</p></td>
+                        <td className="text-muted ">
+                          <p className="view-heading">Email</p>
+                        </td>
                         <td className="text-primary  font-weight-bold text-right">
-                          <p className="view-subheading">
-                            {data.user.email}</p>
+                          <p className="view-subheading">{data.user.email}</p>
                         </td>
                       </tr>
                       <tr>
-                        <td className="text-muted "><p className="view-heading phone-padd">Phone</p></td>
+                        <td className="text-muted ">
+                          <p className="view-heading phone-padd">Phone</p>
+                        </td>
                         <td className="text-primary  font-weight-bold text-right">
-                          <p className="view-subheading">
-                            {data.user.phone}</p>
+                          <p className="view-subheading">{data.user.phone}</p>
                         </td>
                       </tr>
                     </tbody>
@@ -188,9 +189,7 @@ const SingleOrder = () => {
         <Container fluid className="charts-container mt-2">
           <div className="card view-padding p-2 d-flex mt-3">
             <div className="d-flex flex-column">
-              <div className="view-heading  view-top-pad">
-                ORDER SUMMARY
-              </div>
+              <div className="view-heading  view-top-pad">ORDER SUMMARY</div>
               <div
                 className="d-flex flex-column w-100"
                 style={{ fontSize: 18 }}
@@ -198,18 +197,25 @@ const SingleOrder = () => {
                 <table className="w-100">
                   <tbody>
                     <tr>
-                      <td className="text-muted"><p className="view-heading">Ref Id</p></td>
+                      <td className="text-muted">
+                        <p className="view-heading">Ref Id</p>
+                      </td>
                       <td className="text-right">
                         <p className="view-subheading">{data.ref_id}</p>
                       </td>
                     </tr>
                     <tr>
-                      <td className="text-muted "><p className="view-heading">Scheduled At</p></td>
+                      <td className="text-muted ">
+                        <p className="view-heading">Scheduled At</p>
+                      </td>
                       <td className="text-primary  font-weight-bold text-right">
                         <p className="view-subheading">
                           {data.scheduled_at
-                            ? moment(data.scheduled_at).format("DD/MM/YY(hh:mm)")
-                            : "NA"}</p>
+                            ? moment(data.scheduled_at).format(
+                                "DD/MM/YY(hh:mm)"
+                              )
+                            : "NA"}
+                        </p>
                       </td>
                     </tr>
                     {data.address && (
@@ -243,9 +249,7 @@ const SingleOrder = () => {
 
           <div className="card view-padding p-2 d-flex mt-3">
             <div className="d-flex flex-column">
-              <div className="view-heading  view-top-pad">
-                PAYMENT SUMMARY
-              </div>
+              <div className="view-heading  view-top-pad">PAYMENT SUMMARY</div>
               <div
                 className="d-flex flex-column w-100"
                 style={{ fontSize: 18 }}
@@ -265,14 +269,45 @@ const SingleOrder = () => {
                       </td>
                     </tr>
                     <tr>
-                      <td className="view-heading pt-3">Total Payable Amount</td>
+                      <td className="view-heading pt-3">
+                        Total Payable Amount
+                      </td>
                       <td
                         className="text-primary pt-2 font-weight-bold text-right"
                         style={{ fontSize: "24px" }}
                       >
-                        <p className="view-subheading">₹{data.payable_amount}</p>
+                        <p className="view-subheading">
+                          ₹{data.payable_amount}
+                        </p>
                       </td>
                     </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+
+          <div className="card view-padding p-2 d-flex mt-3">
+            <div className="d-flex flex-column">
+              <div className="view-heading  view-top-pad">
+                Requested Services
+              </div>
+              <div
+                className="d-flex flex-column w-100"
+                style={{ fontSize: 18 }}
+              >
+                <table className="w-100">
+                  <tbody>
+                    {data?.services?.length
+                      ? data.services.map((service) => (
+                          <tr>
+                            <td className="view-heading">{service.name}</td>
+                            <td className="text-right">
+                              <p className="view-subheading">₹{service.cost}</p>
+                            </td>
+                          </tr>
+                        ))
+                      : null}
                   </tbody>
                 </table>
               </div>

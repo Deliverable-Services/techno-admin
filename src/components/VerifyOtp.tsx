@@ -13,7 +13,7 @@ import API from "../utils/API";
 import { appApiBaseUrl } from "../utils/constants";
 import { showMsgToast } from "../utils/showMsgToast";
 
-interface Props { }
+interface Props {}
 
 const VerifySchema = Yup.object().shape({
   otp: Yup.string().max(4).min(4).required("Otp is required"),
@@ -33,10 +33,10 @@ const VerifyOtp = (props: Props) => {
 
   const { mutate, data, isLoading, error } = useMutation(verifyOtp, {
     onSuccess: (data) => {
-      console.log({ data })
-      setToken(data.data.data.token);
-      setUser(data.data.data.user);
-      showMsgToast(data.data.message)
+      console.log({ data });
+      console.log({ data });
+      setToken(data.data.token);
+      setUser(data.data.user);
       history.push("/");
     },
   });
