@@ -19,53 +19,70 @@ import { showErrorToast } from "../../utils/showErrorToast";
 
 const key = "bookings";
 
-
 const Orders = () => {
   const history = useHistory();
   const [page, setPage] = useState<number>(1);
-  const [selectedRows, setSelectedRows] = useState([])
-  const filter = useOrderStoreFilter(state => state.filter)
-  const NumberOfRows = useOrderStoreFilter(state => state.rows_per_page)
-  const onFilterChange = useOrderStoreFilter(state => state.onFilterChange)
-  const onRowsChange = useOrderStoreFilter(state => state.onRowsChange)
-  const resetFilter = useOrderStoreFilter(state => state.resetFilter)
+  const [selectedRows, setSelectedRows] = useState([]);
+  const filter = useOrderStoreFilter((state) => state.filter);
+  const NumberOfRows = useOrderStoreFilter((state) => state.rows_per_page);
+  const onFilterChange = useOrderStoreFilter((state) => state.onFilterChange);
+  const onRowsChange = useOrderStoreFilter((state) => state.onRowsChange);
+  const resetFilter = useOrderStoreFilter((state) => state.resetFilter);
   const InitialTableState: IInitialTableState = {
-    pageSize: parseInt(NumberOfRows)
-  }
-  const { data, isLoading, isFetching, error } = useQuery<any>([key, page, filter], {
-    onError: (err: any) => {
-      showErrorToast(err.response.data.message);
-    },
-  });
-  const { data: Customers, isLoading: isCustomerLoading } = useQuery<any>(["users", 1, {
-    role: "customer"
-  }], {
-    onError: (err: any) => {
-      showErrorToast(err.response.data.message);
-    },
-  });
-  const { data: Agents, isLoading: isAgentLoading } = useQuery<any>(["users", 1, {
-    role: "agent"
-  }], {
-    onError: (err: any) => {
-      showErrorToast(err.response.data.message);
-    },
-  });
+    pageSize: parseInt(NumberOfRows),
+  };
+  const { data, isLoading, isFetching, error } = useQuery<any>(
+    [key, page, filter],
+    {
+      onError: (err: any) => {
+        showErrorToast(err.response.data.message);
+      },
+    }
+  );
+  const { data: Customers, isLoading: isCustomerLoading } = useQuery<any>(
+    [
+      "users",
+      1,
+      {
+        role: "customer",
+      },
+    ],
+    {
+      onError: (err: any) => {
+        showErrorToast(err.response.data.message);
+      },
+    }
+  );
+  const { data: Agents, isLoading: isAgentLoading } = useQuery<any>(
+    [
+      "users",
+      1,
+      {
+        role: "agent",
+      },
+    ],
+    {
+      onError: (err: any) => {
+        showErrorToast(err.response.data.message);
+      },
+    }
+  );
 
   const Status = ({ status }: { status: string }) => {
     const setVairant = () => {
       if (status === "cancelled" || status === "error_payment") return "danger";
 
-      if (status === "pending" || status === "pending_payment") return "warning";
+      if (status === "pending" || status === "pending_payment")
+        return "warning";
 
       return "success";
     };
     return <Badge variant={setVairant()}>{status}</Badge>;
   };
   const _onUserClick = (id: string) => {
-    if (!id) return
-    history.push("/users/create-edit", { id })
-  }
+    if (!id) return;
+    history.push("/users/create-edit", { id });
+  };
 
   const columns = useMemo(
     () => [
@@ -86,10 +103,11 @@ const Orders = () => {
               className="text-primary"
               style={{ cursor: "pointer" }}
               onClick={() => _onUserClick((data.row.original as any).user_id)}
-
-            >{data.row.values["user.name"]}</p>
-          )
-        }
+            >
+              {data.row.values["user.name"]}
+            </p>
+          );
+        },
       },
       {
         Header: "Agent",
@@ -100,14 +118,20 @@ const Orders = () => {
               <p
                 className="text-primary"
                 style={{ cursor: "pointer" }}
-                onClick={() => _onUserClick((data.row.original as any).agent_id)}
-
-              >{data.row.values["agent.name"]}</p>
-            )
-          else
-            return "NA"
-        }
-
+                onClick={() =>
+                  _onUserClick((data.row.original as any).agent_id)
+                }
+              >
+                {data.row.values["agent.name"]}
+              </p>
+            );
+          else return "NA";
+        },
+      },
+      {
+        Header: "Order Type",
+        accessor: "order_type",
+        Cell: (data: Cell) => <Status status={data.row.values.order_type} />,
       },
       {
         Header: "Order Status",
@@ -115,12 +139,24 @@ const Orders = () => {
         Cell: (data: Cell) => <Status status={data.row.values.status} />,
       },
       {
+        Header: "Scheduled At",
+        accessor: "scheduled_at",
+      },
+      {
         Header: "Inside Cart",
         accessor: "inside_cart",
       },
       {
-        Header: "Total Cost",
-        accessor: "total_cost",
+        Header: "Paid Amount",
+        accessor: "payable_amount",
+      },
+      {
+        Header: "Rating",
+        accessor: "rating",
+      },
+      {
+        Header: "Created At",
+        accessor: "created_at",
       },
       {
         Header: "Actions",
@@ -154,116 +190,51 @@ const Orders = () => {
   return (
     <>
       <PageHeading title="Orders" />
-      {
-        (!isLoading || !isFetching) &&
-        <div>
-          <Container >
-            <div className="filter">
-              <BreadCrumb
-                onFilterChange={onFilterChange}
-                value=""
-                currentValue={filter.status}
-                dataLength={data?.length}
-                idx="status"
-                title="All"
-              />
-              <BreadCrumb
-                onFilterChange={onFilterChange}
-                value="success"
-                currentValue={filter.status}
-                dataLength={data?.length}
-                idx="status"
-                title="Success"
-              />
-              <BreadCrumb
-                onFilterChange={onFilterChange}
-                value="pending"
-                currentValue={filter.status}
-                dataLength={data?.length}
-                idx="status"
-                title="Pending"
-              />
-              <BreadCrumb
-                onFilterChange={onFilterChange}
-                value="error_payment"
-                currentValue={filter.status}
-                dataLength={data?.length}
-                idx="status"
-                title="Payment Errors"
-              />
-              <BreadCrumb
-                onFilterChange={onFilterChange}
-                value="failed"
-                currentValue={filter.status}
-                dataLength={data?.length}
-                idx="status"
-                title="Failed"
-                isLast
-              />
-            </div>
-          </Container>
-          <Container className="mt-2">
-
-            <Row className="select-filter d-flex">
-              <Col md="auto">
-                <FilterSelect
-                  currentValue={filter.user_id}
-                  data={!isCustomerLoading && Customers}
-                  label="Customers"
-                  idx="user_id"
-                  onFilterChange={onFilterChange}
-
-                />
-              </Col>
-              <Col md="auto">
-                <FilterSelect
-                  currentValue={filter.agent_id}
-                  data={!isAgentLoading && Agents}
-                  label="Agents"
-                  idx="agent_id"
-                  onFilterChange={onFilterChange}
-
-                />
-              </Col>
-              <Col md="auto">
-                <FilterSelect
-                  currentValue={filter.inside_cart}
-                  data={InsideCart}
-                  label="Inside Cart"
-                  idx="inside_cart"
-                  width="80px"
-                  onFilterChange={onFilterChange}
-
-                />
-              </Col>
-              <Col md="auto">
-                <FilterSelect
-                  currentValue={NumberOfRows}
-                  data={RowsPerPage}
-                  label="Rows Per Page"
-                  idx="rows_per_page"
-                  onFilterChange={onRowsChange}
-                  defaultSelectTitle="Rows"
-                  width="100px"
-                  isDefaultDisabled
-                />
-              </Col>
-              <Col md="auto" className="d-flex align-items-center mt-1 justify-content-center">
-                <Button onClick={() => resetFilter()}
-                  variant="light"
-                  style={{
-                    backgroundColor: "#eee",
-                    fontSize: 14
-                  }}
-                >
-                  Reset Filters
-                </Button>
-              </Col>
-            </Row>
-          </Container>
+      {(!isLoading || !isFetching) && (
+        <div className="filter mb-3">
+          <BreadCrumb
+            onFilterChange={onFilterChange}
+            value=""
+            currentValue={filter.status}
+            dataLength={data?.length}
+            idx="status"
+            title="All"
+          />
+          <BreadCrumb
+            onFilterChange={onFilterChange}
+            value="success"
+            currentValue={filter.status}
+            dataLength={data?.length}
+            idx="status"
+            title="Success"
+          />
+          <BreadCrumb
+            onFilterChange={onFilterChange}
+            value="pending"
+            currentValue={filter.status}
+            dataLength={data?.length}
+            idx="status"
+            title="Pending"
+          />
+          <BreadCrumb
+            onFilterChange={onFilterChange}
+            value="error_payment"
+            currentValue={filter.status}
+            dataLength={data?.length}
+            idx="status"
+            title="Payment Errors"
+          />
+          <BreadCrumb
+            onFilterChange={onFilterChange}
+            value="failed"
+            currentValue={filter.status}
+            dataLength={data?.length}
+            idx="status"
+            title="Failed"
+            isLast
+          />
         </div>
-
-      }
+      )}
       <Container fluid className="card component-wrapper px-0 py-2">
         <Container fluid className="h-100 p-0">
           <>
@@ -271,12 +242,76 @@ const Orders = () => {
               <IsLoading />
             ) : (
               <>
-                {!error && <ReactTable
-                  data={data}
-                  columns={columns}
-                  initialState={InitialTableState}
-                  setSelectedRows={setSelectedRows}
-                />}
+                {!error && (
+                  <>
+                    <Container className="pt-3">
+                      <Row className="select-filter d-flex">
+                        <Col md="auto">
+                          <FilterSelect
+                            currentValue={filter.user_id}
+                            data={!isCustomerLoading && Customers}
+                            label="Customers"
+                            idx="user_id"
+                            onFilterChange={onFilterChange}
+                          />
+                        </Col>
+                        <Col md="auto">
+                          <FilterSelect
+                            currentValue={filter.agent_id}
+                            data={!isAgentLoading && Agents}
+                            label="Agents"
+                            idx="agent_id"
+                            onFilterChange={onFilterChange}
+                          />
+                        </Col>
+                        <Col md="auto">
+                          <FilterSelect
+                            currentValue={filter.inside_cart}
+                            data={InsideCart}
+                            label="Inside Cart"
+                            idx="inside_cart"
+                            width="80px"
+                            onFilterChange={onFilterChange}
+                          />
+                        </Col>
+                        <Col md="auto">
+                          <FilterSelect
+                            currentValue={NumberOfRows}
+                            data={RowsPerPage}
+                            label="Rows Per Page"
+                            idx="rows_per_page"
+                            onFilterChange={onRowsChange}
+                            defaultSelectTitle="Rows"
+                            width="100px"
+                            isDefaultDisabled
+                          />
+                        </Col>
+                        <Col
+                          md="auto"
+                          className="d-flex align-items-center mt-1 justify-content-center"
+                        >
+                          <Button
+                            onClick={() => resetFilter()}
+                            variant="light"
+                            style={{
+                              backgroundColor: "#eee",
+                              fontSize: 14,
+                            }}
+                          >
+                            Reset Filters
+                          </Button>
+                        </Col>
+                      </Row>
+                    </Container>
+                    <hr />
+                    <ReactTable
+                      data={data}
+                      columns={columns}
+                      initialState={InitialTableState}
+                      setSelectedRows={setSelectedRows}
+                    />
+                  </>
+                )}
                 {!error && data.length > 0 ? (
                   <TablePagination
                     currentPage={data?.current_page}
@@ -291,15 +326,14 @@ const Orders = () => {
           </>
         </Container>
       </Container>
-      {
-        selectedRows.length > 0 &&
+      {selectedRows.length > 0 && (
         <div className="delete-button rounded">
-          <span><b>Delete {selectedRows.length} rows</b></span>
-          <Button variant="danger">
-            Delete
-          </Button>
+          <span>
+            <b>Delete {selectedRows.length} rows</b>
+          </span>
+          <Button variant="danger">Delete</Button>
         </div>
-      }
+      )}
     </>
   );
 };

@@ -6,7 +6,7 @@ import {
   FaQuestionCircle,
   FaRegLightbulb,
   FaUsers,
-  FaMoneyCheck
+  FaMoneyCheck,
 } from "react-icons/fa";
 import { GoIssueOpened } from "react-icons/go";
 import { IoLogoModelS } from "react-icons/io";
@@ -64,6 +64,16 @@ const manageLinks: Array<INavLink> = [
     path: "/coupons",
     icon: <RiCoupon3Line />,
   },
+  {
+    title: "Banners",
+    path: "/advertisements",
+    icon: <RiAdvertisementFill />,
+  },
+  {
+    title: "Booking Slots",
+    path: "/booking-slots",
+    icon: <RiAdvertisementFill />,
+  },
 ];
 
 const mainLinks: Array<INavLink> = [
@@ -73,14 +83,9 @@ const mainLinks: Array<INavLink> = [
     icon: <FaBoxes />,
   },
   {
-    title: "User Subscriptions",
+    title: "Subscriptions",
     path: "/subscriptions",
     icon: <FaAddressCard />,
-  },
-  {
-    title: "Advertisements",
-    path: "/advertisements",
-    icon: <RiAdvertisementFill />,
   },
   {
     title: "Transactions",
@@ -90,6 +95,11 @@ const mainLinks: Array<INavLink> = [
   {
     title: "Issues",
     path: "/issues",
+    icon: <GoIssueOpened />,
+  },
+  {
+    title: "Notifications",
+    path: "/push-notifications",
     icon: <GoIssueOpened />,
   },
 ];

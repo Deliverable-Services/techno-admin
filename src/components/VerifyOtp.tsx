@@ -14,7 +14,7 @@ import { appApiBaseUrl } from "../utils/constants";
 import { showErrorToast } from "../utils/showErrorToast";
 import { showMsgToast } from "../utils/showMsgToast";
 
-interface Props { }
+interface Props {}
 
 const VerifySchema = Yup.object().shape({
   otp: Yup.string().max(4).min(4).required("Otp is required"),
@@ -28,25 +28,22 @@ const verifyOtp = (formData: FormData) => {
 
 const VerifyOtp = (props: Props) => {
   const params: { id: string; otp: string } = useParams();
-  console.log(params)
+  console.log(params);
   const history = useHistory();
   const setToken = useTokenStore((state) => state.setToken);
   const setUser = useUserProfileStore((state) => state.setUser);
 
   const { mutate, isLoading } = useMutation(verifyOtp, {
     onSuccess: (data) => {
-      if (data) {
-        console.log({ data })
-
-        setToken(data.data.token);
-        setUser(data.data.user);
-        showMsgToast("User succcessfully logged in")
-        history.push("/");
-      }
+      console.log({ data });
+      console.log({ data });
+      setToken(data.data.token);
+      setUser(data.data.user);
+      history.push("/");
     },
     onError: (error: AxiosError) => {
-      showErrorToast(error.message)
-    }
+      showErrorToast(error.message);
+    },
   });
 
   return (
