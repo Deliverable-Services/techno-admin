@@ -33,9 +33,14 @@ const disableUser = (id: string) => {
     disable: 1,
   });
 };
-const INITIAL_FILTER = {
+
+const intitialFilter = {
+  q: "",
   role: "",
-};
+  page: null,
+  perPage: 25
+}
+
 
 const Users = () => {
   const history = useHistory();
@@ -46,7 +51,7 @@ const Users = () => {
   const [role, setRole] = useState("");
   const [deletePopup, setDeletePopup] = useState(false);
 
-  const [filter, setFilter] = useState<IFilter>(INITIAL_FILTER);
+  const [filter, setFilter] = useState(intitialFilter);
 
   const { data, isLoading, isFetching, error } = useQuery<any>(
     [key, page, filter],
@@ -193,7 +198,7 @@ const Users = () => {
         </div>
       </Container>
 
-      {(!isLoading || !isFetching) && (
+      {(!isLoading) && (
         <Container fluid>
           <div>
             <div className="filter">
@@ -201,7 +206,7 @@ const Users = () => {
                 onFilterChange={_onFilterChange}
                 value=""
                 currentValue={filter.role}
-                dataLength={data?.length}
+                dataLength={data?.data?.length}
                 idx="role"
                 title="All"
               />
@@ -209,7 +214,7 @@ const Users = () => {
                 onFilterChange={_onFilterChange}
                 value="admin"
                 currentValue={filter.role}
-                dataLength={data?.length}
+                dataLength={data?.data?.length}
                 idx="role"
                 title="Admin"
               />
@@ -217,7 +222,8 @@ const Users = () => {
                 onFilterChange={_onFilterChange}
                 value="customer"
                 currentValue={filter.role}
-                dataLength={data?.length}
+                dataLength={data?.data?.length}
+
                 idx="role"
                 title="Customer"
               />
@@ -225,7 +231,7 @@ const Users = () => {
                 onFilterChange={_onFilterChange}
                 value="agent"
                 currentValue={filter.role}
-                dataLength={data?.length}
+                dataLength={data?.data?.length}
                 idx="role"
                 title="Agent"
                 isLast
@@ -234,22 +240,28 @@ const Users = () => {
           </div>
         </Container>
       )}
-      <Container fluid className="component-wrapper px-0 py-2">
+      <Container fluid className="card component-wrapper px-0 py-2">
+
+
         <Container fluid className="h-100 p-0">
-          {isLoading || isFetching ? (
+
+          {isLoading ? (
             <IsLoading />
           ) : (
             <>
               {!error && <ReactTable
-                data={data}
+                data={data?.data}
                 columns={columns}
                 setSelectedRows={setSelectedRows}
+                filter={filter}
+                onFilterChange={_onFilterChange}
+                isDataLoading={isFetching}
               />}
               {!error && data.length > 0 ? (
                 <TablePagination
                   currentPage={data?.current_page}
                   lastPage={data?.last_page}
-                  setPage={setPage}
+                  setPage={_onFilterChange}
                   hasNextPage={!!data?.next_page_url}
                   hasPrevPage={!!data?.prev_page_url}
                 />

@@ -5,7 +5,8 @@ interface Props {
   lastPage: number;
   hasPrevPage: boolean;
   hasNextPage: boolean;
-  setPage: React.Dispatch<React.SetStateAction<number>>;
+  // setPage: (idx: string, value: any) => void;
+  setPage: any
 }
 
 const TablePagination = ({
@@ -18,17 +19,17 @@ const TablePagination = ({
   return (
     <Container fluid className="d-flex justify-content-end">
       <Pagination>
-        <Pagination.First onClick={() => setPage(1)} />
+        <Pagination.First onClick={() => setPage("page", 1)} />
         {hasPrevPage && (
-          <Pagination.Prev onClick={() => setPage(currentPage - 1)} />
+          <Pagination.Prev onClick={() => setPage("page", currentPage - 1)} />
         )}
         <Pagination.Item active>
           <span className="text-secondary">{currentPage}</span>
         </Pagination.Item>
         {hasNextPage && (
-          <Pagination.Next onClick={() => setPage(currentPage + 1)} />
+          <Pagination.Next onClick={() => setPage("page", currentPage + 1)} />
         )}
-        <Pagination.Last onClick={() => setPage(lastPage)} />
+        <Pagination.Last onClick={() => setPage("page", lastPage)} />
       </Pagination>
     </Container>
   );

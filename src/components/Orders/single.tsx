@@ -359,8 +359,8 @@ const SingleOrder = () => {
                     </tr>
                     {data.address && (
                       <tr>
-                        <td className="text-muted py-2">Address</td>
-                        <td className="text-primary py-2 text-right">
+                        <td className="view-heading py-2">Address</td>
+                        <td className="view-subheading py-2 text-right">
                           <address className="font-italic font-weight-light text-capitalize">
                             {data.address.address}
                             {", "}
@@ -374,8 +374,8 @@ const SingleOrder = () => {
                     )}
                     {data.vehicle && (
                       <tr>
-                        <td className="text-muted py-2">Vehicle Name</td>
-                        <td className="text-primary py-2 text-right">
+                        <td className="view-heading py-2">Vehicle Name</td>
+                        <td className="view-subheading py-2 text-right">
                           {data.vehicle.name}
                         </td>
                       </tr>
@@ -426,32 +426,32 @@ const SingleOrder = () => {
             </div>
           </div>
 
-          <div className="card view-padding p-2 d-flex mt-3">
-            <div className="d-flex flex-column">
-              <div className="view-heading  view-top-pad">
-                Requested Services
-              </div>
-              <div
-                className="d-flex flex-column w-100"
-                style={{ fontSize: 18 }}
-              >
-                <table className="w-100">
-                  <tbody>
-                    {data?.services?.length
-                      ? data.services.map((service) => (
+          {data?.services?.length ?
+            <div className="card view-padding p-2 d-flex mt-3">
+              <div className="d-flex flex-column">
+                <div className="view-heading  view-top-pad">
+                  Requested Services
+                </div>
+                <div
+                  className="d-flex flex-column w-100"
+                  style={{ fontSize: 18 }}
+                >
+                  <table className="w-100">
+                    <tbody>
+                      {data.services.map((service) => (
                         <tr>
                           <td className="view-heading">{service.name}</td>
                           <td className="text-right">
                             <p className="view-subheading">₹{service.cost}</p>
                           </td>
                         </tr>
-                      ))
-                      : null}
-                  </tbody>
-                </table>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
               </div>
             </div>
-          </div>
+            : null}
 
           {data.plan && (
             <div className="card p-2 d-flex mt-3">
@@ -466,21 +466,21 @@ const SingleOrder = () => {
                   <table className="w-100">
                     <tbody>
                       <tr>
-                        <td className="text-muted">Name</td>
-                        <td className="text-primary font-weight-bold text-right">
+                        <td className="view-heading">Name</td>
+                        <td className="view-subheading font-weight-bold text-right">
                           {data.plan.name}
                         </td>
                       </tr>
                       <tr>
-                        <td className="text-muted py-2">Description</td>
-                        <td className="text-right font-weight-light text-capitalize">
+                        <td className="view-heading py-2">Description</td>
+                        <td className="view-subheading font-weight-light text-capitalize">
                           {data.plan.description}
                         </td>
                       </tr>
                       <tr>
-                        <td className="text-muted pt-3">Price</td>
+                        <td className="view-heading pt-3">Price</td>
                         <td
-                          className="text-primary pt-2 font-weight-bold text-right"
+                          className="view-subheading pt-2 font-weight-bold text-right"
                           style={{ fontSize: "24px" }}
                         >
                           ₹{data.plan.price}

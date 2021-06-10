@@ -14,13 +14,20 @@ import { queryClient } from "../../utils/queryClient";
 import { showErrorToast } from "../../utils/showErrorToast";
 
 const key = "bookings";
+const intitialFilter = {
+  q: "",
+  page: null,
+  perPage: 25
+}
+
 
 const Issues = () => {
   const history = useHistory();
-  const [selectedRowId, setSelectedRowId] = useState<string>("");
-  const [page, setPage] = useState<number>(1);
-  const [deletePopup, setDeletePopup] = useState(false);
-  const { data, isLoading, isFetching, error } = useQuery<any>([key, page], {
+  const [selectedRows, setSelectedRows] = useState([])
+  console.log(selectedRows.map(item => item.id))
+  const [filter, setFilter] = useState(intitialFilter)
+  console.log({ filter })
+  const { data, isLoading, isFetching, error } = useQuery<any>([key, , filter], {
     onError: (err: any) => {
       showErrorToast(err.response.data.message);
     },
@@ -37,6 +44,14 @@ const Issues = () => {
     };
     return <Badge variant={setVairant()}>{status}</Badge>;
   };
+  const _onFilterChange = (idx: string, value: any) => {
+
+    setFilter(prev => ({
+      ...prev,
+      [idx]: value
+    }))
+
+  }
 
   const columns = useMemo(
     () => [
@@ -97,28 +112,47 @@ const Issues = () => {
   return (
     <>
       <PageHeading title="Issues" />
+
       <Container fluid className="card component-wrapper px-0 py-2">
+
+
         <Container fluid className="h-100 p-0">
-          <>
-            {isLoading || isFetching ? (
-              <IsLoading />
-            ) : (
-              <>
-                {!error && <ReactTable data={data} columns={columns} />}
-                {!error && data.length > 0 ? (
-                  <TablePagination
-                    currentPage={data?.current_page}
-                    lastPage={data?.last_page}
-                    setPage={setPage}
-                    hasNextPage={!!data?.next_page_url}
-                    hasPrevPage={!!data?.prev_page_url}
-                  />
-                ) : null}{" "}
-              </>
-            )}
-          </>
+
+          {isLoading ? (
+            <IsLoading />
+          ) : (
+            <>
+              {!error && <ReactTable
+                data={data?.data}
+                columns={columns}
+                setSelectedRows={setSelectedRows}
+                filter={filter}
+                onFilterChange={_onFilterChange}
+                isDataLoading={isFetching}
+              />}
+              {!error && data.length > 0 ? (
+                <TablePagination
+                  currentPage={data?.current_page}
+                  lastPage={data?.last_page}
+                  setPage={_onFilterChange}
+                  hasNextPage={!!data?.next_page_url}
+                  hasPrevPage={!!data?.prev_page_url}
+                />
+              ) : null}{" "}
+            </>
+          )}
         </Container>
       </Container>
+      {
+        selectedRows.length > 0 &&
+        <div className="delete-button rounded">
+          <span><b>Delete {selectedRows.length} rows</b></span>
+          <Button variant="danger">
+            Delete
+          </Button>
+        </div>
+      }
+
     </>
   );
 };

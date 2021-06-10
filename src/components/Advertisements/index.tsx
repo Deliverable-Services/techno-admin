@@ -32,19 +32,31 @@ const key = "banners/list";
 const deleteAd = (id: string) => {
   return API.delete(`${key}/${id}`);
 };
-const INITIAL_FILTER: IFilter = {
-  type: "latest",
+const initialFilter = {
+  type: "offers",
+  q: "",
+  page: "",
+  perPage: ""
 };
 
 const getBanners: QueryFunction = async ({ queryKey }) => {
+
+  const params = {};
+  //@ts-ignore
+  for (let k in queryKey[2]) {
+    if (queryKey[2][k])
+      params[k] = queryKey[2][k]
+  }
+
   const r = await API.get(
-    `${queryKey[0]}/${(queryKey[1] as string).toLowerCase()}`
+    `${queryKey[0]}/${(queryKey[1] as string).toLowerCase()}`,
+    params
   );
 
   return await r.data;
 };
 
-const Users = () => {
+const Advertisements = () => {
   const history = useHistory();
   const [selectedRowId, setSelectedRowId] = useState<string>("");
   const [selectedRows, setSelectedRows] = useState([])
@@ -52,10 +64,10 @@ const Users = () => {
   const [page, setPage] = useState<number>(1);
   const [deletePopup, setDeletePopup] = useState(false);
 
-  const [filter, setFilter] = useState<IFilter>(INITIAL_FILTER);
+  const [filter, setFilter] = useState<IFilter>(initialFilter);
 
   const { data, isLoading, isFetching, error } = useQuery<any>(
-    [key, filter.type],
+    [key, filter.type, filter],
     getBanners, {
     onError: (error: AxiosError) => {
       handleApiError(error, history)
@@ -215,9 +227,17 @@ const Users = () => {
             <div className="filter">
               <BreadCrumb
                 onFilterChange={_onFilterChange}
+                value="offers"
+                currentValue={filter.type}
+                dataLength={data?.data?.length}
+                idx="type"
+                title="Offers"
+              />
+              <BreadCrumb
+                onFilterChange={_onFilterChange}
                 value="latest"
                 currentValue={filter.type}
-                dataLength={data?.length}
+                dataLength={data?.data?.length}
                 idx="type"
                 title="Latest"
               />
@@ -225,7 +245,7 @@ const Users = () => {
                 onFilterChange={_onFilterChange}
                 value="trending"
                 currentValue={filter.type}
-                dataLength={data?.length}
+                dataLength={data?.data?.length}
                 idx="type"
                 title="Trending"
                 isLast
@@ -236,14 +256,16 @@ const Users = () => {
       )}
       <Container fluid className="component-wrapper px-0 py-2">
         <Container fluid className="h-100 p-0">
-          {isLoading || isFetching ? (
+          {isLoading ? (
             <IsLoading />
           ) : (
             <>
               {!error && <ReactTable
-                data={data}
+                data={data.data}
                 columns={columns}
                 setSelectedRows={setSelectedRows}
+                onFilterChange={_onFilterChange}
+                isDataLoading={isFetching}
               />}
               {!error && data.length > 0 ? (
                 <TablePagination
@@ -297,4 +319,4 @@ const Users = () => {
   );
 };
 
-export default Users;
+export default Advertisements;

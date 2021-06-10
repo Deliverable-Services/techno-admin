@@ -7,6 +7,7 @@ import { Cell } from "react-table";
 import useOrderStoreFilter from "../../hooks/useOrderFilterStore";
 import BreadCrumb from "../../shared-components/BreadCrumb";
 import CreatedUpdatedAt from "../../shared-components/CreatedUpdatedAt";
+import CustomBadge from "../../shared-components/CustomBadge";
 import FilterSelect from "../../shared-components/FilterSelect";
 import IsLoading from "../../shared-components/isLoading";
 import PageHeading from "../../shared-components/PageHeading";
@@ -19,11 +20,16 @@ import { showErrorToast } from "../../utils/showErrorToast";
 // import UpdateCreateForm from "./FaqsCreateUpdateForm"
 
 const key = "bookings";
-
+const intitialFilter = {
+  q: "",
+  page: null,
+  perPage: 25
+}
 const Orders = () => {
   const history = useHistory();
   const [page, setPage] = useState<number>(1);
   const [selectedRows, setSelectedRows] = useState([]);
+  const [localFilter, setFilter] = useState(intitialFilter)
   const filter = useOrderStoreFilter((state) => state.filter);
   const NumberOfRows = useOrderStoreFilter((state) => state.rows_per_page);
   const onFilterChange = useOrderStoreFilter((state) => state.onFilterChange);
@@ -33,7 +39,7 @@ const Orders = () => {
     pageSize: parseInt(NumberOfRows),
   };
   const { data, isLoading, isFetching, error } = useQuery<any>(
-    [key, page, filter],
+    [key, , { ...filter, ...localFilter }],
     {
       onError: (err: any) => {
         showErrorToast(err.response.data.message);
@@ -78,13 +84,21 @@ const Orders = () => {
 
       return "success";
     };
-    return <Badge variant={setVairant()}>{status}</Badge>;
+    return <CustomBadge variant={setVairant()} title={status} />;
   };
   const _onUserClick = (id: string) => {
     if (!id) return;
     history.push("/users/create-edit", { id });
   };
 
+  const _onFilterChange = (idx: string, value: any) => {
+
+    setFilter(prev => ({
+      ...prev,
+      [idx]: value
+    }))
+
+  }
   const columns = useMemo(
     () => [
       {
@@ -199,7 +213,7 @@ const Orders = () => {
             onFilterChange={onFilterChange}
             value=""
             currentValue={filter.status}
-            dataLength={data?.length}
+            dataLength={data?.data?.length}
             idx="status"
             title="All"
           />
@@ -207,7 +221,7 @@ const Orders = () => {
             onFilterChange={onFilterChange}
             value="success"
             currentValue={filter.status}
-            dataLength={data?.length}
+            dataLength={data?.data?.length}
             idx="status"
             title="Success"
           />
@@ -215,7 +229,7 @@ const Orders = () => {
             onFilterChange={onFilterChange}
             value="pending"
             currentValue={filter.status}
-            dataLength={data?.length}
+            dataLength={data?.data?.length}
             idx="status"
             title="Pending"
           />
@@ -223,7 +237,7 @@ const Orders = () => {
             onFilterChange={onFilterChange}
             value="error_payment"
             currentValue={filter.status}
-            dataLength={data?.length}
+            dataLength={data?.data?.length}
             idx="status"
             title="Payment Errors"
           />
@@ -231,7 +245,7 @@ const Orders = () => {
             onFilterChange={onFilterChange}
             value="failed"
             currentValue={filter.status}
-            dataLength={data?.length}
+            dataLength={data?.data?.length}
             idx="status"
             title="Failed"
             isLast
@@ -241,7 +255,7 @@ const Orders = () => {
       <Container fluid className="card component-wrapper px-0 py-2">
         <Container fluid className="h-100 p-0">
           <>
-            {isLoading || isFetching ? (
+            {isLoading ? (
               <IsLoading />
             ) : (
               <>
@@ -252,7 +266,7 @@ const Orders = () => {
                         <Col md="auto">
                           <FilterSelect
                             currentValue={filter.user_id}
-                            data={!isCustomerLoading && Customers}
+                            data={!isCustomerLoading && Customers.data}
                             label="Customers"
                             idx="user_id"
                             onFilterChange={onFilterChange}
@@ -261,7 +275,7 @@ const Orders = () => {
                         <Col md="auto">
                           <FilterSelect
                             currentValue={filter.agent_id}
-                            data={!isAgentLoading && Agents}
+                            data={!isAgentLoading && Agents.data}
                             label="Agents"
                             idx="agent_id"
                             onFilterChange={onFilterChange}
@@ -308,10 +322,13 @@ const Orders = () => {
                     </Container>
                     <hr />
                     <ReactTable
-                      data={data}
+                      data={data.data}
                       columns={columns}
                       initialState={InitialTableState}
                       setSelectedRows={setSelectedRows}
+                      filter={filter}
+                      onFilterChange={_onFilterChange}
+                      isDataLoading={isFetching}
                     />
                   </>
                 )}

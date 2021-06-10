@@ -1,9 +1,11 @@
+import { AxiosError } from "axios";
 import { useMemo, useState } from "react";
-import { Badge, Container } from "react-bootstrap";
+import { Badge, Button, Container } from "react-bootstrap";
 import { BiSad } from "react-icons/bi";
 import { useQuery } from "react-query";
 import { useHistory } from "react-router-dom";
 import { Cell } from "react-table";
+import { handleApiError } from "../../hooks/handleApiErrors";
 import CreatedUpdatedAt from "../../shared-components/CreatedUpdatedAt";
 import IsLoading from "../../shared-components/isLoading";
 import PageHeading from "../../shared-components/PageHeading";
@@ -13,18 +15,23 @@ import { primaryColor } from "../../utils/constants";
 import { showErrorToast } from "../../utils/showErrorToast";
 
 const key = "user-subscriptions";
+const intitialFilter = {
+  q: "",
+  page: null,
+  perPage: 25
+}
 
-const Orders = () => {
-  const history = useHistory();
-  const [selectedRowId, setSelectedRowId] = useState<string>("");
-  const [page, setPage] = useState<number>(1);
-  const [deletePopup, setDeletePopup] = useState(false);
-  const { data, isLoading, isFetching, error } = useQuery<any>([key, page], {
-    onError: (err: any) => {
-      showErrorToast(err.response.data.message);
+const Subscription = () => {
+  const history = useHistory()
+  const [selectedRows, setSelectedRows] = useState([])
+  console.log(selectedRows.map(item => item.id))
+  const [filter, setFilter] = useState(intitialFilter)
+  console.log({ filter })
+  const { data, isLoading, isFetching, error } = useQuery<any>([key, , filter], {
+    onError: (error: AxiosError) => {
+      handleApiError(error, history)
     },
   });
-
   const Status = ({ status }: { status: string }) => {
     const setVariant = () => {
       if (status === "active") return "success";
@@ -47,6 +54,14 @@ const Orders = () => {
     history.push("/users/create-edit", { id });
   };
 
+  const _onFilterChange = (idx: string, value: any) => {
+
+    setFilter(prev => ({
+      ...prev,
+      [idx]: value
+    }))
+
+  }
   const columns = useMemo(
     () => [
       {
@@ -153,20 +168,30 @@ const Orders = () => {
 
   return (
     <>
-      <Container fluid className="component-wrapper px-0 py-2">
-        <PageHeading title="Subscriptions" />
+      <PageHeading title="Subscriptions" />
+
+      <Container fluid className="card component-wrapper px-0 py-2">
+
 
         <Container fluid className="h-100 p-0">
-          {isLoading || isFetching ? (
+
+          {isLoading ? (
             <IsLoading />
           ) : (
             <>
-              {!error && <ReactTable data={data} columns={columns} />}
+              {!error && <ReactTable
+                data={data?.data}
+                columns={columns}
+                setSelectedRows={setSelectedRows}
+                filter={filter}
+                onFilterChange={_onFilterChange}
+                isDataLoading={isFetching}
+              />}
               {!error && data.length > 0 ? (
                 <TablePagination
                   currentPage={data?.current_page}
                   lastPage={data?.last_page}
-                  setPage={setPage}
+                  setPage={_onFilterChange}
                   hasNextPage={!!data?.next_page_url}
                   hasPrevPage={!!data?.prev_page_url}
                 />
@@ -175,8 +200,17 @@ const Orders = () => {
           )}
         </Container>
       </Container>
+      {
+        selectedRows.length > 0 &&
+        <div className="delete-button rounded">
+          <span><b>Delete {selectedRows.length} rows</b></span>
+          <Button variant="danger">
+            Delete
+          </Button>
+        </div>
+      }
     </>
   );
 };
 
-export default Orders;
+export default Subscription;

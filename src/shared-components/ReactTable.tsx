@@ -1,4 +1,3 @@
-import Checkbox from '@material-ui/core/Checkbox';
 import { AxiosResponse } from 'axios';
 import React, { ReactElement } from "react";
 import { DragDropContext, Draggable, Droppable } from "react-beautiful-dnd";
@@ -9,6 +8,7 @@ import { AiOutlineSearch } from "react-icons/ai";
 import { BiSad } from "react-icons/bi";
 import { GoSettings } from "react-icons/go";
 import { IoMdArrowDropdown, IoMdArrowDropup } from "react-icons/io";
+import Checkbox from 'react-checkbox-component'
 import { UseMutateAsyncFunction } from 'react-query';
 import {
   TableState,
@@ -17,8 +17,10 @@ import {
   useGlobalFilter, usePagination, useRowSelect, useSortBy,
   useTable
 } from "react-table";
+import { filterProps } from 'recharts/types/util/types';
 import { RowsPerPage } from '../utils/arrays';
 import { primaryColor } from "../utils/constants";
+import { ImCheckboxUnchecked } from 'react-icons/im';
 
 
 interface Props {
@@ -27,31 +29,39 @@ interface Props {
   updateOrder?: any,
   initialState?: Partial<TableState<object>>,
   isDraggable?: boolean
-  setSelectedRows?: React.Dispatch<React.SetStateAction<any[]>>
+  setSelectedRows?: React.Dispatch<React.SetStateAction<any[]>>;
+  filter?: any;
+  onFilterChange?: (idx: string, value: any) => void;
+  isDataLoading?: boolean
 }
 interface ISearchInput {
   preGlobalFilteredRows: any;
   globalFilter: any;
   setGlobalFilter: any;
+  searchValue: string;
+  onSearchChange: any
 }
 
 function SearchInput({
   preGlobalFilteredRows,
   globalFilter,
   setGlobalFilter,
+  searchValue,
+  onSearchChange
 }: ISearchInput) {
   const count = preGlobalFilteredRows.length;
-  const [value, setValue] = React.useState(globalFilter);
-  const onChange = useAsyncDebounce((value) => {
-    setGlobalFilter(value || undefined);
-  }, 200);
+  const [value, setValue] = React.useState(searchValue);
+  // const onChange = useAsyncDebounce((value) => {
+  // setGlobalFilter(value || undefined);
+  // }, 200);
 
   return (
     <input
       value={value || ""}
       onChange={(e) => {
+        onSearchChange("q", e.target.value)
         setValue(e.target.value);
-        onChange(e.target.value);
+        // onChange(e.target.value);
       }}
       placeholder={`Search ${count} records...`}
     />
@@ -62,27 +72,22 @@ const IndeterminateCheckbox = React.forwardRef(
   ({ indeterminate, ...rest }: any, ref) => {
     const defaultRef = React.useRef<HTMLDivElement>(null)
     const resolvedRef = defaultRef || ref
-    //console.log("mm", resolvedRef)
+
+    console.log({ indeterminate, rest })
     // React.useEffect(() => {
     //   resolvedRef.current.indeterminate = indeterminate
     // }, [resolvedRef, indeterminate])
 
     return (
       <>
-        <Checkbox
-          defaultChecked
-          color="primary"
-          size="small"
-          ref={resolvedRef} {...rest}
-          inputProps={{ 'aria-label': 'secondary checkbox' }}
-        />
+        <input type="checkbox" ref={resolvedRef} {...rest} name="row-check" id="row-check" />
 
       </>
     )
   }
 )
 
-function ReactTable({ data, columns, updateOrder, initialState, isDraggable = false, setSelectedRows }: Props): ReactElement {
+function ReactTable({ data, columns, updateOrder, initialState, isDraggable = false, setSelectedRows, filter, onFilterChange, isDataLoading }: Props): ReactElement {
 
   const [records, setRecords] = React.useState(data)
   const updateMyData = (rowIndex: any, columnID: any, newValue: any) => {
@@ -200,6 +205,8 @@ function ReactTable({ data, columns, updateOrder, initialState, isDraggable = fa
               preGlobalFilteredRows={preGlobalFilteredRows}
               globalFilter={state.globalFilter}
               setGlobalFilter={setGlobalFilter}
+              searchValue={filter?.query}
+              onSearchChange={onFilterChange}
             />
           </div>
         </div>
@@ -320,6 +327,13 @@ function ReactTable({ data, columns, updateOrder, initialState, isDraggable = fa
               <Droppable droppableId="table-body">
                 {(provided, snapshot) => (
                   <tbody ref={provided.innerRef} {...provided.droppableProps}>
+
+                    {
+                      isDataLoading ?
+                        <tr><td className="text-muted font-weight-bold w-100">
+                          Loading...</td></tr>
+                        : null
+                    }
                     {rows.map((row, i) => {
                       prepareRow(row);
 
@@ -365,15 +379,17 @@ function ReactTable({ data, columns, updateOrder, initialState, isDraggable = fa
       </DndProvider>
       {/* pagination  */}
 
-      {rows.length === 0 ? (
-        <Container fluid className="d-flex justify-content-center display-3">
-          <div className="d-flex flex-column align-items-center">
-            <BiSad color={primaryColor} />
-            <span className="text-primary display-3">No data found</span>
-          </div>
-        </Container>
-      ) : null}
-    </div>
+      {
+        rows.length === 0 ? (
+          <Container fluid className="d-flex justify-content-center display-3">
+            <div className="d-flex flex-column align-items-center">
+              <BiSad color={primaryColor} />
+              <span className="text-primary display-3">No data found</span>
+            </div>
+          </Container>
+        ) : null
+      }
+    </div >
   );
 }
 

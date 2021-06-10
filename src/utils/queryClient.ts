@@ -14,7 +14,7 @@ export const defaultQueryFn: QueryFunction = async ({ queryKey }) => {
 
     console.log({ params })
 
-    const r = await API.get<any>(`${queryKey[0]}?page=${queryKey[1]}`, {
+    const r = await API.get<any>(`${queryKey[0]}`, {
         params
     });
 

@@ -31,14 +31,18 @@ const deletePlan = (id: string) => {
   });
 };
 
+const intitialFilter = {
+  q: "",
+  page: null,
+  perPage: 25
+}
 const Plans = () => {
-  const history = useHistory();
-  const [selectedRowId, setSelectedRowId] = useState<string>("");
+  const history = useHistory()
   const [selectedRows, setSelectedRows] = useState([])
   console.log(selectedRows.map(item => item.id))
-  const [page, setPage] = useState<number>(1);
-  const [deletePopup, setDeletePopup] = useState(false);
-  const { data, isLoading, isFetching, error } = useQuery<any>([key, page], {
+  const [filter, setFilter] = useState(intitialFilter)
+  console.log({ filter })
+  const { data, isLoading, isFetching, error } = useQuery<any>([key, , filter], {
     onError: (error: AxiosError) => {
       handleApiError(error, history)
     },
@@ -47,7 +51,6 @@ const Plans = () => {
   const { mutate, isLoading: isDeleteLoading } = useMutation(deletePlan, {
     onSuccess: () => {
       queryClient.invalidateQueries(key);
-      setDeletePopup(false);
       showMsgToast("Plans deleted successfully")
     },
     onError: (error: AxiosError) => {
@@ -61,7 +64,14 @@ const Plans = () => {
   const _onEditClick = (id: string) => {
     history.push("/plans/create-edit", { id });
   };
+  const _onFilterChange = (idx: string, value: any) => {
 
+    setFilter(prev => ({
+      ...prev,
+      [idx]: value
+    }))
+
+  }
   const columns = useMemo(
     () => [
       {
@@ -136,15 +146,6 @@ const Plans = () => {
               >
                 <AiFillEdit color={secondaryColor} size={24} />
               </button>
-              <button
-                className="ml-2"
-                onClick={() => {
-                  setSelectedRowId(data.row.values.id);
-                  setDeletePopup(true);
-                }}
-              >
-                <AiFillDelete color="red" size={24} />
-              </button>
             </div>
           );
         },
@@ -167,22 +168,29 @@ const Plans = () => {
   return (
     <>
       <PageHeading title="Plans" onClick={_onCreateClick} />
+
       <Container fluid className="card component-wrapper px-0 py-2">
+
+
         <Container fluid className="h-100 p-0">
-          {isLoading || isFetching ? (
+
+          {isLoading ? (
             <IsLoading />
           ) : (
             <>
               {!error && <ReactTable
-                data={data}
+                data={data?.data}
                 columns={columns}
                 setSelectedRows={setSelectedRows}
+                filter={filter}
+                onFilterChange={_onFilterChange}
+                isDataLoading={isFetching}
               />}
               {!error && data.length > 0 ? (
                 <TablePagination
                   currentPage={data?.current_page}
                   lastPage={data?.last_page}
-                  setPage={setPage}
+                  setPage={_onFilterChange}
                   hasNextPage={!!data?.next_page_url}
                   hasPrevPage={!!data?.prev_page_url}
                 />
@@ -191,32 +199,7 @@ const Plans = () => {
           )}
         </Container>
       </Container>
-      <Modal show={deletePopup} onHide={() => setDeletePopup(false)}>
-        <Modal.Header closeButton>
-          <Modal.Title>Are you sure?</Modal.Title>
-        </Modal.Header>
-        <Modal.Body>
-          Do you really want to delete this record? This process cannot be
-          undone
-        </Modal.Body>
-        <Modal.Footer>
-          <Button variant="bg-light" onClick={() => setDeletePopup(false)}>
-            Close
-          </Button>
-          <Button
-            variant="danger"
-            onClick={() => {
-              mutate(selectedRowId);
-            }}
-          >
-            {isDeleteLoading ? (
-              <Spinner animation="border" size="sm" />
-            ) : (
-              "Delete"
-            )}
-          </Button>
-        </Modal.Footer>
-      </Modal>
+
       {
         selectedRows.length > 0 &&
         <div className="delete-button rounded">

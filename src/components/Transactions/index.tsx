@@ -152,7 +152,7 @@ const Transactions = () => {
                 onFilterChange={_onFilterChange}
                 value=""
                 currentValue={filter.status}
-                dataLength={data?.length}
+                dataLength={data?.data?.length}
                 idx="status"
                 title="All"
               />
@@ -160,7 +160,7 @@ const Transactions = () => {
                 onFilterChange={_onFilterChange}
                 value="success"
                 currentValue={filter.status}
-                dataLength={data?.length}
+                dataLength={data?.data?.length}
                 idx="status"
                 title="Success"
               />
@@ -168,7 +168,7 @@ const Transactions = () => {
                 onFilterChange={_onFilterChange}
                 value="failed"
                 currentValue={filter.status}
-                dataLength={data?.length}
+                dataLength={data?.data.length}
                 idx="status"
                 title="Failed"
               />
@@ -184,11 +184,11 @@ const Transactions = () => {
           ) : (
             <>
               {!error && <ReactTable
-                data={data}
+                data={data?.data}
                 columns={columns}
                 setSelectedRows={setSelectedRows}
               />}
-              {!error && data.length > 0 ? (
+              {!error && data?.data?.length > 0 ? (
                 <TablePagination
                   currentPage={data?.current_page}
                   lastPage={data?.last_page}

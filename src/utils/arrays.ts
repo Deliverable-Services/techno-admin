@@ -17,6 +17,10 @@ export const InsideCart = [
   { id: "0", name: 0 },
   { id: "1", name: 1 },
 ];
+export const PaymentMethods = [
+  { id: "upi", name: "UPI" },
+  { id: "debit", name: "Debit" },
+];
 
 export const RowsPerPage = [
   { id: "25", name: 25 },
