@@ -32,7 +32,7 @@ const deleteFaqs = (id: string) => {
 
 const intitialFilter = {
   q: "",
-  page: null,
+  page: 1,
   perPage: 25
 }
 const Faqs = () => {
@@ -161,7 +161,7 @@ const Faqs = () => {
                 onFilterChange={_onFilterChange}
                 isDataLoading={isFetching}
               />}
-              {!error && data.length > 0 ? (
+              {!error && data?.data?.length > 0 ? (
                 <TablePagination
                   currentPage={data?.current_page}
                   lastPage={data?.last_page}

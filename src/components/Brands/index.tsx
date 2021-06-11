@@ -8,6 +8,7 @@ import { useHistory } from "react-router-dom";
 import { Cell } from "react-table";
 import { handleApiError } from "../../hooks/handleApiErrors";
 import CreatedUpdatedAt from "../../shared-components/CreatedUpdatedAt";
+import EditButton from "../../shared-components/EditButton";
 import IsActiveBadge from "../../shared-components/IsActiveBadge";
 import IsLoading from "../../shared-components/isLoading";
 import PageHeading from "../../shared-components/PageHeading";
@@ -24,15 +25,24 @@ import { showMsgToast } from "../../utils/showMsgToast";
 
 const key = "brands";
 
-const deleteBrand = (id: string) => {
-  return API.delete(`${key}/${id}`, {
-    headers: { "Content-Type": "multipart/form-data" },
-  });
+const deleteBrand = (id: Array<any>) => {
+  const formdata = new FormData()
+  id.forEach(i => {
+    formdata.append("id[]", i)
+
+  })
+
+  console.log({ formdata })
+
+
+  return API.post(`${key}/delete`,
+    formdata
+  );
 };
 
 const intitialFilter = {
   q: "",
-  page: null,
+  page: 1,
   perPage: 25
 }
 
@@ -59,7 +69,7 @@ const Brands = () => {
   });
 
   const _onCreateClick = () => {
-    history.push("/brands/create-edit")
+    history.push("/brands/create-edit",)
   }
   const _onEditClick = (id: string) => {
     history.push("/brands/create-edit", { id })
@@ -131,15 +141,10 @@ const Brands = () => {
         Header: "Actions",
         Cell: (data: Cell) => {
           return (
-            <div className="d-flex">
-              <button
-                onClick={() => {
-                  _onEditClick(data.row.values.id);
-                }}
-              >
-                <AiFillEdit color={secondaryColor} size={24} />
-              </button>
-            </div>
+            <EditButton onClick={() => {
+              _onEditClick(data.row.values.id)
+            }
+            } />
           );
         },
       },
@@ -178,7 +183,7 @@ const Brands = () => {
                 onFilterChange={_onFilterChange}
                 isDataLoading={isFetching}
               />}
-              {!error && data.length > 0 ? (
+              {!error && data?.data?.length > 0 ? (
                 <TablePagination
                   currentPage={data?.current_page}
                   lastPage={data?.last_page}
@@ -195,8 +200,12 @@ const Brands = () => {
         selectedRows.length > 0 &&
         <div className="delete-button rounded">
           <span><b>Delete {selectedRows.length} rows</b></span>
-          <Button variant="danger">
-            Delete
+          <Button variant="danger" onClick={() => {
+            mutate(selectedRows.map(i => i.id))
+          }}>
+            {
+              isDeleteLoading ? "Loading..." : "Delete"
+            }
           </Button>
         </div>
       }

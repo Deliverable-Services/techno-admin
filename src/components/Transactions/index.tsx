@@ -13,17 +13,24 @@ import PageHeading from "../../shared-components/PageHeading";
 import TablePagination from "../../shared-components/Pagination";
 import ReactTable from "../../shared-components/ReactTable";
 import API from "../../utils/API";
+import { PaymentMethods } from "../../utils/arrays";
 import { primaryColor } from "../../utils/constants";
 import { queryClient } from "../../utils/queryClient";
 import { showErrorToast } from "../../utils/showErrorToast";
 
 const key = "transactions";
 
+const intitialFilter = {
+	q: "",
+	page: null,
+	perPage: 25
+}
 const Transactions = () => {
 	const history = useHistory();
 	const [selectedRows, setSelectedRows] = useState([]);
 	const [page, setPage] = useState<number>(1);
 
+	const [localFilter, setFilter] = useState(intitialFilter)
 	const filter = useTransactionStoreFilter((state) => state.filter);
 	const NumberOfRows = useTransactionStoreFilter(
 		(state) => state.rows_per_page
@@ -33,7 +40,7 @@ const Transactions = () => {
 	);
 	const onRowsChange = useTransactionStoreFilter((state) => state.onRowsChange);
 	const resetFilter = useTransactionStoreFilter((state) => state.resetFilter);
-	const { data, isLoading, isFetching, error } = useQuery<any>([key, page], {
+	const { data, isLoading, isFetching, error } = useQuery<any>([key, , { ...localFilter, ...filter }], {
 		onError: (err: any) => {
 			showErrorToast(err.response.data.message);
 		},
@@ -43,6 +50,14 @@ const Transactions = () => {
 		if (!id) return;
 		history.push("/users/create-edit", { id });
 	};
+	const _onFilterChange = (idx: string, value: any) => {
+
+		setFilter(prev => ({
+			...prev,
+			[idx]: value
+		}))
+
+	}
 	const { data: Customers, isLoading: isCustomerLoading } = useQuery<any>(
 		[
 			"users",
@@ -58,12 +73,7 @@ const Transactions = () => {
 		}
 	);
 
-	const PaymentMethods = [
-		{ id: "upi", name: "UPI" },
-		{ id: "card", name: "CARD" },
-	];
 
-	console.log("upi ", PaymentMethods);
 	const _onOrderClick = (id: string) => {
 		if (!id) return;
 		history.push(`/orders/${id}`);
@@ -153,7 +163,7 @@ const Transactions = () => {
 		<>
 			<PageHeading title="Transactions" />
 
-			{(!isLoading || !isFetching) && (
+			{(!isLoading) && (
 				<div>
 					<div>
 						<div className="filter">
@@ -189,9 +199,8 @@ const Transactions = () => {
 			<Container fluid className="card component-wrapper px-0 py-2">
 				<Container fluid className="h-100 p-0">
 					<>
-						{isLoading || isFetching ? (
-							<IsLoading />
-						) : (
+						{!isLoading && (
+
 							<>
 								{!error && (
 									<>
@@ -208,19 +217,10 @@ const Transactions = () => {
 												</Col>
 												<Col md="auto">
 													<FilterSelect
-														currentValue={PaymentMethods[0].id}
-														data={!isCustomerLoading && Customers.data}
+														currentValue={filter.payment_method}
+														data={PaymentMethods}
 														label="Payment Method"
-														idx="user_id"
-														onFilterChange={onFilterChange}
-													/>
-												</Col>
-												<Col md="auto">
-													<FilterSelect
-														currentValue={PaymentMethods[1].id}
-														data={!isCustomerLoading && Customers.data}
-														label="Agents"
-														idx="user_id"
+														idx="payment_method"
 														onFilterChange={onFilterChange}
 													/>
 												</Col>
@@ -251,7 +251,7 @@ const Transactions = () => {
 
 			<Container fluid className="card component-wrapper px-0 py-2">
 				<Container fluid className="h-100 p-0">
-					{isLoading || isFetching ? (
+					{isLoading ? (
 						<IsLoading />
 					) : (
 						<>
@@ -260,6 +260,9 @@ const Transactions = () => {
 									data={data?.data}
 									columns={columns}
 									setSelectedRows={setSelectedRows}
+									filter={filter}
+									onFilterChange={_onFilterChange}
+									isDataLoading={isFetching}
 								/>
 							)}
 							{!error && data?.data?.length > 0 ? (
@@ -275,6 +278,14 @@ const Transactions = () => {
 					)}
 				</Container>
 			</Container>
+			{selectedRows.length > 0 && (
+				<div className="delete-button rounded">
+					<span>
+						<b>Delete {selectedRows.length} rows</b>
+					</span>
+					<Button variant="danger">Delete</Button>
+				</div>
+			)}
 		</>
 	);
 };

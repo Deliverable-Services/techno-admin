@@ -1,7 +1,7 @@
 import { AxiosResponse } from "axios";
 import React, { ReactElement } from "react";
 import { DragDropContext, Draggable, Droppable } from "react-beautiful-dnd";
-import { Container, Dropdown, Table } from "react-bootstrap";
+import { Container, Dropdown, Spinner, Table } from "react-bootstrap";
 import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
 import { AiOutlineSearch } from "react-icons/ai";
@@ -75,7 +75,6 @@ const IndeterminateCheckbox = React.forwardRef(
 		const defaultRef = React.useRef<HTMLDivElement>(null);
 		const resolvedRef = defaultRef || ref;
 
-		console.log({ indeterminate, rest });
 		// React.useEffect(() => {
 		//   resolvedRef.current.indeterminate = indeterminate
 		// }, [resolvedRef, indeterminate])
@@ -150,7 +149,7 @@ function ReactTable({
 		{
 			columns,
 			data: records,
-			initialState: { ...initialState, pageSize: 25 },
+			initialState: { ...initialState, pageSize: filter.perPage },
 		},
 		useFilters,
 		useGlobalFilter,
@@ -235,7 +234,9 @@ function ReactTable({
 							}}
 							value={pageSize}
 							onChange={(e) => {
-								setPageSize(parseInt(e.target.value));
+								const value = e.target.value
+								setPageSize(parseInt(value));
+								onFilterChange("perPage", value)
 							}}
 						>
 							{RowsPerPage.map((item) => (
@@ -303,6 +304,13 @@ function ReactTable({
 						size="sm"
 					>
 						<thead className="bg-grey-primary">
+							{isDataLoading ? (
+								<tr>
+									<td className="text-muted font-weight-bold w-100">
+										Loading <Spinner size="sm" animation="border" />
+									</td>
+								</tr>
+							) : null}
 							{
 								// Loop over the header rows
 								headerGroups.map((headerGroup) => (
@@ -346,13 +354,6 @@ function ReactTable({
 							<Droppable droppableId="table-body">
 								{(provided, snapshot) => (
 									<tbody ref={provided.innerRef} {...provided.droppableProps}>
-										{isDataLoading ? (
-											<tr>
-												<td className="text-muted font-weight-bold w-100">
-													Loading...
-												</td>
-											</tr>
-										) : null}
 										{rows.map((row, i) => {
 											prepareRow(row);
 
@@ -382,10 +383,10 @@ function ReactTable({
 							</Droppable>
 						</DragDropContext>
 						{/* {rows.length === 0 ?
-                                <Container fluid className="d-flex justify-content-center w-100 align-item-center">
-                                    <span className="text-primary display-3">No data found</span>
-                                </Container>
-                                : ""} */}
+<Container fluid className="d-flex justify-content-center w-100 align-item-center">
+<span className="text-primary display-3">No data found</span>
+</Container>
+: ""} */}
 					</Table>
 				</div>
 			</DndProvider>

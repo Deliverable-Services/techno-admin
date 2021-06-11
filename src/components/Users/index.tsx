@@ -9,6 +9,7 @@ import { Cell } from "react-table";
 import { handleApiError } from "../../hooks/handleApiErrors";
 import BreadCrumb from "../../shared-components/BreadCrumb";
 import CreatedUpdatedAt from "../../shared-components/CreatedUpdatedAt";
+import EditButton from "../../shared-components/EditButton";
 import IsActiveBadge from "../../shared-components/IsActiveBadge";
 import IsLoading from "../../shared-components/isLoading";
 import TablePagination from "../../shared-components/Pagination";
@@ -137,24 +138,11 @@ const Users = () => {
         Header: "Actions",
         Cell: (data: Cell) => {
           return (
-            <div className="d-flex">
-              <button
-                onClick={() => {
-                  _onEditClick(data.row.values.id);
-                }}
-              >
-                <AiFillEdit color={secondaryColor} size={24} />
-              </button>
-              <button
-                className="ml-2"
-                onClick={() => {
-                  setSelectedRowId(data.row.values.id);
-                  setDeletePopup(true);
-                }}
-              >
-                <AiFillDelete color="red" size={24} />
-              </button>
-            </div>
+            <EditButton
+              onClick={() => {
+                _onEditClick(data.row.values.id);
+              }}
+            />
           );
         },
       },
@@ -257,7 +245,7 @@ const Users = () => {
                 onFilterChange={_onFilterChange}
                 isDataLoading={isFetching}
               />}
-              {!error && data.length > 0 ? (
+              {!error && data?.data?.length > 0 ? (
                 <TablePagination
                   currentPage={data?.current_page}
                   lastPage={data?.last_page}

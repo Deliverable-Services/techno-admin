@@ -1,9 +1,11 @@
+import { AxiosError } from "axios";
 import bsCustomFileInput from "bs-custom-file-input";
 import { Form, Formik } from "formik";
 import { useEffect } from "react";
 import { Alert, Button, Col, Row, Spinner } from "react-bootstrap";
 import { useMutation } from "react-query";
-import { useLocation } from "react-router-dom";
+import { useHistory, useLocation } from "react-router-dom";
+import { handleApiError } from "../../hooks/handleApiErrors";
 import useGetSingleQuery from "../../hooks/useGetSingleQuery";
 import BackButton from "../../shared-components/BackButton";
 import { InputField } from "../../shared-components/InputFeild";
@@ -11,6 +13,7 @@ import IsLoading from "../../shared-components/isLoading";
 import API from "../../utils/API";
 import { isActiveArray, userRoles } from "../../utils/arrays";
 import { queryClient } from "../../utils/queryClient";
+import { showMsgToast } from "../../utils/showMsgToast";
 
 const key = "users";
 
@@ -34,6 +37,7 @@ const createUpdateUser = ({
 
 const UserBasics = () => {
     const { state } = useLocation()
+    const history = useHistory()
     const id = state ? (state as any).id : null
     useEffect(() => {
         bsCustomFileInput.init();
@@ -42,7 +46,12 @@ const UserBasics = () => {
     const { mutate, isLoading, error, status } = useMutation(createUpdateUser, {
         onSuccess: () => {
             setTimeout(() => queryClient.invalidateQueries(key), 500);
+            if (id) return showMsgToast("User updated successfully")
+            showMsgToast("User created successfully")
         },
+        onError: (error: AxiosError) => {
+            handleApiError(error, history)
+        }
     });
 
     const apiData = data && (data as any);
@@ -62,7 +71,7 @@ const UserBasics = () => {
                         const formdata = new FormData()
                         for (let k in rest) formdata.append(k, rest[k])
 
-                        if (profile_pic)
+                        if (typeof profile_pic !== "string" && profile_pic)
                             formdata.append("profile_pic", profile_pic)
 
                         mutate({ formdata, id });
@@ -70,16 +79,6 @@ const UserBasics = () => {
                 >
                     {({ setFieldValue }) => (
                         <Form className="w-100">
-                            {status === "success" && (
-                                <Alert variant="success">
-                                    {id
-                                        ? "User updated successfully"
-                                        : "User created successfully"}
-                                </Alert>
-                            )}
-                            {error && (
-                                <Alert variant="danger">{(error as Error).message}</Alert>
-                            )}
 
                             <div className="form-container py-2">
                                 <InputField

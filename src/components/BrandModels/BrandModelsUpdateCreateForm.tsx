@@ -106,7 +106,7 @@ const BrandModlesCreateUpdateForm = () => {
                     placeholder="Brand"
                     label="Choose Brand"
                     as="select"
-                    selectData={!isBrandLoading && brands}
+                    selectData={!isBrandLoading && brands.data}
                   />
 
                   <InputField as="select" selectData={isActiveArray} name="is_active" label="Is active?" placeholder="Choose is active" />

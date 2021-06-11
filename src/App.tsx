@@ -42,6 +42,8 @@ import Issues from "./components/Issues";
 import SingleIssue from "./components/Issues/single";
 import Notifications from "./components/Notification";
 import NotificationCreateUpdateForm from "./components/Notification/NotificationCreateUpdateForm";
+import BookingSlots from "./components/BookingSlots";
+import SlotCreateUpdateForm from "./components/BookingSlots/BookingSlotsCreateUpdateForm";
 
 const App = () => {
   const [isDesktop, setIsDesktop] = useState<boolean>(false);
@@ -113,6 +115,8 @@ const App = () => {
             <PrivateRoute path="/transactions" exact component={Transactions} />
             <PrivateRoute path="/issues" exact component={Issues} />
             <PrivateRoute path="/push-notifications" exact component={Notifications} />
+            <PrivateRoute path="/booking-slots" exact component={BookingSlots} />
+            <PrivateRoute path="/booking-slots/create-edit" exact component={SlotCreateUpdateForm} />
             <PrivateRoute path="/push-notifications/create-edit" exact component={NotificationCreateUpdateForm} />
             <PrivateRoute path="/transactions/:id" exact component={TransactionUpdateForm} />
             <PrivateRoute path="/subscriptions" exact component={Subscriptions} />

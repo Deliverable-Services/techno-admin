@@ -291,18 +291,6 @@ const Orders = () => {
                             onFilterChange={onFilterChange}
                           />
                         </Col>
-                        {/* <Col md="auto">
-                          <FilterSelect
-                            currentValue={NumberOfRows}
-                            data={RowsPerPage}
-                            label="Rows Per Page"
-                            idx="rows_per_page"
-                            onFilterChange={onRowsChange}
-                            defaultSelectTitle="Rows"
-                            width="100px"
-                            isDefaultDisabled
-                          />
-                        </Col> */}
                         <Col
                           md="auto"
                           className="d-flex align-items-center mt-1 justify-content-center"

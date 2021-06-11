@@ -3,7 +3,7 @@ import moment from "moment";
 import React, { useState } from "react";
 import { Badge, Button, Col, Container, Form, Row } from "react-bootstrap";
 import { BiArrowFromRight, BiDownload } from "react-icons/bi";
-import { FaDotCircle, FaRegDotCircle } from "react-icons/fa";
+import { CgSandClock } from "react-icons/cg";
 import { useMutation, useQuery } from "react-query";
 import { useHistory, useParams } from "react-router-dom";
 import { ProgressBar, Step } from "react-step-progress-bar";
@@ -116,13 +116,14 @@ const SingleOrder = () => {
         </div>
       </Container>
       <Container>
+
         <Row>
 
           {
-            !form.agent_id &&
+            !isLoading && !data?.agent_id &&
             <Col md="auto">
               <Form.Group>
-                <Form.Label className="text-muted font-weight-bold">{form.agent_id ? "Change Agent" : "Assign Agent"}</Form.Label>
+                <Form.Label className="text-muted font-weight-bold">Assign Agent</Form.Label>
                 <Form.Control as="select" value={form.agent_id || ""} onChange={
                   (e) => {
                     _onformChange("agent_id", e.target.value)
@@ -191,7 +192,7 @@ const SingleOrder = () => {
               <div
                 className={`transitionStep ${accomplished ? "accomplished" : null}`}
               >
-                🌑
+                <CgSandClock />
               </div>
             )}
           </Step>

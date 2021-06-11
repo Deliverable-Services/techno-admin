@@ -1,4 +1,5 @@
 import { AxiosError } from "axios";
+import moment from "moment";
 import { useMemo, useState } from "react";
 import { Button, Container, Modal, Spinner } from "react-bootstrap";
 import { AiFillDelete, AiFillEdit } from "react-icons/ai";
@@ -24,10 +25,14 @@ import { showMsgToast } from "../../utils/showMsgToast";
 
 const key = "brand-models";
 
-const deleteBrandModels = (id: string) => {
-  return API.delete(`${key}/${id}`, {
+const deleteBrandModels = (ids: Array<any>) => {
+  const formdata = new FormData()
+  ids.forEach(id => {
+    formdata.append("id[]", id)
+  })
+  return API.post(`${key}/delete`, formdata, {
     headers: { "Content-Type": "multipart/form-data" },
-  });
+  })
 };
 
 const intitialFilter = {
@@ -198,8 +203,12 @@ const BrandModels = () => {
         selectedRows.length > 0 &&
         <div className="delete-button rounded">
           <span><b>Delete {selectedRows.length} rows</b></span>
-          <Button variant="danger">
-            Delete
+          <Button variant="danger" onClick={() => {
+            mutate(selectedRows.map(m => m.id))
+          }}>
+            {
+              isDeleteLoading ? "Loading..." : "Delete"
+            }
           </Button>
         </div>
       }
