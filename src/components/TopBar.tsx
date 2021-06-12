@@ -67,6 +67,7 @@ const TopBar = ({ isNavOpen, setIsNavOpen }: INavBar) => {
               width: 150,
               fontSize: 14,
             }}
+            disabled
           >
             <option value="carsafai">Car Safai</option>
           </Form.Control>
