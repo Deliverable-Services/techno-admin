@@ -1,47 +1,28 @@
 import { AxiosError } from "axios";
 import moment from "moment";
 import React, { useMemo, useState } from "react";
-import { Accordion, Button, Container, Modal, Spinner } from "react-bootstrap";
-import { AiFillDelete, AiFillEdit } from "react-icons/ai";
+import { Container } from "react-bootstrap";
 import { BiSad } from "react-icons/bi";
-import { useMutation, useQuery } from "react-query";
+import { useQuery } from "react-query";
 import { useHistory } from "react-router-dom";
 import { Cell } from "react-table";
 import { handleApiError } from "../../hooks/handleApiErrors";
 import CreatedUpdatedAt from "../../shared-components/CreatedUpdatedAt";
-import EditButton from "../../shared-components/EditButton";
-import IsActiveBadge from "../../shared-components/IsActiveBadge";
 import IsLoading from "../../shared-components/isLoading";
 import PageHeading from "../../shared-components/PageHeading";
-import TablePagination from "../../shared-components/Pagination";
-import ReactTable from "../../shared-components/ReactTable";
 import Slots from "../../shared-components/Slots";
-import API from "../../utils/API";
 import {
-	baseUploadUrl,
-	primaryColor,
-	secondaryColor
+	primaryColor
 } from "../../utils/constants";
-import { queryClient } from "../../utils/queryClient";
-import { showMsgToast } from "../../utils/showMsgToast";
 
 const key = "disabled-slots";
 
-const deleteSlot = (id: Array<string>) => {
-	const body = {
-		id
-	}
-	return API.delete(`${key}`, {
-		data: body
-	}
-	);
-};
 
 const intitialFilter = {
 	q: "",
 	// page: 1,
 	// perPage: 25,
-	start: moment().subtract(1, "day").format("YYYY-MM-DD"),
+	start: moment().format("YYYY-MM-DD"),
 	end: moment().add(10, "days").format("YYYY-MM-DD")
 }
 

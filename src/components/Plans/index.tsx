@@ -25,11 +25,10 @@ import { showMsgToast } from "../../utils/showMsgToast";
 
 const key = "plans";
 
-const deletePlan = (id: string) => {
-  return API.delete(`${key}/${id}`, {
-    headers: { "Content-Type": "multipart/form-data" },
-  });
+const deletePlans = (id: Array<any>) => {
+  return API.post(`${key}/delete`, { id })
 };
+
 
 const intitialFilter = {
   q: "",
@@ -48,7 +47,7 @@ const Plans = () => {
     },
   });
 
-  const { mutate, isLoading: isDeleteLoading } = useMutation(deletePlan, {
+  const { mutate, isLoading: isDeleteLoading } = useMutation(deletePlans, {
     onSuccess: () => {
       queryClient.invalidateQueries(key);
       showMsgToast("Plans deleted successfully")
@@ -204,8 +203,12 @@ const Plans = () => {
         selectedRows.length > 0 &&
         <div className="delete-button rounded">
           <span><b>Delete {selectedRows.length} rows</b></span>
-          <Button variant="danger">
-            Delete
+          <Button variant="danger" onClick={() => {
+            mutate(selectedRows.map(i => i.id))
+          }}>
+            {
+              isDeleteLoading ? "Loading..." : "Delete"
+            }
           </Button>
         </div>
       }

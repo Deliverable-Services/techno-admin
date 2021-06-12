@@ -1,7 +1,7 @@
 import { AxiosError } from "axios";
 import { useMemo, useState } from "react";
-import { Button, Container, Modal, Spinner } from "react-bootstrap";
-import { AiFillDelete, AiFillEdit } from "react-icons/ai";
+import { Button, Container } from "react-bootstrap";
+import { AiFillEdit } from "react-icons/ai";
 import { BiSad } from "react-icons/bi";
 import { useMutation, useQuery } from "react-query";
 import { useHistory } from "react-router-dom";
@@ -19,15 +19,12 @@ import {
   secondaryColor
 } from "../../utils/constants";
 import { queryClient } from "../../utils/queryClient";
-import { showErrorToast } from "../../utils/showErrorToast";
 import { showMsgToast } from "../../utils/showMsgToast";
 
 const key = "coupons";
 
-const deleteCoupon = (id: string) => {
-  return API.delete(`${key}/${id}`, {
-    headers: { "Content-Type": "multipart/form-data" },
-  });
+const deleteCoupons = (id: Array<any>) => {
+  return API.post(`${key}/delete`, { id })
 };
 const intitialFilter = {
   q: "",
@@ -48,7 +45,7 @@ const Coupons = () => {
     },
   });
 
-  const { mutate, isLoading: isDeleteLoading } = useMutation(deleteCoupon, {
+  const { mutate, isLoading: isDeleteLoading } = useMutation(deleteCoupons, {
     onSuccess: () => {
       queryClient.invalidateQueries(key);
       showMsgToast("Coupons deleted successfully")
@@ -210,8 +207,12 @@ const Coupons = () => {
         selectedRows.length > 0 &&
         <div className="delete-button rounded">
           <span><b>Delete {selectedRows.length} rows</b></span>
-          <Button variant="danger">
-            Delete
+          <Button variant="danger" onClick={() => {
+            mutate(selectedRows.map(i => i.id))
+          }}>
+            {
+              isDeleteLoading ? "Loading..." : "Delete"
+            }
           </Button>
         </div>
       }

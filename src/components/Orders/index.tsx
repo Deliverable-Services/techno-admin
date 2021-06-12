@@ -1,9 +1,11 @@
+import { AxiosError } from "axios";
 import { useMemo, useState } from "react";
 import { Badge, Button, Col, Container, Row } from "react-bootstrap";
 import { BiSad } from "react-icons/bi";
 import { useQuery } from "react-query";
 import { useHistory } from "react-router-dom";
 import { Cell } from "react-table";
+import { handleApiError } from "../../hooks/handleApiErrors";
 import useOrderStoreFilter from "../../hooks/useOrderFilterStore";
 import BreadCrumb from "../../shared-components/BreadCrumb";
 import CreatedUpdatedAt from "../../shared-components/CreatedUpdatedAt";
@@ -41,8 +43,8 @@ const Orders = () => {
   const { data, isLoading, isFetching, error } = useQuery<any>(
     [key, , { ...filter, ...localFilter }],
     {
-      onError: (err: any) => {
-        showErrorToast(err.response.data.message);
+      onError: (error: AxiosError) => {
+        handleApiError(error, history)
       },
     }
   );
@@ -55,8 +57,8 @@ const Orders = () => {
       },
     ],
     {
-      onError: (err: any) => {
-        showErrorToast(err.response.data.message);
+      onError: (error: AxiosError) => {
+        handleApiError(error, history)
       },
     }
   );
@@ -69,8 +71,8 @@ const Orders = () => {
       },
     ],
     {
-      onError: (err: any) => {
-        showErrorToast(err.response.data.message);
+      onError: (error: AxiosError) => {
+        handleApiError(error, history)
       },
     }
   );

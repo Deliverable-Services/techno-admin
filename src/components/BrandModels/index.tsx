@@ -25,13 +25,9 @@ import { showMsgToast } from "../../utils/showMsgToast";
 
 const key = "brand-models";
 
-const deleteBrandModels = (ids: Array<any>) => {
-  // const formdata = new FormData()
-  // ids.forEach(id => {
-  //   formdata.append("id[]", id)
-  // })
-  return API.post(`${key}/delete`, { ids }, {
-    headers: { "Content-Type": "multipart/form-data" },
+const deleteBrandModels = (id: Array<any>) => {
+  return API.post(`${key}/delete`, {
+    id
   })
 };
 

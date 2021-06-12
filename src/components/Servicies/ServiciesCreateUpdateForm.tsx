@@ -1,9 +1,11 @@
+import { AxiosError } from "axios";
 import bsCustomFileInput from "bs-custom-file-input";
 import { Form, Formik } from "formik";
 import { useEffect } from "react";
 import { Alert, Button, Col, Row, Spinner } from "react-bootstrap";
 import { useMutation, useQuery } from "react-query";
-import { useLocation } from "react-router-dom";
+import { useHistory, useLocation } from "react-router-dom";
+import { handleApiError } from "../../hooks/handleApiErrors";
 import useGetSingleQuery from "../../hooks/useGetSingleQuery";
 import BackButton from "../../shared-components/BackButton";
 import { InputField } from "../../shared-components/InputFeild";
@@ -12,6 +14,7 @@ import TextEditor from "../../shared-components/TextEditor";
 import API from "../../utils/API";
 import { isActiveArray } from "../../utils/arrays";
 import { queryClient } from "../../utils/queryClient";
+import { showMsgToast } from "../../utils/showMsgToast";
 
 const key = "services";
 
@@ -36,6 +39,7 @@ const createUpdataServices = ({
 const ServicesCreateUpdateForm = () => {
   const { state } = useLocation()
   const id = state ? (state as any).id : null
+  const history = useHistory()
   useEffect(() => {
     bsCustomFileInput.init();
   }, []);
@@ -47,7 +51,13 @@ const ServicesCreateUpdateForm = () => {
     {
       onSuccess: () => {
         setTimeout(() => queryClient.invalidateQueries(key), 500);
+        history.replace("/services")
+        if (id) return showMsgToast("Service updated successfully")
+        showMsgToast("Service created successfully")
       },
+      onError: (error: AxiosError) => {
+        handleApiError(error, history)
+      }
     }
   );
 
@@ -75,16 +85,6 @@ const ServicesCreateUpdateForm = () => {
         >
           {({ setFieldValue }) => (
             <Form>
-              {status === "success" && (
-                <Alert variant="success">
-                  {id
-                    ? "Service updated successfully"
-                    : "Service created successfully"}
-                </Alert>
-              )}
-              {error && (
-                <Alert variant="danger">{(error as Error).message}</Alert>
-              )}
               <div className="form-container  py-2 ">
                 <InputField
                   name="name"

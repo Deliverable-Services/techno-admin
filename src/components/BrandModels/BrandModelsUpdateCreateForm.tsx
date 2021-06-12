@@ -48,6 +48,7 @@ const BrandModlesCreateUpdateForm = () => {
   const { mutate, isLoading } = useMutation(createUpdataBrand, {
     onSuccess: () => {
       setTimeout(() => queryClient.invalidateQueries(key), 500);
+      history.replace("/brand-models")
       if (id) return showMsgToast("Brand Model updated successfully")
       showMsgToast("Brand Model created successfully")
     },

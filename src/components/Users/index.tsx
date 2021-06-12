@@ -29,10 +29,8 @@ interface IFilter {
 }
 const key = "users";
 
-const disableUser = (id: string) => {
-  return API.post(`${key}/${id}`, {
-    disable: 1,
-  });
+const deleteUsers = (id: Array<any>) => {
+  return API.post(`${key}/delete`, { id })
 };
 
 const intitialFilter = {
@@ -47,12 +45,12 @@ const Users = () => {
   const history = useHistory();
   const [selectedRowId, setSelectedRowId] = useState<string>("");
   const [selectedRows, setSelectedRows] = useState([])
+  const [filter, setFilter] = useState(intitialFilter);
   console.log(selectedRows.map(item => item.id))
   const [page, setPage] = useState<number>(1);
   const [role, setRole] = useState("");
   const [deletePopup, setDeletePopup] = useState(false);
 
-  const [filter, setFilter] = useState(intitialFilter);
 
   const { data, isLoading, isFetching, error } = useQuery<any>(
     [key, , filter],
@@ -63,10 +61,9 @@ const Users = () => {
     }
   );
 
-  const { mutate, isLoading: isDeleteLoading } = useMutation(disableUser, {
+  const { mutate, isLoading: isDeleteLoading } = useMutation(deleteUsers, {
     onSuccess: () => {
       queryClient.invalidateQueries(key);
-      setDeletePopup(false);
       showMsgToast("Users deleted successfully")
     },
     onError: (error: AxiosError) => {
@@ -272,9 +269,9 @@ const Users = () => {
           </Button>
           <Button
             variant="danger"
-            onClick={() => {
-              mutate(selectedRowId);
-            }}
+          // onClick={() => {
+          //   mutate(selectedRowId);
+          // }}
           >
             {isDeleteLoading ? (
               <Spinner animation="border" size="sm" />
@@ -288,8 +285,12 @@ const Users = () => {
         selectedRows.length > 0 &&
         <div className="delete-button rounded">
           <span><b>Delete {selectedRows.length} rows</b></span>
-          <Button variant="danger">
-            Delete
+          <Button variant="danger" onClick={() => {
+            mutate(selectedRows.map(i => i.id))
+          }}>
+            {
+              isDeleteLoading ? "Loading..." : "Delete"
+            }
           </Button>
         </div>
       }

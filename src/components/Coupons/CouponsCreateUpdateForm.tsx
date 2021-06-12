@@ -1,9 +1,11 @@
+import { AxiosError } from "axios";
 import bsCustomFileInput from "bs-custom-file-input";
 import { Form, Formik } from "formik";
 import { useEffect } from "react";
 import { Alert, Button, Col, Row, Spinner } from "react-bootstrap";
 import { useMutation } from "react-query";
-import { useLocation } from "react-router-dom";
+import { useHistory, useLocation } from "react-router-dom";
+import { handleApiError } from "../../hooks/handleApiErrors";
 import useGetSingleQuery from "../../hooks/useGetSingleQuery";
 import BackButton from "../../shared-components/BackButton";
 import DatePicker from "../../shared-components/DatePicker";
@@ -13,6 +15,7 @@ import TextEditor from "../../shared-components/TextEditor";
 import API from "../../utils/API";
 import { conditionType, isActiveArray } from "../../utils/arrays";
 import { queryClient } from "../../utils/queryClient";
+import { showMsgToast } from "../../utils/showMsgToast";
 const key = "coupons";
 
 const createUpdataCoupons = ({
@@ -34,6 +37,7 @@ const createUpdataCoupons = ({
 };
 
 const CouponCreateUpdateForm = () => {
+  const history = useHistory()
   const { state } = useLocation()
   const id = state ? (state as any).id : null
   useEffect(() => {
@@ -45,7 +49,13 @@ const CouponCreateUpdateForm = () => {
     {
       onSuccess: () => {
         setTimeout(() => queryClient.invalidateQueries(key), 500);
+        history.replace("/coupons")
+        if (id) return showMsgToast("Brand updated successfully")
+        showMsgToast("Brands created successfully")
       },
+      onError: (error: AxiosError) => {
+        handleApiError(error, history)
+      }
     }
   );
 
@@ -56,91 +66,83 @@ const CouponCreateUpdateForm = () => {
   if (dataLoading) return <IsLoading />;
 
   return (
-    <Row className="rounded">
+    <>
       <BackButton title="Coupons" />
-      <Col className="mx-auto">
-        <Formik
-          initialValues={apiData || {}}
+      <Row className="rounded">
+        <Col className="mx-auto">
+          <Formik
+            initialValues={apiData || {}}
 
-          onSubmit={(values) => {
-            console.log("values", values)
+            onSubmit={(values) => {
 
-            mutate({ formdata: values, id });
-          }}
-        >
-          {({ setFieldValue }) => (
-            <Form>
-              {status === "success" && (
-                <Alert variant="success">
-                  {id
-                    ? "Coupon updated successfully"
-                    : "Coupon created successfully"}
-                </Alert>
-              )}
-              {error && (
-                <Alert variant="danger">{(error as Error).message}</Alert>
-              )}
-              <div className="form-container  py-2 ">
-                <InputField
-                  name="title"
-                  placeholder="Title"
-                  label="Title"
-                  required
-                />
+              mutate({ formdata: values, id });
+            }}
+          >
+            {({ setFieldValue }) => (
+              <Form>
 
-                <InputField
-                  name="coupon_code"
-                  placeholder="Coupon Code"
-                  label="Coupon Code"
-                  required
-                />
-                <InputField
-                  type="number"
-                  name="condition"
-                  placeholder="Condition"
-                  label="Condition"
-                  required
-                />
-                <DatePicker
-                  name="valid_from"
-                  label="Valid From"
+                <div className="form-container  py-2 ">
+                  <InputField
+                    name="title"
+                    placeholder="Title"
+                    label="Title"
+                    required
+                  />
+
+                  <InputField
+                    name="coupon_code"
+                    placeholder="Coupon Code"
+                    label="Coupon Code"
+                    required
+                  />
+                  <InputField
+                    type="number"
+                    name="condition"
+                    placeholder="Condition"
+                    label="Condition"
+                    required
+                  />
+                  <DatePicker
+                    name="valid_from"
+                    label="Valid From"
+                    setFieldValue={setFieldValue}
+                  />
+                  <DatePicker
+                    name="valid_to"
+                    label="Valid To"
+                    setFieldValue={setFieldValue}
+                  />
+                  <InputField as="select" selectData={isActiveArray} name="is_active" label="Is active?" placeholder="Choose is active" />
+                  <InputField as="select" selectData={conditionType} name="condition_type" label="Condition Type" placeholder="Condition Type" />
+                </div>
+                <TextEditor
+                  name="description"
+                  label="Description"
                   setFieldValue={setFieldValue}
                 />
-                <DatePicker
-                  name="valid_to"
-                  label="Valid To"
+
+                <TextEditor
+                  name="terms"
+                  label="Terms"
                   setFieldValue={setFieldValue}
                 />
-                <InputField as="select" selectData={isActiveArray} name="is_active" label="Is active?" placeholder="Choose is active" />
-                <InputField as="select" selectData={conditionType} name="condition_type" label="Condition Type" placeholder="Condition Type" />
-              </div>
-              <TextEditor
-                name="description"
-                label="Description"
-                setFieldValue={setFieldValue}
-              />
-
-              <TextEditor
-                name="terms"
-                label="Terms"
-                setFieldValue={setFieldValue}
-              />
-              <Row className="d-flex justify-content-center">
-                <Col md="6">
-                  <Button type="submit" disabled={isLoading} className="w-100">
-                    {isLoading ? (
-                      <Spinner animation="border" size="sm" />
-                    ) : (
-                      "Submit"
-                    )}
-                  </Button>
-                </Col>
-              </Row>
-            </Form>
-          )}
-        </Formik>
-      </Col>
-    </Row>
+                <Row className="d-flex justify-content-center">
+                  <Col md="6">
+                    <Button type="submit" disabled={isLoading} className="w-100">
+                      {isLoading ? (
+                        <Spinner animation="border" size="sm" />
+                      ) : (
+                        "Submit"
+                      )}
+                    </Button>
+                  </Col>
+                </Row>
+              </Form>
+            )}
+          </Formik>
+        </Col>
+      </Row>
+    </>
   );
 };
 

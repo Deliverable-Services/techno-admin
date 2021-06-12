@@ -2,7 +2,7 @@ import { AxiosError } from "axios";
 import bsCustomFileInput from "bs-custom-file-input";
 import { Form, Formik } from "formik";
 import { useEffect } from "react";
-import { Alert, Button, Col, Row, Spinner } from "react-bootstrap";
+import { Button, Col, Row, Spinner } from "react-bootstrap";
 import { useMutation } from "react-query";
 import { useHistory, useLocation } from "react-router-dom";
 import { handleApiError } from "../../hooks/handleApiErrors";
@@ -13,7 +13,6 @@ import IsLoading from "../../shared-components/isLoading";
 import API from "../../utils/API";
 import { isActiveArray } from "../../utils/arrays";
 import { queryClient } from "../../utils/queryClient";
-import { showErrorToast } from "../../utils/showErrorToast";
 import { showMsgToast } from "../../utils/showMsgToast";
 
 const key = "brands";
@@ -47,6 +46,7 @@ const BrandsCreateUpdateForm = () => {
   const { mutate, isLoading } = useMutation(createUpdataBrand, {
     onSuccess: () => {
       setTimeout(() => queryClient.invalidateQueries(key), 500);
+      history.replace("/brands")
       if (id) return showMsgToast("Brand updated successfully")
       showMsgToast("Brands created successfully")
     },
@@ -73,8 +73,8 @@ const BrandsCreateUpdateForm = () => {
               const formdata = new FormData();
               for (let k in rest) formdata.append(k, rest[k])
 
-              if (values.logo && typeof values.logo !== "string")
-                formdata.append("logo", values.logo);
+              if (logo && typeof logo !== "string")
+                formdata.append("logo", logo);
 
               mutate({ formdata, id });
             }}

@@ -26,13 +26,7 @@ import { showMsgToast } from "../../utils/showMsgToast";
 const key = "brands";
 
 const deleteBrand = (id: Array<any>) => {
-  // const formdata = new FormData()
-  // id.forEach(i => {
-  //   formdata.append("id", i)
 
-  // })
-
-  // console.log({ formdata })
 
 
   return API.post(`${key}/delete`,
