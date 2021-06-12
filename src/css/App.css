@@ -11749,7 +11749,7 @@ nav {
 @media (min-width: 800px) {
   nav {
     position: fixed;
-    min-width: 18rem;
+    min-width: 13rem;
     -webkit-transform: translateX(0);
             transform: translateX(0);
     border-top-right-radius: 10px;
@@ -12376,6 +12376,29 @@ th {
           box-shadow: none;
 }
 
+.form-group.store-select {
+  margin-bottom: 0;
+}
+
+.form-group.store-select label {
+  margin-bottom: 0;
+  font-size: 9px;
+  text-transform: uppercase;
+}
+
+.form-group.store-select select {
+  border: 0;
+  border-bottom: 1px solid #d2ddec;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  font-size: 11px;
+  background-color: transparent;
+  border-radius: 0;
+  padding: 0;
+  height: 22px;
+  outline: 0;
+}
+
 .tag {
   padding: 3px 6px;
   border-radius: 4px;
@@ -12402,22 +12425,22 @@ body {
   border-top-right-radius: 0;
   border-bottom-right-radius: 0;
   margin-bottom: 50px;
-  padding: 10px 10px;
-  margin-right: 10px;
+  padding: 10px 0 10px 10px;
+  margin-right: 15px;
   width: 100%;
   max-width: 100vw;
 }
 
 @media (min-width: 800px) {
   .App {
-    -ms-grid-columns: 18rem 1fr;
-        grid-template-columns: 18rem 1fr;
+    -ms-grid-columns: 13rem 1fr;
+        grid-template-columns: 13rem 1fr;
   }
   .App .main-layout {
     -ms-grid-column: 2;
     -ms-grid-column-span: 1;
     grid-column: 2/3;
-    max-width: calc(100vw - 19.8rem);
+    max-width: calc(100vw - 14.3rem);
   }
 }
 

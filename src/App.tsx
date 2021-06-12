@@ -90,9 +90,8 @@ const App = () => {
           ""
         )}
         <Container fluid className="main-layout">
-
           <Switch>
-            <PrivateRoute path="/" exact component={Dashboard} />
+            <PrivateRoute path="/dashboard" exact component={Dashboard} />
             <PrivateRoute path="/brands" exact component={Brands} />
             <PrivateRoute path="/brand-models" exact component={BrandModels} />
             <PrivateRoute path="/categories" exact component={Categories} />
@@ -102,28 +101,100 @@ const App = () => {
             <PrivateRoute path="/plans" exact component={Plans} />
             <PrivateRoute path="/coupons" exact component={Coupons} />
             <PrivateRoute path="/orders" exact component={Orders} />
-            <PrivateRoute path="/advertisements" exact component={Advertisements} />
-            <PrivateRoute path="/brands/create-edit" exact component={BrandsCreateUpdateForm} />
-            <PrivateRoute path="/brand-models/create-edit" exact component={BrandModlesCreateUpdateForm} />
-            <PrivateRoute path="/categories/create-edit" exact component={CategoriesCreateUpdateForm} />
-            <PrivateRoute path="/users/create-edit" exact component={UserCreateUpdateForm} />
-            <PrivateRoute path="/services/create-edit" exact component={ServicesCreateUpdateForm} />
-            <PrivateRoute path="/plans/create-edit" exact component={PlanCreateUpdateForm} />
-            <PrivateRoute path="/coupons/create-edit" exact component={CouponCreateUpdateForm} />
-            <PrivateRoute path="/faqs/create-edit" exact component={FaqCreateUpdateForm} />
-            <PrivateRoute path="/advertisements/create-edit" exact component={AdvertisementCreateUpdateForm} />
+            <PrivateRoute
+              path="/advertisements"
+              exact
+              component={Advertisements}
+            />
+            <PrivateRoute
+              path="/brands/create-edit"
+              exact
+              component={BrandsCreateUpdateForm}
+            />
+            <PrivateRoute
+              path="/brand-models/create-edit"
+              exact
+              component={BrandModlesCreateUpdateForm}
+            />
+            <PrivateRoute
+              path="/categories/create-edit"
+              exact
+              component={CategoriesCreateUpdateForm}
+            />
+            <PrivateRoute
+              path="/users/create-edit"
+              exact
+              component={UserCreateUpdateForm}
+            />
+            <PrivateRoute
+              path="/services/create-edit"
+              exact
+              component={ServicesCreateUpdateForm}
+            />
+            <PrivateRoute
+              path="/plans/create-edit"
+              exact
+              component={PlanCreateUpdateForm}
+            />
+            <PrivateRoute
+              path="/coupons/create-edit"
+              exact
+              component={CouponCreateUpdateForm}
+            />
+            <PrivateRoute
+              path="/faqs/create-edit"
+              exact
+              component={FaqCreateUpdateForm}
+            />
+            <PrivateRoute
+              path="/advertisements/create-edit"
+              exact
+              component={AdvertisementCreateUpdateForm}
+            />
             <PrivateRoute path="/transactions" exact component={Transactions} />
             <PrivateRoute path="/issues" exact component={Issues} />
-            <PrivateRoute path="/push-notifications" exact component={Notifications} />
-            <PrivateRoute path="/booking-slots" exact component={BookingSlots} />
-            <PrivateRoute path="/booking-slots/create-edit" exact component={SlotCreateUpdateForm} />
-            <PrivateRoute path="/push-notifications/create-edit" exact component={NotificationCreateUpdateForm} />
-            <PrivateRoute path="/transactions/:id" exact component={TransactionUpdateForm} />
-            <PrivateRoute path="/subscriptions" exact component={Subscriptions} />
-            <PrivateRoute path="/subscriptions/:id" exact component={SingleSubscriptions} />
+            <PrivateRoute
+              path="/push-notifications"
+              exact
+              component={Notifications}
+            />
+            <PrivateRoute
+              path="/booking-slots"
+              exact
+              component={BookingSlots}
+            />
+            <PrivateRoute
+              path="/booking-slots/create-edit"
+              exact
+              component={SlotCreateUpdateForm}
+            />
+            <PrivateRoute
+              path="/push-notifications/create-edit"
+              exact
+              component={NotificationCreateUpdateForm}
+            />
+            <PrivateRoute
+              path="/transactions/:id"
+              exact
+              component={TransactionUpdateForm}
+            />
+            <PrivateRoute
+              path="/subscriptions"
+              exact
+              component={Subscriptions}
+            />
+            <PrivateRoute
+              path="/subscriptions/:id"
+              exact
+              component={SingleSubscriptions}
+            />
             <PrivateRoute path="/orders/:id" exact component={SingleOrder} />
             <PrivateRoute path="/issues/:id" exact component={SingleIssue} />
-            <PrivateRoute path="/orders/assign-agent/:id" exact component={AssignAgent} />
+            <PrivateRoute
+              path="/orders/assign-agent/:id"
+              exact
+              component={AssignAgent}
+            />
             <Route path="/login" exact component={LoginPage} />
             <Route path="/verify-otp/:id/:otp" exact component={VerifyOtp} />
           </Switch>

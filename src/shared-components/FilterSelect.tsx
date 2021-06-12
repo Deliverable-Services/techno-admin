@@ -1,51 +1,54 @@
-import React from 'react'
-import { Form } from 'react-bootstrap'
+import React from "react";
+import { Form } from "react-bootstrap";
 
 interface Props {
-    onFilterChange: (idx: string, value: any) => void;
-    label: string;
-    currentValue: string;
-    idx: string;
-    data: Array<any>;
-    valueSelector?: string;
-    nameSelector?: string;
-    defaultSelectTitle?: string;
-    isDefaultDisabled?: boolean;
-    width?: string
-
+  onFilterChange: (idx: string, value: any) => void;
+  label: string;
+  currentValue: string;
+  idx: string;
+  data: Array<any>;
+  valueSelector?: string;
+  nameSelector?: string;
+  defaultSelectTitle?: string;
+  isDefaultDisabled?: boolean;
+  width?: string;
 }
 
 const FilterSelect = ({
-    onFilterChange,
-    width = "200px",
-    defaultSelectTitle = "All",
-    isDefaultDisabled = false,
-    label,
-    currentValue,
-    idx,
-    data,
-    valueSelector = "id",
-    nameSelector = "name"
+  onFilterChange,
+  width = "200px",
+  defaultSelectTitle = "All",
+  isDefaultDisabled = false,
+  label,
+  currentValue,
+  idx,
+  data,
+  valueSelector = "id",
+  nameSelector = "name",
 }: Props) => {
-    return (
-        <Form.Group>
-            <Form.Label className="text-muted font-weight-bold">{label}</Form.Label>
-            <Form.Control as="select" value={currentValue} id={idx} onChange={e => onFilterChange(idx, e.target.value)}
-                style={{
-                    width,
-                    fontSize: 14
-                }}
+  return (
+    <Form.Group>
+      <Form.Label className="text-muted font-weight-bold">{label}</Form.Label>
+      <Form.Control
+        as="select"
+        value={currentValue}
+        id={idx}
+        onChange={(e) => onFilterChange(idx, e.target.value)}
+        style={{
+          width,
+          fontSize: 14,
+        }}
+      >
+        <option value="" disabled={isDefaultDisabled}>
+          {defaultSelectTitle}
+        </option>
+        {data &&
+          data.map((item) => (
+            <option value={item[valueSelector]}>{item[nameSelector]}</option>
+          ))}
+      </Form.Control>
+    </Form.Group>
+  );
+};
 
-            >
-                <option value="" disabled={isDefaultDisabled}>{defaultSelectTitle}</option>
-                {
-                    data && data.map(item => (
-                        <option value={item[valueSelector]}>{item[nameSelector]}</option>
-                    ))
-                }
-            </Form.Control>
-        </Form.Group>
-    )
-}
-
-export default FilterSelect
+export default FilterSelect;
