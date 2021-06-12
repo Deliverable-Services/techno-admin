@@ -12401,15 +12401,15 @@ th {
 }
 
 .form-group.store-select select {
-  border: 0;
-  border-bottom: 1px solid #d2ddec;
+  border: none !important;
+  padding: 0 !important;
   padding-top: 4px;
   font-size: 11px;
   background-color: transparent;
   border-radius: 0;
-  padding: 0;
   height: 22px;
   outline: 0;
+  text-indent: 0;
 }
 
 .form-group.store-select select:hover {

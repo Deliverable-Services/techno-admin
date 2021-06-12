@@ -175,15 +175,15 @@
     }
 
     select {
-      border: 0;
-      border-bottom: 1px solid $input-border;
+      border: none !important;
+      padding: 0 !important;
       padding-top: 4px;
       font-size: 11px;
       background-color: transparent;
       border-radius: 0;
-      padding: 0;
       height: 22px;
       outline: 0;
+      text-indent: 0;
 
       &:hover {
         cursor: not-allowed;
