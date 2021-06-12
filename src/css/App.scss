@@ -15,20 +15,21 @@
 @import "./dashboard";
 
 body {
-  font-family: "Lato", sans-serif;
-  background-color: #f9fbfd;
+  font-family: "Open Sans", sans-serif;
+  background-color: #fff;
 }
 
 .App {
   display: grid;
-  background-color: #f9fbfd;
+  background-color: #fff;
+  color: #1e2022;
 
   .main-layout {
     border-radius: 12px;
     border-top-right-radius: 0;
     border-bottom-right-radius: 0;
     margin-bottom: 50px;
-    padding: 10px 0 10px 10px;
+    padding: 10px 10px 10px 20px;
     margin-right: 15px;
     width: 100%;
     max-width: 100vw;
@@ -99,7 +100,7 @@ body {
   font-size: 0.9rem !important;
   font-weight: 600;
   color: #6c757d;
-  font-family: "Lato", sans-serif;
+  font-family: "Open Sans", sans-serif;
   margin-bottom: 0.5rem !important;
 }
 
@@ -144,10 +145,6 @@ body {
 
   @include responsive($desktop-breakpoint) {
     grid-template-columns: 1fr 1fr;
-
-    // .form-control {
-
-    // }
   }
 }
 

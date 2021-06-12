@@ -82,7 +82,7 @@ const TopBar = ({ isNavOpen, setIsNavOpen }: INavBar) => {
         }
       >
         <div className="notification">
-          <BsBell size={24} />
+          <BsBell size={20} />
           <div className="circle bg-primary text-white d-flex  justify-content-center">
             <p>
               <b>1</b>
@@ -90,9 +90,6 @@ const TopBar = ({ isNavOpen, setIsNavOpen }: INavBar) => {
           </div>
         </div>
 
-        {/* <button>
-                        <img src={profile} alt="profile" />
-                    </button> */}
         <Dropdown className="ml-4">
           <Dropdown.Toggle
             id="dropdown-basic"

@@ -28,7 +28,7 @@ const FilterSelect = ({
 }: Props) => {
   return (
     <Form.Group>
-      <Form.Label className="text-muted font-weight-bold">{label}</Form.Label>
+      <Form.Label className="text-muted">{label}</Form.Label>
       <Form.Control
         as="select"
         value={currentValue}

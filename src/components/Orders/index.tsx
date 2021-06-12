@@ -210,10 +210,10 @@ const Orders = () => {
 
   return (
     <>
-      <PageHeading title="Orders" />
+      <PageHeading title="Orders" totalRecords={500} />
 
       {(!isLoading || !isFetching) && (
-        <div className="filter mb-3">
+        <div className="filter mb-4">
           <BreadCrumb
             onFilterChange={onFilterChange}
             value=""
@@ -257,6 +257,7 @@ const Orders = () => {
           />
         </div>
       )}
+
       <Container fluid className="card component-wrapper px-0 py-2">
         <Container fluid className="h-100 p-0">
           <>
@@ -266,7 +267,7 @@ const Orders = () => {
               <>
                 {!error && (
                   <>
-                    <Container className="pt-3">
+                    <Container className="pt-2">
                       <Row className="select-filter d-flex">
                         <Col md="auto">
                           <FilterSelect
@@ -296,6 +297,8 @@ const Orders = () => {
                             onFilterChange={onFilterChange}
                           />
                         </Col>
+                        {/* #TODO - Add orderType, orderStatus, createdAt dropdown */}
+
                         <Col
                           md="auto"
                           className="d-flex align-items-center mt-1 justify-content-center"

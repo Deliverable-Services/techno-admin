@@ -96,7 +96,7 @@ const SingleOrder = () => {
     <Container fluid className="component-wrapper px-0 py-2">
       <Container fluid className="d-flex justify-content-between py-2">
         <div className="d-flex align-items-center">
-          <h2 className="text-muted font-weight-bold">Order</h2>
+          <h2 className="font-weight-bold">Order</h2>
           <h2 className="ml-2">#{data.ref_id}</h2>
           <Badge variant="primary" className="mx-3 px-3 py-2 text-uppercase">
             {data.order_type}
@@ -121,70 +121,13 @@ const SingleOrder = () => {
           </Button>
         </div>
       </Container>
-      <Container>
-        <Row>
-          {!isLoading && !data?.agent_id && (
-            <Col md="auto">
-              <Form.Group>
-                <Form.Label className="text-muted font-weight-bold">
-                  Assign Agent
-                </Form.Label>
-                <Form.Control
-                  as="select"
-                  value={form.agent_id || ""}
-                  onChange={(e) => {
-                    _onformChange("agent_id", e.target.value);
-                    mutate({ formdata: { agent_id: e.target.value }, id });
-                  }}
-                  style={{
-                    width: "200px",
-                    fontSize: 14,
-                  }}
-                >
-                  <option value="">Select Agent</option>
-                  <option value="2"> agent</option>
-                  {!isAgentLoading &&
-                    Agents?.data.map((item) => (
-                      <option value={item["id"]}>{item["name"]}</option>
-                    ))}
-                </Form.Control>
-              </Form.Group>
-            </Col>
-          )}
-          <Col md="auto">
-            <Form.Group>
-              <Form.Label className="text-muted font-weight-bold">
-                Change Status
-              </Form.Label>
-              <Form.Control
-                as="select"
-                value={form.status}
-                onChange={(e) => {
-                  _onformChange("status", e.target.value);
-                  // mutate({ formdata: { agent_id: e.target.value }, id })
-                }}
-                style={{
-                  width: "200px",
-                  fontSize: 14,
-                }}
-              >
-                <option value="" disabled>
-                  Select Status
-                </option>
-                {OrderStatus.map((item) => {
-                  if (item.id !== "")
-                    return <option value={item["id"]}>{item["name"]}</option>;
-                })}
-              </Form.Control>
-            </Form.Group>
-          </Col>
-        </Row>
-      </Container>
+
       {data.cancellation_reason && (
         <Container fluid>
           <p className="text-danger">{data.cancellation_reason}</p>
         </Container>
       )}
+
       <div className="w-75 mx-auto">
         <ProgressBar
           filledBackground="linear-gradient(to right, #fefb72, #f0bb31)"
@@ -201,6 +144,7 @@ const SingleOrder = () => {
               </div>
             )}
           </Step>
+
           <Step transition="scale">
             {({ accomplished, index }) => (
               <div
@@ -212,6 +156,7 @@ const SingleOrder = () => {
               </div>
             )}
           </Step>
+
           <Step transition="scale">
             {({ accomplished, index }) => (
               <div
@@ -223,6 +168,7 @@ const SingleOrder = () => {
               </div>
             )}
           </Step>
+
           <Step transition="scale">
             {({ accomplished, index }) => (
               <div
@@ -234,6 +180,7 @@ const SingleOrder = () => {
               </div>
             )}
           </Step>
+
           <Step transition="scale">
             {({ accomplished, index }) => (
               <div
@@ -250,70 +197,112 @@ const SingleOrder = () => {
 
       <div className="dashboard-page w-100">
         <Container fluid className="status-container mt-2">
-          <div className="head-row">
-            <div
-              style={{ margin: "4% 0 -12% 0" }}
-              className="card p-2 view-padding right-div d-flex"
-            >
-              <div className="d-flex flex-column">
-                <div className="text-primary">
-                  <p
-                    className=" font-weight-bold text-primary"
-                    style={{ cursor: "pointer" }}
-                    onClick={() => _onUserClick(data.user_id)}
-                  >
-                    User
-                  </p>
-                </div>
-
-                <div className="d-flex flex-column" style={{ fontSize: 18 }}>
-                  <table className="w-100">
-                    <tbody>
-                      <tr>
-                        <td className="text-muted">
-                          <p className="view-heading">Name</p>
-                        </td>
-                        <td className="text-right">
-                          <p className="view-subheading">{data.user.name}</p>
-                        </td>
-                      </tr>
-                      <tr>
-                        <td className="text-muted ">
-                          <p className="view-heading">Email</p>
-                        </td>
-                        <td className="text-primary  font-weight-bold text-right">
-                          <p className="view-subheading">{data.user.email}</p>
-                        </td>
-                      </tr>
-                      <tr>
-                        <td className="text-muted ">
-                          <p className="view-heading phone-padd">Phone</p>
-                        </td>
-                        <td className="text-primary  font-weight-bold text-right">
-                          <p className="view-subheading">{data.user.phone}</p>
-                        </td>
-                      </tr>
-                    </tbody>
-                  </table>
+          <div className="card p-2 view-padding right-div d-flex mb-3">
+            <div className="d-flex flex-column">
+              <div className="text-primary">
+                <div
+                  className="text-black pb-3"
+                  style={{ cursor: "pointer", fontWeight: 600 }}
+                  onClick={() => _onUserClick(data.user_id)}
+                >
+                  Update order status
                 </div>
               </div>
-            </div>
-            {data.agent && (
-              <div
-                className="card p-2  view-padding right-div d-flex "
-                style={{ marginTop: "15%" }}
-              >
-                <div className="d-flex flex-column">
-                  <div className="text-primary">
+
+              <hr className="mb-3" />
+
+              <div className="d-flex flex-column" style={{ fontSize: 18 }}>
+                <Row>
+                  <Col md="auto">
+                    <Form.Group>
+                      <Form.Control
+                        as="select"
+                        value={form.status}
+                        onChange={(e) => {
+                          _onformChange("status", e.target.value);
+                          // mutate({ formdata: { agent_id: e.target.value }, id })
+                        }}
+                        style={{
+                          width: "200px",
+                          fontSize: 14,
+                        }}
+                      >
+                        <option value="" disabled>
+                          Select Status
+                        </option>
+                        {OrderStatus.map((item) => {
+                          if (item.id !== "")
+                            return (
+                              <option value={item["id"]}>{item["name"]}</option>
+                            );
+                        })}
+                      </Form.Control>
+                    </Form.Group>
+
                     <p
-                      className=" font-weight-bold text-primary"
-                      style={{ cursor: "pointer" }}
-                      onClick={() => _onUserClick(data.agent_id)}
+                      style={{ fontSize: 13, lineHeight: 1.3, marginBottom: 5 }}
+                      className="text-muted"
                     >
-                      Agent
+                      Do note: Status should be changed by the agent from the
+                      app, as it should be to avoid complection in the database.
+                      Please try to avoid changing from here if possible.
                     </p>
-                  </div>
-                  <div className="d-flex flex-column" style={{ fontSize: 18 }}>
+                  </Col>
+                </Row>
+              </div>
+            </div>
+          </div>
+
+          <div className="card p-2  view-padding right-div d-flex mb-3">
+            <div className="d-flex flex-column">
+              <div className="d-flex justify-content-between">
+                <div
+                  className="text-black pb-3"
+                  style={{ cursor: "pointer", fontWeight: 600 }}
+                  onClick={() => _onUserClick(data.user_id)}
+                >
+                  {!isLoading && !data?.agent_id
+                    ? "Assign Agent"
+                    : "Assigned Agent"}
+                </div>
+
+                <div className="text-primary small">Change Agent</div>
+              </div>
+
+              <hr className="mb-3" />
+
+              <div className="d-flex flex-column" style={{ fontSize: 18 }}>
+                {!isLoading && !data?.agent_id && (
+                  <Col md="auto">
+                    <Form.Group>
+                      <Form.Control
+                        as="select"
+                        value={form.agent_id || ""}
+                        onChange={(e) => {
+                          _onformChange("agent_id", e.target.value);
+                          mutate({
+                            formdata: { agent_id: e.target.value },
+                            id,
+                          });
+                        }}
+                        style={{
+                          width: "200px",
+                          fontSize: 14,
+                        }}
+                      >
+                        <option value="">Select Agent</option>
+                        <option value="2"> agent</option>
+                        {!isAgentLoading &&
+                          Agents?.data.map((item) => (
+                            <option value={item["id"]}>{item["name"]}</option>
+                          ))}
+                      </Form.Control>
+                    </Form.Group>
+                  </Col>
+                )}
+
+                {data.agent && (
+                  <>
                     <table className="w-100">
                       <tbody>
                         <tr>
@@ -346,13 +335,104 @@ const SingleOrder = () => {
                         </tr>
                       </tbody>
                     </table>
+
+                    <span className="small text-primary font-weight-bold">
+                      View Profile
+                    </span>
+                  </>
+                )}
+              </div>
+            </div>
+          </div>
+
+          <div className="card p-2 view-padding right-div d-flex">
+            <div className="d-flex flex-column">
+              <div className="text-primary">
+                <div className="d-flex justify-content-between">
+                  <div
+                    className="text-black pb-3"
+                    style={{ cursor: "pointer", fontWeight: 600 }}
+                    onClick={() => _onUserClick(data.user_id)}
+                  >
+                    Customer
                   </div>
+
+                  <div className="text-primary small">Edit Info</div>
                 </div>
               </div>
-            )}
+
+              <hr className="mb-3" />
+
+              <div className="d-flex flex-column" style={{ fontSize: 18 }}>
+                <table className="w-100">
+                  <tbody>
+                    <tr>
+                      <td className="text-muted">
+                        <p className="view-heading">Name</p>
+                      </td>
+                      <td className="text-right">
+                        <p className="view-subheading">{data.user.name}</p>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td className="text-muted ">
+                        <p className="view-heading">Email</p>
+                      </td>
+                      <td className="text-primary  font-weight-bold text-right">
+                        <a href={`mailto:${data.user.email}`}>
+                          <p className="view-subheading text-primary">
+                            {data.user.email}
+                          </p>
+                        </a>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td className="text-muted ">
+                        <p className="view-heading phone-padd">Phone</p>
+                      </td>
+                      <td className="text-primary  font-weight-bold text-right">
+                        <p className="view-subheading">{data.user.phone}</p>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+                <span className="small text-primary font-weight-bold">
+                  View Profile
+                </span>
+              </div>
+
+              <hr className="mb-3 mt-3" />
+
+              <div className="d-flex flex-column" style={{ fontSize: 18 }}>
+                <p className="view-heading font-weight-bold">Billing Address</p>
+                <p className="view-subheading">
+                  {data.address.address}
+                  {", "}
+                  {data.address.city}
+                  {", "}
+                  {data.address.pincode}{" "}
+                </p>
+              </div>
+
+              <hr className="mb-3 mt-2" />
+
+              <div className="d-flex flex-column" style={{ fontSize: 18 }}>
+                <p className="view-heading font-weight-bold">
+                  Shipping Address
+                </p>
+                <p className="view-subheading">
+                  {data.address.address}
+                  {", "}
+                  {data.address.city}
+                  {", "}
+                  {data.address.pincode}{" "}
+                </p>
+              </div>
+            </div>
           </div>
         </Container>
-        <Container fluid className="charts-container mt-2">
+
+        <Container fluid className="charts-container">
           <div className="card view-padding p-2 d-flex mt-3">
             <div className="d-flex flex-column">
               <div
@@ -365,58 +445,84 @@ const SingleOrder = () => {
 
           <div className="card view-padding p-2 d-flex mt-3">
             <div className="d-flex flex-column">
-              <div className="view-heading  view-top-pad">ORDER SUMMARY</div>
+              <div className="text-primary">
+                <div className="d-flex justify-content-between">
+                  <div
+                    className="text-black pb-3"
+                    style={{ cursor: "pointer", fontWeight: 600 }}
+                    onClick={() => _onUserClick(data.user_id)}
+                  >
+                    Summary
+                  </div>
+                </div>
+              </div>
+              <hr className="mb-3" />
               <div
                 className="d-flex flex-column w-100"
                 style={{ fontSize: 18 }}
               >
                 <table className="w-100">
                   <tbody>
-                    <tr>
-                      <td className="text-muted">
-                        <p className="view-heading">Ref Id</p>
-                      </td>
-                      <td className="text-right">
-                        <p className="view-subheading">{data.ref_id}</p>
-                      </td>
-                    </tr>
+                    {data.vehicle && (
+                      <>
+                        <tr>
+                          <td className="view-heading py-2">Pick-up Vehicle</td>
+                          <td className="view-subheading py-2 text-right">
+                            {data.vehicle.name}
+                          </td>
+                        </tr>
+                        <tr>
+                          <td className="view-heading py-2">Vehicle Number</td>
+                          <td className="view-subheading py-2 text-right">
+                            {data.vehicle.name}
+                          </td>
+                        </tr>
+                      </>
+                    )}
+
                     <tr>
                       <td className="text-muted ">
                         <p className="view-heading">Scheduled At</p>
                       </td>
+
                       <td className="text-primary  font-weight-bold text-right">
                         <p className="view-subheading">
                           {data.scheduled_at
                             ? moment(data.scheduled_at).format(
                                 "DD/MM/YY(hh:mm)"
                               )
-                            : "NA"}
+                            : "-"}
                         </p>
                       </td>
                     </tr>
-                    {data.address && (
-                      <tr>
-                        <td className="view-heading py-2">Address</td>
-                        <td className="view-subheading py-2 text-right">
-                          <address className="font-italic font-weight-light text-capitalize">
-                            {data.address.address}
-                            {", "}
-                            <br />
-                            {data.address.city}
-                            {", "}
-                            {data.address.pincode}{" "}
-                          </address>
-                        </td>
-                      </tr>
-                    )}
-                    {data.vehicle && (
-                      <tr>
-                        <td className="view-heading py-2">Vehicle Name</td>
-                        <td className="view-subheading py-2 text-right">
-                          {data.vehicle.name}
-                        </td>
-                      </tr>
-                    )}
+
+                    <tr>
+                      <td className="text-muted ">
+                        <p className="view-heading">Picked At</p>
+                      </td>
+
+                      <td className="text-primary  font-weight-bold text-right">
+                        <p className="view-subheading">
+                          {data.picked_at
+                            ? moment(data.picked_at).format("DD/MM/YY(hh:mm)")
+                            : "-"}
+                        </p>
+                      </td>
+                    </tr>
+
+                    <tr>
+                      <td className="text-muted ">
+                        <p className="view-heading">Closed At</p>
+                      </td>
+
+                      <td className="text-primary  font-weight-bold text-right">
+                        <p className="view-subheading">
+                          {data.closed_at
+                            ? moment(data.closed_at).format("DD/MM/YY(hh:mm)")
+                            : "-"}
+                        </p>
+                      </td>
+                    </tr>
                   </tbody>
                 </table>
               </div>
@@ -425,11 +531,25 @@ const SingleOrder = () => {
 
           <div className="card view-padding p-2 d-flex mt-3">
             <div className="d-flex flex-column">
-              <div className="view-heading  view-top-pad">PAYMENT SUMMARY</div>
+              <div className="text-primary">
+                <div className="d-flex justify-content-between">
+                  <div
+                    className="text-black pb-3"
+                    style={{ cursor: "pointer", fontWeight: 600 }}
+                    onClick={() => _onUserClick(data.user_id)}
+                  >
+                    Services Details
+                  </div>
+                </div>
+              </div>
+
+              <hr className="mb-3" />
+
               <div
                 className="d-flex flex-column w-100"
                 style={{ fontSize: 18 }}
               >
+                {/* #TODO: Add list of services. */}
                 <table className="w-100">
                   <tbody>
                     <tr>

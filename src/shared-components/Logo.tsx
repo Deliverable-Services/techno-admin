@@ -1,4 +1,5 @@
-import logo from "../assets/logo.jpg";
+import logo from "../assets/logo.svg";
+
 const Logo = () => {
   return (
     <div className="d-flex justify-content-start">

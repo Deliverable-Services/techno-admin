@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { Container } from "react-bootstrap";
-import { Route, Switch, useLocation } from "react-router-dom";
+import { Route, Switch, useLocation, Redirect } from "react-router-dom";
 import Advertisements from "./components/Advertisements";
 import BrandModels from "./components/BrandModels";
 import BrandModlesCreateUpdateForm from "./components/BrandModels/BrandModelsUpdateCreateForm";
@@ -91,6 +91,9 @@ const App = () => {
         )}
         <Container fluid className="main-layout">
           <Switch>
+            <Route exact path="/">
+              <Redirect to="/dashboard" />
+            </Route>
             <PrivateRoute path="/dashboard" exact component={Dashboard} />
             <PrivateRoute path="/brands" exact component={Brands} />
             <PrivateRoute path="/brand-models" exact component={BrandModels} />
