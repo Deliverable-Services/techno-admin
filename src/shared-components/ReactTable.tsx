@@ -426,9 +426,9 @@ const DnDRow = ({ provided, row, snapshot }: any) => (
 	</tr>
 );
 const Row = ({ row }: any) => (
-	<tr {...row.getRowProps()}>
+	<tr {...row.getRowProps()} >
 		{row.cells.map((cell) => (
-			<td {...cell.getCellProps()}>{cell.render("Cell")}</td>
+			<td {...cell.getCellProps()} style={{ verticalAlign: "middle" }}>{cell.render("Cell")}</td>
 		))}
 	</tr>
 );

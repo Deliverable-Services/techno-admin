@@ -67,14 +67,13 @@ const NotificationCreateUpdateForm = () => {
 					<Formik
 						initialValues={apiData || {}}
 						onSubmit={(values) => {
-							const { logo, ...rest } = values;
-							const formdata = new FormData();
-							for (let k in rest) formdata.append(k, rest[k]);
+							console.log({ values })
+							// const { logo, ...rest } = values;
+							// const formdata = new FormData();
+							// for (let k in rest) formdata.append(k, rest[k]);
 
-							if (values.logo && typeof values.logo !== "string")
-								formdata.append("logo", values.logo);
 
-							mutate({ formdata, id });
+							// mutate({ formdata, id });
 						}}
 					>
 						{({ setFieldValue }) => (
@@ -88,18 +87,18 @@ const NotificationCreateUpdateForm = () => {
 									/>
 
 									<InputField
-										name="url"
-										placeholder="Url"
-										label="Url"
+										name="title"
+										placeholder="Title"
+										label="Title"
 										required
 									/>
 
 									<InputField
 										as="select"
 										selectData={isActiveArray}
-										name="is_active"
-										label="Is active?"
-										placeholder="Choose is active"
+										name="sent"
+										label="Sent?"
+										placeholder="Choose is sent"
 									/>
 								</div>
 

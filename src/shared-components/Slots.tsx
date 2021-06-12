@@ -40,6 +40,8 @@ const Slots = (props: Props) => {
 
 	return (
 		<Container fluid className="mt-2">
+
+			{isDeleteLoading && <div> Deleting<Spinner animation="border" size="sm" /> </div>}
 			<h2 className="text-muted font-weight-bold">{moment(props.date).format("DD-MM-YYYY")}</h2>
 			<Row
 				className="py-2"
@@ -50,19 +52,23 @@ const Slots = (props: Props) => {
 
 				{
 					props.slots.map(slot => {
-						const initial = (moment(slot.datetime).format("hh a"))
-						const final = moment(slot.datetime).add(1, "hour").format("hh a")
+						const initial = (moment(slot.datetime).format("HH a"))
+						const final = moment(slot.datetime).add(1, "hour").format("HH a")
+						console.log({ initial, datetime: slot.datetime })
 						return (
 
 							<Col md="6" className="d-flex align-items-center justify-content-between my-1 "
 							>
-								<p className="m-0 font-weight-bold">
-									{initial} - {final}
-								</p>
+								<div>
+
+									<p className="m-0 font-weight-bold">
+										{initial} - {final}
+									</p>
+									{slot.reason && <span className="text-muted text-normal">({slot.reason})</span>}
+								</div>
 								<button onClick={() => mutate(slot.id)}>
 									{
-										isDeleteLoading ? <Spinner animation="border" size="sm" /> :
-											<BiTrash size={24} color={"red"} />
+										<BiTrash size={24} color={"red"} />
 
 									}
 								</button>

@@ -25,9 +25,8 @@ const createSlot = ({
 }: {
 	formdata: any;
 }) => {
-	return API.post(`${key}`, formdata, {
-		headers: { "Content-Type": "multipart/form-data" },
-	});
+	return API.post(`${key}`, formdata,);
+
 
 };
 
@@ -63,11 +62,13 @@ const SlotCreateUpdateForm = () => {
 						initialValues={apiData || {}}
 
 						onSubmit={(values) => {
-							console.log({ values })
 
 							const formdata = {
-								datetime: moment(values.datetime).format("YYYY-MM-DD hh-mm-ss")
+								reason: values.reason,
+								datetime: moment(values.datetime).format("YYYY-MM-DD hh:mm:ss")
 							}
+
+							console.log({ formdata })
 							mutate({ formdata });
 						}}
 					>
