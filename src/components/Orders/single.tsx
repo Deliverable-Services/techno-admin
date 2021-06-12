@@ -15,9 +15,9 @@ import API from "../../utils/API";
 import { OrderStatus } from "../../utils/arrays";
 import { queryClient } from "../../utils/queryClient";
 import { showMsgToast } from "../../utils/showMsgToast";
+import Map from "../../components/Map";
 
 const key = "bookings";
-
 
 const assignAgent = ({
   formdata,
@@ -38,7 +38,7 @@ const SingleOrder = () => {
 
   const { mutate, isLoading: isAsigningLoading } = useMutation(assignAgent, {
     onSuccess: (data) => {
-      showMsgToast("Agent assigned successfully")
+      showMsgToast("Agent assigned successfully");
       setTimeout(() => {
         queryClient.invalidateQueries(key);
         queryClient.invalidateQueries(`${key}/${id}`);
@@ -47,24 +47,30 @@ const SingleOrder = () => {
   });
   const [form, setForm] = useState({
     agent_id: data?.agent_id,
-    status: data?.status
-  })
-
+    status: data?.status,
+  });
 
   const _onformChange = (idx: string, value: any) => {
-    setForm(prev => ({
+    setForm((prev) => ({
       ...prev,
-      [idx]: value
-    }))
-  }
+      [idx]: value,
+    }));
+  };
 
-  const { data: Agents, isLoading: isAgentLoading } = useQuery<any>(["users", 1, {
-    role: "agent"
-  }], {
-    onError: (error: AxiosError) => {
-      handleApiError(error, history)
-    },
-  });
+  const { data: Agents, isLoading: isAgentLoading } = useQuery<any>(
+    [
+      "users",
+      1,
+      {
+        role: "agent",
+      },
+    ],
+    {
+      onError: (error: AxiosError) => {
+        handleApiError(error, history);
+      },
+    }
+  );
 
   const _onUserClick = (id: string) => {
     if (!id) return;
@@ -116,65 +122,62 @@ const SingleOrder = () => {
         </div>
       </Container>
       <Container>
-
         <Row>
-
-          {
-            !isLoading && !data?.agent_id &&
+          {!isLoading && !data?.agent_id && (
             <Col md="auto">
               <Form.Group>
-                <Form.Label className="text-muted font-weight-bold">Assign Agent</Form.Label>
-                <Form.Control as="select" value={form.agent_id || ""} onChange={
-                  (e) => {
-                    _onformChange("agent_id", e.target.value)
-                    mutate({ formdata: { agent_id: e.target.value }, id })
-                  }
-                }
+                <Form.Label className="text-muted font-weight-bold">
+                  Assign Agent
+                </Form.Label>
+                <Form.Control
+                  as="select"
+                  value={form.agent_id || ""}
+                  onChange={(e) => {
+                    _onformChange("agent_id", e.target.value);
+                    mutate({ formdata: { agent_id: e.target.value }, id });
+                  }}
                   style={{
                     width: "200px",
-                    fontSize: 14
+                    fontSize: 14,
                   }}
-
                 >
-                  <option value="" >Select Agent</option>
+                  <option value="">Select Agent</option>
                   <option value="2"> agent</option>
-                  {
-                    !isAgentLoading && Agents?.data.map(item => (
+                  {!isAgentLoading &&
+                    Agents?.data.map((item) => (
                       <option value={item["id"]}>{item["name"]}</option>
-                    ))
-                  }
+                    ))}
                 </Form.Control>
               </Form.Group>
             </Col>
-          }
+          )}
           <Col md="auto">
             <Form.Group>
-              <Form.Label className="text-muted font-weight-bold">Change Status</Form.Label>
-              <Form.Control as="select" value={form.status} onChange={
-                (e) => {
-                  _onformChange("status", e.target.value)
+              <Form.Label className="text-muted font-weight-bold">
+                Change Status
+              </Form.Label>
+              <Form.Control
+                as="select"
+                value={form.status}
+                onChange={(e) => {
+                  _onformChange("status", e.target.value);
                   // mutate({ formdata: { agent_id: e.target.value }, id })
-                }
-              }
+                }}
                 style={{
                   width: "200px",
-                  fontSize: 14
+                  fontSize: 14,
                 }}
-
               >
-                <option value="" disabled>Select Status</option>
-                {
-                  OrderStatus.map(item => {
-                    if (item.id !== "")
-                      return (
-                        <option value={item["id"]}>{item["name"]}</option>
-                      )
-                  })
-                }
+                <option value="" disabled>
+                  Select Status
+                </option>
+                {OrderStatus.map((item) => {
+                  if (item.id !== "")
+                    return <option value={item["id"]}>{item["name"]}</option>;
+                })}
               </Form.Control>
             </Form.Group>
           </Col>
-
         </Row>
       </Container>
       {data.cancellation_reason && (
@@ -190,7 +193,9 @@ const SingleOrder = () => {
           <Step transition="scale">
             {({ accomplished, index }) => (
               <div
-                className={`transitionStep ${accomplished ? "accomplished" : null}`}
+                className={`transitionStep ${
+                  accomplished ? "accomplished" : null
+                }`}
               >
                 <CgSandClock />
               </div>
@@ -199,7 +204,9 @@ const SingleOrder = () => {
           <Step transition="scale">
             {({ accomplished, index }) => (
               <div
-                className={`transitionStep ${accomplished ? "accomplished" : null}`}
+                className={`transitionStep ${
+                  accomplished ? "accomplished" : null
+                }`}
               >
                 🌒
               </div>
@@ -208,7 +215,9 @@ const SingleOrder = () => {
           <Step transition="scale">
             {({ accomplished, index }) => (
               <div
-                className={`transitionStep ${accomplished ? "accomplished" : null}`}
+                className={`transitionStep ${
+                  accomplished ? "accomplished" : null
+                }`}
               >
                 🌓
               </div>
@@ -217,7 +226,9 @@ const SingleOrder = () => {
           <Step transition="scale">
             {({ accomplished, index }) => (
               <div
-                className={`transitionStep ${accomplished ? "accomplished" : null}`}
+                className={`transitionStep ${
+                  accomplished ? "accomplished" : null
+                }`}
               >
                 🌔
               </div>
@@ -226,7 +237,9 @@ const SingleOrder = () => {
           <Step transition="scale">
             {({ accomplished, index }) => (
               <div
-                className={`transitionStep ${accomplished ? "accomplished" : null}`}
+                className={`transitionStep ${
+                  accomplished ? "accomplished" : null
+                }`}
               >
                 🌕
               </div>
@@ -244,10 +257,15 @@ const SingleOrder = () => {
             >
               <div className="d-flex flex-column">
                 <div className="text-primary">
-                  <p className=" font-weight-bold text-primary"
+                  <p
+                    className=" font-weight-bold text-primary"
                     style={{ cursor: "pointer" }}
-                    onClick={() => _onUserClick(data.user_id)}>User</p>
+                    onClick={() => _onUserClick(data.user_id)}
+                  >
+                    User
+                  </p>
                 </div>
+
                 <div className="d-flex flex-column" style={{ fontSize: 18 }}>
                   <table className="w-100">
                     <tbody>
@@ -287,9 +305,13 @@ const SingleOrder = () => {
               >
                 <div className="d-flex flex-column">
                   <div className="text-primary">
-                    <p className=" font-weight-bold text-primary"
+                    <p
+                      className=" font-weight-bold text-primary"
                       style={{ cursor: "pointer" }}
-                      onClick={() => _onUserClick(data.agent_id)}>Agent</p>
+                      onClick={() => _onUserClick(data.agent_id)}
+                    >
+                      Agent
+                    </p>
                   </div>
                   <div className="d-flex flex-column" style={{ fontSize: 18 }}>
                     <table className="w-100">
@@ -307,7 +329,9 @@ const SingleOrder = () => {
                             <p className="view-heading">Email</p>
                           </td>
                           <td className="text-primary  font-weight-bold text-right">
-                            <p className="view-subheading">{data.agent.email}</p>
+                            <p className="view-subheading">
+                              {data.agent.email}
+                            </p>
                           </td>
                         </tr>
                         <tr>
@@ -315,7 +339,9 @@ const SingleOrder = () => {
                             <p className="view-heading phone-padd">Phone</p>
                           </td>
                           <td className="text-primary  font-weight-bold text-right">
-                            <p className="view-subheading">{data.agent.phone}</p>
+                            <p className="view-subheading">
+                              {data.agent.phone}
+                            </p>
                           </td>
                         </tr>
                       </tbody>
@@ -327,6 +353,16 @@ const SingleOrder = () => {
           </div>
         </Container>
         <Container fluid className="charts-container mt-2">
+          <div className="card view-padding p-2 d-flex mt-3">
+            <div className="d-flex flex-column">
+              <div
+                style={{ width: "100%", height: "350px", position: "relative" }}
+              >
+                <Map order={data} />
+              </div>
+            </div>
+          </div>
+
           <div className="card view-padding p-2 d-flex mt-3">
             <div className="d-flex flex-column">
               <div className="view-heading  view-top-pad">ORDER SUMMARY</div>
@@ -352,8 +388,8 @@ const SingleOrder = () => {
                         <p className="view-subheading">
                           {data.scheduled_at
                             ? moment(data.scheduled_at).format(
-                              "DD/MM/YY(hh:mm)"
-                            )
+                                "DD/MM/YY(hh:mm)"
+                              )
                             : "NA"}
                         </p>
                       </td>
@@ -427,7 +463,7 @@ const SingleOrder = () => {
             </div>
           </div>
 
-          {data?.services?.length ?
+          {data?.services?.length ? (
             <div className="card view-padding p-2 d-flex mt-3">
               <div className="d-flex flex-column">
                 <div className="view-heading  view-top-pad">
@@ -452,7 +488,7 @@ const SingleOrder = () => {
                 </div>
               </div>
             </div>
-            : null}
+          ) : null}
 
           {data.plan && (
             <div className="card p-2 d-flex mt-3">

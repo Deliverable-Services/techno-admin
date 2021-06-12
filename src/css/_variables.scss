@@ -1,5 +1,5 @@
 $primary-color: #2c7be5;
-$ripple-color:#2c7be5;
+$ripple-color: #2c7be5;
 $secondary-color: #2c7be5;
 $text-primary: #12263f;
 $text-grey: #677788;
@@ -10,7 +10,7 @@ $white-color: rgb(255, 255, 255);
 $grey-color: #8c98a4;
 $dark-color: rgb(0, 0, 0);
 $light-dark: #6f6f6f;
-$navWidth: 18rem;
+$navWidth: 13rem;
 // break points
 $desktop-breakpoint: 800px;
 $large-screen-breakpoint: 1280px;
@@ -18,7 +18,8 @@ $success-bg: rgba(0, 201, 167, 0.1);
 $success-color: #00c9a7;
 
 //bootstarp changes
-$theme-colors: ("primary": #2c7be5,
+$theme-colors: (
+  "primary": #2c7be5,
   "text-primary": #12263f,
   "text-muted": #95aac9,
   "secondary": #2c7be5,

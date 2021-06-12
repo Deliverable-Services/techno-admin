@@ -23,13 +23,13 @@ const key = "bookings";
 const intitialFilter = {
   q: "",
   page: null,
-  perPage: 25
-}
+  perPage: 25,
+};
 const Orders = () => {
   const history = useHistory();
   const [page, setPage] = useState<number>(1);
   const [selectedRows, setSelectedRows] = useState([]);
-  const [localFilter, setFilter] = useState(intitialFilter)
+  const [localFilter, setFilter] = useState(intitialFilter);
   const filter = useOrderStoreFilter((state) => state.filter);
   const NumberOfRows = useOrderStoreFilter((state) => state.rows_per_page);
   const onFilterChange = useOrderStoreFilter((state) => state.onFilterChange);
@@ -86,19 +86,19 @@ const Orders = () => {
     };
     return <CustomBadge variant={setVairant()} title={status} />;
   };
+
   const _onUserClick = (id: string) => {
     if (!id) return;
     history.push("/users/create-edit", { id });
   };
 
   const _onFilterChange = (idx: string, value: any) => {
-
-    setFilter(prev => ({
+    setFilter((prev) => ({
       ...prev,
-      [idx]: value
-    }))
+      [idx]: value,
+    }));
+  };
 
-  }
   const columns = useMemo(
     () => [
       {
@@ -156,7 +156,9 @@ const Orders = () => {
       {
         Header: "Scheduled At",
         accessor: "scheduled_at",
-        Cell: (data: Cell) => <CreatedUpdatedAt date={data.row.values.scheduled_at} />
+        Cell: (data: Cell) => (
+          <CreatedUpdatedAt date={data.row.values.scheduled_at} />
+        ),
       },
       {
         Header: "Inside Cart",
@@ -173,7 +175,9 @@ const Orders = () => {
       {
         Header: "Created At",
         accessor: "created_at",
-        Cell: (data: Cell) => <CreatedUpdatedAt date={data.row.values.created_at} />
+        Cell: (data: Cell) => (
+          <CreatedUpdatedAt date={data.row.values.created_at} />
+        ),
       },
       {
         Header: "Actions",
@@ -207,6 +211,7 @@ const Orders = () => {
   return (
     <>
       <PageHeading title="Orders" />
+
       {(!isLoading || !isFetching) && (
         <div className="filter mb-3">
           <BreadCrumb

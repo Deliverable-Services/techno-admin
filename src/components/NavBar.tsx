@@ -122,7 +122,7 @@ const NavBar = ({ isNavOpen, setIsNavOpen }: INavBar) => {
           <ul className="pt-4">
             <Navlink
               title="Dashboard"
-              path="/"
+              path="/dashboard"
               onClick={closeNavBar}
               icon={<RiDashboardFill />}
             />
