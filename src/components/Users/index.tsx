@@ -55,7 +55,7 @@ const Users = () => {
   const [filter, setFilter] = useState(intitialFilter);
 
   const { data, isLoading, isFetching, error } = useQuery<any>(
-    [key, page, filter],
+    [key, , filter],
     {
       onError: (error: AxiosError) => {
         handleApiError(error, history)
