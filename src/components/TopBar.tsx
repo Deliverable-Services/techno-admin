@@ -1,5 +1,5 @@
 import React, { useContext } from "react";
-import { Container, Dropdown } from "react-bootstrap";
+import { Container, Dropdown, Form } from "react-bootstrap";
 import { BiMenuAltLeft } from "react-icons/bi";
 import { BsBell } from "react-icons/bs";
 import { useMutation } from "react-query";
@@ -52,7 +52,27 @@ const TopBar = ({ isNavOpen, setIsNavOpen }: INavBar) => {
           ) : null}
         </div>
       ) : null}
+
       {!isDesktop && <Logo />}
+
+      {isDesktop && (
+        <Form.Group className="form-group store-select">
+          <Form.Label className="text-muted font-weight-bold">
+            Select Store
+          </Form.Label>
+
+          <Form.Control
+            as="select"
+            style={{
+              width: 150,
+              fontSize: 14,
+            }}
+          >
+            <option value="carsafai">Car Safai</option>
+          </Form.Control>
+        </Form.Group>
+      )}
+
       <div
         className={
           isDesktop

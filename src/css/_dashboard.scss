@@ -146,6 +146,29 @@
       box-shadow: none;
     }
   }
+
+  &.store-select {
+    margin-bottom: 0;
+
+    label {
+      margin-bottom: 0;
+      font-size: 9px;
+      text-transform: uppercase;
+    }
+
+    select {
+      border: 0;
+      border-bottom: 1px solid $input-border;
+      padding-top: 4px;
+      padding-bottom: 4px;
+      font-size: 11px;
+      background-color: transparent;
+      border-radius: 0;
+      padding: 0;
+      height: 22px;
+      outline: 0;
+    }
+  }
 }
 
 .tag {

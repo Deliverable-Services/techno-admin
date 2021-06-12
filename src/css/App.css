@@ -12376,6 +12376,29 @@ th {
           box-shadow: none;
 }
 
+.form-group.store-select {
+  margin-bottom: 0;
+}
+
+.form-group.store-select label {
+  margin-bottom: 0;
+  font-size: 9px;
+  text-transform: uppercase;
+}
+
+.form-group.store-select select {
+  border: 0;
+  border-bottom: 1px solid #d2ddec;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  font-size: 11px;
+  background-color: transparent;
+  border-radius: 0;
+  padding: 0;
+  height: 22px;
+  outline: 0;
+}
+
 .tag {
   padding: 3px 6px;
   border-radius: 4px;
