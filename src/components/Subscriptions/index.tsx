@@ -20,20 +20,23 @@ const key = "user-subscriptions";
 const intitialFilter = {
   q: "",
   page: null,
-  perPage: 25
-}
+  perPage: 25,
+};
 
 const Subscription = () => {
-  const history = useHistory()
-  const [selectedRows, setSelectedRows] = useState([])
-  console.log(selectedRows.map(item => item.id))
-  const [filter, setFilter] = useState(intitialFilter)
-  console.log({ filter })
-  const { data, isLoading, isFetching, error } = useQuery<any>([key, , filter], {
-    onError: (error: AxiosError) => {
-      handleApiError(error, history)
-    },
-  });
+  const history = useHistory();
+  const [selectedRows, setSelectedRows] = useState([]);
+  console.log(selectedRows.map((item) => item.id));
+  const [filter, setFilter] = useState(intitialFilter);
+  console.log({ filter });
+  const { data, isLoading, isFetching, error } = useQuery<any>(
+    [key, , filter],
+    {
+      onError: (error: AxiosError) => {
+        handleApiError(error, history);
+      },
+    }
+  );
   const Status = ({ status }: { status: string }) => {
     const setVariant = () => {
       if (status === "active") return "success";
@@ -57,13 +60,11 @@ const Subscription = () => {
   };
 
   const _onFilterChange = (idx: string, value: any) => {
-
-    setFilter(prev => ({
+    setFilter((prev) => ({
       ...prev,
-      [idx]: value
-    }))
-
-  }
+      [idx]: value,
+    }));
+  };
   const columns = useMemo(
     () => [
       {
@@ -173,8 +174,8 @@ const Subscription = () => {
       <PageHeading title="Subscriptions" totalRecords={500} />
 
       {(!isLoading || !isFetching) && (
-          <div className="filter mb-4">
-          <BreadCrumb
+        <div className="filter mb-4">
+          {/* <BreadCrumb
             // onFilterChange={onFilterChange}
             value=""
             currentValue={filter.status}
@@ -197,76 +198,74 @@ const Subscription = () => {
             dataLength={data?.data?.length}
             idx="status"
             title="Expired"
-          />
+          /> */}
         </div>
       )}
 
       <Container fluid className="card component-wrapper px-0 py-2">
         <Container fluid className="h-100 p-0">
-
           {isLoading ? (
             <IsLoading />
           ) : (
             <>
-                    <Container className="pt-2">
+              <Container className="pt-2">
+                <Row className="select-filter d-flex">
+                  {/* <Col md="auto">
+                    <FilterSelect
+                      // currentValue={filter.user_id}
+                      // data={!isCustomerLoading && Customers.data}
+                      label="Customer"
+                      idx="user_id"
+                      // onFilterChange={onFilterChange}
+                    />
+                  </Col>
+                  <Col md="auto">
+                    <FilterSelect
+                      // currentValue={filter.agent_id}
+                      // data={!isAgentLoading && Agents.data}
+                      label="Plan"
+                      idx="agent_id"
+                      // onFilterChange={onFilterChange}
+                    />
+                  </Col>
+                  <Col md="auto">
+                    <FilterSelect
+                      // currentValue={filter.inside_cart}
+                      // data={InsideCart}
+                      label="Purchased on"
+                      idx="inside_cart"
+                      // onFilterChange={onFilterChange}
+                    />
+                  </Col> */}
 
-                                  <Row className="select-filter d-flex">
-                        <Col md="auto">
-                          <FilterSelect
-                            // currentValue={filter.user_id}
-                            // data={!isCustomerLoading && Customers.data}
-                            label="Customer"
-                            idx="user_id"
-                            // onFilterChange={onFilterChange}
-                          />
-                        </Col>
-                        <Col md="auto">
-                          <FilterSelect
-                            // currentValue={filter.agent_id}
-                            // data={!isAgentLoading && Agents.data}
-                            label="Plan"
-                            idx="agent_id"
-                            // onFilterChange={onFilterChange}
-                          />
-                        </Col>
-                        <Col md="auto">
-                          <FilterSelect
-                            // currentValue={filter.inside_cart}
-                            // data={InsideCart}
-                            label="Purchased on"
-                            idx="inside_cart"
-                            // onFilterChange={onFilterChange}
-                          />
-                        </Col>
-                        {/* #TODO - Add orderType, orderStatus, createdAt dropdown */}
-
-                        <Col
-                          md="auto"
-                          className="d-flex align-items-center mt-1 justify-content-center"
-                        >
-                          <Button
-                            // onClick={() => resetFilter()}
-                            variant="light"
-                            style={{
-                              backgroundColor: "#eee",
-                              fontSize: 14,
-                            }}
-                          >
-                            Reset Filters
-                          </Button>
-                        </Col>
-                      </Row>
-                    </Container>
-                    <hr />
-
-              {!error && <ReactTable
-                data={data?.data}
-                columns={columns}
-                setSelectedRows={setSelectedRows}
-                filter={filter}
-                onFilterChange={_onFilterChange}
-                isDataLoading={isFetching}
-              />}
+                  <Col
+                    md="auto"
+                    className="d-flex align-items-center mt-1 justify-content-center"
+                  >
+                    <Button
+                      // onClick={() => resetFilter()}
+                      variant="light"
+                      style={{
+                        backgroundColor: "#eee",
+                        fontSize: 14,
+                      }}
+                    >
+                      Reset Filters
+                    </Button>
+                  </Col>
+                </Row>
+              </Container>
+              <hr />
+              {!error && (
+                <ReactTable
+                  data={data?.data}
+                  columns={columns}
+                  setSelectedRows={setSelectedRows}
+                  filter={filter}
+                  onFilterChange={_onFilterChange}
+                  isDataLoading={isFetching}
+                />
+              )}
               {!error && data.length > 0 ? (
                 <TablePagination
                   currentPage={data?.current_page}
@@ -280,15 +279,14 @@ const Subscription = () => {
           )}
         </Container>
       </Container>
-      {
-        selectedRows.length > 0 &&
+      {selectedRows.length > 0 && (
         <div className="delete-button rounded">
-          <span><b>Delete {selectedRows.length} rows</b></span>
-          <Button variant="danger">
-            Delete
-          </Button>
+          <span>
+            <b>Delete {selectedRows.length} rows</b>
+          </span>
+          <Button variant="danger">Delete</Button>
         </div>
-      }
+      )}
     </>
   );
 };

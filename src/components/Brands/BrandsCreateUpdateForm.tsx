@@ -2,7 +2,7 @@ import { AxiosError } from "axios";
 import bsCustomFileInput from "bs-custom-file-input";
 import { Form, Formik } from "formik";
 import { useEffect } from "react";
-import { Alert, Button, Col, Row, Spinner } from "react-bootstrap";
+import { Button, Col, Row, Spinner } from "react-bootstrap";
 import { useMutation } from "react-query";
 import { useHistory, useLocation } from "react-router-dom";
 import { handleApiError } from "../../hooks/handleApiErrors";
@@ -13,7 +13,6 @@ import IsLoading from "../../shared-components/isLoading";
 import API from "../../utils/API";
 import { isActiveArray } from "../../utils/arrays";
 import { queryClient } from "../../utils/queryClient";
-import { showErrorToast } from "../../utils/showErrorToast";
 import { showMsgToast } from "../../utils/showMsgToast";
 
 const key = "brands";
@@ -37,8 +36,8 @@ const createUpdataBrand = ({
 };
 
 const BrandsCreateUpdateForm = () => {
-  const { state } = useLocation()
-  const history = useHistory()
+  const { state } = useLocation();
+  const history = useHistory();
   const id = state ? (state as any).id : null;
   useEffect(() => {
     bsCustomFileInput.init();
@@ -47,14 +46,14 @@ const BrandsCreateUpdateForm = () => {
   const { mutate, isLoading } = useMutation(createUpdataBrand, {
     onSuccess: () => {
       setTimeout(() => queryClient.invalidateQueries(key), 500);
-      if (id) return showMsgToast("Brand updated successfully")
-      showMsgToast("Brands created successfully")
+      history.replace("/brands");
+      if (id) return showMsgToast("Brand updated successfully");
+      showMsgToast("Brands created successfully");
     },
     onError: (error: AxiosError) => {
-      handleApiError(error, history)
-    }
+      handleApiError(error, history);
+    },
   });
-
 
   const apiData = data as any;
 
@@ -62,61 +61,91 @@ const BrandsCreateUpdateForm = () => {
 
   return (
     <>
-      <BackButton title="Brands" />
-      <Row className="rounded">
-        <Col className="mx-auto">
-          <Formik
-            initialValues={apiData || {}}
+      <BackButton title="Add brand" />
 
-            onSubmit={(values) => {
-              const { logo, ...rest } = values;
-              const formdata = new FormData();
-              for (let k in rest) formdata.append(k, rest[k])
+      <div className="card view-padding p-2 d-flex mt-3">
+        <div className="text-primary">
+          <div className="d-flex justify-content-between">
+            <div
+              className="text-black pb-3"
+              style={{ cursor: "pointer", fontWeight: 600 }}
+            >
+              Basic Information
+            </div>
+          </div>
+        </div>
 
-              if (values.logo && typeof values.logo !== "string")
-                formdata.append("logo", values.logo);
+        <hr className="mb-3" />
 
-              mutate({ formdata, id });
-            }}
-          >
-            {({ setFieldValue }) => (
-              <Form>
-                <div className="form-container ">
-                  <InputField
-                    name="name"
-                    placeholder="Name"
-                    label="Name"
-                    required
-                  />
+        <Row className="rounded">
+          <Col className="mx-auto">
+            <Formik
+              initialValues={apiData || {}}
+              onSubmit={(values) => {
+                const { logo, ...rest } = values;
+                const formdata = new FormData();
+                for (let k in rest) formdata.append(k, rest[k]);
 
-                  <InputField name="url" placeholder="Url" label="Url" required />
-                  <InputField
-                    name="logo"
-                    placeholder="logo"
-                    label="Choose Brand Logo"
-                    isFile
-                    setFieldValue={setFieldValue}
-                  />
+                if (logo && typeof logo !== "string")
+                  formdata.append("logo", logo);
 
-                  <InputField as="select" selectData={isActiveArray} name="is_active" label="Is active?" placeholder="Choose is active" />
-                </div>
+                mutate({ formdata, id });
+              }}
+            >
+              {({ setFieldValue }) => (
+                <Form>
+                  <div className="form-container ">
+                    <InputField
+                      name="name"
+                      placeholder="Name"
+                      label="Name"
+                      required
+                    />
 
-                <Row className="d-flex justify-content-start">
-                  <Col md="2">
-                    <Button type="submit" disabled={isLoading} className="w-100">
-                      {isLoading ? (
-                        <Spinner animation="border" size="sm" />
-                      ) : (
-                        "Submit"
-                      )}
-                    </Button>
-                  </Col>
-                </Row>
-              </Form>
-            )}
-          </Formik>
-        </Col>
-      </Row>
+                    <InputField
+                      name="url"
+                      placeholder="Url"
+                      label="Url"
+                      required
+                    />
+                    <InputField
+                      name="logo"
+                      placeholder="logo"
+                      label="Choose Brand Logo"
+                      isFile
+                      setFieldValue={setFieldValue}
+                    />
+
+                    <InputField
+                      as="select"
+                      selectData={isActiveArray}
+                      name="is_active"
+                      label="Is active?"
+                      placeholder="Choose is active"
+                    />
+                  </div>
+
+                  <Row className="d-flex justify-content-start">
+                    <Col md="2">
+                      <Button
+                        type="submit"
+                        disabled={isLoading}
+                        className="w-100"
+                      >
+                        {isLoading ? (
+                          <Spinner animation="border" size="sm" />
+                        ) : (
+                          "Submit"
+                        )}
+                      </Button>
+                    </Col>
+                  </Row>
+                </Form>
+              )}
+            </Formik>
+          </Col>
+        </Row>
+      </div>
     </>
   );
 };

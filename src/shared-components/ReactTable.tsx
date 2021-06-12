@@ -183,6 +183,7 @@ function ReactTable({
   );
 
   React.useEffect(() => {
+    console.log(selectedFlatRows);
     function filterRows() {
       let data = [];
       selectedFlatRows.map((d) => {

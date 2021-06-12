@@ -8,16 +8,14 @@ import { useHistory } from "react-router-dom";
 import { Cell, TableState } from "react-table";
 import { handleApiError } from "../../hooks/handleApiErrors";
 import CreatedUpdatedAt from "../../shared-components/CreatedUpdatedAt";
+import EditButton from "../../shared-components/EditButton";
 import IsActiveBadge from "../../shared-components/IsActiveBadge";
 import IsLoading from "../../shared-components/isLoading";
 import PageHeading from "../../shared-components/PageHeading";
 import TablePagination from "../../shared-components/Pagination";
 import ReactTable from "../../shared-components/ReactTable";
 import API from "../../utils/API";
-import {
-  primaryColor,
-  secondaryColor
-} from "../../utils/constants";
+import { primaryColor, secondaryColor } from "../../utils/constants";
 import { queryClient } from "../../utils/queryClient";
 import { showErrorToast } from "../../utils/showErrorToast";
 import { showMsgToast } from "../../utils/showMsgToast";
@@ -31,78 +29,79 @@ const deleteBrandModels = (id: string) => {
 };
 
 const updateOrder = async (id: string, destinationIndex: any, row: any) => {
-  const finalIn = (parseInt(destinationIndex) + 1).toString()
-  const formdata = new FormData()
-  for (let k in row) formdata.append(k, row[k])
-  formdata.append("order", finalIn)
+  const finalIn = (parseInt(destinationIndex) + 1).toString();
+  const formdata = new FormData();
+  for (let k in row) formdata.append(k, row[k]);
+  formdata.append("order", finalIn);
 
   try {
-
     const { data } = await API.post(`${key}/${id}`, formdata, {
       headers: { "Content-Type": "multipart/form-data" },
     });
 
     if (data) {
-      showMsgToast("Successfully updated order")
-      queryClient.invalidateQueries(key)
+      showMsgToast("Successfully updated order");
+      queryClient.invalidateQueries(key);
     }
   } catch (error) {
-    showErrorToast(error.message)
+    showErrorToast(error.message);
   }
-
-}
+};
 
 const initialTableState: Partial<TableState<object>> = {
-  sortBy: [{
-    id: "order",
-    desc: false
-  }]
-}
+  sortBy: [
+    {
+      id: "order",
+      desc: false,
+    },
+  ],
+};
 const intitialFilter = {
   q: "",
   page: null,
-  perPage: 25
-}
+  perPage: 25,
+};
 
 const Categories = () => {
-  const history = useHistory()
-  const [selectedRows, setSelectedRows] = useState([])
-  const [filter, setFilter] = useState(intitialFilter)
+  const history = useHistory();
+  const [selectedRows, setSelectedRows] = useState([]);
+  const [filter, setFilter] = useState(intitialFilter);
 
-  const { data, isLoading, isFetching, error } = useQuery<any>([key, , filter], {
-    onError: (error: AxiosError) => {
-      handleApiError(error, history)
-    },
-  });
+  const { data, isLoading, isFetching, error } = useQuery<any>(
+    [key, , filter],
+    {
+      onError: (error: AxiosError) => {
+        handleApiError(error, history);
+      },
+    }
+  );
 
-  const { mutate, isLoading: isDeleteLoading } = useMutation(deleteBrandModels, {
-    onSuccess: () => {
-      queryClient.invalidateQueries(key);
-      showMsgToast("Categories deleted successfully")
-    },
-    onError: (error: AxiosError) => {
-      handleApiError(error, history)
-    },
-  });
-
-
-
+  const { mutate, isLoading: isDeleteLoading } = useMutation(
+    deleteBrandModels,
+    {
+      onSuccess: () => {
+        queryClient.invalidateQueries(key);
+        showMsgToast("Categories deleted successfully");
+      },
+      onError: (error: AxiosError) => {
+        handleApiError(error, history);
+      },
+    }
+  );
 
   const _onCreateClick = () => {
-    history.push("/categories/create-edit")
-  }
+    history.push("/categories/create-edit");
+  };
   const _onEditClick = (id: string) => {
-    history.push("/categories/create-edit", { id })
-  }
+    history.push("/categories/create-edit", { id });
+  };
 
   const _onFilterChange = (idx: string, value: any) => {
-
-    setFilter(prev => ({
+    setFilter((prev) => ({
       ...prev,
-      [idx]: value
-    }))
-
-  }
+      [idx]: value,
+    }));
+  };
   const columns = useMemo(
     () => [
       {
@@ -120,48 +119,38 @@ const Categories = () => {
       {
         Header: "Order",
         accessor: "order",
-        isSortedDesc: true
+        isSortedDesc: true,
       },
       {
         Header: "Is Active?",
         accessor: "is_active",
         Cell: (data: Cell) => {
-          return (
-            <IsActiveBadge value={data.row.values.is_active} />
-          )
-        }
+          return <IsActiveBadge value={data.row.values.is_active} />;
+        },
       },
       {
         Header: "Created At",
         accessor: "created_at",
         Cell: (data: Cell) => {
-          return (
-            <CreatedUpdatedAt date={data.row.values.created_at} />
-          )
-        }
+          return <CreatedUpdatedAt date={data.row.values.created_at} />;
+        },
       },
       {
         Header: "Updated At",
         accessor: "updated_at",
         Cell: (data: Cell) => {
-          return (
-            <CreatedUpdatedAt date={data.row.values.updated_at} />
-          )
-        }
+          return <CreatedUpdatedAt date={data.row.values.updated_at} />;
+        },
       },
       {
         Header: "Actions",
         Cell: (data: Cell) => {
           return (
-            <div className="d-flex">
-              <button
-                onClick={() => {
-                  _onEditClick(data.row.values.id);
-                }}
-              >
-                <AiFillEdit color={secondaryColor} size={24} />
-              </button>
-            </div>
+            <EditButton
+              onClick={() => {
+                _onEditClick(data.row.values.id);
+              }}
+            />
           );
         },
       },
@@ -182,24 +171,29 @@ const Categories = () => {
 
   return (
     <>
-      <PageHeading title="Categories" onClick={_onCreateClick} />
+      <PageHeading
+        title="Categories"
+        onClick={_onCreateClick}
+        totalRecords={50}
+      />
       <Container fluid className="card component-wrapper px-0 py-2">
         <Container fluid className="h-100 p-0">
-
           {isLoading ? (
             <IsLoading />
           ) : (
             <>
-              {!error && <ReactTable
-                data={data?.data}
-                columns={columns}
-                setSelectedRows={setSelectedRows}
-                filter={filter}
-                onFilterChange={_onFilterChange}
-                isDataLoading={isFetching}
-                isDraggable
-                updateOrder={updateOrder}
-              />}
+              {!error && (
+                <ReactTable
+                  data={data?.data}
+                  columns={columns}
+                  setSelectedRows={setSelectedRows}
+                  filter={filter}
+                  onFilterChange={_onFilterChange}
+                  isDataLoading={isFetching}
+                  isDraggable
+                  updateOrder={updateOrder}
+                />
+              )}
               {!error && data.length > 0 ? (
                 <TablePagination
                   currentPage={data?.current_page}
@@ -213,15 +207,14 @@ const Categories = () => {
           )}
         </Container>
       </Container>
-      {
-        selectedRows.length > 0 &&
+      {selectedRows.length > 0 && (
         <div className="delete-button rounded">
-          <span><b>Delete {selectedRows.length} rows</b></span>
-          <Button variant="danger">
-            Delete
-          </Button>
+          <span>
+            <b>Delete {selectedRows.length} rows</b>
+          </span>
+          <Button variant="danger">Delete</Button>
         </div>
-      }
+      )}
     </>
   );
 };

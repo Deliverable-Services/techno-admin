@@ -41,6 +41,7 @@ const SlotCreateUpdateForm = () => {
 	const { mutate, isLoading } = useMutation(createSlot, {
 		onSuccess: () => {
 			setTimeout(() => queryClient.invalidateQueries(key), 500);
+			history.replace("/booking-slots")
 			showMsgToast("Slot has been  disabled successfully")
 		},
 		onError: (error: AxiosError) => {

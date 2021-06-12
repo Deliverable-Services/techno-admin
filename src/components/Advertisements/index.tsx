@@ -29,8 +29,8 @@ interface IFilter {
 }
 const key = "banners/list";
 
-const deleteAd = (id: string) => {
-  return API.delete(`${key}/${id}`);
+const deleteAd = (id: Array<any>) => {
+  return API.post(`${key}/delete`, { id })
 };
 const initialFilter = {
   type: "offers",
@@ -281,38 +281,16 @@ const Advertisements = () => {
           )}
         </Container>
       </Container>
-      <Modal show={deletePopup} onHide={() => setDeletePopup(false)}>
-        <Modal.Header closeButton>
-          <Modal.Title>Are you sure?</Modal.Title>
-        </Modal.Header>
-        <Modal.Body>
-          Do you really want to delete this record? This process cannot be
-          undone
-        </Modal.Body>
-        <Modal.Footer>
-          <Button variant="bg-light" onClick={() => setDeletePopup(false)}>
-            Close
-          </Button>
-          <Button
-            variant="danger"
-            onClick={() => {
-              mutate(selectedRowId);
-            }}
-          >
-            {isDeleteLoading ? (
-              <Spinner animation="border" size="sm" />
-            ) : (
-              "Disable"
-            )}
-          </Button>
-        </Modal.Footer>
-      </Modal>
       {
         selectedRows.length > 0 &&
         <div className="delete-button rounded">
           <span><b>Delete {selectedRows.length} rows</b></span>
-          <Button variant="danger">
-            Delete
+          <Button variant="danger" onClick={() => {
+            mutate(selectedRows.map(i => i.id))
+          }}>
+            {
+              isDeleteLoading ? "Loading..." : "Delete"
+            }
           </Button>
         </div>
       }

@@ -25,37 +25,38 @@ import { showMsgToast } from "../../utils/showMsgToast";
 
 const key = "services";
 
-const deleteService = (id: string) => {
-  return API.delete(`${key}/${id}`, {
-    headers: { "Content-Type": "multipart/form-data" },
-  });
+const deleteServices = (id: Array<any>) => {
+  return API.post(`${key}/delete`, { id });
 };
 
 const intitialFilter = {
   q: "",
   page: null,
-  perPage: 25
-}
+  perPage: 25,
+};
 
 const Services = () => {
-  const history = useHistory()
-  const [selectedRows, setSelectedRows] = useState([])
-  console.log(selectedRows.map(item => item.id))
-  const [filter, setFilter] = useState(intitialFilter)
-  console.log({ filter })
-  const { data, isLoading, isFetching, error } = useQuery<any>([key, , filter], {
-    onError: (error: AxiosError) => {
-      handleApiError(error, history)
-    },
-  });
+  const history = useHistory();
+  const [selectedRows, setSelectedRows] = useState([]);
+  console.log(selectedRows.map((item) => item.id));
+  const [filter, setFilter] = useState(intitialFilter);
+  console.log({ filter });
+  const { data, isLoading, isFetching, error } = useQuery<any>(
+    [key, , filter],
+    {
+      onError: (error: AxiosError) => {
+        handleApiError(error, history);
+      },
+    }
+  );
 
-  const { mutate, isLoading: isDeleteLoading } = useMutation(deleteService, {
+  const { mutate, isLoading: isDeleteLoading } = useMutation(deleteServices, {
     onSuccess: () => {
       queryClient.invalidateQueries(key);
-      showMsgToast("Services deleted successfully")
+      showMsgToast("Services deleted successfully");
     },
     onError: (error: AxiosError) => {
-      handleApiError(error, history)
+      handleApiError(error, history);
     },
   });
 
@@ -67,13 +68,11 @@ const Services = () => {
   };
 
   const _onFilterChange = (idx: string, value: any) => {
-
-    setFilter(prev => ({
+    setFilter((prev) => ({
       ...prev,
-      [idx]: value
-    }))
-
-  }
+      [idx]: value,
+    }));
+  };
   const columns = useMemo(
     () => [
       {
@@ -162,25 +161,28 @@ const Services = () => {
 
   return (
     <>
-      <PageHeading title="Services" onClick={_onCreateClick} />
+      <PageHeading
+        title="Services"
+        onClick={_onCreateClick}
+        totalRecords={50}
+      />
 
       <Container fluid className="card component-wrapper px-0 py-2">
-
-
         <Container fluid className="h-100 p-0">
-
           {isLoading ? (
             <IsLoading />
           ) : (
             <>
-              {!error && <ReactTable
-                data={data?.data}
-                columns={columns}
-                setSelectedRows={setSelectedRows}
-                filter={filter}
-                onFilterChange={_onFilterChange}
-                isDataLoading={isFetching}
-              />}
+              {!error && (
+                <ReactTable
+                  data={data?.data}
+                  columns={columns}
+                  setSelectedRows={setSelectedRows}
+                  filter={filter}
+                  onFilterChange={_onFilterChange}
+                  isDataLoading={isFetching}
+                />
+              )}
               {!error && data.length > 0 ? (
                 <TablePagination
                   currentPage={data?.current_page}
@@ -195,15 +197,21 @@ const Services = () => {
         </Container>
       </Container>
 
-      {
-        selectedRows.length > 0 &&
+      {selectedRows.length > 0 && (
         <div className="delete-button rounded">
-          <span><b>Delete {selectedRows.length} rows</b></span>
-          <Button variant="danger">
-            Delete
+          <span>
+            <b>Delete {selectedRows.length} rows</b>
+          </span>
+          <Button
+            variant="danger"
+            onClick={() => {
+              mutate(selectedRows.map((i) => i.id));
+            }}
+          >
+            {isDeleteLoading ? "Loading..." : "Delete"}
           </Button>
         </div>
-      }
+      )}
     </>
   );
 };

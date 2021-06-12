@@ -18,65 +18,65 @@ import API from "../../utils/API";
 import {
   baseUploadUrl,
   primaryColor,
-  secondaryColor
+  secondaryColor,
 } from "../../utils/constants";
 import { queryClient } from "../../utils/queryClient";
 import { showMsgToast } from "../../utils/showMsgToast";
 
 const key = "brand-models";
 
-const deleteBrandModels = (ids: Array<any>) => {
-  // const formdata = new FormData()
-  // ids.forEach(id => {
-  //   formdata.append("id[]", id)
-  // })
-  return API.post(`${key}/delete`, { ids }, {
-    headers: { "Content-Type": "multipart/form-data" },
-  })
+const deleteBrandModels = (id: Array<any>) => {
+  return API.post(`${key}/delete`, {
+    id,
+  });
 };
 
 const intitialFilter = {
   q: "",
   page: null,
-  perPage: 25
-}
+  perPage: 25,
+};
 
 const BrandModels = () => {
-  const history = useHistory()
-  const [selectedRows, setSelectedRows] = useState([])
-  const [filter, setFilter] = useState(intitialFilter)
+  const history = useHistory();
+  const [selectedRows, setSelectedRows] = useState([]);
+  const [filter, setFilter] = useState(intitialFilter);
   const [page, setPage] = useState<number>(1);
-  const { data, isLoading, isFetching, error } = useQuery<any>([key, , filter], {
-    onError: (error: AxiosError) => {
-      handleApiError(error, history)
-    },
-  });
+  const { data, isLoading, isFetching, error } = useQuery<any>(
+    [key, , filter],
+    {
+      onError: (error: AxiosError) => {
+        handleApiError(error, history);
+      },
+    }
+  );
 
-  const { mutate, isLoading: isDeleteLoading } = useMutation(deleteBrandModels, {
-    onSuccess: () => {
-      queryClient.invalidateQueries(key);
-      showMsgToast("Brand Model deleted successfully")
-    },
-    onError: (error: AxiosError) => {
-      handleApiError(error, history)
-    },
-  });
+  const { mutate, isLoading: isDeleteLoading } = useMutation(
+    deleteBrandModels,
+    {
+      onSuccess: () => {
+        queryClient.invalidateQueries(key);
+        showMsgToast("Brand Model deleted successfully");
+      },
+      onError: (error: AxiosError) => {
+        handleApiError(error, history);
+      },
+    }
+  );
 
   const _onFilterChange = (idx: string, value: any) => {
-
-    setFilter(prev => ({
+    setFilter((prev) => ({
       ...prev,
-      [idx]: value
-    }))
-
-  }
+      [idx]: value,
+    }));
+  };
 
   const _onCreateClick = () => {
-    history.push("/brand-models/create-edit")
-  }
+    history.push("/brand-models/create-edit");
+  };
   const _onEditClick = (id: string) => {
-    history.push("/brand-models/create-edit", { id })
-  }
+    history.push("/brand-models/create-edit", { id });
+  };
 
   const columns = useMemo(
     () => [
@@ -112,28 +112,22 @@ const BrandModels = () => {
         Header: "Is Active?",
         accessor: "is_active",
         Cell: (data: Cell) => {
-          return (
-            <IsActiveBadge value={data.row.values.is_active} />
-          )
-        }
+          return <IsActiveBadge value={data.row.values.is_active} />;
+        },
       },
       {
         Header: "Created At",
         accessor: "created_at",
         Cell: (data: Cell) => {
-          return (
-            <CreatedUpdatedAt date={data.row.values.created_at} />
-          )
-        }
+          return <CreatedUpdatedAt date={data.row.values.created_at} />;
+        },
       },
       {
         Header: "Updated At",
         accessor: "updated_at",
         Cell: (data: Cell) => {
-          return (
-            <CreatedUpdatedAt date={data.row.values.updated_at} />
-          )
-        }
+          return <CreatedUpdatedAt date={data.row.values.updated_at} />;
+        },
       },
       {
         Header: "Actions",
@@ -168,24 +162,27 @@ const BrandModels = () => {
 
   return (
     <>
-      <PageHeading title="Brand Models" onClick={_onCreateClick} />
+      <PageHeading
+        title="Brand Models"
+        onClick={_onCreateClick}
+        totalRecords={50}
+      />
       <Container fluid className="card component-wrapper px-0 py-2">
-
-
         <Container fluid className="h-100 p-0">
-
           {isLoading ? (
             <IsLoading />
           ) : (
             <>
-              {!error && <ReactTable
-                data={data?.data}
-                columns={columns}
-                setSelectedRows={setSelectedRows}
-                filter={filter}
-                onFilterChange={_onFilterChange}
-                isDataLoading={isFetching}
-              />}
+              {!error && (
+                <ReactTable
+                  data={data?.data}
+                  columns={columns}
+                  setSelectedRows={setSelectedRows}
+                  filter={filter}
+                  onFilterChange={_onFilterChange}
+                  isDataLoading={isFetching}
+                />
+              )}
               {!error && data?.data?.length > 0 ? (
                 <TablePagination
                   currentPage={data?.current_page}
@@ -199,19 +196,21 @@ const BrandModels = () => {
           )}
         </Container>
       </Container>
-      {
-        selectedRows.length > 0 &&
+      {selectedRows.length > 0 && (
         <div className="delete-button rounded">
-          <span><b>Delete {selectedRows.length} rows</b></span>
-          <Button variant="danger" onClick={() => {
-            mutate(selectedRows.map(m => m.id))
-          }}>
-            {
-              isDeleteLoading ? "Loading..." : "Delete"
-            }
+          <span>
+            <b>Delete {selectedRows.length} rows</b>
+          </span>
+          <Button
+            variant="danger"
+            onClick={() => {
+              mutate(selectedRows.map((m) => m.id));
+            }}
+          >
+            {isDeleteLoading ? "Loading..." : "Delete"}
           </Button>
         </div>
-      }
+      )}
     </>
   );
 };
