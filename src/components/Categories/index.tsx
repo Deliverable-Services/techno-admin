@@ -197,6 +197,8 @@ const Categories = () => {
                 filter={filter}
                 onFilterChange={_onFilterChange}
                 isDataLoading={isFetching}
+                isDraggable
+                updateOrder={updateOrder}
               />}
               {!error && data.length > 0 ? (
                 <TablePagination

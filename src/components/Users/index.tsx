@@ -102,7 +102,7 @@ const Users = () => {
         Cell: (data: Cell) => (
           <div className="table-image">
             <img
-              src={`${baseUploadUrl}users/${data.row.values.profile_pic}`}
+              src={`${baseUploadUrl}profile_pic/${data.row.values.profile_pic}`}
               alt="name"
             />
           </div>

@@ -36,7 +36,7 @@ const initialFilter = {
   type: "offers",
   q: "",
   page: "",
-  perPage: ""
+  perPage: 25
 };
 
 const getBanners: QueryFunction = async ({ queryKey }) => {
@@ -265,6 +265,7 @@ const Advertisements = () => {
                 columns={columns}
                 setSelectedRows={setSelectedRows}
                 onFilterChange={_onFilterChange}
+                filter={filter}
                 isDataLoading={isFetching}
               />}
               {!error && data.length > 0 ? (

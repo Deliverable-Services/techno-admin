@@ -1,7 +1,7 @@
 import { AxiosError } from "axios";
 import moment from "moment";
 import React, { useMemo, useState } from "react";
-import { Button, Container, Modal, Spinner } from "react-bootstrap";
+import { Accordion, Button, Container, Modal, Spinner } from "react-bootstrap";
 import { AiFillDelete, AiFillEdit } from "react-icons/ai";
 import { BiSad } from "react-icons/bi";
 import { useMutation, useQuery } from "react-query";
@@ -41,7 +41,7 @@ const intitialFilter = {
 	q: "",
 	// page: 1,
 	// perPage: 25,
-	start: moment().format("YYYY-MM-DD"),
+	start: moment().subtract(1, "day").format("YYYY-MM-DD"),
 	end: moment().add(10, "days").format("YYYY-MM-DD")
 }
 
@@ -58,15 +58,6 @@ const BookingSlots = () => {
 	});
 
 
-	const { mutate, isLoading: isDeleteLoading } = useMutation(deleteSlot, {
-		onSuccess: () => {
-			queryClient.invalidateQueries(key);
-			showMsgToast("Brands deleted successfully")
-		},
-		onError: (error: AxiosError) => {
-			handleApiError(error, history)
-		},
-	});
 
 	const _onCreateClick = () => {
 		history.push("/booking-slots/create-edit")
@@ -136,9 +127,11 @@ const BookingSlots = () => {
 						<IsLoading />
 					) : (
 						<>
+
 							{
-								Object.entries(data).map((bookingslot: any) => (
+								Object.entries(data).map((bookingslot: any, index) => (
 									<Slots
+										key={index}
 										date={bookingslot[0]}
 										slots={bookingslot[1]}
 									/>
@@ -148,17 +141,6 @@ const BookingSlots = () => {
 					)}
 				</Container>
 			</Container>
-			{
-				selectedRows.length > 0 &&
-				<div className="delete-button rounded">
-					<span><b>Delete {selectedRows.length} rows</b></span>
-					<Button variant="danger">
-						{
-							isDeleteLoading ? "Loading..." : "Delete"
-						}
-					</Button>
-				</div>
-			}
 		</>
 	);
 };
