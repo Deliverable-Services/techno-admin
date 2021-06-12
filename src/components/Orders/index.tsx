@@ -273,7 +273,7 @@ const Orders = () => {
                           <FilterSelect
                             currentValue={filter.user_id}
                             data={!isCustomerLoading && Customers.data}
-                            label="Customers"
+                            label="Customer"
                             idx="user_id"
                             onFilterChange={onFilterChange}
                           />

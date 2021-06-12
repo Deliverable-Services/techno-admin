@@ -1,6 +1,6 @@
 import { AxiosError } from "axios";
 import { useMemo, useState } from "react";
-import { Badge, Button, Container } from "react-bootstrap";
+import { Badge, Button, Container, Row, Col } from "react-bootstrap";
 import { BiSad } from "react-icons/bi";
 import { useQuery } from "react-query";
 import { useHistory } from "react-router-dom";
@@ -13,6 +13,8 @@ import TablePagination from "../../shared-components/Pagination";
 import ReactTable from "../../shared-components/ReactTable";
 import { primaryColor } from "../../utils/constants";
 import { showErrorToast } from "../../utils/showErrorToast";
+import BreadCrumb from "../../shared-components/BreadCrumb";
+import FilterSelect from "../../shared-components/FilterSelect";
 
 const key = "user-subscriptions";
 const intitialFilter = {
@@ -168,17 +170,95 @@ const Subscription = () => {
 
   return (
     <>
-      <PageHeading title="Subscriptions" />
+      <PageHeading title="Subscriptions" totalRecords={500} />
+
+      {(!isLoading || !isFetching) && (
+          <div className="filter mb-4">
+          <BreadCrumb
+            // onFilterChange={onFilterChange}
+            value=""
+            currentValue={filter.status}
+            dataLength={data?.data?.length}
+            idx="status"
+            title="All"
+          />
+          <BreadCrumb
+            // onFilterChange={onFilterChange}
+            value="Active"
+            currentValue={filter.status}
+            dataLength={data?.data?.length}
+            idx="status"
+            title="Active"
+          />
+          <BreadCrumb
+            // onFilterChange={onFilterChange}
+            value="Expired"
+            currentValue={filter.status}
+            dataLength={data?.data?.length}
+            idx="status"
+            title="Expired"
+          />
+        </div>
+      )}
 
       <Container fluid className="card component-wrapper px-0 py-2">
-
-
         <Container fluid className="h-100 p-0">
 
           {isLoading ? (
             <IsLoading />
           ) : (
             <>
+                    <Container className="pt-2">
+
+                                  <Row className="select-filter d-flex">
+                        <Col md="auto">
+                          <FilterSelect
+                            // currentValue={filter.user_id}
+                            // data={!isCustomerLoading && Customers.data}
+                            label="Customer"
+                            idx="user_id"
+                            // onFilterChange={onFilterChange}
+                          />
+                        </Col>
+                        <Col md="auto">
+                          <FilterSelect
+                            // currentValue={filter.agent_id}
+                            // data={!isAgentLoading && Agents.data}
+                            label="Plan"
+                            idx="agent_id"
+                            // onFilterChange={onFilterChange}
+                          />
+                        </Col>
+                        <Col md="auto">
+                          <FilterSelect
+                            // currentValue={filter.inside_cart}
+                            // data={InsideCart}
+                            label="Purchased on"
+                            idx="inside_cart"
+                            // onFilterChange={onFilterChange}
+                          />
+                        </Col>
+                        {/* #TODO - Add orderType, orderStatus, createdAt dropdown */}
+
+                        <Col
+                          md="auto"
+                          className="d-flex align-items-center mt-1 justify-content-center"
+                        >
+                          <Button
+                            // onClick={() => resetFilter()}
+                            variant="light"
+                            style={{
+                              backgroundColor: "#eee",
+                              fontSize: 14,
+                            }}
+                          >
+                            Reset Filters
+                          </Button>
+                        </Col>
+                      </Row>
+                    </Container>
+                    <hr />
+
               {!error && <ReactTable
                 data={data?.data}
                 columns={columns}

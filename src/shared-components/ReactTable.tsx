@@ -5,7 +5,7 @@ import { Container, Dropdown, Spinner, Table } from "react-bootstrap";
 import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
 import { AiOutlineSearch } from "react-icons/ai";
-import { BiSad } from "react-icons/bi";
+import { MdRemoveShoppingCart } from "react-icons/md";
 import { GoSettings } from "react-icons/go";
 import { IoMdArrowDropdown, IoMdArrowDropup } from "react-icons/io";
 // import Checkbox from 'react-checkbox-component'
@@ -396,9 +396,9 @@ function ReactTable({
 
       {rows.length === 0 ? (
         <Container fluid className="d-flex justify-content-center display-3">
-          <div className="d-flex flex-column align-items-center">
-            <BiSad color={primaryColor} />
-            <span className="text-primary display-3">No data found</span>
+          <div className="d-flex flex-column align-items-center pt-3 pb-3">
+            <MdRemoveShoppingCart color="#000" size={60} />
+            <h4 className="text-black font-weight-bold mt-2">No data found</h4>
           </div>
         </Container>
       ) : null}

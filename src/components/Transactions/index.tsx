@@ -196,15 +196,15 @@ const Transactions = () => {
 				</div>
 			)}
 
-			<Container fluid className="card component-wrapper px-0 py-2">
+			<Container fluid className="card component-wrapper px-0 py-2 mt-3">
 				<Container fluid className="h-100 p-0">
-					<>
-						{!isLoading && (
-
-							<>
-								{!error && (
-									<>
-										<Container className="pt-3">
+					{isLoading ? (
+						<IsLoading />
+					) : (
+						<>
+							{!error && (
+								<>
+								<Container className="pt-3">
 											<Row className="select-filter d-flex">
 												<Col md="auto">
 													<FilterSelect
@@ -241,21 +241,9 @@ const Transactions = () => {
 												</Col>
 											</Row>
 										</Container>
-									</>
-								)}
-							</>
-						)}
-					</>
-				</Container>
-			</Container>
+                    <hr />
 
-			<Container fluid className="card component-wrapper px-0 py-2">
-				<Container fluid className="h-100 p-0">
-					{isLoading ? (
-						<IsLoading />
-					) : (
-						<>
-							{!error && (
+
 								<ReactTable
 									data={data?.data}
 									columns={columns}
@@ -264,6 +252,7 @@ const Transactions = () => {
 									onFilterChange={_onFilterChange}
 									isDataLoading={isFetching}
 								/>
+								</>
 							)}
 							{!error && data?.data?.length > 0 ? (
 								<TablePagination
