@@ -1,6 +1,7 @@
 import { AxiosError } from "axios";
+import moment from "moment";
 import { useMemo, useState } from "react";
-import { Badge, Button, Col, Container, Row } from "react-bootstrap";
+import { Badge, Button, Col, Container, Form, Row } from "react-bootstrap";
 import { BiSad } from "react-icons/bi";
 import { useQuery } from "react-query";
 import { useHistory } from "react-router-dom";
@@ -16,7 +17,7 @@ import PageHeading from "../../shared-components/PageHeading";
 import TablePagination from "../../shared-components/Pagination";
 import ReactTable from "../../shared-components/ReactTable";
 import { IInitialTableState } from "../../types/interface";
-import { InsideCart, RowsPerPage } from "../../utils/arrays";
+import { InsideCart, OrderType, RowsPerPage } from "../../utils/arrays";
 import { primaryColor } from "../../utils/constants";
 import { showErrorToast } from "../../utils/showErrorToast";
 // import UpdateCreateForm from "./FaqsCreateUpdateForm"
@@ -26,6 +27,7 @@ const intitialFilter = {
   q: "",
   page: null,
   perPage: 25,
+  created_at: ""
 };
 const Orders = () => {
   const history = useHistory();
@@ -224,7 +226,7 @@ const Orders = () => {
 
   return (
     <>
-      <PageHeading title="Orders" totalRecords={500} />
+      <PageHeading title="Orders" totalRecords={data?.total} />
 
       {(!isLoading || !isFetching) && (
         <div className="filter mb-4">
@@ -311,14 +313,45 @@ const Orders = () => {
                             onFilterChange={onFilterChange}
                           />
                         </Col>
-                        {/* #TODO - Add orderType, orderStatus, createdAt dropdown */}
+                        <Col md="auto">
+                          <FilterSelect
+                            currentValue={filter.order_type}
+                            data={OrderType}
+                            label="Order Type"
+                            idx="order_type"
+                            onFilterChange={onFilterChange}
+                          />
+                        </Col>
+                        <Col md="auto">
+                          <Form.Group>
+                            <Form.Label className="text-muted">Created At</Form.Label>
+                            <Form.Control type="date"
+                              value={localFilter.created_at}
+                              onChange={e => {
+                                const value = moment(e.target.value).format("YYYY-MM-DD")
+                                _onFilterChange("created_at", value)
+                              }}
+                              style={{
+                                fontSize: 14,
+                                width: 150,
+                                height: 35
+
+                              }}
+                            />
+                          </Form.Group>
+                        </Col>
 
                         <Col
                           md="auto"
                           className="d-flex align-items-center mt-1 justify-content-center"
                         >
                           <Button
-                            onClick={() => resetFilter()}
+                            onClick={() => {
+                              resetFilter()
+
+                              setFilter(intitialFilter)
+
+                            }}
                             variant={"light"}
                             style={{
                               backgroundColor: "#eee",

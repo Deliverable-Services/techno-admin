@@ -1,32 +1,30 @@
 import { AxiosError } from "axios";
 import { useMemo, useState } from "react";
 import { Button, Col, Container, Row } from "react-bootstrap";
-import { AiFillDelete, AiFillEdit, AiFillPlusSquare } from "react-icons/ai";
 import { BiSad } from "react-icons/bi";
 import LightBox from "react-lightbox-component";
 import { QueryFunction, useMutation, useQuery } from "react-query";
 import { useHistory } from "react-router-dom";
+import Switch from "react-switch";
 import { Cell } from "react-table";
 import { handleApiError } from "../../hooks/handleApiErrors";
 import BreadCrumb from "../../shared-components/BreadCrumb";
 import CreatedUpdatedAt from "../../shared-components/CreatedUpdatedAt";
+import EditButton from "../../shared-components/EditButton";
 import FilterSelect from "../../shared-components/FilterSelect";
 import IsActiveBadge from "../../shared-components/IsActiveBadge";
 import IsLoading from "../../shared-components/isLoading";
+import PageHeading from "../../shared-components/PageHeading";
 import TablePagination from "../../shared-components/Pagination";
 import ReactTable from "../../shared-components/ReactTable";
 import API from "../../utils/API";
-import Switch from "react-switch"
 import { isActiveArray } from "../../utils/arrays";
 import {
   baseUploadUrl,
-  primaryColor,
-  secondaryColor
+  primaryColor
 } from "../../utils/constants";
 import { queryClient } from "../../utils/queryClient";
 import { showMsgToast } from "../../utils/showMsgToast";
-import EditButton from "../../shared-components/EditButton";
-import PageHeading from "../../shared-components/PageHeading";
 const key = "banners/list";
 
 const deleteAd = (id: Array<any>) => {
@@ -37,7 +35,7 @@ const initialFilter = {
   q: "",
   page: "",
   perPage: 25,
-  is_active: ""
+  active: ""
 };
 
 const getBanners: QueryFunction = async ({ queryKey }) => {
@@ -250,10 +248,10 @@ const Advertisements = () => {
                     <Row className="select-filter d-flex">
                       <Col md="auto">
                         <FilterSelect
-                          currentValue={filter.is_active}
+                          currentValue={filter.active}
                           data={isActiveArray}
                           label="Is Active?"
-                          idx="is_active"
+                          idx="active"
                           onFilterChange={_onFilterChange}
                           defaultSelectTitle="Show All"
                         />

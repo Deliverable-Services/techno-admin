@@ -34,7 +34,7 @@ const deleteBrand = (id: Array<any>) => {
 };
 
 const intitialFilter = {
-  is_active: "",
+  active: "",
   q: "",
   page: 1,
   perPage: 25,
@@ -164,26 +164,26 @@ const Brands = () => {
               <BreadCrumb
                 onFilterChange={_onFilterChange}
                 value=""
-                currentValue={filter.is_active}
+                currentValue={filter.active}
                 dataLength={data?.data?.length}
-                idx="is_active"
+                idx="active"
                 title="All"
               />
               <BreadCrumb
                 onFilterChange={_onFilterChange}
                 value="1"
-                currentValue={filter.is_active}
+                currentValue={filter.active}
                 dataLength={data?.data?.length}
-                idx="is_active"
+                idx="active"
                 title="Active"
               />
               <BreadCrumb
                 onFilterChange={_onFilterChange}
                 value="0"
-                currentValue={filter.is_active}
+                currentValue={filter.active}
                 dataLength={data?.data?.length}
 
-                idx="is_active"
+                idx="active"
                 title="Not Active"
                 isLast
               />

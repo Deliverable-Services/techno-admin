@@ -1,19 +1,23 @@
 import { AxiosError } from "axios";
 import { useMemo, useState } from "react";
-import { Button, Container } from "react-bootstrap";
+import { Button, Col, Container, Row } from "react-bootstrap";
 import { AiFillEdit } from "react-icons/ai";
 import { BiSad } from "react-icons/bi";
 import { useMutation, useQuery } from "react-query";
-import { useHistory } from "react-router-dom";
+import { Switch, useHistory } from "react-router-dom";
 import { Cell } from "react-table";
 import { handleApiError } from "../../hooks/handleApiErrors";
+import BreadCrumb from "../../shared-components/BreadCrumb";
 import CreatedUpdatedAt from "../../shared-components/CreatedUpdatedAt";
+import EditButton from "../../shared-components/EditButton";
+import FilterSelect from "../../shared-components/FilterSelect";
 import IsActiveBadge from "../../shared-components/IsActiveBadge";
 import IsLoading from "../../shared-components/isLoading";
 import PageHeading from "../../shared-components/PageHeading";
 import TablePagination from "../../shared-components/Pagination";
 import ReactTable from "../../shared-components/ReactTable";
 import API from "../../utils/API";
+import { conditionType, isActiveArray } from "../../utils/arrays";
 import { primaryColor, secondaryColor } from "../../utils/constants";
 import { queryClient } from "../../utils/queryClient";
 import { showMsgToast } from "../../utils/showMsgToast";
@@ -27,6 +31,8 @@ const intitialFilter = {
   q: "",
   page: null,
   perPage: 25,
+  active: "",
+  condition_type: ""
 };
 
 const Coupons = () => {
@@ -129,15 +135,11 @@ const Coupons = () => {
         Header: "Actions",
         Cell: (data: Cell) => {
           return (
-            <div className="d-flex">
-              <button
-                onClick={() => {
-                  _onEditClick(data.row.values.id);
-                }}
-              >
-                <AiFillEdit color={secondaryColor} size={24} />
-              </button>
-            </div>
+            <EditButton
+              onClick={() => {
+                _onEditClick(data.row.values.id);
+              }}
+            />
           );
         },
       },
@@ -158,7 +160,41 @@ const Coupons = () => {
 
   return (
     <>
-      <PageHeading title="Coupons" onClick={_onCreateClick} totalRecords={50} />
+      <PageHeading title="Coupons" onClick={_onCreateClick} totalRecords={data?.total} />
+      {(!isLoading) && (
+        <Container fluid>
+          <div>
+            <div className="filter">
+              <BreadCrumb
+                onFilterChange={_onFilterChange}
+                value=""
+                currentValue={filter.active}
+                dataLength={data?.data?.length}
+                idx="active"
+                title="All"
+              />
+              <BreadCrumb
+                onFilterChange={_onFilterChange}
+                value="1"
+                currentValue={filter.active}
+                dataLength={data?.data?.length}
+                idx="active"
+                title="Active"
+              />
+              <BreadCrumb
+                onFilterChange={_onFilterChange}
+                value="0"
+                currentValue={filter.active}
+                dataLength={data?.data?.length}
+
+                idx="active"
+                title="Not Active"
+                isLast
+              />
+            </div>
+          </div>
+        </Container>
+      )}
       <Container fluid className="card component-wrapper px-0 py-2">
         <Container fluid className="h-100 p-0">
           {isLoading ? (
@@ -166,14 +202,32 @@ const Coupons = () => {
           ) : (
             <>
               {!error && (
-                <ReactTable
-                  data={data?.data}
-                  columns={columns}
-                  setSelectedRows={setSelectedRows}
-                  filter={filter}
-                  onFilterChange={_onFilterChange}
-                  isDataLoading={isFetching}
-                />
+                <>
+
+                  <Container className="pt-3">
+                    <Row className="select-filter d-flex">
+                      <Col md="auto">
+                        <FilterSelect
+                          currentValue={filter.condition_type}
+                          data={conditionType}
+                          label="Condition Type"
+                          idx="condition_type"
+                          onFilterChange={_onFilterChange}
+                        />
+                      </Col>
+
+                    </Row>
+                  </Container>
+                  <hr />
+                  <ReactTable
+                    data={data?.data}
+                    columns={columns}
+                    setSelectedRows={setSelectedRows}
+                    filter={filter}
+                    onFilterChange={_onFilterChange}
+                    isDataLoading={isFetching}
+                  />
+                </>
               )}
               {!error && data.length > 0 ? (
                 <TablePagination

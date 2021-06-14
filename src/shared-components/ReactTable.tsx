@@ -35,6 +35,7 @@ interface Props {
   filter?: any;
   onFilterChange?: (idx: string, value: any) => void;
   isDataLoading?: boolean;
+  setSelectedRowIds?: any
 }
 interface ISearchInput {
   preGlobalFilteredRows: any;
@@ -103,6 +104,7 @@ function ReactTable({
   filter,
   onFilterChange,
   isDataLoading,
+  setSelectedRowIds
 }: Props): ReactElement {
   const [records, setRecords] = React.useState(data);
   const updateMyData = (rowIndex: any, columnID: any, newValue: any) => {
@@ -183,7 +185,7 @@ function ReactTable({
   );
 
   React.useEffect(() => {
-    console.log(selectedFlatRows);
+
     function filterRows() {
       let data = [];
       selectedFlatRows.map((d) => {
@@ -192,8 +194,10 @@ function ReactTable({
 
       return data;
     }
+    if (setSelectedRowIds) setSelectedRowIds(selectedRowIds)
 
     if (setSelectedRows) setSelectedRows(filterRows);
+
   }, [selectedRowIds]);
 
   const handleDragEnd = (result: any) => {

@@ -38,5 +38,8 @@ export const OrderStatus = [
   { id: "success", name: "Success" },
   { id: "pending", name: "Pending" },
   { id: "error_payment", name: "Payment Error" },
-  { id: "failed", name: "Failed" },
+  { id: "error", name: "Error" },
+];
+export const OrderType = [
+  { id: "normal", name: "Normal" },
 ];

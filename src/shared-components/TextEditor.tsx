@@ -22,7 +22,7 @@ const TextEditor = ({
         <Container fluid className="p-0"
             style={{ height: "400px", zIndex: -1 }}
         >
-            <h4 className="text-black">{label}</h4>
+            <span className="text-black " style={{ fontWeight: 500 }}>{label}</span>
             <div className="mx-auto">
 
                 <BraftEditor

@@ -1,8 +1,9 @@
 import { AxiosError } from "axios";
 import bsCustomFileInput from "bs-custom-file-input";
 import { Form, Formik } from "formik";
+import moment from "moment";
 import { useEffect, useMemo, useState } from "react";
-import { Container, Button, Col, Row, Spinner, Tab, Tabs } from "react-bootstrap";
+import { Button, Col, Row, Spinner } from "react-bootstrap";
 import { RiTimerFill } from "react-icons/ri";
 import { useMutation, useQuery } from "react-query";
 import { useHistory, useLocation } from "react-router-dom";
@@ -10,28 +11,24 @@ import { Cell } from "react-table";
 import { handleApiError } from "../../hooks/handleApiErrors";
 import useGetSingleQuery from "../../hooks/useGetSingleQuery";
 import BackButton from "../../shared-components/BackButton";
-import CreatedUpdatedAt from "../../shared-components/CreatedUpdatedAt";
 import DatePicker from "../../shared-components/DatePicker";
-import EditButton from "../../shared-components/EditButton";
 import { InputField } from "../../shared-components/InputFeild";
 import IsActiveBadge from "../../shared-components/IsActiveBadge";
 import IsLoading from "../../shared-components/isLoading";
 import ReactTable from "../../shared-components/ReactTable";
 import TextEditor from "../../shared-components/TextEditor";
 import API from "../../utils/API";
-import { isActiveArray } from "../../utils/arrays";
 import { primaryColor } from "../../utils/constants";
 import { queryClient } from "../../utils/queryClient";
-import { showErrorToast } from "../../utils/showErrorToast";
 import { showMsgToast } from "../../utils/showMsgToast";
 
-const key = "brands";
+const key = "fcm-notification";
 
 const createUpdataBrand = ({
 	formdata,
 	id,
 }: {
-	formdata: FormData;
+	formdata: any;
 	id: string;
 }) => {
 	if (!id) {
@@ -44,6 +41,8 @@ const createUpdataBrand = ({
 		headers: { "Content-Type": "multipart/form-data" },
 	});
 };
+
+
 const intitialFilter = {
 	q: "",
 	role: "",
@@ -56,6 +55,7 @@ const NotificationCreateUpdateForm = () => {
 	const history = useHistory();
 	const [isScheduleOpen, setIsScheduleOpen] = useState(false);
 	const [selectedRows, setSelectedRows] = useState([])
+	const [selectedRowIds, setSelectedRowIds] = useState<Record<string, boolean>>({})
 	const [filter, setFilter] = useState(intitialFilter);
 	const id = state ? (state as any).id : null;
 	useEffect(() => {
@@ -104,8 +104,10 @@ const NotificationCreateUpdateForm = () => {
 	const { mutate, isLoading } = useMutation(createUpdataBrand, {
 		onSuccess: () => {
 			setTimeout(() => queryClient.invalidateQueries(key), 500);
-			if (id) return showMsgToast("Brand updated successfully");
-			showMsgToast("Brands created successfully");
+			history.replace("/push-notifications")
+			if (id) return showMsgToast("Notification updated successfully");
+			showMsgToast("Notification created successfully");
+
 		},
 		onError: (error: AxiosError) => {
 			handleApiError(error, history);
@@ -121,31 +123,30 @@ const NotificationCreateUpdateForm = () => {
 
 	return (
 		<>
-			<BackButton title="Brands" />
+			<BackButton title="Notification" />
 			<Row className="rounded">
 				<Col className="mx-auto">
 					<Formik
 						initialValues={apiData || {}}
 						onSubmit={(values) => {
-							console.log({ values })
+
+							const formdata = {
+								...values,
+								users: selectedRows.map(i => i.id)
+							}
+
+							if (!values?.scheduled_at) formdata["scheduled_at"] = moment().format("YYYY-MM-DD hh:mm:ss")
 							// const { logo, ...rest } = values;
 							// const formdata = new FormData();
 							// for (let k in rest) formdata.append(k, rest[k]);
 
 
-							// mutate({ formdata, id });
+							mutate({ formdata, id });
 						}}
 					>
 						{({ setFieldValue }) => (
 							<Form>
 								<div className="form-container ">
-									<InputField
-										name="name"
-										placeholder="Name"
-										label="Name"
-										required
-									/>
-
 									<InputField
 										name="title"
 										placeholder="Title"
@@ -153,13 +154,6 @@ const NotificationCreateUpdateForm = () => {
 										required
 									/>
 
-									<InputField
-										as="select"
-										selectData={isActiveArray}
-										name="sent"
-										label="Sent?"
-										placeholder="Choose is sent"
-									/>
 								</div>
 								<Row>
 									<Col md={12} xl={12}>
@@ -210,7 +204,7 @@ const NotificationCreateUpdateForm = () => {
 														width: "200px"
 													}}>
 														<DatePicker
-															name="scheduled-at"
+															name="scheduled_at"
 															setFieldValue={setFieldValue}
 															label="Data\time"
 
@@ -230,6 +224,10 @@ const NotificationCreateUpdateForm = () => {
 											filter={filter}
 											onFilterChange={_onFilterChange}
 											isDataLoading={isFetching}
+											initialState={{
+												selectedRowIds
+											}}
+											setSelectedRowIds={setSelectedRowIds}
 										/>}
 
 									</Col>

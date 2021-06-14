@@ -1,7 +1,10 @@
 import { useEffect, useState } from "react";
 import { Container } from "react-bootstrap";
-import { Route, Switch, useLocation, Redirect } from "react-router-dom";
+import { Redirect, Route, Switch, useLocation } from "react-router-dom";
 import Advertisements from "./components/Advertisements";
+import AdvertisementCreateUpdateForm from "./components/Advertisements/AdvertisementUpdateCreateForm";
+import BookingSlots from "./components/BookingSlots";
+import SlotCreateUpdateForm from "./components/BookingSlots/BookingSlotsCreateUpdateForm";
 import BrandModels from "./components/BrandModels";
 import BrandModlesCreateUpdateForm from "./components/BrandModels/BrandModelsUpdateCreateForm";
 // ------pages components--------
@@ -14,20 +17,24 @@ import CouponCreateUpdateForm from "./components/Coupons/CouponsCreateUpdateForm
 import Dashboard from "./components/Dashboard";
 import Faqs from "./components/Faqs";
 import FaqCreateUpdateForm from "./components/Faqs/FaqsCreateUpdateForm";
+import Issues from "./components/Issues";
+import SingleIssue from "./components/Issues/single";
 import LoginPage from "./components/LoginPage";
 import NavBar from "./components/NavBar";
+import Notifications from "./components/Notification";
+import NotificationCreateUpdateForm from "./components/Notification/NotificationCreateUpdateForm";
 import Orders from "./components/Orders";
-import Transactions from "./components/Transactions";
-import TransactionUpdateForm from "./components/Transactions/TransactionUpdateForm";
-import Subscriptions from "./components/Subscriptions";
-import SingleSubscriptions from "./components/Subscriptions/single";
 import AssignAgent from "./components/Orders/assignAgent";
 import SingleOrder from "./components/Orders/single";
 import Plans from "./components/Plans";
 import PlanCreateUpdateForm from "./components/Plans/PlansCreateUpdateForm";
 import Services from "./components/Servicies";
 import ServicesCreateUpdateForm from "./components/Servicies/ServiciesCreateUpdateForm";
+import Subscriptions from "./components/Subscriptions";
+import SingleSubscriptions from "./components/Subscriptions/single";
 import TopBar from "./components/TopBar";
+import Transactions from "./components/Transactions";
+import TransactionUpdateForm from "./components/Transactions/TransactionUpdateForm";
 import Users from "./components/Users";
 import UserCreateUpdateForm from "./components/Users/UsersCreateUpdateForm";
 import VerifyOtp from "./components/VerifyOtp";
@@ -37,17 +44,9 @@ import ErrorToast from "./shared-components/ErrorToast/ErrorToast";
 import MsgToast from "./shared-components/MsgToast/MsgToast";
 import { PrivateRoute } from "./shared-components/PrivateRoute";
 import API from "./utils/API";
-import AdvertisementCreateUpdateForm from "./components/Advertisements/AdvertisementUpdateCreateForm";
-import Issues from "./components/Issues";
-import SingleIssue from "./components/Issues/single";
-import Notifications from "./components/Notification";
-import NotificationCreateUpdateForm from "./components/Notification/NotificationCreateUpdateForm";
-import BookingSlots from "./components/BookingSlots";
-import SlotCreateUpdateForm from "./components/BookingSlots/BookingSlotsCreateUpdateForm";
 
 const App = () => {
   const [isDesktop, setIsDesktop] = useState<boolean>(false);
-
   //adding token to every request
   const token = useTokenStore((state) => state.accessToken);
 
@@ -55,7 +54,6 @@ const App = () => {
 
   useEffect(() => {
     updateDimensions();
-
     window.addEventListener("resize", updateDimensions);
     return () => window.removeEventListener("resize", updateDimensions);
   }, []);

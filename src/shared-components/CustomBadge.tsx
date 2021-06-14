@@ -41,10 +41,11 @@ const CustomBadge = ({ variant, title, fontSize = 14 }: Props) => {
 		<span style={{
 			backgroundColor: setBgAndColor().bg,
 			color: setBgAndColor().color,
-			fontSize
+			fontSize,
+			padding: "3px 6px"
 		}}
 
-			className="py-1 px-3 rounded"
+			className="text-capitalize rounded"
 		>
 			{title}
 		</span>

@@ -1,8 +1,9 @@
 import { AxiosError } from "axios";
 import moment from "moment";
 import React, { useMemo, useState } from "react";
-import { Container } from "react-bootstrap";
+import { Col, Container, Row } from "react-bootstrap";
 import { BiSad } from "react-icons/bi";
+import { MdRemoveShoppingCart } from "react-icons/md";
 import { useQuery } from "react-query";
 import { useHistory } from "react-router-dom";
 import { Cell } from "react-table";
@@ -16,9 +17,6 @@ import { primaryColor } from "../../utils/constants";
 const key = "disabled-slots";
 
 const intitialFilter = {
-  q: "",
-  // page: 1,
-  // perPage: 25,
   start: moment().format("YYYY-MM-DD"),
   end: moment().add(10, "days").format("YYYY-MM-DD"),
 };
@@ -97,21 +95,63 @@ const BookingSlots = () => {
       <PageHeading
         title="Booking Slots"
         onClick={_onCreateClick}
-        totalRecords={50}
+        totalRecords={data?.total}
       />
+      <Container fluid className="p-0 my-2">
+        <Row>
+          <Col md="auto">
+            <div>
+              <label className="text-muted">Start Date</label>
+              <br />
+              <input type="date"
+                value={filter.start}
+                onChange={e => {
+                  const value = moment(e.target.value).format("YYYY-MM-DD")
+                  _onFilterChange("start", value)
+                }}
+                max={moment(filter.end).subtract(1, "day").format("YYYY-MM-DD")}
+              />
+            </div>
+          </Col>
+          <Col md="auto">
+            <div>
+              <label className="text-muted">End Date</label>
+              <br />
+              <input type="date"
+                value={filter.end}
+                onChange={e => {
+                  const value = moment(e.target.value).format("YYYY-MM-DD")
+                  _onFilterChange("end", value)
+                }}
+              />
+            </div>
+          </Col>
+        </Row>
+      </Container>
+      <hr />
       <Container fluid className="card component-wrapper px-0 py-2">
         <Container fluid className="h-100 p-0">
           {isLoading ? (
             <IsLoading />
           ) : (
             <>
-              {Object.entries(data).map((bookingslot: any, index) => (
-                <Slots
-                  key={index}
-                  date={bookingslot[0]}
-                  slots={bookingslot[1]}
-                />
-              ))}
+              {
+                Object.entries(data) && Object.entries(data).length ?
+                  Object.entries(data).map((bookingslot: any, index) => (
+                    <Slots
+                      key={index}
+                      date={bookingslot[0]}
+                      slots={bookingslot[1]}
+                    />
+                  ))
+                  :
+                  <Container fluid className="d-flex justify-content-center display-3">
+                    <div className="d-flex flex-column align-items-center pt-3 pb-3">
+                      <MdRemoveShoppingCart color="#000" size={60} />
+                      <h4 className="text-black font-weight-bold mt-2">No data found</h4>
+                    </div>
+                  </Container>
+              }
             </>
           )}
         </Container>

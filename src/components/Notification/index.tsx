@@ -22,14 +22,14 @@ import {
 import { queryClient } from "../../utils/queryClient";
 import { showMsgToast } from "../../utils/showMsgToast";
 
-const key = "brands";
+const key = "fcm-notification";
 const intitialFilter = {
   q: "",
   page: null,
   perPage: 25,
 };
 
-const deleteBrand = (id: string) => {
+const deleteNotification = (id: string) => {
   return API.delete(`${key}/${id}`, {
     headers: { "Content-Type": "multipart/form-data" },
   });
@@ -38,9 +38,7 @@ const deleteBrand = (id: string) => {
 const Notifications = () => {
   const history = useHistory();
   const [selectedRows, setSelectedRows] = useState([]);
-  console.log(selectedRows.map((item) => item.id));
   const [filter, setFilter] = useState(intitialFilter);
-  console.log({ filter });
   const { data, isLoading, isFetching, error } = useQuery<any>(
     [key, , filter],
     {
@@ -50,10 +48,10 @@ const Notifications = () => {
     }
   );
 
-  const { mutate, isLoading: isDeleteLoading } = useMutation(deleteBrand, {
+  const { mutate, isLoading: isDeleteLoading } = useMutation(deleteNotification, {
     onSuccess: () => {
       queryClient.invalidateQueries(key);
-      showMsgToast("Brands deleted successfully");
+      showMsgToast("Notifications deleted successfully");
     },
     onError: (error: AxiosError) => {
       handleApiError(error, history);

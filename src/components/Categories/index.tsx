@@ -61,7 +61,7 @@ const intitialFilter = {
   q: "",
   page: null,
   perPage: 25,
-  is_active: "",
+  active: "",
 };
 
 const Categories = () => {
@@ -188,26 +188,26 @@ const Categories = () => {
               <BreadCrumb
                 onFilterChange={_onFilterChange}
                 value=""
-                currentValue={filter.is_active}
+                currentValue={filter.active}
                 dataLength={data?.data?.length}
-                idx="is_active"
+                idx="active"
                 title="All"
               />
               <BreadCrumb
                 onFilterChange={_onFilterChange}
                 value="1"
-                currentValue={filter.is_active}
+                currentValue={filter.active}
                 dataLength={data?.data?.length}
-                idx="is_active"
+                idx="active"
                 title="Active"
               />
               <BreadCrumb
                 onFilterChange={_onFilterChange}
                 value="0"
-                currentValue={filter.is_active}
+                currentValue={filter.active}
                 dataLength={data?.data?.length}
 
-                idx="is_active"
+                idx="active"
                 title="Not Active"
                 isLast
               />

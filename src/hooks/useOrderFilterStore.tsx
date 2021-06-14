@@ -7,12 +7,14 @@ interface IFilter {
     user_id: string | null;
     agent_id: string | null;
     inside_cart: string | null;
+    order_type: string | null;
 }
 const INITIAL_FILTER: IFilter = {
     status: "",
     user_id: "",
     agent_id: "",
     inside_cart: "",
+    order_type: "",
 
 }
 

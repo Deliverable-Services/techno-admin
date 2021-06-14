@@ -1,7 +1,7 @@
 import { AxiosError } from "axios";
 import { useMemo, useState } from "react";
-import { Button, Col, Container, Modal, Row, Spinner } from "react-bootstrap";
-import { AiFillDelete, AiFillEdit } from "react-icons/ai";
+import { Button, Col, Container, Row } from "react-bootstrap";
+import { AiFillEdit } from "react-icons/ai";
 import { BiSad } from "react-icons/bi";
 import { useMutation, useQuery } from "react-query";
 import { useHistory } from "react-router-dom";
@@ -9,6 +9,7 @@ import { Cell } from "react-table";
 import { handleApiError } from "../../hooks/handleApiErrors";
 import BreadCrumb from "../../shared-components/BreadCrumb";
 import CreatedUpdatedAt from "../../shared-components/CreatedUpdatedAt";
+import EditButton from "../../shared-components/EditButton";
 import FilterSelect from "../../shared-components/FilterSelect";
 import IsActiveBadge from "../../shared-components/IsActiveBadge";
 import IsLoading from "../../shared-components/isLoading";
@@ -20,10 +21,9 @@ import { InsideCart, isActiveArray } from "../../utils/arrays";
 import {
   baseUploadUrl,
   primaryColor,
-  secondaryColor,
+  secondaryColor
 } from "../../utils/constants";
 import { queryClient } from "../../utils/queryClient";
-import { showErrorToast } from "../../utils/showErrorToast";
 import { showMsgToast } from "../../utils/showMsgToast";
 
 const key = "plans";
@@ -36,7 +36,7 @@ const intitialFilter = {
   q: "",
   page: null,
   perPage: 25,
-  is_active: "",
+  active: "",
   is_popular: "",
   category_id: "",
   allowed_usage: ""
@@ -146,15 +146,11 @@ const Plans = () => {
         Header: "Actions",
         Cell: (data: Cell) => {
           return (
-            <div className="d-flex">
-              <button
-                onClick={() => {
-                  _onEditClick(data.row.values.id);
-                }}
-              >
-                <AiFillEdit color={secondaryColor} size={24} />
-              </button>
-            </div>
+            <EditButton
+              onClick={() => {
+                _onEditClick(data.row.values.id);
+              }}
+            />
           );
         },
       },
@@ -184,26 +180,26 @@ const Plans = () => {
               <BreadCrumb
                 onFilterChange={_onFilterChange}
                 value=""
-                currentValue={filter.is_active}
+                currentValue={filter.active}
                 dataLength={data?.data?.length}
-                idx="is_active"
+                idx="active"
                 title="All"
               />
               <BreadCrumb
                 onFilterChange={_onFilterChange}
                 value="1"
-                currentValue={filter.is_active}
+                currentValue={filter.active}
                 dataLength={data?.data?.length}
-                idx="is_active"
+                idx="active"
                 title="Active"
               />
               <BreadCrumb
                 onFilterChange={_onFilterChange}
                 value="0"
-                currentValue={filter.is_active}
+                currentValue={filter.active}
                 dataLength={data?.data?.length}
 
-                idx="is_active"
+                idx="active"
                 title="Not Active"
                 isLast
               />
