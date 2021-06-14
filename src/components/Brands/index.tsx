@@ -1,14 +1,16 @@
 import { AxiosError } from "axios";
 import React, { useMemo, useState } from "react";
-import { Button, Container, Modal, Spinner } from "react-bootstrap";
+import { Button, Col, Container, Modal, Row, Spinner } from "react-bootstrap";
 import { AiFillDelete, AiFillEdit } from "react-icons/ai";
 import { BiSad } from "react-icons/bi";
 import { useMutation, useQuery } from "react-query";
 import { useHistory } from "react-router-dom";
 import { Cell } from "react-table";
 import { handleApiError } from "../../hooks/handleApiErrors";
+import BreadCrumb from "../../shared-components/BreadCrumb";
 import CreatedUpdatedAt from "../../shared-components/CreatedUpdatedAt";
 import EditButton from "../../shared-components/EditButton";
+import FilterSelect from "../../shared-components/FilterSelect";
 import IsActiveBadge from "../../shared-components/IsActiveBadge";
 import IsLoading from "../../shared-components/isLoading";
 import PageHeading from "../../shared-components/PageHeading";
@@ -32,6 +34,7 @@ const deleteBrand = (id: Array<any>) => {
 };
 
 const intitialFilter = {
+  is_active: "",
   q: "",
   page: 1,
   perPage: 25,
@@ -152,7 +155,42 @@ const Brands = () => {
 
   return (
     <>
-      <PageHeading title="Brands" onClick={_onCreateClick} totalRecords={50} />
+      <PageHeading title="Brands" onClick={_onCreateClick} totalRecords={data?.total} />
+
+      {(!isLoading) && (
+        <Container fluid>
+          <div>
+            <div className="filter">
+              <BreadCrumb
+                onFilterChange={_onFilterChange}
+                value=""
+                currentValue={filter.is_active}
+                dataLength={data?.data?.length}
+                idx="is_active"
+                title="All"
+              />
+              <BreadCrumb
+                onFilterChange={_onFilterChange}
+                value="1"
+                currentValue={filter.is_active}
+                dataLength={data?.data?.length}
+                idx="is_active"
+                title="Active"
+              />
+              <BreadCrumb
+                onFilterChange={_onFilterChange}
+                value="0"
+                currentValue={filter.is_active}
+                dataLength={data?.data?.length}
+
+                idx="is_active"
+                title="Not Active"
+                isLast
+              />
+            </div>
+          </div>
+        </Container>
+      )}
       <Container fluid className="card component-wrapper px-0 py-2">
         <Container fluid className="h-100 p-0">
           {isLoading ? (

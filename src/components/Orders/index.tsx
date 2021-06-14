@@ -109,7 +109,19 @@ const Orders = () => {
       },
       {
         Header: "Ref Id",
-        accessor: "ref_id", //accessor is the "key" in the data
+        accessor: "ref_id",
+        Cell: (data: Cell) => {
+          return (
+            <p
+              className="text-primary"
+              style={{ cursor: "pointer" }}
+              onClick={() => history.push(`/orders/${data.row.values.id}`)}
+            >
+              {data.row.values["ref_id"]}
+            </p>
+          );
+        },
+        //accessor is the "key" in the data
       },
       {
         Header: "Customer",
@@ -307,7 +319,7 @@ const Orders = () => {
                         >
                           <Button
                             onClick={() => resetFilter()}
-                            variant="light"
+                            variant={"light"}
                             style={{
                               backgroundColor: "#eee",
                               fontSize: 14,

@@ -419,7 +419,7 @@ const DnDRow = ({ provided, row, snapshot }: any) => (
     }}
   >
     {row.cells.map((cell) => (
-      <td {...cell.getCellProps()}>
+      <td {...cell.getCellProps()} style={{ verticalAlign: "middle" }}>
         {cell.render("Cell", {
           dragHandleProps: provided.dragHandleProps,
           isSomethingDragging: snapshot.isDragging,

@@ -1,32 +1,32 @@
+import { AxiosError } from "axios";
 import { useMemo, useState } from "react";
-import { Button, Container, Form, Modal, Spinner } from "react-bootstrap";
+import { Button, Col, Container, Row } from "react-bootstrap";
 import { AiFillDelete, AiFillEdit, AiFillPlusSquare } from "react-icons/ai";
 import { BiSad } from "react-icons/bi";
+import LightBox from "react-lightbox-component";
 import { QueryFunction, useMutation, useQuery } from "react-query";
 import { useHistory } from "react-router-dom";
 import { Cell } from "react-table";
+import { handleApiError } from "../../hooks/handleApiErrors";
 import BreadCrumb from "../../shared-components/BreadCrumb";
 import CreatedUpdatedAt from "../../shared-components/CreatedUpdatedAt";
+import FilterSelect from "../../shared-components/FilterSelect";
 import IsActiveBadge from "../../shared-components/IsActiveBadge";
 import IsLoading from "../../shared-components/isLoading";
 import TablePagination from "../../shared-components/Pagination";
 import ReactTable from "../../shared-components/ReactTable";
 import API from "../../utils/API";
-import LightBox from "react-lightbox-component";
-import { userRoles } from "../../utils/arrays";
+import Switch from "react-switch"
+import { isActiveArray } from "../../utils/arrays";
 import {
   baseUploadUrl,
   primaryColor,
-  secondaryColor,
+  secondaryColor
 } from "../../utils/constants";
 import { queryClient } from "../../utils/queryClient";
-import { showErrorToast } from "../../utils/showErrorToast";
-import { AxiosError } from "axios";
-import { handleApiError } from "../../hooks/handleApiErrors";
 import { showMsgToast } from "../../utils/showMsgToast";
-interface IFilter {
-  type: string | null;
-}
+import EditButton from "../../shared-components/EditButton";
+import PageHeading from "../../shared-components/PageHeading";
 const key = "banners/list";
 
 const deleteAd = (id: Array<any>) => {
@@ -36,7 +36,8 @@ const initialFilter = {
   type: "offers",
   q: "",
   page: "",
-  perPage: 25
+  perPage: 25,
+  is_active: ""
 };
 
 const getBanners: QueryFunction = async ({ queryKey }) => {
@@ -49,8 +50,9 @@ const getBanners: QueryFunction = async ({ queryKey }) => {
   }
 
   const r = await API.get(
-    `${queryKey[0]}/${(queryKey[1] as string).toLowerCase()}`,
+    `${queryKey[0]}/${(queryKey[1] as string).toLowerCase()}`, {
     params
+  }
   );
 
   return await r.data;
@@ -64,7 +66,11 @@ const Advertisements = () => {
   const [page, setPage] = useState<number>(1);
   const [deletePopup, setDeletePopup] = useState(false);
 
-  const [filter, setFilter] = useState<IFilter>(initialFilter);
+  const [isDraggable, setIsDraggable] = useState(false);
+  const handleChange = nextChecked => {
+    setIsDraggable(nextChecked);
+  };
+  const [filter, setFilter] = useState(initialFilter);
 
   const { data, isLoading, isFetching, error } = useQuery<any>(
     [key, filter.type, filter],
@@ -172,24 +178,11 @@ const Advertisements = () => {
         Header: "Actions",
         Cell: (data: Cell) => {
           return (
-            <div className="d-flex">
-              <button
-                onClick={() => {
-                  _onEditClick(data.row.values.id);
-                }}
-              >
-                <AiFillEdit color={secondaryColor} size={24} />
-              </button>
-              <button
-                className="ml-2"
-                onClick={() => {
-                  setSelectedRowId(data.row.values.id);
-                  setDeletePopup(true);
-                }}
-              >
-                <AiFillDelete color="red" size={24} />
-              </button>
-            </div>
+            <EditButton
+              onClick={() => {
+                _onEditClick(data.row.values.id);
+              }}
+            />
           );
         },
       },
@@ -210,16 +203,7 @@ const Advertisements = () => {
 
   return (
     <>
-      <Container fluid className="d-flex justify-content-between py-2">
-        <h2 className="font-weight-bold">Banners</h2>
-        <div className="d-flex">
-          <Button variant="primary" onClick={_onCreateClick}>
-            <div className="text-white d-flex ">
-              <AiFillPlusSquare size={25} /> <b>Create</b>
-            </div>
-          </Button>
-        </div>
-      </Container>
+      <PageHeading title="Banners" onClick={() => _onCreateClick} totalRecords={data?.total} />
 
       {(!isLoading || !isFetching) && (
         <Container fluid>
@@ -260,14 +244,51 @@ const Advertisements = () => {
             <IsLoading />
           ) : (
             <>
-              {!error && <ReactTable
-                data={data.data}
-                columns={columns}
-                setSelectedRows={setSelectedRows}
-                onFilterChange={_onFilterChange}
-                filter={filter}
-                isDataLoading={isFetching}
-              />}
+              {!error &&
+                <>
+                  <Container className="pt-3">
+                    <Row className="select-filter d-flex">
+                      <Col md="auto">
+                        <FilterSelect
+                          currentValue={filter.is_active}
+                          data={isActiveArray}
+                          label="Is Active?"
+                          idx="is_active"
+                          onFilterChange={_onFilterChange}
+                          defaultSelectTitle="Show All"
+                        />
+                      </Col>
+
+                      <Col md="auto" className=" d-flex align-items-center ">
+                        <div className=" d-flex align-items-center "
+                        >
+                          <span className="text-muted mr-2">IsDraggable?</span>
+                          <Switch
+                            checked={isDraggable}
+                            onChange={handleChange}
+                            className="react-switch"
+                            onColor={primaryColor}
+                            uncheckedIcon={false}
+                            checkedIcon={false}
+                            height={20}
+                          />
+
+                        </div>
+                      </Col>
+                    </Row>
+                  </Container>
+                  <hr />
+                  <ReactTable
+                    data={data.data}
+                    columns={columns}
+                    setSelectedRows={setSelectedRows}
+                    onFilterChange={_onFilterChange}
+                    filter={filter}
+                    isDataLoading={isFetching}
+                    isDraggable={isDraggable}
+                  />
+                </>
+              }
               {!error && data.length > 0 ? (
                 <TablePagination
                   currentPage={data?.current_page}

@@ -1,19 +1,22 @@
 import { AxiosError } from "axios";
 import { useMemo, useState } from "react";
-import { Button, Container, Modal, Spinner } from "react-bootstrap";
+import { Button, Col, Container, Modal, Row, Spinner } from "react-bootstrap";
 import { AiFillDelete, AiFillEdit } from "react-icons/ai";
 import { BiSad } from "react-icons/bi";
 import { useMutation, useQuery } from "react-query";
 import { useHistory } from "react-router-dom";
 import { Cell } from "react-table";
 import { handleApiError } from "../../hooks/handleApiErrors";
+import BreadCrumb from "../../shared-components/BreadCrumb";
 import CreatedUpdatedAt from "../../shared-components/CreatedUpdatedAt";
+import FilterSelect from "../../shared-components/FilterSelect";
 import IsActiveBadge from "../../shared-components/IsActiveBadge";
 import IsLoading from "../../shared-components/isLoading";
 import PageHeading from "../../shared-components/PageHeading";
 import TablePagination from "../../shared-components/Pagination";
 import ReactTable from "../../shared-components/ReactTable";
 import API from "../../utils/API";
+import { InsideCart, isActiveArray } from "../../utils/arrays";
 import {
   baseUploadUrl,
   primaryColor,
@@ -33,6 +36,10 @@ const intitialFilter = {
   q: "",
   page: null,
   perPage: 25,
+  is_active: "",
+  is_popular: "",
+  category_id: "",
+  allowed_usage: ""
 };
 const Plans = () => {
   const history = useHistory();
@@ -48,6 +55,8 @@ const Plans = () => {
       },
     }
   );
+
+  const { data: Categories, isLoading: isCategoresLoading } = useQuery<any>(["categories"])
 
   const { mutate, isLoading: isDeleteLoading } = useMutation(deletePlans, {
     onSuccess: () => {
@@ -166,8 +175,42 @@ const Plans = () => {
 
   return (
     <>
-      <PageHeading title="Plans" onClick={_onCreateClick} totalRecords={50} />
+      <PageHeading title="Plans" onClick={_onCreateClick} totalRecords={data?.total} />
 
+      {(!isLoading) && (
+        <Container fluid>
+          <div>
+            <div className="filter">
+              <BreadCrumb
+                onFilterChange={_onFilterChange}
+                value=""
+                currentValue={filter.is_active}
+                dataLength={data?.data?.length}
+                idx="is_active"
+                title="All"
+              />
+              <BreadCrumb
+                onFilterChange={_onFilterChange}
+                value="1"
+                currentValue={filter.is_active}
+                dataLength={data?.data?.length}
+                idx="is_active"
+                title="Active"
+              />
+              <BreadCrumb
+                onFilterChange={_onFilterChange}
+                value="0"
+                currentValue={filter.is_active}
+                dataLength={data?.data?.length}
+
+                idx="is_active"
+                title="Not Active"
+                isLast
+              />
+            </div>
+          </div>
+        </Container>
+      )}
       <Container fluid className="card component-wrapper px-0 py-2">
         <Container fluid className="h-100 p-0">
           {isLoading ? (
@@ -175,14 +218,50 @@ const Plans = () => {
           ) : (
             <>
               {!error && (
-                <ReactTable
-                  data={data?.data}
-                  columns={columns}
-                  setSelectedRows={setSelectedRows}
-                  filter={filter}
-                  onFilterChange={_onFilterChange}
-                  isDataLoading={isFetching}
-                />
+                <>
+                  <Container className="pt-3">
+                    <Row className="select-filter d-flex">
+                      <Col md="auto">
+                        <FilterSelect
+                          currentValue={filter.category_id}
+                          data={!isCategoresLoading && Categories.data}
+                          label="Categories"
+                          idx="category_id"
+                          onFilterChange={_onFilterChange}
+                        />
+                      </Col>
+                      <Col md="auto">
+                        <FilterSelect
+                          currentValue={filter.allowed_usage}
+                          data={InsideCart}
+                          label="Allowed Usage"
+                          idx="allowed_usage"
+                          width="80px"
+                          onFilterChange={_onFilterChange}
+                        />
+                      </Col>
+                      <Col md="auto">
+                        <FilterSelect
+                          currentValue={filter.is_popular}
+                          data={isActiveArray}
+                          label="Is Popular?"
+                          idx="is_popular"
+                          onFilterChange={_onFilterChange}
+                          defaultSelectTitle="Show All"
+                        />
+                      </Col>
+                    </Row>
+                  </Container>
+                  <hr />
+                  <ReactTable
+                    data={data?.data}
+                    columns={columns}
+                    setSelectedRows={setSelectedRows}
+                    filter={filter}
+                    onFilterChange={_onFilterChange}
+                    isDataLoading={isFetching}
+                  />
+                </>
               )}
               {!error && data.length > 0 ? (
                 <TablePagination

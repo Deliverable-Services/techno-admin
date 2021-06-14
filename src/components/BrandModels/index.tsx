@@ -1,14 +1,15 @@
 import { AxiosError } from "axios";
-import moment from "moment";
 import { useMemo, useState } from "react";
-import { Button, Container, Modal, Spinner } from "react-bootstrap";
-import { AiFillDelete, AiFillEdit } from "react-icons/ai";
+import { Button, Col, Container, Row } from "react-bootstrap";
 import { BiSad } from "react-icons/bi";
 import { useMutation, useQuery } from "react-query";
 import { useHistory } from "react-router-dom";
 import { Cell } from "react-table";
 import { handleApiError } from "../../hooks/handleApiErrors";
+import BreadCrumb from "../../shared-components/BreadCrumb";
 import CreatedUpdatedAt from "../../shared-components/CreatedUpdatedAt";
+import EditButton from "../../shared-components/EditButton";
+import FilterSelect from "../../shared-components/FilterSelect";
 import IsActiveBadge from "../../shared-components/IsActiveBadge";
 import IsLoading from "../../shared-components/isLoading";
 import PageHeading from "../../shared-components/PageHeading";
@@ -17,8 +18,7 @@ import ReactTable from "../../shared-components/ReactTable";
 import API from "../../utils/API";
 import {
   baseUploadUrl,
-  primaryColor,
-  secondaryColor,
+  primaryColor
 } from "../../utils/constants";
 import { queryClient } from "../../utils/queryClient";
 import { showMsgToast } from "../../utils/showMsgToast";
@@ -35,6 +35,8 @@ const intitialFilter = {
   q: "",
   page: null,
   perPage: 25,
+  is_active: "",
+  brand_id: ""
 };
 
 const BrandModels = () => {
@@ -51,6 +53,7 @@ const BrandModels = () => {
     }
   );
 
+  const { data: Brands, isLoading: isBrandsLoading } = useQuery<any>(["brands",])
   const { mutate, isLoading: isDeleteLoading } = useMutation(
     deleteBrandModels,
     {
@@ -133,15 +136,11 @@ const BrandModels = () => {
         Header: "Actions",
         Cell: (data: Cell) => {
           return (
-            <div className="d-flex">
-              <button
-                onClick={() => {
-                  _onEditClick(data.row.values.id);
-                }}
-              >
-                <AiFillEdit color={secondaryColor} size={24} />
-              </button>
-            </div>
+            <EditButton
+              onClick={() => {
+                _onEditClick(data.row.values.id);
+              }}
+            />
           );
         },
       },
@@ -165,8 +164,47 @@ const BrandModels = () => {
       <PageHeading
         title="Brand Models"
         onClick={_onCreateClick}
-        totalRecords={50}
+        totalRecords={data?.total}
       />
+      {(!isLoading) && (
+        <Container fluid>
+          <div>
+            <div className="filter">
+              <BreadCrumb
+                onFilterChange={_onFilterChange}
+                value=""
+                currentValue={filter.is_active}
+                dataLength={data?.data?.length}
+                idx="is_active"
+                title="All"
+              />
+              <BreadCrumb
+                onFilterChange={_onFilterChange}
+                value="1"
+                currentValue={filter.is_active}
+                dataLength={data?.data?.length}
+                idx="is_active"
+                title="Active"
+              />
+              <BreadCrumb
+                onFilterChange={_onFilterChange}
+                value="0"
+                currentValue={filter.is_active}
+                dataLength={data?.data?.length}
+
+                idx="is_active"
+                title="Not Active"
+                isLast
+              />
+            </div>
+          </div>
+        </Container>
+      )}
+
+
+
+
+
       <Container fluid className="card component-wrapper px-0 py-2">
         <Container fluid className="h-100 p-0">
           {isLoading ? (
@@ -174,14 +212,47 @@ const BrandModels = () => {
           ) : (
             <>
               {!error && (
-                <ReactTable
-                  data={data?.data}
-                  columns={columns}
-                  setSelectedRows={setSelectedRows}
-                  filter={filter}
-                  onFilterChange={_onFilterChange}
-                  isDataLoading={isFetching}
-                />
+                <>
+                  <Container className="pt-3">
+                    <Row className="select-filter d-flex">
+                      <Col md="auto">
+                        <FilterSelect
+                          currentValue={filter.brand_id}
+                          data={!isBrandsLoading && Brands.data}
+                          label="Brands"
+                          idx="brand_id"
+                          onFilterChange={_onFilterChange}
+                        />
+                      </Col>
+                      <Col
+                        md="auto"
+                        className="d-flex align-items-center mt-1 justify-content-center"
+                      >
+                        <Button
+                          variant="light"
+
+                          style={{
+                            backgroundColor: "#eee",
+                            fontSize: 14,
+                          }}
+
+                          onClick={() => setFilter(intitialFilter)}
+                        >
+                          Reset Filters
+                        </Button>
+                      </Col>
+                    </Row>
+                  </Container>
+                  <hr />
+                  <ReactTable
+                    data={data?.data}
+                    columns={columns}
+                    setSelectedRows={setSelectedRows}
+                    filter={filter}
+                    onFilterChange={_onFilterChange}
+                    isDataLoading={isFetching}
+                  />
+                </>
               )}
               {!error && data?.data?.length > 0 ? (
                 <TablePagination

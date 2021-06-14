@@ -67,7 +67,7 @@ const AdvertisementCreateUpdateForm = () => {
 
   return (
     <>
-      <BackButton title="Advertisements" />
+      <BackButton title="Banners" />
       <Row className="rounded">
         <Col className="mx-auto">
           <Formik

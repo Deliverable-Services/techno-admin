@@ -1,7 +1,7 @@
 import { AxiosError } from "axios";
 import { useMemo, useState } from "react";
-import { Button, Container, Form, Modal, Spinner } from "react-bootstrap";
-import { AiFillDelete, AiFillEdit, AiFillPlusSquare } from "react-icons/ai";
+import { Button, Col, Container, Form, Modal, Row, Spinner } from "react-bootstrap";
+import { AiFillPlusSquare } from "react-icons/ai";
 import { BiSad } from "react-icons/bi";
 import { useMutation, useQuery } from "react-query";
 import { useHistory } from "react-router-dom";
@@ -10,19 +10,18 @@ import { handleApiError } from "../../hooks/handleApiErrors";
 import BreadCrumb from "../../shared-components/BreadCrumb";
 import CreatedUpdatedAt from "../../shared-components/CreatedUpdatedAt";
 import EditButton from "../../shared-components/EditButton";
+import FilterSelect from "../../shared-components/FilterSelect";
 import IsActiveBadge from "../../shared-components/IsActiveBadge";
 import IsLoading from "../../shared-components/isLoading";
 import TablePagination from "../../shared-components/Pagination";
 import ReactTable from "../../shared-components/ReactTable";
 import API from "../../utils/API";
-import { userRoles } from "../../utils/arrays";
+import { isActiveArray, userRoles } from "../../utils/arrays";
 import {
   baseUploadUrl,
-  primaryColor,
-  secondaryColor,
+  primaryColor
 } from "../../utils/constants";
 import { queryClient } from "../../utils/queryClient";
-import { showErrorToast } from "../../utils/showErrorToast";
 import { showMsgToast } from "../../utils/showMsgToast";
 interface IFilter {
   role: string | null;
@@ -37,7 +36,8 @@ const intitialFilter = {
   q: "",
   role: "",
   page: null,
-  perPage: 25
+  perPage: 25,
+  disabled: ""
 }
 
 
@@ -234,14 +234,50 @@ const Users = () => {
             <IsLoading />
           ) : (
             <>
-              {!error && <ReactTable
-                data={data?.data}
-                columns={columns}
-                setSelectedRows={setSelectedRows}
-                filter={filter}
-                onFilterChange={_onFilterChange}
-                isDataLoading={isFetching}
-              />}
+              {!error &&
+                <>
+                  <Container className="pt-3">
+                    <Row className="select-filter d-flex">
+                      <Col md="auto">
+                        <FilterSelect
+                          currentValue={filter.disabled}
+                          data={isActiveArray}
+                          label="Disabled Users?"
+                          idx="disabled"
+                          onFilterChange={_onFilterChange}
+                          defaultSelectTitle="Show All"
+                        />
+                      </Col>
+                      <Col
+                        md="auto"
+                        className="d-flex align-items-center mt-1 justify-content-center"
+                      >
+                        <Button
+                          variant="light"
+
+                          style={{
+                            backgroundColor: "#eee",
+                            fontSize: 14,
+                          }}
+
+                          onClick={() => setFilter(intitialFilter)}
+                        >
+                          Reset Filters
+                        </Button>
+                      </Col>
+                    </Row>
+                  </Container>
+                  <hr />
+                  <ReactTable
+                    data={data?.data}
+                    columns={columns}
+                    setSelectedRows={setSelectedRows}
+                    filter={filter}
+                    onFilterChange={_onFilterChange}
+                    isDataLoading={isFetching}
+                  />
+                </>
+              }
               {!error && data?.data?.length > 0 ? (
                 <TablePagination
                   currentPage={data?.current_page}

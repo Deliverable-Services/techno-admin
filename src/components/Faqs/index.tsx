@@ -1,12 +1,12 @@
 import { AxiosError } from "axios";
 import { useMemo, useState } from "react";
-import { Button, Container, Modal, Spinner } from "react-bootstrap";
-import { AiFillDelete, AiFillEdit } from "react-icons/ai";
+import { Button, Container } from "react-bootstrap";
 import { BiSad } from "react-icons/bi";
 import { useMutation, useQuery } from "react-query";
 import { useHistory } from "react-router-dom";
 import { Cell } from "react-table";
 import { handleApiError } from "../../hooks/handleApiErrors";
+import BreadCrumb from "../../shared-components/BreadCrumb";
 import CreatedUpdatedAt from "../../shared-components/CreatedUpdatedAt";
 import EditButton from "../../shared-components/EditButton";
 import IsActiveBadge from "../../shared-components/IsActiveBadge";
@@ -15,9 +15,8 @@ import PageHeading from "../../shared-components/PageHeading";
 import TablePagination from "../../shared-components/Pagination";
 import ReactTable from "../../shared-components/ReactTable";
 import API from "../../utils/API";
-import { primaryColor, secondaryColor } from "../../utils/constants";
+import { primaryColor } from "../../utils/constants";
 import { queryClient } from "../../utils/queryClient";
-import { showErrorToast } from "../../utils/showErrorToast";
 import { showMsgToast } from "../../utils/showMsgToast";
 
 const key = "faqs";
@@ -30,6 +29,7 @@ const intitialFilter = {
   q: "",
   page: 1,
   perPage: 25,
+  is_active: ""
 };
 const Faqs = () => {
   const history = useHistory();
@@ -128,7 +128,41 @@ const Faqs = () => {
 
   return (
     <>
-      <PageHeading title="Faqs" onClick={_onCreateClick} totalRecords={50} />
+      <PageHeading title="Faqs" onClick={_onCreateClick} totalRecords={data?.total} />
+      {(!isLoading) && (
+        <Container fluid>
+          <div>
+            <div className="filter">
+              <BreadCrumb
+                onFilterChange={_onFilterChange}
+                value=""
+                currentValue={filter.is_active}
+                dataLength={data?.data?.length}
+                idx="is_active"
+                title="All"
+              />
+              <BreadCrumb
+                onFilterChange={_onFilterChange}
+                value="1"
+                currentValue={filter.is_active}
+                dataLength={data?.data?.length}
+                idx="is_active"
+                title="Active"
+              />
+              <BreadCrumb
+                onFilterChange={_onFilterChange}
+                value="0"
+                currentValue={filter.is_active}
+                dataLength={data?.data?.length}
+
+                idx="is_active"
+                title="Not Active"
+                isLast
+              />
+            </div>
+          </div>
+        </Container>
+      )}
 
       <Container fluid className="card component-wrapper px-0 py-2">
         <Container fluid className="h-100 p-0">

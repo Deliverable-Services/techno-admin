@@ -1,12 +1,13 @@
 import { AxiosError } from "axios";
 import { useMemo, useState } from "react";
-import { Button, Container, Modal, Spinner } from "react-bootstrap";
-import { AiFillDelete, AiFillEdit } from "react-icons/ai";
+import { Button, Col, Container, Modal, Row, Spinner } from "react-bootstrap";
+import Switch from "react-switch";
 import { BiSad } from "react-icons/bi";
 import { useMutation, useQuery } from "react-query";
 import { useHistory } from "react-router-dom";
 import { Cell, TableState } from "react-table";
 import { handleApiError } from "../../hooks/handleApiErrors";
+import BreadCrumb from "../../shared-components/BreadCrumb";
 import CreatedUpdatedAt from "../../shared-components/CreatedUpdatedAt";
 import EditButton from "../../shared-components/EditButton";
 import IsActiveBadge from "../../shared-components/IsActiveBadge";
@@ -60,13 +61,17 @@ const intitialFilter = {
   q: "",
   page: null,
   perPage: 25,
+  is_active: "",
 };
 
 const Categories = () => {
   const history = useHistory();
   const [selectedRows, setSelectedRows] = useState([]);
   const [filter, setFilter] = useState(intitialFilter);
-
+  const [isDraggable, setIsDraggable] = useState(false);
+  const handleChange = nextChecked => {
+    setIsDraggable(nextChecked);
+  };
   const { data, isLoading, isFetching, error } = useQuery<any>(
     [key, , filter],
     {
@@ -174,8 +179,43 @@ const Categories = () => {
       <PageHeading
         title="Categories"
         onClick={_onCreateClick}
-        totalRecords={50}
+        totalRecords={data?.total}
       />
+      {(!isLoading) && (
+        <Container fluid>
+          <div className="d-flex align-items-center justify-content-between w-100">
+            <div className="filter">
+              <BreadCrumb
+                onFilterChange={_onFilterChange}
+                value=""
+                currentValue={filter.is_active}
+                dataLength={data?.data?.length}
+                idx="is_active"
+                title="All"
+              />
+              <BreadCrumb
+                onFilterChange={_onFilterChange}
+                value="1"
+                currentValue={filter.is_active}
+                dataLength={data?.data?.length}
+                idx="is_active"
+                title="Active"
+              />
+              <BreadCrumb
+                onFilterChange={_onFilterChange}
+                value="0"
+                currentValue={filter.is_active}
+                dataLength={data?.data?.length}
+
+                idx="is_active"
+                title="Not Active"
+                isLast
+              />
+            </div>
+
+          </div>
+        </Container>
+      )}
       <Container fluid className="card component-wrapper px-0 py-2">
         <Container fluid className="h-100 p-0">
           {isLoading ? (
@@ -183,16 +223,59 @@ const Categories = () => {
           ) : (
             <>
               {!error && (
-                <ReactTable
-                  data={data?.data}
-                  columns={columns}
-                  setSelectedRows={setSelectedRows}
-                  filter={filter}
-                  onFilterChange={_onFilterChange}
-                  isDataLoading={isFetching}
-                  isDraggable
-                  updateOrder={updateOrder}
-                />
+                <>
+                  <Container className="pt-3">
+                    <Row className="select-filter d-flex">
+                      <Col md="auto">
+                        <div className=" d-flex align-items-center "
+                          style={{
+                            height: 30
+                          }}
+                        >
+                          <span className="text-muted mr-2">IsDraggable?</span>
+                          <Switch
+                            checked={isDraggable}
+                            onChange={handleChange}
+                            className="react-switch"
+                            onColor={primaryColor}
+                            uncheckedIcon={false}
+                            checkedIcon={false}
+                            height={20}
+                          />
+
+                        </div>
+                      </Col>
+                      {/* <Col
+                        md="auto"
+                        className="d-flex align-items-center  justify-content-center"
+                      >
+                        <Button
+                          variant="light"
+
+                          style={{
+                            backgroundColor: "#eee",
+                            fontSize: 14,
+                          }}
+
+                          onClick={() => setFilter(intitialFilter)}
+                        >
+                          Reset Filters
+                        </Button>
+                      </Col> */}
+                    </Row>
+                  </Container>
+                  <hr />
+                  <ReactTable
+                    data={data?.data}
+                    columns={columns}
+                    setSelectedRows={setSelectedRows}
+                    filter={filter}
+                    onFilterChange={_onFilterChange}
+                    isDataLoading={isFetching}
+                    isDraggable={isDraggable}
+                    updateOrder={updateOrder}
+                  />
+                </>
               )}
               {!error && data.length > 0 ? (
                 <TablePagination
