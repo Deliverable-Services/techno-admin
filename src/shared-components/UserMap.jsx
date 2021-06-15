@@ -4,8 +4,10 @@ import mapboxgl from "mapbox-gl";
 const accessToken =
 	"pk.eyJ1IjoibmV1cmFmYXJtcy1haSIsImEiOiJja2tqdjcyMzgwbndjMm9xc3U1YTFzcGs2In0.qHHKandtpLSd1f11nSpEFw";
 
-const UserMap = ({ userAddress, ID }) => {
-	console.log("UserAddress", { userAddress });
+const UserMap = ({ userAddress }) => {
+	console.log("UserAddress 11122222",  userAddress );
+	const lat = userAddress.lat;
+	const lng = userAddress.lng;
 
 	const mapContainer = useRef(null);
 	let [map, setMap] = useState(null);
@@ -13,14 +15,14 @@ const UserMap = ({ userAddress, ID }) => {
 	const [viewport] = useState({
 		width: 350,
 		height: 350,
-		lat: userAddress && userAddress.lat ? parseInt(userAddress.lat) : 37.78,
-		lng: userAddress && userAddress.lng ? parseInt(userAddress.lng) : -122.41,
+		lat: userAddress && lat ? parseInt(lat) : 37.78,
+		lng: userAddress && lng ? parseInt(lng) : -122.41,
 		zoom: 12,
 	});
 
 	const [userLocation] = useState({
-		lat: userAddress && parseInt(userAddress.lat),
-		lng: userAddress && parseInt(userAddress.lng),
+		lat: userAddress && parseInt(lat),
+		lng: userAddress && parseInt(lng),
 	});
 	const [agentLocation, setAgentLocation] = useState(null);
 	const [directions, setDirections] = useState(null);

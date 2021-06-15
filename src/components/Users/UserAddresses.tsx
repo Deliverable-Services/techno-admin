@@ -29,18 +29,19 @@ const UserAddress = () => {
   const id = state ? (state as any).id : null;
   const { data, isLoading: dataLoading } = useGetSingleQuery({ id, key });
   // const { mutate, isLoading, error, status } = useMutation(createUpdateUser, {
-  //     onSuccess: () => {
-  //         setTimeout(() => queryClient.invalidateQueries(key), 500);
-  //     },
-  // });
-
-  const apiData = data && (data as any);
-
-  if (dataLoading) return null;
+    //     onSuccess: () => {
+      //         setTimeout(() => queryClient.invalidateQueries(key), 500);
+      //     },
+      // });
+      
+      const apiData = data && (data as any);
+  
+ if (dataLoading) return null;
 
   return (
-    <Row className="rounded mt-3">
+    <div>
       <PageHeading title="User Addresses" totalRecords={50} />
+    <Row className="rounded mt-3">
       {apiData && apiData.addresses && apiData.addresses.length > 0 ? (
         apiData.addresses.map((address: any) => (
           <>
@@ -53,6 +54,8 @@ const UserAddress = () => {
         <h1>No User address found</h1>
       )}
     </Row>
+    </div>
+
   );
 };
 
