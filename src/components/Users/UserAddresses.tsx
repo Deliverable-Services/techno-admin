@@ -1,4 +1,5 @@
-import { Col, Row } from "react-bootstrap";
+import { Col, Container, Row } from "react-bootstrap";
+import { MdRemoveShoppingCart } from "react-icons/md";
 import { useLocation } from "react-router-dom";
 import useGetSingleQuery from "../../hooks/useGetSingleQuery";
 import PageHeading from "../../shared-components/PageHeading";
@@ -39,20 +40,27 @@ const UserAddress = () => {
   if (dataLoading) return null;
 
   return (
-    <Row className="rounded mt-3">
-      <PageHeading title="User Addresses" totalRecords={50} />
-      {apiData && apiData.addresses && apiData.addresses.length > 0 ? (
-        apiData.addresses.map((address: any) => (
-          <>
-            <Col md={6}>
-              <AddressCard address={address} />
-            </Col>
-          </>
-        ))
-      ) : (
-        <h1>No User address found</h1>
-      )}
-    </Row>
+    <>
+      <PageHeading title="User Addresses" />
+      <Row className="rounded mt-3">
+        {apiData && apiData.addresses && apiData.addresses.length > 0 ? (
+          apiData.addresses.map((address: any) => (
+            <>
+              <Col md={6}>
+                <AddressCard address={address} />
+              </Col>
+            </>
+          ))
+        ) : (
+          <Container fluid className="d-flex justify-content-center display-3">
+            <div className="d-flex flex-column align-items-center pt-3 pb-3">
+              <MdRemoveShoppingCart color="#000" size={60} />
+              <h4 className="text-black font-weight-bold mt-2">No address found</h4>
+            </div>
+          </Container>
+        )}
+      </Row>
+    </>
   );
 };
 

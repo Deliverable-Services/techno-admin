@@ -8,6 +8,7 @@ import { useMutation, useQuery } from "react-query";
 import { useHistory, useParams } from "react-router-dom";
 import { ProgressBar, Step } from "react-step-progress-bar";
 import "react-step-progress-bar/styles.css";
+import Map from "../../components/Map";
 import { handleApiError } from "../../hooks/handleApiErrors";
 import useGetSingleQuery from "../../hooks/useGetSingleQuery";
 import IsLoading from "../../shared-components/isLoading";
@@ -15,7 +16,6 @@ import API from "../../utils/API";
 import { OrderStatus } from "../../utils/arrays";
 import { queryClient } from "../../utils/queryClient";
 import { showMsgToast } from "../../utils/showMsgToast";
-import Map from "../../components/Map";
 
 const key = "bookings";
 
@@ -528,6 +528,45 @@ const SingleOrder = () => {
               </div>
             </div>
           </div>
+          {data?.services?.length ? (
+            <div className="card view-padding p-2 d-flex mt-3">
+
+              <div className="d-flex flex-column">
+                <div className="text-primary">
+                  <div className="d-flex justify-content-between">
+                    <div
+                      className="text-black pb-3"
+                      style={{ cursor: "pointer", fontWeight: 600 }}
+                    >
+                      Services
+                    </div>
+                  </div>
+                </div>
+
+                <hr className="mb-3" />
+                <div className="d-flex flex-column">
+                  <div
+                    className="d-flex flex-column w-100"
+                    style={{ fontSize: 18 }}
+                  >
+                    <table className="w-100">
+                      <tbody>
+                        {data.services.map((service) => (
+                          <tr>
+                            <td className="view-heading">{service.name}</td>
+                            <td className="text-right">
+                              <p className="view-subheading">₹{service.cost}</p>
+                            </td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
+            </div>
+          ) : null
+          }
 
           <div className="card view-padding p-2 d-flex mt-3">
             <div className="d-flex flex-column">
@@ -538,7 +577,7 @@ const SingleOrder = () => {
                     style={{ cursor: "pointer", fontWeight: 600 }}
                     onClick={() => _onUserClick(data.user_id)}
                   >
-                    Services Details
+                    Payment Summary
                   </div>
                 </div>
               </div>
@@ -549,7 +588,6 @@ const SingleOrder = () => {
                 className="d-flex flex-column w-100"
                 style={{ fontSize: 18 }}
               >
-                {/* #TODO: Add list of services. */}
                 <table className="w-100">
                   <tbody>
                     <tr>
@@ -583,32 +621,6 @@ const SingleOrder = () => {
             </div>
           </div>
 
-          {data?.services?.length ? (
-            <div className="card view-padding p-2 d-flex mt-3">
-              <div className="d-flex flex-column">
-                <div className="view-heading  view-top-pad">
-                  Requested Services
-                </div>
-                <div
-                  className="d-flex flex-column w-100"
-                  style={{ fontSize: 18 }}
-                >
-                  <table className="w-100">
-                    <tbody>
-                      {data.services.map((service) => (
-                        <tr>
-                          <td className="view-heading">{service.name}</td>
-                          <td className="text-right">
-                            <p className="view-subheading">₹{service.cost}</p>
-                          </td>
-                        </tr>
-                      ))}
-                    </tbody>
-                  </table>
-                </div>
-              </div>
-            </div>
-          ) : null}
 
           {data.plan && (
             <div className="card p-2 d-flex mt-3">

@@ -1,36 +1,92 @@
+import { AxiosError } from "axios";
 import moment from "moment";
-import React from "react";
-import { useState } from "react";
-import { Badge, Button, Container } from "react-bootstrap";
-import { FaDotCircle, FaRegDotCircle } from "react-icons/fa";
+import React, { useState } from "react";
+import { Badge, Button, Col, Container, Form, Row } from "react-bootstrap";
+import { BiArrowFromRight, BiDownload } from "react-icons/bi";
+import { CgSandClock } from "react-icons/cg";
+import { useMutation, useQuery } from "react-query";
 import { useHistory, useParams } from "react-router-dom";
 import { ProgressBar, Step } from "react-step-progress-bar";
 import "react-step-progress-bar/styles.css";
+import Map from "../../components/Map";
+import { handleApiError } from "../../hooks/handleApiErrors";
 import useGetSingleQuery from "../../hooks/useGetSingleQuery";
 import IsLoading from "../../shared-components/isLoading";
+import API from "../../utils/API";
+import { OrderStatus } from "../../utils/arrays";
+import { queryClient } from "../../utils/queryClient";
+import { showMsgToast } from "../../utils/showMsgToast";
 import ChatBox from "./ChatBox";
-
 
 const key = "bookings";
 
-
+const assignAgent = ({
+    formdata,
+    id,
+}: {
+    formdata: { agent_id: string };
+    id: string;
+}) => {
+    return API.post(`bookings/${id}/assign-agent`, formdata, {
+        headers: { "Content-Type": "application/json" },
+    });
+};
 
 const SingleIssue = () => {
     const { id }: { id: string } = useParams();
     const history = useHistory();
-    const [isChatBoxOpen, setIsChatBoxOpen] = useState(false)
-
     const { data, isLoading, isFetching } = useGetSingleQuery({ id, key });
+
+    const { mutate, isLoading: isAsigningLoading } = useMutation(assignAgent, {
+        onSuccess: (data) => {
+            showMsgToast("Agent assigned successfully");
+            setTimeout(() => {
+                queryClient.invalidateQueries(key);
+                queryClient.invalidateQueries(`${key}/${id}`);
+            }, 500);
+        },
+    });
+    const [form, setForm] = useState({
+        agent_id: data?.agent_id,
+        status: data?.status,
+    });
+
+    const _onformChange = (idx: string, value: any) => {
+        setForm((prev) => ({
+            ...prev,
+            [idx]: value,
+        }));
+    };
+
+    const { data: Agents, isLoading: isAgentLoading } = useQuery<any>(
+        [
+            "users",
+            1,
+            {
+                role: "agent",
+            },
+        ],
+        {
+            onError: (error: AxiosError) => {
+                handleApiError(error, history);
+            },
+        }
+    );
+
+    const _onUserClick = (id: string) => {
+        if (!id) return;
+        history.push("/users/create-edit", { id });
+    };
 
     const statusBadgeVairant = (status: string) => {
         const _status = status.toLowerCase();
 
-        if (_status === "cancelled") return "danger";
+        if (_status === "success") return "success";
 
         if (_status === "pending" || _status === "pending_payment")
             return "warning";
 
-        return "success";
+        return "danger";
     };
 
     if (isLoading || isFetching) {
@@ -41,87 +97,117 @@ const SingleIssue = () => {
         <Container fluid className="component-wrapper px-0 py-2">
             <Container fluid className="d-flex justify-content-between py-2">
                 <div className="d-flex align-items-center">
-                    <h2 className="text-muted font-weight-bold">Issue</h2>
-                    <h2 className="ml-2">#{data.id}</h2>
-                    <Badge variant="success" className="mx-3 px-3 py-2 text-uppercase">
-                        Open
-                    </Badge>
+                    <h2 className="font-weight-bold">Issue</h2>
+                    <h2 className="ml-2">#{data.ref_id}</h2>
                 </div>
-                <Button
-                    variant="primary"
-                // onClick={() => history.push(`assign-agent/${id}`)}
-                >
-                    <div className="text-white">Mark Closed</div>
-                </Button>
+                <div>
+                    <Button variant="success">
+                        <div className="text-white">
+                            <BiDownload size={24} /> <b>Mark Closed</b>
+                        </div>
+                    </Button>
+                    <Button className="ml-2" onClick={() => history.goBack()}>
+                        <div className="text-white">
+                            <BiArrowFromRight size={25} /> <b>Back</b>
+                        </div>
+                    </Button>
+                </div>
             </Container>
 
 
-            <div className="w-100">
-                <Container fluid className="charts-container mt-2">
-                    <div className="card view-padding p-2 d-flex mt-3">
-                        <div className="d-flex flex-column">
-                            <div className="view-heading  view-top-pad">
-                                ORDER SUMMARY
+
+            <div className="dashboard-page w-100">
+                <Container fluid className="status-container mt-2">
+
+                    <div className="card p-2 view-padding right-div d-flex">
+                        <div className="text-primary">
+                            <div className="d-flex justify-content-between">
+                                <div
+                                    className="text-black pb-3"
+                                >
+                                    Issues Info
+                                </div>
+
                             </div>
-                            <div
-                                className="d-flex flex-column w-100"
-                                style={{ fontSize: 18 }}
-                            >
+                        </div>
+                        <hr className="mb-3" />
+                        <div className="d-flex flex-column" style={{ fontSize: 18 }}>
+                            <table className="w-100">
+                                <tbody>
+                                    <tr>
+                                        <td className="text-muted">
+                                            <p className="view-heading">Something</p>
+                                        </td>
+                                        <td className="text-right">
+                                            <p className="view-subheading">Something</p>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div className="d-flex flex-column">
+                            <div className="text-primary">
+                                <div className="d-flex justify-content-between">
+                                    <div
+                                        className="text-black pb-3"
+                                    >
+                                        Customer
+                                    </div>
+
+                                    <div className="text-primary small">Edit Info</div>
+                                </div>
+                            </div>
+
+                            <hr className="mb-3" />
+
+                            <div className="d-flex flex-column" style={{ fontSize: 18 }}>
                                 <table className="w-100">
                                     <tbody>
                                         <tr>
-                                            <td className="text-muted"><p className="view-heading">Ref Id</p></td>
+                                            <td className="text-muted">
+                                                <p className="view-heading">Name</p>
+                                            </td>
                                             <td className="text-right">
-                                                <p className="view-subheading">{data.ref_id}</p>
+                                                <p className="view-subheading">{data.user.name}</p>
                                             </td>
                                         </tr>
                                         <tr>
-                                            <td className="text-muted "><p className="view-heading">Scheduled At</p></td>
+                                            <td className="text-muted ">
+                                                <p className="view-heading">Email</p>
+                                            </td>
                                             <td className="text-primary  font-weight-bold text-right">
-                                                <p className="view-subheading">
-                                                    {data.scheduled_at
-                                                        ? moment(data.scheduled_at).format("DD/MM/YY(hh:mm)")
-                                                        : "NA"}</p>
+                                                <a href={`mailto:${data.user.email}`}>
+                                                    <p className="view-subheading text-primary">
+                                                        {data.user.email}
+                                                    </p>
+                                                </a>
                                             </td>
                                         </tr>
-                                        {data.address && (
-                                            <tr>
-                                                <td className="text-muted py-2">Address</td>
-                                                <td className="text-primary py-2 text-right">
-                                                    <address className="font-italic font-weight-light text-capitalize">
-                                                        {data.address.address}
-                                                        {", "}
-                                                        <br />
-                                                        {data.address.city}
-                                                        {", "}
-                                                        {data.address.pincode}{" "}
-                                                    </address>
-                                                </td>
-                                            </tr>
-                                        )}
-                                        {data.vehicle && (
-                                            <tr>
-                                                <td className="text-muted py-2">Vehicle Name</td>
-                                                <td className="text-primary py-2 text-right">
-                                                    {data.vehicle.name}
-                                                </td>
-                                            </tr>
-                                        )}
+                                        <tr>
+                                            <td className="text-muted ">
+                                                <p className="view-heading phone-padd">Phone</p>
+                                            </td>
+                                            <td className="text-primary  font-weight-bold text-right">
+                                                <p className="view-subheading">{data.user.phone}</p>
+                                            </td>
+                                        </tr>
                                     </tbody>
                                 </table>
+                                <span className="small text-primary font-weight-bold"
+                                    style={{ cursor: "pointer" }}
+                                    onClick={() => _onUserClick(data.user_id)}
+                                >
+                                    View Profile
+                                </span>
                             </div>
+
+                            <hr className="mb-3 mt-3" />
                         </div>
                     </div>
-
-
                 </Container>
-                <Container fluid className=" mt-2">
-                    <div className="position-relative">
-                        <ChatBox
-                            isChatBoxOpen={isChatBoxOpen}
-                            setIsChatBoxOpen={setIsChatBoxOpen}
-                        />
-                    </div>
+
+                <Container fluid className="charts-container">
+                    <ChatBox />
                 </Container>
             </div>
         </Container>

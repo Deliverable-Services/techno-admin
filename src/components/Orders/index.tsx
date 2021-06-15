@@ -37,7 +37,6 @@ const Orders = () => {
   const filter = useOrderStoreFilter((state) => state.filter);
   const NumberOfRows = useOrderStoreFilter((state) => state.rows_per_page);
   const onFilterChange = useOrderStoreFilter((state) => state.onFilterChange);
-  const onRowsChange = useOrderStoreFilter((state) => state.onRowsChange);
   const resetFilter = useOrderStoreFilter((state) => state.resetFilter);
   const InitialTableState: IInitialTableState = {
     pageSize: parseInt(NumberOfRows),

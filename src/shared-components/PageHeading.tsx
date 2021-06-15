@@ -4,7 +4,7 @@ import { AiFillPlusSquare } from "react-icons/ai";
 interface Props {
   title: string;
   onClick?: () => void;
-  totalRecords: number;
+  totalRecords?: number;
 }
 const PageHeading: React.FC<Props> = ({ title, onClick, totalRecords }) => {
   return (

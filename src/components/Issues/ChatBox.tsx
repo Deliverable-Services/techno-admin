@@ -1,124 +1,119 @@
 import React from 'react'
-import "bootstrap/dist/css/bootstrap.min.css"
 import { BiMinus, BiPlus } from 'react-icons/bi'
 import { primaryColor } from '../../utils/constants'
 import { RiSendPlane2Fill } from 'react-icons/ri'
 import { BsChat } from 'react-icons/bs'
-interface Props {
-    isChatBoxOpen: boolean,
-    setIsChatBoxOpen: React.Dispatch<React.SetStateAction<boolean>>
-}
+import moment from 'moment'
+import { Container } from 'react-bootstrap';
+import image from "../../assets/user.png"
 
-const ChatBox = ({ isChatBoxOpen = false, setIsChatBoxOpen }: Props) => {
 
-    console.log({ isChatBoxOpen })
+const initialMessage = [
+    {
+        text: "Hi! Please fix this issue. Some important stuff is missing from the car",
+        user: {
+            id: 1,
+            name: "Hitesh Kumar"
+        },
+        send_at: moment().subtract(1, "hour").fromNow(),
+        from_me: false
+    },
+    {
+        text: "I'm working on it ",
+        user: {
+            id: 2,
+            name: "Dishant"
+        },
+        send_at: moment().fromNow(),
+        from_me: true
+    },
+    {
+        text: "Ok Thanks",
+        user: {
+            id: 1,
+            name: "Hitesh Kumar"
+        },
+        send_at: moment().fromNow(),
+        from_me: false
+    },
+]
 
-    const _closeChatbox = () => {
-        setIsChatBoxOpen(false)
-    }
+const ChatBox = () => {
 
-    const _openChatbox = () => {
-        setIsChatBoxOpen(true)
-    }
+    const [messages, setMessages] = React.useState(initialMessage)
+
     return (
         <div
-            style={{
-                position: "fixed",
-                width: "400px",
-                right: "2%",
-                bottom: 0,
-
-
-            }}
         >
             {/* <!-- DIRECT CHAT PRIMARY --> */}
-            <div className="box box-primary direct-chat direct-chat-primary"
+            <div className="card d-flex flex-column justify-content-between "
+                style={{
+                    minHeight: "80vh",
+                    backgroundColor: "#3873cc2b"
+                }}
             >
-                <div className="box-header with-border">
-                    <h3 className="box-title">Direct Chat</h3>
+                <Container fluid className="messages-container p-0 py-2">
 
-                    <div className="box-tools pull-right d-flex">
-                        <div className="position-relative mr-3">
-                            <BsChat />
-                            <span className="position-absolute text-light  font-weight-bold bg-primary d-flex align-items-center justify-content-center"
+
+                    {
+                        messages.map(msg => (
+
+                            <div className="message w-100"
                                 style={{
-                                    height: 18,
-                                    width: 18,
-                                    top: -2,
-                                    right: "-40%",
-                                    borderRadius: "50%"
+                                    position: "relative"
                                 }}
                             >
+                                <div
+                                    className={`d-flex`}
+                                    style={{
+                                        // marginLeft: msg.from_me ? "auto" : "",
+                                        display: "flex",
+                                        minWidth: "50%",
 
-                                3
-                            </span></div>
-                        <button className="btn btn-box-tool" data-widget="collapse">
-                            {
-                                !isChatBoxOpen
-                                    ?
-                                    <BiPlus onClick={_openChatbox} className="font-weight-bold" size={20}
-                                    />
-                                    :
-                                    <BiMinus color={primaryColor} onClick={_closeChatbox} />
-                            }
-                        </button>
-                    </div>
-                </div>
-                {
-                    isChatBoxOpen &&
-                    <>
-                        {/* <!-- /.box-header --> */}
-                        <div className="box-body">
-                            {/* <!-- Conversations are loaded here --> */}
-                            <div className="direct-chat-messages">
-                                {/* <!-- Message. Default to the left --> */}
-                                <div className="direct-chat-msg">
-                                    <div className="direct-chat-info clearfix">
-                                        <span className="direct-chat-name pull-left">Alexander Pierce</span>
-                                        <span className="direct-chat-timestamp pull-right">23 Jan 2:00 pm</span>
-                                    </div>
-                                    {/* <!-- /.direct-chat-info --> */}
-                                    <img className="direct-chat-img" src="https://bootdey.com/img/Content/user_1.jpg" alt="Message User Image" />
-                                    {/* <!-- /.direct-chat-img --> */}
-                                    <div className="direct-chat-text">
-                                        Is this template really for free? That's unbelievable!
-                                    </div>
-                                    {/* <!-- /.direct-chat-text --> */}
-                                </div>
-                                {/* <!-- /.direct-chat-msg --> */}
+                                        flexDirection: !msg.from_me ? "row" : "row-reverse"
 
-                                {/* <!-- Message to the right --> */}
-                                <div className="direct-chat-msg right">
-                                    <div className="direct-chat-info clearfix">
-                                        <span className="direct-chat-name pull-right">Sarah Bullock</span>
-                                        <span className="direct-chat-timestamp pull-left">23 Jan 2:05 pm</span>
+
+                                    }}
+                                >
+                                    <div className="user-image"
+                                        style={{
+                                            flex: 0
+                                        }}
+                                    >
+                                        <img src={require("../../assets/user.png")} alt="profile" height="30" />
                                     </div>
-                                    {/* <!-- /.direct-chat-info --> */}
-                                    <img className="direct-chat-img" src="https://bootdey.com/img/Content/user_2.jpg" alt="Message User Image" />
-                                    {/* <!-- /.direct-chat-img --> */}
-                                    <div className="direct-chat-text">
-                                        You better believe it!
+
+                                    <div className="message-details">
+                                        <p
+                                            style={{
+                                                backgroundColor: msg.from_me ? primaryColor : "#fff",
+                                                boxShadow: msg.from_me ? "" : "4px 0 20px rgba(0,0,0,.12",
+                                                maxWidth: "300px",
+                                            }}
+                                            className="p-1 rounded m-0"
+                                        >
+                                            {msg.text}
+                                        </p>
+                                        <span className="small text-muted">{msg.send_at}</span>
                                     </div>
-                                    {/* <!-- /.direct-chat-text --> */}
                                 </div>
-                                {/* <!-- /.direct-chat-msg --> */}
                             </div>
+                        ))
+                    }
+                </Container>
 
-                        </div>
-                        {/* <!-- /.box-body --> */}
-                        <div className="box-footer">
-                            <form>
-                                <div className="input-group d-flex align-items-center">
-                                    <input type="text" name="message" placeholder="Type Message ..." className="form-control" />
-                                    <RiSendPlane2Fill color={primaryColor} size={24} />
-                                </div>
-                            </form>
-                        </div>
-                        {/* <!-- /.box-footer--> */}
-                    </>
-                }
+                <Container fluid className="send-message-form mb-1">
+                    <div className="bg-light rounded p-1">
+
+                        <form>
+                            <div className="input-group d-flex align-items-center">
+                                <input type="text" name="message" placeholder="Type Message ..." className="form-control" style={{ border: "none", outline: "none" }} />
+                                <RiSendPlane2Fill color={primaryColor} size={24} />
+                            </div>
+                        </form>
+                    </div>
+                </Container>
             </div>
-            {/* <!--/.direct-chat --> */}
         </div >
     )
 }

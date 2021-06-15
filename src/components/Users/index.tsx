@@ -43,13 +43,13 @@ const intitialFilter = {
 
 const Users = () => {
   const history = useHistory();
+  const [deletePopup, setDeletePopup] = useState(false);
   const [selectedRowId, setSelectedRowId] = useState<string>("");
   const [selectedRows, setSelectedRows] = useState([])
   const [filter, setFilter] = useState(intitialFilter);
   console.log(selectedRows.map(item => item.id))
   const [page, setPage] = useState<number>(1);
   const [role, setRole] = useState("");
-  const [deletePopup, setDeletePopup] = useState(false);
 
 
   const { data, isLoading, isFetching, error } = useQuery<any>(

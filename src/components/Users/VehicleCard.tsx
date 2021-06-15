@@ -1,5 +1,6 @@
 import React from 'react';
 import { Badge } from 'react-bootstrap';
+import CustomBadge from '../../shared-components/CustomBadge';
 import IsActiveBadge from '../../shared-components/IsActiveBadge';
 
 interface Props {
@@ -8,14 +9,22 @@ interface Props {
 
 const VehicleCard = ({ vehicle }: Props) => {
     return (
-        <div className="card p-2 d-flex mt-3">
-            <div className="d-flex flex-column p-2">
-                <div className="text-black font-weight-bold">
-                    <div className="d-flex align-items-center">
-                        <h3>{vehicle.name}</h3>
-                        <Badge variant="primary" className="ml-2">{vehicle.fuel_type}</Badge>
+
+        <div className="card view-padding p-2 d-flex">
+            <div className="d-flex flex-column">
+                <div className="text-primary">
+                    <div className="d-flex justify-content-between">
+                        <div
+                            className="text-black pb-3"
+                            style={{ cursor: "pointer", fontWeight: 600 }}
+                        >
+                            {vehicle.name} <span>{vehicle.is_default && <CustomBadge variant="primary" title="Default" />}</span>
+                        </div>
                     </div>
                 </div>
+
+                <hr className="mb-3" />
+
                 <div
                     className="d-flex flex-column w-100"
                     style={{ fontSize: 18 }}
@@ -23,39 +32,51 @@ const VehicleCard = ({ vehicle }: Props) => {
                     <table className="w-100">
                         <tbody>
                             <tr>
-                                <td className="text-muted text-capitalize">Brand</td>
-                                <td className="text-black font-weight-bold text-right">
-                                    {vehicle.brand_id}
+                                <td className="view-heading">Brand</td>
+                                <td className="text-right">
+                                    <p className="view-subheading">{vehicle.brand_id}</p>
                                 </td>
                             </tr>
                             <tr>
-                                <td className="text-muted text-capitalize">Model</td>
-                                <td className="text-black font-weight-bold text-right">
-                                    {vehicle.model_id}
+                                <td className="view-heading">Model</td>
+                                <td className="text-success font-weight-bold text-right">
+                                    <p className="view-subheading">{vehicle.model_id}</p>
                                 </td>
                             </tr>
                             <tr>
-                                <td className="text-muted text-capitalize">Manufactoring Year</td>
-                                <td className="text-black font-weight-bold text-right">
-                                    {vehicle.manufactoring_year}
+                                <td className="view-heading ">Manf. Year</td>
+                                <td
+                                    className="text-primary  font-weight-bold text-right"
+                                    style={{ fontSize: "24px" }}
+                                >
+                                    <p className="view-subheading">{vehicle.manufactoring_year}</p>
                                 </td>
                             </tr>
                             <tr>
-                                <td className="text-muted text-capitalize">Reg. Number</td>
-                                <td className="text-black font-weight-bold text-right">
-                                    {vehicle.registration_number}
+                                <td className="view-heading ">Fuel Type</td>
+                                <td
+                                    className="text-primary  font-weight-bold text-right"
+                                    style={{ fontSize: "24px" }}
+                                >
+                                    <p className="view-subheading">{vehicle.fuel_type}</p>
                                 </td>
                             </tr>
                             <tr>
-                                <td className="text-muted text-capitalize">Reg. State</td>
-                                <td className="text-black font-weight-bold text-right">
-                                    {vehicle.registration_state}
+                                <td className="view-heading ">Reg. Number</td>
+                                <td
+                                    className="text-primary  font-weight-bold text-right"
+                                    style={{ fontSize: "24px" }}
+                                >
+                                    <p className="view-subheading">{vehicle.registration_number}</p>
                                 </td>
                             </tr>
                             <tr>
-                                <td className="text-muted text-capitalize">Is Default?</td>
-                                <td className="text-black font-weight-bold text-right">
-                                    <IsActiveBadge value={vehicle.is_default} />
+                                <td className="view-heading ">Reg. State</td>
+                                <td
+                                    className="text-primary  font-weight-bold text-right"
+                                    style={{ fontSize: "24px" }}
+                                >
+                                    <p className="view-subheading">{vehicle.registration_state}</p>
                                 </td>
                             </tr>
                         </tbody>
@@ -63,6 +84,8 @@ const VehicleCard = ({ vehicle }: Props) => {
                 </div>
             </div>
         </div>
+
+
     )
 }
 

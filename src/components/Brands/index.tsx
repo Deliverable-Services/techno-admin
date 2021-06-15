@@ -19,6 +19,7 @@ import ReactTable from "../../shared-components/ReactTable";
 import API from "../../utils/API";
 import {
   baseUploadUrl,
+  clientWebUrl,
   primaryColor,
   secondaryColor,
 } from "../../utils/constants";
@@ -71,6 +72,9 @@ const Brands = () => {
   const _onEditClick = (id: string) => {
     history.push("/brands/create-edit", { id });
   };
+  const _onUrlClick = (data: Cell) => {
+    window.open(clientWebUrl)
+  }
 
   const _onFilterChange = (idx: string, value: any) => {
     setFilter((prev) => ({
@@ -104,6 +108,11 @@ const Brands = () => {
       {
         Header: "Url",
         accessor: "url",
+        Cell: (data: Cell) => (
+          <p className="text-primary" style={{ cursor: "pointer" }} onClick={() => _onUrlClick(data)}>
+            {data.row.values.url}
+          </p>
+        )
       },
       {
         Header: "Is Active?",
