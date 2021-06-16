@@ -13,7 +13,7 @@ import { handleApiError } from "../../hooks/handleApiErrors";
 import useGetSingleQuery from "../../hooks/useGetSingleQuery";
 import IsLoading from "../../shared-components/isLoading";
 import API from "../../utils/API";
-import { OrderStatus } from "../../utils/arrays";
+import { IssueStatus, OrderStatus } from "../../utils/arrays";
 import { queryClient } from "../../utils/queryClient";
 import { showMsgToast } from "../../utils/showMsgToast";
 import ChatBox from "./ChatBox";
@@ -101,11 +101,6 @@ const SingleIssue = () => {
                     <h2 className="ml-2">#{data.ref_id}</h2>
                 </div>
                 <div>
-                    <Button variant="success">
-                        <div className="text-white">
-                            <BiDownload size={24} /> <b>Mark Closed</b>
-                        </div>
-                    </Button>
                     <Button className="ml-2" onClick={() => history.goBack()}>
                         <div className="text-white">
                             <BiArrowFromRight size={25} /> <b>Back</b>
@@ -119,32 +114,110 @@ const SingleIssue = () => {
             <div className="dashboard-page w-100">
                 <Container fluid className="status-container mt-2">
 
-                    <div className="card p-2 view-padding right-div d-flex">
-                        <div className="text-primary">
-                            <div className="d-flex justify-content-between">
+                    <div className="card p-2 view-padding right-div d-flex mb-3">
+                        <div className="d-flex flex-column">
+                            <div className="text-primary">
                                 <div
                                     className="text-black pb-3"
+                                    style={{ cursor: "pointer", fontWeight: 600 }}
+                                    onClick={() => _onUserClick(data.user_id)}
                                 >
-                                    Issues Info
+                                    Update Issue status
                                 </div>
+                            </div>
 
+                            <hr className="mb-3" />
+
+                            <div className="d-flex flex-column" style={{ fontSize: 18 }}>
+                                <Row>
+                                    <Col md="auto">
+                                        <Form.Group>
+                                            <Form.Control
+                                                as="select"
+                                                value={"open"}
+                                                onChange={(e) => {
+                                                    _onformChange("status", e.target.value);
+                                                    // mutate({ formdata: { agent_id: e.target.value }, id })
+                                                }}
+                                                style={{
+                                                    width: "200px",
+                                                    fontSize: 14,
+                                                }}
+                                            >
+                                                <option value="" disabled>
+                                                    Select Status
+                                                </option>
+                                                {IssueStatus.map((item) => {
+                                                    if (item.id !== "")
+                                                        return (
+                                                            <option value={item["id"]}>{item["name"]}</option>
+                                                        );
+                                                })}
+                                            </Form.Control>
+                                        </Form.Group>
+
+                                        <p
+                                            style={{ fontSize: 13, lineHeight: 1.3, marginBottom: 5 }}
+                                            className="text-muted"
+                                        >
+                                            {/* Do note: */}
+                                        </p>
+                                    </Col>
+                                </Row>
                             </div>
                         </div>
-                        <hr className="mb-3" />
-                        <div className="d-flex flex-column" style={{ fontSize: 18 }}>
-                            <table className="w-100">
-                                <tbody>
-                                    <tr>
-                                        <td className="text-muted">
-                                            <p className="view-heading">Something</p>
-                                        </td>
-                                        <td className="text-right">
-                                            <p className="view-subheading">Something</p>
-                                        </td>
-                                    </tr>
-                                </tbody>
-                            </table>
+                    </div>
+                    <div className="card p-2 view-padding right-div d-flex mb-3">
+                        <div className="d-flex flex-column">
+                            <div className="text-primary">
+                                <div
+                                    className="text-black pb-3"
+                                    style={{ cursor: "pointer", fontWeight: 600 }}
+                                    onClick={() => _onUserClick(data.user_id)}
+                                >
+                                    Issue Info
+                                </div>
+                            </div>
+
+                            <hr className="mb-3" />
+
+                            <div className="d-flex flex-column" style={{ fontSize: 18 }}>
+                                <Row>
+                                    <Col md="auto">
+
+                                        <p
+                                            style={{ fontSize: 13, lineHeight: 1.3, marginBottom: 5 }}
+                                            className="text-muted"
+                                        >
+                                            Lorem ipsum dolor sit amet consectetur, adipisicing elit. Modi, voluptatum.
+                                        </p>
+                                        <table className="w-100">
+                                            <tbody>
+                                                <tr>
+                                                    <td className="text-muted">
+                                                        <p className="view-heading">Created At</p>
+                                                    </td>
+                                                    <td className="text-right">
+                                                        <p className="view-subheading">{moment().format("YYYY-MM-DD")}</p>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td className="text-muted">
+                                                        <p className="view-heading">Closed At</p>
+                                                    </td>
+                                                    <td className="text-right">
+                                                        <p className="view-subheading">{moment().format("YYYY-MM-DD")}</p>
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </Col>
+                                </Row>
+                            </div>
                         </div>
+                    </div>
+
+                    <div className="card p-2 view-padding right-div d-flex">
                         <div className="d-flex flex-column">
                             <div className="text-primary">
                                 <div className="d-flex justify-content-between">

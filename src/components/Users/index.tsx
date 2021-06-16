@@ -13,9 +13,11 @@ import EditButton from "../../shared-components/EditButton";
 import FilterSelect from "../../shared-components/FilterSelect";
 import IsActiveBadge from "../../shared-components/IsActiveBadge";
 import IsLoading from "../../shared-components/isLoading";
+import PageHeading from "../../shared-components/PageHeading";
 import TablePagination from "../../shared-components/Pagination";
 import ReactTable from "../../shared-components/ReactTable";
 import API from "../../utils/API";
+import { areTwoObjEqual } from "../../utils/areTwoObjEqual";
 import { isActiveArray, userRoles } from "../../utils/arrays";
 import {
   baseUploadUrl,
@@ -160,28 +162,7 @@ const Users = () => {
 
   return (
     <>
-      <Container fluid className="d-flex justify-content-between py-2">
-        <h2 className="font-weight-bold">Users</h2>
-        <div className="d-flex">
-          <Form.Control
-            as="select"
-            className="mr-4"
-            onChange={(e) => {
-              setRole(e.target.value);
-            }}
-          >
-            <option value="">All</option>
-            {userRoles.map((role) => (
-              <option value={role.id}>{role.name}</option>
-            ))}
-          </Form.Control>
-          <Button variant="primary" onClick={_onCreateClick}>
-            <div className="text-white d-flex ">
-              <AiFillPlusSquare size={25} /> <b>Create</b>
-            </div>
-          </Button>
-        </div>
-      </Container>
+      <PageHeading title="Users" onClick={_onCreateClick} totalRecords={data?.total} />
 
       {(!isLoading) && (
         <Container fluid>
@@ -253,10 +234,8 @@ const Users = () => {
                         className="d-flex align-items-center mt-1 justify-content-center"
                       >
                         <Button
-                          variant="light"
-
+                          variant={areTwoObjEqual(intitialFilter, filter) ? "light" : "primary"}
                           style={{
-                            backgroundColor: "#eee",
                             fontSize: 14,
                           }}
 

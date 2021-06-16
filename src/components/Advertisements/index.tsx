@@ -21,6 +21,7 @@ import API from "../../utils/API";
 import { isActiveArray } from "../../utils/arrays";
 import {
   baseUploadUrl,
+  clientWebUrl,
   primaryColor
 } from "../../utils/constants";
 import { queryClient } from "../../utils/queryClient";
@@ -105,7 +106,9 @@ const Advertisements = () => {
     history.push("/advertisements/create-edit", { id });
   };
 
-  console.log({ data, isLoading, isFetching });
+  const _onDeepLinkClick = (data: Cell) => {
+    window.open(clientWebUrl)
+  }
 
   const columns = useMemo(
     () => [
@@ -132,6 +135,15 @@ const Advertisements = () => {
       {
         Header: "Name",
         accessor: "name",
+      },
+      {
+        Header: "Deep Link",
+        accessor: "deeplink",
+        Cell: (data: Cell) => (
+          <p className="text-primary" style={{ cursor: "pointer" }} onClick={() => _onDeepLinkClick(data)}>
+            {data.row.values.deeplink}
+          </p>
+        )
       },
       {
         Header: "Order",

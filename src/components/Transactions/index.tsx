@@ -4,7 +4,7 @@ import { BiSad } from "react-icons/bi";
 import { useMutation, useQuery } from "react-query";
 import { useHistory } from "react-router-dom";
 import { Cell } from "react-table";
-import useTransactionStoreFilter from "../../hooks/useTranscationFilterStore";
+import useTransactionStoreFilter, { INITIAL_FILTER } from "../../hooks/useTranscationFilterStore";
 import BreadCrumb from "../../shared-components/BreadCrumb";
 import CreatedUpdatedAt from "../../shared-components/CreatedUpdatedAt";
 import FilterSelect from "../../shared-components/FilterSelect";
@@ -13,6 +13,7 @@ import PageHeading from "../../shared-components/PageHeading";
 import TablePagination from "../../shared-components/Pagination";
 import ReactTable from "../../shared-components/ReactTable";
 import API from "../../utils/API";
+import { areTwoObjEqual } from "../../utils/areTwoObjEqual";
 import { PaymentMethods } from "../../utils/arrays";
 import { primaryColor } from "../../utils/constants";
 import { queryClient } from "../../utils/queryClient";
@@ -32,13 +33,9 @@ const Transactions = () => {
 
   const [localFilter, setFilter] = useState(intitialFilter);
   const filter = useTransactionStoreFilter((state) => state.filter);
-  const NumberOfRows = useTransactionStoreFilter(
-    (state) => state.rows_per_page
-  );
   const onFilterChange = useTransactionStoreFilter(
     (state) => state.onFilterChange
   );
-  const onRowsChange = useTransactionStoreFilter((state) => state.onRowsChange);
   const resetFilter = useTransactionStoreFilter((state) => state.resetFilter);
   const { data, isLoading, isFetching, error } = useQuery<any>(
     [key, , { ...localFilter, ...filter }],
@@ -230,9 +227,8 @@ const Transactions = () => {
                       >
                         <Button
                           onClick={() => resetFilter()}
-                          variant="light"
+                          variant={areTwoObjEqual({ ...intitialFilter, ...INITIAL_FILTER }, { ...localFilter, ...filter }) ? "light" : "primary"}
                           style={{
-                            backgroundColor: "#eee",
                             fontSize: 14,
                           }}
                         >

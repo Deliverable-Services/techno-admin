@@ -1,26 +1,35 @@
 import { AxiosError } from "axios";
+import moment from 'moment';
 import { useMemo, useState } from "react";
-import { Badge, Button, Container, Row, Col } from "react-bootstrap";
+import { Button, Col, Container, Form, Row } from "react-bootstrap";
 import { BiSad } from "react-icons/bi";
 import { useQuery } from "react-query";
 import { useHistory } from "react-router-dom";
 import { Cell } from "react-table";
 import { handleApiError } from "../../hooks/handleApiErrors";
+import BreadCrumb from "../../shared-components/BreadCrumb";
 import CreatedUpdatedAt from "../../shared-components/CreatedUpdatedAt";
+import CustomBadge from "../../shared-components/CustomBadge";
+import FilterSelect from "../../shared-components/FilterSelect";
 import IsLoading from "../../shared-components/isLoading";
 import PageHeading from "../../shared-components/PageHeading";
 import TablePagination from "../../shared-components/Pagination";
 import ReactTable from "../../shared-components/ReactTable";
+import { areTwoObjEqual } from "../../utils/areTwoObjEqual";
+import { InsideCart } from "../../utils/arrays";
 import { primaryColor } from "../../utils/constants";
-import { showErrorToast } from "../../utils/showErrorToast";
-import BreadCrumb from "../../shared-components/BreadCrumb";
-import FilterSelect from "../../shared-components/FilterSelect";
 
 const key = "user-subscriptions";
 const intitialFilter = {
   q: "",
   page: null,
   perPage: 25,
+  plan_id: "",
+  status: "",
+  allowed_usage: "",
+  created_at: "",
+  user_id: ""
+
 };
 
 const Subscription = () => {
@@ -28,7 +37,6 @@ const Subscription = () => {
   const [selectedRows, setSelectedRows] = useState([]);
   console.log(selectedRows.map((item) => item.id));
   const [filter, setFilter] = useState(intitialFilter);
-  console.log({ filter });
   const { data, isLoading, isFetching, error } = useQuery<any>(
     [key, , filter],
     {
@@ -37,6 +45,9 @@ const Subscription = () => {
       },
     }
   );
+
+  const { data: Plans, isLoading: isPlansLoading } = useQuery<any>(["plans"])
+  const { data: Customers, isLoading: isCustomersLoading } = useQuery<any>(["users", , { role: "customer" }])
   const Status = ({ status }: { status: string }) => {
     const setVariant = () => {
       if (status === "active") return "success";
@@ -44,9 +55,7 @@ const Subscription = () => {
       return "danger";
     };
     return (
-      <Badge variant={setVariant()} className="p-1">
-        {status.toUpperCase()}
-      </Badge>
+      <CustomBadge title={status.toUpperCase()} variant={setVariant()} />
     );
   };
 
@@ -171,12 +180,12 @@ const Subscription = () => {
 
   return (
     <>
-      <PageHeading title="Subscriptions" totalRecords={500} />
+      <PageHeading title="Subscriptions" totalRecords={data?.total} />
 
       {(!isLoading || !isFetching) && (
         <div className="filter mb-4">
-          {/* <BreadCrumb
-            // onFilterChange={onFilterChange}
+          <BreadCrumb
+            onFilterChange={_onFilterChange}
             value=""
             currentValue={filter.status}
             dataLength={data?.data?.length}
@@ -184,21 +193,22 @@ const Subscription = () => {
             title="All"
           />
           <BreadCrumb
-            // onFilterChange={onFilterChange}
-            value="Active"
+            onFilterChange={_onFilterChange}
+            value="active"
             currentValue={filter.status}
             dataLength={data?.data?.length}
             idx="status"
             title="Active"
           />
           <BreadCrumb
-            // onFilterChange={onFilterChange}
-            value="Expired"
+            onFilterChange={_onFilterChange}
+            value="expired"
             currentValue={filter.status}
             dataLength={data?.data?.length}
             idx="status"
             title="Expired"
-          /> */}
+            isLast
+          />
         </div>
       )}
 
@@ -210,43 +220,60 @@ const Subscription = () => {
             <>
               <Container className="pt-2">
                 <Row className="select-filter d-flex">
-                  {/* <Col md="auto">
+                  <Col md="auto">
                     <FilterSelect
-                      // currentValue={filter.user_id}
-                      // data={!isCustomerLoading && Customers.data}
-                      label="Customer"
+                      currentValue={filter.user_id}
+                      data={!isCustomersLoading && Customers.data}
+                      label="User"
                       idx="user_id"
-                      // onFilterChange={onFilterChange}
+                      onFilterChange={_onFilterChange}
                     />
                   </Col>
                   <Col md="auto">
                     <FilterSelect
-                      // currentValue={filter.agent_id}
-                      // data={!isAgentLoading && Agents.data}
+                      currentValue={filter.plan_id}
+                      data={!isPlansLoading && Plans.data}
                       label="Plan"
-                      idx="agent_id"
-                      // onFilterChange={onFilterChange}
+                      idx="plan_id"
+                      onFilterChange={_onFilterChange}
                     />
                   </Col>
                   <Col md="auto">
                     <FilterSelect
-                      // currentValue={filter.inside_cart}
-                      // data={InsideCart}
-                      label="Purchased on"
-                      idx="inside_cart"
-                      // onFilterChange={onFilterChange}
+                      currentValue={filter.allowed_usage}
+                      data={InsideCart}
+                      label="Allowed Usage"
+                      idx="allowed_usage"
+                      onFilterChange={_onFilterChange}
                     />
-                  </Col> */}
+                  </Col>
 
+                  <Col md="auto">
+                    <Form.Group>
+                      <Form.Label className="text-muted">Purchased on</Form.Label>
+                      <Form.Control type="date"
+                        value={filter.created_at}
+                        onChange={e => {
+                          const value = moment(e.target.value).format("YYYY-MM-DD")
+                          _onFilterChange("created_at", value)
+                        }}
+                        style={{
+                          fontSize: 14,
+                          width: 150,
+                          height: 35
+
+                        }}
+                      />
+                    </Form.Group>
+                  </Col>
                   <Col
                     md="auto"
                     className="d-flex align-items-center mt-1 justify-content-center"
                   >
                     <Button
-                      // onClick={() => resetFilter()}
-                      variant="light"
+                      onClick={() => setFilter(intitialFilter)}
+                      variant={areTwoObjEqual(intitialFilter, filter) ? "light" : "primary"}
                       style={{
-                        backgroundColor: "#eee",
                         fontSize: 14,
                       }}
                     >

@@ -16,8 +16,10 @@ import PageHeading from "../../shared-components/PageHeading";
 import TablePagination from "../../shared-components/Pagination";
 import ReactTable from "../../shared-components/ReactTable";
 import API from "../../utils/API";
+import { areTwoObjEqual } from "../../utils/areTwoObjEqual";
 import {
   baseUploadUrl,
+  clientWebUrl,
   primaryColor
 } from "../../utils/constants";
 import { queryClient } from "../../utils/queryClient";
@@ -81,6 +83,9 @@ const BrandModels = () => {
     history.push("/brand-models/create-edit", { id });
   };
 
+  const _onUrlClick = (data: Cell) => {
+    window.open(clientWebUrl)
+  }
   const columns = useMemo(
     () => [
       {
@@ -106,6 +111,11 @@ const BrandModels = () => {
       {
         Header: "Url",
         accessor: "url",
+        Cell: (data: Cell) => (
+          <p className="text-primary" style={{ cursor: "pointer" }} onClick={() => _onUrlClick(data)}>
+            {data.row.values.url}
+          </p>
+        )
       },
       {
         Header: "Brand",
@@ -229,10 +239,8 @@ const BrandModels = () => {
                         className="d-flex align-items-center mt-1 justify-content-center"
                       >
                         <Button
-                          variant="light"
-
+                          variant={areTwoObjEqual(intitialFilter, filter) ? "light" : "primary"}
                           style={{
-                            backgroundColor: "#eee",
                             fontSize: 14,
                           }}
 

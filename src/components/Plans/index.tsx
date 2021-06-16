@@ -17,6 +17,7 @@ import PageHeading from "../../shared-components/PageHeading";
 import TablePagination from "../../shared-components/Pagination";
 import ReactTable from "../../shared-components/ReactTable";
 import API from "../../utils/API";
+import { areTwoObjEqual } from "../../utils/areTwoObjEqual";
 import { InsideCart, isActiveArray } from "../../utils/arrays";
 import {
   baseUploadUrl,
@@ -245,6 +246,21 @@ const Plans = () => {
                           onFilterChange={_onFilterChange}
                           defaultSelectTitle="Show All"
                         />
+                      </Col>
+                      <Col
+                        md="auto"
+                        className="d-flex align-items-center mt-1 justify-content-center"
+                      >
+                        <Button
+                          variant={areTwoObjEqual(intitialFilter, filter) ? "light" : "primary"}
+                          style={{
+                            fontSize: 14,
+                          }}
+
+                          onClick={() => setFilter(intitialFilter)}
+                        >
+                          Reset Filters
+                        </Button>
                       </Col>
                     </Row>
                   </Container>

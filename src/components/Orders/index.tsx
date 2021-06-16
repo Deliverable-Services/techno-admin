@@ -7,7 +7,7 @@ import { useQuery } from "react-query";
 import { useHistory } from "react-router-dom";
 import { Cell } from "react-table";
 import { handleApiError } from "../../hooks/handleApiErrors";
-import useOrderStoreFilter from "../../hooks/useOrderFilterStore";
+import useOrderStoreFilter, { INITIAL_FILTER } from "../../hooks/useOrderFilterStore";
 import BreadCrumb from "../../shared-components/BreadCrumb";
 import CreatedUpdatedAt from "../../shared-components/CreatedUpdatedAt";
 import CustomBadge from "../../shared-components/CustomBadge";
@@ -17,6 +17,7 @@ import PageHeading from "../../shared-components/PageHeading";
 import TablePagination from "../../shared-components/Pagination";
 import ReactTable from "../../shared-components/ReactTable";
 import { IInitialTableState } from "../../types/interface";
+import { areTwoObjEqual } from "../../utils/areTwoObjEqual";
 import { InsideCart, OrderType, RowsPerPage } from "../../utils/arrays";
 import { primaryColor } from "../../utils/constants";
 import { showErrorToast } from "../../utils/showErrorToast";
@@ -35,12 +36,8 @@ const Orders = () => {
   const [selectedRows, setSelectedRows] = useState([]);
   const [localFilter, setFilter] = useState(intitialFilter);
   const filter = useOrderStoreFilter((state) => state.filter);
-  const NumberOfRows = useOrderStoreFilter((state) => state.rows_per_page);
   const onFilterChange = useOrderStoreFilter((state) => state.onFilterChange);
   const resetFilter = useOrderStoreFilter((state) => state.resetFilter);
-  const InitialTableState: IInitialTableState = {
-    pageSize: parseInt(NumberOfRows),
-  };
   const { data, isLoading, isFetching, error } = useQuery<any>(
     [key, , { ...filter, ...localFilter }],
     {
@@ -323,7 +320,7 @@ const Orders = () => {
                         </Col>
                         <Col md="auto">
                           <Form.Group>
-                            <Form.Label className="text-muted">Created At</Form.Label>
+                            <Form.Label className="text-muted">Ordered At</Form.Label>
                             <Form.Control type="date"
                               value={localFilter.created_at}
                               onChange={e => {
@@ -351,9 +348,9 @@ const Orders = () => {
                               setFilter(intitialFilter)
 
                             }}
-                            variant={"light"}
+                            variant={areTwoObjEqual({ ...intitialFilter, ...INITIAL_FILTER }, { ...localFilter, ...filter }) ? "light" : "primary"}
                             style={{
-                              backgroundColor: "#eee",
+                              // backgroundColor: "#eee",
                               fontSize: 14,
                             }}
                           >
@@ -366,7 +363,6 @@ const Orders = () => {
                     <ReactTable
                       data={data.data}
                       columns={columns}
-                      initialState={InitialTableState}
                       setSelectedRows={setSelectedRows}
                       filter={filter}
                       onFilterChange={_onFilterChange}

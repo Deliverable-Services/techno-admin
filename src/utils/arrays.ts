@@ -43,3 +43,8 @@ export const OrderStatus = [
 export const OrderType = [
   { id: "normal", name: "Normal" },
 ];
+
+export const IssueStatus = [
+  { id: "open", name: "Open" },
+  { id: "closed", name: "Closed" },
+]

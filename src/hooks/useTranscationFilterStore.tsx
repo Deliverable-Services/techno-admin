@@ -7,17 +7,15 @@ interface IFilter {
 	user_id: string | null;
 	payment_method: string | null;
 }
-const INITIAL_FILTER: IFilter = {
+export const INITIAL_FILTER: IFilter = {
 	status: "",
 	user_id: "",
 	payment_method: "",
 };
 
-let store = combine({ filter: INITIAL_FILTER, rows_per_page: "25" }, (set) => ({
+let store = combine({ filter: INITIAL_FILTER }, (set) => ({
 	onFilterChange: (idx: string, value: any) =>
 		set((state) => ({ ...state, filter: { ...state.filter, [idx]: value } })),
-	onRowsChange: (idx: string, value: any) =>
-		set((state) => ({ ...state, rows_per_page: value })),
 	resetFilter: () => set((state) => ({ filter: INITIAL_FILTER })),
 }));
 

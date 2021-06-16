@@ -5,7 +5,7 @@ const accessToken =
 	"pk.eyJ1IjoibmV1cmFmYXJtcy1haSIsImEiOiJja2tqdjcyMzgwbndjMm9xc3U1YTFzcGs2In0.qHHKandtpLSd1f11nSpEFw";
 
 const UserMap = ({ userAddress }) => {
-	console.log("UserAddress 11122222",  userAddress );
+	console.log("UserAddress 11122222", userAddress);
 	const lat = userAddress.lat;
 	const lng = userAddress.lng;
 
@@ -14,7 +14,7 @@ const UserMap = ({ userAddress }) => {
 
 	const [viewport] = useState({
 		width: 350,
-		height: 350,
+		height: 100,
 		lat: userAddress && lat ? parseInt(lat) : 37.78,
 		lng: userAddress && lng ? parseInt(lng) : -122.41,
 		zoom: 12,
@@ -134,7 +134,7 @@ const UserMap = ({ userAddress }) => {
 		<div
 			ref={mapContainer}
 			style={{
-				height: "350px",
+				height: "150px",
 				width: "100%",
 			}}
 		/>

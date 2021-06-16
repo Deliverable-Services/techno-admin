@@ -16,7 +16,7 @@ import PageHeading from "../../shared-components/PageHeading";
 import TablePagination from "../../shared-components/Pagination";
 import ReactTable from "../../shared-components/ReactTable";
 import API from "../../utils/API";
-import { primaryColor, secondaryColor } from "../../utils/constants";
+import { clientWebUrl, primaryColor, secondaryColor } from "../../utils/constants";
 import { queryClient } from "../../utils/queryClient";
 import { showErrorToast } from "../../utils/showErrorToast";
 import { showMsgToast } from "../../utils/showMsgToast";
@@ -100,6 +100,9 @@ const Categories = () => {
   const _onEditClick = (id: string) => {
     history.push("/categories/create-edit", { id });
   };
+  const _onUrlClick = (data: Cell) => {
+    window.open(clientWebUrl)
+  }
 
   const _onFilterChange = (idx: string, value: any) => {
     setFilter((prev) => ({
@@ -120,6 +123,11 @@ const Categories = () => {
       {
         Header: "Url",
         accessor: "url",
+        Cell: (data: Cell) => (
+          <p className="text-primary" style={{ cursor: "pointer" }} onClick={() => _onUrlClick(data)}>
+            {data.row.values.url}
+          </p>
+        )
       },
       {
         Header: "Order",

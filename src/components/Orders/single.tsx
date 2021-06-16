@@ -3,7 +3,6 @@ import moment from "moment";
 import React, { useState } from "react";
 import { Badge, Button, Col, Container, Form, Row } from "react-bootstrap";
 import { BiArrowFromRight, BiDownload } from "react-icons/bi";
-import { CgSandClock } from "react-icons/cg";
 import { useMutation, useQuery } from "react-query";
 import { useHistory, useParams } from "react-router-dom";
 import { ProgressBar, Step } from "react-step-progress-bar";
@@ -130,7 +129,7 @@ const SingleOrder = () => {
 
       <div className="w-75 mx-auto">
         <ProgressBar
-          filledBackground="linear-gradient(to right, #fefb72, #f0bb31)"
+          filledBackground={"linear-gradient(to right,#72b3fe, #318af0)"}
           percent={80}
         >
           <Step transition="scale">
@@ -139,7 +138,17 @@ const SingleOrder = () => {
                 className={`transitionStep ${accomplished ? "accomplished" : null
                   }`}
               >
-                <CgSandClock />
+                ❌
+              </div>
+            )}
+          </Step>
+          <Step transition="scale">
+            {({ accomplished, index }) => (
+              <div
+                className={`transitionStep ${accomplished ? "accomplished" : null
+                  }`}
+              >
+                ⏳
               </div>
             )}
           </Step>
@@ -150,7 +159,7 @@ const SingleOrder = () => {
                 className={`transitionStep ${accomplished ? "accomplished" : null
                   }`}
               >
-                🌒
+                🙍
               </div>
             )}
           </Step>
@@ -161,7 +170,7 @@ const SingleOrder = () => {
                 className={`transitionStep ${accomplished ? "accomplished" : null
                   }`}
               >
-                🌓
+                🚚
               </div>
             )}
           </Step>
@@ -172,21 +181,11 @@ const SingleOrder = () => {
                 className={`transitionStep ${accomplished ? "accomplished" : null
                   }`}
               >
-                🌔
+                ✅
               </div>
             )}
           </Step>
 
-          <Step transition="scale">
-            {({ accomplished, index }) => (
-              <div
-                className={`transitionStep ${accomplished ? "accomplished" : null
-                  }`}
-              >
-                🌕
-              </div>
-            )}
-          </Step>
         </ProgressBar>
       </div>
 

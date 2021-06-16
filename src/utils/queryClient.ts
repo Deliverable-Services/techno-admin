@@ -29,6 +29,7 @@ export const defaultQueryFn: QueryFunction = async ({ queryKey }) => {
 
 export const queryClient = new QueryClient({
     defaultOptions: {
+
         queries: {
 
             // refetchOnWindowFocus: "always",
@@ -38,7 +39,9 @@ export const queryClient = new QueryClient({
                 showErrorToast(error.message)
                 queryClient.invalidateQueries("profile")
             },
-            keepPreviousData: true
+            keepPreviousData: true,
+            retry: false
+
         },
     },
 });
