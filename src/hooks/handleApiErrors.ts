@@ -23,7 +23,7 @@ export const handleApiError = async (error: AxiosError, history: any) => {
         if (data) useTokenStore.getState().setToken(data.access_token)
     } catch (error) {
         history.push("/login");
-        showErrorToast(error.message)
+        showErrorToast(error?.response?.data?.message || error.message)
     }
 
 }
