@@ -12,6 +12,8 @@ import Brands from "./components/Brands";
 import BrandsCreateUpdateForm from "./components/Brands/BrandsCreateUpdateForm";
 import Categories from "./components/Categories";
 import CategoriesCreateUpdateForm from "./components/Categories/CategoriesCreateUpdateForm";
+import Cities from "./components/Cities";
+import CitiesCreateUpdateForm from "./components/Cities/CitiesCreateUpdateForm";
 import Coupons from "./components/Coupons";
 import CouponCreateUpdateForm from "./components/Coupons/CouponsCreateUpdateForm";
 import Dashboard from "./components/Dashboard";
@@ -36,6 +38,7 @@ import TopBar from "./components/TopBar";
 import Transactions from "./components/Transactions";
 import TransactionUpdateForm from "./components/Transactions/TransactionUpdateForm";
 import Users from "./components/Users";
+import Admins from "./components/Users/admin";
 import UserCreateUpdateForm from "./components/Users/UsersCreateUpdateForm";
 import VerifyOtp from "./components/VerifyOtp";
 import { IsDesktopContext } from "./context/IsDesktopContext";
@@ -97,11 +100,13 @@ const App = () => {
             <PrivateRoute path="/brand-models" exact component={BrandModels} />
             <PrivateRoute path="/categories" exact component={Categories} />
             <PrivateRoute path="/users" exact component={Users} />
+            <PrivateRoute path="/admin" exact component={Admins} />
             <PrivateRoute path="/services" exact component={Services} />
             <PrivateRoute path="/faqs" exact component={Faqs} />
             <PrivateRoute path="/plans" exact component={Plans} />
             <PrivateRoute path="/coupons" exact component={Coupons} />
             <PrivateRoute path="/orders" exact component={Orders} />
+            <PrivateRoute path="/cities" exact component={Cities} />
             <PrivateRoute
               path="/advertisements"
               exact
@@ -146,6 +151,11 @@ const App = () => {
               path="/faqs/create-edit"
               exact
               component={FaqCreateUpdateForm}
+            />
+            <Route
+              path="/cities/create-edit"
+              exact
+              component={CitiesCreateUpdateForm}
             />
             <PrivateRoute
               path="/advertisements/create-edit"
@@ -197,7 +207,7 @@ const App = () => {
               component={AssignAgent}
             />
             <Route path="/login" exact component={LoginPage} />
-            <Route path="/verify-otp/:id/:otp" exact component={VerifyOtp} />
+            <Route path="/verify-otp" exact component={VerifyOtp} />
           </Switch>
           <ErrorToast />
           <MsgToast />

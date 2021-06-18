@@ -385,7 +385,7 @@ const Orders = () => {
         </Container>
       </Container>
       {selectedRows.length > 0 && (
-        <div className="delete-button rounded">
+        <div className="delete-button ">
           <span>
             <b>Delete {selectedRows.length} rows</b>
           </span>

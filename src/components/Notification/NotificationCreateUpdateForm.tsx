@@ -3,7 +3,7 @@ import bsCustomFileInput from "bs-custom-file-input";
 import { Form, Formik } from "formik";
 import moment from "moment";
 import { useEffect, useMemo, useState } from "react";
-import { Button, Col, Row, Spinner } from "react-bootstrap";
+import { Button, Col, Container, Row, Spinner } from "react-bootstrap";
 import { RiTimerFill } from "react-icons/ri";
 import { useMutation, useQuery } from "react-query";
 import { useHistory, useLocation } from "react-router-dom";
@@ -11,13 +11,16 @@ import { Cell } from "react-table";
 import { handleApiError } from "../../hooks/handleApiErrors";
 import useGetSingleQuery from "../../hooks/useGetSingleQuery";
 import BackButton from "../../shared-components/BackButton";
+import BreadCrumb from "../../shared-components/BreadCrumb";
 import DatePicker from "../../shared-components/DatePicker";
+import FilterSelect from "../../shared-components/FilterSelect";
 import { InputField } from "../../shared-components/InputFeild";
 import IsActiveBadge from "../../shared-components/IsActiveBadge";
 import IsLoading from "../../shared-components/isLoading";
 import ReactTable from "../../shared-components/ReactTable";
 import TextEditor from "../../shared-components/TextEditor";
 import API from "../../utils/API";
+import { NotificationSendToCategories } from "../../utils/arrays";
 import { primaryColor } from "../../utils/constants";
 import { queryClient } from "../../utils/queryClient";
 import { showMsgToast } from "../../utils/showMsgToast";
@@ -140,8 +143,8 @@ const NotificationCreateUpdateForm = () => {
 							// const formdata = new FormData();
 							// for (let k in rest) formdata.append(k, rest[k]);
 
-
-							mutate({ formdata, id });
+							console.log({ formdata });
+							// mutate({ formdata, id });
 						}}
 					>
 						{({ setFieldValue }) => (
@@ -213,22 +216,36 @@ const NotificationCreateUpdateForm = () => {
 											}
 										</div>
 									</Col>
-									<Col md={12} xl={12}>
+									<Col md={6}>
 										<h4 className="font-weight-bold d-flex align-items-center ">
-											<span> Users</span>
+											<span> Send Notification To</span>
 										</h4>
-										{!error && !isUsersLoading && Users && <ReactTable
-											data={Users?.data}
-											columns={columns}
-											setSelectedRows={setSelectedRows}
-											filter={filter}
-											onFilterChange={_onFilterChange}
-											isDataLoading={isFetching}
-											initialState={{
-												selectedRowIds
-											}}
-											setSelectedRowIds={setSelectedRowIds}
-										/>}
+
+										<InputField
+											as="select"
+											selectData={NotificationSendToCategories}
+											name="send_to"
+											label="Send to ?"
+											placeholder="Choose user category"
+
+										/>
+									</Col>
+									<Col md={12} xl={12}>
+
+
+										{!error && !isUsersLoading && Users &&
+											<ReactTable
+												data={Users?.data}
+												columns={columns}
+												setSelectedRows={setSelectedRows}
+												filter={filter}
+												onFilterChange={_onFilterChange}
+												isDataLoading={isFetching}
+												initialState={{
+													selectedRowIds
+												}}
+												setSelectedRowIds={setSelectedRowIds}
+											/>}
 
 									</Col>
 								</Row>

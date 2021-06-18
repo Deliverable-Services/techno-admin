@@ -11,6 +11,7 @@ import {
 import { GoIssueOpened } from "react-icons/go";
 import { IoLogoModelS } from "react-icons/io";
 import {
+  RiAdminFill,
   RiAdvertisementFill,
   RiCoupon3Line,
   RiDashboardFill,
@@ -45,6 +46,11 @@ const manageLinks: Array<INavLink> = [
     icon: <FaUsers />,
   },
   {
+    title: "Admins",
+    path: "/admin",
+    icon: <RiAdminFill />,
+  },
+  {
     title: "Services",
     path: "/services",
     icon: <RiServiceFill />,
@@ -67,6 +73,11 @@ const manageLinks: Array<INavLink> = [
   {
     title: "Banners",
     path: "/advertisements",
+    icon: <RiAdvertisementFill />,
+  },
+  {
+    title: "Cities",
+    path: "/cities",
     icon: <RiAdvertisementFill />,
   },
   {

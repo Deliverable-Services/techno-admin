@@ -1,9 +1,11 @@
+import { AxiosError } from "axios";
 import { Form, Formik } from "formik";
 import { useEffect } from "react";
 import { Button, Container, Spinner } from "react-bootstrap";
 import { useMutation } from "react-query";
 import { useHistory } from "react-router";
 import * as Yup from "yup";
+import { handleApiError } from "../hooks/handleApiErrors";
 import { InputField } from "../shared-components/InputFeild";
 import API from "../utils/API";
 
@@ -24,14 +26,17 @@ const sendOtp = (formData: FormData) => {
 const LoginPage = (props: Props) => {
   const history = useHistory();
 
-  const { mutate, data, isLoading } = useMutation(sendOtp);
+  const { mutate, data, isLoading } = useMutation(sendOtp, {
+    onSuccess: (data) => {
 
-  useEffect(() => {
-    if (data) {
       console.log("send-otp", data.data);
-      history.push(`/verify-otp/${data.data.user.phone}/${data.data.user.otp}`);
+      history.push(`/verify-otp/`, { phone: data.data.user.phone, otp: data.data.user.otp });
+    },
+    onError: (error: AxiosError) => {
+      handleApiError(error, history)
     }
-  }, [data]);
+  });
+
 
   return (
     <Container fluid className="login-page">

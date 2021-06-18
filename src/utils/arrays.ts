@@ -24,8 +24,8 @@ export const InsideCart = [
   { id: "7", name: 7 },
 ];
 export const PaymentMethods = [
-  { id: "upi", name: "UPI" },
-  { id: "debit", name: "Debit" },
+  { id: "razorpay", name: "Razor Pay" },
+  { id: "cod", name: "COD" },
 ];
 
 export const RowsPerPage = [
@@ -47,4 +47,12 @@ export const OrderType = [
 export const IssueStatus = [
   { id: "open", name: "Open" },
   { id: "closed", name: "Closed" },
+]
+
+export const NotificationSendToCategories = [
+  { id: "active-users", name: "Active Users" },
+  { id: "disabled-users", name: "Disabled Users" },
+  { id: "subscribed-users", name: "Subscribed Users" },
+  { id: "not-subscribed-users", name: "Not Subscribed Users" },
+  { id: "agents", name: "Agents" },
 ]

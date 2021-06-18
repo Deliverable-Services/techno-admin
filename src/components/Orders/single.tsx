@@ -246,6 +246,58 @@ const SingleOrder = () => {
               </div>
             </div>
           </div>
+          <div className="card p-2 view-padding right-div d-flex mb-3">
+            <div className="d-flex flex-column">
+              <div className="text-primary">
+                <div
+                  className="text-black pb-3"
+                  style={{ cursor: "pointer", fontWeight: 600 }}
+                >Order Issue</div>
+              </div>
+
+              <hr className="mb-3" />
+
+              <div className="d-flex flex-column" style={{ fontSize: 18 }}>
+                <Row>
+                  <Col md="auto">
+
+                    <p
+                      style={{ fontSize: 13, lineHeight: 1.3, marginBottom: 5 }}
+                      className="text-muted"
+                    >
+                      Lorem ipsum dolor sit amet consectetur, adipisicing elit. Modi, voluptatum.
+                    </p>
+                    <table className="w-100">
+                      <tbody>
+                        <tr>
+                          <td className="text-muted">
+                            <p className="view-heading">Created At</p>
+                          </td>
+                          <td className="text-right">
+                            <p className="view-subheading">{moment().format("YYYY-MM-DD")}</p>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td className="text-muted">
+                            <p className="view-heading">Closed At</p>
+                          </td>
+                          <td className="text-right">
+                            <p className="view-subheading">{moment().format("YYYY-MM-DD")}</p>
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
+                    <span className="small text-primary font-weight-bold"
+                      style={{ cursor: "pointer" }}
+                      onClick={() => history.push("/issues/1")}
+                    >
+                      View Issue
+                    </span>
+                  </Col>
+                </Row>
+              </div>
+            </div>
+          </div>
 
           <div className="card p-2  view-padding right-div d-flex mb-3">
             <div className="d-flex flex-column">

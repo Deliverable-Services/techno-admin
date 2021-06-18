@@ -1,12 +1,9 @@
-import React from 'react'
-import { BiMinus, BiPlus } from 'react-icons/bi'
-import { primaryColor } from '../../utils/constants'
-import { RiSendPlane2Fill } from 'react-icons/ri'
-import { BsChat } from 'react-icons/bs'
-import moment from 'moment'
-import { Container, Image } from 'react-bootstrap';
-import image from "../../assets/user.png"
 import { Form, Formik } from 'formik'
+import moment from 'moment'
+import React from 'react'
+import { Container } from 'react-bootstrap'
+import { RiSendPlane2Fill } from 'react-icons/ri'
+import { primaryColor } from '../../utils/constants'
 
 
 const initialMessage = [

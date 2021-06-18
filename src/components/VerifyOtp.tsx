@@ -4,6 +4,7 @@ import { useEffect } from "react";
 import { Alert, Button, Container, Spinner } from "react-bootstrap";
 import { useMutation } from "react-query";
 import { useHistory, useParams } from "react-router";
+import { useLocation } from "react-router-dom";
 import * as Yup from "yup";
 import useTokenStore from "../hooks/useTokenStore";
 import useUserProfileStore from "../hooks/useUserProfileStore";
@@ -14,7 +15,7 @@ import { appApiBaseUrl } from "../utils/constants";
 import { showErrorToast } from "../utils/showErrorToast";
 import { showMsgToast } from "../utils/showMsgToast";
 
-interface Props {}
+interface Props { }
 
 const VerifySchema = Yup.object().shape({
   otp: Yup.string().max(4).min(4).required("Otp is required"),
@@ -27,16 +28,13 @@ const verifyOtp = (formData: FormData) => {
 };
 
 const VerifyOtp = (props: Props) => {
-  const params: { id: string; otp: string } = useParams();
-  console.log(params);
+  const { state } = useLocation()
   const history = useHistory();
   const setToken = useTokenStore((state) => state.setToken);
   const setUser = useUserProfileStore((state) => state.setUser);
 
   const { mutate, isLoading } = useMutation(verifyOtp, {
     onSuccess: (data) => {
-      console.log({ data });
-      console.log({ data });
       setToken(data.data.token);
       setUser(data.data.user);
       history.push("/");
@@ -49,10 +47,10 @@ const VerifyOtp = (props: Props) => {
   return (
     <Container fluid className="login-page">
       <Formik
-        initialValues={{ otp: params.otp || "" }}
+        initialValues={{ otp: (state as any).otp || "" }}
         onSubmit={(values) => {
           const formData = new FormData();
-          formData.append("phone", params.id);
+          formData.append("phone", (state as any).phone);
           formData.append("otp", values.otp);
 
           mutate(formData);
@@ -80,7 +78,7 @@ const VerifyOtp = (props: Props) => {
                   name="otp"
                   placeholder="Enter the Otp"
                   label="Verify Otp"
-                  error={errors.otp}
+                  error={errors.otp as string}
                 />
                 <Button
                   variant="primary"
