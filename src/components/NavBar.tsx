@@ -10,6 +10,7 @@ import {
 } from "react-icons/fa";
 import { GoIssueOpened } from "react-icons/go";
 import { IoLogoModelS } from "react-icons/io";
+import { GiModernCity } from "react-icons/gi";
 import {
   RiAdminFill,
   RiAdvertisementFill,
@@ -76,13 +77,23 @@ const manageLinks: Array<INavLink> = [
     icon: <RiAdvertisementFill />,
   },
   {
-    title: "Cities",
-    path: "/cities",
+    title: "Permissions",
+    path: "/permissions",
     icon: <RiAdvertisementFill />,
   },
   {
     title: "Booking Slots",
     path: "/booking-slots",
+    icon: <RiAdvertisementFill />,
+  },
+  {
+    title: "Cities",
+    path: "/cities",
+    icon: <GiModernCity />,
+  },
+  {
+    title: "Testimonials",
+    path: "/testimonials",
     icon: <RiAdvertisementFill />,
   },
 ];

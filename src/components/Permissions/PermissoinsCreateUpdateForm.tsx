@@ -15,7 +15,7 @@ import { isActiveArray } from "../../utils/arrays";
 import { queryClient } from "../../utils/queryClient";
 import { showMsgToast } from "../../utils/showMsgToast";
 
-const key = "cities";
+const key = "brands";
 
 const createUpdataBrand = ({
   formdata,
@@ -35,7 +35,7 @@ const createUpdataBrand = ({
   });
 };
 
-const CitiesCreateUpdateForm = () => {
+const PermissionsCreateUpdateForm = () => {
   const { state } = useLocation();
   const history = useHistory();
   const id = state ? (state as any).id : null;
@@ -46,16 +46,14 @@ const CitiesCreateUpdateForm = () => {
   const { mutate, isLoading } = useMutation(createUpdataBrand, {
     onSuccess: () => {
       setTimeout(() => queryClient.invalidateQueries(key), 500);
-      history.replace("/cities");
-      if (id) return showMsgToast("City updated successfully");
-      showMsgToast("City created successfully");
+      history.replace("/permissions");
+      if (id) return showMsgToast("Permission updated successfully");
+      showMsgToast("Permission created successfully");
     },
     onError: (error: AxiosError) => {
       handleApiError(error, history);
     },
   });
-
-  const title = id ? "Update City" : "Add City";
 
   const apiData = data as any;
 
@@ -63,7 +61,7 @@ const CitiesCreateUpdateForm = () => {
 
   return (
     <>
-      <BackButton title={title} />
+      <BackButton title={id ? "Update Permission" : "Add Permission"} />
 
       <div className="card view-padding p-2 d-flex mt-3">
         <div className="text-primary">
@@ -105,21 +103,9 @@ const CitiesCreateUpdateForm = () => {
                     />
 
                     <InputField
-                      name="state"
-                      placeholder="State"
-                      label="State"
-                      required
-                    />
-                    <InputField
-                      name="lat"
-                      placeholder="Latitude"
-                      label="Latitude"
-                      required
-                    />
-                    <InputField
-                      name="lng"
-                      placeholder="Longitude"
-                      label="Longitude"
+                      name="info"
+                      placeholder="Info"
+                      label="Info"
                       required
                     />
                   </div>
@@ -149,4 +135,4 @@ const CitiesCreateUpdateForm = () => {
   );
 };
 
-export default CitiesCreateUpdateForm;
+export default PermissionsCreateUpdateForm;

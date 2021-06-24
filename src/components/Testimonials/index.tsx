@@ -23,7 +23,7 @@ import {
 import { queryClient } from "../../utils/queryClient";
 import { showMsgToast } from "../../utils/showMsgToast";
 
-const key = "cities";
+const key = "testimonial";
 
 const deleteCities = (id: Array<any>) => {
   return API.post(`${key}/delete`, {
@@ -37,7 +37,7 @@ const intitialFilter = {
   perPage: 25,
 };
 
-const Cities = () => {
+const Testimonial = () => {
   const history = useHistory();
   const [selectedRows, setSelectedRows] = useState([]);
   console.log(selectedRows.map((item) => item.id));
@@ -54,7 +54,7 @@ const Cities = () => {
   const { mutate, isLoading: isDeleteLoading } = useMutation(deleteCities, {
     onSuccess: () => {
       queryClient.invalidateQueries(key);
-      showMsgToast("Cities deleted successfully");
+      showMsgToast("Testimonials deleted successfully");
     },
     onError: (error: AxiosError) => {
       handleApiError(error, history);
@@ -62,10 +62,14 @@ const Cities = () => {
   });
 
   const _onCreateClick = () => {
-    history.push("/cities/create-edit");
+    history.push("/testimonials/create-edit");
   };
   const _onEditClick = (id: string) => {
-    history.push("/cities/create-edit", { id });
+    history.push("/testimonials/create-edit", { id });
+  };
+  const _onUserClick = (id: string) => {
+    if (!id) return;
+    history.push("/users/create-edit", { id });
   };
 
   const _onFilterChange = (idx: string, value: any) => {
@@ -82,20 +86,39 @@ const Cities = () => {
         accessor: "id", //accessor is the "key" in the data
       },
       {
+        Header: "Picture",
+        accessor: "picture",
+        Cell: (data: Cell) => (
+          <div className="table-image">
+            <img
+              src={`${baseUploadUrl}testimonial/${data.row.values.picture}`}
+              alt="name"
+            />
+          </div>
+        ),
+      },
+      {
         Header: "Name",
         accessor: "name",
       },
       {
-        Header: "State",
-        accessor: "state",
+        Header: "Link",
+        accessor: "link",
       },
       {
-        Header: "Lat",
-        accessor: "lat",
-      },
-      {
-        Header: "Lng",
-        accessor: "lng",
+        Header: "User",
+        accessor: "user.name",
+        Cell: (data: Cell) => {
+          return (
+            <p
+              className="text-primary"
+              style={{ cursor: "pointer" }}
+              onClick={() => _onUserClick((data.row.original as any).user_id)}
+            >
+              {data.row.values["user.name"] || "NA"}
+            </p>
+          );
+        },
       },
       {
         Header: "Created At",
@@ -141,7 +164,7 @@ const Cities = () => {
   return (
     <>
       <PageHeading
-        title="Serviceable Cities"
+        title="Testimonials"
         onClick={_onCreateClick}
         totalRecords={data?.total}
       />
@@ -194,4 +217,4 @@ const Cities = () => {
   );
 };
 
-export default Cities;
+export default Testimonial;

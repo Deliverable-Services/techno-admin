@@ -7,20 +7,18 @@ import useMeQuery from "../hooks/useMeQuery";
 import useTokenStore from "../hooks/useTokenStore";
 import API from "../utils/API";
 
-
 export const PrivateRoute = ({ component: Component, ...rest }: any) => {
+  // const { isFetching, isLoading, error } = useMeQuery();
 
-  const { isFetching, isLoading, error, } = useMeQuery();
-
-
-  if (isLoading || isFetching) {
-    return <Container fluid className="d-flex justify-content-center align-items-center mt-4"><Spinner animation="border" /></Container>;
-  }
-  return (
-    <Route {...rest} render={(props) => (
-
-      <Component {...props} />
-
-    )} />
-  );
+  // if (isLoading || isFetching) {
+  //   return (
+  //     <Container
+  //       fluid
+  //       className="d-flex justify-content-center align-items-center mt-4"
+  //     >
+  //       <Spinner animation="border" />
+  //     </Container>
+  //   );
+  // }
+  return <Route {...rest} render={(props) => <Component {...props} />} />;
 };

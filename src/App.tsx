@@ -28,12 +28,17 @@ import NotificationCreateUpdateForm from "./components/Notification/Notification
 import Orders from "./components/Orders";
 import AssignAgent from "./components/Orders/assignAgent";
 import SingleOrder from "./components/Orders/single";
+import Permissions from "./components/Permissions";
+import PermissionsCreateUpdateForm from "./components/Permissions/PermissoinsCreateUpdateForm";
+import RolesCreateUpdateForm from "./components/Permissions/RolesCreateUpdateForm";
 import Plans from "./components/Plans";
 import PlanCreateUpdateForm from "./components/Plans/PlansCreateUpdateForm";
 import Services from "./components/Servicies";
 import ServicesCreateUpdateForm from "./components/Servicies/ServiciesCreateUpdateForm";
 import Subscriptions from "./components/Subscriptions";
 import SingleSubscriptions from "./components/Subscriptions/single";
+import Testimonial from "./components/Testimonials";
+import TestimonialCreateUpdateForm from "./components/Testimonials/TestimonialCreateUpdateForm";
 import TopBar from "./components/TopBar";
 import Transactions from "./components/Transactions";
 import TransactionUpdateForm from "./components/Transactions/TransactionUpdateForm";
@@ -107,6 +112,7 @@ const App = () => {
             <PrivateRoute path="/coupons" exact component={Coupons} />
             <PrivateRoute path="/orders" exact component={Orders} />
             <PrivateRoute path="/cities" exact component={Cities} />
+            <PrivateRoute path="/testimonials" exact component={Testimonial} />
             <PrivateRoute
               path="/advertisements"
               exact
@@ -164,6 +170,7 @@ const App = () => {
             />
             <PrivateRoute path="/transactions" exact component={Transactions} />
             <PrivateRoute path="/issues" exact component={Issues} />
+            <PrivateRoute path="/permissions" exact component={Permissions} />
             <PrivateRoute
               path="/push-notifications"
               exact
@@ -183,6 +190,21 @@ const App = () => {
               path="/push-notifications/create-edit"
               exact
               component={NotificationCreateUpdateForm}
+            />
+            <PrivateRoute
+              path="/testimonials/create-edit"
+              exact
+              component={TestimonialCreateUpdateForm}
+            />
+            <PrivateRoute
+              path="/permissions/create-edit"
+              exact
+              component={PermissionsCreateUpdateForm}
+            />
+            <PrivateRoute
+              path="/roles/create-edit"
+              exact
+              component={RolesCreateUpdateForm}
             />
             <PrivateRoute
               path="/transactions/:id"

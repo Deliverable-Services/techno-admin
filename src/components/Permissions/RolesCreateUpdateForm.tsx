@@ -11,11 +11,11 @@ import BackButton from "../../shared-components/BackButton";
 import { InputField } from "../../shared-components/InputFeild";
 import IsLoading from "../../shared-components/isLoading";
 import API from "../../utils/API";
-import { isActiveArray } from "../../utils/arrays";
+import { isActiveArray, userRoles } from "../../utils/arrays";
 import { queryClient } from "../../utils/queryClient";
 import { showMsgToast } from "../../utils/showMsgToast";
 
-const key = "cities";
+const key = "brands";
 
 const createUpdataBrand = ({
   formdata,
@@ -35,7 +35,7 @@ const createUpdataBrand = ({
   });
 };
 
-const CitiesCreateUpdateForm = () => {
+const RolesCreateUpdateForm = () => {
   const { state } = useLocation();
   const history = useHistory();
   const id = state ? (state as any).id : null;
@@ -46,16 +46,14 @@ const CitiesCreateUpdateForm = () => {
   const { mutate, isLoading } = useMutation(createUpdataBrand, {
     onSuccess: () => {
       setTimeout(() => queryClient.invalidateQueries(key), 500);
-      history.replace("/cities");
-      if (id) return showMsgToast("City updated successfully");
-      showMsgToast("City created successfully");
+      history.replace("/permissions");
+      if (id) return showMsgToast("Role updated successfully");
+      showMsgToast("Role created successfully");
     },
     onError: (error: AxiosError) => {
       handleApiError(error, history);
     },
   });
-
-  const title = id ? "Update City" : "Add City";
 
   const apiData = data as any;
 
@@ -63,7 +61,7 @@ const CitiesCreateUpdateForm = () => {
 
   return (
     <>
-      <BackButton title={title} />
+      <BackButton title={id ? "Update Role" : "Add Role"} />
 
       <div className="card view-padding p-2 d-flex mt-3">
         <div className="text-primary">
@@ -98,31 +96,16 @@ const CitiesCreateUpdateForm = () => {
                 <Form>
                   <div className="form-container ">
                     <InputField
-                      name="name"
-                      placeholder="Name"
-                      label="Name"
-                      required
-                    />
-
-                    <InputField
-                      name="state"
-                      placeholder="State"
-                      label="State"
-                      required
-                    />
-                    <InputField
-                      name="lat"
-                      placeholder="Latitude"
-                      label="Latitude"
-                      required
-                    />
-                    <InputField
-                      name="lng"
-                      placeholder="Longitude"
-                      label="Longitude"
-                      required
+                      as="select"
+                      selectData={userRoles}
+                      name="role"
+                      label="Role"
+                      placeholder="Role"
                     />
                   </div>
+                  <Row>
+                    <Col>permission with checkboxes goes here</Col>
+                  </Row>
 
                   <Row className="d-flex justify-content-start">
                     <Col md="2">
@@ -149,4 +132,4 @@ const CitiesCreateUpdateForm = () => {
   );
 };
 
-export default CitiesCreateUpdateForm;
+export default RolesCreateUpdateForm;

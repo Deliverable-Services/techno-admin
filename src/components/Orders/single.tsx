@@ -34,6 +34,12 @@ const SingleOrder = () => {
   const { id }: { id: string } = useParams();
   const history = useHistory();
   const { data, isLoading, isFetching } = useGetSingleQuery({ id, key });
+  const { data: Invoice, isLoading: isInvoiceLoading } = useGetSingleQuery({
+    id,
+    key: "downloadInvoice",
+  });
+
+  console.log({ Invoice });
 
   const { mutate, isLoading: isAsigningLoading } = useMutation(assignAgent, {
     onSuccess: (data) => {
@@ -135,8 +141,9 @@ const SingleOrder = () => {
           <Step transition="scale">
             {({ accomplished, index }) => (
               <div
-                className={`transitionStep ${accomplished ? "accomplished" : null
-                  }`}
+                className={`transitionStep ${
+                  accomplished ? "accomplished" : null
+                }`}
               >
                 ❌
               </div>
@@ -145,8 +152,9 @@ const SingleOrder = () => {
           <Step transition="scale">
             {({ accomplished, index }) => (
               <div
-                className={`transitionStep ${accomplished ? "accomplished" : null
-                  }`}
+                className={`transitionStep ${
+                  accomplished ? "accomplished" : null
+                }`}
               >
                 ⏳
               </div>
@@ -156,8 +164,9 @@ const SingleOrder = () => {
           <Step transition="scale">
             {({ accomplished, index }) => (
               <div
-                className={`transitionStep ${accomplished ? "accomplished" : null
-                  }`}
+                className={`transitionStep ${
+                  accomplished ? "accomplished" : null
+                }`}
               >
                 🙍
               </div>
@@ -167,8 +176,9 @@ const SingleOrder = () => {
           <Step transition="scale">
             {({ accomplished, index }) => (
               <div
-                className={`transitionStep ${accomplished ? "accomplished" : null
-                  }`}
+                className={`transitionStep ${
+                  accomplished ? "accomplished" : null
+                }`}
               >
                 🚚
               </div>
@@ -178,14 +188,14 @@ const SingleOrder = () => {
           <Step transition="scale">
             {({ accomplished, index }) => (
               <div
-                className={`transitionStep ${accomplished ? "accomplished" : null
-                  }`}
+                className={`transitionStep ${
+                  accomplished ? "accomplished" : null
+                }`}
               >
                 ✅
               </div>
             )}
           </Step>
-
         </ProgressBar>
       </div>
 
@@ -252,7 +262,9 @@ const SingleOrder = () => {
                 <div
                   className="text-black pb-3"
                   style={{ cursor: "pointer", fontWeight: 600 }}
-                >Order Issue</div>
+                >
+                  Order Issue
+                </div>
               </div>
 
               <hr className="mb-3" />
@@ -260,12 +272,12 @@ const SingleOrder = () => {
               <div className="d-flex flex-column" style={{ fontSize: 18 }}>
                 <Row>
                   <Col md="auto">
-
                     <p
                       style={{ fontSize: 13, lineHeight: 1.3, marginBottom: 5 }}
                       className="text-muted"
                     >
-                      Lorem ipsum dolor sit amet consectetur, adipisicing elit. Modi, voluptatum.
+                      Lorem ipsum dolor sit amet consectetur, adipisicing elit.
+                      Modi, voluptatum.
                     </p>
                     <table className="w-100">
                       <tbody>
@@ -274,7 +286,9 @@ const SingleOrder = () => {
                             <p className="view-heading">Created At</p>
                           </td>
                           <td className="text-right">
-                            <p className="view-subheading">{moment().format("YYYY-MM-DD")}</p>
+                            <p className="view-subheading">
+                              {moment().format("YYYY-MM-DD")}
+                            </p>
                           </td>
                         </tr>
                         <tr>
@@ -282,12 +296,15 @@ const SingleOrder = () => {
                             <p className="view-heading">Closed At</p>
                           </td>
                           <td className="text-right">
-                            <p className="view-subheading">{moment().format("YYYY-MM-DD")}</p>
+                            <p className="view-subheading">
+                              {moment().format("YYYY-MM-DD")}
+                            </p>
                           </td>
                         </tr>
                       </tbody>
                     </table>
-                    <span className="small text-primary font-weight-bold"
+                    <span
+                      className="small text-primary font-weight-bold"
                       style={{ cursor: "pointer" }}
                       onClick={() => history.push("/issues/1")}
                     >
@@ -448,24 +465,25 @@ const SingleOrder = () => {
               </div>
 
               <hr className="mb-3 mt-3" />
-              {
-                data?.address ?
-                  <div className="d-flex flex-column" style={{ fontSize: 18 }}>
-                    <p className="view-heading font-weight-bold">Billing Address</p>
-                    <p className="view-subheading">
-                      {data.address.address}
-                      {", "}
-                      {data.address.city}
-                      {", "}
-                      {data.address.pincode}{" "}
-                    </p>
-                  </div> :
-                  <p className="view-subheading">Billing Address not available</p>
-              }
+              {data?.address ? (
+                <div className="d-flex flex-column" style={{ fontSize: 18 }}>
+                  <p className="view-heading font-weight-bold">
+                    Billing Address
+                  </p>
+                  <p className="view-subheading">
+                    {data.address.address}
+                    {", "}
+                    {data.address.city}
+                    {", "}
+                    {data.address.pincode}{" "}
+                  </p>
+                </div>
+              ) : (
+                <p className="view-subheading">Billing Address not available</p>
+              )}
 
               <hr className="mb-3 mt-2" />
-              {
-                data?.address &&
+              {data?.address && (
                 <div className="d-flex flex-column" style={{ fontSize: 18 }}>
                   <p className="view-heading font-weight-bold">
                     Shipping Address
@@ -478,7 +496,7 @@ const SingleOrder = () => {
                     {data.address.pincode}{" "}
                   </p>
                 </div>
-              }
+              )}
             </div>
           </div>
         </Container>
@@ -540,8 +558,8 @@ const SingleOrder = () => {
                         <p className="view-subheading">
                           {data.scheduled_at
                             ? moment(data.scheduled_at).format(
-                              "DD/MM/YY(hh:mm)"
-                            )
+                                "DD/MM/YY(hh:mm)"
+                              )
                             : "-"}
                         </p>
                       </td>
@@ -581,7 +599,6 @@ const SingleOrder = () => {
           </div>
           {data?.services?.length ? (
             <div className="card view-padding p-2 d-flex mt-3">
-
               <div className="d-flex flex-column">
                 <div className="text-primary">
                   <div className="d-flex justify-content-between">
@@ -616,8 +633,7 @@ const SingleOrder = () => {
                 </div>
               </div>
             </div>
-          ) : null
-          }
+          ) : null}
 
           <div className="card view-padding p-2 d-flex mt-3">
             <div className="d-flex flex-column">
@@ -671,7 +687,6 @@ const SingleOrder = () => {
               </div>
             </div>
           </div>
-
 
           {data.plan && (
             <div className="card p-2 d-flex mt-3">

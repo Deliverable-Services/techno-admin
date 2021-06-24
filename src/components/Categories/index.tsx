@@ -16,7 +16,11 @@ import PageHeading from "../../shared-components/PageHeading";
 import TablePagination from "../../shared-components/Pagination";
 import ReactTable from "../../shared-components/ReactTable";
 import API from "../../utils/API";
-import { clientWebUrl, primaryColor, secondaryColor } from "../../utils/constants";
+import {
+  clientWebUrl,
+  primaryColor,
+  secondaryColor,
+} from "../../utils/constants";
 import { queryClient } from "../../utils/queryClient";
 import { showErrorToast } from "../../utils/showErrorToast";
 import { showMsgToast } from "../../utils/showMsgToast";
@@ -69,7 +73,7 @@ const Categories = () => {
   const [selectedRows, setSelectedRows] = useState([]);
   const [filter, setFilter] = useState(intitialFilter);
   const [isDraggable, setIsDraggable] = useState(false);
-  const handleChange = nextChecked => {
+  const handleChange = (nextChecked) => {
     setIsDraggable(nextChecked);
   };
   const { data, isLoading, isFetching, error } = useQuery<any>(
@@ -101,8 +105,8 @@ const Categories = () => {
     history.push("/categories/create-edit", { id });
   };
   const _onUrlClick = (data: Cell) => {
-    window.open(clientWebUrl)
-  }
+    window.open(clientWebUrl);
+  };
 
   const _onFilterChange = (idx: string, value: any) => {
     setFilter((prev) => ({
@@ -124,10 +128,14 @@ const Categories = () => {
         Header: "Url",
         accessor: "url",
         Cell: (data: Cell) => (
-          <p className="text-primary" style={{ cursor: "pointer" }} onClick={() => _onUrlClick(data)}>
+          <p
+            className="text-primary"
+            style={{ cursor: "pointer" }}
+            onClick={() => _onUrlClick(data)}
+          >
             {data.row.values.url}
           </p>
-        )
+        ),
       },
       {
         Header: "Order",
@@ -189,7 +197,7 @@ const Categories = () => {
         onClick={_onCreateClick}
         totalRecords={data?.total}
       />
-      {(!isLoading) && (
+      {!isLoading && (
         <Container fluid>
           <div className="d-flex align-items-center justify-content-between w-100">
             <div className="filter">
@@ -214,13 +222,11 @@ const Categories = () => {
                 value="0"
                 currentValue={filter.active}
                 dataLength={data?.data?.length}
-
                 idx="active"
                 title="Not Active"
                 isLast
               />
             </div>
-
           </div>
         </Container>
       )}
@@ -234,7 +240,7 @@ const Categories = () => {
                 <>
                   <Container className="pt-3">
                     <Row className="select-filter d-flex">
-                      <Col md="auto">
+                      {/* <Col md="auto">
                         <div className=" d-flex align-items-center "
                           style={{
                             height: 30
@@ -252,7 +258,7 @@ const Categories = () => {
                           />
 
                         </div>
-                      </Col>
+                      </Col> */}
                       {/* <Col
                         md="auto"
                         className="d-flex align-items-center  justify-content-center"

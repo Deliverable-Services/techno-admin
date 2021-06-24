@@ -23,25 +23,27 @@ import {
 import { queryClient } from "../../utils/queryClient";
 import { showMsgToast } from "../../utils/showMsgToast";
 
-const key = "cities";
+const key = "brands";
 
-const deleteCities = (id: Array<any>) => {
+const deleteBrand = (id: Array<any>) => {
   return API.post(`${key}/delete`, {
     id,
   });
 };
 
 const intitialFilter = {
+  active: "",
   q: "",
   page: 1,
   perPage: 25,
 };
 
-const Cities = () => {
+const Permissions = () => {
   const history = useHistory();
   const [selectedRows, setSelectedRows] = useState([]);
   console.log(selectedRows.map((item) => item.id));
   const [filter, setFilter] = useState(intitialFilter);
+  console.log({ filter });
   const { data, isLoading, isFetching, error } = useQuery<any>(
     [key, , filter],
     {
@@ -51,10 +53,10 @@ const Cities = () => {
     }
   );
 
-  const { mutate, isLoading: isDeleteLoading } = useMutation(deleteCities, {
+  const { mutate, isLoading: isDeleteLoading } = useMutation(deleteBrand, {
     onSuccess: () => {
       queryClient.invalidateQueries(key);
-      showMsgToast("Cities deleted successfully");
+      showMsgToast("Brands deleted successfully");
     },
     onError: (error: AxiosError) => {
       handleApiError(error, history);
@@ -62,10 +64,16 @@ const Cities = () => {
   });
 
   const _onCreateClick = () => {
-    history.push("/cities/create-edit");
+    history.push("/permissions/create-edit");
+  };
+  const _onRolesCreateClick = () => {
+    history.push("/roles/create-edit");
   };
   const _onEditClick = (id: string) => {
-    history.push("/cities/create-edit", { id });
+    history.push("/permissions/create-edit", { id });
+  };
+  const _onRolesEditClick = (id: string) => {
+    history.push("/roles/create-edit", { id });
   };
 
   const _onFilterChange = (idx: string, value: any) => {
@@ -78,38 +86,12 @@ const Cities = () => {
   const columns = useMemo(
     () => [
       {
-        Header: "#Id",
-        accessor: "id", //accessor is the "key" in the data
+        Header: "Role",
+        accessor: "role",
       },
       {
-        Header: "Name",
-        accessor: "name",
-      },
-      {
-        Header: "State",
-        accessor: "state",
-      },
-      {
-        Header: "Lat",
-        accessor: "lat",
-      },
-      {
-        Header: "Lng",
-        accessor: "lng",
-      },
-      {
-        Header: "Created At",
-        accessor: "created_at",
-        Cell: (data: Cell) => {
-          return <CreatedUpdatedAt date={data.row.values.created_at} />;
-        },
-      },
-      {
-        Header: "Updated At",
-        accessor: "updated_at",
-        Cell: (data: Cell) => {
-          return <CreatedUpdatedAt date={data.row.values.updated_at} />;
-        },
+        Header: "Permissions",
+        accessor: "permissions",
       },
       {
         Header: "Actions",
@@ -117,12 +99,37 @@ const Cities = () => {
           return (
             <EditButton
               onClick={() => {
-                _onEditClick(data.row.values.id);
+                _onRolesEditClick(data.row.values.id);
               }}
             />
           );
         },
       },
+    ],
+    []
+  );
+  const permissionColumn = useMemo(
+    () => [
+      {
+        Header: "Name",
+        accessor: "name",
+      },
+      {
+        Header: "Info",
+        accessor: "info",
+      },
+      // {
+      //   Header: "Actions",
+      //   Cell: (data: Cell) => {
+      //     return (
+      //       <EditButton
+      //         onClick={() => {
+      //           _onEditClick(data.row.values.id);
+      //         }}
+      //       />
+      //     );
+      //   },
+      // },
     ],
     []
   );
@@ -141,7 +148,49 @@ const Cities = () => {
   return (
     <>
       <PageHeading
-        title="Serviceable Cities"
+        title="Roles"
+        onClick={_onRolesCreateClick}
+        totalRecords={data?.total}
+      />
+
+      <Container fluid className="card component-wrapper px-0 py-2 mb-3">
+        <Container fluid className="h-100 p-0">
+          {isLoading ? (
+            <IsLoading />
+          ) : (
+            <>
+              {!error && (
+                <ReactTable
+                  data={data?.data}
+                  columns={columns}
+                  setSelectedRows={setSelectedRows}
+                  filter={filter}
+                  onFilterChange={_onFilterChange}
+                  isDataLoading={isFetching}
+                />
+              )}
+            </>
+          )}
+        </Container>
+      </Container>
+      {selectedRows.length > 0 && (
+        <div className="delete-button rounded">
+          <span>
+            <b>Delete {selectedRows.length} rows</b>
+          </span>
+          <Button
+            variant="danger"
+            onClick={() => {
+              mutate(selectedRows.map((i) => i.id));
+            }}
+          >
+            {isDeleteLoading ? "Loading..." : "Delete"}
+          </Button>
+        </div>
+      )}
+
+      <PageHeading
+        title="Permissions"
         onClick={_onCreateClick}
         totalRecords={data?.total}
       />
@@ -155,7 +204,7 @@ const Cities = () => {
               {!error && (
                 <ReactTable
                   data={data?.data}
-                  columns={columns}
+                  columns={permissionColumn}
                   setSelectedRows={setSelectedRows}
                   filter={filter}
                   onFilterChange={_onFilterChange}
@@ -194,4 +243,4 @@ const Cities = () => {
   );
 };
 
-export default Cities;
+export default Permissions;
