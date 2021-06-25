@@ -25,7 +25,6 @@ interface IDates {
 }
 
 const Dashboard = () => {
-
   const [chartOneSelect, setChartOneSelect] = useState<string>("1");
   const [chartTwoSelect, setChartTwoSelect] = useState<string>("");
   const [dates, setDates] = useState<IDates>({
@@ -35,15 +34,15 @@ const Dashboard = () => {
   });
   const [start_date, setStartDate] = useState<Moment | null>(moment());
   const [end_date, setEndDate] = useState<Moment | null>(null);
-  const [focusedInput, setFocusInput] =
-    useState<FocusedInputShape | null>(null);
+  const [focusedInput, setFocusInput] = useState<FocusedInputShape | null>(
+    null
+  );
   const { data, isLoading, isFetching } = useQuery<any>(
     "analytics",
     getAnalytics
   );
   const handleChartOneChange = (e: any) => setChartOneSelect(e.target.value);
   const handleChartTwoChange = (e: any) => setChartTwoSelect(e.target.value);
-
 
   if (isLoading || isFetching) return <IsLoading />;
 
@@ -94,7 +93,7 @@ const Dashboard = () => {
 
                 <div className="d-flex align-items-center justify-content-between mt-2">
                   <h1 className="text-black font-weight-bold">
-                    {data.overall_status.customers}
+                    {data?.overall_status?.customers}
                   </h1>
                   <span>graph</span>
                 </div>
@@ -116,7 +115,7 @@ const Dashboard = () => {
 
                 <div className="d-flex align-items-center justify-content-between mt-2">
                   <h1 className="text-black font-weight-bold">
-                    {data.overall_status.orders}
+                    {data?.overall_status?.orders}
                   </h1>
                   <span>graph</span>
                 </div>
@@ -138,7 +137,7 @@ const Dashboard = () => {
 
                 <div className="d-flex align-items-center justify-content-between mt-2">
                   <h1 className="text-black font-weight-bold">
-                    {data.overall_status.active_subscriptions}
+                    {data?.overall_status?.active_subscriptions}
                   </h1>
                   <span>graph</span>
                 </div>
@@ -160,7 +159,7 @@ const Dashboard = () => {
 
                 <div className="d-flex align-items-center justify-content-between mt-2">
                   <h1 className="text-black font-weight-bold">
-                    {data.overall_status.merchants}
+                    {data?.overall_status?.merchants}
                   </h1>
                   <span>graph</span>
                 </div>

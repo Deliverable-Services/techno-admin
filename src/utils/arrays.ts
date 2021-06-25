@@ -40,14 +40,12 @@ export const OrderStatus = [
   { id: "error_payment", name: "Payment Error" },
   { id: "error", name: "Error" },
 ];
-export const OrderType = [
-  { id: "normal", name: "Normal" },
-];
+export const OrderType = [{ id: "normal", name: "Normal" }];
 
 export const IssueStatus = [
   { id: "open", name: "Open" },
   { id: "closed", name: "Closed" },
-]
+];
 
 export const NotificationSendToCategories = [
   { id: "active-users", name: "Active Users" },
@@ -55,4 +53,11 @@ export const NotificationSendToCategories = [
   { id: "subscribed-users", name: "Subscribed Users" },
   { id: "not-subscribed-users", name: "Not Subscribed Users" },
   { id: "agents", name: "Agents" },
-]
+];
+
+export const PermissionsData = [
+  { id: "1", name: "read" },
+  { id: "2", name: "delete" },
+  { id: "3", name: "create" },
+  { id: "4", name: "update" },
+];

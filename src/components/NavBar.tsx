@@ -82,6 +82,11 @@ const manageLinks: Array<INavLink> = [
     icon: <RiAdvertisementFill />,
   },
   {
+    title: "Roles",
+    path: "/roles",
+    icon: <RiAdvertisementFill />,
+  },
+  {
     title: "Booking Slots",
     path: "/booking-slots",
     icon: <RiAdvertisementFill />,

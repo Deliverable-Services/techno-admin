@@ -15,7 +15,7 @@ import { isActiveArray } from "../../utils/arrays";
 import { queryClient } from "../../utils/queryClient";
 import { showMsgToast } from "../../utils/showMsgToast";
 
-const key = "create-permission";
+const key = "create-roles";
 
 const createUpdataBrand = ({
   formdata,
@@ -26,40 +26,36 @@ const createUpdataBrand = ({
 }) => {
   if (!id) {
     return API.post(`${key}`, formdata, {
-      headers: { "Content-Type": "application/json" },
+      headers: { "Content-Type": "multipart/form-data" },
     });
   }
 
   return API.post(`${key}/${id}`, formdata, {
-    headers: { "Content-Type": "application/json" },
+    headers: { "Content-Type": "multipart/form-data" },
   });
 };
 
-const PermissionsCreateUpdateForm = () => {
+const RolesCreateUpdateForm = () => {
   const { state } = useLocation();
   const history = useHistory();
   const id = state ? (state as any).id : null;
   useEffect(() => {
     bsCustomFileInput.init();
   }, []);
-  const { data, isLoading: dataLoading } = useGetSingleQuery({
-    id,
-    key: "get-permission",
-  });
+  const { data, isLoading: dataLoading } = useGetSingleQuery({ id, key });
   const { mutate, isLoading } = useMutation(createUpdataBrand, {
     onSuccess: () => {
-      setTimeout(
-        () => queryClient.invalidateQueries("get-all-permission/1"),
-        500
-      );
-      history.replace("/permissions");
-      if (id) return showMsgToast("Permission updated successfully");
-      showMsgToast("Permission created successfully");
+      setTimeout(() => queryClient.invalidateQueries("get-all-roles/1"), 500);
+      history.replace("/roles");
+      if (id) return showMsgToast("Role updated successfully");
+      showMsgToast("Role created successfully");
     },
     onError: (error: AxiosError) => {
       handleApiError(error, history);
     },
   });
+
+  const title = id ? "Update Role" : "Add Role";
 
   const apiData = data as any;
 
@@ -67,7 +63,7 @@ const PermissionsCreateUpdateForm = () => {
 
   return (
     <>
-      <BackButton title={id ? "Update Permission" : "Add Permission"} />
+      <BackButton title={title} />
 
       <div className="card view-padding p-2 d-flex mt-3">
         <div className="text-primary">
@@ -88,7 +84,14 @@ const PermissionsCreateUpdateForm = () => {
             <Formik
               initialValues={apiData || {}}
               onSubmit={(values) => {
-                mutate({ formdata: values, id });
+                const { logo, ...rest } = values;
+                const formdata = new FormData();
+                for (let k in rest) formdata.append(k, rest[k]);
+
+                if (logo && typeof logo !== "string")
+                  formdata.append("logo", logo);
+
+                mutate({ formdata, id });
               }}
             >
               {({ setFieldValue }) => (
@@ -127,4 +130,4 @@ const PermissionsCreateUpdateForm = () => {
   );
 };
 
-export default PermissionsCreateUpdateForm;
+export default RolesCreateUpdateForm;

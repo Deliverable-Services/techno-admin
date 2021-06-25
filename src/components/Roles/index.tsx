@@ -23,27 +23,24 @@ import {
 import { queryClient } from "../../utils/queryClient";
 import { showMsgToast } from "../../utils/showMsgToast";
 
-const key = "get-all-permission/1";
+const key = "get-all-roles/1";
 
-const deleteBrand = (id: Array<any>) => {
-  return API.post(`${key}/delete`, {
+const deleteRole = (id: Array<any>) => {
+  return API.post(`remove-role/${id}`, {
     id,
   });
 };
 
 const intitialFilter = {
-  active: "",
   q: "",
   page: 1,
   perPage: 25,
 };
 
-const Permissions = () => {
+const Roles = () => {
   const history = useHistory();
   const [selectedRows, setSelectedRows] = useState([]);
-  console.log(selectedRows.map((item) => item.id));
   const [filter, setFilter] = useState(intitialFilter);
-  console.log({ filter });
   const { data, isLoading, isFetching, error } = useQuery<any>(
     [key, , filter],
     {
@@ -53,10 +50,10 @@ const Permissions = () => {
     }
   );
 
-  const { mutate, isLoading: isDeleteLoading } = useMutation(deleteBrand, {
+  const { mutate, isLoading: isDeleteLoading } = useMutation(deleteRole, {
     onSuccess: () => {
       queryClient.invalidateQueries(key);
-      showMsgToast("Brands deleted successfully");
+      showMsgToast("Roles deleted successfully");
     },
     onError: (error: AxiosError) => {
       handleApiError(error, history);
@@ -64,16 +61,10 @@ const Permissions = () => {
   });
 
   const _onCreateClick = () => {
-    history.push("/permissions/create-edit");
-  };
-  const _onRolesCreateClick = () => {
-    history.push("/assign-permission/create-edit");
+    history.push("/roles/create-edit");
   };
   const _onEditClick = (id: string) => {
-    history.push("/permissions/create-edit", { id });
-  };
-  const _onRolesEditClick = (id: string) => {
-    history.push("/assign-pemission/create-edit", { id });
+    history.push("/roles/create-edit", { id });
   };
 
   const _onFilterChange = (idx: string, value: any) => {
@@ -86,30 +77,9 @@ const Permissions = () => {
   const columns = useMemo(
     () => [
       {
-        Header: "Role",
-        accessor: "role",
+        Header: "#Id",
+        accessor: "id", //accessor is the "key" in the data
       },
-      {
-        Header: "Permissions",
-        accessor: "permissions",
-      },
-      {
-        Header: "Actions",
-        Cell: (data: Cell) => {
-          return (
-            <EditButton
-              onClick={() => {
-                _onRolesEditClick(data.row.values.id);
-              }}
-            />
-          );
-        },
-      },
-    ],
-    []
-  );
-  const permissionColumn = useMemo(
-    () => [
       {
         Header: "Name",
         accessor: "name",
@@ -126,6 +96,18 @@ const Permissions = () => {
         accessor: "updated_at",
         Cell: (data: Cell) => {
           return <CreatedUpdatedAt date={data.row.values.updated_at} />;
+        },
+      },
+      {
+        Header: "Actions",
+        Cell: (data: Cell) => {
+          return (
+            <EditButton
+              onClick={() => {
+                _onEditClick(data.row.values.id);
+              }}
+            />
+          );
         },
       },
     ],
@@ -146,33 +128,7 @@ const Permissions = () => {
   return (
     <>
       <PageHeading
-        title="Assign Permission"
-        onClick={_onRolesCreateClick}
-        totalRecords={data?.total}
-      />
-
-      <Container fluid className="card component-wrapper px-0 py-2 mb-3">
-        <Container fluid className="h-100 p-0">
-          {isLoading ? (
-            <IsLoading />
-          ) : (
-            <>
-              {!error && (
-                <ReactTable
-                  data={data}
-                  columns={columns}
-                  filter={filter}
-                  onFilterChange={_onFilterChange}
-                  isDataLoading={isFetching}
-                />
-              )}
-            </>
-          )}
-        </Container>
-      </Container>
-
-      <PageHeading
-        title="Permissions"
+        title="Roles"
         onClick={_onCreateClick}
         totalRecords={data?.total}
       />
@@ -186,22 +142,13 @@ const Permissions = () => {
               {!error && (
                 <ReactTable
                   data={data}
-                  columns={permissionColumn}
+                  columns={columns}
                   setSelectedRows={setSelectedRows}
                   filter={filter}
                   onFilterChange={_onFilterChange}
                   isDataLoading={isFetching}
                 />
               )}
-              {!error && data?.data?.length > 0 ? (
-                <TablePagination
-                  currentPage={data?.current_page}
-                  lastPage={data?.last_page}
-                  setPage={_onFilterChange}
-                  hasNextPage={!!data?.next_page_url}
-                  hasPrevPage={!!data?.prev_page_url}
-                />
-              ) : null}{" "}
             </>
           )}
         </Container>
@@ -225,4 +172,4 @@ const Permissions = () => {
   );
 };
 
-export default Permissions;
+export default Roles;

@@ -30,9 +30,10 @@ import AssignAgent from "./components/Orders/assignAgent";
 import SingleOrder from "./components/Orders/single";
 import Permissions from "./components/Permissions";
 import PermissionsCreateUpdateForm from "./components/Permissions/PermissoinsCreateUpdateForm";
-import RolesCreateUpdateForm from "./components/Permissions/RolesCreateUpdateForm";
+import AssignPermissionForm from "./components/Permissions/AssignPermissonCreateUpdateForm";
 import Plans from "./components/Plans";
 import PlanCreateUpdateForm from "./components/Plans/PlansCreateUpdateForm";
+import Roles from "./components/Roles";
 import Services from "./components/Servicies";
 import ServicesCreateUpdateForm from "./components/Servicies/ServiciesCreateUpdateForm";
 import Subscriptions from "./components/Subscriptions";
@@ -52,6 +53,7 @@ import ErrorToast from "./shared-components/ErrorToast/ErrorToast";
 import MsgToast from "./shared-components/MsgToast/MsgToast";
 import { PrivateRoute } from "./shared-components/PrivateRoute";
 import API from "./utils/API";
+import RolesCreateUpdateForm from "./components/Roles/RolesCreateUpdateForm";
 
 const App = () => {
   const [isDesktop, setIsDesktop] = useState<boolean>(false);
@@ -171,6 +173,7 @@ const App = () => {
             <PrivateRoute path="/transactions" exact component={Transactions} />
             <PrivateRoute path="/issues" exact component={Issues} />
             <PrivateRoute path="/permissions" exact component={Permissions} />
+            <PrivateRoute path="/roles" exact component={Roles} />
             <PrivateRoute
               path="/push-notifications"
               exact
@@ -195,6 +198,11 @@ const App = () => {
               path="/testimonials/create-edit"
               exact
               component={TestimonialCreateUpdateForm}
+            />
+            <PrivateRoute
+              path="/assign-permission/create-edit"
+              exact
+              component={AssignPermissionForm}
             />
             <PrivateRoute
               path="/permissions/create-edit"
