@@ -23,7 +23,7 @@ import {
 import { queryClient } from "../../utils/queryClient";
 import { showMsgToast } from "../../utils/showMsgToast";
 
-const key = "get-all-permission/1";
+const key = "get-all-permission";
 
 const deleteBrand = (id: Array<any>) => {
   return API.post(`${key}/delete`, {
@@ -52,6 +52,16 @@ const Permissions = () => {
       },
     }
   );
+  const {
+    data: RolesPermission,
+    isLoading: isRolesPermissionLoading,
+    isFetching: isRolesPermissoinFetch,
+    error: RolesPermissionError,
+  } = useQuery<any>([key, , filter], {
+    onError: (error: AxiosError) => {
+      handleApiError(error, history);
+    },
+  });
 
   const { mutate, isLoading: isDeleteLoading } = useMutation(deleteBrand, {
     onSuccess: () => {
@@ -142,6 +152,19 @@ const Permissions = () => {
       </Container>
     );
   }
+  if (
+    !RolesPermission &&
+    (!isRolesPermissionLoading || !isRolesPermissoinFetch)
+  ) {
+    return (
+      <Container fluid className="d-flex justify-content-center display-3">
+        <div className="d-flex flex-column align-items-center">
+          <BiSad color={primaryColor} />
+          <span className="text-primary display-3">Something went wrong</span>
+        </div>
+      </Container>
+    );
+  }
 
   return (
     <>
@@ -153,17 +176,17 @@ const Permissions = () => {
 
       <Container fluid className="card component-wrapper px-0 py-2 mb-3">
         <Container fluid className="h-100 p-0">
-          {isLoading ? (
+          {isRolesPermissionLoading ? (
             <IsLoading />
           ) : (
             <>
               {!error && (
                 <ReactTable
-                  data={data}
+                  data={RolesPermission}
                   columns={columns}
                   filter={filter}
                   onFilterChange={_onFilterChange}
-                  isDataLoading={isFetching}
+                  isDataLoading={isRolesPermissoinFetch}
                 />
               )}
             </>
