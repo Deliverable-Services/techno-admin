@@ -1,6 +1,7 @@
 import { AxiosError } from "axios";
 import bsCustomFileInput from "bs-custom-file-input";
 import { Form, Formik } from "formik";
+import moment from "moment";
 import { useEffect } from "react";
 import { Alert, Button, Col, Row, Spinner } from "react-bootstrap";
 import { useMutation } from "react-query";
@@ -38,9 +39,9 @@ const createUpdataAdvertisement = ({
 };
 
 const AdvertisementCreateUpdateForm = () => {
-  const history = useHistory()
-  const { state } = useLocation()
-  const id = state ? (state as any).id : null
+  const history = useHistory();
+  const { state } = useLocation();
+  const id = state ? (state as any).id : null;
   useEffect(() => {
     bsCustomFileInput.init();
   }, []);
@@ -51,13 +52,13 @@ const AdvertisementCreateUpdateForm = () => {
     {
       onSuccess: () => {
         setTimeout(() => queryClient.invalidateQueries("banners/list"), 500);
-        history.replace("/advertisements")
-        if (id) return showMsgToast("Banner updated successfully")
-        showMsgToast("Bannner created successfully")
+        history.replace("/advertisements");
+        if (id) return showMsgToast("Banner updated successfully");
+        showMsgToast("Bannner created successfully");
       },
       onError: (error: AxiosError) => {
-        handleApiError(error, history)
-      }
+        handleApiError(error, history);
+      },
     }
   );
 
@@ -71,14 +72,18 @@ const AdvertisementCreateUpdateForm = () => {
       <Row className="rounded">
         <Col className="mx-auto">
           <Formik
-            initialValues={apiData || {}}
+            initialValues={
+              apiData || {
+                valid_to: moment().format("YYYY-MM-DD hh:mm:ss"),
+                valid_from: moment().format("YYYY-MM-DD hh:mm:ss"),
+              }
+            }
             onSubmit={(values) => {
               const { image, ...rest } = values;
-              console.log({ values })
+              console.log({ values });
               const formdata = new FormData();
-              for (let k in rest) formdata.append(k, rest[k])
-              if (image)
-                formdata.append("image", values.image);
+              for (let k in rest) formdata.append(k, rest[k]);
+              if (image) formdata.append("image", values.image);
 
               mutate({ formdata, id });
             }}
@@ -96,16 +101,8 @@ const AdvertisementCreateUpdateForm = () => {
                   <Alert variant="danger">{(error as Error).message}</Alert>
                 )}
                 <div className={`form-container  py-2 `}>
-                  <InputField
-                    name="name"
-                    placeholder="Name"
-                    label="Name"
-                  />
-                  <InputField
-                    name="title"
-                    placeholder="Title"
-                    label="Title"
-                  />
+                  <InputField name="name" placeholder="Name" label="Name" />
+                  <InputField name="title" placeholder="Title" label="Title" />
 
                   <InputField
                     name="deeplink"
@@ -118,7 +115,6 @@ const AdvertisementCreateUpdateForm = () => {
                     placeholder="Order"
                     label="Order"
                   />
-
 
                   <DatePicker
                     name="valid_from"
@@ -137,7 +133,13 @@ const AdvertisementCreateUpdateForm = () => {
                     isFile
                     setFieldValue={setFieldValue}
                   />
-                  <InputField as="select" selectData={isActiveArray} name="is_active" label="Is active?" placeholder="Choose is active" />
+                  <InputField
+                    as="select"
+                    selectData={isActiveArray}
+                    name="is_active"
+                    label="Is active?"
+                    placeholder="Choose is active"
+                  />
                   <InputField
                     name="type"
                     placeholder="Advertisement type"
@@ -161,7 +163,11 @@ const AdvertisementCreateUpdateForm = () => {
                 </div>
                 <Row className="d-flex justify-content-start">
                   <Col md="2">
-                    <Button type="submit" disabled={isLoading} className="w-100">
+                    <Button
+                      type="submit"
+                      disabled={isLoading}
+                      className="w-100"
+                    >
                       {isLoading ? (
                         <Spinner animation="border" size="sm" />
                       ) : (

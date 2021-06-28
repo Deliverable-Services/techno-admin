@@ -24,6 +24,7 @@ import Logo from "../shared-components/Logo";
 import Navlink from "../shared-components/Navlink";
 import Overlay from "../shared-components/Overlay";
 import { INavBar, INavLink } from "../types/interface";
+import { MdShoppingCart } from "react-icons/md";
 
 const manageLinks: Array<INavLink> = [
   {
@@ -108,6 +109,11 @@ const mainLinks: Array<INavLink> = [
     title: "Orders",
     path: "/orders",
     icon: <FaBoxes />,
+  },
+  {
+    title: "Cart",
+    path: "/cart",
+    icon: <MdShoppingCart />,
   },
   {
     title: "Subscriptions",

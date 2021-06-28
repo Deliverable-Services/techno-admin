@@ -1,6 +1,7 @@
 import { AxiosError } from "axios";
 import bsCustomFileInput from "bs-custom-file-input";
 import { Form, Formik } from "formik";
+import moment from "moment";
 import { useEffect } from "react";
 import { Alert, Button, Col, Row, Spinner } from "react-bootstrap";
 import { useMutation } from "react-query";
@@ -37,9 +38,9 @@ const createUpdataCoupons = ({
 };
 
 const CouponCreateUpdateForm = () => {
-  const history = useHistory()
-  const { state } = useLocation()
-  const id = state ? (state as any).id : null
+  const history = useHistory();
+  const { state } = useLocation();
+  const id = state ? (state as any).id : null;
   useEffect(() => {
     bsCustomFileInput.init();
   }, []);
@@ -49,13 +50,13 @@ const CouponCreateUpdateForm = () => {
     {
       onSuccess: () => {
         setTimeout(() => queryClient.invalidateQueries(key), 500);
-        history.replace("/coupons")
-        if (id) return showMsgToast("Brand updated successfully")
-        showMsgToast("Brands created successfully")
+        history.replace("/coupons");
+        if (id) return showMsgToast("Brand updated successfully");
+        showMsgToast("Brands created successfully");
       },
       onError: (error: AxiosError) => {
-        handleApiError(error, history)
-      }
+        handleApiError(error, history);
+      },
     }
   );
 
@@ -71,16 +72,18 @@ const CouponCreateUpdateForm = () => {
       <Row className="rounded">
         <Col className="mx-auto">
           <Formik
-            initialValues={apiData || {}}
-
+            initialValues={
+              apiData || {
+                valid_to: moment().format("YYYY-MM-DD hh:mm:ss"),
+                valid_from: moment().format("YYYY-MM-DD hh:mm:ss"),
+              }
+            }
             onSubmit={(values) => {
-
               mutate({ formdata: values, id });
             }}
           >
             {({ setFieldValue }) => (
               <Form>
-
                 <div className="form-container  py-2 ">
                   <InputField
                     name="title"
@@ -112,8 +115,20 @@ const CouponCreateUpdateForm = () => {
                     label="Valid To"
                     setFieldValue={setFieldValue}
                   />
-                  <InputField as="select" selectData={isActiveArray} name="is_active" label="Is active?" placeholder="Choose is active" />
-                  <InputField as="select" selectData={conditionType} name="condition_type" label="Condition Type" placeholder="Condition Type" />
+                  <InputField
+                    as="select"
+                    selectData={isActiveArray}
+                    name="is_active"
+                    label="Is active?"
+                    placeholder="Choose is active"
+                  />
+                  <InputField
+                    as="select"
+                    selectData={conditionType}
+                    name="condition_type"
+                    label="Condition Type"
+                    placeholder="Condition Type"
+                  />
                 </div>
                 <TextEditor
                   name="description"
@@ -128,7 +143,11 @@ const CouponCreateUpdateForm = () => {
                 />
                 <Row className="d-flex justify-content-center">
                   <Col md="6">
-                    <Button type="submit" disabled={isLoading} className="w-100">
+                    <Button
+                      type="submit"
+                      disabled={isLoading}
+                      className="w-100"
+                    >
                       {isLoading ? (
                         <Spinner animation="border" size="sm" />
                       ) : (

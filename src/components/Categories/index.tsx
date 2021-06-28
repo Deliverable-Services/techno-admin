@@ -27,9 +27,9 @@ import { showMsgToast } from "../../utils/showMsgToast";
 
 const key = "categories";
 
-const deleteBrandModels = (id: string) => {
-  return API.delete(`${key}/${id}`, {
-    headers: { "Content-Type": "multipart/form-data" },
+const deleteCategories = (id: Array<any>) => {
+  return API.post(`${key}/delete`, {
+    id,
   });
 };
 
@@ -85,18 +85,15 @@ const Categories = () => {
     }
   );
 
-  const { mutate, isLoading: isDeleteLoading } = useMutation(
-    deleteBrandModels,
-    {
-      onSuccess: () => {
-        queryClient.invalidateQueries(key);
-        showMsgToast("Categories deleted successfully");
-      },
-      onError: (error: AxiosError) => {
-        handleApiError(error, history);
-      },
-    }
-  );
+  const { mutate, isLoading: isDeleteLoading } = useMutation(deleteCategories, {
+    onSuccess: () => {
+      queryClient.invalidateQueries(key);
+      showMsgToast("Categories deleted successfully");
+    },
+    onError: (error: AxiosError) => {
+      handleApiError(error, history);
+    },
+  });
 
   const _onCreateClick = () => {
     history.push("/categories/create-edit");
@@ -309,7 +306,14 @@ const Categories = () => {
           <span>
             <b>Delete {selectedRows.length} rows</b>
           </span>
-          <Button variant="danger">Delete</Button>
+          <Button
+            variant="danger"
+            onClick={() => {
+              mutate(selectedRows.map((i) => i.id));
+            }}
+          >
+            {isDeleteLoading ? "Loading..." : "Delete"}
+          </Button>
         </div>
       )}
     </>

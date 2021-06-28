@@ -42,7 +42,10 @@ const RolesCreateUpdateForm = () => {
   useEffect(() => {
     bsCustomFileInput.init();
   }, []);
-  const { data, isLoading: dataLoading } = useGetSingleQuery({ id, key });
+  const { data, isLoading: dataLoading } = useGetSingleQuery({
+    id,
+    key: "get-roles",
+  });
   const { mutate, isLoading } = useMutation(createUpdataBrand, {
     onSuccess: () => {
       setTimeout(() => queryClient.invalidateQueries("get-all-roles/1"), 500);

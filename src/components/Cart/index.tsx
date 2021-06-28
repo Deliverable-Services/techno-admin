@@ -19,7 +19,7 @@ import PageHeading from "../../shared-components/PageHeading";
 import TablePagination from "../../shared-components/Pagination";
 import ReactTable from "../../shared-components/ReactTable";
 import { areTwoObjEqual } from "../../utils/areTwoObjEqual";
-import { InsideCart, OrderType } from "../../utils/arrays";
+import { OrderType } from "../../utils/arrays";
 import { primaryColor } from "../../utils/constants";
 // import UpdateCreateForm from "./FaqsCreateUpdateForm"
 
@@ -29,14 +29,13 @@ const intitialFilter = {
   page: null,
   perPage: 25,
   created_at: "",
-  inside_cart: "0",
+  inside_cart: "1",
 };
-const Orders = () => {
+const InsideCart = () => {
   const history = useHistory();
   const [page, setPage] = useState<number>(1);
   const [selectedRows, setSelectedRows] = useState([]);
   const [localFilter, setFilter] = useState(intitialFilter);
-  console.log({ localFilter });
   const filter = useOrderStoreFilter((state) => state.filter);
   const onFilterChange = useOrderStoreFilter((state) => state.onFilterChange);
   const resetFilter = useOrderStoreFilter((state) => state.resetFilter);
@@ -54,20 +53,6 @@ const Orders = () => {
       1,
       {
         role: "customer",
-      },
-    ],
-    {
-      onError: (error: AxiosError) => {
-        handleApiError(error, history);
-      },
-    }
-  );
-  const { data: Agents, isLoading: isAgentLoading } = useQuery<any>(
-    [
-      "users",
-      1,
-      {
-        role: "agent",
       },
     ],
     {
@@ -139,25 +124,6 @@ const Orders = () => {
         },
       },
       {
-        Header: "Agent",
-        accessor: "agent.name",
-        Cell: (data: Cell) => {
-          if ((data.row.original as any).agent_id)
-            return (
-              <p
-                className="text-primary"
-                style={{ cursor: "pointer" }}
-                onClick={() =>
-                  _onUserClick((data.row.original as any).agent_id)
-                }
-              >
-                {data.row.values["agent.name"]}
-              </p>
-            );
-          else return "NA";
-        },
-      },
-      {
         Header: "Order Type",
         accessor: "order_type",
         Cell: (data: Cell) => <Status status={data.row.values.order_type} />,
@@ -196,7 +162,6 @@ const Orders = () => {
       {
         Header: "Actions",
         Cell: (data: Cell) => {
-          console.log({ data });
           return (
             <div className="d-flex">
               <Button
@@ -225,9 +190,9 @@ const Orders = () => {
 
   return (
     <>
-      <PageHeading title="Orders" totalRecords={data?.total} />
+      <PageHeading title="Inside Cart" totalRecords={data?.total} />
 
-      {(!isLoading || !isFetching) && (
+      {/* {(!isLoading || !isFetching) && (
         <div className="filter mb-4">
           <BreadCrumb
             onFilterChange={onFilterChange}
@@ -271,7 +236,7 @@ const Orders = () => {
             isLast
           />
         </div>
-      )}
+      )} */}
 
       <Container fluid className="card component-wrapper px-0 py-2">
         <Container fluid className="h-100 p-0">
@@ -295,25 +260,6 @@ const Orders = () => {
                         </Col>
                         <Col md="auto">
                           <FilterSelect
-                            currentValue={filter.agent_id}
-                            data={!isAgentLoading && Agents.data}
-                            label="Agents"
-                            idx="agent_id"
-                            onFilterChange={onFilterChange}
-                          />
-                        </Col>
-                        {/* <Col md="auto">
-                          <FilterSelect
-                            currentValue={filter.inside_cart}
-                            data={InsideCart}
-                            label="Inside Cart"
-                            idx="inside_cart"
-                            width="80px"
-                            onFilterChange={onFilterChange}
-                          />
-                        </Col> */}
-                        <Col md="auto">
-                          <FilterSelect
                             currentValue={filter.order_type}
                             data={OrderType}
                             label="Order Type"
@@ -321,7 +267,7 @@ const Orders = () => {
                             onFilterChange={onFilterChange}
                           />
                         </Col>
-                        <Col md="auto">
+                        {/* <Col md="auto">
                           <Form.Group>
                             <Form.Label className="text-muted">
                               Ordered At
@@ -342,7 +288,7 @@ const Orders = () => {
                               }}
                             />
                           </Form.Group>
-                        </Col>
+                        </Col> */}
 
                         <Col
                           md="auto"
@@ -409,4 +355,4 @@ const Orders = () => {
   );
 };
 
-export default Orders;
+export default InsideCart;

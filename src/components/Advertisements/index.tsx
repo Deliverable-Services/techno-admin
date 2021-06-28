@@ -22,36 +22,35 @@ import { isActiveArray } from "../../utils/arrays";
 import {
   baseUploadUrl,
   clientWebUrl,
-  primaryColor
+  primaryColor,
 } from "../../utils/constants";
 import { queryClient } from "../../utils/queryClient";
 import { showMsgToast } from "../../utils/showMsgToast";
 const key = "banners/list";
 
 const deleteAd = (id: Array<any>) => {
-  return API.post(`${key}/delete`, { id })
+  return API.post(`banners/delete`, { id });
 };
 const initialFilter = {
   type: "offers",
   q: "",
   page: "",
   perPage: 25,
-  active: ""
+  active: "",
 };
 
 const getBanners: QueryFunction = async ({ queryKey }) => {
-
   const params = {};
   //@ts-ignore
   for (let k in queryKey[2]) {
-    if (queryKey[2][k])
-      params[k] = queryKey[2][k]
+    if (queryKey[2][k]) params[k] = queryKey[2][k];
   }
 
   const r = await API.get(
-    `${queryKey[0]}/${(queryKey[1] as string).toLowerCase()}`, {
-    params
-  }
+    `${queryKey[0]}/${(queryKey[1] as string).toLowerCase()}`,
+    {
+      params,
+    }
   );
 
   return await r.data;
@@ -60,34 +59,35 @@ const getBanners: QueryFunction = async ({ queryKey }) => {
 const Advertisements = () => {
   const history = useHistory();
   const [selectedRowId, setSelectedRowId] = useState<string>("");
-  const [selectedRows, setSelectedRows] = useState([])
-  console.log(selectedRows.map(item => item.id))
+  const [selectedRows, setSelectedRows] = useState([]);
+  console.log(selectedRows.map((item) => item.id));
   const [page, setPage] = useState<number>(1);
   const [deletePopup, setDeletePopup] = useState(false);
 
   const [isDraggable, setIsDraggable] = useState(false);
-  const handleChange = nextChecked => {
+  const handleChange = (nextChecked) => {
     setIsDraggable(nextChecked);
   };
   const [filter, setFilter] = useState(initialFilter);
 
   const { data, isLoading, isFetching, error } = useQuery<any>(
     [key, filter.type, filter],
-    getBanners, {
-    onError: (error: AxiosError) => {
-      handleApiError(error, history)
-    },
-  }
+    getBanners,
+    {
+      onError: (error: AxiosError) => {
+        handleApiError(error, history);
+      },
+    }
   );
 
   const { mutate, isLoading: isDeleteLoading } = useMutation(deleteAd, {
     onSuccess: () => {
       queryClient.invalidateQueries(key);
       setDeletePopup(false);
-      showMsgToast("Users deleted successfully")
+      showMsgToast("Banner(s) deleted successfully");
     },
     onError: (error: AxiosError) => {
-      handleApiError(error, history)
+      handleApiError(error, history);
     },
   });
   const _onFilterChange = (idx: string, value: any) => {
@@ -107,8 +107,8 @@ const Advertisements = () => {
   };
 
   const _onDeepLinkClick = (data: Cell) => {
-    window.open(clientWebUrl)
-  }
+    window.open(clientWebUrl);
+  };
 
   const columns = useMemo(
     () => [
@@ -140,10 +140,14 @@ const Advertisements = () => {
         Header: "Deep Link",
         accessor: "deeplink",
         Cell: (data: Cell) => (
-          <p className="text-primary" style={{ cursor: "pointer" }} onClick={() => _onDeepLinkClick(data)}>
+          <p
+            className="text-primary"
+            style={{ cursor: "pointer" }}
+            onClick={() => _onDeepLinkClick(data)}
+          >
             {data.row.values.deeplink}
           </p>
-        )
+        ),
       },
       {
         Header: "Order",
@@ -213,7 +217,11 @@ const Advertisements = () => {
 
   return (
     <>
-      <PageHeading title="Banners" onClick={() => _onCreateClick} totalRecords={data?.total} />
+      <PageHeading
+        title="Banners"
+        onClick={() => _onCreateClick()}
+        totalRecords={data?.total}
+      />
 
       {(!isLoading || !isFetching) && (
         <Container fluid>
@@ -254,7 +262,7 @@ const Advertisements = () => {
             <IsLoading />
           ) : (
             <>
-              {!error &&
+              {!error && (
                 <>
                   <Container className="pt-3">
                     <Row className="select-filter d-flex">
@@ -269,7 +277,7 @@ const Advertisements = () => {
                         />
                       </Col>
 
-                      <Col md="auto" className=" d-flex align-items-center ">
+                      {/* <Col md="auto" className=" d-flex align-items-center ">
                         <div className=" d-flex align-items-center "
                         >
                           <span className="text-muted mr-2">IsDraggable?</span>
@@ -284,7 +292,7 @@ const Advertisements = () => {
                           />
 
                         </div>
-                      </Col>
+                      </Col> */}
                     </Row>
                   </Container>
                   <hr />
@@ -298,7 +306,7 @@ const Advertisements = () => {
                     isDraggable={isDraggable}
                   />
                 </>
-              }
+              )}
               {!error && data.length > 0 ? (
                 <TablePagination
                   currentPage={data?.current_page}
@@ -312,19 +320,21 @@ const Advertisements = () => {
           )}
         </Container>
       </Container>
-      {
-        selectedRows.length > 0 &&
+      {selectedRows.length > 0 && (
         <div className="delete-button rounded">
-          <span><b>Delete {selectedRows.length} rows</b></span>
-          <Button variant="danger" onClick={() => {
-            mutate(selectedRows.map(i => i.id))
-          }}>
-            {
-              isDeleteLoading ? "Loading..." : "Delete"
-            }
+          <span>
+            <b>Delete {selectedRows.length} rows</b>
+          </span>
+          <Button
+            variant="danger"
+            onClick={() => {
+              mutate(selectedRows.map((i) => i.id));
+            }}
+          >
+            {isDeleteLoading ? "Loading..." : "Delete"}
           </Button>
         </div>
-      }
+      )}
     </>
   );
 };

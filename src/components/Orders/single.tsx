@@ -30,6 +30,18 @@ const assignAgent = ({
   });
 };
 
+// const updateOrderStatus = ({
+//   formdata,
+//   id,
+// }: {
+//   formdata: any;
+//   id: string;
+// }) => {
+//   return API.post(`bookings/${id}/assign-agent`, formdata, {
+//     headers: { "Content-Type": "application/json" },
+//   });
+// };
+
 const SingleOrder = () => {
   const { id }: { id: string } = useParams();
   const history = useHistory();
@@ -38,8 +50,6 @@ const SingleOrder = () => {
     id,
     key: "downloadInvoice",
   });
-
-  console.log({ Invoice });
 
   const { mutate, isLoading: isAsigningLoading } = useMutation(assignAgent, {
     onSuccess: (data) => {
@@ -65,7 +75,7 @@ const SingleOrder = () => {
   const { data: Agents, isLoading: isAgentLoading } = useQuery<any>(
     [
       "users",
-      1,
+      ,
       {
         role: "agent",
       },
@@ -399,7 +409,11 @@ const SingleOrder = () => {
                       </tbody>
                     </table>
 
-                    <span className="small text-primary font-weight-bold">
+                    <span
+                      className="small text-primary font-weight-bold"
+                      onClick={() => _onUserClick(data.agent_id)}
+                      style={{ cursor: "pointer" }}
+                    >
                       View Profile
                     </span>
                   </>
@@ -459,7 +473,11 @@ const SingleOrder = () => {
                     </tr>
                   </tbody>
                 </table>
-                <span className="small text-primary font-weight-bold">
+                <span
+                  className="small text-primary font-weight-bold"
+                  onClick={() => _onUserClick(data.user_id)}
+                  style={{ cursor: "pointer" }}
+                >
                   View Profile
                 </span>
               </div>

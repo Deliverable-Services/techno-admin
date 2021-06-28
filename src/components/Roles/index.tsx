@@ -23,12 +23,10 @@ import {
 import { queryClient } from "../../utils/queryClient";
 import { showMsgToast } from "../../utils/showMsgToast";
 
-const key = "get-all-roles/1";
+const key = "get-all-roles";
 
-const deleteRole = (id: Array<any>) => {
-  return API.post(`remove-role/${id}`, {
-    id,
-  });
+const removeRole = (id: string) => {
+  return API.get(`remove-role/${id}`);
 };
 
 const intitialFilter = {
@@ -50,10 +48,10 @@ const Roles = () => {
     }
   );
 
-  const { mutate, isLoading: isDeleteLoading } = useMutation(deleteRole, {
+  const { mutate, isLoading: isRemoveLoading } = useMutation(removeRole, {
     onSuccess: () => {
       queryClient.invalidateQueries(key);
-      showMsgToast("Roles deleted successfully");
+      showMsgToast("Role removed successfully");
     },
     onError: (error: AxiosError) => {
       handleApiError(error, history);
@@ -98,18 +96,18 @@ const Roles = () => {
           return <CreatedUpdatedAt date={data.row.values.updated_at} />;
         },
       },
-      {
-        Header: "Actions",
-        Cell: (data: Cell) => {
-          return (
-            <EditButton
-              onClick={() => {
-                _onEditClick(data.row.values.id);
-              }}
-            />
-          );
-        },
-      },
+      // {
+      //   Header: "Actions",
+      //   Cell: (data: Cell) => {
+      //     return (
+      //       <EditButton
+      //         onClick={() => {
+      //           _onEditClick(data.row.values.id);
+      //         }}
+      //       />
+      //     );
+      //   },
+      // },
     ],
     []
   );
@@ -161,10 +159,10 @@ const Roles = () => {
           <Button
             variant="danger"
             onClick={() => {
-              mutate(selectedRows.map((i) => i.id));
+              mutate(selectedRows.map((i) => i.id)[0]);
             }}
           >
-            {isDeleteLoading ? "Loading..." : "Delete"}
+            {isRemoveLoading ? "Loading..." : "Remove"}
           </Button>
         </div>
       )}
