@@ -38,6 +38,8 @@ import Roles from "./components/Roles";
 import RolesCreateUpdateForm from "./components/Roles/RolesCreateUpdateForm";
 import Services from "./components/Servicies";
 import ServicesCreateUpdateForm from "./components/Servicies/ServiciesCreateUpdateForm";
+import StaticPages from "./components/StaticPages";
+import StaticPageCreateForm from "./components/StaticPages/StaticPageCreateUpdateForm";
 import Subscriptions from "./components/Subscriptions";
 import SingleSubscriptions from "./components/Subscriptions/single";
 import Testimonial from "./components/Testimonials";
@@ -225,6 +227,12 @@ const App = () => {
               path="/subscriptions"
               exact
               component={Subscriptions}
+            />
+            <PrivateRoute path="/static-pages" exact component={StaticPages} />
+            <PrivateRoute
+              path="/static-pages/create-edit"
+              exact
+              component={StaticPageCreateForm}
             />
             <PrivateRoute
               path="/subscriptions/:id"

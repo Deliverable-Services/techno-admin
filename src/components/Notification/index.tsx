@@ -1,24 +1,21 @@
 import { AxiosError } from "axios";
 import React, { useMemo, useState } from "react";
-import { Button, Container, Modal, Spinner } from "react-bootstrap";
-import { AiFillDelete, AiFillEdit } from "react-icons/ai";
+import { Button, Container } from "react-bootstrap";
+import { AiFillEdit } from "react-icons/ai";
 import { BiSad } from "react-icons/bi";
 import { useMutation, useQuery } from "react-query";
 import { useHistory } from "react-router-dom";
 import { Cell } from "react-table";
 import { handleApiError } from "../../hooks/handleApiErrors";
 import CreatedUpdatedAt from "../../shared-components/CreatedUpdatedAt";
+import EditButton from "../../shared-components/EditButton";
 import IsActiveBadge from "../../shared-components/IsActiveBadge";
 import IsLoading from "../../shared-components/isLoading";
 import PageHeading from "../../shared-components/PageHeading";
 import TablePagination from "../../shared-components/Pagination";
 import ReactTable from "../../shared-components/ReactTable";
 import API from "../../utils/API";
-import {
-  baseUploadUrl,
-  primaryColor,
-  secondaryColor,
-} from "../../utils/constants";
+import { primaryColor, secondaryColor } from "../../utils/constants";
 import { queryClient } from "../../utils/queryClient";
 import { showMsgToast } from "../../utils/showMsgToast";
 
@@ -29,9 +26,9 @@ const intitialFilter = {
   perPage: 25,
 };
 
-const deleteNotification = (id: string) => {
-  return API.delete(`${key}/${id}`, {
-    headers: { "Content-Type": "multipart/form-data" },
+const deleteNotification = (id: any[]) => {
+  return API.post(`${key}/delete`, {
+    id,
   });
 };
 
@@ -48,15 +45,18 @@ const Notifications = () => {
     }
   );
 
-  const { mutate, isLoading: isDeleteLoading } = useMutation(deleteNotification, {
-    onSuccess: () => {
-      queryClient.invalidateQueries(key);
-      showMsgToast("Notifications deleted successfully");
-    },
-    onError: (error: AxiosError) => {
-      handleApiError(error, history);
-    },
-  });
+  const { mutate, isLoading: isDeleteLoading } = useMutation(
+    deleteNotification,
+    {
+      onSuccess: () => {
+        queryClient.invalidateQueries(key);
+        showMsgToast("Notifications deleted successfully");
+      },
+      onError: (error: AxiosError) => {
+        handleApiError(error, history);
+      },
+    }
+  );
 
   const _onCreateClick = () => {
     history.push("/push-notifications/create-edit");
@@ -98,6 +98,13 @@ const Notifications = () => {
         Cell: (data: Cell) => "false",
       },
       {
+        Header: "Scheduled At",
+        accessor: "scheduled_at",
+        Cell: (data: Cell) => {
+          return <CreatedUpdatedAt date={data.row.values.scheduled_at} />;
+        },
+      },
+      {
         Header: "Created At",
         accessor: "created_at",
         Cell: (data: Cell) => {
@@ -115,15 +122,11 @@ const Notifications = () => {
         Header: "Actions",
         Cell: (data: Cell) => {
           return (
-            <div className="d-flex">
-              <button
-                onClick={() => {
-                  _onEditClick(data.row.values.id);
-                }}
-              >
-                <AiFillEdit color={secondaryColor} size={24} />
-              </button>
-            </div>
+            <EditButton
+              onClick={() => {
+                _onEditClick(data.row.values.id);
+              }}
+            />
           );
         },
       },
@@ -147,7 +150,7 @@ const Notifications = () => {
       <PageHeading
         title="Notifications"
         onClick={_onCreateClick}
-        totalRecords={50}
+        totalRecords={data?.total}
       />
 
       <Container fluid className="card component-wrapper px-0 py-2">
@@ -184,7 +187,14 @@ const Notifications = () => {
           <span>
             <b>Delete {selectedRows.length} rows</b>
           </span>
-          <Button variant="danger">Delete</Button>
+          <Button
+            variant="danger"
+            onClick={() => {
+              mutate(selectedRows.map((i) => i.id));
+            }}
+          >
+            {isDeleteLoading ? "Loading..." : "Delete"}
+          </Button>
         </div>
       )}
     </>

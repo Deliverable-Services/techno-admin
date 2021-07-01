@@ -102,6 +102,11 @@ const manageLinks: Array<INavLink> = [
     path: "/testimonials",
     icon: <RiAdvertisementFill />,
   },
+  {
+    title: "Static Pages",
+    path: "/static-pages",
+    icon: <RiAdvertisementFill />,
+  },
 ];
 
 const mainLinks: Array<INavLink> = [
