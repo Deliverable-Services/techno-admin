@@ -78,24 +78,15 @@ const Notifications = () => {
         accessor: "id", //accessor is the "key" in the data
       },
       {
-        Header: "Name",
-        accessor: "name",
-      },
-      {
         Header: "Title",
-        accessor: "url",
+        accessor: "title",
       },
       {
-        Header: "Is Active?",
-        accessor: "is_active",
+        Header: "Sent ?",
+        accessor: "sent",
         Cell: (data: Cell) => {
-          return <IsActiveBadge value={data.row.values.is_active} />;
+          return <IsActiveBadge value={data.row.values.sent} />;
         },
-      },
-      {
-        Header: "Sent",
-        accessor: "is_sent",
-        Cell: (data: Cell) => "false",
       },
       {
         Header: "Scheduled At",

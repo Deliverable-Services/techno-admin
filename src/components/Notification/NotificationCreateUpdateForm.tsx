@@ -27,14 +27,10 @@ const key = "fcm-notification";
 
 const createUpdataBrand = ({ formdata, id }: { formdata: any; id: string }) => {
   if (!id) {
-    return API.post(`${key}`, formdata, {
-      headers: { "Content-Type": "multipart/form-data" },
-    });
+    return API.post(`${key}`, formdata);
   }
 
-  return API.post(`${key}/${id}`, formdata, {
-    headers: { "Content-Type": "multipart/form-data" },
-  });
+  return API.post(`${key}/${id}`, formdata);
 };
 
 const intitialFilter = {
