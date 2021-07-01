@@ -23,7 +23,7 @@ import {
 import { queryClient } from "../../utils/queryClient";
 import { showMsgToast } from "../../utils/showMsgToast";
 
-const key = "get-all-roles/1";
+const key = "get-all-roles";
 
 const deleteRole = (id: Array<any>) => {
   return API.post(`remove-role/${id}`, {
