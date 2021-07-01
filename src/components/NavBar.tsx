@@ -16,6 +16,8 @@ import {
   RiAdvertisementFill,
   RiCoupon3Line,
   RiDashboardFill,
+  RiNotification2Line,
+  RiPagesLine,
   RiServiceFill,
 } from "react-icons/ri";
 import { SiBrandfolder } from "react-icons/si";
@@ -25,6 +27,9 @@ import Navlink from "../shared-components/Navlink";
 import Overlay from "../shared-components/Overlay";
 import { INavBar, INavLink } from "../types/interface";
 import { MdShoppingCart } from "react-icons/md";
+import { ImUsers } from "react-icons/im";
+import { AiFillIdcard } from "react-icons/ai";
+import { BsClock, BsShieldLock } from "react-icons/bs";
 
 const manageLinks: Array<INavLink> = [
   {
@@ -45,7 +50,7 @@ const manageLinks: Array<INavLink> = [
   {
     title: "Users",
     path: "/users",
-    icon: <FaUsers />,
+    icon: <ImUsers />,
   },
   {
     title: "Admins",
@@ -80,17 +85,17 @@ const manageLinks: Array<INavLink> = [
   {
     title: "Permissions",
     path: "/permissions",
-    icon: <RiAdvertisementFill />,
+    icon: <BsShieldLock />,
   },
   {
     title: "Roles",
     path: "/roles",
-    icon: <RiAdvertisementFill />,
+    icon: <FaUsers />,
   },
   {
     title: "Booking Slots",
     path: "/booking-slots",
-    icon: <RiAdvertisementFill />,
+    icon: <BsClock />,
   },
   {
     title: "Cities",
@@ -100,12 +105,12 @@ const manageLinks: Array<INavLink> = [
   {
     title: "Testimonials",
     path: "/testimonials",
-    icon: <RiAdvertisementFill />,
+    icon: <AiFillIdcard />,
   },
   {
     title: "Static Pages",
     path: "/static-pages",
-    icon: <RiAdvertisementFill />,
+    icon: <RiPagesLine />,
   },
 ];
 
@@ -138,7 +143,7 @@ const mainLinks: Array<INavLink> = [
   {
     title: "Notifications",
     path: "/push-notifications",
-    icon: <GoIssueOpened />,
+    icon: <RiNotification2Line />,
   },
 ];
 

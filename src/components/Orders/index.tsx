@@ -239,19 +239,19 @@ const Orders = () => {
           />
           <BreadCrumb
             onFilterChange={onFilterChange}
-            value="success"
+            value="confirmed"
             currentValue={filter.status}
             dataLength={data?.data?.length}
             idx="status"
-            title="Success"
+            title="Confirmed"
           />
           <BreadCrumb
             onFilterChange={onFilterChange}
-            value="pending"
+            value="pending_payment"
             currentValue={filter.status}
             dataLength={data?.data?.length}
             idx="status"
-            title="Pending"
+            title="Pending Payment"
           />
           <BreadCrumb
             onFilterChange={onFilterChange}
