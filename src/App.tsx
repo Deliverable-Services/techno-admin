@@ -10,6 +10,7 @@ import BrandModlesCreateUpdateForm from "./components/BrandModels/BrandModelsUpd
 // ------pages components--------
 import Brands from "./components/Brands";
 import BrandsCreateUpdateForm from "./components/Brands/BrandsCreateUpdateForm";
+import Cart from "./components/Cart";
 import Categories from "./components/Categories";
 import CategoriesCreateUpdateForm from "./components/Categories/CategoriesCreateUpdateForm";
 import Cities from "./components/Cities";
@@ -29,11 +30,12 @@ import Orders from "./components/Orders";
 import AssignAgent from "./components/Orders/assignAgent";
 import SingleOrder from "./components/Orders/single";
 import Permissions from "./components/Permissions";
-import PermissionsCreateUpdateForm from "./components/Permissions/PermissoinsCreateUpdateForm";
 import AssignPermissionForm from "./components/Permissions/AssignPermissonCreateUpdateForm";
+import PermissionsCreateUpdateForm from "./components/Permissions/PermissoinsCreateUpdateForm";
 import Plans from "./components/Plans";
 import PlanCreateUpdateForm from "./components/Plans/PlansCreateUpdateForm";
 import Roles from "./components/Roles";
+import RolesCreateUpdateForm from "./components/Roles/RolesCreateUpdateForm";
 import Services from "./components/Servicies";
 import ServicesCreateUpdateForm from "./components/Servicies/ServiciesCreateUpdateForm";
 import Subscriptions from "./components/Subscriptions";
@@ -53,7 +55,6 @@ import ErrorToast from "./shared-components/ErrorToast/ErrorToast";
 import MsgToast from "./shared-components/MsgToast/MsgToast";
 import { PrivateRoute } from "./shared-components/PrivateRoute";
 import API from "./utils/API";
-import RolesCreateUpdateForm from "./components/Roles/RolesCreateUpdateForm";
 
 const App = () => {
   const [isDesktop, setIsDesktop] = useState<boolean>(false);
@@ -179,6 +180,7 @@ const App = () => {
               exact
               component={Notifications}
             />
+            <PrivateRoute path="/cart" exact component={Cart} />
             <PrivateRoute
               path="/booking-slots"
               exact

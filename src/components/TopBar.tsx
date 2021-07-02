@@ -22,6 +22,7 @@ const TopBar = ({ isNavOpen, setIsNavOpen }: INavBar) => {
   const history = useHistory();
   const removeToken = useTokenStore((state) => state.removeToken);
   const removeUser = useUserProfileStore((state) => state.removeUser);
+  const user = useUserProfileStore((state) => state.user);
 
   const { mutate, isLoading } = useMutation(logout, {
     onSuccess: () => {
@@ -90,24 +91,27 @@ const TopBar = ({ isNavOpen, setIsNavOpen }: INavBar) => {
           </div>
         </div> */}
 
-        <Dropdown className="ml-4">
-          <Dropdown.Toggle
-            id="dropdown-basic"
-            className="filter-button bg-transparent border-0 text-primary"
-          >
-            {isLoading ? (
-              "Loading"
-            ) : (
-              <img src={profile} alt="profile" className="profile" />
-            )}
-          </Dropdown.Toggle>
+        <div className="d-flex align-items-center justify-content-center ml-4">
+          <span className="text-muted">{user.name}</span>
+          <Dropdown className="ml-4">
+            <Dropdown.Toggle
+              id="dropdown-basic"
+              className="filter-button bg-transparent border-0 text-primary"
+            >
+              {isLoading ? (
+                "Loading"
+              ) : (
+                <img src={profile} alt="profile" className="profile" />
+              )}
+            </Dropdown.Toggle>
 
-          <Dropdown.Menu>
-            <Dropdown.Item onClick={() => mutate()}>
-              {isLoading ? "Loading" : "SignOut"}
-            </Dropdown.Item>
-          </Dropdown.Menu>
-        </Dropdown>
+            <Dropdown.Menu>
+              <Dropdown.Item onClick={() => mutate()}>
+                {isLoading ? "Loading" : "SignOut"}
+              </Dropdown.Item>
+            </Dropdown.Menu>
+          </Dropdown>
+        </div>
       </div>
     </Container>
   );

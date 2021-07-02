@@ -1,3 +1,4 @@
+import { AxiosError } from "axios";
 import moment, { Moment } from "moment";
 import React, { useState } from "react";
 import { Container, Form } from "react-bootstrap";
@@ -7,6 +8,8 @@ import { AiOutlineArrowUp } from "react-icons/ai";
 import { BiSad } from "react-icons/bi";
 import { BsCalendar } from "react-icons/bs";
 import { useQuery } from "react-query";
+import { useHistory } from "react-router-dom";
+import { handleApiError } from "../../hooks/handleApiErrors";
 import IsLoading from "../../shared-components/isLoading";
 import API from "../../utils/API";
 import { primaryColor } from "../../utils/constants";
@@ -25,6 +28,7 @@ interface IDates {
 }
 
 const Dashboard = () => {
+  const history = useHistory();
   const [chartOneSelect, setChartOneSelect] = useState<string>("1");
   const [chartTwoSelect, setChartTwoSelect] = useState<string>("");
   const [dates, setDates] = useState<IDates>({
@@ -37,10 +41,17 @@ const Dashboard = () => {
   const [focusedInput, setFocusInput] = useState<FocusedInputShape | null>(
     null
   );
-  const { data, isLoading, isFetching } = useQuery<any>(
-    "analytics",
-    getAnalytics
-  );
+  const { data, isLoading, isFetching } = useQuery<any>(["analytics"], {
+    onError: (error: AxiosError) => {
+      handleApiError(error, history);
+    },
+  });
+  const { data: BookingAnalytics, isLoading: isBookingAnalyticsLoading } =
+    useQuery<any>(["bookingAnalytics", , { month: 1 }], {
+      onError: (error: AxiosError) => {
+        handleApiError(error, history);
+      },
+    });
   const handleChartOneChange = (e: any) => setChartOneSelect(e.target.value);
   const handleChartTwoChange = (e: any) => setChartTwoSelect(e.target.value);
 
@@ -93,9 +104,8 @@ const Dashboard = () => {
 
                 <div className="d-flex align-items-center justify-content-between mt-2">
                   <h1 className="text-black font-weight-bold">
-                    {data?.overall_status?.customers}
+                    {data?.customer}
                   </h1>
-                  <span>graph</span>
                 </div>
 
                 <div className="d-flex align-items-center justify-content-start">
@@ -114,10 +124,7 @@ const Dashboard = () => {
                 <div className="lead">Orders</div>
 
                 <div className="d-flex align-items-center justify-content-between mt-2">
-                  <h1 className="text-black font-weight-bold">
-                    {data?.overall_status?.orders}
-                  </h1>
-                  <span>graph</span>
+                  <h1 className="text-black font-weight-bold">{data?.order}</h1>
                 </div>
 
                 <div className="d-flex align-items-center justify-content-start">
@@ -137,9 +144,8 @@ const Dashboard = () => {
 
                 <div className="d-flex align-items-center justify-content-between mt-2">
                   <h1 className="text-black font-weight-bold">
-                    {data?.overall_status?.active_subscriptions}
+                    {data?.subscription}
                   </h1>
-                  <span>graph</span>
                 </div>
 
                 <div className="d-flex align-items-center justify-content-start">
@@ -158,10 +164,7 @@ const Dashboard = () => {
                 <div className="lead">Agents</div>
 
                 <div className="d-flex align-items-center justify-content-between mt-2">
-                  <h1 className="text-black font-weight-bold">
-                    {data?.overall_status?.merchants}
-                  </h1>
-                  <span>graph</span>
+                  <h1 className="text-black font-weight-bold">{data?.agent}</h1>
                 </div>
 
                 <div className="d-flex align-items-center justify-content-start">
@@ -183,42 +186,30 @@ const Dashboard = () => {
               <div className="card-header">
                 <p className="text-black">Reports overview</p>
               </div>
-
               <div className="card-content">
-                <div className="d-flex align-items-center justify-content-between w-100">
-                  <span className="text-grey">Bookings</span>
-
-                  <span className="text-grey">100</span>
-
-                  <span className="tag tag-success d-flex align-items-center">
-                    <AiOutlineArrowUp size={13} />
-                    <strong>10%</strong>
-                  </span>
-                </div>
-                <hr />
-
-                <div className="d-flex align-items-center justify-content-between w-100">
-                  <span className="text-grey">Subscriptions</span>
-
-                  <span className="text-grey">100</span>
-
-                  <span className="tag tag-success d-flex align-items-center">
-                    <AiOutlineArrowUp size={13} />
-                    <strong>10%</strong>
-                  </span>
-                </div>
-                <hr />
-
-                <div className="d-flex align-items-center justify-content-between w-100">
-                  <span className="text-grey">Other</span>
-
-                  <span className="text-grey">100</span>
-
-                  <span className="tag tag-success d-flex align-items-center">
-                    <AiOutlineArrowUp size={13} />
-                    <strong>10%</strong>
-                  </span>
-                </div>
+                <table className="w-100">
+                  <tbody>
+                    {data?.data_total &&
+                      Object.entries(data?.data_total).map((item) => (
+                        <tr>
+                          <td className="text-muted ">
+                            <p className=" m-0">{item[0].toUpperCase()}</p>
+                          </td>
+                          <td className="text-left" style={{ width: "30px" }}>
+                            <p className="view-subheading m-0">
+                              <b>{item[1]}</b>
+                            </p>
+                          </td>
+                          <td className="text-right" style={{ width: "24px" }}>
+                            <span className="tag tag-success d-flex align-items-center w-100">
+                              <AiOutlineArrowUp size={13} />
+                              <strong>10%</strong>
+                            </span>
+                          </td>
+                        </tr>
+                      ))}
+                  </tbody>
+                </table>
               </div>
             </div>
 

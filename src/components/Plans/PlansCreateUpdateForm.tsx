@@ -37,33 +37,33 @@ const createUpdataCoupons = ({
 };
 
 const PlanCreateUpdateForm = () => {
-  const history = useHistory()
-  const { state } = useLocation()
-  const id = state ? (state as any).id : null
+  const history = useHistory();
+  const { state } = useLocation();
+  const id = state ? (state as any).id : null;
   useEffect(() => {
     bsCustomFileInput.init();
   }, []);
 
-  const { data: categories, isLoading: isCategoriesLoading } = useQuery<any>(["categories"]);
+  const { data: categories, isLoading: isCategoriesLoading } = useQuery<any>([
+    "categories",
+  ]);
   const { data, isLoading: dataLoading } = useGetSingleQuery({ id, key });
   const { mutate, isLoading, error, status } = useMutation(
     createUpdataCoupons,
     {
       onSuccess: () => {
         setTimeout(() => queryClient.invalidateQueries(key), 500);
-        history.replace("/plans")
-        if (id) return showMsgToast("Service updated successfully")
-        showMsgToast("Service created successfully")
+        history.replace("/plans");
+        if (id) return showMsgToast("Plan updated successfully");
+        showMsgToast("Plan created successfully");
       },
       onError: (error: AxiosError) => {
-        handleApiError(error, history)
-      }
+        handleApiError(error, history);
+      },
     }
   );
 
   const apiData = data && (data as any);
-
-  console.log("apiData", apiData);
 
   if (dataLoading) return <IsLoading />;
 
@@ -73,13 +73,12 @@ const PlanCreateUpdateForm = () => {
       <Row className="rounded">
         <Col className="mx-auto">
           <Formik
-            initialValues={apiData || {}}
-
+            initialValues={apiData || { is_active: 1 }}
             onSubmit={(values) => {
-              const { image, ...rest } = values
+              const { image, ...rest } = values;
               const formdata = new FormData();
 
-              for (let k in rest) formdata.append(k, rest[k])
+              for (let k in rest) formdata.append(k, rest[k]);
 
               if (image && typeof image !== "string")
                 formdata.append("image", image);
@@ -128,8 +127,20 @@ const PlanCreateUpdateForm = () => {
                     selectData={!isCategoriesLoading && categories.data}
                   />
 
-                  <InputField as="select" selectData={isActiveArray} name="is_active" label="Is active?" placeholder="Choose is active" />
-                  <InputField as="select" selectData={isActiveArray} name="is_popular" label="Is Popular?" placeholder="Choose is popular" />
+                  <InputField
+                    as="select"
+                    selectData={isActiveArray}
+                    name="is_active"
+                    label="Is active?"
+                    placeholder="Choose is active"
+                  />
+                  <InputField
+                    as="select"
+                    selectData={isActiveArray}
+                    name="is_popular"
+                    label="Is Popular?"
+                    placeholder="Choose is popular"
+                  />
                 </div>
                 <TextEditor
                   name="description"
@@ -138,7 +149,11 @@ const PlanCreateUpdateForm = () => {
                 />
                 <Row className="d-flex justify-content-start">
                   <Col md="2">
-                    <Button type="submit" disabled={isLoading} className="w-100">
+                    <Button
+                      type="submit"
+                      disabled={isLoading}
+                      className="w-100"
+                    >
                       {isLoading ? (
                         <Spinner animation="border" size="sm" />
                       ) : (

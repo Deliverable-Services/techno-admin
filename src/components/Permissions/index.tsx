@@ -57,7 +57,7 @@ const Permissions = () => {
     isLoading: isRolesPermissionLoading,
     isFetching: isRolesPermissoinFetch,
     error: RolesPermissionError,
-  } = useQuery<any>([key, , filter], {
+  } = useQuery<any>(["roles-with-permission", , filter], {
     onError: (error: AxiosError) => {
       handleApiError(error, history);
     },
@@ -66,7 +66,7 @@ const Permissions = () => {
   const { mutate, isLoading: isDeleteLoading } = useMutation(deleteBrand, {
     onSuccess: () => {
       queryClient.invalidateQueries(key);
-      showMsgToast("Brands deleted successfully");
+      showMsgToast("Permission deleted successfully");
     },
     onError: (error: AxiosError) => {
       handleApiError(error, history);

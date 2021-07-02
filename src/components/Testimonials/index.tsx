@@ -111,7 +111,7 @@ const Testimonial = () => {
         Cell: (data: Cell) => {
           return (
             <p
-              className="text-primary"
+              className="text-primary m-0"
               style={{ cursor: "pointer" }}
               onClick={() => _onUserClick((data.row.original as any).user_id)}
             >

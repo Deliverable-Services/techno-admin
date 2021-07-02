@@ -3,13 +3,7 @@ import bsCustomFileInput from "bs-custom-file-input";
 import { error } from "console";
 import { Form, Formik } from "formik";
 import { useEffect } from "react";
-import {
-  Alert,
-  Button,
-  Col,
-  Row,
-  Spinner
-} from "react-bootstrap";
+import { Alert, Button, Col, Row, Spinner } from "react-bootstrap";
 import { useMutation } from "react-query";
 import { useHistory, useLocation } from "react-router-dom";
 import { handleApiError } from "../../hooks/handleApiErrors";
@@ -44,8 +38,8 @@ const createUpdataFaq = ({
 };
 
 const FaqCreateUpdateForm = () => {
-  const { state } = useLocation()
-  const history = useHistory()
+  const { state } = useLocation();
+  const history = useHistory();
   const id = state ? (state as any).id : null;
   useEffect(() => {
     bsCustomFileInput.init();
@@ -54,13 +48,13 @@ const FaqCreateUpdateForm = () => {
   const { mutate, isLoading } = useMutation(createUpdataFaq, {
     onSuccess: () => {
       setTimeout(() => queryClient.invalidateQueries(key), 500);
-      history.replace("/faqs")
-      if (id) return showMsgToast("Faq updated successfully")
-      showMsgToast("Faq created successfully")
+      history.replace("/faqs");
+      if (id) return showMsgToast("Faq updated successfully");
+      showMsgToast("Faq created successfully");
     },
     onError: (error: AxiosError) => {
-      handleApiError(error, history)
-    }
+      handleApiError(error, history);
+    },
   });
 
   const apiData = data as any;
@@ -73,7 +67,7 @@ const FaqCreateUpdateForm = () => {
       <Row className="rounded">
         <Col className="mx-auto">
           <Formik
-            initialValues={apiData || {}}
+            initialValues={apiData || { is_active: 1 }}
             onSubmit={(values) => {
               const formdata = new FormData();
               formdata.append("title", values.title);
@@ -114,7 +108,11 @@ const FaqCreateUpdateForm = () => {
 
                 <Row className="d-flex justify-content-start">
                   <Col md="2">
-                    <Button type="submit" disabled={isLoading} className="w-100">
+                    <Button
+                      type="submit"
+                      disabled={isLoading}
+                      className="w-100"
+                    >
                       {isLoading ? (
                         <Spinner animation="border" size="sm" />
                       ) : (

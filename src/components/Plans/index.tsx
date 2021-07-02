@@ -1,7 +1,6 @@
 import { AxiosError } from "axios";
 import { useMemo, useState } from "react";
 import { Button, Col, Container, Row } from "react-bootstrap";
-import { AiFillEdit } from "react-icons/ai";
 import { BiSad } from "react-icons/bi";
 import { useMutation, useQuery } from "react-query";
 import { useHistory } from "react-router-dom";
@@ -19,11 +18,7 @@ import ReactTable from "../../shared-components/ReactTable";
 import API from "../../utils/API";
 import { areTwoObjEqual } from "../../utils/areTwoObjEqual";
 import { InsideCart, isActiveArray } from "../../utils/arrays";
-import {
-  baseUploadUrl,
-  primaryColor,
-  secondaryColor
-} from "../../utils/constants";
+import { baseUploadUrl, primaryColor } from "../../utils/constants";
 import { queryClient } from "../../utils/queryClient";
 import { showMsgToast } from "../../utils/showMsgToast";
 
@@ -40,7 +35,7 @@ const intitialFilter = {
   active: "",
   is_popular: "",
   category_id: "",
-  allowed_usage: ""
+  allowed_usage: "",
 };
 const Plans = () => {
   const history = useHistory();
@@ -57,7 +52,9 @@ const Plans = () => {
     }
   );
 
-  const { data: Categories, isLoading: isCategoresLoading } = useQuery<any>(["categories"])
+  const { data: Categories, isLoading: isCategoresLoading } = useQuery<any>([
+    "categories",
+  ]);
 
   const { mutate, isLoading: isDeleteLoading } = useMutation(deletePlans, {
     onSuccess: () => {
@@ -172,9 +169,13 @@ const Plans = () => {
 
   return (
     <>
-      <PageHeading title="Plans" onClick={_onCreateClick} totalRecords={data?.total} />
+      <PageHeading
+        title="Plans"
+        onClick={_onCreateClick}
+        totalRecords={data?.total}
+      />
 
-      {(!isLoading) && (
+      {!isLoading && (
         <Container fluid>
           <div>
             <div className="filter">
@@ -199,7 +200,6 @@ const Plans = () => {
                 value="0"
                 currentValue={filter.active}
                 dataLength={data?.data?.length}
-
                 idx="active"
                 title="Not Active"
                 isLast
@@ -252,11 +252,14 @@ const Plans = () => {
                         className="d-flex align-items-center mt-1 justify-content-center"
                       >
                         <Button
-                          variant={areTwoObjEqual(intitialFilter, filter) ? "light" : "primary"}
+                          variant={
+                            areTwoObjEqual(intitialFilter, filter)
+                              ? "light"
+                              : "primary"
+                          }
                           style={{
                             fontSize: 14,
                           }}
-
                           onClick={() => setFilter(intitialFilter)}
                         >
                           Reset Filters
