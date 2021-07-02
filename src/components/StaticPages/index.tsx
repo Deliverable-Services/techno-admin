@@ -64,8 +64,6 @@ const StaticPages = () => {
     }
   }, [titles.length]);
 
-  console.log({ titles, selectedTitle });
-
   const _onCreateClick = () => {
     history.push("/static-pages/create-edit");
   };

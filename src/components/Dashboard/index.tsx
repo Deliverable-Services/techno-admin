@@ -22,22 +22,21 @@ const getAnalytics = async () => {
 };
 
 interface IDates {
-  start_date: Moment | null;
-  end_date: Moment | null;
+  start_date: Moment;
+  end_date: Moment;
   focusedInput: FocusedInputShape | null;
 }
 
+const bookingFilter = {
+  dateFrom: moment().startOf("month").format("YYYY-MM-DD"),
+  dateTo: moment().endOf("month").format("YYYY-MM-DD"),
+  duration: "month",
+};
+
 const Dashboard = () => {
   const history = useHistory();
-  const [chartOneSelect, setChartOneSelect] = useState<string>("1");
-  const [chartTwoSelect, setChartTwoSelect] = useState<string>("");
-  const [dates, setDates] = useState<IDates>({
-    start_date: null,
-    end_date: null,
-    focusedInput: null,
-  });
-  const [start_date, setStartDate] = useState<Moment | null>(moment());
-  const [end_date, setEndDate] = useState<Moment | null>(null);
+  const [duration, setDuration] = useState("month");
+  const [filter, setFilter] = useState(bookingFilter);
   const [focusedInput, setFocusInput] = useState<FocusedInputShape | null>(
     null
   );
@@ -47,13 +46,18 @@ const Dashboard = () => {
     },
   });
   const { data: BookingAnalytics, isLoading: isBookingAnalyticsLoading } =
-    useQuery<any>(["bookingAnalytics", , { month: 1 }], {
+    useQuery<any>(["bookingAnalytics", , filter], {
       onError: (error: AxiosError) => {
         handleApiError(error, history);
       },
     });
-  const handleChartOneChange = (e: any) => setChartOneSelect(e.target.value);
-  const handleChartTwoChange = (e: any) => setChartTwoSelect(e.target.value);
+
+  const _onFilterChange = (idx: any, value: any) => {
+    setFilter((prev) => ({
+      ...prev,
+      [idx]: value,
+    }));
+  };
 
   if (isLoading || isFetching) return <IsLoading />;
 
@@ -81,17 +85,33 @@ const Dashboard = () => {
                 <BsCalendar color={primaryColor} size={24} className="mr-3" />
               </div>
               <DateRangePicker
-                startDate={start_date}
+                startDate={moment(filter.dateFrom)}
                 startDateId={"start_date"}
-                endDate={end_date}
+                endDate={moment(filter.dateTo)}
                 endDateId={"end_date"}
                 onDatesChange={({ startDate, endDate }) => {
-                  if (startDate) setStartDate(startDate);
-                  if (endDate) setEndDate(endDate);
+                  if (startDate)
+                    _onFilterChange("dateFrom", startDate.format("YYYY-MM-DD"));
+                  if (endDate)
+                    _onFilterChange("dateTo", endDate.format("YYYY-MM-DD"));
                 }}
                 focusedInput={focusedInput}
                 onFocusChange={(focusedInput) => setFocusInput(focusedInput)}
               />
+              <Form.Control
+                as="select"
+                custom
+                onChange={(e) => {
+                  _onFilterChange("duration", e.target.value);
+                }}
+                className="bg-transparent m-0 ml-4"
+                style={{ width: "100px", height: "44px" }}
+              >
+                <option value="year">Year</option>
+                <option value="month">Month</option>
+                <option value="week">Week</option>
+                <option value="day">Daily</option>
+              </Form.Control>
             </Container>
           </div>
         </div>
@@ -221,18 +241,6 @@ const Dashboard = () => {
                   <h5 className="mb-0">
                     <strong>Bookings</strong>
                   </h5>
-                  <div>
-                    <Form.Control
-                      as="select"
-                      custom
-                      onChange={handleChartOneChange}
-                      className="bg-transparent"
-                    >
-                      <option value="1">Option 1</option>
-                      <option value="2">Option 2</option>
-                      <option value="3">Option 3</option>
-                    </Form.Control>
-                  </div>
                 </div>
 
                 <div className="card-content chart-container">
@@ -245,18 +253,6 @@ const Dashboard = () => {
                   <h5 className="mb-0">
                     <strong>Bookings</strong>
                   </h5>
-                  <div>
-                    <Form.Control
-                      as="select"
-                      custom
-                      onChange={handleChartOneChange}
-                      className="bg-transparent"
-                    >
-                      <option value="1">Option 1</option>
-                      <option value="2">Option 2</option>
-                      <option value="3">Option 3</option>
-                    </Form.Control>
-                  </div>
                 </div>
 
                 <div className="card-content chart-container">
@@ -269,18 +265,6 @@ const Dashboard = () => {
                   <h5 className="mb-0">
                     <strong>Bookings</strong>
                   </h5>
-                  <div>
-                    <Form.Control
-                      as="select"
-                      custom
-                      onChange={handleChartOneChange}
-                      className="bg-transparent"
-                    >
-                      <option value="1">Option 1</option>
-                      <option value="2">Option 2</option>
-                      <option value="3">Option 3</option>
-                    </Form.Control>
-                  </div>
                 </div>
 
                 <div className="card-content chart-container">

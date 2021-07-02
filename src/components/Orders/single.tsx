@@ -30,17 +30,11 @@ const assignAgent = ({
   });
 };
 
-// const updateOrderStatus = ({
-//   formdata,
-//   id,
-// }: {
-//   formdata: any;
-//   id: string;
-// }) => {
-//   return API.post(`bookings/${id}/assign-agent`, formdata, {
-//     headers: { "Content-Type": "application/json" },
-//   });
-// };
+const updateOrderStatus = ({ formdata, id }: { formdata: any; id: string }) => {
+  return API.post(`order-status/${id}`, formdata, {
+    headers: { "Content-Type": "application/json" },
+  });
+};
 
 const SingleOrder = () => {
   const { id }: { id: string } = useParams();
@@ -60,6 +54,16 @@ const SingleOrder = () => {
       }, 500);
     },
   });
+  const { mutate: mutateOrderStatus, isLoading: isOrderStatusMutateLoading } =
+    useMutation(updateOrderStatus, {
+      onSuccess: (data) => {
+        showMsgToast("Order Status  updated successfully");
+        setTimeout(() => {
+          queryClient.invalidateQueries(key);
+          queryClient.invalidateQueries(`${key}/${id}`);
+        }, 500);
+      },
+    });
   const [form, setForm] = useState({
     agent_id: data?.agent_id,
     status: data?.status,
@@ -234,7 +238,10 @@ const SingleOrder = () => {
                         value={form.status}
                         onChange={(e) => {
                           _onformChange("status", e.target.value);
-                          // mutate({ formdata: { agent_id: e.target.value }, id })
+                          mutateOrderStatus({
+                            formdata: { status: e.target.value },
+                            id,
+                          });
                         }}
                         style={{
                           width: "200px",
@@ -364,7 +371,7 @@ const SingleOrder = () => {
                         }}
                       >
                         <option value="">Select Agent</option>
-                        <option value="2"> agent</option>
+                        <option value="2">Dishant</option>
                         {!isAgentLoading &&
                           Agents?.data.map((item) => (
                             <option value={item["id"]}>{item["name"]}</option>

@@ -85,9 +85,9 @@ const StaticPageCreateForm = () => {
                   />
 
                   <InputField
-                    name="Url"
-                    placeholder="url"
-                    label="url"
+                    name="url"
+                    placeholder="Url"
+                    label="Url"
                     required
                   />
                   <InputField
