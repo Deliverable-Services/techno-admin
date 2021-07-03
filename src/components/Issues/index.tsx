@@ -5,6 +5,8 @@ import { useMutation, useQuery } from "react-query";
 import { useHistory } from "react-router-dom";
 import { Cell } from "react-table";
 import BreadCrumb from "../../shared-components/BreadCrumb";
+import CreatedUpdatedAt from "../../shared-components/CreatedUpdatedAt";
+import CustomBadge from "../../shared-components/CustomBadge";
 import IsLoading from "../../shared-components/isLoading";
 import PageHeading from "../../shared-components/PageHeading";
 import TablePagination from "../../shared-components/Pagination";
@@ -25,7 +27,6 @@ const intitialFilter = {
 const Issues = () => {
   const history = useHistory();
   const [selectedRows, setSelectedRows] = useState([]);
-  console.log(selectedRows.map((item) => item.id));
   const [filter, setFilter] = useState(intitialFilter);
   const { data, isLoading, isFetching, error } = useQuery<any>(
     [key, , filter],
@@ -36,16 +37,17 @@ const Issues = () => {
     }
   );
 
+  const _onUserClick = (id: string) => {
+    if (!id) return;
+    history.push("/users/create-edit", { id });
+  };
   const Status = ({ status }: { status: string }) => {
     const setVairant = () => {
-      if (status === "cancelled" || status === "error_payment") return "danger";
-
-      if (status === "pending" || status === "pending_payment")
-        return "warning";
+      if (status === "closed") return "danger";
 
       return "success";
     };
-    return <Badge variant={setVairant()}>{status}</Badge>;
+    return <CustomBadge variant={setVairant()} title={status} />;
   };
   const _onFilterChange = (idx: string, value: any) => {
     setFilter((prev) => ({
@@ -76,10 +78,37 @@ const Issues = () => {
       {
         Header: "Raised by",
         accessor: "user.name", //accessor is the "key" in the data
+        Cell: (data: Cell) => {
+          if ((data.row.original as any).user_id)
+            return (
+              <p
+                className="text-primary m-0"
+                style={{ cursor: "pointer" }}
+                onClick={() => _onUserClick((data.row.original as any).user_id)}
+              >
+                {data.row.values["user.name"]}
+              </p>
+            );
+          else return "NA";
+        },
       },
       {
         Header: "Order Id",
         accessor: "order.id", //accessor is the "key" in the data
+      },
+      {
+        Header: "Created At",
+        accessor: "created_at",
+        Cell: (data: Cell) => (
+          <CreatedUpdatedAt date={data.row.values.created_at} />
+        ),
+      },
+      {
+        Header: "Updated At",
+        accessor: "updated_at",
+        Cell: (data: Cell) => (
+          <CreatedUpdatedAt date={data.row.values.updated_at} />
+        ),
       },
       {
         Header: "Actions",
