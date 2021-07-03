@@ -39,6 +39,7 @@ const updateOrderStatus = ({ formdata, id }: { formdata: any; id: string }) => {
 const SingleOrder = () => {
   const { id }: { id: string } = useParams();
   const history = useHistory();
+  const [showAssignAgent, setShowAssignAgent] = useState(false);
   const { data, isLoading, isFetching } = useGetSingleQuery({ id, key });
   const { data: Invoice, isLoading: isInvoiceLoading } = useGetSingleQuery({
     id,
@@ -74,6 +75,7 @@ const SingleOrder = () => {
       ...prev,
       [idx]: value,
     }));
+    setShowAssignAgent(false);
   };
 
   const { data: Agents, isLoading: isAgentLoading } = useQuery<any>(
@@ -346,13 +348,18 @@ const SingleOrder = () => {
                     : "Assigned Agent"}
                 </div>
 
-                <div className="text-primary small">Change Agent</div>
+                <div
+                  className="text-primary small"
+                  onClick={() => setShowAssignAgent(!showAssignAgent)}
+                >
+                  {showAssignAgent && data?.agent_id ? "Close" : "Assign agent"}
+                </div>
               </div>
 
               <hr className="mb-3" />
 
               <div className="d-flex flex-column" style={{ fontSize: 18 }}>
-                {!isLoading && !data?.agent_id && (
+                {!isLoading && (!data?.agent_id || showAssignAgent) && (
                   <Col md="auto">
                     <Form.Group>
                       <Form.Control
@@ -441,7 +448,12 @@ const SingleOrder = () => {
                     Customer
                   </div>
 
-                  <div className="text-primary small">Edit Info</div>
+                  <div
+                    className="text-primary small"
+                    onClick={() => _onUserClick(data.user_id)}
+                  >
+                    Edit Info
+                  </div>
                 </div>
               </div>
 

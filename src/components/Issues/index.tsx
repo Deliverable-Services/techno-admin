@@ -4,6 +4,7 @@ import { BiSad } from "react-icons/bi";
 import { useMutation, useQuery } from "react-query";
 import { useHistory } from "react-router-dom";
 import { Cell } from "react-table";
+import BreadCrumb from "../../shared-components/BreadCrumb";
 import IsLoading from "../../shared-components/isLoading";
 import PageHeading from "../../shared-components/PageHeading";
 import TablePagination from "../../shared-components/Pagination";
@@ -13,11 +14,12 @@ import { primaryColor } from "../../utils/constants";
 import { queryClient } from "../../utils/queryClient";
 import { showErrorToast } from "../../utils/showErrorToast";
 
-const key = "bookings";
+const key = "tickets";
 const intitialFilter = {
   q: "",
   page: null,
   perPage: 25,
+  status: "active",
 };
 
 const Issues = () => {
@@ -25,7 +27,6 @@ const Issues = () => {
   const [selectedRows, setSelectedRows] = useState([]);
   console.log(selectedRows.map((item) => item.id));
   const [filter, setFilter] = useState(intitialFilter);
-  console.log({ filter });
   const { data, isLoading, isFetching, error } = useQuery<any>(
     [key, , filter],
     {
@@ -112,7 +113,30 @@ const Issues = () => {
   return (
     <>
       <PageHeading title="Issues" totalRecords={50} />
-
+      {!isLoading && (
+        <Container fluid>
+          <div>
+            <div className="filter">
+              <BreadCrumb
+                onFilterChange={_onFilterChange}
+                value="active"
+                currentValue={filter.status}
+                dataLength={data?.data?.length}
+                idx="status"
+                title="Active"
+              />
+              <BreadCrumb
+                onFilterChange={_onFilterChange}
+                value="closed"
+                currentValue={filter.status}
+                dataLength={data?.data?.length}
+                idx="status"
+                title="Closed"
+              />
+            </div>
+          </div>
+        </Container>
+      )}
       <Container fluid className="card component-wrapper px-0 py-2">
         <Container fluid className="h-100 p-0">
           {isLoading ? (
