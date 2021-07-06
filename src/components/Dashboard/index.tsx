@@ -15,36 +15,38 @@ import API from "../../utils/API";
 import { primaryColor } from "../../utils/constants";
 import { ChartArea, ChartBar, ChartLine } from "./Chart";
 
-const getAnalytics = async () => {
-  const r = await API.get("analytics");
-
-  return r.data;
-};
-
 interface IDates {
   start_date: Moment;
   end_date: Moment;
   focusedInput: FocusedInputShape | null;
 }
 
+const returnPercentage = (newData: number, lastTotal: number) => {
+  if (newData === 0 && lastTotal === 0) return 0;
+  const p = newData / (lastTotal + newData);
+  return (p * 100).toFixed(1);
+};
+
 const bookingFilter = {
-  dateFrom: moment().startOf("month").format("YYYY-MM-DD"),
-  dateTo: moment().endOf("month").format("YYYY-MM-DD"),
+  datefrom: moment().startOf("month").format("YYYY-MM-DD"),
+  dateto: moment().endOf("month").format("YYYY-MM-DD"),
   duration: "month",
 };
 
 const Dashboard = () => {
   const history = useHistory();
-  const [duration, setDuration] = useState("month");
   const [filter, setFilter] = useState(bookingFilter);
   const [focusedInput, setFocusInput] = useState<FocusedInputShape | null>(
     null
   );
-  const { data, isLoading, isFetching } = useQuery<any>(["analytics"], {
-    onError: (error: AxiosError) => {
-      handleApiError(error, history);
-    },
-  });
+  const { data, isLoading, isFetching } = useQuery<any>(
+    ["analytics", , filter],
+    {
+      onError: (error: AxiosError) => {
+        handleApiError(error, history);
+      },
+    }
+  );
   const { data: BookingAnalytics, isLoading: isBookingAnalyticsLoading } =
     useQuery<any>(["bookingAnalytics", , filter], {
       onError: (error: AxiosError) => {
@@ -59,7 +61,7 @@ const Dashboard = () => {
     }));
   };
 
-  if (isLoading || isFetching) return <IsLoading />;
+  if (isLoading) return <IsLoading />;
 
   if (!data && (!isLoading || !isFetching)) {
     return (
@@ -74,6 +76,7 @@ const Dashboard = () => {
 
   return (
     <>
+      <h1>{isFetching ? "Fetching" : null}</h1>
       <Container fluid className="component-wrapper px-0 py-2">
         <div className="card">
           <div className="card-content">
@@ -85,15 +88,15 @@ const Dashboard = () => {
                 <BsCalendar color={primaryColor} size={24} className="mr-3" />
               </div>
               <DateRangePicker
-                startDate={moment(filter.dateFrom)}
+                startDate={moment(filter.datefrom)}
                 startDateId={"start_date"}
-                endDate={moment(filter.dateTo)}
+                endDate={moment(filter.dateto)}
                 endDateId={"end_date"}
                 onDatesChange={({ startDate, endDate }) => {
                   if (startDate)
-                    _onFilterChange("dateFrom", startDate.format("YYYY-MM-DD"));
+                    _onFilterChange("datefrom", startDate.format("YYYY-MM-DD"));
                   if (endDate)
-                    _onFilterChange("dateTo", endDate.format("YYYY-MM-DD"));
+                    _onFilterChange("dateto", endDate.format("YYYY-MM-DD"));
                 }}
                 focusedInput={focusedInput}
                 onFocusChange={(focusedInput) => setFocusInput(focusedInput)}
@@ -106,6 +109,7 @@ const Dashboard = () => {
                 }}
                 className="bg-transparent m-0 ml-4"
                 style={{ width: "100px", height: "44px" }}
+                value={filter.duration}
               >
                 <option value="year">Year</option>
                 <option value="month">Month</option>
@@ -124,14 +128,16 @@ const Dashboard = () => {
 
                 <div className="d-flex align-items-center justify-content-between mt-2">
                   <h1 className="text-black font-weight-bold">
-                    {data?.customer}
+                    {data?.customer + data?.customerprev}
                   </h1>
                 </div>
 
                 <div className="d-flex align-items-center justify-content-start">
                   <span className="tag tag-success d-flex align-items-center">
                     <AiOutlineArrowUp size={13} />
-                    <strong>10%</strong>
+                    <strong>
+                      {returnPercentage(data.customer, data.customerprev)}%
+                    </strong>
                   </span>
 
                   <span className="text-muted ml-2">from 3</span>
@@ -144,13 +150,17 @@ const Dashboard = () => {
                 <div className="lead">Orders</div>
 
                 <div className="d-flex align-items-center justify-content-between mt-2">
-                  <h1 className="text-black font-weight-bold">{data?.order}</h1>
+                  <h1 className="text-black font-weight-bold">
+                    {data?.order + data?.orderprev}
+                  </h1>
                 </div>
 
                 <div className="d-flex align-items-center justify-content-start">
                   <span className="tag tag-success d-flex align-items-center">
                     <AiOutlineArrowUp size={13} />
-                    <strong>10%</strong>
+                    <strong>
+                      {returnPercentage(data?.order, data?.orderprev)}%
+                    </strong>
                   </span>
 
                   <span className="text-muted ml-2">from 3</span>
@@ -164,14 +174,20 @@ const Dashboard = () => {
 
                 <div className="d-flex align-items-center justify-content-between mt-2">
                   <h1 className="text-black font-weight-bold">
-                    {data?.subscription}
+                    {data?.subscription + data?.subscriptionprev}
                   </h1>
                 </div>
 
                 <div className="d-flex align-items-center justify-content-start">
                   <span className="tag tag-success d-flex align-items-center">
                     <AiOutlineArrowUp size={13} />
-                    <strong>10%</strong>
+                    <strong>
+                      {returnPercentage(
+                        data?.subscription,
+                        data?.subscriptionprev
+                      )}
+                      %
+                    </strong>
                   </span>
 
                   <span className="text-muted ml-2">from 3</span>
@@ -184,13 +200,17 @@ const Dashboard = () => {
                 <div className="lead">Agents</div>
 
                 <div className="d-flex align-items-center justify-content-between mt-2">
-                  <h1 className="text-black font-weight-bold">{data?.agent}</h1>
+                  <h1 className="text-black font-weight-bold">
+                    {data?.agent + data?.agentprev}
+                  </h1>
                 </div>
 
                 <div className="d-flex align-items-center justify-content-start">
                   <span className="tag tag-success d-flex align-items-center">
                     <AiOutlineArrowUp size={13} />
-                    <strong>10%</strong>
+                    <strong>
+                      {returnPercentage(data?.agent, data?.agentprev)}%
+                    </strong>
                   </span>
 
                   <span className="text-muted ml-2">from 3</span>

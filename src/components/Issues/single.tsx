@@ -1,33 +1,31 @@
 import { AxiosError } from "axios";
 import moment from "moment";
 import React, { useState } from "react";
-import { Badge, Button, Col, Container, Form, Row } from "react-bootstrap";
-import { BiArrowFromRight, BiDownload } from "react-icons/bi";
-import { CgSandClock } from "react-icons/cg";
+import { Button, Col, Container, Form, Row } from "react-bootstrap";
+import { BiArrowFromRight, BiSad } from "react-icons/bi";
 import { useMutation, useQuery } from "react-query";
 import { useHistory, useParams } from "react-router-dom";
-import { ProgressBar, Step } from "react-step-progress-bar";
 import "react-step-progress-bar/styles.css";
-import Map from "../../components/Map";
 import { handleApiError } from "../../hooks/handleApiErrors";
 import useGetSingleQuery from "../../hooks/useGetSingleQuery";
 import IsLoading from "../../shared-components/isLoading";
 import API from "../../utils/API";
-import { IssueStatus, OrderStatus } from "../../utils/arrays";
+import { IssueStatus } from "../../utils/arrays";
+import { primaryColor } from "../../utils/constants";
 import { queryClient } from "../../utils/queryClient";
 import { showMsgToast } from "../../utils/showMsgToast";
 import ChatBox from "./ChatBox";
 
 const key = "tickets";
 
-const assignAgent = ({
+const changeStatus = ({
   formdata,
   id,
 }: {
   formdata: { agent_id: string };
   id: string;
 }) => {
-  return API.post(`bookings/${id}/assign-agent`, formdata, {
+  return API.post(`${key}/${id}/create`, formdata, {
     headers: { "Content-Type": "application/json" },
   });
 };
@@ -37,7 +35,7 @@ const SingleIssue = () => {
   const history = useHistory();
   const { data, isLoading, isFetching } = useGetSingleQuery({ id, key });
 
-  const { mutate, isLoading: isAsigningLoading } = useMutation(assignAgent, {
+  const { mutate, isLoading: isAsigningLoading } = useMutation(changeStatus, {
     onSuccess: (data) => {
       showMsgToast("Agent assigned successfully");
       setTimeout(() => {
@@ -77,6 +75,10 @@ const SingleIssue = () => {
     if (!id) return;
     history.push("/users/create-edit", { id });
   };
+  const _onOrderClick = (id: string) => {
+    if (!id) return;
+    history.push(`/orders/${id}`);
+  };
 
   const statusBadgeVairant = (status: string) => {
     const _status = status.toLowerCase();
@@ -92,13 +94,23 @@ const SingleIssue = () => {
   if (isLoading || isFetching) {
     return <IsLoading />;
   }
-  // console.log(data);
+
+  if (!data && (!isLoading || !isFetching)) {
+    return (
+      <Container fluid className="d-flex justify-content-center display-3">
+        <div className="d-flex flex-column align-items-center">
+          <BiSad color={primaryColor} />
+          <span className="text-primary display-3">Something went wrong</span>
+        </div>
+      </Container>
+    );
+  }
   return (
     <Container fluid className="component-wrapper px-0 py-2">
       <Container fluid className="d-flex justify-content-between py-2">
         <div className="d-flex align-items-center">
           <h2 className="font-weight-bold">Issue</h2>
-          <h2 className="ml-2">#{data.ref_id}</h2>
+          <h2 className="ml-2">#{data?.id}</h2>
         </div>
         <div>
           <Button className="ml-2" onClick={() => history.goBack()}>
@@ -117,7 +129,7 @@ const SingleIssue = () => {
                 <div
                   className="text-black pb-3"
                   style={{ cursor: "pointer", fontWeight: 600 }}
-                  onClick={() => _onUserClick(data.user_id)}
+                  onClick={() => _onUserClick(data?.user_id)}
                 >
                   Update Issue status
                 </div>
@@ -170,7 +182,7 @@ const SingleIssue = () => {
                 <div
                   className="text-black pb-3"
                   style={{ cursor: "pointer", fontWeight: 600 }}
-                  onClick={() => _onUserClick(data.user_id)}
+                  onClick={() => _onUserClick(data?.user_id)}
                 >
                   Issue Info
                 </div>
@@ -180,33 +192,57 @@ const SingleIssue = () => {
 
               <div className="d-flex flex-column" style={{ fontSize: 18 }}>
                 <Row>
-                  <Col md="auto">
+                  <Col md="auto" className="w-100">
+                    <p className="font-weight-bold mb-1">{data?.title}</p>
                     <p
                       style={{ fontSize: 13, lineHeight: 1.3, marginBottom: 5 }}
                       className="text-muted"
                     >
-                      Lorem ipsum dolor sit amet consectetur, adipisicing elit.
-                      Modi, voluptatum.
+                      {data?.description}
                     </p>
-                    <table className="w-100">
+                    <table className="w-100 ">
                       <tbody>
+                        <tr>
+                          <td className="text-muted">
+                            <p className="view-heading">Order</p>
+                          </td>
+                          <td className="text-right">
+                            <p
+                              className="view-subheading text-primary"
+                              style={{ cursor: "pointer" }}
+                              onClick={() => _onOrderClick(data?.order_id)}
+                            >
+                              {data.order_id || "NA"}
+                            </p>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td className="text-muted">
+                            <p className="view-heading">Related To</p>
+                          </td>
+                          <td className="text-right">
+                            <p className="view-subheading">
+                              {data?.related_to}
+                            </p>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td className="text-muted">
+                            <p className="view-heading">Updated At</p>
+                          </td>
+                          <td className="text-right">
+                            <p className="view-subheading">
+                              {moment(data?.updated_at).format("YYYY-MM-DD")}
+                            </p>
+                          </td>
+                        </tr>
                         <tr>
                           <td className="text-muted">
                             <p className="view-heading">Created At</p>
                           </td>
                           <td className="text-right">
                             <p className="view-subheading">
-                              {moment().format("YYYY-MM-DD")}
-                            </p>
-                          </td>
-                        </tr>
-                        <tr>
-                          <td className="text-muted">
-                            <p className="view-heading">Closed At</p>
-                          </td>
-                          <td className="text-right">
-                            <p className="view-subheading">
-                              {moment().format("YYYY-MM-DD")}
+                              {moment(data?.created_at).format("YYYY-MM-DD")}
                             </p>
                           </td>
                         </tr>
@@ -238,7 +274,7 @@ const SingleIssue = () => {
                         <p className="view-heading">Name</p>
                       </td>
                       <td className="text-right">
-                        <p className="view-subheading">{data.user.name}</p>
+                        <p className="view-subheading">{data?.user.name}</p>
                       </td>
                     </tr>
                     <tr>
@@ -246,9 +282,9 @@ const SingleIssue = () => {
                         <p className="view-heading">Email</p>
                       </td>
                       <td className="text-primary  font-weight-bold text-right">
-                        <a href={`mailto:${data.user.email}`}>
+                        <a href={`mailto:${data?.user.email}`}>
                           <p className="view-subheading text-primary">
-                            {data.user.email}
+                            {data?.user?.email}
                           </p>
                         </a>
                       </td>
@@ -258,7 +294,7 @@ const SingleIssue = () => {
                         <p className="view-heading phone-padd">Phone</p>
                       </td>
                       <td className="text-primary  font-weight-bold text-right">
-                        <p className="view-subheading">{data.user.phone}</p>
+                        <p className="view-subheading">{data?.user?.phone}</p>
                       </td>
                     </tr>
                   </tbody>
@@ -266,7 +302,7 @@ const SingleIssue = () => {
                 <span
                   className="small text-primary font-weight-bold"
                   style={{ cursor: "pointer" }}
-                  onClick={() => _onUserClick(data.user_id)}
+                  onClick={() => _onUserClick(data?.user_id)}
                 >
                   View Profile
                 </span>
@@ -278,7 +314,7 @@ const SingleIssue = () => {
         </Container>
 
         <Container fluid className="charts-container">
-          <ChatBox />
+          <ChatBox initialMessages={data?.messages} />
         </Container>
       </div>
     </Container>
