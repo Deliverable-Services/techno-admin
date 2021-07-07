@@ -22,10 +22,10 @@ const changeStatus = ({
   formdata,
   id,
 }: {
-  formdata: { agent_id: string };
-  id: string;
+  formdata: { status: string };
+  id: any;
 }) => {
-  return API.post(`${key}/${id}/create`, formdata, {
+  return API.post(`${key}/${id}/update-status`, formdata, {
     headers: { "Content-Type": "application/json" },
   });
 };
@@ -35,17 +35,19 @@ const SingleIssue = () => {
   const history = useHistory();
   const { data, isLoading, isFetching } = useGetSingleQuery({ id, key });
 
-  const { mutate, isLoading: isAsigningLoading } = useMutation(changeStatus, {
-    onSuccess: (data) => {
-      showMsgToast("Agent assigned successfully");
-      setTimeout(() => {
-        queryClient.invalidateQueries(key);
-        queryClient.invalidateQueries(`${key}/${id}`);
-      }, 500);
-    },
-  });
+  const { mutate, isLoading: isChangeStatusLoading } = useMutation(
+    changeStatus,
+    {
+      onSuccess: (data) => {
+        showMsgToast("Status changed successfully");
+        setTimeout(() => {
+          queryClient.invalidateQueries(key);
+          queryClient.invalidateQueries(`${key}/${id}`);
+        }, 500);
+      },
+    }
+  );
   const [form, setForm] = useState({
-    agent_id: data?.agent_id,
     status: data?.status,
   });
 
@@ -55,21 +57,6 @@ const SingleIssue = () => {
       [idx]: value,
     }));
   };
-
-  const { data: Agents, isLoading: isAgentLoading } = useQuery<any>(
-    [
-      "users",
-      1,
-      {
-        role: "agent",
-      },
-    ],
-    {
-      onError: (error: AxiosError) => {
-        handleApiError(error, history);
-      },
-    }
-  );
 
   const _onUserClick = (id: string) => {
     if (!id) return;
@@ -143,19 +130,16 @@ const SingleIssue = () => {
                     <Form.Group>
                       <Form.Control
                         as="select"
-                        value={"open"}
+                        value={data?.status}
                         onChange={(e) => {
                           _onformChange("status", e.target.value);
-                          // mutate({ formdata: { agent_id: e.target.value }, id })
+                          mutate({ formdata: { status: e.target.value }, id });
                         }}
                         style={{
                           width: "200px",
                           fontSize: 14,
                         }}
                       >
-                        <option value="" disabled>
-                          Select Status
-                        </option>
                         {IssueStatus.map((item) => {
                           if (item.id !== "")
                             return (
@@ -314,7 +298,7 @@ const SingleIssue = () => {
         </Container>
 
         <Container fluid className="charts-container">
-          <ChatBox initialMessages={data?.messages} />
+          <ChatBox initialMessages={data?.messages} id={id} />
         </Container>
       </div>
     </Container>

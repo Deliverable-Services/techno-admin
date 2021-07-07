@@ -1,29 +1,38 @@
 import { AxiosError } from "axios";
+import moment from "moment";
 import React, { useMemo, useState } from "react";
-import { Button, Container } from "react-bootstrap";
+import { Button, Col, Container, Form, Row } from "react-bootstrap";
 import { AiFillEdit } from "react-icons/ai";
 import { BiSad } from "react-icons/bi";
 import { useMutation, useQuery } from "react-query";
 import { useHistory } from "react-router-dom";
 import { Cell } from "react-table";
 import { handleApiError } from "../../hooks/handleApiErrors";
+import BreadCrumb from "../../shared-components/BreadCrumb";
 import CreatedUpdatedAt from "../../shared-components/CreatedUpdatedAt";
 import EditButton from "../../shared-components/EditButton";
+import FilterSelect from "../../shared-components/FilterSelect";
 import IsActiveBadge from "../../shared-components/IsActiveBadge";
 import IsLoading from "../../shared-components/isLoading";
 import PageHeading from "../../shared-components/PageHeading";
 import TablePagination from "../../shared-components/Pagination";
 import ReactTable from "../../shared-components/ReactTable";
 import API from "../../utils/API";
+import { areTwoObjEqual } from "../../utils/areTwoObjEqual";
+import { NotificationSendToCategories } from "../../utils/arrays";
 import { primaryColor, secondaryColor } from "../../utils/constants";
 import { queryClient } from "../../utils/queryClient";
 import { showMsgToast } from "../../utils/showMsgToast";
+import Brands from "../Brands";
 
 const key = "fcm-notification";
 const intitialFilter = {
   q: "",
   page: null,
   perPage: 25,
+  sent: "",
+  sent_to: "",
+  scheduled_at: "",
 };
 
 const deleteNotification = (id: any[]) => {
@@ -143,6 +152,39 @@ const Notifications = () => {
         onClick={_onCreateClick}
         totalRecords={data?.total}
       />
+      {!isLoading && (
+        <Container fluid>
+          <div>
+            <div className="filter">
+              <BreadCrumb
+                onFilterChange={_onFilterChange}
+                value=""
+                currentValue={filter.sent}
+                dataLength={data?.data?.length}
+                idx="sent"
+                title="All"
+              />
+              <BreadCrumb
+                onFilterChange={_onFilterChange}
+                value="1"
+                currentValue={filter.sent}
+                dataLength={data?.data?.length}
+                idx="sent"
+                title="Sent"
+              />
+              <BreadCrumb
+                onFilterChange={_onFilterChange}
+                value="0"
+                currentValue={filter.sent}
+                dataLength={data?.data?.length}
+                idx="sent"
+                title="Not Sent"
+                isLast
+              />
+            </div>
+          </div>
+        </Container>
+      )}
 
       <Container fluid className="card component-wrapper px-0 py-2">
         <Container fluid className="h-100 p-0">
@@ -151,14 +193,70 @@ const Notifications = () => {
           ) : (
             <>
               {!error && (
-                <ReactTable
-                  data={data?.data}
-                  columns={columns}
-                  setSelectedRows={setSelectedRows}
-                  filter={filter}
-                  onFilterChange={_onFilterChange}
-                  isDataLoading={isFetching}
-                />
+                <>
+                  <Container className="pt-3">
+                    <Row className="select-filter d-flex">
+                      <Col md="auto">
+                        <FilterSelect
+                          currentValue={filter.sent_to}
+                          data={NotificationSendToCategories}
+                          label="Sent To"
+                          idx="sent_to"
+                          onFilterChange={_onFilterChange}
+                        />
+                      </Col>
+                      <Col md="auto">
+                        <Form.Group>
+                          <Form.Label className="text-muted">
+                            Scheduled At
+                          </Form.Label>
+                          <Form.Control
+                            type="date"
+                            value={filter.scheduled_at}
+                            onChange={(e) => {
+                              const value = moment(e.target.value).format(
+                                "YYYY-MM-DD"
+                              );
+                              _onFilterChange("scheduled_at", value);
+                            }}
+                            style={{
+                              fontSize: 14,
+                              width: 150,
+                              height: 35,
+                            }}
+                          />
+                        </Form.Group>
+                      </Col>
+                      <Col
+                        md="auto"
+                        className="d-flex align-items-center mt-1 justify-content-center"
+                      >
+                        <Button
+                          variant={
+                            areTwoObjEqual(intitialFilter, filter)
+                              ? "light"
+                              : "primary"
+                          }
+                          style={{
+                            fontSize: 14,
+                          }}
+                          onClick={() => setFilter(intitialFilter)}
+                        >
+                          Reset Filters
+                        </Button>
+                      </Col>
+                    </Row>
+                  </Container>
+                  <hr />
+                  <ReactTable
+                    data={data?.data}
+                    columns={columns}
+                    setSelectedRows={setSelectedRows}
+                    filter={filter}
+                    onFilterChange={_onFilterChange}
+                    isDataLoading={isFetching}
+                  />
+                </>
               )}
               {!error && data.length > 0 ? (
                 <TablePagination

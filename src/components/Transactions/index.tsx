@@ -4,7 +4,9 @@ import { BiSad } from "react-icons/bi";
 import { useMutation, useQuery } from "react-query";
 import { useHistory } from "react-router-dom";
 import { Cell } from "react-table";
-import useTransactionStoreFilter, { INITIAL_FILTER } from "../../hooks/useTranscationFilterStore";
+import useTransactionStoreFilter, {
+  INITIAL_FILTER,
+} from "../../hooks/useTranscationFilterStore";
 import BreadCrumb from "../../shared-components/BreadCrumb";
 import CreatedUpdatedAt from "../../shared-components/CreatedUpdatedAt";
 import FilterSelect from "../../shared-components/FilterSelect";
@@ -72,6 +74,7 @@ const Transactions = () => {
   );
 
   const _onOrderClick = (id: string) => {
+    console.log({ id });
     if (!id) return;
     history.push(`/orders/${id}`);
   };
@@ -91,7 +94,7 @@ const Transactions = () => {
         Cell: (data: Cell) => {
           return (
             <p
-              className="text-primary"
+              className="text-primary m-0"
               style={{ cursor: "pointer" }}
               onClick={() => _onUserClick((data.row.original as any).user_id)}
             >
@@ -102,15 +105,16 @@ const Transactions = () => {
       },
       {
         Header: "Order",
-        accessor: "order_id",
+        accessor: "order.ref_id",
         Cell: (data: Cell) => {
+          console.log({ data });
           return (
             <p
-              className="text-primary"
+              className="text-primary m-0"
               style={{ cursor: "pointer" }}
-              onClick={() => _onOrderClick((data.row.values as any).order_id)}
+              onClick={() => _onOrderClick(data.row.original["order_id"])}
             >
-              {data.row.values.order_id}
+              {data.row.values["order.ref_id"]}
             </p>
           );
         },
@@ -227,7 +231,14 @@ const Transactions = () => {
                       >
                         <Button
                           onClick={() => resetFilter()}
-                          variant={areTwoObjEqual({ ...intitialFilter, ...INITIAL_FILTER }, { ...localFilter, ...filter }) ? "light" : "primary"}
+                          variant={
+                            areTwoObjEqual(
+                              { ...intitialFilter, ...INITIAL_FILTER },
+                              { ...localFilter, ...filter }
+                            )
+                              ? "light"
+                              : "primary"
+                          }
                           style={{
                             fontSize: 14,
                           }}

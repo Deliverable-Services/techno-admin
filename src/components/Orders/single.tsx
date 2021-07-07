@@ -5,7 +5,6 @@ import { Badge, Button, Col, Container, Form, Row } from "react-bootstrap";
 import { BiArrowFromRight, BiDownload } from "react-icons/bi";
 import { useMutation, useQuery } from "react-query";
 import { useHistory, useParams } from "react-router-dom";
-import { ProgressBar, Step } from "react-step-progress-bar";
 import "react-step-progress-bar/styles.css";
 import Map from "../../components/Map";
 import { handleApiError } from "../../hooks/handleApiErrors";
@@ -15,6 +14,7 @@ import API from "../../utils/API";
 import { OrderStatus } from "../../utils/arrays";
 import { queryClient } from "../../utils/queryClient";
 import { showMsgToast } from "../../utils/showMsgToast";
+import { AiFillPlusSquare } from "react-icons/ai";
 
 const key = "bookings";
 
@@ -31,7 +31,7 @@ const assignAgent = ({
 };
 
 const updateOrderStatus = ({ formdata, id }: { formdata: any; id: string }) => {
-  return API.post(`order-status/${id}`, formdata, {
+  return API.post(`${key}/${id}/update-status`, formdata, {
     headers: { "Content-Type": "application/json" },
   });
 };
@@ -41,10 +41,9 @@ const SingleOrder = () => {
   const history = useHistory();
   const [showAssignAgent, setShowAssignAgent] = useState(false);
   const { data, isLoading, isFetching } = useGetSingleQuery({ id, key });
-  const { data: Invoice, isLoading: isInvoiceLoading } = useGetSingleQuery({
-    id,
-    key: "downloadInvoice",
-  });
+  const { data: Invoice, isLoading: isInvoiceLoading } = useQuery<any>([
+    `${key}/${id}/download-invoice`,
+  ]);
 
   const { mutate, isLoading: isAsigningLoading } = useMutation(assignAgent, {
     onSuccess: (data) => {
@@ -98,6 +97,14 @@ const SingleOrder = () => {
     history.push("/users/create-edit", { id });
   };
 
+  const _onCreateIssueClick = () => {
+    history.push("/issues/create-edit", {
+      id: data?.user_id,
+      order_id: id,
+      ref_id: data?.ref_id,
+    });
+  };
+
   const statusBadgeVairant = (status: string) => {
     const _status = status.toLowerCase();
 
@@ -135,6 +142,11 @@ const SingleOrder = () => {
               <BiDownload size={24} /> <b>Invoice</b>
             </div>
           </Button>
+          <Button className="ml-2" onClick={() => _onCreateIssueClick()}>
+            <div className="text-white">
+              <AiFillPlusSquare size={24} /> <b>Issue</b>
+            </div>
+          </Button>
           <Button className="ml-2" onClick={() => history.goBack()}>
             <div className="text-white">
               <BiArrowFromRight size={25} /> <b>Back</b>
@@ -149,7 +161,7 @@ const SingleOrder = () => {
         </Container>
       )}
 
-      <div className="w-75 mx-auto">
+      {/* <div className="w-75 mx-auto">
         <ProgressBar
           filledBackground={"linear-gradient(to right,#72b3fe, #318af0)"}
           percent={80}
@@ -213,7 +225,7 @@ const SingleOrder = () => {
             )}
           </Step>
         </ProgressBar>
-      </div>
+      </div> */}
 
       <div className="dashboard-page w-100">
         <Container fluid className="status-container mt-2">
@@ -237,7 +249,7 @@ const SingleOrder = () => {
                     <Form.Group>
                       <Form.Control
                         as="select"
-                        value={form.status}
+                        value={data?.status}
                         onChange={(e) => {
                           _onformChange("status", e.target.value);
                           mutateOrderStatus({
@@ -250,9 +262,6 @@ const SingleOrder = () => {
                           fontSize: 14,
                         }}
                       >
-                        <option value="" disabled>
-                          Select Status
-                        </option>
                         {OrderStatus.map((item) => {
                           if (item.id !== "")
                             return (
@@ -270,65 +279,6 @@ const SingleOrder = () => {
                       app, as it should be to avoid complection in the database.
                       Please try to avoid changing from here if possible.
                     </p>
-                  </Col>
-                </Row>
-              </div>
-            </div>
-          </div>
-          <div className="card p-2 view-padding right-div d-flex mb-3">
-            <div className="d-flex flex-column">
-              <div className="text-primary">
-                <div
-                  className="text-black pb-3"
-                  style={{ cursor: "pointer", fontWeight: 600 }}
-                >
-                  Order Issue
-                </div>
-              </div>
-
-              <hr className="mb-3" />
-
-              <div className="d-flex flex-column" style={{ fontSize: 18 }}>
-                <Row>
-                  <Col md="auto">
-                    <p
-                      style={{ fontSize: 13, lineHeight: 1.3, marginBottom: 5 }}
-                      className="text-muted"
-                    >
-                      Lorem ipsum dolor sit amet consectetur, adipisicing elit.
-                      Modi, voluptatum.
-                    </p>
-                    <table className="w-100">
-                      <tbody>
-                        <tr>
-                          <td className="text-muted">
-                            <p className="view-heading">Created At</p>
-                          </td>
-                          <td className="text-right">
-                            <p className="view-subheading">
-                              {moment().format("YYYY-MM-DD")}
-                            </p>
-                          </td>
-                        </tr>
-                        <tr>
-                          <td className="text-muted">
-                            <p className="view-heading">Closed At</p>
-                          </td>
-                          <td className="text-right">
-                            <p className="view-subheading">
-                              {moment().format("YYYY-MM-DD")}
-                            </p>
-                          </td>
-                        </tr>
-                      </tbody>
-                    </table>
-                    <span
-                      className="small text-primary font-weight-bold"
-                      style={{ cursor: "pointer" }}
-                      onClick={() => history.push("/issues/1")}
-                    >
-                      View Issue
-                    </span>
                   </Col>
                 </Row>
               </div>
@@ -549,6 +499,55 @@ const SingleOrder = () => {
             </div>
           </div>
 
+          {data?.tickets?.length && (
+            <div className="card p-2 view-padding right-div d-flex mb-3">
+              <div className="d-flex flex-column">
+                <div className="text-primary">
+                  <div
+                    className="text-black pb-3"
+                    style={{ cursor: "pointer", fontWeight: 600 }}
+                  >
+                    Order Issue
+                  </div>
+                </div>
+
+                <hr className="mb-3" />
+
+                <div className="d-flex flex-column" style={{ fontSize: 18 }}>
+                  {data?.tickets.map((ticket) => (
+                    <>
+                      <Row>
+                        <Col md="auto">
+                          <p className="m-0">
+                            <b>{ticket.title}</b>
+                          </p>
+                          <p
+                            style={{
+                              fontSize: 13,
+                              lineHeight: 1.3,
+                              marginBottom: 5,
+                            }}
+                            className="text-muted"
+                          >
+                            {ticket.description}
+                          </p>
+                          <span
+                            className="small text-primary font-weight-bold ml-auto"
+                            style={{ cursor: "pointer" }}
+                            onClick={() => history.push(`/issues/${ticket.id}`)}
+                          >
+                            View Issue
+                          </span>
+                        </Col>
+                      </Row>
+                      <hr className="my-2" />
+                    </>
+                  ))}
+                </div>
+              </div>
+            </div>
+          )}
+
           <div className="card view-padding p-2 d-flex mt-3">
             <div className="d-flex flex-column">
               <div className="text-primary">
@@ -658,9 +657,21 @@ const SingleOrder = () => {
                       <tbody>
                         {data.services.map((service) => (
                           <tr>
-                            <td className="view-heading">{service.name}</td>
+                            <td
+                              className="view-heading text-primary"
+                              style={{ cursor: "pointer" }}
+                              onClick={() =>
+                                history.push("/services/create-edit", {
+                                  id: service.id,
+                                })
+                              }
+                            >
+                              {service?.name}
+                            </td>
                             <td className="text-right">
-                              <p className="view-subheading">₹{service.cost}</p>
+                              <p className="view-subheading">
+                                ₹{service?.price}
+                              </p>
                             </td>
                           </tr>
                         ))}

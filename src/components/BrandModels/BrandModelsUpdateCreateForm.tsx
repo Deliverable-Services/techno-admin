@@ -2,7 +2,7 @@ import { AxiosError } from "axios";
 import bsCustomFileInput from "bs-custom-file-input";
 import { Form, Formik } from "formik";
 import { useEffect } from "react";
-import { Alert, Button, Col, Row, Spinner } from "react-bootstrap";
+import { Button, Col, Row, Spinner } from "react-bootstrap";
 import { useMutation, useQuery } from "react-query";
 import { useHistory, useLocation } from "react-router-dom";
 import { handleApiError } from "../../hooks/handleApiErrors";
@@ -36,9 +36,9 @@ const createUpdataBrand = ({
 };
 
 const BrandModlesCreateUpdateForm = () => {
-  const { state } = useLocation()
-  const history = useHistory()
-  const id = state ? (state as any).id : null
+  const { state } = useLocation();
+  const history = useHistory();
+  const id = state ? (state as any).id : null;
   useEffect(() => {
     bsCustomFileInput.init();
   }, []);
@@ -48,15 +48,14 @@ const BrandModlesCreateUpdateForm = () => {
   const { mutate, isLoading } = useMutation(createUpdataBrand, {
     onSuccess: () => {
       setTimeout(() => queryClient.invalidateQueries(key), 500);
-      history.replace("/brand-models")
-      if (id) return showMsgToast("Brand Model updated successfully")
-      showMsgToast("Brand Model created successfully")
+      history.replace("/brand-models");
+      if (id) return showMsgToast("Brand Model updated successfully");
+      showMsgToast("Brand Model created successfully");
     },
     onError: (error: AxiosError) => {
-      handleApiError(error, history)
-    }
+      handleApiError(error, history);
+    },
   });
-
 
   const apiData = data && (data as any);
 
@@ -110,11 +109,21 @@ const BrandModlesCreateUpdateForm = () => {
                     selectData={!isBrandLoading && brands.data}
                   />
 
-                  <InputField as="select" selectData={isActiveArray} name="is_active" label="Is active?" placeholder="Choose is active" />
+                  <InputField
+                    as="select"
+                    selectData={isActiveArray}
+                    name="is_active"
+                    label="Is active?"
+                    placeholder="Choose is active"
+                  />
                 </div>
                 <Row className="d-flex justify-content-start">
                   <Col md="2">
-                    <Button type="submit" disabled={isLoading} className="w-100">
+                    <Button
+                      type="submit"
+                      disabled={isLoading}
+                      className="w-100"
+                    >
                       {isLoading ? (
                         <Spinner animation="border" size="sm" />
                       ) : (

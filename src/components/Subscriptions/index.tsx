@@ -1,5 +1,5 @@
 import { AxiosError } from "axios";
-import moment from 'moment';
+import moment from "moment";
 import { useMemo, useState } from "react";
 import { Button, Col, Container, Form, Row } from "react-bootstrap";
 import { BiSad } from "react-icons/bi";
@@ -28,8 +28,7 @@ const intitialFilter = {
   status: "",
   allowed_usage: "",
   created_at: "",
-  user_id: ""
-
+  user_id: "",
 };
 
 const Subscription = () => {
@@ -46,17 +45,19 @@ const Subscription = () => {
     }
   );
 
-  const { data: Plans, isLoading: isPlansLoading } = useQuery<any>(["plans"])
-  const { data: Customers, isLoading: isCustomersLoading } = useQuery<any>(["users", , { role: "customer" }])
+  const { data: Plans, isLoading: isPlansLoading } = useQuery<any>(["plans"]);
+  const { data: Customers, isLoading: isCustomersLoading } = useQuery<any>([
+    "users",
+    ,
+    { role: "customer" },
+  ]);
   const Status = ({ status }: { status: string }) => {
     const setVariant = () => {
       if (status === "active") return "success";
 
       return "danger";
     };
-    return (
-      <CustomBadge title={status.toUpperCase()} variant={setVariant()} />
-    );
+    return <CustomBadge title={status.toUpperCase()} variant={setVariant()} />;
   };
 
   const _onPlanClick = (id: string) => {
@@ -86,7 +87,7 @@ const Subscription = () => {
         Cell: (data: Cell) => {
           return (
             <p
-              className="text-primary"
+              className="text-primary m-0"
               style={{ cursor: "pointer" }}
               onClick={() => _onUserClick((data.row.original as any).user_id)}
             >
@@ -101,7 +102,7 @@ const Subscription = () => {
         Cell: (data: Cell) => {
           return (
             <p
-              className="text-primary"
+              className="text-primary m-0"
               style={{ cursor: "pointer" }}
               onClick={() => _onPlanClick((data.row.original as any).plan_id)}
             >
@@ -149,20 +150,22 @@ const Subscription = () => {
         },
       },
 
-      // {
-      //   Header: "Actions",
-      //   Cell: (data: Cell) => {
-      //     return (
-      //       <div className="d-flex">
-      //         <Button
-      //           onClick={() => history.push(`/subscriptions/${data.row.values.id}`)}
-      //         >
-      //           View
-      //         </Button>
-      //       </div>
-      //     );
-      //   },
-      // },
+      {
+        Header: "Actions",
+        Cell: (data: Cell) => {
+          return (
+            <div className="d-flex">
+              <Button
+                onClick={() =>
+                  history.push(`/subscriptions/${data.row.values.id}`)
+                }
+              >
+                View
+              </Button>
+            </div>
+          );
+        },
+      },
     ],
     []
   );
@@ -250,18 +253,22 @@ const Subscription = () => {
 
                   <Col md="auto">
                     <Form.Group>
-                      <Form.Label className="text-muted">Purchased on</Form.Label>
-                      <Form.Control type="date"
+                      <Form.Label className="text-muted">
+                        Purchased on
+                      </Form.Label>
+                      <Form.Control
+                        type="date"
                         value={filter.created_at}
-                        onChange={e => {
-                          const value = moment(e.target.value).format("YYYY-MM-DD")
-                          _onFilterChange("created_at", value)
+                        onChange={(e) => {
+                          const value = moment(e.target.value).format(
+                            "YYYY-MM-DD"
+                          );
+                          _onFilterChange("created_at", value);
                         }}
                         style={{
                           fontSize: 14,
                           width: 150,
-                          height: 35
-
+                          height: 35,
                         }}
                       />
                     </Form.Group>
@@ -272,7 +279,11 @@ const Subscription = () => {
                   >
                     <Button
                       onClick={() => setFilter(intitialFilter)}
-                      variant={areTwoObjEqual(intitialFilter, filter) ? "light" : "primary"}
+                      variant={
+                        areTwoObjEqual(intitialFilter, filter)
+                          ? "light"
+                          : "primary"
+                      }
                       style={{
                         fontSize: 14,
                       }}

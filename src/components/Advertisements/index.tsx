@@ -307,11 +307,11 @@ const Advertisements = () => {
                   />
                 </>
               )}
-              {!error && data.length > 0 ? (
+              {!error && data?.data?.length > 0 ? (
                 <TablePagination
                   currentPage={data?.current_page}
                   lastPage={data?.last_page}
-                  setPage={setPage}
+                  setPage={_onFilterChange}
                   hasNextPage={!!data?.next_page_url}
                   hasPrevPage={!!data?.prev_page_url}
                 />

@@ -1,7 +1,7 @@
 import { useMemo, useState } from "react";
-import { Badge, Button, Container, Modal, Spinner } from "react-bootstrap";
+import { Button, Container } from "react-bootstrap";
 import { BiSad } from "react-icons/bi";
-import { useMutation, useQuery } from "react-query";
+import { useQuery } from "react-query";
 import { useHistory } from "react-router-dom";
 import { Cell } from "react-table";
 import BreadCrumb from "../../shared-components/BreadCrumb";
@@ -11,9 +11,7 @@ import IsLoading from "../../shared-components/isLoading";
 import PageHeading from "../../shared-components/PageHeading";
 import TablePagination from "../../shared-components/Pagination";
 import ReactTable from "../../shared-components/ReactTable";
-import API from "../../utils/API";
 import { primaryColor } from "../../utils/constants";
-import { queryClient } from "../../utils/queryClient";
 import { showErrorToast } from "../../utils/showErrorToast";
 
 const key = "tickets";
@@ -41,6 +39,10 @@ const Issues = () => {
     if (!id) return;
     history.push("/users/create-edit", { id });
   };
+  const _onOrderClick = (id: string) => {
+    if (!id) return;
+    history.push(`/orders/${id}`);
+  };
   const Status = ({ status }: { status: string }) => {
     const setVairant = () => {
       if (status === "closed") return "danger";
@@ -61,6 +63,10 @@ const Issues = () => {
       {
         Header: "#Id",
         accessor: "id", //accessor is the "key" in the data
+      },
+      {
+        Header: "Title",
+        accessor: "title", //accessor is the "key" in the data
       },
       {
         Header: "Reference Id",
@@ -94,7 +100,22 @@ const Issues = () => {
       },
       {
         Header: "Order Id",
-        accessor: "order.id", //accessor is the "key" in the data
+        accessor: "order.ref_id", //accessor is the "key" in the data
+        Cell: (data: Cell) => {
+          if ((data.row.original as any).order_id)
+            return (
+              <p
+                className="text-primary m-0"
+                style={{ cursor: "pointer" }}
+                onClick={() =>
+                  _onOrderClick((data.row.original as any).order_id)
+                }
+              >
+                {data.row.values["order.ref_id"]}
+              </p>
+            );
+          else return "NA";
+        },
       },
       {
         Header: "Created At",

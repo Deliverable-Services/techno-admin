@@ -288,7 +288,7 @@ const Categories = () => {
                   />
                 </>
               )}
-              {!error && data.length > 0 ? (
+              {!error && data?.data?.length > 0 ? (
                 <TablePagination
                   currentPage={data?.current_page}
                   lastPage={data?.last_page}

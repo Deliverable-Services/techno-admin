@@ -20,7 +20,7 @@ import { areTwoObjEqual } from "../../utils/areTwoObjEqual";
 import {
   baseUploadUrl,
   clientWebUrl,
-  primaryColor
+  primaryColor,
 } from "../../utils/constants";
 import { queryClient } from "../../utils/queryClient";
 import { showMsgToast } from "../../utils/showMsgToast";
@@ -38,7 +38,7 @@ const intitialFilter = {
   page: null,
   perPage: 25,
   active: "",
-  brand_id: ""
+  brand_id: "",
 };
 
 const BrandModels = () => {
@@ -55,7 +55,9 @@ const BrandModels = () => {
     }
   );
 
-  const { data: Brands, isLoading: isBrandsLoading } = useQuery<any>(["brands",])
+  const { data: Brands, isLoading: isBrandsLoading } = useQuery<any>([
+    "brands",
+  ]);
   const { mutate, isLoading: isDeleteLoading } = useMutation(
     deleteBrandModels,
     {
@@ -84,8 +86,8 @@ const BrandModels = () => {
   };
 
   const _onUrlClick = (data: Cell) => {
-    window.open(clientWebUrl)
-  }
+    window.open(clientWebUrl);
+  };
   const columns = useMemo(
     () => [
       {
@@ -112,10 +114,14 @@ const BrandModels = () => {
         Header: "Url",
         accessor: "url",
         Cell: (data: Cell) => (
-          <p className="text-primary" style={{ cursor: "pointer" }} onClick={() => _onUrlClick(data)}>
+          <p
+            className="text-primary"
+            style={{ cursor: "pointer" }}
+            onClick={() => _onUrlClick(data)}
+          >
             {data.row.values.url}
           </p>
-        )
+        ),
       },
       {
         Header: "Brand",
@@ -176,7 +182,7 @@ const BrandModels = () => {
         onClick={_onCreateClick}
         totalRecords={data?.total}
       />
-      {(!isLoading) && (
+      {!isLoading && (
         <Container fluid>
           <div>
             <div className="filter">
@@ -201,7 +207,6 @@ const BrandModels = () => {
                 value="0"
                 currentValue={filter.active}
                 dataLength={data?.data?.length}
-
                 idx="active"
                 title="Not Active"
                 isLast
@@ -210,10 +215,6 @@ const BrandModels = () => {
           </div>
         </Container>
       )}
-
-
-
-
 
       <Container fluid className="card component-wrapper px-0 py-2">
         <Container fluid className="h-100 p-0">
@@ -239,11 +240,14 @@ const BrandModels = () => {
                         className="d-flex align-items-center mt-1 justify-content-center"
                       >
                         <Button
-                          variant={areTwoObjEqual(intitialFilter, filter) ? "light" : "primary"}
+                          variant={
+                            areTwoObjEqual(intitialFilter, filter)
+                              ? "light"
+                              : "primary"
+                          }
                           style={{
                             fontSize: 14,
                           }}
-
                           onClick={() => setFilter(intitialFilter)}
                         >
                           Reset Filters
@@ -266,7 +270,7 @@ const BrandModels = () => {
                 <TablePagination
                   currentPage={data?.current_page}
                   lastPage={data?.last_page}
-                  setPage={setPage}
+                  setPage={_onFilterChange}
                   hasNextPage={!!data?.next_page_url}
                   hasPrevPage={!!data?.prev_page_url}
                 />

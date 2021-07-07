@@ -1,15 +1,59 @@
+import { AxiosError } from "axios";
 import { Form, Formik } from "formik";
 import moment from "moment";
 import React from "react";
 import { Container } from "react-bootstrap";
 import { RiSendPlane2Fill } from "react-icons/ri";
+import { useMutation } from "react-query";
+import { useHistory } from "react-router-dom";
+import { handleApiError } from "../../hooks/handleApiErrors";
 import useUserProfileStore from "../../hooks/useUserProfileStore";
+import API from "../../utils/API";
 import { primaryColor } from "../../utils/constants";
+import { queryClient } from "../../utils/queryClient";
+import { showMsgToast } from "../../utils/showMsgToast";
 
-const ChatBox = ({ initialMessages }: { initialMessages: any }) => {
+const key = "tickets";
+
+const addMessageToServer = ({ id, message }: any) => {
+  return API.post(
+    `${key}/${id}/message`,
+    { message },
+    {
+      headers: { "Content-Type": "application/json" },
+    }
+  );
+};
+
+const ChatBox = ({
+  initialMessages,
+  id,
+}: {
+  initialMessages: any;
+  id: any;
+}) => {
+  const history = useHistory();
   const loggedInUser = useUserProfileStore((state) => state.user);
 
   const [messages, setMessages] = React.useState(initialMessages);
+
+  // React.useEffect(() => {
+  //   setInterval(() => queryClient.invalidateQueries(`${key}`), 10000);
+  // }, []);
+
+  const { mutate, isLoading: isSendingMessage } = useMutation(
+    addMessageToServer,
+    {
+      onSuccess: (data) => {
+        setTimeout(() => {
+          queryClient.invalidateQueries(key);
+        }, 500);
+      },
+      onError: (error: AxiosError) => {
+        handleApiError(error, history);
+      },
+    }
+  );
 
   const scrollDiv = React.useRef<HTMLDivElement>();
 
@@ -128,12 +172,13 @@ const ChatBox = ({ initialMessages }: { initialMessages: any }) => {
             <Formik
               initialValues={{ text: "" }}
               onSubmit={({ text }, { resetForm }) => {
-                const body = {
-                  message: text,
-                  user_id: loggedInUser.id,
-                  created_at: moment().format("YYYY-MM-DD"),
-                };
-                addMessageToChat(body);
+                // const body = {
+                //   message: text,
+                //   user_id: loggedInUser.id,
+                //   created_at: moment().format("YYYY-MM-DD"),
+                // };
+                mutate({ id, message: text });
+                // addMessageToChat(body);
                 resetForm();
               }}
             >

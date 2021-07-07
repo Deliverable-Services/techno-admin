@@ -48,9 +48,9 @@ const PlanCreateUpdateForm = () => {
     "categories",
   ]);
 
-  // const { data: Services, isLoading: isServicesLoading } = useQuery<any>([
-  //   "services",
-  // ]);
+  const { data: Services, isLoading: isServicesLoading } = useQuery<any>([
+    "services",
+  ]);
   const { data, isLoading: dataLoading } = useGetSingleQuery({ id, key });
   const { mutate, isLoading, error, status } = useMutation(
     createUpdataCoupons,
@@ -77,7 +77,14 @@ const PlanCreateUpdateForm = () => {
       <Row className="rounded">
         <Col className="mx-auto">
           <Formik
-            initialValues={apiData || { is_active: 1 }}
+            initialValues={
+              apiData
+                ? {
+                    ...apiData,
+                    services: apiData?.allowed_services.map((s) => id),
+                  }
+                : { is_active: 1 }
+            }
             onSubmit={(values) => {
               console.log({ values });
               const { image, ...rest } = values;
@@ -88,7 +95,7 @@ const PlanCreateUpdateForm = () => {
               if (image && typeof image !== "string")
                 formdata.append("image", image);
 
-              mutate({ formdata, id });
+              // mutate({ formdata, id });
             }}
           >
             {({ setFieldValue, values }) => (
@@ -157,8 +164,8 @@ const PlanCreateUpdateForm = () => {
                       name="services"
                       render={(arrayHelpers) => (
                         <div className="d-flex flex-wrap">
-                          {!isCategoriesLoading &&
-                            categories?.data?.map((p) => (
+                          {!isServicesLoading &&
+                            Services?.data?.map((p) => (
                               <div className="mr-2">
                                 <label
                                   key={p.id}

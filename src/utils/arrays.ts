@@ -35,10 +35,15 @@ export const RowsPerPage = [
 ];
 export const OrderStatus = [
   { id: "", name: "All" },
-  { id: "success", name: "Success" },
-  { id: "pending", name: "Pending" },
+  { id: "confirmed", name: "Success" },
+  { id: "pending_payment", name: "Pending Payment" },
   { id: "error_payment", name: "Payment Error" },
-  { id: "error", name: "Error" },
+  { id: "fulfilled", name: "Fulfilled" },
+  { id: "picked", name: "Fulfilled" },
+  { id: "transit", name: "Fulfilled" },
+  { id: "dispatched", name: "Fulfilled" },
+  { id: "delayed", name: "Delayed" },
+  { id: "processing", name: "Processing" },
 ];
 export const OrderType = [{ id: "normal", name: "Normal" }];
 

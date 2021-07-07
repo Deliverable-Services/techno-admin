@@ -21,6 +21,7 @@ import Dashboard from "./components/Dashboard";
 import Faqs from "./components/Faqs";
 import FaqCreateUpdateForm from "./components/Faqs/FaqsCreateUpdateForm";
 import Issues from "./components/Issues";
+import IssuesCreateForm from "./components/Issues/IssuesCreateForm";
 import SingleIssue from "./components/Issues/single";
 import LoginPage from "./components/LoginPage";
 import NavBar from "./components/NavBar";
@@ -175,6 +176,11 @@ const App = () => {
             />
             <PrivateRoute path="/transactions" exact component={Transactions} />
             <PrivateRoute path="/issues" exact component={Issues} />
+            <PrivateRoute
+              path="/issues/create-edit"
+              exact
+              component={IssuesCreateForm}
+            />
             <PrivateRoute path="/permissions" exact component={Permissions} />
             <PrivateRoute path="/roles" exact component={Roles} />
             <PrivateRoute
