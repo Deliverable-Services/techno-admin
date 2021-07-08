@@ -18,6 +18,7 @@ const useGetSingleQuery = ({ id, key }: IUseGetSingle) => {
   const history = useHistory();
   const allData = useQuery<any>([key, id], getSingle, {
     enabled: !!id,
+    refetchOnMount: "always",
     onError: (error: AxiosError) => {
       handleApiError(error, history);
     },

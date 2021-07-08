@@ -55,6 +55,8 @@ const TestimonialCreateUpdateForm = () => {
   const { mutate, isLoading } = useMutation(createUpdataTestimonial, {
     onSuccess: () => {
       setTimeout(() => queryClient.invalidateQueries(key), 500);
+      if (id)
+        setTimeout(() => queryClient.invalidateQueries(`${key}/${id}`), 500);
       history.replace("/testimonials");
       if (id) return showMsgToast("Testimonial updated successfully");
       showMsgToast("Testimonial created successfully");
