@@ -44,7 +44,9 @@ const FilterSelect = ({
         </option>
         {data &&
           data.map((item) => (
-            <option value={item[valueSelector]}>{item[nameSelector]}</option>
+            <option value={item[valueSelector]}>
+              {item[nameSelector] || item[valueSelector]}
+            </option>
           ))}
       </Form.Control>
     </Form.Group>

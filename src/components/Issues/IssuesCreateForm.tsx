@@ -11,7 +11,7 @@ import BackButton from "../../shared-components/BackButton";
 import { InputField } from "../../shared-components/InputFeild";
 import IsLoading from "../../shared-components/isLoading";
 import API from "../../utils/API";
-import { isActiveArray, IssueStatus } from "../../utils/arrays";
+import { isActiveArray, IssueRelatedTo, IssueStatus } from "../../utils/arrays";
 import { queryClient } from "../../utils/queryClient";
 import { showMsgToast } from "../../utils/showMsgToast";
 
@@ -42,9 +42,13 @@ const IssuesCreateForm = () => {
     },
   });
 
+  if (!state) return <h1>Order Id is required</h1>;
+
   return (
     <>
-      <BackButton title="Issue" />
+      <BackButton
+        title={`Create issue for order #${(state as any)?.order_id}`}
+      />
       <Row className="rounded">
         <Col className="mx-auto">
           <Formik
@@ -71,12 +75,23 @@ const IssuesCreateForm = () => {
                     placeholder="Choose Status"
                   />
                   <InputField
-                    name="description"
-                    label="Description"
-                    placeholder="Description"
-                    as="textarea"
+                    name="related_to"
+                    label="Related To"
+                    placeholder="Related To?"
+                    selectData={IssueRelatedTo}
+                    as="select"
                   />
                 </div>
+                <Row>
+                  <Col md={6}>
+                    <InputField
+                      name="description"
+                      label="Description"
+                      placeholder="Description"
+                      as="textarea"
+                    />
+                  </Col>
+                </Row>
                 <Row className="d-flex justify-content-start">
                   <Col md="2">
                     <Button

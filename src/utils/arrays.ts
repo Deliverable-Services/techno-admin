@@ -1,6 +1,6 @@
 export const isActiveArray = [
-  { id: 1, name: "Yes" },
-  { id: 0, name: "No" },
+  { id: "1", name: "Yes" },
+  { id: "0", name: "No" },
 ];
 
 export const conditionType = [
@@ -33,15 +33,20 @@ export const RowsPerPage = [
   { id: "35", name: 35 },
   { id: "45", name: 45 },
 ];
+export const IssueRelatedTo = [
+  { id: "Order related", name: "Order related" },
+  { id: "Payment Related", name: "Payment Related" },
+  { id: "Other Issue", name: "Other Issue" },
+];
 export const OrderStatus = [
-  { id: "", name: "All" },
-  { id: "confirmed", name: "Success" },
-  { id: "pending_payment", name: "Pending Payment" },
-  { id: "error_payment", name: "Payment Error" },
+  // { id: "", name: "All" },
+  // { id: "confirmed", name: "Success" },
+  // { id: "pending_payment", name: "Pending Payment" },
+  // { id: "error_payment", name: "Payment Error" },
   { id: "fulfilled", name: "Fulfilled" },
-  { id: "picked", name: "Fulfilled" },
-  { id: "transit", name: "Fulfilled" },
-  { id: "dispatched", name: "Fulfilled" },
+  { id: "picked", name: "Picked" },
+  { id: "transit", name: "Transit" },
+  { id: "dispatched", name: "Dispatched" },
   { id: "delayed", name: "Delayed" },
   { id: "processing", name: "Processing" },
 ];

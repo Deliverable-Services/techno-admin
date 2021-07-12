@@ -13,7 +13,7 @@ import { handleApiError } from "../../hooks/handleApiErrors";
 import IsLoading from "../../shared-components/isLoading";
 import API from "../../utils/API";
 import { primaryColor } from "../../utils/constants";
-import { ChartArea, ChartBar, ChartLine } from "./Chart";
+import { BookingLineChart, ChartArea, ChartBar, ChartLine } from "./Chart";
 
 interface IDates {
   start_date: Moment;
@@ -76,7 +76,6 @@ const Dashboard = () => {
 
   return (
     <>
-      <h1>{isFetching ? "Fetching" : null}</h1>
       <Container fluid className="component-wrapper px-0 py-2">
         <div className="card">
           <div className="card-content">
@@ -92,6 +91,8 @@ const Dashboard = () => {
                 startDateId={"start_date"}
                 endDate={moment(filter.dateto)}
                 endDateId={"end_date"}
+                isOutsideRange={() => false}
+                keepOpenOnDateSelect={true}
                 onDatesChange={({ startDate, endDate }) => {
                   if (startDate)
                     _onFilterChange("datefrom", startDate.format("YYYY-MM-DD"));
@@ -119,6 +120,14 @@ const Dashboard = () => {
             </Container>
           </div>
         </div>
+
+        <Container>
+          <h1>
+            {isFetching ? (
+              <h3 className="text-muted text-center">Fetching data....</h3>
+            ) : null}
+          </h1>
+        </Container>
 
         <Container fluid className="px-0">
           <div className="d-flex justify-content-between my-3">
@@ -240,12 +249,12 @@ const Dashboard = () => {
                               <b>{item[1]}</b>
                             </p>
                           </td>
-                          <td className="text-right" style={{ width: "24px" }}>
+                          {/* <td className="text-right" style={{ width: "24px" }}>
                             <span className="tag tag-success d-flex align-items-center w-100">
                               <AiOutlineArrowUp size={13} />
                               <strong>10%</strong>
                             </span>
-                          </td>
+                          </td> */}
                         </tr>
                       ))}
                   </tbody>
@@ -264,11 +273,19 @@ const Dashboard = () => {
                 </div>
 
                 <div className="card-content chart-container">
-                  <ChartLine />
+                  {isBookingAnalyticsLoading ? (
+                    <IsLoading />
+                  ) : (
+                    <BookingLineChart
+                      data={BookingAnalytics?.booking}
+                      xAxisDataKey="date"
+                      dataKey="order"
+                    />
+                  )}
                 </div>
               </div>
 
-              <div className="card ">
+              {/* <div className="card ">
                 <div className="card-header pb-3 d-flex justify-content-between align-items-center">
                   <h5 className="mb-0">
                     <strong>Bookings</strong>
@@ -290,7 +307,7 @@ const Dashboard = () => {
                 <div className="card-content chart-container">
                   <ChartBar />
                 </div>
-              </div>
+              </div> */}
             </div>
           </Container>
         </div>

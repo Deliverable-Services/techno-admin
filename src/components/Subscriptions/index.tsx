@@ -57,7 +57,7 @@ const Subscription = () => {
 
       return "danger";
     };
-    return <CustomBadge title={status.toUpperCase()} variant={setVariant()} />;
+    return <CustomBadge title={status} variant={setVariant()} />;
   };
 
   const _onPlanClick = (id: string) => {
@@ -302,6 +302,7 @@ const Subscription = () => {
                   filter={filter}
                   onFilterChange={_onFilterChange}
                   isDataLoading={isFetching}
+                  isSelectable={false}
                 />
               )}
               {!error && data.length > 0 ? (

@@ -18,6 +18,7 @@ import IsLoading from "../../shared-components/isLoading";
 import PageHeading from "../../shared-components/PageHeading";
 import TablePagination from "../../shared-components/Pagination";
 import ReactTable from "../../shared-components/ReactTable";
+import TableLink from "../../shared-components/TableLink";
 import { areTwoObjEqual } from "../../utils/areTwoObjEqual";
 import { OrderType } from "../../utils/arrays";
 import { primaryColor } from "../../utils/constants";
@@ -78,6 +79,10 @@ const InsideCart = () => {
     if (!id) return;
     history.push("/users/create-edit", { id });
   };
+  const _onOrderClick = (id: string) => {
+    if (!id) return;
+    history.push(`/orders/${id}`);
+  };
 
   const _onFilterChange = (idx: string, value: any) => {
     setFilter((prev) => ({
@@ -97,13 +102,11 @@ const InsideCart = () => {
         accessor: "ref_id",
         Cell: (data: Cell) => {
           return (
-            <p
-              className="text-primary"
-              style={{ cursor: "pointer" }}
-              onClick={() => history.push(`/orders/${data.row.values.id}`)}
-            >
-              {data.row.values["ref_id"]}
-            </p>
+            <TableLink
+              onClick={_onOrderClick}
+              id={data.row.values.id}
+              title={data.row.values["ref_id"]}
+            />
           );
         },
         //accessor is the "key" in the data
@@ -113,13 +116,11 @@ const InsideCart = () => {
         accessor: "user.name", //accessor is the "key" in the data
         Cell: (data: Cell) => {
           return (
-            <p
-              className="text-primary"
-              style={{ cursor: "pointer" }}
-              onClick={() => _onUserClick((data.row.original as any).user_id)}
-            >
-              {data.row.values["user.name"]}
-            </p>
+            <TableLink
+              onClick={_onUserClick}
+              id={(data.row.original as any).user_id}
+              title={data.row.values["user.name"]}
+            />
           );
         },
       },
@@ -326,6 +327,7 @@ const InsideCart = () => {
                       filter={filter}
                       onFilterChange={_onFilterChange}
                       isDataLoading={isFetching}
+                      isSelectable={false}
                     />
                   </>
                 )}

@@ -15,6 +15,7 @@ import { OrderStatus } from "../../utils/arrays";
 import { queryClient } from "../../utils/queryClient";
 import { showMsgToast } from "../../utils/showMsgToast";
 import { AiFillPlusSquare } from "react-icons/ai";
+import CustomBadge from "../../shared-components/CustomBadge";
 
 const key = "bookings";
 
@@ -41,9 +42,13 @@ const SingleOrder = () => {
   const history = useHistory();
   const [showAssignAgent, setShowAssignAgent] = useState(false);
   const { data, isLoading, isFetching } = useGetSingleQuery({ id, key });
-  const { data: Invoice, isLoading: isInvoiceLoading } = useQuery<any>([
-    `${key}/${id}/download-invoice`,
-  ]);
+
+  const { data: Invoice, isLoading: isInvoiceLoading } = useQuery<any>(
+    [`${key}/${data?.transaction?.id}/download-invoice`],
+    {
+      enabled: !!data?.transaction?.id,
+    }
+  );
 
   const { mutate, isLoading: isAsigningLoading } = useMutation(assignAgent, {
     onSuccess: (data) => {
@@ -137,11 +142,13 @@ const SingleOrder = () => {
           </Badge>
         </div>
         <div>
-          <Button variant="success">
-            <div className="text-white">
-              <BiDownload size={24} /> <b>Invoice</b>
-            </div>
-          </Button>
+          {!isLoading && data.transaction && (
+            <Button variant="success">
+              <div className="text-white">
+                <BiDownload size={24} /> <b>Invoice</b>
+              </div>
+            </Button>
+          )}
           <Button className="ml-2" onClick={() => _onCreateIssueClick()}>
             <div className="text-white">
               <AiFillPlusSquare size={24} /> <b>Issue</b>
@@ -507,7 +514,7 @@ const SingleOrder = () => {
                     className="text-black pb-3"
                     style={{ cursor: "pointer", fontWeight: 600 }}
                   >
-                    Order Issue
+                    Order Issues
                   </div>
                 </div>
 
@@ -518,9 +525,22 @@ const SingleOrder = () => {
                     <>
                       <Row>
                         <Col md="auto">
-                          <p className="m-0">
-                            <b>{ticket.title}</b>
-                          </p>
+                          <Container
+                            fluid
+                            className=" m-0 p-0 d-flex align-items-center justify-content-between w-100"
+                          >
+                            <p className="m-0 mr-2 w-100">
+                              <b>{ticket.title}</b>
+                            </p>
+                            <CustomBadge
+                              title={ticket.status}
+                              variant={
+                                ticket.status === "active"
+                                  ? "danger"
+                                  : "success"
+                              }
+                            />
+                          </Container>
                           <p
                             style={{
                               fontSize: 13,
@@ -572,12 +592,6 @@ const SingleOrder = () => {
                       <>
                         <tr>
                           <td className="view-heading py-2">Pick-up Vehicle</td>
-                          <td className="view-subheading py-2 text-right">
-                            {data.vehicle.name}
-                          </td>
-                        </tr>
-                        <tr>
-                          <td className="view-heading py-2">Vehicle Number</td>
                           <td className="view-subheading py-2 text-right">
                             {data.vehicle.name}
                           </td>

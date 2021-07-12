@@ -9,6 +9,7 @@ import useTransactionStoreFilter, {
 } from "../../hooks/useTranscationFilterStore";
 import BreadCrumb from "../../shared-components/BreadCrumb";
 import CreatedUpdatedAt from "../../shared-components/CreatedUpdatedAt";
+import CustomBadge from "../../shared-components/CustomBadge";
 import FilterSelect from "../../shared-components/FilterSelect";
 import IsLoading from "../../shared-components/isLoading";
 import PageHeading from "../../shared-components/PageHeading";
@@ -78,6 +79,15 @@ const Transactions = () => {
     if (!id) return;
     history.push(`/orders/${id}`);
   };
+
+  const Status = ({ status }: { status: string }) => {
+    const setVariant = () => {
+      if (status === "success") return "success";
+
+      return "danger";
+    };
+    return <CustomBadge title={status} variant={setVariant()} />;
+  };
   const columns = useMemo(
     () => [
       {
@@ -129,7 +139,8 @@ const Transactions = () => {
       },
       {
         Header: "Status",
-        accessor: "status",
+        accessor: "status", //accessor is the "key" in the data
+        Cell: (data: Cell) => <Status status={data.row.values.status} />,
       },
       {
         Header: "Created At",
@@ -257,6 +268,7 @@ const Transactions = () => {
                     filter={filter}
                     onFilterChange={_onFilterChange}
                     isDataLoading={isFetching}
+                    isSelectable={false}
                   />
                 </>
               )}

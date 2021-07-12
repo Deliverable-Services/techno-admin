@@ -71,6 +71,36 @@ const ChartLine = () => {
     </ResponsiveContainer>
   );
 };
+const BookingLineChart = ({ data, xAxisDataKey, dataKey }) => {
+  return (
+    <ResponsiveContainer>
+      <LineChart
+        width={"100%"}
+        height={300}
+        data={data}
+        margin={{ top: 10, right: 30, left: 0, bottom: 0 }}
+      >
+        {/* <CartesianGrid str /> */}
+        <XAxis
+          dataKey={xAxisDataKey}
+          tickLine={false}
+          padding={{ left: 20, right: 20 }}
+        />
+        <YAxis tickLine={false} axisLine={false} />
+        <Tooltip />
+        <Legend />
+        <Line
+          type="monotone"
+          dataKey={dataKey}
+          stroke={primaryColor}
+          activeDot={{ r: 8 }}
+        />
+        {/* <Line type="monotone" dataKey="data1" stroke="#00ff00" />
+                <Line type="monotone" dataKey="data3" stroke="#0000ff" /> */}
+      </LineChart>
+    </ResponsiveContainer>
+  );
+};
 
 const ChartArea = () => {
   return (
@@ -132,4 +162,4 @@ const ChartBar = () => {
     </ResponsiveContainer>
   );
 };
-export { ChartLine, ChartArea, ChartBar };
+export { ChartLine, ChartArea, ChartBar, BookingLineChart };
