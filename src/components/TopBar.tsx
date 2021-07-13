@@ -82,6 +82,7 @@ const TopBar = ({ isNavOpen, setIsNavOpen }: INavBar) => {
             : "d-flex align-items-center"
         }
       >
+        {/* Todo: Add notification functionality */}
         {/* <div className="notification">
           <BsBell size={20} />
           <div className="circle bg-primary text-white d-flex  justify-content-center">
@@ -92,7 +93,7 @@ const TopBar = ({ isNavOpen, setIsNavOpen }: INavBar) => {
         </div> */}
 
         <div className="d-flex align-items-center justify-content-center ml-4">
-          <span className="text-muted">{user.name}</span>
+          {user && <span className="text-muted">{user?.name}</span>}
           <Dropdown className="ml-4">
             <Dropdown.Toggle
               id="dropdown-basic"

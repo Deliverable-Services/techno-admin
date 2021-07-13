@@ -1,31 +1,31 @@
 import { useMemo, useState } from "react";
-import { Badge, Button, Container, Modal, Spinner } from "react-bootstrap";
+import { Button, Container } from "react-bootstrap";
 import { BiSad } from "react-icons/bi";
-import { useMutation, useQuery } from "react-query";
+import { useQuery } from "react-query";
 import { useHistory } from "react-router-dom";
 import { Cell } from "react-table";
+import BreadCrumb from "../../shared-components/BreadCrumb";
+import CreatedUpdatedAt from "../../shared-components/CreatedUpdatedAt";
+import CustomBadge from "../../shared-components/CustomBadge";
 import IsLoading from "../../shared-components/isLoading";
 import PageHeading from "../../shared-components/PageHeading";
 import TablePagination from "../../shared-components/Pagination";
 import ReactTable from "../../shared-components/ReactTable";
-import API from "../../utils/API";
 import { primaryColor } from "../../utils/constants";
-import { queryClient } from "../../utils/queryClient";
 import { showErrorToast } from "../../utils/showErrorToast";
 
-const key = "bookings";
+const key = "tickets";
 const intitialFilter = {
   q: "",
   page: null,
   perPage: 25,
+  status: "active",
 };
 
 const Issues = () => {
   const history = useHistory();
   const [selectedRows, setSelectedRows] = useState([]);
-  console.log(selectedRows.map((item) => item.id));
   const [filter, setFilter] = useState(intitialFilter);
-  console.log({ filter });
   const { data, isLoading, isFetching, error } = useQuery<any>(
     [key, , filter],
     {
@@ -35,16 +35,21 @@ const Issues = () => {
     }
   );
 
+  const _onUserClick = (id: string) => {
+    if (!id) return;
+    history.push("/users/create-edit", { id });
+  };
+  const _onOrderClick = (id: string) => {
+    if (!id) return;
+    history.push(`/orders/${id}`);
+  };
   const Status = ({ status }: { status: string }) => {
     const setVairant = () => {
-      if (status === "cancelled" || status === "error_payment") return "danger";
-
-      if (status === "pending" || status === "pending_payment")
-        return "warning";
+      if (status === "closed") return "danger";
 
       return "success";
     };
-    return <Badge variant={setVairant()}>{status}</Badge>;
+    return <CustomBadge variant={setVairant()} title={status} />;
   };
   const _onFilterChange = (idx: string, value: any) => {
     setFilter((prev) => ({
@@ -58,6 +63,10 @@ const Issues = () => {
       {
         Header: "#Id",
         accessor: "id", //accessor is the "key" in the data
+      },
+      {
+        Header: "Title",
+        accessor: "title", //accessor is the "key" in the data
       },
       {
         Header: "Reference Id",
@@ -75,10 +84,52 @@ const Issues = () => {
       {
         Header: "Raised by",
         accessor: "user.name", //accessor is the "key" in the data
+        Cell: (data: Cell) => {
+          if ((data.row.original as any).user_id)
+            return (
+              <p
+                className="text-primary m-0"
+                style={{ cursor: "pointer" }}
+                onClick={() => _onUserClick((data.row.original as any).user_id)}
+              >
+                {data.row.values["user.name"]}
+              </p>
+            );
+          else return "NA";
+        },
       },
       {
         Header: "Order Id",
-        accessor: "order.id", //accessor is the "key" in the data
+        accessor: "order.ref_id", //accessor is the "key" in the data
+        Cell: (data: Cell) => {
+          if ((data.row.original as any).order_id)
+            return (
+              <p
+                className="text-primary m-0"
+                style={{ cursor: "pointer" }}
+                onClick={() =>
+                  _onOrderClick((data.row.original as any).order_id)
+                }
+              >
+                {data.row.values["order.ref_id"]}
+              </p>
+            );
+          else return "NA";
+        },
+      },
+      {
+        Header: "Created At",
+        accessor: "created_at",
+        Cell: (data: Cell) => (
+          <CreatedUpdatedAt date={data.row.values.created_at} />
+        ),
+      },
+      {
+        Header: "Updated At",
+        accessor: "updated_at",
+        Cell: (data: Cell) => (
+          <CreatedUpdatedAt date={data.row.values.updated_at} />
+        ),
       },
       {
         Header: "Actions",
@@ -112,7 +163,30 @@ const Issues = () => {
   return (
     <>
       <PageHeading title="Issues" totalRecords={50} />
-
+      {!isLoading && (
+        <Container fluid>
+          <div>
+            <div className="filter">
+              <BreadCrumb
+                onFilterChange={_onFilterChange}
+                value="active"
+                currentValue={filter.status}
+                dataLength={data?.data?.length}
+                idx="status"
+                title="Active"
+              />
+              <BreadCrumb
+                onFilterChange={_onFilterChange}
+                value="closed"
+                currentValue={filter.status}
+                dataLength={data?.data?.length}
+                idx="status"
+                title="Closed"
+              />
+            </div>
+          </div>
+        </Container>
+      )}
       <Container fluid className="card component-wrapper px-0 py-2">
         <Container fluid className="h-100 p-0">
           {isLoading ? (

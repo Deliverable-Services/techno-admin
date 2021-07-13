@@ -13,49 +13,55 @@ import { handleApiError } from "../../hooks/handleApiErrors";
 import IsLoading from "../../shared-components/isLoading";
 import API from "../../utils/API";
 import { primaryColor } from "../../utils/constants";
-import { ChartArea, ChartBar, ChartLine } from "./Chart";
-
-const getAnalytics = async () => {
-  const r = await API.get("analytics");
-
-  return r.data;
-};
+import { BookingLineChart, ChartArea, ChartBar, ChartLine } from "./Chart";
 
 interface IDates {
-  start_date: Moment | null;
-  end_date: Moment | null;
+  start_date: Moment;
+  end_date: Moment;
   focusedInput: FocusedInputShape | null;
 }
 
+const returnPercentage = (newData: number, lastTotal: number) => {
+  if (newData === 0 && lastTotal === 0) return 0;
+  const p = newData / (lastTotal + newData);
+  return (p * 100).toFixed(1);
+};
+
+const bookingFilter = {
+  datefrom: moment().startOf("month").format("YYYY-MM-DD"),
+  dateto: moment().endOf("month").format("YYYY-MM-DD"),
+  duration: "month",
+};
+
 const Dashboard = () => {
   const history = useHistory();
-  const [chartOneSelect, setChartOneSelect] = useState<string>("1");
-  const [chartTwoSelect, setChartTwoSelect] = useState<string>("");
-  const [dates, setDates] = useState<IDates>({
-    start_date: null,
-    end_date: null,
-    focusedInput: null,
-  });
-  const [start_date, setStartDate] = useState<Moment | null>(moment());
-  const [end_date, setEndDate] = useState<Moment | null>(null);
+  const [filter, setFilter] = useState(bookingFilter);
   const [focusedInput, setFocusInput] = useState<FocusedInputShape | null>(
     null
   );
-  const { data, isLoading, isFetching } = useQuery<any>(["analytics"], {
-    onError: (error: AxiosError) => {
-      handleApiError(error, history);
-    },
-  });
+  const { data, isLoading, isFetching } = useQuery<any>(
+    ["analytics", , filter],
+    {
+      onError: (error: AxiosError) => {
+        handleApiError(error, history);
+      },
+    }
+  );
   const { data: BookingAnalytics, isLoading: isBookingAnalyticsLoading } =
-    useQuery<any>(["bookingAnalytics", , { month: 1 }], {
+    useQuery<any>(["bookingAnalytics", , filter], {
       onError: (error: AxiosError) => {
         handleApiError(error, history);
       },
     });
-  const handleChartOneChange = (e: any) => setChartOneSelect(e.target.value);
-  const handleChartTwoChange = (e: any) => setChartTwoSelect(e.target.value);
 
-  if (isLoading || isFetching) return <IsLoading />;
+  const _onFilterChange = (idx: any, value: any) => {
+    setFilter((prev) => ({
+      ...prev,
+      [idx]: value,
+    }));
+  };
+
+  if (isLoading) return <IsLoading />;
 
   if (!data && (!isLoading || !isFetching)) {
     return (
@@ -81,20 +87,47 @@ const Dashboard = () => {
                 <BsCalendar color={primaryColor} size={24} className="mr-3" />
               </div>
               <DateRangePicker
-                startDate={start_date}
+                startDate={moment(filter.datefrom)}
                 startDateId={"start_date"}
-                endDate={end_date}
+                endDate={moment(filter.dateto)}
                 endDateId={"end_date"}
+                isOutsideRange={() => false}
+                keepOpenOnDateSelect={true}
                 onDatesChange={({ startDate, endDate }) => {
-                  if (startDate) setStartDate(startDate);
-                  if (endDate) setEndDate(endDate);
+                  if (startDate)
+                    _onFilterChange("datefrom", startDate.format("YYYY-MM-DD"));
+                  if (endDate)
+                    _onFilterChange("dateto", endDate.format("YYYY-MM-DD"));
                 }}
                 focusedInput={focusedInput}
                 onFocusChange={(focusedInput) => setFocusInput(focusedInput)}
               />
+              <Form.Control
+                as="select"
+                custom
+                onChange={(e) => {
+                  _onFilterChange("duration", e.target.value);
+                }}
+                className="bg-transparent m-0 ml-4"
+                style={{ width: "100px", height: "44px" }}
+                value={filter.duration}
+              >
+                <option value="year">Year</option>
+                <option value="month">Month</option>
+                <option value="week">Week</option>
+                <option value="day">Daily</option>
+              </Form.Control>
             </Container>
           </div>
         </div>
+
+        <Container>
+          <h1>
+            {isFetching ? (
+              <h3 className="text-muted text-center">Fetching data....</h3>
+            ) : null}
+          </h1>
+        </Container>
 
         <Container fluid className="px-0">
           <div className="d-flex justify-content-between my-3">
@@ -104,14 +137,16 @@ const Dashboard = () => {
 
                 <div className="d-flex align-items-center justify-content-between mt-2">
                   <h1 className="text-black font-weight-bold">
-                    {data?.customer}
+                    {data?.customer + data?.customerprev}
                   </h1>
                 </div>
 
                 <div className="d-flex align-items-center justify-content-start">
                   <span className="tag tag-success d-flex align-items-center">
                     <AiOutlineArrowUp size={13} />
-                    <strong>10%</strong>
+                    <strong>
+                      {returnPercentage(data.customer, data.customerprev)}%
+                    </strong>
                   </span>
 
                   <span className="text-muted ml-2">from 3</span>
@@ -124,13 +159,17 @@ const Dashboard = () => {
                 <div className="lead">Orders</div>
 
                 <div className="d-flex align-items-center justify-content-between mt-2">
-                  <h1 className="text-black font-weight-bold">{data?.order}</h1>
+                  <h1 className="text-black font-weight-bold">
+                    {data?.order + data?.orderprev}
+                  </h1>
                 </div>
 
                 <div className="d-flex align-items-center justify-content-start">
                   <span className="tag tag-success d-flex align-items-center">
                     <AiOutlineArrowUp size={13} />
-                    <strong>10%</strong>
+                    <strong>
+                      {returnPercentage(data?.order, data?.orderprev)}%
+                    </strong>
                   </span>
 
                   <span className="text-muted ml-2">from 3</span>
@@ -144,14 +183,20 @@ const Dashboard = () => {
 
                 <div className="d-flex align-items-center justify-content-between mt-2">
                   <h1 className="text-black font-weight-bold">
-                    {data?.subscription}
+                    {data?.subscription + data?.subscriptionprev}
                   </h1>
                 </div>
 
                 <div className="d-flex align-items-center justify-content-start">
                   <span className="tag tag-success d-flex align-items-center">
                     <AiOutlineArrowUp size={13} />
-                    <strong>10%</strong>
+                    <strong>
+                      {returnPercentage(
+                        data?.subscription,
+                        data?.subscriptionprev
+                      )}
+                      %
+                    </strong>
                   </span>
 
                   <span className="text-muted ml-2">from 3</span>
@@ -164,13 +209,17 @@ const Dashboard = () => {
                 <div className="lead">Agents</div>
 
                 <div className="d-flex align-items-center justify-content-between mt-2">
-                  <h1 className="text-black font-weight-bold">{data?.agent}</h1>
+                  <h1 className="text-black font-weight-bold">
+                    {data?.agent + data?.agentprev}
+                  </h1>
                 </div>
 
                 <div className="d-flex align-items-center justify-content-start">
                   <span className="tag tag-success d-flex align-items-center">
                     <AiOutlineArrowUp size={13} />
-                    <strong>10%</strong>
+                    <strong>
+                      {returnPercentage(data?.agent, data?.agentprev)}%
+                    </strong>
                   </span>
 
                   <span className="text-muted ml-2">from 3</span>
@@ -200,12 +249,12 @@ const Dashboard = () => {
                               <b>{item[1]}</b>
                             </p>
                           </td>
-                          <td className="text-right" style={{ width: "24px" }}>
+                          {/* <td className="text-right" style={{ width: "24px" }}>
                             <span className="tag tag-success d-flex align-items-center w-100">
                               <AiOutlineArrowUp size={13} />
                               <strong>10%</strong>
                             </span>
-                          </td>
+                          </td> */}
                         </tr>
                       ))}
                   </tbody>
@@ -249,42 +298,26 @@ const Dashboard = () => {
                   <h5 className="mb-0">
                     <strong>Bookings</strong>
                   </h5>
-                  <div>
-                    <Form.Control
-                      as="select"
-                      custom
-                      onChange={handleChartOneChange}
-                      className="bg-transparent"
-                    >
-                      <option value="1">Option 1</option>
-                      <option value="2">Option 2</option>
-                      <option value="3">Option 3</option>
-                    </Form.Control>
-                  </div>
                 </div>
 
                 <div className="card-content chart-container">
-                  <ChartLine />
+                  {isBookingAnalyticsLoading ? (
+                    <IsLoading />
+                  ) : (
+                    <BookingLineChart
+                      data={BookingAnalytics?.booking}
+                      xAxisDataKey="date"
+                      dataKey="order"
+                    />
+                  )}
                 </div>
               </div>
 
-              <div className="card ">
+              {/* <div className="card ">
                 <div className="card-header pb-3 d-flex justify-content-between align-items-center">
                   <h5 className="mb-0">
                     <strong>Bookings</strong>
                   </h5>
-                  <div>
-                    <Form.Control
-                      as="select"
-                      custom
-                      onChange={handleChartOneChange}
-                      className="bg-transparent"
-                    >
-                      <option value="1">Option 1</option>
-                      <option value="2">Option 2</option>
-                      <option value="3">Option 3</option>
-                    </Form.Control>
-                  </div>
                 </div>
 
                 <div className="card-content chart-container">
@@ -297,24 +330,12 @@ const Dashboard = () => {
                   <h5 className="mb-0">
                     <strong>Bookings</strong>
                   </h5>
-                  <div>
-                    <Form.Control
-                      as="select"
-                      custom
-                      onChange={handleChartOneChange}
-                      className="bg-transparent"
-                    >
-                      <option value="1">Option 1</option>
-                      <option value="2">Option 2</option>
-                      <option value="3">Option 3</option>
-                    </Form.Control>
-                  </div>
                 </div>
 
                 <div className="card-content chart-container">
                   <ChartBar />
                 </div>
-              </div>
+              </div> */}
             </div>
           </Container>
         </div>

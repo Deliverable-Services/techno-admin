@@ -35,7 +35,8 @@ interface Props {
   filter?: any;
   onFilterChange?: (idx: string, value: any) => void;
   isDataLoading?: boolean;
-  setSelectedRowIds?: any
+  setSelectedRowIds?: any;
+  isSelectable?: boolean;
 }
 interface ISearchInput {
   preGlobalFilteredRows: any;
@@ -104,7 +105,8 @@ function ReactTable({
   filter,
   onFilterChange,
   isDataLoading,
-  setSelectedRowIds
+  setSelectedRowIds,
+  isSelectable = true,
 }: Props): ReactElement {
   const [records, setRecords] = React.useState(data);
   const updateMyData = (rowIndex: any, columnID: any, newValue: any) => {
@@ -160,32 +162,32 @@ function ReactTable({
     useRowSelect,
     getRowId,
     (hooks) => {
-      hooks.visibleColumns.push((columns) => [
-        {
-          id: "selection",
+      isSelectable &&
+        hooks.visibleColumns.push((columns) => [
+          {
+            id: "selection",
 
-          // The header can use the table's getToggleAllRowsSelectedProps method
-          // to render a checkbox
-          Header: ({ getToggleAllRowsSelectedProps }) => (
-            <div>
-              <IndeterminateCheckbox {...getToggleAllRowsSelectedProps()} />
-            </div>
-          ),
-          // The cell can use the individual row's getToggleRowSelectedProps method
-          // to the render a checkbox
-          Cell: ({ row }) => (
-            <div>
-              <IndeterminateCheckbox {...row.getToggleRowSelectedProps()} />
-            </div>
-          ),
-        },
-        ...columns,
-      ]);
+            // The header can use the table's getToggleAllRowsSelectedProps method
+            // to render a checkbox
+            Header: ({ getToggleAllRowsSelectedProps }) => (
+              <div>
+                <IndeterminateCheckbox {...getToggleAllRowsSelectedProps()} />
+              </div>
+            ),
+            // The cell can use the individual row's getToggleRowSelectedProps method
+            // to the render a checkbox
+            Cell: ({ row }) => (
+              <div>
+                <IndeterminateCheckbox {...row.getToggleRowSelectedProps()} />
+              </div>
+            ),
+          },
+          ...columns,
+        ]);
     }
   );
 
   React.useEffect(() => {
-
     function filterRows() {
       let data = [];
       selectedFlatRows.map((d) => {
@@ -194,10 +196,9 @@ function ReactTable({
 
       return data;
     }
-    if (setSelectedRowIds) setSelectedRowIds(selectedRowIds)
+    if (setSelectedRowIds) setSelectedRowIds(selectedRowIds);
 
     if (setSelectedRows) setSelectedRows(filterRows);
-
   }, [selectedRowIds]);
 
   const handleDragEnd = (result: any) => {
@@ -268,7 +269,7 @@ function ReactTable({
                 return (
                   <div
                     key={column.id}
-                    className="custom-control custom-checkbox"
+                    className="custom-control custom-checkbox w-100 px-2"
                   >
                     <input
                       type="checkbox"
@@ -289,7 +290,7 @@ function ReactTable({
                         className="custom-control-label"
                         htmlFor={column.id}
                       >
-                        <p>{column.Header}</p>
+                        <p style={{ whiteSpace: "nowrap" }}>{column.Header}</p>
                       </label>
                     </div>
                   </div>

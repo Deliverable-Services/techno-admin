@@ -1,6 +1,6 @@
 import { AxiosError } from "axios";
 import bsCustomFileInput from "bs-custom-file-input";
-import { Form, Formik } from "formik";
+import { FieldArray, Form, Formik } from "formik";
 import { useEffect } from "react";
 import { Button, Col, Row, Spinner } from "react-bootstrap";
 import { useMutation, useQuery } from "react-query";
@@ -47,6 +47,10 @@ const PlanCreateUpdateForm = () => {
   const { data: categories, isLoading: isCategoriesLoading } = useQuery<any>([
     "categories",
   ]);
+
+  const { data: Services, isLoading: isServicesLoading } = useQuery<any>([
+    "services",
+  ]);
   const { data, isLoading: dataLoading } = useGetSingleQuery({ id, key });
   const { mutate, isLoading, error, status } = useMutation(
     createUpdataCoupons,
@@ -73,8 +77,16 @@ const PlanCreateUpdateForm = () => {
       <Row className="rounded">
         <Col className="mx-auto">
           <Formik
-            initialValues={apiData || { is_active: 1 }}
+            initialValues={
+              apiData
+                ? {
+                    ...apiData,
+                    services: apiData?.allowed_services.map((s) => id),
+                  }
+                : { is_active: 1 }
+            }
             onSubmit={(values) => {
+              console.log({ values });
               const { image, ...rest } = values;
               const formdata = new FormData();
 
@@ -83,10 +95,10 @@ const PlanCreateUpdateForm = () => {
               if (image && typeof image !== "string")
                 formdata.append("image", image);
 
-              mutate({ formdata, id });
+              // mutate({ formdata, id });
             }}
           >
-            {({ setFieldValue }) => (
+            {({ setFieldValue, values }) => (
               <Form>
                 <div className="form-container  py-2 ">
                   <InputField
@@ -142,11 +154,55 @@ const PlanCreateUpdateForm = () => {
                     placeholder="Choose is popular"
                   />
                 </div>
-                <TextEditor
-                  name="description"
-                  label="Description"
-                  setFieldValue={setFieldValue}
-                />
+
+                <Row>
+                  <Col xl={12} sm={12}>
+                    <p className="text-black font-weight-bold small">
+                      Services
+                    </p>
+                    <FieldArray
+                      name="services"
+                      render={(arrayHelpers) => (
+                        <div className="d-flex flex-wrap">
+                          {!isServicesLoading &&
+                            Services?.data?.map((p) => (
+                              <div className="mr-2">
+                                <label
+                                  key={p.id}
+                                  className="d-flex align-items-center"
+                                >
+                                  <input
+                                    name="services"
+                                    type="checkbox"
+                                    value={p.id}
+                                    checked={values?.services?.includes(p.id)}
+                                    onChange={(e) => {
+                                      if (e.target.checked) {
+                                        arrayHelpers.push(p.id);
+                                      } else {
+                                        const idx = values?.services?.indexOf(
+                                          p.id
+                                        );
+                                        arrayHelpers.remove(idx);
+                                      }
+                                    }}
+                                  />
+                                  <span className=" ml-2 ">{p.name}</span>
+                                </label>
+                              </div>
+                            ))}
+                        </div>
+                      )}
+                    />
+                  </Col>
+                  <Col xl={12} sm={12}>
+                    <TextEditor
+                      name="description"
+                      label="Description"
+                      setFieldValue={setFieldValue}
+                    />
+                  </Col>
+                </Row>
                 <Row className="d-flex justify-content-start">
                   <Col md="2">
                     <Button

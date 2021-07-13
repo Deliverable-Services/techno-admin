@@ -18,6 +18,7 @@ import IsLoading from "../../shared-components/isLoading";
 import PageHeading from "../../shared-components/PageHeading";
 import TablePagination from "../../shared-components/Pagination";
 import ReactTable from "../../shared-components/ReactTable";
+import TableLink from "../../shared-components/TableLink";
 import { areTwoObjEqual } from "../../utils/areTwoObjEqual";
 import { InsideCart, OrderType } from "../../utils/arrays";
 import { primaryColor } from "../../utils/constants";
@@ -94,6 +95,11 @@ const Orders = () => {
     history.push("/users/create-edit", { id });
   };
 
+  const _onOrderClick = (id: string) => {
+    if (!id) return;
+    history.push(`/orders/${id}`);
+  };
+
   const _onFilterChange = (idx: string, value: any) => {
     setFilter((prev) => ({
       ...prev,
@@ -112,13 +118,11 @@ const Orders = () => {
         accessor: "ref_id",
         Cell: (data: Cell) => {
           return (
-            <p
-              className="text-primary"
-              style={{ cursor: "pointer" }}
-              onClick={() => history.push(`/orders/${data.row.values.id}`)}
-            >
-              {data.row.values["ref_id"]}
-            </p>
+            <TableLink
+              onClick={_onOrderClick}
+              id={data.row.values.id}
+              title={data.row.values["ref_id"]}
+            />
           );
         },
         //accessor is the "key" in the data
@@ -128,13 +132,11 @@ const Orders = () => {
         accessor: "user.name", //accessor is the "key" in the data
         Cell: (data: Cell) => {
           return (
-            <p
-              className="text-primary"
-              style={{ cursor: "pointer" }}
-              onClick={() => _onUserClick((data.row.original as any).user_id)}
-            >
-              {data.row.values["user.name"]}
-            </p>
+            <TableLink
+              onClick={_onUserClick}
+              id={(data.row.original as any).user_id}
+              title={data.row.values["user.name"]}
+            />
           );
         },
       },
@@ -142,19 +144,13 @@ const Orders = () => {
         Header: "Agent",
         accessor: "agent.name",
         Cell: (data: Cell) => {
-          if ((data.row.original as any).agent_id)
-            return (
-              <p
-                className="text-primary"
-                style={{ cursor: "pointer" }}
-                onClick={() =>
-                  _onUserClick((data.row.original as any).agent_id)
-                }
-              >
-                {data.row.values["agent.name"]}
-              </p>
-            );
-          else return "NA";
+          return (
+            <TableLink
+              onClick={_onUserClick}
+              id={(data.row.original as any).agent_id}
+              title={data.row.values["agent.name"]}
+            />
+          );
         },
       },
       {
@@ -173,10 +169,6 @@ const Orders = () => {
         Cell: (data: Cell) => (
           <CreatedUpdatedAt date={data.row.values.scheduled_at} />
         ),
-      },
-      {
-        Header: "Inside Cart",
-        accessor: "inside_cart",
       },
       {
         Header: "Paid Amount",
@@ -239,19 +231,19 @@ const Orders = () => {
           />
           <BreadCrumb
             onFilterChange={onFilterChange}
-            value="success"
+            value="confirmed"
             currentValue={filter.status}
             dataLength={data?.data?.length}
             idx="status"
-            title="Success"
+            title="Confirmed"
           />
           <BreadCrumb
             onFilterChange={onFilterChange}
-            value="pending"
+            value="pending_payment"
             currentValue={filter.status}
             dataLength={data?.data?.length}
             idx="status"
-            title="Pending"
+            title="Pending Payment"
           />
           <BreadCrumb
             onFilterChange={onFilterChange}
@@ -380,14 +372,15 @@ const Orders = () => {
                       filter={filter}
                       onFilterChange={_onFilterChange}
                       isDataLoading={isFetching}
+                      isSelectable={false}
                     />
                   </>
                 )}
-                {!error && data.length > 0 ? (
+                {!error && data?.data?.length > 0 ? (
                   <TablePagination
                     currentPage={data?.current_page}
                     lastPage={data?.last_page}
-                    setPage={setPage}
+                    setPage={_onFilterChange}
                     hasNextPage={!!data?.next_page_url}
                     hasPrevPage={!!data?.prev_page_url}
                   />

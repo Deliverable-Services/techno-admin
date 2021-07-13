@@ -21,6 +21,7 @@ import Dashboard from "./components/Dashboard";
 import Faqs from "./components/Faqs";
 import FaqCreateUpdateForm from "./components/Faqs/FaqsCreateUpdateForm";
 import Issues from "./components/Issues";
+import IssuesCreateForm from "./components/Issues/IssuesCreateForm";
 import SingleIssue from "./components/Issues/single";
 import LoginPage from "./components/LoginPage";
 import NavBar from "./components/NavBar";
@@ -38,6 +39,8 @@ import Roles from "./components/Roles";
 import RolesCreateUpdateForm from "./components/Roles/RolesCreateUpdateForm";
 import Services from "./components/Servicies";
 import ServicesCreateUpdateForm from "./components/Servicies/ServiciesCreateUpdateForm";
+import StaticPages from "./components/StaticPages";
+import StaticPageCreateForm from "./components/StaticPages/StaticPageCreateUpdateForm";
 import Subscriptions from "./components/Subscriptions";
 import SingleSubscriptions from "./components/Subscriptions/single";
 import Testimonial from "./components/Testimonials";
@@ -173,6 +176,11 @@ const App = () => {
             />
             <PrivateRoute path="/transactions" exact component={Transactions} />
             <PrivateRoute path="/issues" exact component={Issues} />
+            <PrivateRoute
+              path="/issues/create-edit"
+              exact
+              component={IssuesCreateForm}
+            />
             <PrivateRoute path="/permissions" exact component={Permissions} />
             <PrivateRoute path="/roles" exact component={Roles} />
             <PrivateRoute
@@ -225,6 +233,12 @@ const App = () => {
               path="/subscriptions"
               exact
               component={Subscriptions}
+            />
+            <PrivateRoute path="/static-pages" exact component={StaticPages} />
+            <PrivateRoute
+              path="/static-pages/create-edit"
+              exact
+              component={StaticPageCreateForm}
             />
             <PrivateRoute
               path="/subscriptions/:id"

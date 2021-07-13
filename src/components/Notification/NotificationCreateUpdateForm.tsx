@@ -3,7 +3,7 @@ import bsCustomFileInput from "bs-custom-file-input";
 import { Form, Formik } from "formik";
 import moment from "moment";
 import { useEffect, useMemo, useState } from "react";
-import { Button, Col, Container, Row, Spinner } from "react-bootstrap";
+import { Button, Col, Row, Spinner } from "react-bootstrap";
 import { RiTimerFill } from "react-icons/ri";
 import { useMutation, useQuery } from "react-query";
 import { useHistory, useLocation } from "react-router-dom";
@@ -11,9 +11,7 @@ import { Cell } from "react-table";
 import { handleApiError } from "../../hooks/handleApiErrors";
 import useGetSingleQuery from "../../hooks/useGetSingleQuery";
 import BackButton from "../../shared-components/BackButton";
-import BreadCrumb from "../../shared-components/BreadCrumb";
 import DatePicker from "../../shared-components/DatePicker";
-import FilterSelect from "../../shared-components/FilterSelect";
 import { InputField } from "../../shared-components/InputFeild";
 import IsActiveBadge from "../../shared-components/IsActiveBadge";
 import IsLoading from "../../shared-components/isLoading";
@@ -29,14 +27,10 @@ const key = "fcm-notification";
 
 const createUpdataBrand = ({ formdata, id }: { formdata: any; id: string }) => {
   if (!id) {
-    return API.post(`${key}`, formdata, {
-      headers: { "Content-Type": "multipart/form-data" },
-    });
+    return API.post(`${key}`, formdata);
   }
 
-  return API.post(`${key}/${id}`, formdata, {
-    headers: { "Content-Type": "multipart/form-data" },
-  });
+  return API.post(`${key}/${id}`, formdata);
 };
 
 const intitialFilter = {
@@ -49,13 +43,15 @@ const intitialFilter = {
 const NotificationCreateUpdateForm = () => {
   const { state } = useLocation();
   const history = useHistory();
-  const [isScheduleOpen, setIsScheduleOpen] = useState(false);
+  const id = state ? (state as any).id : null;
+  const [isScheduleOpen, setIsScheduleOpen] = useState(() =>
+    id ? true : false
+  );
   const [selectedRows, setSelectedRows] = useState([]);
   const [selectedRowIds, setSelectedRowIds] = useState<Record<string, boolean>>(
     {}
   );
   const [filter, setFilter] = useState(intitialFilter);
-  const id = state ? (state as any).id : null;
   useEffect(() => {
     bsCustomFileInput.init();
   }, []);
@@ -157,50 +153,58 @@ const NotificationCreateUpdateForm = () => {
                     label="Title"
                     required
                   />
+                  <InputField
+                    as="select"
+                    selectData={NotificationSendToCategories}
+                    name="send_to"
+                    label="Send to ?"
+                    placeholder="Choose user category"
+                  />
+                  <InputField
+                    name="description"
+                    placeholder="Description"
+                    label="Description"
+                    as="textarea"
+                    required
+                  />
                 </div>
                 <Row>
-                  <Col md={12} xl={12}>
-                    <TextEditor
-                      name="description"
-                      label="Description"
-                      setFieldValue={setFieldValue}
-                    />
-                  </Col>
-
                   <Col md={12} xl={12}>
                     <h4 className="font-weight-bold d-flex align-items-center ">
                       <RiTimerFill size={24} /> <span> Schedule</span>
                     </h4>
-                    <div className="navigation-tab mt-3">
-                      <button
-                        type="button"
-                        className={
-                          !isScheduleOpen ? "text-primary" : "text-muted"
-                        }
-                        style={{
-                          borderBottom: !isScheduleOpen
-                            ? ` 2px solid ${primaryColor}`
-                            : "",
-                        }}
-                        onClick={_closeSchedulTab}
-                      >
-                        <b>Now</b>
-                      </button>
-                      <button
-                        type="button"
-                        className={`${
-                          isScheduleOpen ? "text-primary" : "text-muted"
-                        } ml-2`}
-                        style={{
-                          borderBottom: isScheduleOpen
-                            ? ` 2px solid ${primaryColor}`
-                            : "",
-                        }}
-                        onClick={_openSchedulTab}
-                      >
-                        <b>Schedule</b>
-                      </button>
-                    </div>
+                    {!id && (
+                      <div className="navigation-tab mt-3">
+                        <button
+                          type="button"
+                          className={
+                            !isScheduleOpen ? "text-primary" : "text-muted"
+                          }
+                          style={{
+                            borderBottom: !isScheduleOpen
+                              ? ` 2px solid ${primaryColor}`
+                              : "",
+                          }}
+                          onClick={_closeSchedulTab}
+                        >
+                          <b>Now</b>
+                        </button>
+                        <button
+                          type="button"
+                          className={`${
+                            isScheduleOpen ? "text-primary" : "text-muted"
+                          } ml-2`}
+                          style={{
+                            borderBottom: isScheduleOpen
+                              ? ` 2px solid ${primaryColor}`
+                              : "",
+                          }}
+                          onClick={_openSchedulTab}
+                        >
+                          <b>Schedule</b>
+                        </button>
+                      </div>
+                    )}
 
                     <div className="display-for-schedule mt-2">
                       {!isScheduleOpen ? (
@@ -221,19 +225,6 @@ const NotificationCreateUpdateForm = () => {
                         </div>
                       )}
                     </div>
-                  </Col>
-                  <Col md={6}>
-                    <h4 className="font-weight-bold d-flex align-items-center ">
-                      <span> Send Notification To</span>
-                    </h4>
-
-                    <InputField
-                      as="select"
-                      selectData={NotificationSendToCategories}
-                      name="send_to"
-                      label="Send to ?"
-                      placeholder="Choose user category"
-                    />
                   </Col>
                   <Col md={12} xl={12}>
                     {!error && !isUsersLoading && Users && (

@@ -1,183 +1,213 @@
-import { Form, Formik } from 'formik'
-import moment from 'moment'
-import React from 'react'
-import { Container } from 'react-bootstrap'
-import { RiSendPlane2Fill } from 'react-icons/ri'
-import { primaryColor } from '../../utils/constants'
+import { AxiosError } from "axios";
+import { Form, Formik } from "formik";
+import moment from "moment";
+import React from "react";
+import { Container } from "react-bootstrap";
+import { RiSendPlane2Fill } from "react-icons/ri";
+import { useMutation } from "react-query";
+import { useHistory } from "react-router-dom";
+import { handleApiError } from "../../hooks/handleApiErrors";
+import useUserProfileStore from "../../hooks/useUserProfileStore";
+import API from "../../utils/API";
+import { primaryColor } from "../../utils/constants";
+import { queryClient } from "../../utils/queryClient";
+import { showMsgToast } from "../../utils/showMsgToast";
 
+const key = "tickets";
 
-const initialMessage = [
+const addMessageToServer = ({ id, message }: any) => {
+  return API.post(
+    `${key}/${id}/message`,
+    { message },
     {
-        text: "Hi! Please fix this issue. Some important stuff is missing from the car",
-        user: {
-            id: 1,
-            name: "Hitesh Kumar"
-        },
-        send_at: moment().subtract(1, "hour").fromNow(),
-        from_me: false
-    },
-    {
-        text: "I'm working on it ",
-        user: {
-            id: 2,
-            name: "Dishant"
-        },
-        send_at: moment().fromNow(),
-        from_me: true
-    },
-    {
-        text: "Ok Thanks",
-        user: {
-            id: 1,
-            name: "Hitesh Kumar"
-        },
-        send_at: moment().fromNow(),
-        from_me: false
-    },
-]
-
-const ChatBox = () => {
-
-    const [messages, setMessages] = React.useState(initialMessage)
-
-    const scrollDiv = React.useRef<HTMLDivElement>()
-
-    const addMessageToChat = (messageBody: any) => {
-        setMessages(prev => ([
-            ...prev,
-            messageBody
-        ])
-        )
-
-        scrollDiv.current.scrollIntoView()
+      headers: { "Content-Type": "application/json" },
     }
+  );
+};
 
-    return (
-        <div
+const ChatBox = ({
+  initialMessages,
+  id,
+}: {
+  initialMessages: any;
+  id: any;
+}) => {
+  const history = useHistory();
+  const loggedInUser = useUserProfileStore((state) => state.user);
+
+  const [messages, setMessages] = React.useState(initialMessages);
+
+  // React.useEffect(() => {
+  //   setInterval(() => queryClient.invalidateQueries(`${key}`), 10000);
+  // }, []);
+
+  const { mutate, isLoading: isSendingMessage } = useMutation(
+    addMessageToServer,
+    {
+      onSuccess: (data) => {
+        setTimeout(() => {
+          queryClient.invalidateQueries(key);
+        }, 500);
+      },
+      onError: (error: AxiosError) => {
+        handleApiError(error, history);
+      },
+    }
+  );
+
+  const scrollDiv = React.useRef<HTMLDivElement>();
+
+  const addMessageToChat = (messageBody: any) => {
+    setMessages((prev) => [...prev, messageBody]);
+
+    scrollDiv.current.scrollIntoView();
+  };
+
+  const isMsgFromMe = (user_id: number) => {
+    if (loggedInUser.id === user_id) return true;
+
+    return false;
+  };
+
+  return (
+    <div>
+      {/* <!-- DIRECT CHAT PRIMARY --> */}
+      <div
+        className="card d-flex flex-column justify-content-between "
+        style={{
+          minHeight: "75vh",
+          backgroundColor: "#7598ce2b",
+        }}
+      >
+        <Container
+          fluid
+          className="messages-container p-0 py-2 hide-scroll"
+          style={{
+            maxHeight: "70vh",
+            overflow: "auto",
+          }}
         >
-            {/* <!-- DIRECT CHAT PRIMARY --> */}
-            <div className="card d-flex flex-column justify-content-between "
-                style={{
-                    minHeight: "75vh",
-                    backgroundColor: "#7598ce2b"
-                }}
+          {messages.length === 0 && (
+            <p className="text-center text-muted">
+              Send Message to start a conversation
+            </p>
+          )}
+          {messages?.map((msg) => (
+            <div
+              className="message w-100"
+              style={{
+                position: "relative",
+                marginBottom: 6,
+              }}
             >
-                <Container fluid className="messages-container p-0 py-2 hide-scroll"
-                    style={{
-                        maxHeight: "70vh",
-                        overflow: "auto"
-                    }}
+              <div
+                className={`d-flex`}
+                style={{
+                  // marginLeft: msg.from_me ? "auto" : "",
+                  display: "flex",
+                  minWidth: "50%",
+
+                  flexDirection: !isMsgFromMe(msg.user_id)
+                    ? "row"
+                    : "row-reverse",
+                }}
+              >
+                <div
+                  className="user-image mx-1"
+                  style={{
+                    flex: 0,
+                  }}
                 >
+                  <div
+                    className="d-flex align-items-center justify-content-center text-black "
+                    style={{
+                      height: 30,
+                      width: 30,
+                      borderRadius: "50%",
+                      backgroundColor: isMsgFromMe(msg.user_id)
+                        ? "#7bbfff"
+                        : "#ffd76a",
+                    }}
+                  >
+                    {msg?.user?.name.slice(0, 1).toUpperCase() || "A"}
+                  </div>
+                  {/* <Image src={require("../../assets/user.png")} alt="profile" /> */}
+                </div>
 
-
-                    {
-                        messages.map(msg => (
-
-                            <div className="message w-100"
-                                style={{
-                                    position: "relative",
-                                    marginBottom: 6
-                                }}
-                            >
-                                <div
-                                    className={`d-flex`}
-                                    style={{
-                                        // marginLeft: msg.from_me ? "auto" : "",
-                                        display: "flex",
-                                        minWidth: "50%",
-
-                                        flexDirection: !msg.from_me ? "row" : "row-reverse"
-
-
-                                    }}
-                                >
-                                    <div className="user-image mx-1"
-                                        style={{
-                                            flex: 0
-                                        }}
-                                    >
-                                        <div
-                                            className="d-flex align-items-center justify-content-center text-black "
-                                            style={{
-                                                height: 30,
-                                                width: 30,
-                                                borderRadius: "50%",
-                                                backgroundColor: msg.from_me ? "#7bbfff" : "#ffd76a"
-                                            }}
-                                        >{msg.user.name.slice(0, 1).toUpperCase()}</div>
-                                        {/* <Image src={require("../../assets/user.png")} alt="profile" /> */}
-                                    </div>
-
-                                    <div className="message-details d-flex flex-column">
-                                        <p
-                                            style={{
-                                                backgroundColor: msg.from_me ? primaryColor : "#fff",
-                                                color: msg.from_me ? "white" : "black",
-                                                boxShadow: msg.from_me ? "" : "4px 0 20px rgba(0,0,0,.12",
-                                                maxWidth: "300px",
-                                            }}
-                                            className="p-1 rounded m-0"
-                                        >
-                                            {msg.text}
-                                        </p>
-                                        <span
-                                            className="small text-muted "
-                                            style={{
-                                                fontSize: 12,
-                                                alignSelf: msg.from_me && "flex-end"
-                                            }}
-                                        >{msg.send_at}</span>
-                                    </div>
-                                </div>
-                            </div>
-                        ))
-                    }
-                    <div ref={scrollDiv} className="dummy-div"></div>
-                </Container>
-
-                <Container fluid className="send-message-form mb-1">
-                    <div className="bg-light rounded p-1">
-
-                        <Formik
-                            initialValues={{ text: "" }}
-                            onSubmit={({ text }, { resetForm }) => {
-                                const body = {
-                                    text,
-                                    user: {
-                                        id: 2,
-                                        name: "Dishant"
-                                    },
-                                    send_at: moment().fromNow(),
-                                    from_me: true
-                                }
-                                addMessageToChat(body)
-                                resetForm()
-                            }}
-                        >
-                            {
-                                ({ handleChange, values }) => (
-                                    <Form>
-                                        <div className="input-group d-flex align-items-center">
-                                            <input type="text" name="text" id="text" value={values.text} placeholder="Type Message ..." className="form-control shadow-none" style={{ border: "none", outline: "none" }}
-                                                required
-                                                onChange={handleChange}
-                                            />
-                                            <button type="submit">
-
-                                                <RiSendPlane2Fill color={primaryColor} size={24} />
-                                            </button>
-                                        </div>
-
-                                    </Form>
-                                )
-                            }
-
-                        </Formik>
-                    </div>
-                </Container>
+                <div className="message-details d-flex flex-column">
+                  <p
+                    style={{
+                      backgroundColor: isMsgFromMe(msg.user_id)
+                        ? primaryColor
+                        : "#fff",
+                      color: isMsgFromMe(msg.user_id) ? "white" : "black",
+                      boxShadow: isMsgFromMe(msg.user_id)
+                        ? ""
+                        : "4px 0 20px rgba(0,0,0,.12",
+                      maxWidth: "300px",
+                      minHeight: 20,
+                    }}
+                    className="p-1 rounded m-0"
+                  >
+                    {msg.message}
+                  </p>
+                  <span
+                    className="small text-muted "
+                    style={{
+                      fontSize: 12,
+                      alignSelf: isMsgFromMe(msg.user_id) && "flex-end",
+                    }}
+                  >
+                    {moment(msg.created_at).fromNow()}
+                  </span>
+                </div>
+              </div>
             </div>
-        </div >
-    )
-}
+          ))}
+          <div ref={scrollDiv} className="dummy-div "></div>
+        </Container>
 
-export default ChatBox
+        <Container fluid className="send-message-form mb-1">
+          <div className="bg-light rounded p-1">
+            <Formik
+              initialValues={{ text: "" }}
+              onSubmit={({ text }, { resetForm }) => {
+                // const body = {
+                //   message: text,
+                //   user_id: loggedInUser.id,
+                //   created_at: moment().format("YYYY-MM-DD"),
+                // };
+                mutate({ id, message: text });
+                // addMessageToChat(body);
+                resetForm();
+              }}
+            >
+              {({ handleChange, values }) => (
+                <Form>
+                  <div className="input-group d-flex align-items-center">
+                    <input
+                      type="text"
+                      name="text"
+                      id="text"
+                      value={values.text}
+                      placeholder="Type Message ..."
+                      className="form-control shadow-none"
+                      style={{ border: "none", outline: "none" }}
+                      required
+                      onChange={handleChange}
+                    />
+                    <button type="submit">
+                      <RiSendPlane2Fill color={primaryColor} size={24} />
+                    </button>
+                  </div>
+                </Form>
+              )}
+            </Formik>
+          </div>
+        </Container>
+      </div>
+    </div>
+  );
+};
+
+export default ChatBox;

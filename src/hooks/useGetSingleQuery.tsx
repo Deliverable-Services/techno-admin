@@ -1,26 +1,30 @@
-import { QueryFunction, useQuery } from 'react-query'
-import API from '../utils/API'
-
+import { AxiosError } from "axios";
+import { QueryFunction, useQuery } from "react-query";
+import { useHistory } from "react-router-dom";
+import API from "../utils/API";
+import { handleApiError } from "./handleApiErrors";
 
 interface IUseGetSingle {
-    key: string,
-    id: string
+  key: string;
+  id: string;
 }
 const getSingle: QueryFunction = async ({ queryKey }) => {
-    const r = await API.get(`${queryKey[0]}/${queryKey[1]}`)
+  const r = await API.get(`${queryKey[0]}/${queryKey[1]}`);
 
-
-    return r.data
-
-}
+  return r.data;
+};
 
 const useGetSingleQuery = ({ id, key }: IUseGetSingle) => {
+  const history = useHistory();
+  const allData = useQuery<any>([key, id], getSingle, {
+    enabled: !!id,
+    refetchOnMount: "always",
+    onError: (error: AxiosError) => {
+      handleApiError(error, history);
+    },
+  });
 
-    const allData = useQuery<any>([key, id], getSingle, {
-        enabled: !!id,
-    })
+  return allData;
+};
 
-    return allData
-}
-
-export default useGetSingleQuery
+export default useGetSingleQuery;

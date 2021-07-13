@@ -5,7 +5,6 @@ import { Badge, Button, Col, Container, Form, Row } from "react-bootstrap";
 import { BiArrowFromRight, BiDownload } from "react-icons/bi";
 import { useMutation, useQuery } from "react-query";
 import { useHistory, useParams } from "react-router-dom";
-import { ProgressBar, Step } from "react-step-progress-bar";
 import "react-step-progress-bar/styles.css";
 import Map from "../../components/Map";
 import { handleApiError } from "../../hooks/handleApiErrors";
@@ -15,6 +14,8 @@ import API from "../../utils/API";
 import { OrderStatus } from "../../utils/arrays";
 import { queryClient } from "../../utils/queryClient";
 import { showMsgToast } from "../../utils/showMsgToast";
+import { AiFillPlusSquare } from "react-icons/ai";
+import CustomBadge from "../../shared-components/CustomBadge";
 
 const key = "bookings";
 
@@ -30,26 +31,24 @@ const assignAgent = ({
   });
 };
 
-// const updateOrderStatus = ({
-//   formdata,
-//   id,
-// }: {
-//   formdata: any;
-//   id: string;
-// }) => {
-//   return API.post(`bookings/${id}/assign-agent`, formdata, {
-//     headers: { "Content-Type": "application/json" },
-//   });
-// };
+const updateOrderStatus = ({ formdata, id }: { formdata: any; id: string }) => {
+  return API.post(`${key}/${id}/update-status`, formdata, {
+    headers: { "Content-Type": "application/json" },
+  });
+};
 
 const SingleOrder = () => {
   const { id }: { id: string } = useParams();
   const history = useHistory();
+  const [showAssignAgent, setShowAssignAgent] = useState(false);
   const { data, isLoading, isFetching } = useGetSingleQuery({ id, key });
-  const { data: Invoice, isLoading: isInvoiceLoading } = useGetSingleQuery({
-    id,
-    key: "downloadInvoice",
-  });
+
+  const { data: Invoice, isLoading: isInvoiceLoading } = useQuery<any>(
+    [`${key}/${data?.transaction?.id}/download-invoice`],
+    {
+      enabled: !!data?.transaction?.id,
+    }
+  );
 
   const { mutate, isLoading: isAsigningLoading } = useMutation(assignAgent, {
     onSuccess: (data) => {
@@ -60,6 +59,16 @@ const SingleOrder = () => {
       }, 500);
     },
   });
+  const { mutate: mutateOrderStatus, isLoading: isOrderStatusMutateLoading } =
+    useMutation(updateOrderStatus, {
+      onSuccess: (data) => {
+        showMsgToast("Order Status  updated successfully");
+        setTimeout(() => {
+          queryClient.invalidateQueries(key);
+          queryClient.invalidateQueries(`${key}/${id}`);
+        }, 500);
+      },
+    });
   const [form, setForm] = useState({
     agent_id: data?.agent_id,
     status: data?.status,
@@ -70,6 +79,7 @@ const SingleOrder = () => {
       ...prev,
       [idx]: value,
     }));
+    setShowAssignAgent(false);
   };
 
   const { data: Agents, isLoading: isAgentLoading } = useQuery<any>(
@@ -90,6 +100,14 @@ const SingleOrder = () => {
   const _onUserClick = (id: string) => {
     if (!id) return;
     history.push("/users/create-edit", { id });
+  };
+
+  const _onCreateIssueClick = () => {
+    history.push("/issues/create-edit", {
+      id: data?.user_id,
+      order_id: id,
+      ref_id: data?.ref_id,
+    });
   };
 
   const statusBadgeVairant = (status: string) => {
@@ -124,9 +142,16 @@ const SingleOrder = () => {
           </Badge>
         </div>
         <div>
-          <Button variant="success">
+          {!isLoading && data.transaction && (
+            <Button variant="success">
+              <div className="text-white">
+                <BiDownload size={24} /> <b>Invoice</b>
+              </div>
+            </Button>
+          )}
+          <Button className="ml-2" onClick={() => _onCreateIssueClick()}>
             <div className="text-white">
-              <BiDownload size={24} /> <b>Invoice</b>
+              <AiFillPlusSquare size={24} /> <b>Issue</b>
             </div>
           </Button>
           <Button className="ml-2" onClick={() => history.goBack()}>
@@ -143,7 +168,7 @@ const SingleOrder = () => {
         </Container>
       )}
 
-      <div className="w-75 mx-auto">
+      {/* <div className="w-75 mx-auto">
         <ProgressBar
           filledBackground={"linear-gradient(to right,#72b3fe, #318af0)"}
           percent={80}
@@ -207,7 +232,7 @@ const SingleOrder = () => {
             )}
           </Step>
         </ProgressBar>
-      </div>
+      </div> */}
 
       <div className="dashboard-page w-100">
         <Container fluid className="status-container mt-2">
@@ -231,19 +256,19 @@ const SingleOrder = () => {
                     <Form.Group>
                       <Form.Control
                         as="select"
-                        value={form.status}
+                        value={data?.status}
                         onChange={(e) => {
                           _onformChange("status", e.target.value);
-                          // mutate({ formdata: { agent_id: e.target.value }, id })
+                          mutateOrderStatus({
+                            formdata: { status: e.target.value },
+                            id,
+                          });
                         }}
                         style={{
                           width: "200px",
                           fontSize: 14,
                         }}
                       >
-                        <option value="" disabled>
-                          Select Status
-                        </option>
                         {OrderStatus.map((item) => {
                           if (item.id !== "")
                             return (
@@ -266,65 +291,6 @@ const SingleOrder = () => {
               </div>
             </div>
           </div>
-          <div className="card p-2 view-padding right-div d-flex mb-3">
-            <div className="d-flex flex-column">
-              <div className="text-primary">
-                <div
-                  className="text-black pb-3"
-                  style={{ cursor: "pointer", fontWeight: 600 }}
-                >
-                  Order Issue
-                </div>
-              </div>
-
-              <hr className="mb-3" />
-
-              <div className="d-flex flex-column" style={{ fontSize: 18 }}>
-                <Row>
-                  <Col md="auto">
-                    <p
-                      style={{ fontSize: 13, lineHeight: 1.3, marginBottom: 5 }}
-                      className="text-muted"
-                    >
-                      Lorem ipsum dolor sit amet consectetur, adipisicing elit.
-                      Modi, voluptatum.
-                    </p>
-                    <table className="w-100">
-                      <tbody>
-                        <tr>
-                          <td className="text-muted">
-                            <p className="view-heading">Created At</p>
-                          </td>
-                          <td className="text-right">
-                            <p className="view-subheading">
-                              {moment().format("YYYY-MM-DD")}
-                            </p>
-                          </td>
-                        </tr>
-                        <tr>
-                          <td className="text-muted">
-                            <p className="view-heading">Closed At</p>
-                          </td>
-                          <td className="text-right">
-                            <p className="view-subheading">
-                              {moment().format("YYYY-MM-DD")}
-                            </p>
-                          </td>
-                        </tr>
-                      </tbody>
-                    </table>
-                    <span
-                      className="small text-primary font-weight-bold"
-                      style={{ cursor: "pointer" }}
-                      onClick={() => history.push("/issues/1")}
-                    >
-                      View Issue
-                    </span>
-                  </Col>
-                </Row>
-              </div>
-            </div>
-          </div>
 
           <div className="card p-2  view-padding right-div d-flex mb-3">
             <div className="d-flex flex-column">
@@ -339,13 +305,18 @@ const SingleOrder = () => {
                     : "Assigned Agent"}
                 </div>
 
-                <div className="text-primary small">Change Agent</div>
+                <div
+                  className="text-primary small"
+                  onClick={() => setShowAssignAgent(!showAssignAgent)}
+                >
+                  {showAssignAgent && data?.agent_id ? "Close" : "Assign agent"}
+                </div>
               </div>
 
               <hr className="mb-3" />
 
               <div className="d-flex flex-column" style={{ fontSize: 18 }}>
-                {!isLoading && !data?.agent_id && (
+                {!isLoading && (!data?.agent_id || showAssignAgent) && (
                   <Col md="auto">
                     <Form.Group>
                       <Form.Control
@@ -364,7 +335,7 @@ const SingleOrder = () => {
                         }}
                       >
                         <option value="">Select Agent</option>
-                        <option value="2"> agent</option>
+                        <option value="2">Dishant</option>
                         {!isAgentLoading &&
                           Agents?.data.map((item) => (
                             <option value={item["id"]}>{item["name"]}</option>
@@ -434,7 +405,12 @@ const SingleOrder = () => {
                     Customer
                   </div>
 
-                  <div className="text-primary small">Edit Info</div>
+                  <div
+                    className="text-primary small"
+                    onClick={() => _onUserClick(data.user_id)}
+                  >
+                    Edit Info
+                  </div>
                 </div>
               </div>
 
@@ -530,6 +506,68 @@ const SingleOrder = () => {
             </div>
           </div>
 
+          {data?.tickets?.length && (
+            <div className="card p-2 view-padding right-div d-flex mb-3">
+              <div className="d-flex flex-column">
+                <div className="text-primary">
+                  <div
+                    className="text-black pb-3"
+                    style={{ cursor: "pointer", fontWeight: 600 }}
+                  >
+                    Order Issues
+                  </div>
+                </div>
+
+                <hr className="mb-3" />
+
+                <div className="d-flex flex-column" style={{ fontSize: 18 }}>
+                  {data?.tickets.map((ticket) => (
+                    <>
+                      <Row>
+                        <Col md="auto">
+                          <Container
+                            fluid
+                            className=" m-0 p-0 d-flex align-items-center justify-content-between w-100"
+                          >
+                            <p className="m-0 mr-2 w-100">
+                              <b>{ticket.title}</b>
+                            </p>
+                            <CustomBadge
+                              title={ticket.status}
+                              variant={
+                                ticket.status === "active"
+                                  ? "danger"
+                                  : "success"
+                              }
+                            />
+                          </Container>
+                          <p
+                            style={{
+                              fontSize: 13,
+                              lineHeight: 1.3,
+                              marginBottom: 5,
+                            }}
+                            className="text-muted"
+                          >
+                            {ticket.description}
+                          </p>
+                          <span
+                            className="small text-primary font-weight-bold ml-auto"
+                            style={{ cursor: "pointer" }}
+                            onClick={() => history.push(`/issues/${ticket.id}`)}
+                          >
+                            View Issue
+                          </span>
+                        </Col>
+                      </Row>
+                      <hr className="my-2" />
+                    </>
+                  ))}
+                </div>
+              </div>
+            </div>
+          )}
+
           <div className="card view-padding p-2 d-flex mt-3">
             <div className="d-flex flex-column">
               <div className="text-primary">
@@ -554,12 +592,6 @@ const SingleOrder = () => {
                       <>
                         <tr>
                           <td className="view-heading py-2">Pick-up Vehicle</td>
-                          <td className="view-subheading py-2 text-right">
-                            {data.vehicle.name}
-                          </td>
-                        </tr>
-                        <tr>
-                          <td className="view-heading py-2">Vehicle Number</td>
                           <td className="view-subheading py-2 text-right">
                             {data.vehicle.name}
                           </td>
@@ -639,9 +671,21 @@ const SingleOrder = () => {
                       <tbody>
                         {data.services.map((service) => (
                           <tr>
-                            <td className="view-heading">{service.name}</td>
+                            <td
+                              className="view-heading text-primary"
+                              style={{ cursor: "pointer" }}
+                              onClick={() =>
+                                history.push("/services/create-edit", {
+                                  id: service.id,
+                                })
+                              }
+                            >
+                              {service?.name}
+                            </td>
                             <td className="text-right">
-                              <p className="view-subheading">₹{service.cost}</p>
+                              <p className="view-subheading">
+                                ₹{service?.price}
+                              </p>
                             </td>
                           </tr>
                         ))}

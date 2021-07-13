@@ -33,7 +33,7 @@ const intitialFilter = {
   page: null,
   perPage: 25,
   active: "",
-  condition_type: ""
+  condition_type: "",
 };
 
 const Coupons = () => {
@@ -161,8 +161,12 @@ const Coupons = () => {
 
   return (
     <>
-      <PageHeading title="Coupons" onClick={_onCreateClick} totalRecords={data?.total} />
-      {(!isLoading) && (
+      <PageHeading
+        title="Coupons"
+        onClick={_onCreateClick}
+        totalRecords={data?.total}
+      />
+      {!isLoading && (
         <Container fluid>
           <div>
             <div className="filter">
@@ -187,7 +191,6 @@ const Coupons = () => {
                 value="0"
                 currentValue={filter.active}
                 dataLength={data?.data?.length}
-
                 idx="active"
                 title="Not Active"
                 isLast
@@ -204,7 +207,6 @@ const Coupons = () => {
             <>
               {!error && (
                 <>
-
                   <Container className="pt-3">
                     <Row className="select-filter d-flex">
                       <Col md="auto">
@@ -221,11 +223,14 @@ const Coupons = () => {
                         className="d-flex align-items-center mt-1 justify-content-center"
                       >
                         <Button
-                          variant={areTwoObjEqual(intitialFilter, filter) ? "light" : "primary"}
+                          variant={
+                            areTwoObjEqual(intitialFilter, filter)
+                              ? "light"
+                              : "primary"
+                          }
                           style={{
                             fontSize: 14,
                           }}
-
                           onClick={() => setFilter(intitialFilter)}
                         >
                           Reset Filters
@@ -244,7 +249,7 @@ const Coupons = () => {
                   />
                 </>
               )}
-              {!error && data.length > 0 ? (
+              {!error && data?.data?.length > 0 ? (
                 <TablePagination
                   currentPage={data?.current_page}
                   lastPage={data?.last_page}
