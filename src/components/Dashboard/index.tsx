@@ -261,6 +261,34 @@ const Dashboard = () => {
                 </table>
               </div>
             </div>
+
+            <div className="card hoverable stats-card d-flex w-100 mt-3">
+              <div className="card-header">
+                <p className="text-black">Platform Data Overview</p>
+              </div>
+
+              <div className="card-content">
+                <div className="d-flex align-items-center justify-content-between w-100 pb-2">
+                  <span className="text-grey">Brands</span>
+                  <span className="text-grey">10</span>
+                </div>
+
+                <div className="d-flex align-items-center justify-content-between w-100 pt-2 pb-2">
+                  <span className="text-grey">Brand Models</span>
+                  <span className="text-grey">6</span>
+                </div>
+
+                <div className="d-flex align-items-center justify-content-between w-100 pt-2 pb-2">
+                  <span className="text-grey">Categories</span>
+                  <span className="text-grey">12</span>
+                </div>
+
+                <div className="d-flex align-items-center justify-content-between w-100 pt-2 pb-2">
+                  <span className="text-grey">Services</span>
+                  <span className="text-grey">12</span>
+                </div>
+              </div>
+            </div>
           </Container>
 
           <Container fluid className="charts-container mt-0 pl-0 pr-2">
