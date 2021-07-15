@@ -335,7 +335,6 @@ const SingleOrder = () => {
                         }}
                       >
                         <option value="">Select Agent</option>
-                        <option value="2">Dishant</option>
                         {!isAgentLoading &&
                           Agents?.data.map((item) => (
                             <option value={item["id"]}>{item["name"]}</option>

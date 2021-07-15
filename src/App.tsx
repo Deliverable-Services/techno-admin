@@ -53,17 +53,20 @@ import Admins from "./components/Users/admin";
 import UserCreateUpdateForm from "./components/Users/UsersCreateUpdateForm";
 import VerifyOtp from "./components/VerifyOtp";
 import { IsDesktopContext } from "./context/IsDesktopContext";
+import useMeQuery from "./hooks/useMeQuery";
 import useTokenStore from "./hooks/useTokenStore";
 import ErrorToast from "./shared-components/ErrorToast/ErrorToast";
 import MsgToast from "./shared-components/MsgToast/MsgToast";
 import { PrivateRoute } from "./shared-components/PrivateRoute";
+import VerifingUserLoader from "./shared-components/VerifingUserLoader";
 import API from "./utils/API";
 
 const App = () => {
   const [isDesktop, setIsDesktop] = useState<boolean>(false);
+  const { isLoading: isVerifingLoggedInUser } = useMeQuery();
+  console.log({ isVerifingLoggedInUser });
   //adding token to every request
   const token = useTokenStore((state) => state.accessToken);
-
   if (token) API.defaults.headers.common["Authorization"] = `Bearer ${token}`;
 
   useEffect(() => {
@@ -86,6 +89,8 @@ const App = () => {
       return false;
     else return true;
   }
+
+  if (isVerifingLoggedInUser) return <VerifingUserLoader />;
 
   return (
     <IsDesktopContext.Provider value={isDesktop}>

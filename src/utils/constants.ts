@@ -5,5 +5,6 @@ export const LocalStorageKey = "carsafai_admin_";
 // export const adminApiBaseUrl = process.env.REACT_APP_ADMIN_API_URL;
 export const adminApiBaseUrl = "http://localhost:8000/admin/v1/";
 export const appApiBaseUrl = process.env.REACT_APP_APP_API_URL;
-export const baseUploadUrl = process.env.REACT_APP_UPLOAD_URL;
+// export const baseUploadUrl = process.env.REACT_APP_UPLOAD_URL;
+export const baseUploadUrl = "http://localhost:8000/upload/";
 export const clientWebUrl = process.env.REACT_APP_CLIENT_WEB_URL;

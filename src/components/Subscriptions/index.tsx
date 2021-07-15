@@ -25,10 +25,11 @@ const intitialFilter = {
   page: null,
   perPage: 25,
   plan_id: "",
-  status: "",
+  status: "active",
   allowed_usage: "",
   created_at: "",
   user_id: "",
+  last_used_at: "",
 };
 
 const Subscription = () => {
@@ -49,7 +50,7 @@ const Subscription = () => {
   const { data: Customers, isLoading: isCustomersLoading } = useQuery<any>([
     "users",
     ,
-    { role: "customer" },
+    {},
   ]);
   const Status = ({ status }: { status: string }) => {
     const setVariant = () => {
@@ -187,14 +188,14 @@ const Subscription = () => {
 
       {(!isLoading || !isFetching) && (
         <div className="filter mb-4">
-          <BreadCrumb
+          {/* <BreadCrumb
             onFilterChange={_onFilterChange}
             value=""
             currentValue={filter.status}
             dataLength={data?.data?.length}
             idx="status"
             title="All"
-          />
+          /> */}
           <BreadCrumb
             onFilterChange={_onFilterChange}
             value="active"
@@ -264,6 +265,28 @@ const Subscription = () => {
                             "YYYY-MM-DD"
                           );
                           _onFilterChange("created_at", value);
+                        }}
+                        style={{
+                          fontSize: 14,
+                          width: 150,
+                          height: 35,
+                        }}
+                      />
+                    </Form.Group>
+                  </Col>
+                  <Col md="auto">
+                    <Form.Group>
+                      <Form.Label className="text-muted">
+                        Last used at
+                      </Form.Label>
+                      <Form.Control
+                        type="date"
+                        value={filter.last_used_at}
+                        onChange={(e) => {
+                          const value = moment(e.target.value).format(
+                            "YYYY-MM-DD"
+                          );
+                          _onFilterChange("last_used_at", value);
                         }}
                         style={{
                           fontSize: 14,

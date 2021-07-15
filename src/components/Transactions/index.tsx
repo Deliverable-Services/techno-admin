@@ -60,13 +60,7 @@ const Transactions = () => {
     }));
   };
   const { data: Customers, isLoading: isCustomerLoading } = useQuery<any>(
-    [
-      "users",
-      1,
-      {
-        role: "customer",
-      },
-    ],
+    ["users", 1, {}],
     {
       onError: (err: any) => {
         showErrorToast(err.response.data.message);
@@ -173,7 +167,7 @@ const Transactions = () => {
 
   return (
     <>
-      <PageHeading title="Transactions" totalRecords={50} />
+      <PageHeading title="Transactions" totalRecords={data?.total} />
 
       {!isLoading && (
         <div>

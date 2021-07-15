@@ -22,7 +22,6 @@ const useMeQuery = () => {
   const setUser = useUserProfileStore((state) => state.setUser);
 
   const me = useQuery(["profile", token], getProfile, {
-    retry: false,
     onSuccess: (data: any) => {
       setUser(data);
     },

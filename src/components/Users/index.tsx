@@ -17,6 +17,7 @@ import { Cell } from "react-table";
 import { handleApiError } from "../../hooks/handleApiErrors";
 import BreadCrumb from "../../shared-components/BreadCrumb";
 import CreatedUpdatedAt from "../../shared-components/CreatedUpdatedAt";
+import CustomBadge from "../../shared-components/CustomBadge";
 import EditButton from "../../shared-components/EditButton";
 import FilterSelect from "../../shared-components/FilterSelect";
 import IsActiveBadge from "../../shared-components/IsActiveBadge";
@@ -24,6 +25,7 @@ import IsLoading from "../../shared-components/isLoading";
 import PageHeading from "../../shared-components/PageHeading";
 import TablePagination from "../../shared-components/Pagination";
 import ReactTable from "../../shared-components/ReactTable";
+import TableImage from "../../shared-components/TableImage";
 import API from "../../utils/API";
 import { areTwoObjEqual } from "../../utils/areTwoObjEqual";
 import { isActiveArray, userRoles } from "../../utils/arrays";
@@ -101,12 +103,7 @@ const Users = () => {
         Header: "Profile Pic",
         accessor: "profile_pic",
         Cell: (data: Cell) => (
-          <div className="table-image">
-            <img
-              src={`${baseUploadUrl}profile_pic/${data.row.values.profile_pic}`}
-              alt="name"
-            />
-          </div>
+          <TableImage folder="profile_pic" file={data.row.values.profile_pic} />
         ),
       },
       {
@@ -120,6 +117,9 @@ const Users = () => {
       {
         Header: "Role",
         accessor: "role",
+        Cell: (data: Cell) => (
+          <CustomBadge variant="primary" title={data.row.values.role} />
+        ),
       },
       {
         Header: " Disabled?",

@@ -15,6 +15,7 @@ import IsLoading from "../../shared-components/isLoading";
 import PageHeading from "../../shared-components/PageHeading";
 import TablePagination from "../../shared-components/Pagination";
 import ReactTable from "../../shared-components/ReactTable";
+import TableImage from "../../shared-components/TableImage";
 import API from "../../utils/API";
 import { areTwoObjEqual } from "../../utils/areTwoObjEqual";
 import {
@@ -98,12 +99,7 @@ const BrandModels = () => {
         Header: "Image",
         accessor: "image",
         Cell: (data: Cell) => (
-          <div className="table-image">
-            <img
-              src={`${baseUploadUrl}brand-models/${data.row.values.image}`}
-              alt={data.row.values.image}
-            />
-          </div>
+          <TableImage folder="brand-models" file={data.row.values.image} />
         ),
       },
       {
@@ -115,7 +111,7 @@ const BrandModels = () => {
         accessor: "url",
         Cell: (data: Cell) => (
           <p
-            className="text-primary"
+            className="text-primary m-0"
             style={{ cursor: "pointer" }}
             onClick={() => _onUrlClick(data)}
           >

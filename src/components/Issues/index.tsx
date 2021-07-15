@@ -1,16 +1,23 @@
+import { AxiosError } from "axios";
+import moment from "moment";
 import { useMemo, useState } from "react";
-import { Button, Container } from "react-bootstrap";
+import { Button, Col, Container, Form, Row } from "react-bootstrap";
 import { BiSad } from "react-icons/bi";
 import { useQuery } from "react-query";
 import { useHistory } from "react-router-dom";
 import { Cell } from "react-table";
+import { handleApiError } from "../../hooks/handleApiErrors";
+import { INITIAL_FILTER } from "../../hooks/useOrderFilterStore";
 import BreadCrumb from "../../shared-components/BreadCrumb";
 import CreatedUpdatedAt from "../../shared-components/CreatedUpdatedAt";
 import CustomBadge from "../../shared-components/CustomBadge";
+import FilterSelect from "../../shared-components/FilterSelect";
 import IsLoading from "../../shared-components/isLoading";
 import PageHeading from "../../shared-components/PageHeading";
 import TablePagination from "../../shared-components/Pagination";
 import ReactTable from "../../shared-components/ReactTable";
+import { areTwoObjEqual } from "../../utils/areTwoObjEqual";
+import { IssueRelatedTo, OrderType } from "../../utils/arrays";
 import { primaryColor } from "../../utils/constants";
 import { showErrorToast } from "../../utils/showErrorToast";
 
@@ -20,6 +27,9 @@ const intitialFilter = {
   page: null,
   perPage: 25,
   status: "active",
+  user_id: "",
+  related_to: "",
+  created_at: "",
 };
 
 const Issues = () => {
@@ -35,6 +45,20 @@ const Issues = () => {
     }
   );
 
+  const { data: Customers, isLoading: isCustomerLoading } = useQuery<any>(
+    [
+      "users",
+      1,
+      {
+        role: "customer",
+      },
+    ],
+    {
+      onError: (error: AxiosError) => {
+        handleApiError(error, history);
+      },
+    }
+  );
   const _onUserClick = (id: string) => {
     if (!id) return;
     history.push("/users/create-edit", { id });
@@ -194,14 +218,93 @@ const Issues = () => {
           ) : (
             <>
               {!error && (
-                <ReactTable
-                  data={data?.data}
-                  columns={columns}
-                  setSelectedRows={setSelectedRows}
-                  filter={filter}
-                  onFilterChange={_onFilterChange}
-                  isDataLoading={isFetching}
-                />
+                <>
+                  <Container className="pt-2">
+                    <Row className="select-filter d-flex">
+                      <Col md="auto">
+                        <FilterSelect
+                          currentValue={filter.user_id}
+                          data={!isCustomerLoading && Customers.data}
+                          label="Customer"
+                          idx="user_id"
+                          onFilterChange={_onFilterChange}
+                        />
+                      </Col>
+                      {/* <Col md="auto">
+                          <FilterSelect
+                            currentValue={filter.inside_cart}
+                            data={InsideCart}
+                            label="Inside Cart"
+                            idx="inside_cart"
+                            width="80px"
+                            onFilterChange={onFilterChange}
+                          />
+                        </Col> */}
+                      <Col md="auto">
+                        <FilterSelect
+                          currentValue={filter.related_to}
+                          data={IssueRelatedTo}
+                          label="Related to"
+                          idx="related_to"
+                          onFilterChange={_onFilterChange}
+                        />
+                      </Col>
+                      <Col md="auto">
+                        <Form.Group>
+                          <Form.Label className="text-muted">
+                            Raised At
+                          </Form.Label>
+                          <Form.Control
+                            type="date"
+                            value={filter.created_at}
+                            onChange={(e) => {
+                              const value = moment(e.target.value).format(
+                                "YYYY-MM-DD"
+                              );
+                              _onFilterChange("created_at", value);
+                            }}
+                            style={{
+                              fontSize: 14,
+                              width: 150,
+                              height: 35,
+                            }}
+                          />
+                        </Form.Group>
+                      </Col>
+
+                      <Col
+                        md="auto"
+                        className="d-flex align-items-center mt-1 justify-content-center"
+                      >
+                        <Button
+                          onClick={() => {
+                            setFilter(intitialFilter);
+                          }}
+                          variant={
+                            areTwoObjEqual(intitialFilter, filter)
+                              ? "light"
+                              : "primary"
+                          }
+                          style={{
+                            // backgroundColor: "#eee",
+                            fontSize: 14,
+                          }}
+                        >
+                          Reset Filters
+                        </Button>
+                      </Col>
+                    </Row>
+                  </Container>
+                  <ReactTable
+                    data={data?.data}
+                    columns={columns}
+                    setSelectedRows={setSelectedRows}
+                    filter={filter}
+                    onFilterChange={_onFilterChange}
+                    isDataLoading={isFetching}
+                    isSelectable={false}
+                  />
+                </>
               )}
               {!error && data.length > 0 ? (
                 <TablePagination

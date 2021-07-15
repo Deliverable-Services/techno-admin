@@ -34,6 +34,9 @@ const ChatBox = ({
 }) => {
   const history = useHistory();
   const loggedInUser = useUserProfileStore((state) => state.user);
+  const messagesRefs = React.useRef<HTMLDivElement>(null);
+
+  console.log({ messagesRefs });
 
   const [messages, setMessages] = React.useState(initialMessages);
 
@@ -92,8 +95,9 @@ const ChatBox = ({
               Send Message to start a conversation
             </p>
           )}
-          {messages?.map((msg) => (
+          {messages?.map((msg, i) => (
             <div
+              ref={messages.current[i]}
               className="message w-100"
               style={{
                 position: "relative",

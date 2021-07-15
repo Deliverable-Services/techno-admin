@@ -91,8 +91,8 @@ const Testimonial = () => {
         Cell: (data: Cell) => (
           <div className="table-image">
             <img
-              src={`${baseUploadUrl}testimonial/${data.row.values.picture}`}
-              alt="name"
+              src={`${baseUploadUrl}profile_pic/${data.row.values.picture}`}
+              alt={data.row.values.picture}
             />
           </div>
         ),

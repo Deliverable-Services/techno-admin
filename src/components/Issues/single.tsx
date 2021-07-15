@@ -243,8 +243,6 @@ const SingleIssue = () => {
               <div className="text-primary">
                 <div className="d-flex justify-content-between">
                   <div className="text-black pb-3">Customer</div>
-
-                  <div className="text-primary small">Edit Info</div>
                 </div>
               </div>
 

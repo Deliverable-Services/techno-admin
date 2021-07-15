@@ -39,9 +39,6 @@ const BrandsCreateUpdateForm = () => {
   const { state } = useLocation();
   const history = useHistory();
   const id = state ? (state as any).id : null;
-  useEffect(() => {
-    bsCustomFileInput.init();
-  }, []);
   const { data, isLoading: dataLoading } = useGetSingleQuery({ id, key });
   const { mutate, isLoading } = useMutation(createUpdataBrand, {
     onSuccess: () => {
@@ -54,6 +51,10 @@ const BrandsCreateUpdateForm = () => {
       handleApiError(error, history);
     },
   });
+
+  useEffect(() => {
+    bsCustomFileInput.init();
+  }, []);
 
   const apiData = data as any;
 
@@ -80,7 +81,7 @@ const BrandsCreateUpdateForm = () => {
         <Row className="rounded">
           <Col className="mx-auto">
             <Formik
-              initialValues={apiData || {}}
+              initialValues={apiData || { is_active: "1" }}
               onSubmit={(values) => {
                 const { logo, ...rest } = values;
                 const formdata = new FormData();

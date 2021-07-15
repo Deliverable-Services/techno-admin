@@ -14,11 +14,13 @@ import IsLoading from "../../shared-components/isLoading";
 import PageHeading from "../../shared-components/PageHeading";
 import TablePagination from "../../shared-components/Pagination";
 import ReactTable from "../../shared-components/ReactTable";
+import TableImage from "../../shared-components/TableImage";
+import TableLink from "../../shared-components/TableLink";
 import API from "../../utils/API";
 import {
   baseUploadUrl,
   clientWebUrl,
-  primaryColor
+  primaryColor,
 } from "../../utils/constants";
 import { queryClient } from "../../utils/queryClient";
 import { showMsgToast } from "../../utils/showMsgToast";
@@ -70,8 +72,8 @@ const Brands = () => {
     history.push("/brands/create-edit", { id });
   };
   const _onUrlClick = (data: Cell) => {
-    window.open(clientWebUrl)
-  }
+    window.open(clientWebUrl);
+  };
 
   const _onFilterChange = (idx: string, value: any) => {
     setFilter((prev) => ({
@@ -90,12 +92,7 @@ const Brands = () => {
         Header: "Logo",
         accessor: "logo",
         Cell: (data: Cell) => (
-          <div className="table-image">
-            <img
-              src={`${baseUploadUrl}brands/${data.row.values.logo}`}
-              alt="name"
-            />
-          </div>
+          <TableImage folder="brands" file={data.row.values.logo} />
         ),
       },
       {
@@ -106,10 +103,14 @@ const Brands = () => {
         Header: "Url",
         accessor: "url",
         Cell: (data: Cell) => (
-          <p className="text-primary" style={{ cursor: "pointer" }} onClick={() => _onUrlClick(data)}>
+          <p
+            className="text-primary m-0"
+            style={{ cursor: "pointer" }}
+            onClick={() => _onUrlClick(data)}
+          >
             {data.row.values.url}
           </p>
-        )
+        ),
       },
       {
         Header: "Is Active?",
@@ -161,9 +162,13 @@ const Brands = () => {
 
   return (
     <>
-      <PageHeading title="Brands" onClick={_onCreateClick} totalRecords={data?.total} />
+      <PageHeading
+        title="Brands"
+        onClick={_onCreateClick}
+        totalRecords={data?.total}
+      />
 
-      {(!isLoading) && (
+      {!isLoading && (
         <Container fluid>
           <div>
             <div className="filter">
@@ -188,7 +193,6 @@ const Brands = () => {
                 value="0"
                 currentValue={filter.active}
                 dataLength={data?.data?.length}
-
                 idx="active"
                 title="Not Active"
                 isLast

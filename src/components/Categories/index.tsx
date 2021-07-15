@@ -126,7 +126,7 @@ const Categories = () => {
         accessor: "url",
         Cell: (data: Cell) => (
           <p
-            className="text-primary"
+            className="text-primary m-0"
             style={{ cursor: "pointer" }}
             onClick={() => _onUrlClick(data)}
           >

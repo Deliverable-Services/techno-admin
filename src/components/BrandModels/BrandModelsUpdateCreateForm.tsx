@@ -67,7 +67,7 @@ const BrandModlesCreateUpdateForm = () => {
       <Row className="rounded">
         <Col className="mx-auto">
           <Formik
-            initialValues={apiData || {}}
+            initialValues={apiData || { is_active: "1" }}
             onSubmit={(values) => {
               const formdata = new FormData();
               const { image, ...rest } = values;
