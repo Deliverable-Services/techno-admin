@@ -1,6 +1,6 @@
 import { AxiosError } from "axios";
 import moment, { Moment } from "moment";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Container, Form } from "react-bootstrap";
 import { DateRangePicker, FocusedInputShape } from "react-dates";
 import "react-dates/initialize";
@@ -39,6 +39,7 @@ const Dashboard = () => {
   const [focusedInput, setFocusInput] = useState<FocusedInputShape | null>(
     null
   );
+  const [currentTime, setCurrentTime] = useState(moment().format("hh:mm a"));
   const { data, isLoading, isFetching } = useQuery<any>(
     ["analytics", , filter],
     {
@@ -61,6 +62,14 @@ const Dashboard = () => {
     }));
   };
 
+  const _changeCurrentTime = () => {
+    setCurrentTime(moment().format("hh:mm a"));
+  };
+
+  useEffect(() => {
+    setInterval(() => _changeCurrentTime(), 1000);
+  }, []);
+
   if (isLoading) return <IsLoading />;
 
   if (!data && (!isLoading || !isFetching)) {
@@ -78,7 +87,7 @@ const Dashboard = () => {
     <>
       <Container fluid className="component-wrapper px-0 py-2">
         <div className="card">
-          <div className="card-content">
+          <div className="card-content d-flex align-items-center justify-content-between">
             <Container
               fluid
               className="d-flex align-items-center justify-content-start"
@@ -112,12 +121,23 @@ const Dashboard = () => {
                 style={{ width: "100px", height: "44px" }}
                 value={filter.duration}
               >
-                <option value="year">Year</option>
+                {/* <option value="year">Year</option> */}
                 <option value="month">Month</option>
                 <option value="week">Week</option>
                 <option value="day">Daily</option>
               </Form.Control>
             </Container>
+            <div>
+              <p className="m-0 text-right lead">
+                {moment().format("DD-MMMM")}
+              </p>
+              <p
+                style={{ whiteSpace: "nowrap", fontSize: "20px" }}
+                className="font-weight-bold  text-right"
+              >
+                {currentTime}
+              </p>
+            </div>
           </div>
         </div>
 

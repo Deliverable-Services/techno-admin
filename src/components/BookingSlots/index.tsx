@@ -210,7 +210,7 @@ const BookingSlots = () => {
                   <div className="d-flex flex-column align-items-center pt-3 pb-3">
                     <MdRemoveShoppingCart color="#000" size={60} />
                     <h4 className="text-black font-weight-bold mt-2">
-                      No data found
+                      No disabled slot found
                     </h4>
                   </div>
                 </Container>

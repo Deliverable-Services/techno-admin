@@ -81,21 +81,23 @@ const PlanCreateUpdateForm = () => {
               apiData
                 ? {
                     ...apiData,
-                    services: apiData?.allowed_services.map((s) => id),
+                    services: apiData?.allowed_services.map((s) => s.id),
                   }
                 : { is_active: 1 }
             }
             onSubmit={(values) => {
               console.log({ values });
-              const { image, ...rest } = values;
+              const { image, services, ...rest } = values;
               const formdata = new FormData();
 
               for (let k in rest) formdata.append(k, rest[k]);
 
+              for (let k in services)
+                formdata.append("services[]", services[k]);
               if (image && typeof image !== "string")
                 formdata.append("image", image);
 
-              // mutate({ formdata, id });
+              mutate({ formdata, id });
             }}
           >
             {({ setFieldValue, values }) => (

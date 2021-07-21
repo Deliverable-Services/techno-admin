@@ -30,6 +30,11 @@ const TopBar = ({ isNavOpen, setIsNavOpen }: INavBar) => {
       removeToken();
       history.push("/login");
     },
+    onError: () => {
+      removeUser();
+      removeToken();
+      history.push("/login");
+    },
   });
   const openNavBar = () => {
     if (setIsNavOpen) {

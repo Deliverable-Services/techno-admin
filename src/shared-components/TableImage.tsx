@@ -7,7 +7,7 @@ interface Props {
 }
 
 const TableImage = ({ file, folder }: Props) => {
-  if (!file) return <p className="text-muted text-center">NA</p>;
+  if (!file) return <p className="text-muted text-center m-0">NA</p>;
   return (
     <div className="table-image">
       <img src={`${baseUploadUrl}${folder}/${file}`} alt={file} />

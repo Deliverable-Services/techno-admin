@@ -9,6 +9,7 @@ import { Cell } from "react-table";
 import { handleApiError } from "../../hooks/handleApiErrors";
 import BreadCrumb from "../../shared-components/BreadCrumb";
 import CreatedUpdatedAt from "../../shared-components/CreatedUpdatedAt";
+import CustomBadge from "../../shared-components/CustomBadge";
 import EditButton from "../../shared-components/EditButton";
 import FilterSelect from "../../shared-components/FilterSelect";
 import IsActiveBadge from "../../shared-components/IsActiveBadge";
@@ -88,6 +89,14 @@ const Coupons = () => {
       {
         Header: "Coupon Code",
         accessor: "coupon_code",
+        Cell: (data: Cell) => {
+          return (
+            <CustomBadge
+              title={data.row.values.coupon_code}
+              variant="primary"
+            />
+          );
+        },
       },
       {
         Header: "Condition",

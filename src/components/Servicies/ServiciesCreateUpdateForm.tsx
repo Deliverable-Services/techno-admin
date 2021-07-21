@@ -37,9 +37,9 @@ const createUpdataServices = ({
 };
 
 const ServicesCreateUpdateForm = () => {
-  const { state } = useLocation()
-  const id = state ? (state as any).id : null
-  const history = useHistory()
+  const { state } = useLocation();
+  const id = state ? (state as any).id : null;
+  const history = useHistory();
   useEffect(() => {
     bsCustomFileInput.init();
   }, []);
@@ -51,23 +51,21 @@ const ServicesCreateUpdateForm = () => {
     {
       onSuccess: () => {
         setTimeout(() => queryClient.invalidateQueries(key), 500);
-        history.replace("/services")
-        if (id) return showMsgToast("Service updated successfully")
-        showMsgToast("Service created successfully")
+        history.replace("/services");
+        if (id) return showMsgToast("Service updated successfully");
+        showMsgToast("Service created successfully");
       },
       onError: (error: AxiosError) => {
-        handleApiError(error, history)
-      }
+        handleApiError(error, history);
+      },
     }
   );
 
   const apiData = data && (data as any);
 
-
   if (dataLoading) return <IsLoading />;
 
   return (
-
     <Row className="rounded">
       <BackButton title="Services" />
       <Col className="mx-auto">
@@ -75,11 +73,10 @@ const ServicesCreateUpdateForm = () => {
           initialValues={apiData || {}}
           onSubmit={(values) => {
             // console.log("values", values)
-            const formdata = new FormData()
+            const formdata = new FormData();
             const { image, ...rest } = values;
-            for (let k in rest) formdata.append(k, rest[k])
-            if (values.image)
-              formdata.append("image", values.image);
+            for (let k in rest) formdata.append(k, rest[k]);
+            if (values.image) formdata.append("image", values.image);
             mutate({ formdata, id });
           }}
         >
@@ -93,12 +90,7 @@ const ServicesCreateUpdateForm = () => {
                   required
                 />
 
-                <InputField
-                  name="url"
-                  placeholder="Url"
-                  label="Url"
-                  required
-                />
+                <InputField name="url" placeholder="Url" label="Url" required />
                 <InputField
                   name="price"
                   placeholder="Price"
@@ -110,11 +102,15 @@ const ServicesCreateUpdateForm = () => {
                   placeholder="Category"
                   label="Choose Category"
                   as="select"
-                  selectData={
-                    !isCategoriesLoading && (categories as any).data
-                  }
+                  selectData={!isCategoriesLoading && (categories as any).data}
                 />
-                <InputField as="select" selectData={isActiveArray} name="is_active" label="Is active?" placeholder="Choose is active" />
+                <InputField
+                  as="select"
+                  selectData={isActiveArray}
+                  name="is_active"
+                  label="Is active?"
+                  placeholder="Choose is active"
+                />
                 <InputField
                   name="image"
                   placeholder="image"

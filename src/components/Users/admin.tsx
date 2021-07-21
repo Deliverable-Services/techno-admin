@@ -1,6 +1,14 @@
 import { AxiosError } from "axios";
 import { useMemo, useState } from "react";
-import { Button, Col, Container, Form, Modal, Row, Spinner } from "react-bootstrap";
+import {
+  Button,
+  Col,
+  Container,
+  Form,
+  Modal,
+  Row,
+  Spinner,
+} from "react-bootstrap";
 import { AiFillPlusSquare } from "react-icons/ai";
 import { BiSad } from "react-icons/bi";
 import { useMutation, useQuery } from "react-query";
@@ -16,13 +24,11 @@ import IsLoading from "../../shared-components/isLoading";
 import PageHeading from "../../shared-components/PageHeading";
 import TablePagination from "../../shared-components/Pagination";
 import ReactTable from "../../shared-components/ReactTable";
+import TableImage from "../../shared-components/TableImage";
 import API from "../../utils/API";
 import { areTwoObjEqual } from "../../utils/areTwoObjEqual";
 import { isActiveArray, userRoles } from "../../utils/arrays";
-import {
-  baseUploadUrl,
-  primaryColor
-} from "../../utils/constants";
+import { baseUploadUrl, primaryColor } from "../../utils/constants";
 import { queryClient } from "../../utils/queryClient";
 import { showMsgToast } from "../../utils/showMsgToast";
 interface IFilter {
@@ -31,7 +37,7 @@ interface IFilter {
 const key = "users";
 
 const deleteUsers = (id: Array<any>) => {
-  return API.post(`${key}/delete`, { id })
+  return API.post(`${key}/delete`, { id });
 };
 
 const intitialFilter = {
@@ -39,26 +45,24 @@ const intitialFilter = {
   role: "admin",
   page: null,
   perPage: 25,
-  disabled: ""
-}
-
+  disabled: "",
+};
 
 const Admins = () => {
   const history = useHistory();
   const [deletePopup, setDeletePopup] = useState(false);
   const [selectedRowId, setSelectedRowId] = useState<string>("");
-  const [selectedRows, setSelectedRows] = useState([])
+  const [selectedRows, setSelectedRows] = useState([]);
   const [filter, setFilter] = useState(intitialFilter);
-  console.log(selectedRows.map(item => item.id))
+  console.log(selectedRows.map((item) => item.id));
   const [page, setPage] = useState<number>(1);
   const [role, setRole] = useState("");
-
 
   const { data, isLoading, isFetching, error } = useQuery<any>(
     [key, , filter],
     {
       onError: (error: AxiosError) => {
-        handleApiError(error, history)
+        handleApiError(error, history);
       },
     }
   );
@@ -66,10 +70,10 @@ const Admins = () => {
   const { mutate, isLoading: isDeleteLoading } = useMutation(deleteUsers, {
     onSuccess: () => {
       queryClient.invalidateQueries(key);
-      showMsgToast("Users deleted successfully")
+      showMsgToast("Users deleted successfully");
     },
     onError: (error: AxiosError) => {
-      handleApiError(error, history)
+      handleApiError(error, history);
     },
   });
   const _onFilterChange = (idx: string, value: any) => {
@@ -88,7 +92,6 @@ const Admins = () => {
     history.push("/users/create-edit", { id });
   };
 
-
   const columns = useMemo(
     () => [
       {
@@ -99,12 +102,7 @@ const Admins = () => {
         Header: "Profile Pic",
         accessor: "profile_pic",
         Cell: (data: Cell) => (
-          <div className="table-image">
-            <img
-              src={`${baseUploadUrl}profile_pic/${data.row.values.profile_pic}`}
-              alt="name"
-            />
-          </div>
+          <TableImage folder="profile_pic" file={data.row.values.profile_pic} />
         ),
       },
       {
@@ -162,18 +160,19 @@ const Admins = () => {
 
   return (
     <>
-      <PageHeading title="Admins" onClick={_onCreateClick} totalRecords={data?.total} />
+      <PageHeading
+        title="Admins"
+        onClick={_onCreateClick}
+        totalRecords={data?.total}
+      />
 
       <Container fluid className="card component-wrapper px-0 py-2">
-
-
         <Container fluid className="h-100 p-0">
-
           {isLoading ? (
             <IsLoading />
           ) : (
             <>
-              {!error &&
+              {!error && (
                 <>
                   <Container className="pt-3">
                     <Row className="select-filter d-flex">
@@ -192,11 +191,14 @@ const Admins = () => {
                         className="d-flex align-items-center mt-1 justify-content-center"
                       >
                         <Button
-                          variant={areTwoObjEqual(intitialFilter, filter) ? "light" : "primary"}
+                          variant={
+                            areTwoObjEqual(intitialFilter, filter)
+                              ? "light"
+                              : "primary"
+                          }
                           style={{
                             fontSize: 14,
                           }}
-
                           onClick={() => setFilter(intitialFilter)}
                         >
                           Reset Filters
@@ -214,7 +216,7 @@ const Admins = () => {
                     isDataLoading={isFetching}
                   />
                 </>
-              }
+              )}
               {!error && data?.data?.length > 0 ? (
                 <TablePagination
                   currentPage={data?.current_page}
@@ -242,9 +244,9 @@ const Admins = () => {
           </Button>
           <Button
             variant="danger"
-          // onClick={() => {
-          //   mutate(selectedRowId);
-          // }}
+            // onClick={() => {
+            //   mutate(selectedRowId);
+            // }}
           >
             {isDeleteLoading ? (
               <Spinner animation="border" size="sm" />
@@ -254,19 +256,21 @@ const Admins = () => {
           </Button>
         </Modal.Footer>
       </Modal>
-      {
-        selectedRows.length > 0 &&
+      {selectedRows.length > 0 && (
         <div className="delete-button rounded">
-          <span><b>Delete {selectedRows.length} rows</b></span>
-          <Button variant="danger" onClick={() => {
-            mutate(selectedRows.map(i => i.id))
-          }}>
-            {
-              isDeleteLoading ? "Loading..." : "Delete"
-            }
+          <span>
+            <b>Delete {selectedRows.length} rows</b>
+          </span>
+          <Button
+            variant="danger"
+            onClick={() => {
+              mutate(selectedRows.map((i) => i.id));
+            }}
+          >
+            {isDeleteLoading ? "Loading..." : "Delete"}
           </Button>
         </div>
-      }
+      )}
     </>
   );
 };

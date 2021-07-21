@@ -14,6 +14,7 @@ import IsLoading from "../../shared-components/isLoading";
 import PageHeading from "../../shared-components/PageHeading";
 import TablePagination from "../../shared-components/Pagination";
 import ReactTable from "../../shared-components/ReactTable";
+import TableImage from "../../shared-components/TableImage";
 import API from "../../utils/API";
 import {
   baseUploadUrl,
@@ -89,12 +90,10 @@ const Testimonial = () => {
         Header: "Picture",
         accessor: "picture",
         Cell: (data: Cell) => (
-          <div className="table-image">
-            <img
-              src={`${baseUploadUrl}profile_pic/${data.row.values.picture}`}
-              alt={data.row.values.picture}
-            />
-          </div>
+          <TableImage
+            file={(data.row.original as any).user.profile_pic}
+            folder="profile_pic"
+          />
         ),
       },
       {

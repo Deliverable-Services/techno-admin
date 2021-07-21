@@ -15,7 +15,7 @@ import { appApiBaseUrl } from "../utils/constants";
 import { showErrorToast } from "../utils/showErrorToast";
 import { showMsgToast } from "../utils/showMsgToast";
 
-interface Props { }
+interface Props {}
 
 const VerifySchema = Yup.object().shape({
   otp: Yup.string().max(4).min(4).required("Otp is required"),
@@ -28,7 +28,7 @@ const verifyOtp = (formData: FormData) => {
 };
 
 const VerifyOtp = (props: Props) => {
-  const { state } = useLocation()
+  const { state } = useLocation();
   const history = useHistory();
   const setToken = useTokenStore((state) => state.setToken);
   const setUser = useUserProfileStore((state) => state.setUser);
@@ -47,7 +47,7 @@ const VerifyOtp = (props: Props) => {
   return (
     <Container fluid className="login-page">
       <Formik
-        initialValues={{ otp: (state as any).otp || "" }}
+        initialValues={{ otp: "" }}
         onSubmit={(values) => {
           const formData = new FormData();
           formData.append("phone", (state as any).phone);

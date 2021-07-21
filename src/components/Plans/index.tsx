@@ -15,6 +15,7 @@ import IsLoading from "../../shared-components/isLoading";
 import PageHeading from "../../shared-components/PageHeading";
 import TablePagination from "../../shared-components/Pagination";
 import ReactTable from "../../shared-components/ReactTable";
+import TableImage from "../../shared-components/TableImage";
 import API from "../../utils/API";
 import { areTwoObjEqual } from "../../utils/areTwoObjEqual";
 import { InsideCart, isActiveArray } from "../../utils/arrays";
@@ -88,12 +89,7 @@ const Plans = () => {
         Header: "Image",
         accessor: "image",
         Cell: (data: Cell) => (
-          <div className="table-image">
-            <img
-              src={`${baseUploadUrl}plans/${data.row.values.image}`}
-              alt={data.row.values.image}
-            />
-          </div>
+          <TableImage file={data.row.values.image} folder="plans" />
         ),
       },
       {
