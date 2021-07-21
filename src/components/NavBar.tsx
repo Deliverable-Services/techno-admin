@@ -82,11 +82,11 @@ const manageLinks: Array<INavLink> = [
     path: "/advertisements",
     icon: <RiAdvertisementFill />,
   },
-  // {
-  //   title: "Permissions",
-  //   path: "/permissions",
-  //   icon: <BsShieldLock />,
-  // },
+  {
+    title: "Permissions",
+    path: "/permissions",
+    icon: <BsShieldLock />,
+  },
   {
     title: "Roles",
     path: "/roles",

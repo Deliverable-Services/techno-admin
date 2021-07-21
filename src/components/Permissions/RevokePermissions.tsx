@@ -8,20 +8,21 @@ import { useHistory, useLocation } from "react-router-dom";
 import { handleApiError } from "../../hooks/handleApiErrors";
 import useGetSingleQuery from "../../hooks/useGetSingleQuery";
 import BackButton from "../../shared-components/BackButton";
+import { InputField } from "../../shared-components/InputFeild";
 import IsLoading from "../../shared-components/isLoading";
 import API from "../../utils/API";
 import { queryClient } from "../../utils/queryClient";
 import { showMsgToast } from "../../utils/showMsgToast";
 
-const key = "give-permission";
+const key = "revoke-permission";
 
 const createUpdataBrand = ({ formdata, id }: { formdata: any; id: string }) => {
-  return API.post(`give-permission`, formdata, {
+  return API.post(`revoke-permission/${id}`, formdata, {
     headers: { "Content-Type": "application/json" },
   });
 };
 
-const AssignPermissionForm = () => {
+const RevokePermission = () => {
   const { state } = useLocation();
   const history = useHistory();
   const id = state ? (state as any).id : null;
@@ -37,9 +38,9 @@ const AssignPermissionForm = () => {
   ]);
   const { mutate, isLoading } = useMutation(createUpdataBrand, {
     onSuccess: () => {
-      setTimeout(() => queryClient.invalidateQueries(key), 500);
+      setTimeout(() => queryClient.invalidateQueries(""), 500);
       history.replace("/permissions");
-      showMsgToast("Permission assigned successfully");
+      showMsgToast("Permission revoked successfully");
     },
     onError: (error: AxiosError) => {
       handleApiError(error, history);
@@ -52,7 +53,7 @@ const AssignPermissionForm = () => {
 
   return (
     <>
-      <BackButton title={"Assign Permission Role"} />
+      <BackButton title={"Revoke Permission Role"} />
 
       <div className="card view-padding p-2 d-flex mt-3">
         <div className="text-primary">
@@ -75,11 +76,12 @@ const AssignPermissionForm = () => {
                 apiData
                   ? {
                       ...apiData,
-                      permission: apiData?.permissions.map((p) => p.id),
+                      // permission: apiData?.permissions.map((p) => p.id),
                     }
                   : {}
               }
               onSubmit={(values) => {
+                console.log({ values });
                 mutate({ formdata: values, id });
               }}
             >
@@ -94,38 +96,13 @@ const AssignPermissionForm = () => {
                     <Col>
                       <p className="text-muted">Permissions</p>
 
-                      <FieldArray
+                      <InputField
+                        as="select"
+                        label="Select Permissoin to Revoke"
                         name="permission"
-                        render={(arrayHelpers) => (
-                          <div>
-                            {Permissions?.map((p) => (
-                              <div>
-                                <label
-                                  key={p.id}
-                                  className="d-flex align-items-center"
-                                >
-                                  <input
-                                    name="permission"
-                                    type="checkbox"
-                                    value={p.id}
-                                    checked={values?.permission?.includes(p.id)}
-                                    onChange={(e) => {
-                                      if (e.target.checked) {
-                                        arrayHelpers.push(p.id);
-                                      } else {
-                                        const idx = values?.permission?.indexOf(
-                                          p.id
-                                        );
-                                        arrayHelpers.remove(idx);
-                                      }
-                                    }}
-                                  />
-                                  <span className=" ml-2 ">{p.name}</span>
-                                </label>
-                              </div>
-                            ))}
-                          </div>
-                        )}
+                        selectData={values.permissions}
+                        selectTitleKey="name"
+                        selectValueKey="name"
                       />
                     </Col>
                   </Row>
@@ -155,4 +132,4 @@ const AssignPermissionForm = () => {
   );
 };
 
-export default AssignPermissionForm;
+export default RevokePermission;

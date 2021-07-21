@@ -49,7 +49,7 @@ const PermissionsCreateUpdateForm = () => {
   const { mutate, isLoading } = useMutation(createUpdataBrand, {
     onSuccess: () => {
       setTimeout(
-        () => queryClient.invalidateQueries("get-all-permission/1"),
+        () => queryClient.invalidateQueries("get-all-permission"),
         500
       );
       history.replace("/permissions");

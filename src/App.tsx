@@ -33,6 +33,7 @@ import SingleOrder from "./components/Orders/single";
 import Permissions from "./components/Permissions";
 import AssignPermissionForm from "./components/Permissions/AssignPermissonCreateUpdateForm";
 import PermissionsCreateUpdateForm from "./components/Permissions/PermissoinsCreateUpdateForm";
+import RevokePermission from "./components/Permissions/RevokePermissions";
 import Plans from "./components/Plans";
 import PlanCreateUpdateForm from "./components/Plans/PlansCreateUpdateForm";
 import Roles from "./components/Roles";
@@ -218,6 +219,11 @@ const App = () => {
               path="/assign-permission/create-edit"
               exact
               component={AssignPermissionForm}
+            />
+            <PrivateRoute
+              path="/revoke-permission/create-edit"
+              exact
+              component={RevokePermission}
             />
             <PrivateRoute
               path="/permissions/create-edit"

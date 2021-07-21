@@ -82,8 +82,11 @@ const Permissions = () => {
   const _onEditClick = (id: string) => {
     history.push("/permissions/create-edit", { id });
   };
-  const _onRolesEditClick = (id: string) => {
-    history.push("/assign-pemission/create-edit", { id });
+  const _onGiveClick = (id: string) => {
+    history.push("/assign-permission/create-edit", { id });
+  };
+  const _onRevokeClick = (id: string) => {
+    history.push("/revoke-permission/create-edit", { id });
   };
 
   const _onFilterChange = (idx: string, value: any) => {
@@ -93,25 +96,46 @@ const Permissions = () => {
     }));
   };
 
+  console.log({ RolesPermission });
+
   const columns = useMemo(
     () => [
       {
         Header: "Role",
-        accessor: "role",
+        accessor: "name",
       },
       {
         Header: "Permissions",
         accessor: "permissions",
+        Cell: (data: Cell) => {
+          const p = data.row.values.permissions;
+          const list = p.map((x) => x.name).join(", ");
+          return <span>{list}</span>;
+        },
       },
       {
         Header: "Actions",
         Cell: (data: Cell) => {
           return (
-            <EditButton
-              onClick={() => {
-                _onRolesEditClick(data.row.values.id);
-              }}
-            />
+            <div className="d-flex">
+              <Button
+                variant="outline-primary"
+                onClick={() => {
+                  _onGiveClick((data.row.original as any).id);
+                }}
+              >
+                Give
+              </Button>
+              <Button
+                className="ml-2"
+                variant="outline-danger"
+                onClick={() => {
+                  _onRevokeClick((data.row.original as any).id);
+                }}
+              >
+                Revoke
+              </Button>
+            </div>
           );
         },
       },
@@ -168,11 +192,7 @@ const Permissions = () => {
 
   return (
     <>
-      <PageHeading
-        title="Assign Permission"
-        onClick={_onRolesCreateClick}
-        totalRecords={data?.total}
-      />
+      <PageHeading title="Assign Permission" />
 
       <Container fluid className="card component-wrapper px-0 py-2 mb-3">
         <Container fluid className="h-100 p-0">
@@ -182,11 +202,12 @@ const Permissions = () => {
             <>
               {!error && (
                 <ReactTable
-                  data={RolesPermission}
+                  data={RolesPermission?.role}
                   columns={columns}
                   filter={filter}
                   onFilterChange={_onFilterChange}
                   isDataLoading={isRolesPermissoinFetch}
+                  isSelectable={false}
                 />
               )}
             </>
