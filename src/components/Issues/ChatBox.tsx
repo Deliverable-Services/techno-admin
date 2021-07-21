@@ -1,7 +1,7 @@
 import { AxiosError } from "axios";
 import { Form, Formik } from "formik";
 import moment from "moment";
-import React from "react";
+import React, { useEffect } from "react";
 import { Container } from "react-bootstrap";
 import { RiSendPlane2Fill } from "react-icons/ri";
 import { useMutation } from "react-query";
@@ -34,15 +34,26 @@ const ChatBox = ({
 }) => {
   const history = useHistory();
   const loggedInUser = useUserProfileStore((state) => state.user);
-  const messagesRefs = React.useRef<HTMLDivElement>(null);
-
-  console.log({ messagesRefs });
 
   const [messages, setMessages] = React.useState(initialMessages);
 
   // React.useEffect(() => {
   //   setInterval(() => queryClient.invalidateQueries(`${key}`), 10000);
   // }, []);
+  // const getAllMessage = async (id) => {
+  //   if (!id) return;
+  //   try {
+  //     const res = await API.get("/tickets/" + id + "/message");
+  //     if (res) console.log({ res });
+  //   } catch (error) {
+  //     handleApiError(error, history);
+  //   }
+  // };
+
+  // useEffect(() => {
+  //   if (!id) return;
+  //   getAllMessage(id);
+  // }, [id]);
 
   const { mutate, isLoading: isSendingMessage } = useMutation(
     addMessageToServer,
@@ -97,7 +108,6 @@ const ChatBox = ({
           )}
           {messages?.map((msg, i) => (
             <div
-              ref={messages.current[i]}
               className="message w-100"
               style={{
                 position: "relative",
@@ -176,11 +186,6 @@ const ChatBox = ({
             <Formik
               initialValues={{ text: "" }}
               onSubmit={({ text }, { resetForm }) => {
-                // const body = {
-                //   message: text,
-                //   user_id: loggedInUser.id,
-                //   created_at: moment().format("YYYY-MM-DD"),
-                // };
                 mutate({ id, message: text });
                 // addMessageToChat(body);
                 resetForm();

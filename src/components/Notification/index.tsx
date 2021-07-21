@@ -10,6 +10,7 @@ import { Cell } from "react-table";
 import { handleApiError } from "../../hooks/handleApiErrors";
 import BreadCrumb from "../../shared-components/BreadCrumb";
 import CreatedUpdatedAt from "../../shared-components/CreatedUpdatedAt";
+import CustomBadge from "../../shared-components/CustomBadge";
 import EditButton from "../../shared-components/EditButton";
 import FilterSelect from "../../shared-components/FilterSelect";
 import IsActiveBadge from "../../shared-components/IsActiveBadge";
@@ -31,7 +32,7 @@ const intitialFilter = {
   page: null,
   perPage: 25,
   sent: "",
-  sent_to: "",
+  send_to: "",
   scheduled_at: "",
 };
 
@@ -95,6 +96,15 @@ const Notifications = () => {
         accessor: "sent",
         Cell: (data: Cell) => {
           return <IsActiveBadge value={data.row.values.sent} />;
+        },
+      },
+      {
+        Header: "Send To ",
+        accessor: "send_to",
+        Cell: (data: Cell) => {
+          return (
+            <CustomBadge title={data.row.values.send_to} variant="primary" />
+          );
         },
       },
       {
@@ -198,10 +208,10 @@ const Notifications = () => {
                     <Row className="select-filter d-flex">
                       <Col md="auto">
                         <FilterSelect
-                          currentValue={filter.sent_to}
+                          currentValue={filter.send_to}
                           data={NotificationSendToCategories}
-                          label="Sent To"
-                          idx="sent_to"
+                          label="Send To"
+                          idx="send_to"
                           onFilterChange={_onFilterChange}
                         />
                       </Col>

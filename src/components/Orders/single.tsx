@@ -2,7 +2,7 @@ import { AxiosError } from "axios";
 import moment from "moment";
 import React, { useState } from "react";
 import { Badge, Button, Col, Container, Form, Row } from "react-bootstrap";
-import { BiArrowFromRight, BiDownload } from "react-icons/bi";
+import { BiArrowFromRight, BiDownload, BiSad } from "react-icons/bi";
 import { useMutation, useQuery } from "react-query";
 import { useHistory, useParams } from "react-router-dom";
 import "react-step-progress-bar/styles.css";
@@ -16,6 +16,7 @@ import { queryClient } from "../../utils/queryClient";
 import { showMsgToast } from "../../utils/showMsgToast";
 import { AiFillPlusSquare } from "react-icons/ai";
 import CustomBadge from "../../shared-components/CustomBadge";
+import { primaryColor } from "../../utils/constants";
 
 const key = "bookings";
 
@@ -43,12 +44,20 @@ const SingleOrder = () => {
   const [showAssignAgent, setShowAssignAgent] = useState(false);
   const { data, isLoading, isFetching } = useGetSingleQuery({ id, key });
 
-  const { data: Invoice, isLoading: isInvoiceLoading } = useQuery<any>(
-    [`${key}/${15}/download-invoice`],
-    {
-      enabled: !!data?.transaction?.id,
+  // const { data: Invoice, isLoading: isInvoiceLoading } = useQuery<any>(
+  //   [`${key}/${15}/download-invoice`],
+  //   {
+  //     // enabled: !!data?.transaction?.id,
+  //   }
+  const _onDownloadInvoice = async (id) => {
+    try {
+      const res = await API.get("/bookings/" + id + "/download-invoice");
+      if (res) console.log({ res });
+    } catch (error) {
+      handleApiError(error, history);
     }
-  );
+  };
+  // );
 
   const { mutate, isLoading: isAsigningLoading } = useMutation(assignAgent, {
     onSuccess: (data) => {
@@ -124,6 +133,17 @@ const SingleOrder = () => {
   if (isLoading || isFetching) {
     return <IsLoading />;
   }
+
+  if (!data && (!isLoading || !isFetching)) {
+    return (
+      <Container fluid className="d-flex justify-content-center display-3">
+        <div className="d-flex flex-column align-items-center">
+          <BiSad color={primaryColor} />
+          <span className="text-primary display-3">Something went wrong</span>
+        </div>
+      </Container>
+    );
+  }
   // console.log(data);
   return (
     <Container fluid className="component-wrapper px-0 py-2">
@@ -143,7 +163,10 @@ const SingleOrder = () => {
         </div>
         <div>
           {!isLoading && data.transaction && (
-            <Button variant="success">
+            <Button
+              variant="success"
+              onClick={() => _onDownloadInvoice(data?.transaction[0]?.id)}
+            >
               <div className="text-white">
                 <BiDownload size={24} /> <b>Invoice</b>
               </div>
