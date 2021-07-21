@@ -44,7 +44,7 @@ const SingleOrder = () => {
   const { data, isLoading, isFetching } = useGetSingleQuery({ id, key });
 
   const { data: Invoice, isLoading: isInvoiceLoading } = useQuery<any>(
-    [`${key}/${data?.transaction?.id}/download-invoice`],
+    [`${key}/${15}/download-invoice`],
     {
       enabled: !!data?.transaction?.id,
     }
