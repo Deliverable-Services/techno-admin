@@ -261,11 +261,14 @@ const Dashboard = () => {
                     {data?.data_total &&
                       Object.entries(data?.data_total).map((item) => (
                         <tr>
-                          <td className="text-muted ">
-                            <p className=" m-0">{item[0].toUpperCase()}</p>
+                          <td className="text-grey ">
+                            <p>{item[0].replace("_", " ")}</p>
                           </td>
-                          <td className="text-left" style={{ width: "30px" }}>
-                            <p className="view-subheading m-0">
+                          <td
+                            className="text-left text-grey"
+                            style={{ width: "30px" }}
+                          >
+                            <p>
                               <b>{item[1]}</b>
                             </p>
                           </td>
@@ -279,34 +282,6 @@ const Dashboard = () => {
                       ))}
                   </tbody>
                 </table>
-              </div>
-            </div>
-
-            <div className="card hoverable stats-card d-flex w-100 mt-3">
-              <div className="card-header">
-                <p className="text-black">Platform Data Overview</p>
-              </div>
-
-              <div className="card-content">
-                <div className="d-flex align-items-center justify-content-between w-100 pb-2">
-                  <span className="text-grey">Brands</span>
-                  <span className="text-grey">10</span>
-                </div>
-
-                <div className="d-flex align-items-center justify-content-between w-100 pt-2 pb-2">
-                  <span className="text-grey">Brand Models</span>
-                  <span className="text-grey">6</span>
-                </div>
-
-                <div className="d-flex align-items-center justify-content-between w-100 pt-2 pb-2">
-                  <span className="text-grey">Categories</span>
-                  <span className="text-grey">12</span>
-                </div>
-
-                <div className="d-flex align-items-center justify-content-between w-100 pt-2 pb-2">
-                  <span className="text-grey">Services</span>
-                  <span className="text-grey">12</span>
-                </div>
               </div>
             </div>
           </Container>
