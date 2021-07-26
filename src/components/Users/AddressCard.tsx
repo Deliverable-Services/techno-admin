@@ -5,13 +5,22 @@ interface Props {
   address: any;
 }
 
-const AddressCard = ({ address } : Props) => {
-  console.log("address 444", address)
+const AddressCard = ({ address }: Props) => {
   return (
-    <div className="d-flex justify-content-between p-2 flex-column">
+    <div className="d-flex justify-content-between flex-column ">
+      {address.lat && address.lng ? (
         <UserMap userAddress={address} />
-          
-        <div className="" >
+      ) : (
+        <div
+          style={{ minHeight: "250px" }}
+          className="d-flex align-items-center justify-content-center"
+        >
+          <p className=" text-muted">
+            User latitude and longitude are not available
+          </p>
+        </div>
+      )}
+      <div className=" p-2">
         <span className="text-black font-weight-bold">{address.name}</span>
         <br />
         <span className="text-muted">{address.address},</span>
@@ -21,7 +30,6 @@ const AddressCard = ({ address } : Props) => {
         <br />
         <span className="text-muted">{address.pincode}</span>
       </div>
-      
     </div>
   );
 };

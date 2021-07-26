@@ -162,7 +162,7 @@ const SingleOrder = () => {
           </Badge>
         </div>
         <div>
-          {!isLoading && data.transaction && (
+          {!isLoading && data.transaction && data.transaction.length > 0 && (
             <Button
               variant="success"
               onClick={() => _onDownloadInvoice(data?.transaction[0]?.id)}

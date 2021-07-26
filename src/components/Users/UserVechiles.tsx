@@ -44,13 +44,12 @@ const UserVehicles = () => {
       <PageHeading title="User Vehicles" />
       <Row
         className="rounded mt-3"
-      // style={{ borderTop: "1px solid rgba(0,0,0,.25" }}
+        // style={{ borderTop: "1px solid rgba(0,0,0,.25" }}
       >
-
         {apiData && apiData.vehicles && apiData.vehicles.length > 0 ? (
           apiData.vehicles.map((vehicle: any) => (
             <>
-              <Col md={6}>
+              <Col md={6} className="mt-2">
                 <VehicleCard vehicle={vehicle} />
               </Col>
             </>
@@ -59,7 +58,9 @@ const UserVehicles = () => {
           <Container fluid className="d-flex justify-content-center display-3">
             <div className="d-flex flex-column align-items-center pt-3 pb-3">
               <MdRemoveShoppingCart color="#000" size={60} />
-              <h4 className="text-black font-weight-bold mt-2">No vehicle found</h4>
+              <h4 className="text-black font-weight-bold mt-2">
+                No vehicle found
+              </h4>
             </div>
           </Container>
         )}

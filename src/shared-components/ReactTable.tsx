@@ -435,11 +435,20 @@ const DnDRow = ({ provided, row, snapshot }: any) => (
 );
 const Row = ({ row }: any) => (
   <tr {...row.getRowProps()}>
-    {row.cells.map((cell) => (
-      <td {...cell.getCellProps()} style={{ verticalAlign: "middle" }}>
-        {cell.render("Cell")}
-      </td>
-    ))}
+    {row.cells.map((cell) => {
+      console.log({ cell });
+      return (
+        <td {...cell.getCellProps()} style={{ verticalAlign: "middle" }}>
+          {cell.value ||
+          cell.column.id === "selection" ||
+          cell.column.id === "Actions" ? (
+            cell.render("Cell")
+          ) : (
+            <span className="text-muted">NA</span>
+          )}
+        </td>
+      );
+    })}
   </tr>
 );
 
