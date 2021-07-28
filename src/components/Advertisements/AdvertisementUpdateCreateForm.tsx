@@ -148,7 +148,7 @@ const AdvertisementCreateUpdateForm = () => {
                     selectData={types}
                   />
 
-                  <InputField
+                  {/* <InputField
                     as="textarea"
                     name="description"
                     placeholder="Description"
@@ -159,7 +159,7 @@ const AdvertisementCreateUpdateForm = () => {
                     name="terms"
                     placeholder="Terms"
                     label="Terms"
-                  />
+                  /> */}
                 </div>
                 <Row className="d-flex justify-content-start">
                   <Col md="2">

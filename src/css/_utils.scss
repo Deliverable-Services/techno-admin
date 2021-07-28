@@ -52,7 +52,7 @@ td {
 
 td,
 th {
-  text-transform: capitalize;
+  // text-transform: capitalize;
   white-space: nowrap;
 }
 
@@ -303,12 +303,11 @@ th {
   bottom: 0;
   right: 0;
   background-color: #eee;
-  box-shadow: 0 -4px 44px rgba(0, 0, 0, .2);
+  box-shadow: 0 -4px 44px rgba(0, 0, 0, 0.2);
   padding: 6px;
   animation: slide 0.3s ease;
   z-index: 100000000000000000;
   border-radius: none !important;
-
 }
 
 @keyframes slide {
@@ -320,7 +319,6 @@ th {
     transform: translateY(0);
   }
 }
-
 
 //hide the scroll bar
 .hide-scroll::-webkit-scrollbar {

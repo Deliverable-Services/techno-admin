@@ -16,6 +16,7 @@ type InputFieldProps = InputHTMLAttributes<HTMLInputElement> & {
   selectData?: Array<any>;
   selectValueKey?: any;
   selectTitleKey?: string;
+  altTitleKey?: string;
 };
 
 // '' => false
@@ -31,6 +32,7 @@ export const InputField: React.FC<InputFieldProps> = ({
   selectData,
   selectValueKey,
   selectTitleKey,
+  altTitleKey,
   ...props
 }) => {
   const [field] = useField(props);
@@ -61,7 +63,7 @@ export const InputField: React.FC<InputFieldProps> = ({
             {selectData &&
               selectData.map((data: any) => (
                 <option value={data[selectValueKey || "id"]}>
-                  {data[selectTitleKey || "name"]}
+                  {data[selectTitleKey || "name"] || data[altTitleKey]}
                 </option>
               ))}
           </Form.Control>

@@ -23,10 +23,10 @@ const DatePicker: React.FC<Props> = ({
 }) => {
   const [field] = useField({ ...props, name });
   const [value, setValue] = useState(
-    moment(field.value).format("YYYY-MM-DDThh:mm")
+    moment(field.value).format("YYYY-MM-DDTHH:mm")
   );
   const handleChange = (e: any) => {
-    setFieldValue(name, moment(e.target.value).format("YYYY-MM-DD hh:mm:ss"));
+    setFieldValue(name, moment(e.target.value).format("YYYY-MM-DD HH:mm:ss"));
     setValue(e.target.value);
   };
   return (

@@ -186,7 +186,7 @@ const Issues = () => {
 
   return (
     <>
-      <PageHeading title="Issues" totalRecords={50} />
+      <PageHeading title="Issues" totalRecords={data?.total} />
       {!isLoading && (
         <Container fluid>
           <div>

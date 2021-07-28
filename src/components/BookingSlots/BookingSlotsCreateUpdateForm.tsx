@@ -20,94 +20,88 @@ import { showMsgToast } from "../../utils/showMsgToast";
 
 const key = "disabled-slots";
 
-const createSlot = ({
-	formdata,
-}: {
-	formdata: any;
-}) => {
-	return API.post(`${key}`, formdata,);
-
-
+const createSlot = ({ formdata }: { formdata: any }) => {
+  return API.post(`${key}`, formdata);
 };
 
 const SlotCreateUpdateForm = () => {
-	const { state } = useLocation()
-	const history = useHistory()
-	const id = state ? (state as any).id : null;
-	useEffect(() => {
-		bsCustomFileInput.init();
-	}, []);
-	const { data, isLoading: dataLoading } = useGetSingleQuery({ id, key });
-	const { mutate, isLoading } = useMutation(createSlot, {
-		onSuccess: () => {
-			setTimeout(() => queryClient.invalidateQueries(key), 500);
-			history.replace("/booking-slots")
-			showMsgToast("Slot has been  disabled successfully")
-		},
-		onError: (error: AxiosError) => {
-			handleApiError(error, history)
-		}
-	});
+  const { state } = useLocation();
+  const history = useHistory();
+  const id = state ? (state as any).id : null;
+  useEffect(() => {
+    bsCustomFileInput.init();
+  }, []);
+  const { data, isLoading: dataLoading } = useGetSingleQuery({ id, key });
+  const { mutate, isLoading } = useMutation(createSlot, {
+    onSuccess: () => {
+      setTimeout(() => queryClient.invalidateQueries(key), 500);
+      history.replace("/booking-slots");
+      showMsgToast("Slot has been  disabled successfully");
+    },
+    onError: (error: AxiosError) => {
+      handleApiError(error, history);
+    },
+  });
 
+  const apiData = data as any;
 
-	const apiData = data as any;
+  if (dataLoading) return <IsLoading />;
 
-	if (dataLoading) return <IsLoading />;
+  return (
+    <>
+      <BackButton title="Booking Slots" />
+      <Row className="rounded">
+        <Col className="mx-auto">
+          <Formik
+            initialValues={apiData || {}}
+            onSubmit={(values) => {
+              const formdata = {
+                reason: values.reason,
+                datetime: moment(values.datetime).format("YYYY-MM-DD HH:mm:ss"),
+              };
 
-	return (
-		<>
-			<BackButton title="Booking Slots" />
-			<Row className="rounded">
-				<Col className="mx-auto">
-					<Formik
-						initialValues={apiData || {}}
+              console.log({ formdata });
+              mutate({ formdata });
+            }}
+          >
+            {({ setFieldValue }) => (
+              <Form>
+                <div className="form-container ">
+                  <InputField
+                    name="reason"
+                    placeholder="Reason"
+                    label="Reason"
+                    required
+                  />
+                  <DatePicker
+                    name="datetime"
+                    setFieldValue={setFieldValue}
+                    label="Date Time"
+                  />
+                </div>
 
-						onSubmit={(values) => {
-
-							const formdata = {
-								reason: values.reason,
-								datetime: moment(values.datetime).format("YYYY-MM-DD hh:mm:ss")
-							}
-
-							console.log({ formdata })
-							mutate({ formdata });
-						}}
-					>
-						{({ setFieldValue }) => (
-							<Form>
-								<div className="form-container ">
-									<InputField
-										name="reason"
-										placeholder="Reason"
-										label="Reason"
-										required
-									/>
-									<DatePicker
-										name="datetime"
-										setFieldValue={setFieldValue}
-										label="Date Time"
-									/>
-
-								</div>
-
-								<Row className="d-flex justify-content-start">
-									<Col md="2">
-										<Button type="submit" disabled={isLoading} className="w-100">
-											{isLoading ? (
-												<Spinner animation="border" size="sm" />
-											) : (
-												"Submit"
-											)}
-										</Button>
-									</Col>
-								</Row>
-							</Form>
-						)}
-					</Formik>
-				</Col>
-			</Row>
-		</>
-	);
+                <Row className="d-flex justify-content-start">
+                  <Col md="2">
+                    <Button
+                      type="submit"
+                      disabled={isLoading}
+                      className="w-100"
+                    >
+                      {isLoading ? (
+                        <Spinner animation="border" size="sm" />
+                      ) : (
+                        "Submit"
+                      )}
+                    </Button>
+                  </Col>
+                </Row>
+              </Form>
+            )}
+          </Formik>
+        </Col>
+      </Row>
+    </>
+  );
 };
 
 export default SlotCreateUpdateForm;

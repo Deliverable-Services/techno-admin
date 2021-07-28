@@ -125,6 +125,7 @@ const TestimonialCreateUpdateForm = () => {
                       label="Choose User"
                       as="select"
                       selectData={!isUsersLoading && Users.data}
+                      altTitleKey="id"
                     />
                   </div>
                   <Row>

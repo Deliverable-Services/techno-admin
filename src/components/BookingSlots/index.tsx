@@ -74,21 +74,28 @@ const BookingSlots = () => {
       // formatting data in the calendar accepted form
       Object.values(data).map((items: Array<any>) => {
         items.map((item) => {
+          console.log({ dataTime: item.datetime });
           const event = {
             id: item.id,
-            from: moment(item.datetime).format("YYYY-MM-DDThh:mm:ss"),
-            to: moment(item.datetime)
+            from: moment.utc(item.datetime).format("YYYY-MM-DD HH:mm:ss"),
+            to: moment
+              .utc(item.datetime)
               .add(1, "hour")
-              .format("YYYY-MM-DDThh:mm:ss"),
-            title: `${item.reason} ${moment(item.datetime).format(
-              "HH a"
-            )}-${moment(item.datetime).add(1, "hour").format("HH a")} `,
+              .format("YYYY-MM-DD HH:mm:ss"),
+            title: `${item.reason} ${moment
+              .utc(item.datetime)
+              .format("HH")}-${moment
+              .utc(item.datetime)
+              .add(1, "hour")
+              .format("HH")} `,
             color: primaryColor,
           };
+
           events.push(event);
         });
       });
       setFormattedDataForCalendar(events);
+      console.log(events);
     };
 
     formataData();
