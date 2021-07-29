@@ -182,6 +182,7 @@ const Testimonial = () => {
                   filter={filter}
                   onFilterChange={_onFilterChange}
                   isDataLoading={isFetching}
+                  searchPlaceHolder="Search using name, link"
                 />
               )}
               {!error && data?.data?.length > 0 ? (

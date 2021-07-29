@@ -181,7 +181,7 @@ const Faqs = () => {
                   filter={filter}
                   onFilterChange={_onFilterChange}
                   isDataLoading={isFetching}
-                  searchPlaceHolder="Search using placeholder"
+                  searchPlaceHolder="Search using title"
                 />
               )}
               {!error && data?.data?.length > 0 ? (

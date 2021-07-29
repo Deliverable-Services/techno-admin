@@ -263,6 +263,7 @@ const Transactions = () => {
                     onFilterChange={_onFilterChange}
                     isDataLoading={isFetching}
                     isSelectable={false}
+                    searchPlaceHolder="Search using ref id"
                   />
                 </>
               )}

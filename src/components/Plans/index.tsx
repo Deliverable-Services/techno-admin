@@ -102,7 +102,7 @@ const Plans = () => {
       },
       {
         Header: "Category",
-        accessor: "category_id",
+        accessor: "category.name",
       },
       {
         Header: "Allowed Usage",
@@ -271,6 +271,7 @@ const Plans = () => {
                     filter={filter}
                     onFilterChange={_onFilterChange}
                     isDataLoading={isFetching}
+                    searchPlaceHolder="Search using name"
                   />
                 </>
               )}

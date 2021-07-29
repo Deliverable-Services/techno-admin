@@ -160,6 +160,7 @@ const Cities = () => {
                   filter={filter}
                   onFilterChange={_onFilterChange}
                   isDataLoading={isFetching}
+                  searchPlaceHolder="Search using city, state"
                 />
               )}
               {!error && data?.data?.length > 0 ? (
