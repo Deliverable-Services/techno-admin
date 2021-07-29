@@ -29,7 +29,7 @@ const intitialFilter = {
   q: "",
   page: 1,
   perPage: 25,
-  active: ""
+  active: "",
 };
 const Faqs = () => {
   const history = useHistory();
@@ -128,8 +128,12 @@ const Faqs = () => {
 
   return (
     <>
-      <PageHeading title="Faqs" onClick={_onCreateClick} totalRecords={data?.total} />
-      {(!isLoading) && (
+      <PageHeading
+        title="Faqs"
+        onClick={_onCreateClick}
+        totalRecords={data?.total}
+      />
+      {!isLoading && (
         <Container fluid>
           <div>
             <div className="filter">
@@ -154,7 +158,6 @@ const Faqs = () => {
                 value="0"
                 currentValue={filter.active}
                 dataLength={data?.data?.length}
-
                 idx="active"
                 title="Not Active"
                 isLast
@@ -178,6 +181,7 @@ const Faqs = () => {
                   filter={filter}
                   onFilterChange={_onFilterChange}
                   isDataLoading={isFetching}
+                  searchPlaceHolder="Search using placeholder"
                 />
               )}
               {!error && data?.data?.length > 0 ? (

@@ -37,6 +37,7 @@ interface Props {
   isDataLoading?: boolean;
   setSelectedRowIds?: any;
   isSelectable?: boolean;
+  searchPlaceHolder?: string;
 }
 interface ISearchInput {
   preGlobalFilteredRows: any;
@@ -44,6 +45,7 @@ interface ISearchInput {
   setGlobalFilter: any;
   searchValue: string;
   onSearchChange: any;
+  placeholder?: string;
 }
 
 function SearchInput({
@@ -52,6 +54,7 @@ function SearchInput({
   setGlobalFilter,
   searchValue,
   onSearchChange,
+  placeholder,
 }: ISearchInput) {
   const count = preGlobalFilteredRows.length;
   const [value, setValue] = React.useState(searchValue);
@@ -67,7 +70,7 @@ function SearchInput({
         setValue(e.target.value);
         // onChange(e.target.value);
       }}
-      placeholder={`Search ${count} records...`}
+      placeholder={placeholder ? placeholder : `Search ${count} records...`}
     />
   );
 }
@@ -107,6 +110,7 @@ function ReactTable({
   isDataLoading,
   setSelectedRowIds,
   isSelectable = true,
+  searchPlaceHolder,
 }: Props): ReactElement {
   const [records, setRecords] = React.useState(data);
   const updateMyData = (rowIndex: any, columnID: any, newValue: any) => {
@@ -226,6 +230,7 @@ function ReactTable({
               setGlobalFilter={setGlobalFilter}
               searchValue={filter?.query}
               onSearchChange={onFilterChange}
+              placeholder={searchPlaceHolder}
             />
           </div>
         </div>

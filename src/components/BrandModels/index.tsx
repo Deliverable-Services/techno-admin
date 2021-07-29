@@ -259,6 +259,7 @@ const BrandModels = () => {
                     filter={filter}
                     onFilterChange={_onFilterChange}
                     isDataLoading={isFetching}
+                    searchPlaceHolder="Search using name"
                   />
                 </>
               )}

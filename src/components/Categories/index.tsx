@@ -285,6 +285,7 @@ const Categories = () => {
                     isDataLoading={isFetching}
                     isDraggable={isDraggable}
                     updateOrder={updateOrder}
+                    searchPlaceHolder="Search using name, url"
                   />
                 </>
               )}

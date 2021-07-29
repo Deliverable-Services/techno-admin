@@ -114,6 +114,10 @@ const Admins = () => {
         accessor: "phone",
       },
       {
+        Header: "Phone",
+        accessor: "email",
+      },
+      {
         Header: "Role",
         accessor: "role",
       },
@@ -214,6 +218,7 @@ const Admins = () => {
                     filter={filter}
                     onFilterChange={_onFilterChange}
                     isDataLoading={isFetching}
+                    searchPlaceHolder="Search using name, phone, email"
                   />
                 </>
               )}

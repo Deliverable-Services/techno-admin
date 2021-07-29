@@ -22,8 +22,7 @@ interface IDates {
 }
 
 const returnPercentage = (newData: number, lastTotal: number) => {
-  if (newData === 0 && lastTotal === 0) return 0;
-  const p = newData / (lastTotal + newData);
+  const p = newData / (lastTotal || 1);
   return (p * 100).toFixed(1);
 };
 
@@ -169,7 +168,9 @@ const Dashboard = () => {
                     </strong>
                   </span>
 
-                  <span className="text-muted ml-2">from 3</span>
+                  <span className="text-muted ml-2">
+                    from {data?.customerprev}
+                  </span>
                 </div>
               </div>
             </div>
@@ -192,7 +193,9 @@ const Dashboard = () => {
                     </strong>
                   </span>
 
-                  <span className="text-muted ml-2">from 3</span>
+                  <span className="text-muted ml-2">
+                    from {data?.orderprev}
+                  </span>
                 </div>
               </div>
             </div>
@@ -219,7 +222,9 @@ const Dashboard = () => {
                     </strong>
                   </span>
 
-                  <span className="text-muted ml-2">from 3</span>
+                  <span className="text-muted ml-2">
+                    from {data?.subscriptionprev}
+                  </span>
                 </div>
               </div>
             </div>
@@ -242,7 +247,9 @@ const Dashboard = () => {
                     </strong>
                   </span>
 
-                  <span className="text-muted ml-2">from 3</span>
+                  <span className="text-muted ml-2">
+                    from {data?.agentprev}
+                  </span>
                 </div>
               </div>
             </div>
@@ -261,7 +268,7 @@ const Dashboard = () => {
                     {data?.data_total &&
                       Object.entries(data?.data_total).map((item) => (
                         <tr>
-                          <td className="text-grey ">
+                          <td className="text-grey text-capitalize">
                             <p>{item[0].replace("_", " ")}</p>
                           </td>
                           <td

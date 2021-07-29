@@ -115,6 +115,10 @@ const Users = () => {
         accessor: "phone",
       },
       {
+        Header: "Email",
+        accessor: "email",
+      },
+      {
         Header: "Role",
         accessor: "role",
         Cell: (data: Cell) => (
@@ -259,6 +263,7 @@ const Users = () => {
                     filter={filter}
                     onFilterChange={_onFilterChange}
                     isDataLoading={isFetching}
+                    searchPlaceHolder="Search using name, phone, email"
                   />
                 </>
               )}
