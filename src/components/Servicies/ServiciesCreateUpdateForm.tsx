@@ -2,14 +2,16 @@ import { AxiosError } from "axios";
 import bsCustomFileInput from "bs-custom-file-input";
 import { Form, Formik } from "formik";
 import { useEffect } from "react";
-import { Alert, Button, Col, Row, Spinner } from "react-bootstrap";
+import { Alert, Button, Col, Container, Row, Spinner } from "react-bootstrap";
 import { useMutation, useQuery } from "react-query";
 import { useHistory, useLocation } from "react-router-dom";
 import { handleApiError } from "../../hooks/handleApiErrors";
 import useGetSingleQuery from "../../hooks/useGetSingleQuery";
 import BackButton from "../../shared-components/BackButton";
+import ImagesContainer from "../../shared-components/ImagesContainer";
 import { InputField } from "../../shared-components/InputFeild";
 import IsLoading from "../../shared-components/isLoading";
+import PageHeading from "../../shared-components/PageHeading";
 import TextEditor from "../../shared-components/TextEditor";
 import API from "../../utils/API";
 import { isActiveArray } from "../../utils/arrays";
@@ -32,6 +34,12 @@ const createUpdataServices = ({
   }
 
   return API.post(`${key}/${id}`, formdata, {
+    headers: { "Content-Type": "multipart/form-data" },
+  });
+};
+
+const addServicesImages = ({ formdata }: { formdata: FormData }) => {
+  return API.post(`${key}/add-images`, formdata, {
     headers: { "Content-Type": "multipart/form-data" },
   });
 };
@@ -61,85 +69,175 @@ const ServicesCreateUpdateForm = () => {
     }
   );
 
+  const {
+    mutate: mutateImages,
+    isLoading: isServicesImageLoading,
+    error: imagesError,
+    status: imagesMutationStatus,
+  } = useMutation(addServicesImages, {
+    onSuccess: () => {
+      setTimeout(() => queryClient.invalidateQueries(key), 500);
+      showMsgToast("Services images added successfully");
+    },
+    onError: (error: AxiosError) => {
+      handleApiError(error, history);
+    },
+  });
   const apiData = data && (data as any);
 
   if (dataLoading) return <IsLoading />;
 
   return (
-    <Row className="rounded">
-      <BackButton title="Services" />
-      <Col className="mx-auto">
-        <Formik
-          initialValues={apiData || {}}
-          onSubmit={(values) => {
-            // console.log("values", values)
-            const formdata = new FormData();
-            const { image, ...rest } = values;
-            for (let k in rest) formdata.append(k, rest[k]);
-            if (values.image) formdata.append("image", values.image);
-            mutate({ formdata, id });
-          }}
-        >
-          {({ setFieldValue }) => (
-            <Form>
-              <div className="form-container  py-2 ">
-                <InputField
-                  name="name"
-                  placeholder="Name"
-                  label="Name"
-                  required
-                />
+    <>
+      <Row className="rounded">
+        <BackButton title="Services" />
+        <Col className="mx-auto">
+          <Formik
+            initialValues={apiData || {}}
+            onSubmit={(values) => {
+              // console.log("values", values)
+              const formdata = new FormData();
+              const { image, images, ...rest } = values;
+              for (let k in rest) formdata.append(k, rest[k]);
 
-                <InputField name="url" placeholder="Url" label="Url" required />
-                <InputField
-                  name="price"
-                  placeholder="Price"
-                  label="Price"
-                  type="number"
-                />
-                <InputField
-                  name="category_id"
-                  placeholder="Category"
-                  label="Choose Category"
-                  as="select"
-                  selectData={!isCategoriesLoading && (categories as any).data}
-                />
-                <InputField
-                  as="select"
-                  selectData={isActiveArray}
-                  name="is_active"
-                  label="Is active?"
-                  placeholder="Choose is active"
-                />
-                <InputField
-                  name="image"
-                  placeholder="image"
-                  label="Choose Service Image"
-                  isFile
+              for (let k in images) formdata.append("images[]", images[k]);
+              if (values.image) formdata.append("image", values.image);
+              mutate({ formdata, id });
+            }}
+          >
+            {({ setFieldValue }) => (
+              <Form>
+                <div className="form-container  py-2 ">
+                  <InputField
+                    name="name"
+                    placeholder="Name"
+                    label="Name"
+                    required
+                  />
+
+                  <InputField
+                    name="url"
+                    placeholder="Url"
+                    label="Url"
+                    required
+                  />
+                  <InputField
+                    name="price"
+                    placeholder="Price"
+                    label="Price"
+                    type="number"
+                  />
+                  <InputField
+                    name="category_id"
+                    placeholder="Category"
+                    label="Choose Category"
+                    as="select"
+                    selectData={
+                      !isCategoriesLoading && (categories as any).data
+                    }
+                  />
+                  <InputField
+                    as="select"
+                    selectData={isActiveArray}
+                    name="is_active"
+                    label="Is active?"
+                    placeholder="Choose is active"
+                  />
+                  <InputField
+                    name="image"
+                    placeholder="image"
+                    label="Choose Service  Featured Image"
+                    isFile
+                    setFieldValue={setFieldValue}
+                  />
+                </div>
+                <TextEditor
+                  name="details"
+                  label="Details"
                   setFieldValue={setFieldValue}
                 />
+                <Row className="d-flex justify-content-start">
+                  <Col md="2">
+                    <Button
+                      type="submit"
+                      disabled={isLoading}
+                      className="w-100"
+                    >
+                      {isLoading ? (
+                        <Spinner animation="border" size="sm" />
+                      ) : (
+                        "Submit"
+                      )}
+                    </Button>
+                  </Col>
+                </Row>
+              </Form>
+            )}
+          </Formik>
+        </Col>
+      </Row>
+
+      {id && (
+        <div className="card view-padding p-2 d-flex mt-3 ">
+          <div className="text-primary">
+            <div className="d-flex justify-content-between">
+              <div
+                className="text-black pb-3"
+                style={{ cursor: "pointer", fontWeight: 600 }}
+              >
+                Service Images
               </div>
-              <TextEditor
-                name="details"
-                label="Details"
-                setFieldValue={setFieldValue}
-              />
-              <Row className="d-flex justify-content-start">
-                <Col md="2">
-                  <Button type="submit" disabled={isLoading} className="w-100">
-                    {isLoading ? (
-                      <Spinner animation="border" size="sm" />
-                    ) : (
-                      "Submit"
-                    )}
-                  </Button>
-                </Col>
-              </Row>
-            </Form>
-          )}
-        </Formik>
-      </Col>
-    </Row>
+            </div>
+          </div>
+          <div className="text-primary">
+            <div className="d-flex justify-content-between">
+              <div
+                className="text-black pb-3"
+                style={{ cursor: "pointer", fontWeight: 600 }}
+              >
+                <Formik
+                  initialValues={{ images: [] }}
+                  onSubmit={(values) => {
+                    const { images } = values;
+                    const formdata = new FormData();
+                    for (let k in images) formdata.append("images", images[k]);
+
+                    formdata.append("id", id);
+
+                    mutateImages({ formdata });
+                  }}
+                >
+                  {({ setFieldValue, values }) => (
+                    <Form>
+                      <div className="w-100 d-flex align-items-start ">
+                        <InputField
+                          name="images"
+                          label="Choose Plans Images"
+                          isFile
+                          multipleImages
+                          setFieldValue={setFieldValue}
+                        />
+                      </div>
+                      <Button type="submit" disabled={isServicesImageLoading}>
+                        {isServicesImageLoading ? (
+                          <Spinner animation="border" size="sm" />
+                        ) : (
+                          "Add Imges"
+                        )}
+                      </Button>
+                    </Form>
+                  )}
+                </Formik>
+              </div>
+            </div>
+          </div>
+          <ImagesContainer
+            folder="services"
+            images={!isLoading && data?.images}
+          />
+        </div>
+      )}
+    </>
   );
 };
 

@@ -328,6 +328,7 @@ const InsideCart = () => {
                       onFilterChange={_onFilterChange}
                       isDataLoading={isFetching}
                       isSelectable={false}
+                      searchPlaceHolder="Search using ref_id"
                     />
                   </>
                 )}

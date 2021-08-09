@@ -112,38 +112,6 @@ const BookingSlots = () => {
     }));
   };
 
-  const columns = useMemo(
-    () => [
-      {
-        Header: "#Id",
-        accessor: "id", //accessor is the "key" in the data
-      },
-      {
-        Header: "Reason",
-        accessor: "reason",
-      },
-      {
-        Header: "Date",
-        accessor: "updated_at",
-        Cell: (data: Cell) =>
-          moment(data.row.values.updated_at).format("DD-MM-YYYY"),
-      },
-      {
-        Header: "Slot",
-        Cell: (data: Cell) =>
-          moment(data.row.values.updated_at).format("hh (hh+1) A"),
-      },
-      {
-        Header: "Created At",
-        accessor: "created_at",
-        Cell: (data: Cell) => {
-          return <CreatedUpdatedAt date={data.row.values.created_at} />;
-        },
-      },
-    ],
-    []
-  );
-
   if (!data && (!isLoading || !isFetching)) {
     return (
       <Container fluid className="d-flex justify-content-center display-3">
@@ -162,37 +130,6 @@ const BookingSlots = () => {
         onClick={_onCreateClick}
         totalRecords={data?.total}
       />
-      {/* <Container fluid className="p-0 my-2">
-        <Row>
-          <Col md="auto">
-            <Form>
-              <Form.Label className="text-muted">Start Date</Form.Label>
-              <Form.Control
-                type="date"
-                value={filter.start}
-                onChange={(e) => {
-                  const value = moment(e.target.value).format("YYYY-MM-DD");
-                  _onFilterChange("start", value);
-                }}
-                max={moment(filter.end).subtract(1, "day").format("YYYY-MM-DD")}
-              />
-            </Form>
-          </Col>
-          <Col md="auto">
-            <Form>
-              <Form.Label className="text-muted">End Date</Form.Label>
-              <Form.Control
-                type="date"
-                value={filter.end}
-                onChange={(e) => {
-                  const value = moment(e.target.value).format("YYYY-MM-DD");
-                  _onFilterChange("end", value);
-                }}
-              />
-            </Form>
-          </Col>
-        </Row>
-      </Container> */}
       <hr />
       <Container fluid className="card component-wrapper px-0 py-2">
         <Container fluid className="h-100 p-0">
@@ -200,16 +137,16 @@ const BookingSlots = () => {
             <IsLoading />
           ) : (
             <>
-              {Object.entries(data) && Object.entries(data).length ? (
-                <Calendar
-                  events={formattedDataForCalendar}
-                  onClickEvent={(event: any) => {
-                    //here event return the id of the slot
-                    setSelectedRowId(event);
-                    setDeletePopup(true);
-                  }}
-                />
-              ) : (
+              {/* {Object.entries(data) && Object.entries(data).length ? ( */}
+              <Calendar
+                events={formattedDataForCalendar}
+                onClickEvent={(event: any) => {
+                  //here event return the id of the slot
+                  setSelectedRowId(event);
+                  setDeletePopup(true);
+                }}
+              />
+              {/* ) : (
                 <Container
                   fluid
                   className="d-flex justify-content-center display-3"
@@ -221,7 +158,7 @@ const BookingSlots = () => {
                     </h4>
                   </div>
                 </Container>
-              )}
+              )} */}
             </>
           )}
         </Container>

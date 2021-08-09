@@ -1,77 +1,53 @@
-import React, { useState, useRef, useEffect } from "react";
-import mapboxgl from "mapbox-gl";
-
-const accessToken =
+import React, { useContext, useEffect, useState } from "react";
+import ReactMapGL, {
+  Marker,
+  FlyToInterpolator,
+  FullscreenControl,
+  NavigationControl,
+} from "react-map-gl";
+import { AiFillHome, AiFillCar } from "react-icons/ai";
+import PolyLine from "./Polyline";
+import axios from "axios";
+import { primaryColor } from "../../utils/constants";
+const mapBoxToken =
   "pk.eyJ1IjoibmV1cmFmYXJtcy1haSIsImEiOiJja2tqdjcyMzgwbndjMm9xc3U1YTFzcGs2In0.qHHKandtpLSd1f11nSpEFw";
-
-const Map = ({ order }) => {
-  console.log("order", { order });
+const defaultLat = 28.6139;
+const defaultLng = 77.209;
+const TrackingMap = ({ order }) => {
   const { address: userAddress } = order;
-  console.log("address", { userAddress });
 
-  const mapContainer = useRef(null);
-  let [map, setMap] = useState(null);
+  console.log({ order });
 
-  const [viewport] = useState({
-    width: 350,
-    height: 350,
-    lat: userAddress && userAddress.lat ? parseInt(userAddress.lat) : 37.78,
-    lng: userAddress && userAddress.lng ? parseInt(userAddress.lng) : -122.41,
-    zoom: 12,
-  });
-
-  const [userLocation] = useState({
-    lat: userAddress && parseInt(userAddress.lat),
-    lng: userAddress && parseInt(userAddress.lng),
-  });
   const [agentLocation, setAgentLocation] = useState(null);
-  const [directions, setDirections] = useState(null);
+  const [route, setRoute] = useState();
+  const [viewport, setViewport] = React.useState({
+    latitude: Number(userAddress?.lat) || defaultLat,
+    longitude: Number(userAddress?.lng) || defaultLng,
+    zoom: 15,
+  });
+  // useEffect(() => {
+  //   getAgentLocation();
+  //   const interval = setInterval(() => getAgentLocation(), 10000);
+  //   return () => {
+  //     clearInterval(interval);
+  //   };
+  // }, []);
 
   useEffect(() => {
-    const attachMap = (setMap, mapContainer) => {
-      if (!mapContainer.current) return;
-
-      const map = new mapboxgl.Map({
-        accessToken,
-        container: mapContainer.current || "",
-        style: "mapbox://styles/mapbox/streets-v11",
-        center: [viewport.lng, viewport.lat],
-        zoom: viewport.zoom,
-        interactive: false,
-        dragPan: false,
-      });
-
-      setMap(map);
-    };
-
-    !map && attachMap(setMap, mapContainer);
-    const locationInterval = setInterval(getAgentLocation, 1000);
-    return () => clearInterval(locationInterval);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
-  useEffect(() => {
-    if (map && mapContainer.current) addDestinationMarker();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [map, mapContainer]);
-
-  useEffect(() => {
-    if (!directions) initializedMapboxDirections();
-    else setMapDirections();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    if (!agentLocation) return;
+    getRoute();
+    flyToLocation();
   }, [agentLocation]);
 
-  const isValidLocation = (location) => {
-    if (location && location.lat && location.lng) return true;
-    return false;
-  };
-
+  // get the agent locatoin
   const getAgentLocation = async () => {
+    if (!order.agent_id) return;
     // const {
     //   data: { agent_location: location },
     // } = await API.get(`/orders/${order.id}/get-agent-location`, {
     //   headers: { Authorization: `Bearer ${token}` },
     // });
+
     // if (location)
     //   setAgentLocation({
     //     lat: parseFloat(location.lat),
@@ -79,65 +55,64 @@ const Map = ({ order }) => {
     //   });
   };
 
-  const addDestinationMarker = () => {
-    if (isValidLocation(userLocation)) {
-      // #TODO - Change default markers with our markers
-      var el = document.createElement("div");
-      el.className = "user-marker";
+  // getting the coords of the path
+  const getRoute = async () => {
+    if (!userAddress || !agentLocation) return;
 
-      new mapboxgl.Marker(el)
-        .setLngLat([userLocation.lat, userLocation.lng])
-        .addTo(map);
+    const res = await axios.get(
+      `https://api.mapbox.com/directions/v5/mapbox/driving/${userAddress.lng},${userAddress.lat};${agentLocation.lng},${agentLocation.lat}?geometries=geojson&access_token=${mapBoxToken}`
+    );
 
-      getAgentLocation();
-    }
+    if (res) setRoute(res.data.routes[0].geometry.coordinates);
   };
 
-  const initializedMapboxDirections = () => {
-    if (isValidLocation(userLocation) && isValidLocation(agentLocation)) {
-      const newMapboxDirection = new window.MapboxDirections({
-        accessToken,
-        controls: { instructions: false },
-        unit: "metric",
-        profile: "mapbox/driving",
-      });
-
-      setDirections(newMapboxDirection);
-      map.addControl(newMapboxDirection, "top-left");
-
-      setMapDirections();
-    }
-  };
-
-  const setMapDirections = () => {
-    if (directions) {
-      directions.setOrigin([userLocation.lng, userLocation.lat]);
-
-      if (Object.keys(directions.getDestination()).length === 0) {
-        directions.setDestination([agentLocation.lng, agentLocation.lat]);
-      }
-    }
-  };
-
-  if (!order) return;
-
-  if (!userAddress) {
+  if (!userAddress)
     return (
       <h3 style={{ width: "100%", textAlign: "center", marginTop: "10px" }}>
         No address found
       </h3>
     );
-  }
+  const flyToLocation = () => {
+    if (!agentLocation) return;
+    setViewport({
+      ...viewport,
+      longitude: agentLocation.lng,
+      latitude: agentLocation.lat,
+      zoom: 15,
+      transitionDuration: 5000,
+      transitionInterpolator: new FlyToInterpolator(),
+    });
+  };
 
   return (
-    <div
-      ref={mapContainer}
-      style={{
-        height: "350px",
-        width: "100%",
-      }}
-    />
+    <ReactMapGL
+      {...viewport}
+      mapboxApiAccessToken={mapBoxToken}
+      height="350px"
+      width="100%"
+      mapStyle="mapbox://styles/mapbox/streets-v11"
+      onViewportChange={(viewport) => setViewport(viewport)}
+    >
+      {route && <PolyLine points={route} />}
+      {userAddress?.lat && userAddress?.lng && (
+        <Marker
+          latitude={Number(userAddress?.lat)}
+          longitude={Number(userAddress?.lng)}
+        >
+          <AiFillHome size={30} color={primaryColor} />
+        </Marker>
+      )}
+
+      {agentLocation?.lat && agentLocation?.lng && (
+        <Marker
+          latitude={Number(agentLocation?.lat)}
+          longitude={Number(agentLocation?.lng)}
+        >
+          <AiFillCar size={30} color={primaryColor} />
+        </Marker>
+      )}
+    </ReactMapGL>
   );
 };
 
-export default Map;
+export default TrackingMap;

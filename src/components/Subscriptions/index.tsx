@@ -83,6 +83,10 @@ const Subscription = () => {
         accessor: "id", //accessor is the "key" in the data
       },
       {
+        Header: "Razorpay Id",
+        accessor: "razerpay_order_id", //accessor is the "key" in the data
+      },
+      {
         Header: "User Name",
         accessor: "user.name", //accessor is the "key" in the data
         Cell: (data: Cell) => {
@@ -326,6 +330,7 @@ const Subscription = () => {
                   onFilterChange={_onFilterChange}
                   isDataLoading={isFetching}
                   isSelectable={false}
+                  searchPlaceHolder="Search using rzr order id, allowed usage, transaction id"
                 />
               )}
               {!error && data.length > 0 ? (

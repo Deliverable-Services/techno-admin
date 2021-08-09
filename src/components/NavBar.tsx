@@ -28,8 +28,9 @@ import Overlay from "../shared-components/Overlay";
 import { INavBar, INavLink } from "../types/interface";
 import { MdShoppingCart } from "react-icons/md";
 import { ImUsers } from "react-icons/im";
-import { AiFillIdcard } from "react-icons/ai";
+import { AiFillIdcard, AiFillSetting } from "react-icons/ai";
 import { BsClock, BsShieldLock } from "react-icons/bs";
+import { GrDocumentConfig } from "react-icons/gr";
 
 const manageLinks: Array<INavLink> = [
   {
@@ -91,6 +92,11 @@ const manageLinks: Array<INavLink> = [
     title: "Roles",
     path: "/roles",
     icon: <FaUsers />,
+  },
+  {
+    title: "Configurations",
+    path: "/configurations",
+    icon: <AiFillSetting />,
   },
   {
     title: "Booking Slots",

@@ -304,6 +304,7 @@ const Advertisements = () => {
                     filter={filter}
                     isDataLoading={isFetching}
                     isDraggable={isDraggable}
+                    searchPlaceHolder="Search using name"
                   />
                 </>
               )}

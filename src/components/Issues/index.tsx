@@ -303,6 +303,7 @@ const Issues = () => {
                     onFilterChange={_onFilterChange}
                     isDataLoading={isFetching}
                     isSelectable={false}
+                    searchPlaceHolder="Search using title,ref_id"
                   />
                 </>
               )}

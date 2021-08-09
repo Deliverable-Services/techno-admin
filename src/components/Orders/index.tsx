@@ -26,11 +26,11 @@ import { primaryColor } from "../../utils/constants";
 
 const key = "bookings";
 const intitialFilter = {
-  q: "",
   page: null,
   perPage: 25,
   created_at: "",
   inside_cart: "0",
+  q: "",
 };
 const Orders = () => {
   const history = useHistory();
@@ -173,6 +173,10 @@ const Orders = () => {
       {
         Header: "Paid Amount",
         accessor: "payable_amount",
+      },
+      {
+        Header: "Payment Method",
+        accessor: "payment_method",
       },
       {
         Header: "Rating",
@@ -372,6 +376,7 @@ const Orders = () => {
                       filter={filter}
                       onFilterChange={_onFilterChange}
                       isDataLoading={isFetching}
+                      searchPlaceHolder="Search using ref_id"
                       isSelectable={false}
                     />
                   </>

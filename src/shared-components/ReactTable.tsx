@@ -441,7 +441,6 @@ const DnDRow = ({ provided, row, snapshot }: any) => (
 const Row = ({ row }: any) => (
   <tr {...row.getRowProps()}>
     {row.cells.map((cell) => {
-      console.log({ cell });
       return (
         <td {...cell.getCellProps()} style={{ verticalAlign: "middle" }}>
           {cell.value ||

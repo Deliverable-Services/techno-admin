@@ -15,6 +15,8 @@ import Categories from "./components/Categories";
 import CategoriesCreateUpdateForm from "./components/Categories/CategoriesCreateUpdateForm";
 import Cities from "./components/Cities";
 import CitiesCreateUpdateForm from "./components/Cities/CitiesCreateUpdateForm";
+import Configurations from "./components/Configuration";
+import ConfigCreateUpdateForm from "./components/Configuration/ConfigCreateUpdate";
 import Coupons from "./components/Coupons";
 import CouponCreateUpdateForm from "./components/Coupons/CouponsCreateUpdateForm";
 import Dashboard from "./components/Dashboard";
@@ -126,6 +128,11 @@ const App = () => {
             <PrivateRoute path="/cities" exact component={Cities} />
             <PrivateRoute path="/testimonials" exact component={Testimonial} />
             <PrivateRoute
+              path="/configurations"
+              exact
+              component={Configurations}
+            />
+            <PrivateRoute
               path="/advertisements"
               exact
               component={Advertisements}
@@ -144,6 +151,11 @@ const App = () => {
               path="/categories/create-edit"
               exact
               component={CategoriesCreateUpdateForm}
+            />
+            <PrivateRoute
+              path="/configurations/create-edit"
+              exact
+              component={ConfigCreateUpdateForm}
             />
             <PrivateRoute
               path="/users/create-edit"

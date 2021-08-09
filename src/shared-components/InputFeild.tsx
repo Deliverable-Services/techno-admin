@@ -17,6 +17,7 @@ type InputFieldProps = InputHTMLAttributes<HTMLInputElement> & {
   selectValueKey?: any;
   selectTitleKey?: string;
   altTitleKey?: string;
+  multipleImages?: boolean;
 };
 
 // '' => false
@@ -33,6 +34,7 @@ export const InputField: React.FC<InputFieldProps> = ({
   selectValueKey,
   selectTitleKey,
   altTitleKey,
+  multipleImages = false,
   ...props
 }) => {
   const [field] = useField(props);
@@ -47,15 +49,22 @@ export const InputField: React.FC<InputFieldProps> = ({
         {label ? <Form.Label htmlFor={field.name}>{label}</Form.Label> : null}
         {isFile ? (
           <Form.File
+            name={field.name + "[]"}
             id="custom-file"
             label="Choose file"
             custom
             onChange={(e: ChangeEvent) => {
               const input = (e.currentTarget as HTMLInputElement).files;
+              console.log(typeof input);
               if (input && setFieldValue) {
-                setFieldValue(field.name, input[0]);
+                if (!multipleImages) {
+                  setFieldValue(field.name, input[0]);
+                  return;
+                }
+                setFieldValue(field.name, input);
               }
             }}
+            multiple={multipleImages}
           />
         ) : as === "select" ? (
           <Form.Control {...field} id={field.name} as="select">
