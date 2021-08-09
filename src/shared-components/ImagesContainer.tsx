@@ -52,37 +52,40 @@ const ImagesContainer = ({ images, folder }: Props) => {
     );
 
   return (
-    <Row className="mt-3 ">
-      {images.map((file) => (
-        <Col sm={6}>
-          <div
-            className="card shadow p-relative"
-            style={{ height: "200px", position: "relative" }}
-          >
+    <>
+      {isLoading && <p className="text-muted text-center">Deleting...</p>}
+      <Row className="mt-3 ">
+        {images.map((file) => (
+          <Col sm={6} className="mt-2">
             <div
-              style={{
-                top: 0,
-                right: 0,
-                position: "absolute",
-                background: "red",
-              }}
-              className="p-1"
-              onClick={() => {
-                mutate({ imageId: file.id, type: folder });
-              }}
+              className="card shadow p-relative"
+              style={{ height: "200px", position: "relative" }}
             >
-              <button type="button" className="p-0">
-                <BsFillTrashFill color="#fff" size={14} />
-              </button>
+              <div
+                style={{
+                  top: 0,
+                  right: 0,
+                  position: "absolute",
+                  background: "red",
+                }}
+                className="p-1"
+                onClick={() => {
+                  mutate({ imageId: file.id, type: folder });
+                }}
+              >
+                <button type="button" className="p-0">
+                  <BsFillTrashFill color="#fff" size={14} />
+                </button>
+              </div>
+              <img
+                src={`${baseUploadUrl}${folder}/${file.image}`}
+                alt={file.image}
+              />
             </div>
-            <img
-              src={`${baseUploadUrl}${folder}/${file.image}`}
-              alt={file.image}
-            />
-          </div>
-        </Col>
-      ))}
-    </Row>
+          </Col>
+        ))}
+      </Row>
+    </>
   );
 };
 

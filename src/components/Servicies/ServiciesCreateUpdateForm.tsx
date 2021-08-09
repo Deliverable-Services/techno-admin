@@ -200,7 +200,8 @@ const ServicesCreateUpdateForm = () => {
                   onSubmit={(values) => {
                     const { images } = values;
                     const formdata = new FormData();
-                    for (let k in images) formdata.append("images", images[k]);
+                    for (let k in images)
+                      formdata.append("images[]", images[k]);
 
                     formdata.append("id", id);
 
