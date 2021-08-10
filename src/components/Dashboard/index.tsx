@@ -13,7 +13,13 @@ import { handleApiError } from "../../hooks/handleApiErrors";
 import IsLoading from "../../shared-components/isLoading";
 import API from "../../utils/API";
 import { primaryColor } from "../../utils/constants";
-import { BookingLineChart, ChartArea, ChartBar, ChartLine } from "./Chart";
+import {
+  BookingLineChart,
+  ChartArea,
+  ChartBar,
+  ChartLine,
+  RevenueLineChart,
+} from "./Chart";
 
 interface IDates {
   start_date: Moment;
@@ -49,6 +55,12 @@ const Dashboard = () => {
   );
   const { data: BookingAnalytics, isLoading: isBookingAnalyticsLoading } =
     useQuery<any>(["bookingAnalytics", , filter], {
+      onError: (error: AxiosError) => {
+        handleApiError(error, history);
+      },
+    });
+  const { data: RevenueAnalytics, isLoading: isRevenueAnalyticsLoading } =
+    useQuery<any>(["revenueAnalytic", , filter], {
       onError: (error: AxiosError) => {
         handleApiError(error, history);
       },
@@ -310,6 +322,26 @@ const Dashboard = () => {
                       data={BookingAnalytics?.booking}
                       xAxisDataKey="date"
                       dataKey="order"
+                    />
+                  )}
+                </div>
+              </div>
+              <div className="card">
+                <div className="card-header pb-3 d-flex justify-content-between align-items-center">
+                  <h5 className="mb-0">
+                    <strong>Revenue</strong>
+                  </h5>
+                </div>
+
+                <div className="card-content chart-container">
+                  {isBookingAnalyticsLoading ? (
+                    <IsLoading />
+                  ) : (
+                    <ChartBar
+                      data={RevenueAnalytics?.revenue}
+                      xAxisDataKey="date"
+                      dataKey1="total_amount"
+                      dataKey2="discount_amount"
                     />
                   )}
                 </div>

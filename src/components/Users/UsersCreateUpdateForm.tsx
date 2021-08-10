@@ -3,17 +3,19 @@ import UserAddress from "./UserAddresses";
 import UserBasics from "./UserBasics";
 import UserVehicles from "./UserVechiles";
 import useGetSingleQuery from "../../hooks/useGetSingleQuery";
+import UserWallet from "./UserWallet";
 
 const UserCreateUpdateForm = () => {
   const { state } = useLocation();
   const id = state ? (state as any).id : null;
-  console.log(id);
+  const role = state ? (state as any).role : null;
   return (
     <>
       <UserBasics />
       <br />
       {id && (
         <>
+          {role === "customer" && <UserWallet />}
           <UserAddress />
           <UserVehicles />
         </>

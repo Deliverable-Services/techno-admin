@@ -101,6 +101,40 @@ const BookingLineChart = ({ data, xAxisDataKey, dataKey }) => {
     </ResponsiveContainer>
   );
 };
+const RevenueLineChart = ({ data, xAxisDataKey, dataKey1, dataKey2 }) => {
+  return (
+    <ResponsiveContainer>
+      <LineChart
+        width={"100%"}
+        height={300}
+        data={data}
+        margin={{ top: 10, right: 30, left: 0, bottom: 0 }}
+      >
+        {/* <CartesianGrid str /> */}
+        <XAxis
+          dataKey={xAxisDataKey}
+          tickLine={false}
+          padding={{ left: 20, right: 20 }}
+        />
+        <YAxis tickLine={false} axisLine={false} />
+        <Tooltip />
+        <Legend />
+        <Line
+          type="monotone"
+          dataKey={dataKey1}
+          stroke={primaryColor}
+          activeDot={{ r: 8 }}
+        />
+        <Line
+          type="monotone"
+          dataKey={dataKey2}
+          stroke={secondaryColor}
+          activeDot={{ r: 8 }}
+        />
+      </LineChart>
+    </ResponsiveContainer>
+  );
+};
 
 const ChartArea = () => {
   return (
@@ -143,23 +177,23 @@ const ChartArea = () => {
   );
 };
 
-const ChartBar = () => {
+const ChartBar = ({ data, xAxisDataKey, dataKey1, dataKey2 }) => {
   return (
     <ResponsiveContainer>
       <BarChart width={"100%"} height={300} data={data}>
         {/* <CartesianGrid strokeDasharray="3 3" /> */}
         <XAxis
-          dataKey="name"
+          dataKey={xAxisDataKey}
           tickLine={false}
           padding={{ left: 20, right: 20 }}
         />
         <YAxis axisLine={false} />
         <Tooltip />
         <Legend />
-        <Bar dataKey="data1" fill={primaryColor} />
-        <Bar dataKey="data2" fill={secondaryColor} />
+        <Bar dataKey={dataKey1} fill={primaryColor} />
+        <Bar dataKey={dataKey2} fill={secondaryColor} />
       </BarChart>
     </ResponsiveContainer>
   );
 };
-export { ChartLine, ChartArea, ChartBar, BookingLineChart };
+export { ChartLine, ChartArea, ChartBar, BookingLineChart, RevenueLineChart };

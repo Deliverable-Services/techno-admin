@@ -89,8 +89,8 @@ const Users = () => {
   const _onCreateClick = () => {
     history.push("/users/create-edit");
   };
-  const _onEditClick = (id: string) => {
-    history.push("/users/create-edit", { id });
+  const _onEditClick = (id: string, role: string) => {
+    history.push("/users/create-edit", { id, role });
   };
 
   const columns = useMemo(
@@ -126,6 +126,10 @@ const Users = () => {
         ),
       },
       {
+        Header: "Wallet Balance",
+        accessor: "wallets.balance",
+      },
+      {
         Header: " Disabled?",
         accessor: "disabled",
         Cell: (data: Cell) => {
@@ -145,7 +149,7 @@ const Users = () => {
           return (
             <EditButton
               onClick={() => {
-                _onEditClick(data.row.values.id);
+                _onEditClick(data.row.values.id, data.row.values.role);
               }}
             />
           );

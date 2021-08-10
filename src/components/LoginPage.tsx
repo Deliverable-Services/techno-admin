@@ -9,7 +9,7 @@ import { handleApiError } from "../hooks/handleApiErrors";
 import { InputField } from "../shared-components/InputFeild";
 import API from "../utils/API";
 
-interface Props { }
+interface Props {}
 const phoneRegExp = /^[6-9]\d{9}$/;
 const LoginSchema = Yup.object().shape({
   phone: Yup.string()
@@ -28,15 +28,15 @@ const LoginPage = (props: Props) => {
 
   const { mutate, data, isLoading } = useMutation(sendOtp, {
     onSuccess: (data) => {
-
-      console.log("send-otp", data.data);
-      history.push(`/verify-otp/`, { phone: data.data.user.phone, otp: data.data.user.otp });
+      history.push(`/verify-otp/`, {
+        phone: data.data.user.phone,
+        otp: data.data.user.otp,
+      });
     },
     onError: (error: AxiosError) => {
-      handleApiError(error, history)
-    }
+      handleApiError(error, history);
+    },
   });
-
 
   return (
     <Container fluid className="login-page">

@@ -6,6 +6,7 @@ import { useMutation } from "react-query";
 import { useHistory, useParams } from "react-router";
 import { useLocation } from "react-router-dom";
 import * as Yup from "yup";
+import { handleApiError } from "../hooks/handleApiErrors";
 import useTokenStore from "../hooks/useTokenStore";
 import useUserProfileStore from "../hooks/useUserProfileStore";
 import { InputField } from "../shared-components/InputFeild";
@@ -27,6 +28,12 @@ const verifyOtp = (formData: FormData) => {
   });
 };
 
+const resendOtp = (formData: FormData) => {
+  return API.post(`auth/send-otp`, formData, {
+    headers: { "Content-Type": "multipart/form-data" },
+  });
+};
+
 const VerifyOtp = (props: Props) => {
   const { state } = useLocation();
   const history = useHistory();
@@ -44,6 +51,14 @@ const VerifyOtp = (props: Props) => {
     },
   });
 
+  const { mutate: mutateResend } = useMutation(resendOtp, {
+    onSuccess: (data) => {
+      showMsgToast("OTP resend successfully");
+    },
+    onError: (error: AxiosError) => {
+      handleApiError(error, history);
+    },
+  });
   return (
     <Container fluid className="login-page">
       <Formik
@@ -80,6 +95,19 @@ const VerifyOtp = (props: Props) => {
                   label="Verify Otp"
                   error={errors.otp as string}
                 />
+                <div className="w-100">
+                  <p
+                    className="text-primary text-right m-0"
+                    onClick={() => {
+                      const formData = new FormData();
+                      formData.append("phone", (state as any).phone);
+                      mutateResend(formData);
+                    }}
+                    style={{ cursor: "pointer" }}
+                  >
+                    Resend OTP
+                  </p>
+                </div>
                 <Button
                   variant="primary"
                   type="submit"

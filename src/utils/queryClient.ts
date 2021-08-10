@@ -28,7 +28,7 @@ export const defaultQueryFn: QueryFunction = async ({ queryKey }) => {
 export const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
-      refetchOnMount: "always",
+      // refetchOnMount: "always",
       // refetchOnWindowFocus: "always",
       staleTime: 60 * 1000 * 5,
       queryFn: defaultQueryFn,

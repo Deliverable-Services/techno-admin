@@ -12,6 +12,7 @@ interface Props {
   defaultSelectTitle?: string;
   isDefaultDisabled?: boolean;
   width?: string;
+  nameSelector2?: string;
 }
 
 const FilterSelect = ({
@@ -25,6 +26,7 @@ const FilterSelect = ({
   data,
   valueSelector = "id",
   nameSelector = "name",
+  nameSelector2 = "phone",
 }: Props) => {
   return (
     <Form.Group>
@@ -45,7 +47,7 @@ const FilterSelect = ({
         {data &&
           data.map((item) => (
             <option value={item[valueSelector]}>
-              {item[nameSelector] || item[valueSelector]}
+              {item[nameSelector] || item[nameSelector2] || item[valueSelector]}
             </option>
           ))}
       </Form.Control>
