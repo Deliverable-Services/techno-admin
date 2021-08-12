@@ -72,6 +72,7 @@ const RevokePermission = () => {
         <Row className="rounded">
           <Col className="mx-auto">
             <Formik
+              enableReinitialize
               initialValues={
                 apiData
                   ? {

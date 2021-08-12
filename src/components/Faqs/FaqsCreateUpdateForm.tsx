@@ -67,6 +67,7 @@ const FaqCreateUpdateForm = () => {
       <Row className="rounded">
         <Col className="mx-auto">
           <Formik
+            enableReinitialize
             initialValues={apiData || { is_active: 1 }}
             onSubmit={(values) => {
               const formdata = new FormData();

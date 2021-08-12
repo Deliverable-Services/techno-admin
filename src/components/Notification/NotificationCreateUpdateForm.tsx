@@ -125,6 +125,7 @@ const NotificationCreateUpdateForm = () => {
       <Row className="rounded">
         <Col className="mx-auto">
           <Formik
+            enableReinitialize
             initialValues={apiData || {}}
             onSubmit={(values) => {
               const formdata = {
@@ -140,7 +141,6 @@ const NotificationCreateUpdateForm = () => {
               // const formdata = new FormData();
               // for (let k in rest) formdata.append(k, rest[k]);
 
-              console.log({ formdata });
               mutate({ formdata, id });
             }}
           >

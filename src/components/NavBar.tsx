@@ -10,7 +10,7 @@ import {
 } from "react-icons/fa";
 import { GoIssueOpened } from "react-icons/go";
 import { IoLogoModelS } from "react-icons/io";
-import { GiModernCity } from "react-icons/gi";
+import { GiModernCity, GiOnTarget } from "react-icons/gi";
 import {
   RiAdminFill,
   RiAdvertisementFill,
@@ -57,6 +57,11 @@ const manageLinks: Array<INavLink> = [
     title: "Admins",
     path: "/admin",
     icon: <RiAdminFill />,
+  },
+  {
+    title: "Agent Targets",
+    path: "/agent-targets",
+    icon: <GiOnTarget />,
   },
   {
     title: "Services",

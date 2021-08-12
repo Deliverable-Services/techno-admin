@@ -36,9 +36,9 @@ const createUpdataCategories = ({
 };
 
 const CategoriesCreateUpdateForm = () => {
-  const history = useHistory()
-  const { state } = useLocation()
-  const id = state ? (state as any).id : null
+  const history = useHistory();
+  const { state } = useLocation();
+  const id = state ? (state as any).id : null;
   useEffect(() => {
     bsCustomFileInput.init();
   }, []);
@@ -48,18 +48,17 @@ const CategoriesCreateUpdateForm = () => {
     {
       onSuccess: () => {
         setTimeout(() => queryClient.invalidateQueries(key), 500);
-        history.replace("/categories")
-        if (id) return showMsgToast("Category  updated successfully")
-        showMsgToast("Categoryj  created successfully")
+        history.replace("/categories");
+        if (id) return showMsgToast("Category  updated successfully");
+        showMsgToast("Categoryj  created successfully");
       },
       onError: (error: AxiosError) => {
-        handleApiError(error, history)
-      }
+        handleApiError(error, history);
+      },
     }
   );
 
   const apiData = data && (data as any);
-
 
   if (dataLoading) return <IsLoading />;
 
@@ -69,9 +68,10 @@ const CategoriesCreateUpdateForm = () => {
       <Row className="rounded">
         <Col className="mx-auto">
           <Formik
+            enableReinitialize
             initialValues={apiData || {}}
             onSubmit={(values) => {
-              const formdata = new FormData()
+              const formdata = new FormData();
               formdata.append("name", values.name);
               formdata.append("url", values.url);
               formdata.append("order", values.order);
@@ -104,11 +104,21 @@ const CategoriesCreateUpdateForm = () => {
                     required
                   />
 
-                  <InputField as="select" selectData={isActiveArray} name="is_active" label="Is active?" placeholder="Choose is active" />
+                  <InputField
+                    as="select"
+                    selectData={isActiveArray}
+                    name="is_active"
+                    label="Is active?"
+                    placeholder="Choose is active"
+                  />
                 </div>
                 <Row className="d-flex justify-content-start">
                   <Col md="2">
-                    <Button type="submit" disabled={isLoading} className="w-100">
+                    <Button
+                      type="submit"
+                      disabled={isLoading}
+                      className="w-100"
+                    >
                       {isLoading ? (
                         <Spinner animation="border" size="sm" />
                       ) : (

@@ -86,6 +86,7 @@ const PermissionsCreateUpdateForm = () => {
         <Row className="rounded">
           <Col className="mx-auto">
             <Formik
+              enableReinitialize
               initialValues={apiData || {}}
               onSubmit={(values) => {
                 mutate({ formdata: values, id });

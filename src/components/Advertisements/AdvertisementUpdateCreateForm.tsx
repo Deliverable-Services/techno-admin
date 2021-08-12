@@ -72,6 +72,7 @@ const AdvertisementCreateUpdateForm = () => {
       <Row className="rounded">
         <Col className="mx-auto">
           <Formik
+            enableReinitialize
             initialValues={
               apiData || {
                 valid_to: moment().format("YYYY-MM-DD hh:mm:ss"),

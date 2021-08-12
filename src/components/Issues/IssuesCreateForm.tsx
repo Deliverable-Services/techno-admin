@@ -52,6 +52,7 @@ const IssuesCreateForm = () => {
       <Row className="rounded">
         <Col className="mx-auto">
           <Formik
+            enableReinitialize
             initialValues={state}
             onSubmit={(values) => {
               mutate({ formdata: values });

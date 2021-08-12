@@ -82,6 +82,7 @@ const ConfigCreateUpdateForm = () => {
         <Row className="rounded">
           <Col className="mx-auto">
             <Formik
+              enableReinitialize
               initialValues={data || {}}
               onSubmit={(values) => {
                 console.log({ values });

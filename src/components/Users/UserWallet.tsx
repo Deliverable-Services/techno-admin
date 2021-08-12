@@ -59,6 +59,7 @@ const UserWallet = () => {
         <Row className="rounded mt-3 ">
           <Col className="mx-auto">
             <Formik
+              enableReinitialize
               initialValues={{ action: "deposit", amount: 0 }}
               onSubmit={(values) => mutate({ formdata: { id, ...values } })}
             >

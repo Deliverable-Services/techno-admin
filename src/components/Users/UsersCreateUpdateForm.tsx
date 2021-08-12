@@ -2,7 +2,6 @@ import { useLocation } from "react-router-dom";
 import UserAddress from "./UserAddresses";
 import UserBasics from "./UserBasics";
 import UserVehicles from "./UserVechiles";
-import useGetSingleQuery from "../../hooks/useGetSingleQuery";
 import UserWallet from "./UserWallet";
 
 const UserCreateUpdateForm = () => {

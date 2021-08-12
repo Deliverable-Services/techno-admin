@@ -3,6 +3,8 @@ import { Container } from "react-bootstrap";
 import { Redirect, Route, Switch, useLocation } from "react-router-dom";
 import Advertisements from "./components/Advertisements";
 import AdvertisementCreateUpdateForm from "./components/Advertisements/AdvertisementUpdateCreateForm";
+import AgentTargets from "./components/AgentTargets";
+import TargetCreateUpdateForm from "./components/AgentTargets/AgentCreateUpdateForm";
 import BookingSlots from "./components/BookingSlots";
 import SlotCreateUpdateForm from "./components/BookingSlots/BookingSlotsCreateUpdateForm";
 import BrandModels from "./components/BrandModels";
@@ -50,7 +52,6 @@ import Testimonial from "./components/Testimonials";
 import TestimonialCreateUpdateForm from "./components/Testimonials/TestimonialCreateUpdateForm";
 import TopBar from "./components/TopBar";
 import Transactions from "./components/Transactions";
-import TransactionUpdateForm from "./components/Transactions/TransactionUpdateForm";
 import Users from "./components/Users";
 import Admins from "./components/Users/admin";
 import UserCreateUpdateForm from "./components/Users/UsersCreateUpdateForm";
@@ -128,6 +129,11 @@ const App = () => {
             <PrivateRoute path="/cities" exact component={Cities} />
             <PrivateRoute path="/testimonials" exact component={Testimonial} />
             <PrivateRoute
+              path="/agent-targets"
+              exact
+              component={AgentTargets}
+            />
+            <PrivateRoute
               path="/configurations"
               exact
               component={Configurations}
@@ -151,6 +157,11 @@ const App = () => {
               path="/categories/create-edit"
               exact
               component={CategoriesCreateUpdateForm}
+            />
+            <PrivateRoute
+              path="/agent-targets/create-edit"
+              exact
+              component={TargetCreateUpdateForm}
             />
             <PrivateRoute
               path="/configurations/create-edit"
@@ -246,11 +257,6 @@ const App = () => {
               path="/roles/create-edit"
               exact
               component={RolesCreateUpdateForm}
-            />
-            <PrivateRoute
-              path="/transactions/:id"
-              exact
-              component={TransactionUpdateForm}
             />
             <PrivateRoute
               path="/subscriptions"

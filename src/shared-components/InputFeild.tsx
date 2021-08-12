@@ -18,6 +18,7 @@ type InputFieldProps = InputHTMLAttributes<HTMLInputElement> & {
   selectTitleKey?: string;
   altTitleKey?: string;
   multipleImages?: boolean;
+  isDisabled?: boolean;
 };
 
 // '' => false
@@ -35,6 +36,7 @@ export const InputField: React.FC<InputFieldProps> = ({
   selectTitleKey,
   altTitleKey,
   multipleImages = false,
+  isDisabled = false,
   ...props
 }) => {
   const [field] = useField(props);
@@ -67,7 +69,12 @@ export const InputField: React.FC<InputFieldProps> = ({
             multiple={multipleImages}
           />
         ) : as === "select" ? (
-          <Form.Control {...field} id={field.name} as="select">
+          <Form.Control
+            {...field}
+            id={field.name}
+            as="select"
+            disabled={isDisabled}
+          >
             <option value="">{label}</option>
             {selectData &&
               selectData.map((data: any) => (
@@ -77,7 +84,13 @@ export const InputField: React.FC<InputFieldProps> = ({
               ))}
           </Form.Control>
         ) : (
-          <Form.Control {...field} {...props} id={field.name} as={as} />
+          <Form.Control
+            {...field}
+            {...props}
+            id={field.name}
+            as={as}
+            disabled={isDisabled}
+          />
         )}
         {error && <Form.Text className="text-danger">{error}</Form.Text>}
       </Form.Group>

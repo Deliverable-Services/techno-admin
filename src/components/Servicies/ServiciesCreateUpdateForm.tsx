@@ -93,6 +93,7 @@ const ServicesCreateUpdateForm = () => {
         <BackButton title="Services" />
         <Col className="mx-auto">
           <Formik
+            enableReinitialize
             initialValues={apiData || {}}
             onSubmit={(values) => {
               // console.log("values", values)
