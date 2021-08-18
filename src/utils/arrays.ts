@@ -40,15 +40,19 @@ export const IssueRelatedTo = [
 ];
 export const OrderStatus = [
   // { id: "", name: "All" },
-  // { id: "confirmed", name: "Success" },
-  // { id: "pending_payment", name: "Pending Payment" },
-  // { id: "error_payment", name: "Payment Error" },
+  { id: "confirmed", name: "Confirmed" },
+  { id: "pending_payment", name: "Pending Payment" },
+  { id: "error_payment", name: "Payment Error" },
   { id: "fulfilled", name: "Fulfilled" },
   { id: "picked", name: "Picked" },
   { id: "transit", name: "Transit" },
   { id: "dispatched", name: "Dispatched" },
   { id: "delayed", name: "Delayed" },
   { id: "processing", name: "Processing" },
+  { id: "reached", name: "Reached" },
+  { id: "pending", name: "Pending" },
+  { id: "hold", name: "Hold" },
+  { id: "cancelled", name: "Cancelled" },
 ];
 export const OrderType = [{ id: "normal", name: "Normal" }];
 

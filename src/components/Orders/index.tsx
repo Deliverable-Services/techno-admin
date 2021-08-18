@@ -20,7 +20,7 @@ import TablePagination from "../../shared-components/Pagination";
 import ReactTable from "../../shared-components/ReactTable";
 import TableLink from "../../shared-components/TableLink";
 import { areTwoObjEqual } from "../../utils/areTwoObjEqual";
-import { InsideCart, OrderType } from "../../utils/arrays";
+import { InsideCart, OrderStatus, OrderType } from "../../utils/arrays";
 import { primaryColor } from "../../utils/constants";
 // import UpdateCreateForm from "./FaqsCreateUpdateForm"
 
@@ -243,6 +243,30 @@ const Orders = () => {
           />
           <BreadCrumb
             onFilterChange={onFilterChange}
+            value="fulfilled"
+            currentValue={filter.status}
+            dataLength={data?.data?.length}
+            idx="status"
+            title="Fulfilled"
+          />
+          <BreadCrumb
+            onFilterChange={onFilterChange}
+            value="picked"
+            currentValue={filter.status}
+            dataLength={data?.data?.length}
+            idx="status"
+            title="Picked"
+          />
+          <BreadCrumb
+            onFilterChange={onFilterChange}
+            value="pending"
+            currentValue={filter.status}
+            dataLength={data?.data?.length}
+            idx="status"
+            title="Pending"
+          />
+          <BreadCrumb
+            onFilterChange={onFilterChange}
             value="pending_payment"
             currentValue={filter.status}
             dataLength={data?.data?.length}
@@ -256,6 +280,14 @@ const Orders = () => {
             dataLength={data?.data?.length}
             idx="status"
             title="Payment Errors"
+          />
+          <BreadCrumb
+            onFilterChange={onFilterChange}
+            value="cancelled"
+            currentValue={filter.status}
+            dataLength={data?.data?.length}
+            idx="status"
+            title="Cancelled"
           />
           <BreadCrumb
             onFilterChange={onFilterChange}
@@ -298,16 +330,15 @@ const Orders = () => {
                             onFilterChange={onFilterChange}
                           />
                         </Col>
-                        {/* <Col md="auto">
+                        <Col md="auto">
                           <FilterSelect
-                            currentValue={filter.inside_cart}
-                            data={InsideCart}
-                            label="Inside Cart"
-                            idx="inside_cart"
-                            width="80px"
+                            currentValue={filter.status}
+                            data={OrderStatus}
+                            label="Status"
+                            idx="status"
                             onFilterChange={onFilterChange}
                           />
-                        </Col> */}
+                        </Col>
                         <Col md="auto">
                           <FilterSelect
                             currentValue={filter.order_type}

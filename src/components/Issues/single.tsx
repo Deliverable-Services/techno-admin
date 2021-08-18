@@ -70,12 +70,17 @@ const SingleIssue = () => {
   const statusBadgeVairant = (status: string) => {
     const _status = status.toLowerCase();
 
-    if (_status === "success") return "success";
+    if (_status.includes("error") || _status.includes("cancelled"))
+      return "danger";
 
-    if (_status === "pending" || _status === "pending_payment")
+    if (
+      _status.includes("pending") ||
+      _status.includes("delay") ||
+      _status.includes("hold")
+    )
       return "warning";
 
-    return "danger";
+    return "success";
   };
 
   if (isLoading || isFetching) {

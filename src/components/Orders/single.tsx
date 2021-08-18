@@ -122,12 +122,17 @@ const SingleOrder = () => {
   const statusBadgeVairant = (status: string) => {
     const _status = status.toLowerCase();
 
-    if (_status === "success") return "success";
+    if (_status.includes("error") || _status.includes("cancelled"))
+      return "danger";
 
-    if (_status === "pending" || _status === "pending_payment")
+    if (
+      _status.includes("pending") ||
+      _status.includes("delay") ||
+      _status.includes("hold")
+    )
       return "warning";
 
-    return "danger";
+    return "success";
   };
 
   if (isLoading || isFetching) {
@@ -528,7 +533,7 @@ const SingleOrder = () => {
             </div>
           </div>
 
-          {data?.tickets?.length && (
+          {data?.tickets?.length > 0 && (
             <div className="card p-2 view-padding right-div d-flex mb-3">
               <div className="d-flex flex-column">
                 <div className="text-primary">
@@ -644,8 +649,8 @@ const SingleOrder = () => {
 
                       <td className="text-primary  font-weight-bold text-right">
                         <p className="view-subheading">
-                          {data.picked_at
-                            ? moment(data.picked_at).format("DD/MM/YY(hh:mm)")
+                          {data.pickup_at
+                            ? moment(data.pickup_at).format("DD/MM/YY(hh:mm)")
                             : "-"}
                         </p>
                       </td>
@@ -742,6 +747,12 @@ const SingleOrder = () => {
                 <table className="w-100">
                   <tbody>
                     <tr>
+                      <td className="view-heading">Payment Method</td>
+                      <td className="text-right">
+                        <p className="view-subheading">{data.payment_method}</p>
+                      </td>
+                    </tr>
+                    <tr>
                       <td className="view-heading">Total Cost</td>
                       <td className="text-right">
                         <p className="view-subheading">₹{data.total_cost}</p>
@@ -751,6 +762,12 @@ const SingleOrder = () => {
                       <td className="view-heading">Discount</td>
                       <td className="text-success font-weight-bold text-right">
                         <p className="view-subheading">₹{data.discount}</p>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td className="view-heading">GST(18%)</td>
+                      <td className="text-success font-weight-bold text-right">
+                        <p className="view-subheading">₹{data?.tax_amount}</p>
                       </td>
                     </tr>
                     <tr>
