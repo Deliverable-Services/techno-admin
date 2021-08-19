@@ -9,12 +9,12 @@ export const appApiBaseUrl = process.env.REACT_APP_APP_API_URL;
 // export const clientWebUrl = process.env.REACT_APP_CLIENT_WEB_URL;
 
 //-------------------localhost
-export const adminApiBaseUrl = "http://localhost:8000/admin/v1/";
-export const baseUploadUrl = "http://localhost:8000/upload/";
+// export const adminApiBaseUrl = "http://localhost:8000/admin/v1/";
+// export const baseUploadUrl = "http://localhost:8000/upload/";
 
 //-----------live api
-// export const baseUploadUrl = "https://carsafai.deliverable.services/upload/";
-// export const adminApiBaseUrl =
-//   "https://carsafai.deliverable.services/admin/v1/";
+export const baseUploadUrl = "https://carsafai.deliverable.services/upload/";
+export const adminApiBaseUrl =
+  "https://carsafai.deliverable.services/admin/v1/";
 
 export const clientWebUrl = "https://carsafai.in";
