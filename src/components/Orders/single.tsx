@@ -43,6 +43,7 @@ const SingleOrder = () => {
   const history = useHistory();
   const [showAssignAgent, setShowAssignAgent] = useState(false);
   const { data, isLoading, isFetching } = useGetSingleQuery({ id, key });
+  const [isDownloadingInvoice, setIsDownloadingInvoice] = useState(false);
 
   // const { data: Invoice, isLoading: isInvoiceLoading } = useQuery<any>(
   //   [`${key}/${15}/download-invoice`],
@@ -50,11 +51,18 @@ const SingleOrder = () => {
   //     // enabled: !!data?.transaction?.id,
   //   }
   const _onDownloadInvoice = async (id) => {
+    setIsDownloadingInvoice(true);
     try {
-      const res = await API.get("/bookings/" + id + "/download-invoice");
+      const res = await API.get("/bookings/" + id + "/download-invoice", {
+        headers: {
+          "Content-Type": "application/pdf",
+        },
+      });
       if (res) console.log({ res });
     } catch (error) {
       handleApiError(error, history);
+    } finally {
+      setIsDownloadingInvoice(false);
     }
   };
   // );
@@ -171,10 +179,15 @@ const SingleOrder = () => {
             <Button
               variant="success"
               onClick={() => _onDownloadInvoice(data?.transaction[0]?.id)}
+              disabled={isDownloadingInvoice}
             >
-              <div className="text-white">
-                <BiDownload size={24} /> <b>Invoice</b>
-              </div>
+              {isDownloadingInvoice ? (
+                <p className="text-white m-0">Downloading...</p>
+              ) : (
+                <div className="text-white">
+                  <BiDownload size={24} /> <b>Invoice</b>
+                </div>
+              )}
             </Button>
           )}
           <Button className="ml-2" onClick={() => _onCreateIssueClick()}>

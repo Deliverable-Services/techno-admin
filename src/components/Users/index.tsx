@@ -42,8 +42,8 @@ const deleteUsers = (id: Array<any>) => {
 };
 
 const intitialFilter = {
+  role: "customer",
   q: "",
-  role: "",
   page: null,
   perPage: 25,
   disabled: "",
@@ -87,7 +87,7 @@ const Users = () => {
   };
 
   const _onCreateClick = () => {
-    history.push("/users/create-edit");
+    history.push("/users/create-edit", { role: "customer" });
   };
   const _onEditClick = (id: string, role: string) => {
     history.push("/users/create-edit", { id, role });
@@ -173,12 +173,12 @@ const Users = () => {
   return (
     <>
       <PageHeading
-        title="Users"
+        title="Customers"
         onClick={_onCreateClick}
         totalRecords={data?.total}
       />
 
-      {!isLoading && (
+      {/* {!isLoading && (
         <Container fluid>
           <div>
             <div className="filter">
@@ -190,14 +190,14 @@ const Users = () => {
                 idx="role"
                 title="All"
               />
-              {/* <BreadCrumb
+              <BreadCrumb
                 onFilterChange={_onFilterChange}
                 value="admin"
                 currentValue={filter.role}
                 dataLength={data?.data?.length}
                 idx="role"
                 title="Admin"
-              /> */}
+              />
               <BreadCrumb
                 onFilterChange={_onFilterChange}
                 value="customer"
@@ -218,7 +218,7 @@ const Users = () => {
             </div>
           </div>
         </Container>
-      )}
+      )} */}
       <Container fluid className="card component-wrapper px-0 py-2">
         <Container fluid className="h-100 p-0">
           {isLoading ? (

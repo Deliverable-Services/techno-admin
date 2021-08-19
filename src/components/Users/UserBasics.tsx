@@ -46,6 +46,7 @@ const UserBasics = () => {
   const { state } = useLocation();
   const history = useHistory();
   const id = state ? (state as any).id : null;
+  const role = state ? (state as any).role : null;
   useEffect(() => {
     bsCustomFileInput.init();
   }, []);
@@ -68,89 +69,91 @@ const UserBasics = () => {
 
   return (
     <>
-      <BackButton title="Users" />
-      <Row className="rounded">
-        <Col className="mx-auto">
-          <Formik
-            enableReinitialize
-            initialValues={apiData || {}}
-            onSubmit={(values) => {
-              console.log(values);
-              const { profile_pic, ...rest } = values;
-              const formdata = new FormData();
-              for (let k in rest) formdata.append(k, rest[k]);
+      <div className="card view-padding p-2 d-flex mt-3">
+        <BackButton title={role || "User"} />
+        <Row className="rounded">
+          <Col className="mx-auto">
+            <Formik
+              enableReinitialize
+              initialValues={apiData || { role }}
+              onSubmit={(values) => {
+                console.log(values);
+                const { profile_pic, ...rest } = values;
+                const formdata = new FormData();
+                for (let k in rest) formdata.append(k, rest[k]);
 
-              if (typeof profile_pic !== "string" && profile_pic)
-                formdata.append("profile_pic", profile_pic);
+                if (typeof profile_pic !== "string" && profile_pic)
+                  formdata.append("profile_pic", profile_pic);
 
-              mutate({ formdata, id });
-            }}
-            validationSchema={ValidationSchema}
-          >
-            {({ setFieldValue, errors }) => (
-              <Form className="w-100">
-                <div className="form-container py-2">
-                  <InputField
-                    name="name"
-                    placeholder="Name"
-                    label="Name"
-                    required
-                  />
-                  <InputField
-                    name="phone"
-                    placeholder="phone"
-                    label="Phone"
-                    error={errors.phone as string}
-                    required
-                  />
-                  <InputField
-                    name="email"
-                    placeholder="Email"
-                    label="Email"
-                    required
-                  />
-                  <InputField
-                    as="select"
-                    selectData={isActiveArray}
-                    name="disabled"
-                    label="Disabled?"
-                    placeholder="Is User Disabled?"
-                  />
-                  <InputField
-                    as="select"
-                    selectData={userRoles}
-                    name="role"
-                    label="Role"
-                    placeholder="Role"
-                  />
-                  <InputField
-                    name="profile_pic"
-                    placeholder="Profile Pic"
-                    label="Choose Profile Pic"
-                    isFile
-                    setFieldValue={setFieldValue}
-                  />
-                </div>
-                <Row className="d-flex justify-content-start">
-                  <Col md="2">
-                    <Button
-                      type="submit"
-                      disabled={isLoading}
-                      className="w-100"
-                    >
-                      {isLoading ? (
-                        <Spinner animation="border" size="sm" />
-                      ) : (
-                        "Submit"
-                      )}
-                    </Button>
-                  </Col>
-                </Row>
-              </Form>
-            )}
-          </Formik>
-        </Col>
-      </Row>
+                mutate({ formdata, id });
+              }}
+              validationSchema={ValidationSchema}
+            >
+              {({ setFieldValue, errors }) => (
+                <Form className="w-100">
+                  <div className="form-container py-2">
+                    <InputField
+                      name="name"
+                      placeholder="Name"
+                      label="Name"
+                      required
+                    />
+                    <InputField
+                      name="phone"
+                      placeholder="phone"
+                      label="Phone"
+                      error={errors.phone as string}
+                      required
+                    />
+                    <InputField
+                      name="email"
+                      placeholder="Email"
+                      label="Email"
+                      required
+                    />
+                    <InputField
+                      as="select"
+                      selectData={isActiveArray}
+                      name="disabled"
+                      label="Disabled?"
+                      placeholder="Is User Disabled?"
+                    />
+                    <InputField
+                      as="select"
+                      selectData={userRoles}
+                      name="role"
+                      label="Role"
+                      placeholder="Role"
+                    />
+                    <InputField
+                      name="profile_pic"
+                      placeholder="Profile Pic"
+                      label="Choose Profile Pic"
+                      isFile
+                      setFieldValue={setFieldValue}
+                    />
+                  </div>
+                  <Row className="d-flex justify-content-start">
+                    <Col md="2">
+                      <Button
+                        type="submit"
+                        disabled={isLoading}
+                        className="w-100"
+                      >
+                        {isLoading ? (
+                          <Spinner animation="border" size="sm" />
+                        ) : (
+                          "Submit"
+                        )}
+                      </Button>
+                    </Col>
+                  </Row>
+                </Form>
+              )}
+            </Formik>
+          </Col>
+        </Row>
+      </div>
     </>
   );
 };

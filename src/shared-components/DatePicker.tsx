@@ -7,6 +7,7 @@ interface Props {
   label?: string;
   name: string;
   error?: string;
+  pickerType?: string;
   setFieldValue: (
     field: string,
     value: any,
@@ -18,6 +19,7 @@ const DatePicker: React.FC<Props> = ({
   label,
   name,
   error,
+  pickerType = "datetime-local",
   setFieldValue,
   ...props
 }) => {
@@ -38,7 +40,7 @@ const DatePicker: React.FC<Props> = ({
             id={field.name}
             value={value}
             onChange={handleChange}
-            type="datetime-local"
+            type={pickerType}
           />
         }
         {error && <Form.Text className="text-danger">{error}</Form.Text>}

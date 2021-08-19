@@ -41,29 +41,34 @@ const UserAddress = () => {
 
   return (
     <>
-      <PageHeading title="User Addresses" />
-      <Row className="rounded mt-3 ">
-        {apiData && apiData.addresses && apiData.addresses.length > 0 ? (
-          apiData.addresses.map((address: any) => (
-            <>
-              <Col md={6} className="mt-2">
-                <div className="card">
-                  <AddressCard address={address} />
-                </div>
-              </Col>
-            </>
-          ))
-        ) : (
-          <Container fluid className="d-flex justify-content-center display-3">
-            <div className="d-flex flex-column align-items-center pt-3 pb-3">
-              <MdRemoveShoppingCart color="#000" size={60} />
-              <h4 className="text-black font-weight-bold mt-2">
-                No address found
-              </h4>
-            </div>
-          </Container>
-        )}
-      </Row>
+      <div className="card view-padding p-2 d-flex mt-3">
+        <PageHeading title={`${apiData.name || "Users"} Address`} />
+        <Row className="rounded mt-3 ">
+          {apiData && apiData.addresses && apiData.addresses.length > 0 ? (
+            apiData.addresses.map((address: any) => (
+              <>
+                <Col md={6} className="mt-2">
+                  <div className="card">
+                    <AddressCard address={address} />
+                  </div>
+                </Col>
+              </>
+            ))
+          ) : (
+            <Container
+              fluid
+              className="d-flex justify-content-center display-3"
+            >
+              <div className="d-flex flex-column align-items-center pt-3 pb-3">
+                <MdRemoveShoppingCart color="#000" size={60} />
+                <h4 className="text-black font-weight-bold mt-2">
+                  No address found
+                </h4>
+              </div>
+            </Container>
+          )}
+        </Row>
+      </div>
     </>
   );
 };

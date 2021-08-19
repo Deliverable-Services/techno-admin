@@ -36,6 +36,7 @@ const TargetCreateUpdateForm = () => {
   const { state } = useLocation();
   const history = useHistory();
   const id = state ? (state as any).id : null;
+  const agentId = state ? (state as any).agent_id : null;
   useEffect(() => {
     bsCustomFileInput.init();
   }, []);
@@ -47,7 +48,11 @@ const TargetCreateUpdateForm = () => {
   const { mutate, isLoading } = useMutation(createUpdataTarget, {
     onSuccess: () => {
       setTimeout(() => queryClient.invalidateQueries(key), 500);
-      history.replace("/agent-targets");
+      if (agentId) {
+        history.goBack();
+      } else {
+        history.replace("/agent-targets");
+      }
       if (id) return showMsgToast("Target updated successfully");
       showMsgToast("Target created successfully");
     },
@@ -70,8 +75,8 @@ const TargetCreateUpdateForm = () => {
 
   return (
     <>
-      <BackButton title={title} />
       <div className="card view-padding p-2 d-flex mt-3">
+        <BackButton title={title} />
         <Row className="rounded">
           <Col className="mx-auto">
             <Formik
@@ -82,7 +87,7 @@ const TargetCreateUpdateForm = () => {
                       ...data,
                       month: moment(data.month).format("YYYY-MM"),
                     }
-                  : {}
+                  : { agent_id: agentId }
               }
               onSubmit={(values) => {
                 const m = moment(values.month).format("MMMM YYYY");

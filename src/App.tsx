@@ -54,6 +54,7 @@ import TopBar from "./components/TopBar";
 import Transactions from "./components/Transactions";
 import Users from "./components/Users";
 import Admins from "./components/Users/admin";
+import Agents from "./components/Users/agent";
 import UserCreateUpdateForm from "./components/Users/UsersCreateUpdateForm";
 import VerifyOtp from "./components/VerifyOtp";
 import { IsDesktopContext } from "./context/IsDesktopContext";
@@ -121,6 +122,7 @@ const App = () => {
             <PrivateRoute path="/categories" exact component={Categories} />
             <PrivateRoute path="/users" exact component={Users} />
             <PrivateRoute path="/admin" exact component={Admins} />
+            <PrivateRoute path="/agent" exact component={Agents} />
             <PrivateRoute path="/services" exact component={Services} />
             <PrivateRoute path="/faqs" exact component={Faqs} />
             <PrivateRoute path="/plans" exact component={Plans} />

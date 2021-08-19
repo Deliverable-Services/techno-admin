@@ -63,70 +63,72 @@ const FaqCreateUpdateForm = () => {
 
   return (
     <>
-      <BackButton title="Faqs" />
-      <Row className="rounded">
-        <Col className="mx-auto">
-          <Formik
-            enableReinitialize
-            initialValues={apiData || { is_active: 1 }}
-            onSubmit={(values) => {
-              const formdata = new FormData();
-              formdata.append("title", values.title);
-              formdata.append("description", values.description);
-              formdata.append("is_active", values.is_active);
+      <div className="card view-padding p-2 d-flex mt-3">
+        <BackButton title="Faqs" />
+        <Row className="rounded">
+          <Col className="mx-auto">
+            <Formik
+              enableReinitialize
+              initialValues={apiData || { is_active: 1 }}
+              onSubmit={(values) => {
+                const formdata = new FormData();
+                formdata.append("title", values.title);
+                formdata.append("description", values.description);
+                formdata.append("is_active", values.is_active);
 
-              mutate({ formdata, id });
-            }}
-          >
-            {({ setFieldValue }) => (
-              <Form>
-                <div className="form-container ">
-                  <InputField
-                    name="title"
-                    placeholder="title"
-                    label="Title"
-                    required
-                  />
-
-                  <InputField
-                    name="is_active"
-                    placeholder="Is Active?"
-                    label="Is Active?"
-                    as="select"
-                    selectData={isActiveArray}
-                  />
-                </div>
-                <Row>
-                  <Col md={12} xl={12}>
-                    <TextEditor
-                      name="description"
-                      label="Description"
-                      setFieldValue={setFieldValue}
+                mutate({ formdata, id });
+              }}
+            >
+              {({ setFieldValue }) => (
+                <Form>
+                  <div className="form-container ">
+                    <InputField
+                      name="title"
+                      placeholder="title"
+                      label="Title"
+                      required
                     />
-                  </Col>
-                </Row>
-                {/* <InputField name="is_active" placeholder="isActive" label="Is Active?" /> */}
 
-                <Row className="d-flex justify-content-start">
-                  <Col md="2">
-                    <Button
-                      type="submit"
-                      disabled={isLoading}
-                      className="w-100"
-                    >
-                      {isLoading ? (
-                        <Spinner animation="border" size="sm" />
-                      ) : (
-                        "Submit"
-                      )}
-                    </Button>
-                  </Col>
-                </Row>
-              </Form>
-            )}
-          </Formik>
-        </Col>
-      </Row>
+                    <InputField
+                      name="is_active"
+                      placeholder="Is Active?"
+                      label="Is Active?"
+                      as="select"
+                      selectData={isActiveArray}
+                    />
+                  </div>
+                  <Row>
+                    <Col md={12} xl={12}>
+                      <TextEditor
+                        name="description"
+                        label="Description"
+                        setFieldValue={setFieldValue}
+                      />
+                    </Col>
+                  </Row>
+                  {/* <InputField name="is_active" placeholder="isActive" label="Is Active?" /> */}
+
+                  <Row className="d-flex justify-content-start">
+                    <Col md="2">
+                      <Button
+                        type="submit"
+                        disabled={isLoading}
+                        className="w-100"
+                      >
+                        {isLoading ? (
+                          <Spinner animation="border" size="sm" />
+                        ) : (
+                          "Submit"
+                        )}
+                      </Button>
+                    </Col>
+                  </Row>
+                </Form>
+              )}
+            </Formik>
+          </Col>
+        </Row>
+      </div>
     </>
   );
 };

@@ -63,10 +63,10 @@ const CitiesCreateUpdateForm = () => {
 
   return (
     <>
-      <BackButton title={title} />
-
       <div className="card view-padding p-2 d-flex mt-3">
-        <div className="text-primary">
+        <BackButton title={title} />
+
+        {/* <div className="text-primary">
           <div className="d-flex justify-content-between">
             <div
               className="text-black pb-3"
@@ -77,7 +77,7 @@ const CitiesCreateUpdateForm = () => {
           </div>
         </div>
 
-        <hr className="mb-3" />
+        <hr className="mb-3" /> */}
 
         <Row className="rounded">
           <Col className="mx-auto">

@@ -63,81 +63,83 @@ const BrandModlesCreateUpdateForm = () => {
 
   return (
     <>
-      <BackButton title="Brands Model" />
-      <Row className="rounded">
-        <Col className="mx-auto">
-          <Formik
-            enableReinitialize
-            initialValues={apiData || { is_active: "1" }}
-            onSubmit={(values) => {
-              const formdata = new FormData();
-              const { image, ...rest } = values;
-              for (let k in rest) formdata.append(k, rest[k]);
-              if (values.image && typeof values.image !== "string")
-                formdata.append("image", values.image);
+      <div className="card view-padding p-2 d-flex mt-3">
+        <BackButton title="Brands Model" />
+        <Row className="rounded">
+          <Col className="mx-auto">
+            <Formik
+              enableReinitialize
+              initialValues={apiData || { is_active: "1" }}
+              onSubmit={(values) => {
+                const formdata = new FormData();
+                const { image, ...rest } = values;
+                for (let k in rest) formdata.append(k, rest[k]);
+                if (values.image && typeof values.image !== "string")
+                  formdata.append("image", values.image);
 
-              mutate({ formdata, id });
-            }}
-          >
-            {({ setFieldValue }) => (
-              <Form>
-                <div className={`form-container  py-2 `}>
-                  <InputField
-                    name="name"
-                    placeholder="Name"
-                    label="Name"
-                    required
-                  />
+                mutate({ formdata, id });
+              }}
+            >
+              {({ setFieldValue }) => (
+                <Form>
+                  <div className={`form-container  py-2 `}>
+                    <InputField
+                      name="name"
+                      placeholder="Name"
+                      label="Name"
+                      required
+                    />
 
-                  <InputField
-                    name="url"
-                    placeholder="Url"
-                    label="Url"
-                    required
-                  />
-                  <InputField
-                    name="image"
-                    placeholder="image"
-                    label="Choose Brand Model Image"
-                    isFile
-                    setFieldValue={setFieldValue}
-                  />
-                  <InputField
-                    name="brand_id"
-                    placeholder="Brand"
-                    label="Choose Brand"
-                    as="select"
-                    selectData={!isBrandLoading && brands.data}
-                  />
+                    <InputField
+                      name="url"
+                      placeholder="Url"
+                      label="Url"
+                      required
+                    />
+                    <InputField
+                      name="image"
+                      placeholder="image"
+                      label="Choose Brand Model Image"
+                      isFile
+                      setFieldValue={setFieldValue}
+                    />
+                    <InputField
+                      name="brand_id"
+                      placeholder="Brand"
+                      label="Choose Brand"
+                      as="select"
+                      selectData={!isBrandLoading && brands.data}
+                    />
 
-                  <InputField
-                    as="select"
-                    selectData={isActiveArray}
-                    name="is_active"
-                    label="Is active?"
-                    placeholder="Choose is active"
-                  />
-                </div>
-                <Row className="d-flex justify-content-start">
-                  <Col md="2">
-                    <Button
-                      type="submit"
-                      disabled={isLoading}
-                      className="w-100"
-                    >
-                      {isLoading ? (
-                        <Spinner animation="border" size="sm" />
-                      ) : (
-                        "Submit"
-                      )}
-                    </Button>
-                  </Col>
-                </Row>
-              </Form>
-            )}
-          </Formik>
-        </Col>
-      </Row>
+                    <InputField
+                      as="select"
+                      selectData={isActiveArray}
+                      name="is_active"
+                      label="Is active?"
+                      placeholder="Choose is active"
+                    />
+                  </div>
+                  <Row className="d-flex justify-content-start">
+                    <Col md="2">
+                      <Button
+                        type="submit"
+                        disabled={isLoading}
+                        className="w-100"
+                      >
+                        {isLoading ? (
+                          <Spinner animation="border" size="sm" />
+                        ) : (
+                          "Submit"
+                        )}
+                      </Button>
+                    </Col>
+                  </Row>
+                </Form>
+              )}
+            </Formik>
+          </Col>
+        </Row>
+      </div>
     </>
   );
 };

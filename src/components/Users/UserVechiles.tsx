@@ -41,30 +41,35 @@ const UserVehicles = () => {
 
   return (
     <>
-      <PageHeading title="User Vehicles" />
-      <Row
-        className="rounded mt-3"
-        // style={{ borderTop: "1px solid rgba(0,0,0,.25" }}
-      >
-        {apiData && apiData.vehicles && apiData.vehicles.length > 0 ? (
-          apiData.vehicles.map((vehicle: any) => (
-            <>
-              <Col md={6} className="mt-2">
-                <VehicleCard vehicle={vehicle} />
-              </Col>
-            </>
-          ))
-        ) : (
-          <Container fluid className="d-flex justify-content-center display-3">
-            <div className="d-flex flex-column align-items-center pt-3 pb-3">
-              <MdRemoveShoppingCart color="#000" size={60} />
-              <h4 className="text-black font-weight-bold mt-2">
-                No vehicle found
-              </h4>
-            </div>
-          </Container>
-        )}
-      </Row>
+      <div className="card view-padding p-2 d-flex mt-3">
+        <PageHeading title={`${apiData.name || "Users"} Vehicles`} />
+        <Row
+          className="rounded mt-3"
+          // style={{ borderTop: "1px solid rgba(0,0,0,.25" }}
+        >
+          {apiData && apiData.vehicles && apiData.vehicles.length > 0 ? (
+            apiData.vehicles.map((vehicle: any) => (
+              <>
+                <Col md={6} className="mt-2">
+                  <VehicleCard vehicle={vehicle} />
+                </Col>
+              </>
+            ))
+          ) : (
+            <Container
+              fluid
+              className="d-flex justify-content-center display-3"
+            >
+              <div className="d-flex flex-column align-items-center pt-3 pb-3">
+                <MdRemoveShoppingCart color="#000" size={60} />
+                <h4 className="text-black font-weight-bold mt-2">
+                  No vehicle found
+                </h4>
+              </div>
+            </Container>
+          )}
+        </Row>
+      </div>
     </>
   );
 };

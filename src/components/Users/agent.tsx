@@ -9,7 +9,7 @@ import {
   Row,
   Spinner,
 } from "react-bootstrap";
-import { AiFillPlusSquare } from "react-icons/ai";
+import { AiFillEdit, AiFillPlusSquare } from "react-icons/ai";
 import { BiSad } from "react-icons/bi";
 import { useMutation, useQuery } from "react-query";
 import { useHistory } from "react-router-dom";
@@ -42,14 +42,14 @@ const deleteUsers = (id: Array<any>) => {
 };
 
 const intitialFilter = {
-  q: "",
-  role: "admin",
-  page: null,
+  role: "agent",
   perPage: 25,
+  q: "",
+  page: null,
   disabled: "",
 };
 
-const Admins = () => {
+const Agents = () => {
   const history = useHistory();
   const [deletePopup, setDeletePopup] = useState(false);
   const [selectedRowId, setSelectedRowId] = useState<string>("");
@@ -87,12 +87,13 @@ const Admins = () => {
   };
 
   const _onCreateClick = () => {
-    history.push("/users/create-edit", { role: "admin" });
+    history.push("/users/create-edit", { role: "agent" });
   };
 
   const _onEditClick = (id: string, role: string) => {
     history.push("/users/create-edit", { id, role });
   };
+
   const columns = useMemo(
     () => [
       {
@@ -143,11 +144,21 @@ const Admins = () => {
         Header: "Actions",
         Cell: (data: Cell) => {
           return (
-            <EditButton
-              onClick={() => {
-                _onEditClick(data.row.values.id, data.row.values.role);
-              }}
-            />
+            <div className="d-flex">
+              <EditButton
+                onClick={() => {
+                  _onEditClick(data.row.values.id, data.row.values.role);
+                }}
+              />
+              <Button
+                variant="outline-primary"
+                onClick={() => console.log("hellow")}
+                className="ml-2"
+              >
+                <AiFillEdit size={16} className="mr-1" />
+                Target
+              </Button>
+            </div>
           );
         },
       },
@@ -169,7 +180,7 @@ const Admins = () => {
   return (
     <>
       <PageHeading
-        title="Admins"
+        title="Agents"
         onClick={_onCreateClick}
         totalRecords={data?.total}
       />
@@ -284,4 +295,4 @@ const Admins = () => {
   );
 };
 
-export default Admins;
+export default Agents;

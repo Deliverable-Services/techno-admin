@@ -38,7 +38,10 @@ const RevokePermission = () => {
   ]);
   const { mutate, isLoading } = useMutation(createUpdataBrand, {
     onSuccess: () => {
-      setTimeout(() => queryClient.invalidateQueries(""), 500);
+      setTimeout(
+        () => queryClient.invalidateQueries("roles-with-permission"),
+        500
+      );
       history.replace("/permissions");
       showMsgToast("Permission revoked successfully");
     },

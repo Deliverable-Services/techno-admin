@@ -68,100 +68,102 @@ const CouponCreateUpdateForm = () => {
 
   return (
     <>
-      <BackButton title="Coupons" />
-      <Row className="rounded">
-        <Col className="mx-auto">
-          <Formik
-            enableReinitialize
-            initialValues={
-              apiData || {
-                valid_to: moment().format("YYYY-MM-DD hh:mm:ss"),
-                valid_from: moment().format("YYYY-MM-DD hh:mm:ss"),
+      <div className="card view-padding p-2 d-flex mt-3">
+        <BackButton title="Coupons" />
+        <Row className="rounded">
+          <Col className="mx-auto">
+            <Formik
+              enableReinitialize
+              initialValues={
+                apiData || {
+                  valid_to: moment().format("YYYY-MM-DD hh:mm:ss"),
+                  valid_from: moment().format("YYYY-MM-DD hh:mm:ss"),
+                }
               }
-            }
-            onSubmit={(values) => {
-              mutate({ formdata: values, id });
-            }}
-          >
-            {({ setFieldValue }) => (
-              <Form>
-                <div className="form-container  py-2 ">
-                  <InputField
-                    name="title"
-                    placeholder="Title"
-                    label="Title"
-                    required
-                  />
+              onSubmit={(values) => {
+                mutate({ formdata: values, id });
+              }}
+            >
+              {({ setFieldValue }) => (
+                <Form>
+                  <div className="form-container  py-2 ">
+                    <InputField
+                      name="title"
+                      placeholder="Title"
+                      label="Title"
+                      required
+                    />
 
-                  <InputField
-                    name="coupon_code"
-                    placeholder="Coupon Code"
-                    label="Coupon Code"
-                    required
-                  />
-                  <InputField
-                    type="number"
-                    name="condition"
-                    placeholder="Condition"
-                    label="Condition"
-                    required
-                  />
-                  <DatePicker
-                    name="valid_from"
-                    label="Valid From"
+                    <InputField
+                      name="coupon_code"
+                      placeholder="Coupon Code"
+                      label="Coupon Code"
+                      required
+                    />
+                    <InputField
+                      type="number"
+                      name="condition"
+                      placeholder="Condition"
+                      label="Condition"
+                      required
+                    />
+                    <DatePicker
+                      name="valid_from"
+                      label="Valid From"
+                      setFieldValue={setFieldValue}
+                    />
+                    <DatePicker
+                      name="valid_to"
+                      label="Valid To"
+                      setFieldValue={setFieldValue}
+                    />
+                    <InputField
+                      as="select"
+                      selectData={isActiveArray}
+                      name="is_active"
+                      label="Is active?"
+                      placeholder="Choose is active"
+                    />
+                    <InputField
+                      as="select"
+                      selectData={conditionType}
+                      name="condition_type"
+                      label="Condition Type"
+                      placeholder="Condition Type"
+                    />
+                  </div>
+                  <TextEditor
+                    name="description"
+                    label="Description"
                     setFieldValue={setFieldValue}
                   />
-                  <DatePicker
-                    name="valid_to"
-                    label="Valid To"
+
+                  <TextEditor
+                    name="terms"
+                    label="Terms"
                     setFieldValue={setFieldValue}
                   />
-                  <InputField
-                    as="select"
-                    selectData={isActiveArray}
-                    name="is_active"
-                    label="Is active?"
-                    placeholder="Choose is active"
-                  />
-                  <InputField
-                    as="select"
-                    selectData={conditionType}
-                    name="condition_type"
-                    label="Condition Type"
-                    placeholder="Condition Type"
-                  />
-                </div>
-                <TextEditor
-                  name="description"
-                  label="Description"
-                  setFieldValue={setFieldValue}
-                />
-
-                <TextEditor
-                  name="terms"
-                  label="Terms"
-                  setFieldValue={setFieldValue}
-                />
-                <Row className="d-flex justify-content-center">
-                  <Col md="6">
-                    <Button
-                      type="submit"
-                      disabled={isLoading}
-                      className="w-100"
-                    >
-                      {isLoading ? (
-                        <Spinner animation="border" size="sm" />
-                      ) : (
-                        "Submit"
-                      )}
-                    </Button>
-                  </Col>
-                </Row>
-              </Form>
-            )}
-          </Formik>
-        </Col>
-      </Row>
+                  <Row className="d-flex justify-content-center">
+                    <Col md="6">
+                      <Button
+                        type="submit"
+                        disabled={isLoading}
+                        className="w-100"
+                      >
+                        {isLoading ? (
+                          <Spinner animation="border" size="sm" />
+                        ) : (
+                          "Submit"
+                        )}
+                      </Button>
+                    </Col>
+                  </Row>
+                </Form>
+              )}
+            </Formik>
+          </Col>
+        </Row>
+      </div>
     </>
   );
 };

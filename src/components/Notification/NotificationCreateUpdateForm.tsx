@@ -1,9 +1,10 @@
 import { AxiosError } from "axios";
 import bsCustomFileInput from "bs-custom-file-input";
-import { Form, Formik } from "formik";
+import { Field, Form, Formik } from "formik";
 import moment from "moment";
 import { useEffect, useMemo, useState } from "react";
 import { Button, Col, Row, Spinner } from "react-bootstrap";
+import { MdNotificationsActive, MdTextsms } from "react-icons/md";
 import { RiTimerFill } from "react-icons/ri";
 import { useMutation, useQuery } from "react-query";
 import { useHistory, useLocation } from "react-router-dom";
@@ -122,148 +123,176 @@ const NotificationCreateUpdateForm = () => {
   return (
     <>
       <BackButton title="Notification" />
-      <Row className="rounded">
-        <Col className="mx-auto">
-          <Formik
-            enableReinitialize
-            initialValues={apiData || {}}
-            onSubmit={(values) => {
-              const formdata = {
-                ...values,
-                users: selectedRows.map((i) => i.id),
-              };
 
-              if (!values?.scheduled_at)
-                formdata["scheduled_at"] = moment().format(
-                  "YYYY-MM-DD hh:mm:ss"
-                );
-              // const { logo, ...rest } = values;
-              // const formdata = new FormData();
-              // for (let k in rest) formdata.append(k, rest[k]);
+      <div className="card view-padding p-2 d-flex mt-3">
+        <Row className="rounded">
+          <Col className="mx-auto">
+            <Formik
+              enableReinitialize
+              initialValues={apiData || { is_sms: "0" }}
+              onSubmit={(values) => {
+                const formdata = {
+                  ...values,
+                  users: selectedRows.map((i) => i.id),
+                };
 
-              mutate({ formdata, id });
-            }}
-          >
-            {({ setFieldValue }) => (
-              <Form>
-                <div className="form-container ">
-                  <InputField
-                    name="title"
-                    placeholder="Title"
-                    label="Title"
-                    required
-                  />
-                  <InputField
-                    as="select"
-                    selectData={NotificationSendToCategories}
-                    name="send_to"
-                    label="Send to ?"
-                    placeholder="Choose user category"
-                  />
-                  <InputField
-                    name="description"
-                    placeholder="Description"
-                    label="Description"
-                    as="textarea"
-                    required
-                  />
-                </div>
-                <Row>
-                  <Col md={12} xl={12}>
-                    <h4 className="font-weight-bold d-flex align-items-center ">
-                      <RiTimerFill size={24} /> <span> Schedule</span>
-                    </h4>
-                    {!id && (
-                      <div className="navigation-tab mt-3">
-                        <button
-                          type="button"
-                          className={
-                            !isScheduleOpen ? "text-primary" : "text-muted"
-                          }
-                          style={{
-                            borderBottom: !isScheduleOpen
-                              ? ` 2px solid ${primaryColor}`
-                              : "",
-                          }}
-                          onClick={_closeSchedulTab}
-                        >
-                          <b>Now</b>
-                        </button>
-                        <button
-                          type="button"
-                          className={`${
-                            isScheduleOpen ? "text-primary" : "text-muted"
-                          } ml-2`}
-                          style={{
-                            borderBottom: isScheduleOpen
-                              ? ` 2px solid ${primaryColor}`
-                              : "",
-                          }}
-                          onClick={_openSchedulTab}
-                        >
-                          <b>Schedule</b>
-                        </button>
-                      </div>
-                    )}
+                if (!values?.scheduled_at)
+                  formdata["scheduled_at"] = moment().format(
+                    "YYYY-MM-DD hh:mm:ss"
+                  );
+                // const { logo, ...rest } = values;
+                // const formdata = new FormData();
+                // for (let k in rest) formdata.append(k, rest[k]);
 
-                    <div className="display-for-schedule mt-2">
-                      {!isScheduleOpen ? (
-                        <div className="py-3">
-                          <p>Notification will be send now</p>
-                        </div>
-                      ) : (
-                        <div
-                          style={{
-                            width: "200px",
-                          }}
-                        >
-                          <DatePicker
-                            name="scheduled_at"
-                            setFieldValue={setFieldValue}
-                            label="Data\time"
-                          />
-                        </div>
-                      )}
-                    </div>
-                  </Col>
-                  <Col md={12} xl={12}>
-                    {!error && !isUsersLoading && Users && (
-                      <ReactTable
-                        data={Users?.data}
-                        columns={columns}
-                        setSelectedRows={setSelectedRows}
-                        filter={filter}
-                        onFilterChange={_onFilterChange}
-                        isDataLoading={isFetching}
-                        initialState={{
-                          selectedRowIds,
-                        }}
-                        setSelectedRowIds={setSelectedRowIds}
+                mutate({ formdata, id });
+              }}
+            >
+              {({ setFieldValue, values }) => (
+                <Form>
+                  <div className="d-flex">
+                    <label className="d-flex align-items-center">
+                      <Field type="radio" name="is_sms" value="1" />
+                      <p className="m-0 mx-2 lead">
+                        SMS
+                        <span className="mx-1">
+                          <MdTextsms />
+                        </span>
+                      </p>
+                    </label>
+                    <label className="d-flex align-items-center ml-4">
+                      <Field type="radio" name="is_sms" value="0" />
+                      <p className="m-0 mx-2 lead">
+                        Notification
+                        <span className="mx-1">
+                          <MdNotificationsActive />
+                        </span>
+                      </p>
+                    </label>
+                  </div>
+                  <div className="form-container ">
+                    <InputField
+                      name="title"
+                      placeholder="Title"
+                      label="Title"
+                      required
+                    />
+                    <InputField
+                      as="select"
+                      selectData={NotificationSendToCategories}
+                      name="send_to"
+                      label="Send to ?"
+                      placeholder="Choose user category"
+                    />
+                    {values.is_sms === "0" && (
+                      <InputField
+                        name="description"
+                        placeholder="Description"
+                        label="Description"
+                        as="textarea"
+                        required
                       />
                     )}
-                  </Col>
-                </Row>
-
-                <Row className="d-flex justify-content-start">
-                  <Col md="2">
-                    <Button
-                      type="submit"
-                      disabled={isLoading}
-                      className="w-100"
-                    >
-                      {isLoading ? (
-                        <Spinner animation="border" size="sm" />
-                      ) : (
-                        "Submit"
+                  </div>
+                  <Row>
+                    <Col md={12} xl={12}>
+                      {values.is_sms === "0" && (
+                        <h4 className="font-weight-bold d-flex align-items-center ">
+                          <RiTimerFill size={24} /> <span> Schedule</span>
+                        </h4>
                       )}
-                    </Button>
-                  </Col>
-                </Row>
-              </Form>
-            )}
-          </Formik>
-        </Col>
-      </Row>
+                      {values.is_sms === "0" && !id && (
+                        <div className="navigation-tab mt-3">
+                          <button
+                            type="button"
+                            className={
+                              !isScheduleOpen ? "text-primary" : "text-muted"
+                            }
+                            style={{
+                              borderBottom: !isScheduleOpen
+                                ? ` 2px solid ${primaryColor}`
+                                : "",
+                            }}
+                            onClick={_closeSchedulTab}
+                          >
+                            <b>Now</b>
+                          </button>
+                          <button
+                            type="button"
+                            className={`${
+                              isScheduleOpen ? "text-primary" : "text-muted"
+                            } ml-2`}
+                            style={{
+                              borderBottom: isScheduleOpen
+                                ? ` 2px solid ${primaryColor}`
+                                : "",
+                            }}
+                            onClick={_openSchedulTab}
+                          >
+                            <b>Schedule</b>
+                          </button>
+                        </div>
+                      )}
+                      {values.is_sms === "0" && (
+                        <div className="display-for-schedule mt-2">
+                          {!isScheduleOpen ? (
+                            <div className="py-3">
+                              <p>Notification will be send now</p>
+                            </div>
+                          ) : (
+                            <div
+                              style={{
+                                width: "200px",
+                              }}
+                            >
+                              <DatePicker
+                                name="scheduled_at"
+                                setFieldValue={setFieldValue}
+                                label="Data\time"
+                              />
+                            </div>
+                          )}
+                        </div>
+                      )}
+                    </Col>
+                    <Col md={12} xl={12}>
+                      {!error && !isUsersLoading && Users && (
+                        <ReactTable
+                          data={Users?.data}
+                          columns={columns}
+                          setSelectedRows={setSelectedRows}
+                          filter={filter}
+                          onFilterChange={_onFilterChange}
+                          isDataLoading={isFetching}
+                          initialState={{
+                            selectedRowIds,
+                          }}
+                          setSelectedRowIds={setSelectedRowIds}
+                        />
+                      )}
+                    </Col>
+                  </Row>
+
+                  <Row className="d-flex justify-content-start">
+                    <Col md="2">
+                      <Button
+                        type="submit"
+                        disabled={isLoading}
+                        className="w-100"
+                      >
+                        {isLoading ? (
+                          <Spinner animation="border" size="sm" />
+                        ) : (
+                          "Submit"
+                        )}
+                      </Button>
+                    </Col>
+                  </Row>
+                </Form>
+              )}
+            </Formik>
+          </Col>
+        </Row>
+      </div>
     </>
   );
 };

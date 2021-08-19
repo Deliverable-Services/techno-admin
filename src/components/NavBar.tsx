@@ -7,6 +7,7 @@ import {
   FaRegLightbulb,
   FaUsers,
   FaMoneyCheck,
+  FaUserSecret,
 } from "react-icons/fa";
 import { GoIssueOpened } from "react-icons/go";
 import { IoLogoModelS } from "react-icons/io";
@@ -49,7 +50,7 @@ const manageLinks: Array<INavLink> = [
     icon: <FaDiceFour />,
   },
   {
-    title: "Users",
+    title: "Customers",
     path: "/users",
     icon: <ImUsers />,
   },
@@ -57,6 +58,11 @@ const manageLinks: Array<INavLink> = [
     title: "Admins",
     path: "/admin",
     icon: <RiAdminFill />,
+  },
+  {
+    title: "Agents",
+    path: "/agent",
+    icon: <FaUserSecret />,
   },
   {
     title: "Agent Targets",

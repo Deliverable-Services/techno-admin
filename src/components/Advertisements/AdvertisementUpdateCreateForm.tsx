@@ -68,88 +68,93 @@ const AdvertisementCreateUpdateForm = () => {
 
   return (
     <>
-      <BackButton title="Banners" />
-      <Row className="rounded">
-        <Col className="mx-auto">
-          <Formik
-            enableReinitialize
-            initialValues={
-              apiData || {
-                valid_to: moment().format("YYYY-MM-DD hh:mm:ss"),
-                valid_from: moment().format("YYYY-MM-DD hh:mm:ss"),
+      <div className="card view-padding p-2 d-flex mt-3">
+        <BackButton title="Banners" />
+        <Row className="rounded">
+          <Col className="mx-auto">
+            <Formik
+              enableReinitialize
+              initialValues={
+                apiData || {
+                  valid_to: moment().format("YYYY-MM-DD hh:mm:ss"),
+                  valid_from: moment().format("YYYY-MM-DD hh:mm:ss"),
+                }
               }
-            }
-            onSubmit={(values) => {
-              const { image, ...rest } = values;
-              console.log({ values });
-              const formdata = new FormData();
-              for (let k in rest) formdata.append(k, rest[k]);
-              if (image) formdata.append("image", values.image);
+              onSubmit={(values) => {
+                const { image, ...rest } = values;
+                console.log({ values });
+                const formdata = new FormData();
+                for (let k in rest) formdata.append(k, rest[k]);
+                if (image) formdata.append("image", values.image);
 
-              mutate({ formdata, id });
-            }}
-          >
-            {({ setFieldValue }) => (
-              <Form>
-                {status === "success" && (
-                  <Alert variant="success">
-                    {id
-                      ? "Advertisement  updated successfully"
-                      : "Advertisement created successfully"}
-                  </Alert>
-                )}
-                {error && (
-                  <Alert variant="danger">{(error as Error).message}</Alert>
-                )}
-                <div className={`form-container  py-2 `}>
-                  <InputField name="name" placeholder="Name" label="Name" />
-                  <InputField name="title" placeholder="Title" label="Title" />
+                mutate({ formdata, id });
+              }}
+            >
+              {({ setFieldValue }) => (
+                <Form>
+                  {status === "success" && (
+                    <Alert variant="success">
+                      {id
+                        ? "Advertisement  updated successfully"
+                        : "Advertisement created successfully"}
+                    </Alert>
+                  )}
+                  {error && (
+                    <Alert variant="danger">{(error as Error).message}</Alert>
+                  )}
+                  <div className={`form-container  py-2 `}>
+                    <InputField name="name" placeholder="Name" label="Name" />
+                    <InputField
+                      name="title"
+                      placeholder="Title"
+                      label="Title"
+                    />
 
-                  <InputField
-                    name="deeplink"
-                    placeholder="Deep Link"
-                    label="Deep Link"
-                  />
-                  <InputField
-                    type="number"
-                    name="order"
-                    placeholder="Order"
-                    label="Order"
-                  />
+                    <InputField
+                      name="deeplink"
+                      placeholder="Deep Link"
+                      label="Deep Link"
+                    />
+                    <InputField
+                      type="number"
+                      name="order"
+                      placeholder="Order"
+                      label="Order"
+                    />
 
-                  <DatePicker
-                    name="valid_from"
-                    label="Valid From"
-                    setFieldValue={setFieldValue}
-                  />
-                  <DatePicker
-                    name="valid_to"
-                    label="Valid To"
-                    setFieldValue={setFieldValue}
-                  />
-                  <InputField
-                    name="image"
-                    placeholder="image"
-                    label="Image"
-                    isFile
-                    setFieldValue={setFieldValue}
-                  />
-                  <InputField
-                    as="select"
-                    selectData={isActiveArray}
-                    name="is_active"
-                    label="Is active?"
-                    placeholder="Choose is active"
-                  />
-                  <InputField
-                    name="type"
-                    placeholder="Advertisement type"
-                    label="Choose Type"
-                    as="select"
-                    selectData={types}
-                  />
+                    <DatePicker
+                      name="valid_from"
+                      label="Valid From"
+                      setFieldValue={setFieldValue}
+                    />
+                    <DatePicker
+                      name="valid_to"
+                      label="Valid To"
+                      setFieldValue={setFieldValue}
+                    />
+                    <InputField
+                      name="image"
+                      placeholder="image"
+                      label="Image"
+                      isFile
+                      setFieldValue={setFieldValue}
+                    />
+                    <InputField
+                      as="select"
+                      selectData={isActiveArray}
+                      name="is_active"
+                      label="Is active?"
+                      placeholder="Choose is active"
+                    />
+                    <InputField
+                      name="type"
+                      placeholder="Advertisement type"
+                      label="Choose Type"
+                      as="select"
+                      selectData={types}
+                    />
 
-                  {/* <InputField
+                    {/* <InputField
                     as="textarea"
                     name="description"
                     placeholder="Description"
@@ -161,27 +166,28 @@ const AdvertisementCreateUpdateForm = () => {
                     placeholder="Terms"
                     label="Terms"
                   /> */}
-                </div>
-                <Row className="d-flex justify-content-start">
-                  <Col md="2">
-                    <Button
-                      type="submit"
-                      disabled={isLoading}
-                      className="w-100"
-                    >
-                      {isLoading ? (
-                        <Spinner animation="border" size="sm" />
-                      ) : (
-                        "Submit"
-                      )}
-                    </Button>
-                  </Col>
-                </Row>
-              </Form>
-            )}
-          </Formik>
-        </Col>
-      </Row>
+                  </div>
+                  <Row className="d-flex justify-content-start">
+                    <Col md="2">
+                      <Button
+                        type="submit"
+                        disabled={isLoading}
+                        className="w-100"
+                      >
+                        {isLoading ? (
+                          <Spinner animation="border" size="sm" />
+                        ) : (
+                          "Submit"
+                        )}
+                      </Button>
+                    </Col>
+                  </Row>
+                </Form>
+              )}
+            </Formik>
+          </Col>
+        </Row>
+      </div>
     </>
   );
 };

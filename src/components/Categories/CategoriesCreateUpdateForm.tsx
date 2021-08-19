@@ -64,74 +64,76 @@ const CategoriesCreateUpdateForm = () => {
 
   return (
     <>
-      <BackButton title="Categories" />
-      <Row className="rounded">
-        <Col className="mx-auto">
-          <Formik
-            enableReinitialize
-            initialValues={apiData || {}}
-            onSubmit={(values) => {
-              const formdata = new FormData();
-              formdata.append("name", values.name);
-              formdata.append("url", values.url);
-              formdata.append("order", values.order);
-              formdata.append("is_active", values.is_active);
-              if (values.logo && typeof values.logo !== "string")
-                formdata.append("logo", values.logo);
+      <div className="card view-padding p-2 d-flex mt-3">
+        <BackButton title="Categories" />
+        <Row className="rounded">
+          <Col className="mx-auto">
+            <Formik
+              enableReinitialize
+              initialValues={apiData || {}}
+              onSubmit={(values) => {
+                const formdata = new FormData();
+                formdata.append("name", values.name);
+                formdata.append("url", values.url);
+                formdata.append("order", values.order);
+                formdata.append("is_active", values.is_active);
+                if (values.logo && typeof values.logo !== "string")
+                  formdata.append("logo", values.logo);
 
-              mutate({ formdata, id });
-            }}
-          >
-            {({ setFieldValue }) => (
-              <Form className="w-100">
-                <div className="form-container py-2">
-                  <InputField
-                    name="name"
-                    placeholder="Name"
-                    label="Name"
-                    required
-                  />
-                  <InputField
-                    name="url"
-                    placeholder="Url"
-                    label="Url"
-                    required
-                  />
-                  <InputField
-                    name="order"
-                    placeholder="order"
-                    label="order"
-                    required
-                  />
+                mutate({ formdata, id });
+              }}
+            >
+              {({ setFieldValue }) => (
+                <Form className="w-100">
+                  <div className="form-container py-2">
+                    <InputField
+                      name="name"
+                      placeholder="Name"
+                      label="Name"
+                      required
+                    />
+                    <InputField
+                      name="url"
+                      placeholder="Url"
+                      label="Url"
+                      required
+                    />
+                    <InputField
+                      name="order"
+                      placeholder="order"
+                      label="order"
+                      required
+                    />
 
-                  <InputField
-                    as="select"
-                    selectData={isActiveArray}
-                    name="is_active"
-                    label="Is active?"
-                    placeholder="Choose is active"
-                  />
-                </div>
-                <Row className="d-flex justify-content-start">
-                  <Col md="2">
-                    <Button
-                      type="submit"
-                      disabled={isLoading}
-                      className="w-100"
-                    >
-                      {isLoading ? (
-                        <Spinner animation="border" size="sm" />
-                      ) : (
-                        "Submit"
-                      )}
-                    </Button>
-                  </Col>
-                </Row>
-              </Form>
-            )}
-          </Formik>
-        </Col>
-      </Row>
+                    <InputField
+                      as="select"
+                      selectData={isActiveArray}
+                      name="is_active"
+                      label="Is active?"
+                      placeholder="Choose is active"
+                    />
+                  </div>
+                  <Row className="d-flex justify-content-start">
+                    <Col md="2">
+                      <Button
+                        type="submit"
+                        disabled={isLoading}
+                        className="w-100"
+                      >
+                        {isLoading ? (
+                          <Spinner animation="border" size="sm" />
+                        ) : (
+                          "Submit"
+                        )}
+                      </Button>
+                    </Col>
+                  </Row>
+                </Form>
+              )}
+            </Formik>
+          </Col>
+        </Row>
+      </div>
     </>
   );
 };
