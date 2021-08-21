@@ -46,39 +46,18 @@ const TopBar = ({ isNavOpen, setIsNavOpen }: INavBar) => {
     <Container
       fluid
       className="top-bar d-flex align-items-center justify-content-between"
+      style={{ width: !isNavOpen ? "98vw" : "100%" }}
     >
-      {!isDesktop ? (
+      {/* {!isDesktop ? ( */}
+      {!isNavOpen ? (
         <div className="menu-hamburger">
-          {!isNavOpen ? (
-            <BiMenuAltLeft
-              size={32}
-              onClick={openNavBar}
-              color={primaryColor}
-            />
-          ) : null}
+          <BiMenuAltLeft size={32} onClick={openNavBar} color={primaryColor} />
         </div>
       ) : null}
+      {/* ) : null} */}
 
+      {isDesktop && !isNavOpen && <Logo />}
       {!isDesktop && <Logo />}
-
-      {isDesktop && (
-        <Form.Group className="form-group store-select">
-          <Form.Label className="text-muted font-weight-bold">
-            Select Store
-          </Form.Label>
-
-          <Form.Control
-            as="select"
-            style={{
-              width: 150,
-              fontSize: 14,
-            }}
-            disabled
-          >
-            <option value="carsafai">Car Safai</option>
-          </Form.Control>
-        </Form.Group>
-      )}
 
       <div
         className={
@@ -96,9 +75,26 @@ const TopBar = ({ isNavOpen, setIsNavOpen }: INavBar) => {
             </p>
           </div>
         </div> */}
+        {isDesktop && (
+          <Form.Group className="form-group store-select ">
+            <Form.Label className="text-muted font-weight-bold">
+              Select Store
+            </Form.Label>
+
+            <Form.Control
+              as="select"
+              style={{
+                width: 150,
+                fontSize: 14,
+              }}
+              disabled
+            >
+              <option value="carsafai">Car Safai</option>
+            </Form.Control>
+          </Form.Group>
+        )}
 
         <div className="d-flex align-items-center justify-content-center ml-4">
-          {user && <span className="text-muted">{user?.name}</span>}
           <Dropdown className="ml-4">
             <Dropdown.Toggle
               id="dropdown-basic"
@@ -117,6 +113,7 @@ const TopBar = ({ isNavOpen, setIsNavOpen }: INavBar) => {
               </Dropdown.Item>
             </Dropdown.Menu>
           </Dropdown>
+          {user && <p className="text-muted small mb-0">{user?.name}</p>}
         </div>
       </div>
     </Container>

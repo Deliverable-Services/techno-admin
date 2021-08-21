@@ -12,7 +12,7 @@ import { useHistory } from "react-router-dom";
 import { handleApiError } from "../../hooks/handleApiErrors";
 import IsLoading from "../../shared-components/isLoading";
 import API from "../../utils/API";
-import { primaryColor } from "../../utils/constants";
+import { isDesktop, primaryColor } from "../../utils/constants";
 import {
   BookingLineChart,
   ChartArea,
@@ -97,61 +97,65 @@ const Dashboard = () => {
   return (
     <>
       <Container fluid className="component-wrapper px-0 py-2">
-        <div className="card">
-          <div className="card-content d-flex align-items-center justify-content-between">
-            <Container
-              fluid
-              className="d-flex align-items-center justify-content-start"
-            >
+        {isDesktop && (
+          <div className="card">
+            <div className="card-content d-flex align-items-center justify-content-between">
+              <Container
+                fluid
+                className="d-flex align-items-center justify-content-start"
+              >
+                <DateRangePicker
+                  customInputIcon={
+                    <BsCalendar color={primaryColor} size={24} />
+                  }
+                  startDate={moment(filter.datefrom)}
+                  startDateId={"start_date"}
+                  endDate={moment(filter.dateto)}
+                  endDateId={"end_date"}
+                  isOutsideRange={() => false}
+                  keepOpenOnDateSelect={true}
+                  onDatesChange={({ startDate, endDate }) => {
+                    if (startDate)
+                      _onFilterChange(
+                        "datefrom",
+                        startDate.format("YYYY-MM-DD")
+                      );
+                    if (endDate)
+                      _onFilterChange("dateto", endDate.format("YYYY-MM-DD"));
+                  }}
+                  focusedInput={focusedInput}
+                  onFocusChange={(focusedInput) => setFocusInput(focusedInput)}
+                />
+                <Form.Control
+                  as="select"
+                  custom
+                  onChange={(e) => {
+                    _onFilterChange("duration", e.target.value);
+                  }}
+                  className="bg-transparent m-0 ml-4"
+                  style={{ width: "100px", height: "44px" }}
+                  value={filter.duration}
+                >
+                  {/* <option value="year">Year</option> */}
+                  <option value="month">Month</option>
+                  <option value="week">Week</option>
+                  <option value="day">Daily</option>
+                </Form.Control>
+              </Container>
               <div>
-                <BsCalendar color={primaryColor} size={24} className="mr-3" />
+                <p className="m-0 text-right lead">
+                  {moment().format("DD-MMMM")}
+                </p>
+                <p
+                  style={{ whiteSpace: "nowrap", fontSize: "20px" }}
+                  className="font-weight-bold  text-right"
+                >
+                  {currentTime}
+                </p>
               </div>
-              <DateRangePicker
-                startDate={moment(filter.datefrom)}
-                startDateId={"start_date"}
-                endDate={moment(filter.dateto)}
-                endDateId={"end_date"}
-                isOutsideRange={() => false}
-                keepOpenOnDateSelect={true}
-                onDatesChange={({ startDate, endDate }) => {
-                  if (startDate)
-                    _onFilterChange("datefrom", startDate.format("YYYY-MM-DD"));
-                  if (endDate)
-                    _onFilterChange("dateto", endDate.format("YYYY-MM-DD"));
-                }}
-                focusedInput={focusedInput}
-                onFocusChange={(focusedInput) => setFocusInput(focusedInput)}
-              />
-              <Form.Control
-                as="select"
-                custom
-                onChange={(e) => {
-                  _onFilterChange("duration", e.target.value);
-                }}
-                className="bg-transparent m-0 ml-4"
-                style={{ width: "100px", height: "44px" }}
-                value={filter.duration}
-              >
-                {/* <option value="year">Year</option> */}
-                <option value="month">Month</option>
-                <option value="week">Week</option>
-                <option value="day">Daily</option>
-              </Form.Control>
-            </Container>
-            <div>
-              <p className="m-0 text-right lead">
-                {moment().format("DD-MMMM")}
-              </p>
-              <p
-                style={{ whiteSpace: "nowrap", fontSize: "20px" }}
-                className="font-weight-bold  text-right"
-              >
-                {currentTime}
-              </p>
             </div>
           </div>
-        </div>
-
+        )}
         <Container>
           <h1>
             {isFetching ? (
@@ -161,8 +165,15 @@ const Dashboard = () => {
         </Container>
 
         <Container fluid className="px-0">
-          <div className="d-flex justify-content-between my-3">
-            <div className="card hoverable stats-card d-flex w-100 mr-3">
+          <div
+            className="my-3"
+            style={{
+              display: "grid",
+              gridTemplateColumns: "repeat( auto-fit, minmax(200px, 1fr) )",
+              gap: "10px",
+            }}
+          >
+            <div className="card hoverable stats-card d-flex w-100 ">
               <div className="card-content">
                 <div className="lead">Customers</div>
 
@@ -187,7 +198,7 @@ const Dashboard = () => {
               </div>
             </div>
 
-            <div className="card hoverable stats-card d-flex w-100 mr-3 ml-3">
+            <div className="card hoverable stats-card d-flex w-100 ">
               <div className="card-content">
                 <div className="lead">Orders</div>
 
@@ -212,7 +223,7 @@ const Dashboard = () => {
               </div>
             </div>
 
-            <div className="card hoverable stats-card d-flex w-100 mr-3 ml-3">
+            <div className="card hoverable stats-card d-flex w-100">
               <div className="card-content">
                 <div className="lead">Active Subscriptions</div>
 
@@ -241,7 +252,7 @@ const Dashboard = () => {
               </div>
             </div>
 
-            <div className="card hoverable stats-card d-flex w-100 ml-3">
+            <div className="card hoverable stats-card d-flex w-100">
               <div className="card-content">
                 <div className="lead">Agents</div>
 
@@ -346,30 +357,6 @@ const Dashboard = () => {
                   )}
                 </div>
               </div>
-
-              {/* <div className="card ">
-                <div className="card-header pb-3 d-flex justify-content-between align-items-center">
-                  <h5 className="mb-0">
-                    <strong>Bookings</strong>
-                  </h5>
-                </div>
-
-                <div className="card-content chart-container">
-                  <ChartArea />
-                </div>
-              </div>
-
-              <div className="card ">
-                <div className="card-header pb-3 d-flex justify-content-between align-items-center">
-                  <h5 className="mb-0">
-                    <strong>Bookings</strong>
-                  </h5>
-                </div>
-
-                <div className="card-content chart-container">
-                  <ChartBar />
-                </div>
-              </div> */}
             </div>
           </Container>
         </div>

@@ -12,6 +12,7 @@ import { Cell } from "react-table";
 import { handleApiError } from "../../hooks/handleApiErrors";
 import useGetSingleQuery from "../../hooks/useGetSingleQuery";
 import BackButton from "../../shared-components/BackButton";
+import CustomBadge from "../../shared-components/CustomBadge";
 import DatePicker from "../../shared-components/DatePicker";
 import { InputField } from "../../shared-components/InputFeild";
 import IsActiveBadge from "../../shared-components/IsActiveBadge";
@@ -90,6 +91,9 @@ const NotificationCreateUpdateForm = () => {
       {
         Header: "Role",
         accessor: "role",
+        Cell: (data: Cell) => (
+          <CustomBadge variant="primary" title={data.row.values.role} />
+        ),
       },
       {
         Header: " Disabled?",

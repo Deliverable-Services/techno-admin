@@ -3,7 +3,7 @@ import bsCustomFileInput from "bs-custom-file-input";
 import { Form, Formik } from "formik";
 import moment from "moment";
 import { useEffect } from "react";
-import { Alert, Button, Col, Row, Spinner } from "react-bootstrap";
+import { Alert, Button, Col, Container, Row, Spinner } from "react-bootstrap";
 import { useMutation } from "react-query";
 import { useHistory, useLocation } from "react-router-dom";
 import { handleApiError } from "../../hooks/handleApiErrors";
@@ -116,35 +116,43 @@ const SlotCreateUpdateForm = () => {
                     pickerType="date"
                   />
                 </div>
-                <div className="card mx-auto" style={{ width: "450px" }}>
-                  <p className="text-center text-muted">
-                    Pick a slot to disable
-                  </p>
-                  <Row>
-                    {AvailableSlots.map((slot) => (
-                      <Col sm={6}>
-                        <div
-                          className="d-flex mx-auto p-2 align-items-center justify-content-center mt-2"
-                          style={{
-                            background:
-                              values.time_slot === slot.value
-                                ? primaryColor
-                                : "#fff",
-                            color:
-                              values.time_slot === slot.value ? "#fff" : "#000",
-                            border: `1px solid ${primaryColor}`,
-                            borderRadius: 10,
-                            width: 200,
-                          }}
-                          onClick={() => setFieldValue("time_slot", slot.value)}
-                        >
-                          <p className="text-center m-0">{slot.title}</p>
-                        </div>
-                      </Col>
-                    ))}
-                  </Row>
-                </div>
-
+                <Container fluid className="px-0 ">
+                  <div
+                    className="card mx-auto w-50 view-padding"
+                    style={{ width: "" }}
+                  >
+                    <p className="text-center text-muted">
+                      Pick a slot to disable
+                    </p>
+                    <Row>
+                      {AvailableSlots.map((slot) => (
+                        <Col sm={6}>
+                          <div
+                            className="d-flex mx-auto p-2 align-items-center justify-content-center mt-2 w-100"
+                            style={{
+                              background:
+                                values.time_slot === slot.value
+                                  ? primaryColor
+                                  : "#fff",
+                              color:
+                                values.time_slot === slot.value
+                                  ? "#fff"
+                                  : "#000",
+                              border: `1px solid ${primaryColor}`,
+                              borderRadius: 10,
+                              // width: 200,
+                            }}
+                            onClick={() =>
+                              setFieldValue("time_slot", slot.value)
+                            }
+                          >
+                            <p className="text-center m-0">{slot.title}</p>
+                          </div>
+                        </Col>
+                      ))}
+                    </Row>
+                  </div>
+                </Container>
                 <Row className="d-flex justify-content-start mt-2">
                   <Col md="2">
                     <Button

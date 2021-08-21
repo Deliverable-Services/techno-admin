@@ -1,11 +1,13 @@
 import { AxiosError } from "axios";
 import moment from "moment";
+import { useContext } from "react";
 import { useMemo, useState } from "react";
 import { Button, Col, Container, Form, Row } from "react-bootstrap";
 import { BiSad } from "react-icons/bi";
 import { useQuery } from "react-query";
 import { useHistory } from "react-router-dom";
 import { Cell } from "react-table";
+import { IsDesktopContext } from "../../context/IsDesktopContext";
 import { handleApiError } from "../../hooks/handleApiErrors";
 import useOrderStoreFilter, {
   INITIAL_FILTER,
@@ -34,6 +36,7 @@ const intitialFilter = {
 };
 const Orders = () => {
   const history = useHistory();
+  const isDesktop = useContext(IsDesktopContext);
   const [page, setPage] = useState<number>(1);
   const [selectedRows, setSelectedRows] = useState([]);
   const [localFilter, setFilter] = useState(intitialFilter);
@@ -221,87 +224,91 @@ const Orders = () => {
 
   return (
     <>
-      <PageHeading title="Orders" totalRecords={data?.total} />
+      <Container fluid className="card component-wrapper view-padding">
+        <PageHeading title="Orders" totalRecords={data?.total} />
 
-      {(!isLoading || !isFetching) && (
-        <div className="filter mb-4">
-          <BreadCrumb
-            onFilterChange={onFilterChange}
-            value=""
-            currentValue={filter.status}
-            dataLength={data?.data?.length}
-            idx="status"
-            title="All"
-          />
-          <BreadCrumb
-            onFilterChange={onFilterChange}
-            value="confirmed"
-            currentValue={filter.status}
-            dataLength={data?.data?.length}
-            idx="status"
-            title="Confirmed"
-          />
-          <BreadCrumb
-            onFilterChange={onFilterChange}
-            value="fulfilled"
-            currentValue={filter.status}
-            dataLength={data?.data?.length}
-            idx="status"
-            title="Fulfilled"
-          />
-          <BreadCrumb
-            onFilterChange={onFilterChange}
-            value="picked"
-            currentValue={filter.status}
-            dataLength={data?.data?.length}
-            idx="status"
-            title="Picked"
-          />
-          <BreadCrumb
-            onFilterChange={onFilterChange}
-            value="pending"
-            currentValue={filter.status}
-            dataLength={data?.data?.length}
-            idx="status"
-            title="Pending"
-          />
-          <BreadCrumb
-            onFilterChange={onFilterChange}
-            value="pending_payment"
-            currentValue={filter.status}
-            dataLength={data?.data?.length}
-            idx="status"
-            title="Pending Payment"
-          />
-          <BreadCrumb
-            onFilterChange={onFilterChange}
-            value="error_payment"
-            currentValue={filter.status}
-            dataLength={data?.data?.length}
-            idx="status"
-            title="Payment Errors"
-          />
-          <BreadCrumb
-            onFilterChange={onFilterChange}
-            value="cancelled"
-            currentValue={filter.status}
-            dataLength={data?.data?.length}
-            idx="status"
-            title="Cancelled"
-          />
-          <BreadCrumb
-            onFilterChange={onFilterChange}
-            value="failed"
-            currentValue={filter.status}
-            dataLength={data?.data?.length}
-            idx="status"
-            title="Failed"
-            isLast
-          />
-        </div>
-      )}
+        {(!isLoading || !isFetching) && (
+          <Container fluid className="px-0">
+            {isDesktop && (
+              <div className="filter mb-4">
+                <BreadCrumb
+                  onFilterChange={onFilterChange}
+                  value=""
+                  currentValue={filter.status}
+                  dataLength={data?.data?.length}
+                  idx="status"
+                  title="All"
+                />
+                <BreadCrumb
+                  onFilterChange={onFilterChange}
+                  value="confirmed"
+                  currentValue={filter.status}
+                  dataLength={data?.data?.length}
+                  idx="status"
+                  title="Confirmed"
+                />
+                <BreadCrumb
+                  onFilterChange={onFilterChange}
+                  value="fulfilled"
+                  currentValue={filter.status}
+                  dataLength={data?.data?.length}
+                  idx="status"
+                  title="Fulfilled"
+                />
+                <BreadCrumb
+                  onFilterChange={onFilterChange}
+                  value="picked"
+                  currentValue={filter.status}
+                  dataLength={data?.data?.length}
+                  idx="status"
+                  title="Picked"
+                />
+                <BreadCrumb
+                  onFilterChange={onFilterChange}
+                  value="pending"
+                  currentValue={filter.status}
+                  dataLength={data?.data?.length}
+                  idx="status"
+                  title="Pending"
+                />
+                <BreadCrumb
+                  onFilterChange={onFilterChange}
+                  value="pending_payment"
+                  currentValue={filter.status}
+                  dataLength={data?.data?.length}
+                  idx="status"
+                  title="Pending Payment"
+                />
+                <BreadCrumb
+                  onFilterChange={onFilterChange}
+                  value="error_payment"
+                  currentValue={filter.status}
+                  dataLength={data?.data?.length}
+                  idx="status"
+                  title="Payment Errors"
+                />
+                <BreadCrumb
+                  onFilterChange={onFilterChange}
+                  value="cancelled"
+                  currentValue={filter.status}
+                  dataLength={data?.data?.length}
+                  idx="status"
+                  title="Cancelled"
+                />
+                <BreadCrumb
+                  onFilterChange={onFilterChange}
+                  value="failed"
+                  currentValue={filter.status}
+                  dataLength={data?.data?.length}
+                  idx="status"
+                  title="Failed"
+                  isLast
+                />
+              </div>
+            )}
+          </Container>
+        )}
 
-      <Container fluid className="card component-wrapper px-0 py-2">
         <Container fluid className="h-100 p-0">
           <>
             {isLoading ? (
@@ -310,7 +317,7 @@ const Orders = () => {
               <>
                 {!error && (
                   <>
-                    <Container className="pt-2">
+                    <Container fluid className="pt-2 px-0">
                       <Row className="select-filter d-flex">
                         <Col md="auto">
                           <FilterSelect
@@ -373,7 +380,7 @@ const Orders = () => {
 
                         <Col
                           md="auto"
-                          className="d-flex align-items-center mt-1 justify-content-center"
+                          className="d-flex align-items-center mt-1 justify-md-content-center"
                         >
                           <Button
                             onClick={() => {

@@ -78,13 +78,14 @@ const VerifyOtp = (props: Props) => {
               <div
                 className="d-flex flex-column align-items-center px-3 py-5"
                 style={{
-                  width: "450px",
+                  width: "100vw",
+                  maxWidth: "450px",
                 }}
               >
                 <h1 className="text-black">
                   <b>Verify</b>
                 </h1>
-                <p className="text-muted">
+                <p className="text-muted text-center">
                   Please enter the code sent on your mobile number
                 </p>
                 <br />

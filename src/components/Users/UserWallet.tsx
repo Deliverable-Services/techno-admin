@@ -42,8 +42,8 @@ const UserWallet = () => {
 
   return (
     <>
-      <PageHeading title="User Wallet" />
       <div className="card view-padding p-2 d-flex mt-3">
+        <PageHeading title="User Wallet" />
         <div className="text-primary">
           <div className="d-flex justify-content-between">
             <div

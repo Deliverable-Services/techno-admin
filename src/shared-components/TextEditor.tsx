@@ -25,7 +25,11 @@ const TextEditor = ({ name, label, setFieldValue, ...props }: Props) => {
     <Container
       fluid
       className="p-0 my-2 rounded"
-      style={{ height: "400px", zIndex: -1, overflow: "hidden" }}
+      style={{
+        height: "400px",
+        zIndex: -1,
+        overflow: "hidden",
+      }}
     >
       <span className="text-black " style={{ fontWeight: 500 }}>
         {label}

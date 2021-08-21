@@ -69,7 +69,8 @@ import API from "./utils/API";
 const App = () => {
   const [isDesktop, setIsDesktop] = useState<boolean>(false);
   const { isLoading: isVerifingLoggedInUser } = useMeQuery();
-  console.log({ isVerifingLoggedInUser });
+  const [isNavOpen, setIsNavOpen] = useState<boolean>(false);
+  const { pathname } = useLocation();
   //adding token to every request
   const token = useTokenStore((state) => state.accessToken);
   if (token) API.defaults.headers.common["Authorization"] = `Bearer ${token}`;
@@ -77,17 +78,22 @@ const App = () => {
   useEffect(() => {
     updateDimensions();
     window.addEventListener("resize", updateDimensions);
-    return () => window.removeEventListener("resize", updateDimensions);
+    // return () => window.removeEventListener("resize", updateDimensions);
   }, []);
+
+  useEffect(() => {
+    if (isDesktop) setIsNavOpen(true);
+
+    setIsNavOpen(false);
+  }, [isDesktop]);
+
+  console.log({ isDesktop, isNavOpen });
 
   const updateDimensions = () => {
     const width = window.innerWidth;
     if (width > 800) setIsDesktop(true);
     else setIsDesktop(false);
   };
-
-  const [isNavOpen, setIsNavOpen] = useState<boolean>(false);
-  const { pathname } = useLocation();
 
   function showNavTopBar(): boolean {
     if (pathname.includes("login") || pathname.includes("verify-otp"))
@@ -105,13 +111,20 @@ const App = () => {
         ) : (
           ""
         )}
-        <div></div>
+        {isNavOpen && <div></div>}
         {showNavTopBar() ? (
           <TopBar isNavOpen={isNavOpen} setIsNavOpen={setIsNavOpen} />
         ) : (
           ""
         )}
-        <Container fluid className="main-layout">
+        <Container
+          fluid
+          className="main-layout"
+          style={{
+            gridColumn: isNavOpen ? "2/3" : "1/3",
+            minWidth: !isNavOpen && "100vw",
+          }}
+        >
           <Switch>
             <Route exact path="/">
               <Redirect to="/dashboard" />

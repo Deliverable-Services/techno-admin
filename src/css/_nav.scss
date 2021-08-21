@@ -13,21 +13,13 @@ nav {
   z-index: 100;
   padding: 1rem 0;
   border-right: 1px solid #e7eaf3;
+  overflow: auto;
 
   @include responsive($desktop-breakpoint) {
     position: fixed;
     min-width: $navWidth;
     // width: $navWidth;
-    transform: translateX(0);
-    overflow: auto;
-
-    // this is to hide scroll bar
-    // &::-webkit-scrollbar {
-    //   width: 0;
-    // }
-
-    -ms-overflow-style: none;
-    scrollbar-width: none;
+    // transform: translateX(0);
 
     .logo-wrapper {
       width: auto;
@@ -78,4 +70,14 @@ nav {
       transition: all 0.3s ease;
     }
   }
+}
+
+nav::-webkit-scrollbar {
+  width: 3px;
+}
+
+nav::-webkit-scrollbar-thumb {
+  background-color: lighten($color: $primary-color, $amount: 30);
+  // outline: 1px solid slategrey;
+  border-radius: 10px;
 }

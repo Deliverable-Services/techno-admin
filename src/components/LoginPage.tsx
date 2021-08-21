@@ -56,7 +56,8 @@ const LoginPage = (props: Props) => {
               <div
                 className="d-flex flex-column align-items-center justify-content-between px-3 py-3"
                 style={{
-                  width: "450px",
+                  width: "100vw",
+                  maxWidth: "450px",
                 }}
               >
                 <h1 className="text-black">

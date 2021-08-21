@@ -170,53 +170,54 @@ const Coupons = () => {
 
   return (
     <>
-      <PageHeading
-        title="Coupons"
-        onClick={_onCreateClick}
-        totalRecords={data?.total}
-      />
-      {!isLoading && (
-        <Container fluid>
-          <div>
-            <div className="filter">
-              <BreadCrumb
-                onFilterChange={_onFilterChange}
-                value=""
-                currentValue={filter.active}
-                dataLength={data?.data?.length}
-                idx="active"
-                title="All"
-              />
-              <BreadCrumb
-                onFilterChange={_onFilterChange}
-                value="1"
-                currentValue={filter.active}
-                dataLength={data?.data?.length}
-                idx="active"
-                title="Active"
-              />
-              <BreadCrumb
-                onFilterChange={_onFilterChange}
-                value="0"
-                currentValue={filter.active}
-                dataLength={data?.data?.length}
-                idx="active"
-                title="Not Active"
-                isLast
-              />
+      <Container fluid className="card component-wrapper view-padding">
+        <PageHeading
+          title="Coupons"
+          onClick={_onCreateClick}
+          totalRecords={data?.total}
+        />
+        {!isLoading && (
+          <Container fluid className="px-0">
+            <div>
+              <div className="filter">
+                <BreadCrumb
+                  onFilterChange={_onFilterChange}
+                  value=""
+                  currentValue={filter.active}
+                  dataLength={data?.data?.length}
+                  idx="active"
+                  title="All"
+                />
+                <BreadCrumb
+                  onFilterChange={_onFilterChange}
+                  value="1"
+                  currentValue={filter.active}
+                  dataLength={data?.data?.length}
+                  idx="active"
+                  title="Active"
+                />
+                <BreadCrumb
+                  onFilterChange={_onFilterChange}
+                  value="0"
+                  currentValue={filter.active}
+                  dataLength={data?.data?.length}
+                  idx="active"
+                  title="Not Active"
+                  isLast
+                />
+              </div>
             </div>
-          </div>
-        </Container>
-      )}
-      <Container fluid className="card component-wrapper px-0 py-2">
-        <Container fluid className="h-100 p-0">
+          </Container>
+        )}
+        <hr className="mt-2" />
+        <Container fluid className="h-100 p-0 ">
           {isLoading ? (
             <IsLoading />
           ) : (
             <>
               {!error && (
                 <>
-                  <Container className="pt-3">
+                  <Container fluid className="pt-3 px-0">
                     <Row className="select-filter d-flex">
                       <Col md="auto">
                         <FilterSelect
@@ -229,7 +230,7 @@ const Coupons = () => {
                       </Col>
                       <Col
                         md="auto"
-                        className="d-flex align-items-center mt-1 justify-content-center"
+                        className="d-flex align-items-end justify-md-content-center"
                       >
                         <Button
                           variant={
@@ -247,7 +248,7 @@ const Coupons = () => {
                       </Col>
                     </Row>
                   </Container>
-                  <hr />
+                  <hr className="mt-2" />
                   <ReactTable
                     data={data?.data}
                     columns={columns}

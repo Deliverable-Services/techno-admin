@@ -160,23 +160,28 @@ const SingleOrder = () => {
   // console.log(data);
   return (
     <Container fluid className="component-wrapper px-0 py-2">
-      <Container fluid className="d-flex justify-content-between py-2">
-        <div className="d-flex align-items-center">
-          <h2 className="font-weight-bold">Order</h2>
-          <h2 className="ml-2">#{data.ref_id}</h2>
-          <Badge variant="primary" className="mx-3 px-3 py-2 text-uppercase">
-            {data.order_type}
-          </Badge>
-          <Badge
-            variant={statusBadgeVairant(data.status)}
-            className="px-3 py-2 text-uppercase"
-          >
-            {data.status}
-          </Badge>
+      <Container
+        fluid
+        className="d-flex justify-content-between py-2 flex-column flex-md-row"
+      >
+        <div className="d-flex align-md-items-center flex-column flex-md-row">
+          <div className="d-flex align-items-center mb-1 mb-md-0">
+            <p className=" mb-0">Order</p>
+            <p className="lead mx-2 mb-0 font-weight-bold">#{data.ref_id}</p>
+          </div>
+          <div className="d-flex">
+            <CustomBadge title={data.order_type} variant="primary" />
+            <span className="mx-2 my-1 my-md-0"></span>
+            <CustomBadge
+              title={data.status}
+              variant={statusBadgeVairant(data.status)}
+            />
+          </div>
         </div>
-        <div>
+        <div className="mt-1 mt-md-0">
           {!isLoading && data.transaction && data.transaction.length > 0 && (
             <Button
+              size="sm"
               variant="success"
               onClick={() => _onDownloadInvoice(data?.transaction[0]?.id)}
               disabled={isDownloadingInvoice}
@@ -184,20 +189,26 @@ const SingleOrder = () => {
               {isDownloadingInvoice ? (
                 <p className="text-white m-0">Downloading...</p>
               ) : (
-                <div className="text-white">
-                  <BiDownload size={24} /> <b>Invoice</b>
+                <div className=" d-flex align-items-center text-white">
+                  <BiDownload size={18} />
+
+                  <p className="mb-0 ml-1">Invoice</p>
                 </div>
               )}
             </Button>
           )}
-          <Button className="ml-2" onClick={() => _onCreateIssueClick()}>
-            <div className="text-white">
-              <AiFillPlusSquare size={24} /> <b>Issue</b>
+          <Button
+            size="sm"
+            className="ml-2"
+            onClick={() => _onCreateIssueClick()}
+          >
+            <div className="d-flex text-white align-items-center">
+              <AiFillPlusSquare size={18} /> <p className="mb-0 ml-1">Issue</p>
             </div>
           </Button>
-          <Button className="ml-2" onClick={() => history.goBack()}>
-            <div className="text-white">
-              <BiArrowFromRight size={25} /> <b>Back</b>
+          <Button className="ml-2" onClick={() => history.goBack()} size="sm">
+            <div className="text-white d-flex align-items-center">
+              <BiArrowFromRight size={18} /> <p className="ml-1 mb-0">Back</p>
             </div>
           </Button>
         </div>

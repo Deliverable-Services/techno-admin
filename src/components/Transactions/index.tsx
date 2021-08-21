@@ -167,50 +167,51 @@ const Transactions = () => {
 
   return (
     <>
-      <PageHeading title="Transactions" totalRecords={data?.total} />
+      <Container fluid className="card component-wrapper view-padding">
+        <PageHeading title="Transactions" totalRecords={data?.total} />
 
-      {!isLoading && (
-        <div>
+        {!isLoading && (
           <div>
-            <div className="filter">
-              <BreadCrumb
-                onFilterChange={onFilterChange}
-                value=""
-                currentValue={filter.status}
-                dataLength={data?.data?.length}
-                idx="status"
-                title="All"
-              />
-              <BreadCrumb
-                onFilterChange={onFilterChange}
-                value="success"
-                currentValue={filter.status}
-                dataLength={data?.data?.length}
-                idx="status"
-                title="Success"
-              />
-              <BreadCrumb
-                onFilterChange={onFilterChange}
-                value="failed"
-                currentValue={filter.status}
-                dataLength={data?.data.length}
-                idx="status"
-                title="Failed"
-              />
+            <div>
+              <div className="filter">
+                <BreadCrumb
+                  onFilterChange={onFilterChange}
+                  value=""
+                  currentValue={filter.status}
+                  dataLength={data?.data?.length}
+                  idx="status"
+                  title="All"
+                />
+                <BreadCrumb
+                  onFilterChange={onFilterChange}
+                  value="success"
+                  currentValue={filter.status}
+                  dataLength={data?.data?.length}
+                  idx="status"
+                  title="Success"
+                />
+                <BreadCrumb
+                  onFilterChange={onFilterChange}
+                  value="failed"
+                  currentValue={filter.status}
+                  dataLength={data?.data.length}
+                  idx="status"
+                  title="Failed"
+                  isLast
+                />
+              </div>
             </div>
           </div>
-        </div>
-      )}
+        )}
 
-      <Container fluid className="card component-wrapper px-0 py-2 mt-3">
-        <Container fluid className="h-100 p-0">
+        <Container fluid className="h-100 p-0 ">
           {isLoading ? (
             <IsLoading />
           ) : (
             <>
               {!error && (
                 <>
-                  <Container className="pt-3">
+                  <Container fluid className="pt-2 px-0">
                     <Row className="select-filter d-flex">
                       <Col md="auto">
                         <FilterSelect
@@ -232,7 +233,7 @@ const Transactions = () => {
                       </Col>
                       <Col
                         md="auto"
-                        className="d-flex align-items-center mt-1 justify-content-center"
+                        className="d-flex align-items-end justify-md-content"
                       >
                         <Button
                           onClick={() => resetFilter()}
@@ -253,7 +254,7 @@ const Transactions = () => {
                       </Col>
                     </Row>
                   </Container>
-                  <hr />
+                  <hr className="mt-2" />
 
                   <ReactTable
                     data={data?.data}

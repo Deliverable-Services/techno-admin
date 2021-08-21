@@ -1,7 +1,10 @@
+import { useContext } from "react";
 import { Link, useLocation } from "react-router-dom";
+import { IsDesktopContext } from "../context/IsDesktopContext";
 import { INavLink } from "../types/interface";
 
-const Navlink = ({ title, path, onClick, icon }: INavLink) => {
+const Navlink = ({ title, path, onClick, icon, isNavOpen }: INavLink) => {
+  const isDesktop = useContext(IsDesktopContext);
   const { pathname } = useLocation();
   return (
     <Link to={path}>

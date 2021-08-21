@@ -101,62 +101,68 @@ const StaticPages = () => {
 
   return (
     <>
-      <PageHeading title="Static Pages" onClick={_onCreateClick} />
-      <p className="small text-muted">
-        Pres Ctrl+S inside editor to save content
-      </p>
-      <Container fluid className="px-0 my-3">
-        {titles?.map((title) => (
-          <Button
-            variant={selectedTitle === title ? "primary" : "outline-primary"}
-            className="mr-2"
-            onClick={() => setSelectedTitle(title)}
-          >
-            {title}
-          </Button>
-        ))}
-      </Container>
+      <Container fluid className="card component-wrapper view-padding">
+        <PageHeading title="Static Pages" onClick={_onCreateClick} />
+        <p className="small text-muted">
+          Press "Ctrl+S" inside editor to save content
+        </p>
+        <Container fluid className="px-0 my-3">
+          {titles?.map((title) => (
+            <Button
+              size="sm"
+              variant={selectedTitle === title ? "primary" : "outline-primary"}
+              className="mr-2"
+              onClick={() => setSelectedTitle(title)}
+            >
+              {title}
+            </Button>
+          ))}
+        </Container>
 
-      {data?.data.map((page) => (
-        <Container
-          fluid
-          className="p-0 mb-3"
-          style={{ display: selectedTitle === page.title ? "block" : "none" }}
-        >
-          <div className="card">
-            <div className="card-title d-flex align-items-center justify-content-between">
-              <h3 className="text-black px-2">
-                <b>{page.title}</b>
-              </h3>
-              <div className="d-flex align-items-center">
-                <Button
-                  className="mr-2"
-                  variant="danger"
-                  onClick={() => _onDeletePage(page.id)}
-                  disabled={isDeleteLoading}
-                >
-                  {isDeleteLoading ? "Loading..." : "Delete"}
-                </Button>
-                {/* <EditButton onClick={() => _onEditPageClick(page.id)} /> */}
+        {data?.data.map((page) => (
+          <Container
+            fluid
+            className="p-0 mb-3"
+            style={{ display: selectedTitle === page.title ? "block" : "none" }}
+          >
+            <div className="">
+              <div className="card-title d-flex align-items-center justify-content-between">
+                <p className="text-black px-2 lead font-weight-bold">
+                  {page.title}
+                </p>
+                <div className="d-flex align-items-center">
+                  <Button
+                    size="sm"
+                    className="mr-2"
+                    variant="danger"
+                    onClick={() => _onDeletePage(page.id)}
+                    disabled={isDeleteLoading}
+                  >
+                    {isDeleteLoading ? "Loading..." : "Delete page"}
+                  </Button>
+                  {/* <EditButton onClick={() => _onEditPageClick(page.id)} /> */}
+                </div>
+              </div>
+              <p className="text-muted px-2">{page.description}</p>
+              <div className="mx-auto">
+                {isFetching || isUpdatedLoading ? (
+                  <IsLoading />
+                ) : (
+                  <div className="bg-light rounded">
+                    <BraftEditor
+                      value={BraftEditor.createEditorState(page.content)}
+                      onSave={(editorState: EditorState) =>
+                        handleSave(editorState, page)
+                      }
+                      language="en"
+                    />
+                  </div>
+                )}
               </div>
             </div>
-            <p className="text-muted px-2">{page.description}</p>
-            <div className="mx-auto">
-              {isFetching || isUpdatedLoading ? (
-                <IsLoading />
-              ) : (
-                <BraftEditor
-                  value={BraftEditor.createEditorState(page.content)}
-                  onSave={(editorState: EditorState) =>
-                    handleSave(editorState, page)
-                  }
-                  language="en"
-                />
-              )}
-            </div>
-          </div>
-        </Container>
-      ))}
+          </Container>
+        ))}
+      </Container>
     </>
   );
 };

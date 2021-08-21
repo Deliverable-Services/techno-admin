@@ -61,19 +61,19 @@ const SingleSubscription = () => {
     <Container fluid className="component-wrapper px-0 py-2">
       <Container fluid className="d-flex justify-content-between py-2">
         <div className="d-flex align-items-center">
-          <h2 className="font-weight-bold">Subscription</h2>
-          <h2 className="mx-2">#{data?.id}</h2>
-          <Badge
-            variant={statusBadgeVairant(data.status)}
-            className="px-3 py-2 text-uppercase"
-          >
-            {data.status}
-          </Badge>
+          <div className="d-flex align-items-center mr-2">
+            <p className="mb-0">Subscription</p>
+            <p className="mb-0 lead font-weight-bold">#{data?.id}</p>
+          </div>
+          <CustomBadge
+            title={data?.status}
+            variant={statusBadgeVairant(data?.status)}
+          />
         </div>
         <div>
-          <Button className="ml-2" onClick={() => history.goBack()}>
-            <div className="text-white">
-              <BiArrowFromRight size={25} /> <b>Back</b>
+          <Button className="ml-2" size="sm" onClick={() => history.goBack()}>
+            <div className="text-white d-flex align-items-center">
+              <BiArrowFromRight size={18} /> <p className="mb-0 mr-1">Back</p>
             </div>
           </Button>
         </div>

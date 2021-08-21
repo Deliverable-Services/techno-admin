@@ -48,6 +48,7 @@ const TargetCreateUpdateForm = () => {
   const { mutate, isLoading } = useMutation(createUpdataTarget, {
     onSuccess: () => {
       setTimeout(() => queryClient.invalidateQueries(key), 500);
+      queryClient.invalidateQueries("users");
       if (agentId) {
         history.goBack();
       } else {

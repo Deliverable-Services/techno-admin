@@ -8,6 +8,8 @@ import {
   FaUsers,
   FaMoneyCheck,
   FaUserSecret,
+  FaArrowAltCircleLeft,
+  FaArrowLeft,
 } from "react-icons/fa";
 import { GoIssueOpened } from "react-icons/go";
 import { IoLogoModelS } from "react-icons/io";
@@ -32,6 +34,7 @@ import { ImUsers } from "react-icons/im";
 import { AiFillIdcard, AiFillSetting } from "react-icons/ai";
 import { BsClock, BsShieldLock } from "react-icons/bs";
 import { GrDocumentConfig } from "react-icons/gr";
+import { primaryColor } from "../utils/constants";
 
 const manageLinks: Array<INavLink> = [
   {
@@ -168,15 +171,32 @@ const NavBar = ({ isNavOpen, setIsNavOpen }: INavBar) => {
   const isDesktop = useContext(IsDesktopContext);
 
   const closeNavBar = () => {
+    if (isDesktop) return;
     if (setIsNavOpen) {
       setIsNavOpen(false);
+    }
+  };
+  const desktopNavClose = () => {
+    if (setIsNavOpen) {
+      setIsNavOpen(!isNavOpen);
     }
   };
 
   return (
     <>
       <nav className={isNavOpen ? "active" : ""}>
-        {isDesktop ? <Logo /> : null}
+        {isDesktop && (
+          <div className="d-flex  justify-content-between align-items-center">
+            <Logo />
+            <FaArrowLeft
+              onClick={desktopNavClose}
+              // color={""}
+              size={24}
+              className="mr-2"
+              style={{ cursor: "pointer" }}
+            />
+          </div>
+        )}
 
         <div className="all-links">
           <ul className="pt-4">
@@ -185,6 +205,7 @@ const NavBar = ({ isNavOpen, setIsNavOpen }: INavBar) => {
               path="/dashboard"
               onClick={closeNavBar}
               icon={<RiDashboardFill />}
+              isNavOpen={isNavOpen}
             />
           </ul>
 
@@ -197,6 +218,7 @@ const NavBar = ({ isNavOpen, setIsNavOpen }: INavBar) => {
                 key={title}
                 onClick={closeNavBar}
                 icon={icon}
+                isNavOpen={isNavOpen}
               />
             ))}
           </ul>
@@ -210,12 +232,13 @@ const NavBar = ({ isNavOpen, setIsNavOpen }: INavBar) => {
                 key={title}
                 onClick={closeNavBar}
                 icon={icon}
+                isNavOpen={isNavOpen}
               />
             ))}
           </ul>
         </div>
       </nav>
-      {isNavOpen && <Overlay onClick={closeNavBar} />}
+      {isNavOpen && !isDesktop && <Overlay onClick={closeNavBar} />}
     </>
   );
 };

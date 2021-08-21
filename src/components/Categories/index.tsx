@@ -189,45 +189,45 @@ const Categories = () => {
 
   return (
     <>
-      <PageHeading
-        title="Categories"
-        onClick={_onCreateClick}
-        totalRecords={data?.total}
-      />
-      {!isLoading && (
-        <Container fluid>
-          <div className="d-flex align-items-center justify-content-between w-100">
-            <div className="filter">
-              <BreadCrumb
-                onFilterChange={_onFilterChange}
-                value=""
-                currentValue={filter.active}
-                dataLength={data?.data?.length}
-                idx="active"
-                title="All"
-              />
-              <BreadCrumb
-                onFilterChange={_onFilterChange}
-                value="1"
-                currentValue={filter.active}
-                dataLength={data?.data?.length}
-                idx="active"
-                title="Active"
-              />
-              <BreadCrumb
-                onFilterChange={_onFilterChange}
-                value="0"
-                currentValue={filter.active}
-                dataLength={data?.data?.length}
-                idx="active"
-                title="Not Active"
-                isLast
-              />
+      <Container fluid className="card component-wrapper view-padding">
+        <PageHeading
+          title="Categories"
+          onClick={_onCreateClick}
+          totalRecords={data?.total}
+        />
+        {!isLoading && (
+          <Container fluid className="px-0">
+            <div className="d-flex align-items-center justify-content-between w-100">
+              <div className="filter">
+                <BreadCrumb
+                  onFilterChange={_onFilterChange}
+                  value=""
+                  currentValue={filter.active}
+                  dataLength={data?.data?.length}
+                  idx="active"
+                  title="All"
+                />
+                <BreadCrumb
+                  onFilterChange={_onFilterChange}
+                  value="1"
+                  currentValue={filter.active}
+                  dataLength={data?.data?.length}
+                  idx="active"
+                  title="Active"
+                />
+                <BreadCrumb
+                  onFilterChange={_onFilterChange}
+                  value="0"
+                  currentValue={filter.active}
+                  dataLength={data?.data?.length}
+                  idx="active"
+                  title="Not Active"
+                  isLast
+                />
+              </div>
             </div>
-          </div>
-        </Container>
-      )}
-      <Container fluid className="card component-wrapper px-0 py-2">
+          </Container>
+        )}
         <Container fluid className="h-100 p-0">
           {isLoading ? (
             <IsLoading />

@@ -18,6 +18,7 @@ import PageHeading from "../../shared-components/PageHeading";
 import TablePagination from "../../shared-components/Pagination";
 import ReactTable from "../../shared-components/ReactTable";
 import API from "../../utils/API";
+import { areTwoObjEqual } from "../../utils/areTwoObjEqual";
 import { isActiveArray } from "../../utils/arrays";
 import {
   baseUploadUrl,
@@ -217,46 +218,47 @@ const Advertisements = () => {
 
   return (
     <>
-      <PageHeading
-        title="Banners"
-        onClick={() => _onCreateClick()}
-        totalRecords={data?.total}
-      />
+      <Container fluid className="component-wrapper view-padding">
+        <PageHeading
+          title="Banners"
+          onClick={() => _onCreateClick()}
+          totalRecords={data?.total}
+        />
 
-      {(!isLoading || !isFetching) && (
-        <Container fluid>
-          <div>
-            <div className="filter">
-              <BreadCrumb
-                onFilterChange={_onFilterChange}
-                value="offers"
-                currentValue={filter.type}
-                dataLength={data?.data?.length}
-                idx="type"
-                title="Offers"
-              />
-              <BreadCrumb
-                onFilterChange={_onFilterChange}
-                value="latest"
-                currentValue={filter.type}
-                dataLength={data?.data?.length}
-                idx="type"
-                title="Latest"
-              />
-              <BreadCrumb
-                onFilterChange={_onFilterChange}
-                value="trending"
-                currentValue={filter.type}
-                dataLength={data?.data?.length}
-                idx="type"
-                title="Trending"
-                isLast
-              />
+        {(!isLoading || !isFetching) && (
+          <Container fluid className="px-0">
+            <div>
+              <div className="filter">
+                <BreadCrumb
+                  onFilterChange={_onFilterChange}
+                  value="offers"
+                  currentValue={filter.type}
+                  dataLength={data?.data?.length}
+                  idx="type"
+                  title="Offers"
+                />
+                <BreadCrumb
+                  onFilterChange={_onFilterChange}
+                  value="latest"
+                  currentValue={filter.type}
+                  dataLength={data?.data?.length}
+                  idx="type"
+                  title="Latest"
+                />
+                <BreadCrumb
+                  onFilterChange={_onFilterChange}
+                  value="trending"
+                  currentValue={filter.type}
+                  dataLength={data?.data?.length}
+                  idx="type"
+                  title="Trending"
+                  isLast
+                />
+              </div>
             </div>
-          </div>
-        </Container>
-      )}
-      <Container fluid className="component-wrapper px-0 py-2">
+          </Container>
+        )}
+        <hr className="mt-2" />
         <Container fluid className="h-100 p-0">
           {isLoading ? (
             <IsLoading />
@@ -264,7 +266,7 @@ const Advertisements = () => {
             <>
               {!error && (
                 <>
-                  <Container className="pt-3">
+                  <Container fluid className="pt-3 px-0">
                     <Row className="select-filter d-flex">
                       <Col md="auto">
                         <FilterSelect
@@ -293,9 +295,28 @@ const Advertisements = () => {
 
                         </div>
                       </Col> */}
+
+                      <Col
+                        md="auto"
+                        className="d-flex align-items-end justify-md-content-center"
+                      >
+                        <Button
+                          variant={
+                            areTwoObjEqual(initialFilter, filter)
+                              ? "light"
+                              : "primary"
+                          }
+                          style={{
+                            fontSize: 14,
+                          }}
+                          onClick={() => setFilter(initialFilter)}
+                        >
+                          Reset Filters
+                        </Button>
+                      </Col>
                     </Row>
                   </Container>
-                  <hr />
+                  <hr className="mt-2" />
                   <ReactTable
                     data={data.data}
                     columns={columns}

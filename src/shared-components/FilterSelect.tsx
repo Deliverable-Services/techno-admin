@@ -29,7 +29,7 @@ const FilterSelect = ({
   nameSelector2 = "phone",
 }: Props) => {
   return (
-    <Form.Group>
+    <Form.Group className="mb-md-0">
       <Form.Label className="text-muted">{label}</Form.Label>
       <Form.Control
         as="select"

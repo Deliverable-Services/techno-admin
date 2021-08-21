@@ -188,11 +188,12 @@ const Subscription = () => {
 
   return (
     <>
-      <PageHeading title="Subscriptions" totalRecords={data?.total} />
+      <Container fluid className="card component-wrapper view-padding">
+        <PageHeading title="Subscriptions" totalRecords={data?.total} />
 
-      {(!isLoading || !isFetching) && (
-        <div className="filter mb-4">
-          {/* <BreadCrumb
+        {(!isLoading || !isFetching) && (
+          <div className="filter mb-2">
+            {/* <BreadCrumb
             onFilterChange={_onFilterChange}
             value=""
             currentValue={filter.status}
@@ -200,33 +201,32 @@ const Subscription = () => {
             idx="status"
             title="All"
           /> */}
-          <BreadCrumb
-            onFilterChange={_onFilterChange}
-            value="active"
-            currentValue={filter.status}
-            dataLength={data?.data?.length}
-            idx="status"
-            title="Active"
-          />
-          <BreadCrumb
-            onFilterChange={_onFilterChange}
-            value="expired"
-            currentValue={filter.status}
-            dataLength={data?.data?.length}
-            idx="status"
-            title="Expired"
-            isLast
-          />
-        </div>
-      )}
-
-      <Container fluid className="card component-wrapper px-0 py-2">
+            <BreadCrumb
+              onFilterChange={_onFilterChange}
+              value="active"
+              currentValue={filter.status}
+              dataLength={data?.data?.length}
+              idx="status"
+              title="Active"
+            />
+            <BreadCrumb
+              onFilterChange={_onFilterChange}
+              value="expired"
+              currentValue={filter.status}
+              dataLength={data?.data?.length}
+              idx="status"
+              title="Expired"
+              isLast
+            />
+          </div>
+        )}
+        <hr />
         <Container fluid className="h-100 p-0">
           {isLoading ? (
             <IsLoading />
           ) : (
             <>
-              <Container className="pt-2">
+              <Container fluid className="pt-2 px-0">
                 <Row className="select-filter d-flex">
                   <Col md="auto">
                     <FilterSelect
@@ -302,7 +302,7 @@ const Subscription = () => {
                   </Col>
                   <Col
                     md="auto"
-                    className="d-flex align-items-center mt-1 justify-content-center"
+                    className="d-flex align-items-center mt-1 justify-md-content-center"
                   >
                     <Button
                       onClick={() => setFilter(intitialFilter)}
@@ -320,7 +320,7 @@ const Subscription = () => {
                   </Col>
                 </Row>
               </Container>
-              <hr />
+              <hr className="mt-2" />
               {!error && (
                 <ReactTable
                   data={data?.data}
@@ -333,7 +333,7 @@ const Subscription = () => {
                   searchPlaceHolder="Search using rzr order id, allowed usage, transaction id"
                 />
               )}
-              {!error && data.length > 0 ? (
+              {!error && data?.data?.length > 0 ? (
                 <TablePagination
                   currentPage={data?.current_page}
                   lastPage={data?.last_page}

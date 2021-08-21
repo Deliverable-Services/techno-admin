@@ -63,21 +63,8 @@ const ConfigCreateUpdateForm = () => {
 
   return (
     <>
-      <BackButton title={title} />
-
       <div className="card view-padding p-2 d-flex mt-3">
-        <div className="text-primary">
-          <div className="d-flex justify-content-between">
-            <div
-              className="text-black pb-3"
-              style={{ cursor: "pointer", fontWeight: 600 }}
-            >
-              Basic Information
-            </div>
-          </div>
-        </div>
-
-        <hr className="mb-3" />
+        <BackButton title={title} />
 
         <Row className="rounded">
           <Col className="mx-auto">
@@ -111,7 +98,7 @@ const ConfigCreateUpdateForm = () => {
                     <InputField
                       name="value"
                       placeholder="value"
-                      label="value"
+                      label="Value"
                       required
                     />
                   </div>

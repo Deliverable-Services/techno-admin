@@ -191,9 +191,10 @@ const InsideCart = () => {
 
   return (
     <>
-      <PageHeading title="Inside Cart" totalRecords={data?.total} />
+      <Container fluid className="card component-wrapper view-padding">
+        <PageHeading title="Inside Cart" totalRecords={data?.total} />
 
-      {/* {(!isLoading || !isFetching) && (
+        {/* {(!isLoading || !isFetching) && (
         <div className="filter mb-4">
           <BreadCrumb
             onFilterChange={onFilterChange}
@@ -239,7 +240,6 @@ const InsideCart = () => {
         </div>
       )} */}
 
-      <Container fluid className="card component-wrapper px-0 py-2">
         <Container fluid className="h-100 p-0">
           <>
             {isLoading ? (
@@ -248,7 +248,7 @@ const InsideCart = () => {
               <>
                 {!error && (
                   <>
-                    <Container className="pt-2">
+                    <Container fluid className="pt-2 px-0">
                       <Row className="select-filter d-flex">
                         <Col md="auto">
                           <FilterSelect
@@ -293,7 +293,7 @@ const InsideCart = () => {
 
                         <Col
                           md="auto"
-                          className="d-flex align-items-center mt-1 justify-content-center"
+                          className="d-flex align-items-end justify-md-content-center"
                         >
                           <Button
                             onClick={() => {
@@ -319,7 +319,7 @@ const InsideCart = () => {
                         </Col>
                       </Row>
                     </Container>
-                    <hr />
+                    <hr className="mt-2" />
                     <ReactTable
                       data={data.data}
                       columns={columns}

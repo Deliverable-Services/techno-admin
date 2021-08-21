@@ -125,13 +125,12 @@ const BookingSlots = () => {
 
   return (
     <>
-      <PageHeading
-        title="Booking Slots"
-        onClick={_onCreateClick}
-        totalRecords={data?.total}
-      />
-      <hr />
-      <Container fluid className="card component-wrapper px-0 py-2">
+      <Container fluid className="card component-wrapper view-padding">
+        <PageHeading
+          title="Booking Slots"
+          onClick={_onCreateClick}
+          totalRecords={data?.total}
+        />
         <Container fluid className="h-100 p-0">
           {isLoading ? (
             <IsLoading />

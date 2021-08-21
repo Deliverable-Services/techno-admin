@@ -7,7 +7,6 @@ interface Props {
 }
 
 const IsActiveBadge = ({ value }: Props) => {
-  console.log("this is the value", { value });
   return (
     <CustomBadge
       title={parseInt(value) === 1 ? "Yes" : "No"}

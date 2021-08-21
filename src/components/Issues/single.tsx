@@ -8,6 +8,7 @@ import { useHistory, useParams } from "react-router-dom";
 import "react-step-progress-bar/styles.css";
 import { handleApiError } from "../../hooks/handleApiErrors";
 import useGetSingleQuery from "../../hooks/useGetSingleQuery";
+import BackButton from "../../shared-components/BackButton";
 import IsLoading from "../../shared-components/isLoading";
 import API from "../../utils/API";
 import { IssueStatus } from "../../utils/arrays";
@@ -98,8 +99,9 @@ const SingleIssue = () => {
     );
   }
   return (
-    <Container fluid className="component-wrapper px-0 py-2">
-      <Container fluid className="d-flex justify-content-between py-2">
+    <Container fluid className="component-wrapper ">
+      <BackButton title={`Issue #${data?.id}`} />
+      {/* <Container fluid className="d-flex justify-content-between py-2">
         <div className="d-flex align-items-center">
           <h2 className="font-weight-bold">Issue</h2>
           <h2 className="ml-2">#{data?.id}</h2>
@@ -111,11 +113,11 @@ const SingleIssue = () => {
             </div>
           </Button>
         </div>
-      </Container>
+      </Container> */}
 
-      <div className="dashboard-page w-100">
-        <Container fluid className="status-container mt-2">
-          <div className="card p-2 view-padding right-div d-flex mb-3">
+      <div className="dashboard-page w-100 ">
+        <Container fluid className="status-container mt-2 px-0">
+          <div className="card  view-padding right-div d-flex mb-3">
             <div className="d-flex flex-column">
               <div className="text-primary">
                 <div

@@ -157,46 +157,46 @@ const Notifications = () => {
 
   return (
     <>
-      <PageHeading
-        title="Notifications"
-        onClick={_onCreateClick}
-        totalRecords={data?.total}
-      />
-      {!isLoading && (
-        <Container fluid>
-          <div>
-            <div className="filter">
-              <BreadCrumb
-                onFilterChange={_onFilterChange}
-                value=""
-                currentValue={filter.sent}
-                dataLength={data?.data?.length}
-                idx="sent"
-                title="All"
-              />
-              <BreadCrumb
-                onFilterChange={_onFilterChange}
-                value="1"
-                currentValue={filter.sent}
-                dataLength={data?.data?.length}
-                idx="sent"
-                title="Sent"
-              />
-              <BreadCrumb
-                onFilterChange={_onFilterChange}
-                value="0"
-                currentValue={filter.sent}
-                dataLength={data?.data?.length}
-                idx="sent"
-                title="Not Sent"
-                isLast
-              />
+      <Container fluid className="card component-wrapper view-padding">
+        <PageHeading
+          title="Notifications"
+          onClick={_onCreateClick}
+          totalRecords={data?.total}
+        />
+        {!isLoading && (
+          <Container fluid className="px-0">
+            <div>
+              <div className="filter">
+                <BreadCrumb
+                  onFilterChange={_onFilterChange}
+                  value=""
+                  currentValue={filter.sent}
+                  dataLength={data?.data?.length}
+                  idx="sent"
+                  title="All"
+                />
+                <BreadCrumb
+                  onFilterChange={_onFilterChange}
+                  value="1"
+                  currentValue={filter.sent}
+                  dataLength={data?.data?.length}
+                  idx="sent"
+                  title="Sent"
+                />
+                <BreadCrumb
+                  onFilterChange={_onFilterChange}
+                  value="0"
+                  currentValue={filter.sent}
+                  dataLength={data?.data?.length}
+                  idx="sent"
+                  title="Not Sent"
+                  isLast
+                />
+              </div>
             </div>
-          </div>
-        </Container>
-      )}
-
-      <Container fluid className="card component-wrapper px-0 py-2">
+          </Container>
+        )}
+        <hr className="mt-2" />
         <Container fluid className="h-100 p-0">
           {isLoading ? (
             <IsLoading />
@@ -204,7 +204,7 @@ const Notifications = () => {
             <>
               {!error && (
                 <>
-                  <Container className="pt-3">
+                  <Container fluid className="pt-3 px-0">
                     <Row className="select-filter d-flex">
                       <Col md="auto">
                         <FilterSelect
@@ -239,7 +239,7 @@ const Notifications = () => {
                       </Col>
                       <Col
                         md="auto"
-                        className="d-flex align-items-center mt-1 justify-content-center"
+                        className="d-flex align-items-center justify-md-content-center"
                       >
                         <Button
                           variant={

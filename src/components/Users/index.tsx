@@ -172,13 +172,14 @@ const Users = () => {
 
   return (
     <>
-      <PageHeading
-        title="Customers"
-        onClick={_onCreateClick}
-        totalRecords={data?.total}
-      />
+      <Container fluid className="card component-wrapper view-padding">
+        <PageHeading
+          title="Customers"
+          onClick={_onCreateClick}
+          totalRecords={data?.total}
+        />
 
-      {/* {!isLoading && (
+        {/* {!isLoading && (
         <Container fluid>
           <div>
             <div className="filter">
@@ -219,15 +220,14 @@ const Users = () => {
           </div>
         </Container>
       )} */}
-      <Container fluid className="card component-wrapper px-0 py-2">
-        <Container fluid className="h-100 p-0">
+        <Container fluid className="h-100 p-0 ">
           {isLoading ? (
             <IsLoading />
           ) : (
             <>
               {!error && (
                 <>
-                  <Container className="pt-3">
+                  <Container fluid className="pt-3 px-0">
                     <Row className="select-filter d-flex">
                       <Col md="auto">
                         <FilterSelect
@@ -241,7 +241,7 @@ const Users = () => {
                       </Col>
                       <Col
                         md="auto"
-                        className="d-flex align-items-center mt-1 justify-content-center"
+                        className="d-flex align-items-end  justify-md-content-center"
                       >
                         <Button
                           variant={
@@ -259,7 +259,7 @@ const Users = () => {
                       </Col>
                     </Row>
                   </Container>
-                  <hr />
+                  <hr className="mt-2" />
                   <ReactTable
                     data={data?.data}
                     columns={columns}

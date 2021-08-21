@@ -150,14 +150,14 @@ const Agents = () => {
                   _onEditClick(data.row.values.id, data.row.values.role);
                 }}
               />
-              <Button
+              {/* <Button
                 variant="outline-primary"
                 onClick={() => console.log("hellow")}
                 className="ml-2"
               >
                 <AiFillEdit size={16} className="mr-1" />
                 Target
-              </Button>
+              </Button> */}
             </div>
           );
         },
@@ -179,13 +179,13 @@ const Agents = () => {
 
   return (
     <>
-      <PageHeading
-        title="Agents"
-        onClick={_onCreateClick}
-        totalRecords={data?.total}
-      />
+      <Container fluid className="card component-wrapper view-padding">
+        <PageHeading
+          title="Agents"
+          onClick={_onCreateClick}
+          totalRecords={data?.total}
+        />
 
-      <Container fluid className="card component-wrapper px-0 py-2">
         <Container fluid className="h-100 p-0">
           {isLoading ? (
             <IsLoading />
@@ -193,7 +193,7 @@ const Agents = () => {
             <>
               {!error && (
                 <>
-                  <Container className="pt-3">
+                  <Container fluid className="pt-3 px-0">
                     <Row className="select-filter d-flex">
                       <Col md="auto">
                         <FilterSelect
@@ -207,7 +207,7 @@ const Agents = () => {
                       </Col>
                       <Col
                         md="auto"
-                        className="d-flex align-items-center mt-1 justify-content-center"
+                        className="d-flex align-items-end  justify-md-content-center"
                       >
                         <Button
                           variant={
@@ -225,7 +225,7 @@ const Agents = () => {
                       </Col>
                     </Row>
                   </Container>
-                  <hr />
+                  <hr className="mt-2" />
                   <ReactTable
                     data={data?.data}
                     columns={columns}

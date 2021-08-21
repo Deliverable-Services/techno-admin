@@ -24,6 +24,8 @@ import { filterProps } from "recharts/types/util/types";
 import { RowsPerPage } from "../utils/arrays";
 import { primaryColor } from "../utils/constants";
 import { ImCheckboxUnchecked } from "react-icons/im";
+import { useContext } from "react";
+import { IsDesktopContext } from "../context/IsDesktopContext";
 
 interface Props {
   data: any;
@@ -134,6 +136,8 @@ function ReactTable({
     setRecords(newData);
   };
 
+  const isDesktop = useContext(IsDesktopContext);
+
   React.useEffect(() => setRecords(data), [data]);
 
   const getRowId = React.useCallback((row) => {
@@ -219,7 +223,8 @@ function ReactTable({
     <div>
       <Container
         fluid
-        className="card-header pb-3 d-flex align-items-center position-relative"
+        className="card-header pb-3 d-flex align-items-end position-relative px-0 "
+        style={{ flexDirection: isDesktop ? "row" : "column-reverse" }}
       >
         <div className="w-100">
           <div className="search-input">
@@ -235,7 +240,7 @@ function ReactTable({
           </div>
         </div>
 
-        <div className="d-flex">
+        <div className="d-flex ">
           <div className="d-flex align-items-center justify-content-center">
             <span className="text-muted">Records </span>
             <select
