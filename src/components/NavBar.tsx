@@ -191,9 +191,9 @@ const NavBar = ({ isNavOpen, setIsNavOpen }: INavBar) => {
             <FaArrowLeft
               onClick={desktopNavClose}
               // color={""}
-              size={24}
+              size={20}
               className="mr-2"
-              style={{ cursor: "pointer" }}
+              style={{ cursor: "pointer", color: "#707070" }}
             />
           </div>
         )}

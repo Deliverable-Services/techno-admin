@@ -1,22 +1,44 @@
 import { AxiosError } from "axios";
 import { useEffect } from "react";
 import { Container, Spinner } from "react-bootstrap";
+import { FaBan } from "react-icons/fa";
+import { useQuery } from "react-query";
 import { Route, useHistory } from "react-router-dom";
 import { handleApiError } from "../hooks/handleApiErrors";
 import useMeQuery from "../hooks/useMeQuery";
 import useTokenStore from "../hooks/useTokenStore";
+import useUserProfileStore from "../hooks/useUserProfileStore";
 import API from "../utils/API";
 
-export const PrivateRoute = ({ component: Component, ...rest }: any) => {
+const key = "get-all-permission";
+export const PrivateRoute = ({
+  component: Component,
+  permissionReq,
+  ...rest
+}: any) => {
+  const loggedInUserPermissoins = useUserProfileStore(
+    (state) => state?.user?.roles?.permissions
+  );
+
+  console.log({ loggedInUserPermissoins });
+
+  const isAllowed = (to: string) => loggedInUserPermissoins.includes(to);
+
   // const { isFetching, isLoading, error } = useMeQuery();
 
-  // if (isLoading || isFetching) {
+  // checking for read permission of the route here
+  // if (!isAllowed(permissionReq)) {
   //   return (
   //     <Container
   //       fluid
   //       className="d-flex justify-content-center align-items-center mt-4"
   //     >
-  //       <Spinner animation="border" />
+  //       <Container fluid className="d-flex justify-content-center display-3">
+  //         <div className="d-flex flex-column align-items-center">
+  //           <FaBan color="red" />
+  //           <span className="text-danger display-3">Unauthorised</span>
+  //         </div>
+  //       </Container>
   //     </Container>
   //   );
   // }

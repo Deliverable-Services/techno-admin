@@ -55,6 +55,7 @@ import Transactions from "./components/Transactions";
 import Users from "./components/Users";
 import Admins from "./components/Users/admin";
 import Agents from "./components/Users/agent";
+import ProfilePage from "./components/Users/profile";
 import UserCreateUpdateForm from "./components/Users/UsersCreateUpdateForm";
 import VerifyOtp from "./components/VerifyOtp";
 import { IsDesktopContext } from "./context/IsDesktopContext";
@@ -78,16 +79,14 @@ const App = () => {
   useEffect(() => {
     updateDimensions();
     window.addEventListener("resize", updateDimensions);
-    // return () => window.removeEventListener("resize", updateDimensions);
+    return () => window.removeEventListener("resize", updateDimensions);
   }, []);
 
   useEffect(() => {
-    if (isDesktop) setIsNavOpen(true);
+    if (isDesktop) return setIsNavOpen(true);
 
     setIsNavOpen(false);
   }, [isDesktop]);
-
-  console.log({ isDesktop, isNavOpen });
 
   const updateDimensions = () => {
     const width = window.innerWidth;
@@ -129,8 +128,19 @@ const App = () => {
             <Route exact path="/">
               <Redirect to="/dashboard" />
             </Route>
-            <PrivateRoute path="/dashboard" exact component={Dashboard} />
-            <PrivateRoute path="/brands" exact component={Brands} />
+            <PrivateRoute
+              path="/dashboard"
+              exact
+              component={Dashboard}
+              permissionReq="read_dashboard"
+            />
+            <PrivateRoute path="/profile" exact component={ProfilePage} />
+            <PrivateRoute
+              path="/brands"
+              exact
+              component={Brands}
+              permissionReq="read_brand"
+            />
             <PrivateRoute path="/brand-models" exact component={BrandModels} />
             <PrivateRoute path="/categories" exact component={Categories} />
             <PrivateRoute path="/users" exact component={Users} />
@@ -162,6 +172,7 @@ const App = () => {
               path="/brands/create-edit"
               exact
               component={BrandsCreateUpdateForm}
+              permissionReq="read_brand"
             />
             <PrivateRoute
               path="/brand-models/create-edit"

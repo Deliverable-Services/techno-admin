@@ -34,6 +34,11 @@ export type User = {
   two_factor_recovery_codes: string | null;
   two_factor_secret: string | null;
   updated_at: string | null;
+  profile_pic: string;
+  roles: {
+    role: string;
+    permissions: Array<string>;
+  };
 };
 
 export type IInitialTableState = Partial<TableState<object>>;

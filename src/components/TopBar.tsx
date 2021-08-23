@@ -2,6 +2,7 @@ import React, { useContext } from "react";
 import { Container, Dropdown, Form } from "react-bootstrap";
 import { BiMenuAltLeft } from "react-icons/bi";
 import { BsBell } from "react-icons/bs";
+import { GiHamburgerMenu } from "react-icons/gi";
 import { useMutation } from "react-query";
 import { useHistory } from "react-router-dom";
 import profile from "../assets/profile.svg";
@@ -50,8 +51,12 @@ const TopBar = ({ isNavOpen, setIsNavOpen }: INavBar) => {
     >
       {/* {!isDesktop ? ( */}
       {!isNavOpen ? (
-        <div className="menu-hamburger">
-          <BiMenuAltLeft size={32} onClick={openNavBar} color={primaryColor} />
+        <div className="menu-hamburger" style={{ cursor: "pointer" }}>
+          <GiHamburgerMenu
+            size={28}
+            onClick={openNavBar}
+            // color={primaryColor}
+          />
         </div>
       ) : null}
       {/* ) : null} */}
@@ -98,7 +103,8 @@ const TopBar = ({ isNavOpen, setIsNavOpen }: INavBar) => {
           <Dropdown className="ml-4">
             <Dropdown.Toggle
               id="dropdown-basic"
-              className="filter-button bg-transparent border-0 text-primary"
+              className="filter-button bg-transparent border-0"
+              style={{ color: "#000" }}
             >
               {isLoading ? (
                 "Loading"
@@ -108,8 +114,9 @@ const TopBar = ({ isNavOpen, setIsNavOpen }: INavBar) => {
             </Dropdown.Toggle>
 
             <Dropdown.Menu>
+              <Dropdown.Item href="/profile">Profile</Dropdown.Item>
               <Dropdown.Item onClick={() => mutate()}>
-                {isLoading ? "Loading" : "SignOut"}
+                {isLoading ? "Loading" : "Log out"}
               </Dropdown.Item>
             </Dropdown.Menu>
           </Dropdown>

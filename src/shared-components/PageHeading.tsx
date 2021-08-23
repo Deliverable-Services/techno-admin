@@ -6,8 +6,14 @@ interface Props {
   title: string;
   onClick?: () => void;
   totalRecords?: number;
+  permissionReq?: string;
 }
-const PageHeading: React.FC<Props> = ({ title, onClick, totalRecords }) => {
+const PageHeading: React.FC<Props> = ({
+  title,
+  onClick,
+  totalRecords,
+  permissionReq,
+}) => {
   const isDesktop = useContext(IsDesktopContext);
   return (
     <div className="d-flex justify-content-between py-2">

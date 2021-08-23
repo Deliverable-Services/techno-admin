@@ -23,7 +23,16 @@ const useMeQuery = () => {
 
   const me = useQuery(["profile", token], getProfile, {
     onSuccess: (data: any) => {
-      setUser(data);
+      const roles = {
+        role: "admin",
+        permissions: [
+          "update_brand",
+          "create_brand",
+          "delete_brand",
+          "read_brand",
+        ],
+      };
+      setUser({ ...data, roles });
     },
     onError: (error: AxiosError) => {
       handleApiError(error, history);

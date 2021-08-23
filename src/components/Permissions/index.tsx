@@ -96,8 +96,6 @@ const Permissions = () => {
     }));
   };
 
-  console.log({ RolesPermission });
-
   const columns = useMemo(
     () => [
       {
