@@ -71,11 +71,12 @@ const VerifyOtp = (props: Props) => {
   return (
     <Container fluid className="login-page">
       <Formik
-        initialValues={{ otp: "" }}
+        initialValues={{ otp: (state as any).otp }}
         onSubmit={(values) => {
           const formData = new FormData();
           formData.append("phone", (state as any).phone);
-          formData.append("otp", values.otp);
+          formData.append("otp", (state as any).otp);
+          // formData.append("otp", values.otp);
 
           mutate(formData);
         }}
