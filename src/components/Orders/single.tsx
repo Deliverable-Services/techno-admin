@@ -1,7 +1,8 @@
 import { AxiosError } from "axios";
 import moment from "moment";
 import React, { useState } from "react";
-import { Badge, Button, Col, Container, Form, Row } from "react-bootstrap";
+import { Button, Col, Container, Form, Row } from "react-bootstrap";
+import { AiFillPlusSquare } from "react-icons/ai";
 import { BiArrowFromRight, BiDownload, BiSad } from "react-icons/bi";
 import { useMutation, useQuery } from "react-query";
 import { useHistory, useParams } from "react-router-dom";
@@ -9,16 +10,17 @@ import "react-step-progress-bar/styles.css";
 import Map from "../../components/Map";
 import { handleApiError } from "../../hooks/handleApiErrors";
 import useGetSingleQuery from "../../hooks/useGetSingleQuery";
+import CustomBadge from "../../shared-components/CustomBadge";
 import IsLoading from "../../shared-components/isLoading";
 import API from "../../utils/API";
 import { OrderStatus } from "../../utils/arrays";
+import { primaryColor } from "../../utils/constants";
 import { queryClient } from "../../utils/queryClient";
 import { showMsgToast } from "../../utils/showMsgToast";
-import { AiFillPlusSquare } from "react-icons/ai";
-import CustomBadge from "../../shared-components/CustomBadge";
-import { primaryColor } from "../../utils/constants";
+import ProgressBar from "./ProgressBar";
 
 const key = "bookings";
+const dateFormat = "DD MMMM YY (hh:mm a)";
 
 const assignAgent = ({
   formdata,
@@ -220,71 +222,9 @@ const SingleOrder = () => {
         </Container>
       )}
 
-      {/* <div className="w-75 mx-auto">
-        <ProgressBar
-          filledBackground={"linear-gradient(to right,#72b3fe, #318af0)"}
-          percent={80}
-        >
-          <Step transition="scale">
-            {({ accomplished, index }) => (
-              <div
-                className={`transitionStep ${
-                  accomplished ? "accomplished" : null
-                }`}
-              >
-                ❌
-              </div>
-            )}
-          </Step>
-          <Step transition="scale">
-            {({ accomplished, index }) => (
-              <div
-                className={`transitionStep ${
-                  accomplished ? "accomplished" : null
-                }`}
-              >
-                ⏳
-              </div>
-            )}
-          </Step>
-
-          <Step transition="scale">
-            {({ accomplished, index }) => (
-              <div
-                className={`transitionStep ${
-                  accomplished ? "accomplished" : null
-                }`}
-              >
-                🙍
-              </div>
-            )}
-          </Step>
-
-          <Step transition="scale">
-            {({ accomplished, index }) => (
-              <div
-                className={`transitionStep ${
-                  accomplished ? "accomplished" : null
-                }`}
-              >
-                🚚
-              </div>
-            )}
-          </Step>
-
-          <Step transition="scale">
-            {({ accomplished, index }) => (
-              <div
-                className={`transitionStep ${
-                  accomplished ? "accomplished" : null
-                }`}
-              >
-                ✅
-              </div>
-            )}
-          </Step>
-        </ProgressBar>
-      </div> */}
+      <div className="w-75 mx-auto">
+        <ProgressBar orderStatus={data?.status} />
+      </div>
 
       <div className="dashboard-page w-100">
         <Container fluid className="status-container mt-2">
@@ -658,9 +598,7 @@ const SingleOrder = () => {
                       <td className="text-primary  font-weight-bold text-right">
                         <p className="view-subheading">
                           {data.scheduled_at
-                            ? moment(data.scheduled_at).format(
-                                "DD/MM/YY(hh:mm)"
-                              )
+                            ? moment(data.scheduled_at).format(dateFormat)
                             : "-"}
                         </p>
                       </td>
@@ -674,7 +612,7 @@ const SingleOrder = () => {
                       <td className="text-primary  font-weight-bold text-right">
                         <p className="view-subheading">
                           {data.pickup_at
-                            ? moment(data.pickup_at).format("DD/MM/YY(hh:mm)")
+                            ? moment(data.pickup_at).format(dateFormat)
                             : "-"}
                         </p>
                       </td>
@@ -688,7 +626,7 @@ const SingleOrder = () => {
                       <td className="text-primary  font-weight-bold text-right">
                         <p className="view-subheading">
                           {data.closed_at
-                            ? moment(data.closed_at).format("DD/MM/YY(hh:mm)")
+                            ? moment(data.closed_at).format(dateFormat)
                             : "-"}
                         </p>
                       </td>

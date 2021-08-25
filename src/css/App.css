@@ -11643,6 +11643,10 @@ th {
   /* Firefox */
 }
 
+.MuiStepIcon-root.MuiStepIcon-completed {
+  color: "green" !important;
+}
+
 .dashboard-page {
   display: -webkit-box;
   display: -ms-flexbox;

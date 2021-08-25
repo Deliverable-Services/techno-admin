@@ -18,6 +18,7 @@ import { showMsgToast } from "../../utils/showMsgToast";
 import ChatBox from "./ChatBox";
 
 const key = "tickets";
+const dateFormat = "DD MMMM YY (hh:mm a)";
 
 const changeStatus = ({
   formdata,
@@ -223,7 +224,7 @@ const SingleIssue = () => {
                           </td>
                           <td className="text-right">
                             <p className="view-subheading">
-                              {moment(data?.updated_at).format("YYYY-MM-DD")}
+                              {moment(data?.updated_at).format(dateFormat)}
                             </p>
                           </td>
                         </tr>
@@ -233,7 +234,7 @@ const SingleIssue = () => {
                           </td>
                           <td className="text-right">
                             <p className="view-subheading">
-                              {moment(data?.created_at).format("YYYY-MM-DD")}
+                              {moment(data?.created_at).format(dateFormat)}
                             </p>
                           </td>
                         </tr>

@@ -83,6 +83,7 @@ const Orders = () => {
 
   const Status = ({ status }: { status: string }) => {
     const setVairant = () => {
+      if (status === "subscription") return "primary";
       if (status === "cancelled" || status === "error_payment") return "danger";
 
       if (status === "pending" || status === "pending_payment")

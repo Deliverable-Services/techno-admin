@@ -18,6 +18,7 @@ import { AiFillPlusSquare } from "react-icons/ai";
 import IsActiveBadge from "../../shared-components/IsActiveBadge";
 import CustomBadge from "../../shared-components/CustomBadge";
 
+const dateFormat = "DD MMMM YY (hh:mm a)";
 const key = "user-subscriptions";
 
 const assignAgent = ({
@@ -178,9 +179,7 @@ const SingleSubscription = () => {
                       <td className="text-primary  font-weight-bold text-right">
                         <p className="view-subheading">
                           {data.last_used_at
-                            ? moment(data.last_used_at).format(
-                                "DD/MM/YY(hh:mm)"
-                              )
+                            ? moment(data.last_used_at).format(dateFormat)
                             : "-"}
                         </p>
                       </td>
@@ -193,7 +192,7 @@ const SingleSubscription = () => {
                       <td className="text-primary  font-weight-bold text-right">
                         <p className="view-subheading">
                           {data.last_used_at
-                            ? moment(data?.valid_till).format("DD/MM/YY(hh:mm)")
+                            ? moment(data?.valid_till).format(dateFormat)
                             : "-"}
                         </p>
                       </td>
@@ -206,7 +205,7 @@ const SingleSubscription = () => {
                       <td className="text-primary  font-weight-bold text-right">
                         <p className="view-subheading">
                           {data.last_used_at
-                            ? moment(data?.created_at).format("DD/MM/YY(hh:mm)")
+                            ? moment(data?.created_at).format(dateFormat)
                             : "-"}
                         </p>
                       </td>

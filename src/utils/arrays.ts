@@ -54,7 +54,10 @@ export const OrderStatus = [
   { id: "hold", name: "Hold" },
   { id: "cancelled", name: "Cancelled" },
 ];
-export const OrderType = [{ id: "normal", name: "Normal" }];
+export const OrderType = [
+  { id: "normal", name: "Normal" },
+  { id: "subscription", name: "Subscriptoin" },
+];
 
 export const IssueStatus = [
   { id: "active", name: "Active" },
