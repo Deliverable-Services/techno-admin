@@ -1,8 +1,9 @@
 export interface AdType {
-    id: string;
-    name: string;
+  id: string;
+  name: string;
 }
 export const types: Array<AdType> = [
-    { id: "Trending", name: "Trending" },
-    { id: "Latest", name: "Latest" },
+  { id: "Trending", name: "Trending" },
+  { id: "Latest", name: "Latest" },
+  { id: "offer", name: "Offer" },
 ];

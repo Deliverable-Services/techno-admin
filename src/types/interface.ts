@@ -7,6 +7,7 @@ export interface INavLink {
   onClick?: () => void;
   icon?: IconBaseProps;
   isNavOpen?: boolean;
+  permissionReq?: string;
 }
 export interface INavBar {
   isNavOpen: boolean;

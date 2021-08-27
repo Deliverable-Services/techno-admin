@@ -33,7 +33,7 @@ const deleteAd = (id: Array<any>) => {
   return API.post(`banners/delete`, { id });
 };
 const initialFilter = {
-  type: "offers",
+  type: "offer",
   q: "",
   page: "",
   perPage: 25,
@@ -233,11 +233,11 @@ const Advertisements = () => {
               <div className="filter">
                 <BreadCrumb
                   onFilterChange={_onFilterChange}
-                  value="offers"
+                  value="offer"
                   currentValue={filter.type}
                   dataLength={data?.data?.length}
                   idx="type"
-                  title="Offers"
+                  title="Offer"
                 />
                 <BreadCrumb
                   onFilterChange={_onFilterChange}

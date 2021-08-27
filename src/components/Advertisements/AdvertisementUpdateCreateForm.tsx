@@ -106,9 +106,9 @@ const AdvertisementCreateUpdateForm = () => {
                   <div className={`form-container  py-2 `}>
                     <InputField name="name" placeholder="Name" label="Name" />
                     <InputField
-                      name="title"
-                      placeholder="Title"
-                      label="Title"
+                      name="goto_link"
+                      placeholder="eg: /coupons/1 "
+                      label="Goto Link"
                     />
 
                     <InputField
@@ -154,19 +154,13 @@ const AdvertisementCreateUpdateForm = () => {
                       as="select"
                       selectData={types}
                     />
-
-                    {/* <InputField
-                    as="textarea"
-                    name="description"
-                    placeholder="Description"
-                    label="Description"
-                  />
-                  <InputField
-                    as="textarea"
-                    name="terms"
-                    placeholder="Terms"
-                    label="Terms"
-                  /> */}
+                    <span></span>
+                    <InputField
+                      as="textarea"
+                      name="details"
+                      placeholder="Details"
+                      label="Details"
+                    />
                   </div>
                   <Row className="d-flex justify-content-start">
                     <Col md="2">

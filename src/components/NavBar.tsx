@@ -41,96 +41,115 @@ const manageLinks: Array<INavLink> = [
     title: "Brands",
     path: "/brands",
     icon: <SiBrandfolder />,
+    permissionReq: "read_brand",
   },
   {
     title: "Brand Models",
     path: "/brand-models",
     icon: <IoLogoModelS />,
+    permissionReq: "read_brandmodel",
   },
   {
     title: "Categories",
     path: "/categories",
     icon: <FaDiceFour />,
+    permissionReq: "read_category",
   },
   {
     title: "Customers",
     path: "/users",
     icon: <ImUsers />,
+    permissionReq: "read_user",
   },
   {
     title: "Admins",
     path: "/admin",
     icon: <RiAdminFill />,
+    permissionReq: "read_user",
   },
   {
     title: "Agents",
     path: "/agent",
     icon: <FaUserSecret />,
+    permissionReq: "read_user",
   },
   {
     title: "Agent Targets",
     path: "/agent-targets",
     icon: <GiOnTarget />,
+    permissionReq: "read_agenttarget",
   },
   {
     title: "Services",
     path: "/services",
     icon: <RiServiceFill />,
+    permissionReq: "read_service",
   },
   {
     title: "Faqs",
     path: "/faqs",
     icon: <FaQuestionCircle />,
+    permissionReq: "read_faq",
   },
   {
     title: "Plans",
     path: "/plans",
     icon: <FaRegLightbulb />,
+    permissionReq: "read_plan",
   },
   {
     title: "Coupons",
     path: "/coupons",
     icon: <RiCoupon3Line />,
+    permissionReq: "read_coupon",
   },
   {
     title: "Banners",
     path: "/advertisements",
     icon: <RiAdvertisementFill />,
+    permissionReq: "read_banner",
   },
   {
     title: "Permissions",
     path: "/permissions",
     icon: <BsShieldLock />,
+    permissionReq: "read_permission",
   },
   {
     title: "Roles",
     path: "/roles",
     icon: <FaUsers />,
+    permissionReq: "read_role",
   },
   {
     title: "Configurations",
     path: "/configurations",
     icon: <AiFillSetting />,
+    permissionReq: "read_config",
   },
   {
     title: "Booking Slots",
     path: "/booking-slots",
     icon: <BsClock />,
+    permissionReq: "read_bookingslot",
   },
   {
     title: "Cities",
     path: "/cities",
     icon: <GiModernCity />,
+    permissionReq: "read_city",
   },
   {
     title: "Testimonials",
     path: "/testimonials",
     icon: <AiFillIdcard />,
+    permissionReq: "read_testimonial",
   },
   {
     title: "Static Pages",
     path: "/static-pages",
     icon: <RiPagesLine />,
+    permissionReq: "read_staticpage",
   },
 ];
 
@@ -139,31 +158,37 @@ const mainLinks: Array<INavLink> = [
     title: "Orders",
     path: "/orders",
     icon: <FaBoxes />,
+    permissionReq: "read_booking",
   },
   {
     title: "Cart",
     path: "/cart",
     icon: <MdShoppingCart />,
+    permissionReq: "read_booking",
   },
   {
     title: "Subscriptions",
     path: "/subscriptions",
     icon: <FaAddressCard />,
+    permissionReq: "read_subscription",
   },
   {
     title: "Transactions",
     path: "/transactions",
     icon: <FaMoneyCheck />,
+    permissionReq: "read_transaction",
   },
   {
     title: "Issues",
     path: "/issues",
     icon: <GoIssueOpened />,
+    permissionReq: "read_ticket",
   },
   {
-    title: "Notifications",
+    title: "Notification/Sms",
     path: "/push-notifications",
     icon: <RiNotification2Line />,
+    permissionReq: "read_notification",
   },
 ];
 
@@ -206,12 +231,13 @@ const NavBar = ({ isNavOpen, setIsNavOpen }: INavBar) => {
               onClick={closeNavBar}
               icon={<RiDashboardFill />}
               isNavOpen={isNavOpen}
+              permissionReq="read_dashboard"
             />
           </ul>
 
           <p className="text-muted mb-2">Main</p>
           <ul>
-            {mainLinks.map(({ title, path, icon }) => (
+            {mainLinks.map(({ title, path, icon, permissionReq }) => (
               <Navlink
                 path={path}
                 title={title}
@@ -219,13 +245,14 @@ const NavBar = ({ isNavOpen, setIsNavOpen }: INavBar) => {
                 onClick={closeNavBar}
                 icon={icon}
                 isNavOpen={isNavOpen}
+                permissionReq={permissionReq}
               />
             ))}
           </ul>
 
           <p className="text-muted mb-2">Manage</p>
           <ul>
-            {manageLinks.map(({ title, path, icon }) => (
+            {manageLinks.map(({ title, path, icon, permissionReq }) => (
               <Navlink
                 path={path}
                 title={title}
@@ -233,6 +260,7 @@ const NavBar = ({ isNavOpen, setIsNavOpen }: INavBar) => {
                 onClick={closeNavBar}
                 icon={icon}
                 isNavOpen={isNavOpen}
+                permissionReq={permissionReq}
               />
             ))}
           </ul>

@@ -1,19 +1,53 @@
 import { AxiosError } from "axios";
 import { Formik, Form } from "formik";
+import moment from "moment";
+import { useMemo, useState } from "react";
 import { Button, Col, Container, Row, Spinner } from "react-bootstrap";
+import { HiMinusSm, HiPlus } from "react-icons/hi";
 import { MdRemoveShoppingCart } from "react-icons/md";
 import { useMutation } from "react-query";
 import { useHistory, useLocation } from "react-router-dom";
+import { Cell } from "react-table";
 import { handleApiError } from "../../hooks/handleApiErrors";
 import useGetSingleQuery from "../../hooks/useGetSingleQuery";
+import CreatedUpdatedAt from "../../shared-components/CreatedUpdatedAt";
+import EditButton from "../../shared-components/EditButton";
 import { InputField } from "../../shared-components/InputFeild";
 import PageHeading from "../../shared-components/PageHeading";
+import ReactTable from "../../shared-components/ReactTable";
 import API from "../../utils/API";
 import { queryClient } from "../../utils/queryClient";
 import { showMsgToast } from "../../utils/showMsgToast";
 import AddressCard from "./AddressCard";
 
 const key = "user-balance";
+
+const WalletTransactions = [
+  {
+    user_id: 1,
+    amount: 10,
+    type: "deposit",
+    created_at: moment().format("YYYY-MM-DD hh:mm:ss"),
+  },
+  {
+    user_id: 1,
+    amount: 5,
+    type: "withdraw",
+    created_at: moment().format("YYYY-MM-DD hh:mm:ss"),
+  },
+  {
+    user_id: 1,
+    amount: 5,
+    type: "deposit",
+    created_at: moment().format("YYYY-MM-DD hh:mm:ss"),
+  },
+  {
+    user_id: 1,
+    amount: 10,
+    type: "withdraw",
+    created_at: moment().format("YYYY-MM-DD hh:mm:ss"),
+  },
+];
 
 const walletAction = ({ formdata }: { formdata: any }) => {
   if (formdata.action === "deposit") {
@@ -23,13 +57,18 @@ const walletAction = ({ formdata }: { formdata: any }) => {
   return API.post(`user-withdraw`, formdata);
 };
 
+const intitialFilter = {
+  q: "",
+  page: 1,
+  perPage: 25,
+};
 const UserWallet = () => {
   const history = useHistory();
   const { state } = useLocation();
   const id = state ? (state as any).id : null;
   const { data, isLoading: dataLoading } = useGetSingleQuery({ id, key });
 
-  console.log({ data });
+  const [filter, setFilter] = useState(intitialFilter);
   const { mutate, isLoading, error, status } = useMutation(walletAction, {
     onSuccess: () => {
       setTimeout(() => queryClient.invalidateQueries(key), 500);
@@ -37,6 +76,52 @@ const UserWallet = () => {
     },
     onError: (error: AxiosError) => handleApiError(error, history),
   });
+
+  const columns = useMemo(
+    () => [
+      {
+        Header: "#Id",
+        accessor: "id", //accessor is the "key" in the data
+      },
+      {
+        Header: "Amount",
+        accessor: "amount",
+        Cell: (data: Cell) => {
+          const type = (data.row.original as any)?.type;
+          const amount = data.row.values?.amount;
+
+          if (type === "deposit")
+            return (
+              <p className="text-danger mb-0">
+                <HiPlus className="mb-1" />₹{amount}
+              </p>
+            );
+          if (type === "withdraw")
+            return (
+              <p className="text-success mb-0 ">
+                <HiMinusSm />₹{amount}
+              </p>
+            );
+
+          return <p>₹{amount}</p>;
+        },
+      },
+      {
+        Header: "Transaction date",
+        accessor: "created_at",
+        Cell: (data: Cell) => {
+          return <CreatedUpdatedAt date={data.row.values.created_at} />;
+        },
+      },
+    ],
+    []
+  );
+  const _onFilterChange = (idx: string, value: any) => {
+    setFilter((prev) => ({
+      ...prev,
+      [idx]: value,
+    }));
+  };
 
   if (dataLoading) return null;
 
@@ -97,6 +182,17 @@ const UserWallet = () => {
             </Formik>
           </Col>
         </Row>
+        <hr className="my-2" />
+        <PageHeading title="Wallet History" />
+        <ReactTable
+          data={WalletTransactions}
+          columns={columns}
+          filter={filter}
+          onFilterChange={_onFilterChange}
+          // isDataLoading={isFetching}
+          searchPlaceHolder="Search using amount"
+          isSelectable={false}
+        />
       </div>
     </>
   );
