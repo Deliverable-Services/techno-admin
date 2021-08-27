@@ -32,7 +32,7 @@ const UserWallet = () => {
   console.log({ data });
   const { mutate, isLoading, error, status } = useMutation(walletAction, {
     onSuccess: () => {
-      setTimeout(() => queryClient.invalidateQueries("users"), 500);
+      setTimeout(() => queryClient.invalidateQueries(key), 500);
       showMsgToast("Transaction successfull");
     },
     onError: (error: AxiosError) => handleApiError(error, history),
