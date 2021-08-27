@@ -20,19 +20,14 @@ const useMeQuery = () => {
   const history = useHistory();
   const token = useTokenStore((state) => state.accessToken);
   const setUser = useUserProfileStore((state) => state.setUser);
+  const setUserPermissions = useUserProfileStore(
+    (state) => state.setUserPermssions
+  );
 
   const me = useQuery(["profile", token], getProfile, {
     onSuccess: (data: any) => {
-      const roles = {
-        role: "admin",
-        permissions: [
-          "update_brand",
-          "create_brand",
-          "delete_brand",
-          "read_brand",
-        ],
-      };
-      setUser({ ...data, roles });
+      setUser(data.user);
+      setUserPermissions(data?.permissions);
     },
     onError: (error: AxiosError) => {
       handleApiError(error, history);

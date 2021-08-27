@@ -149,6 +149,7 @@ const Coupons = () => {
               onClick={() => {
                 _onEditClick(data.row.values.id);
               }}
+              permissionReq="update_coupon"
             />
           );
         },
@@ -175,6 +176,7 @@ const Coupons = () => {
           title="Coupons"
           onClick={_onCreateClick}
           totalRecords={data?.total}
+          permissionReq="create_coupon"
         />
         {!isLoading && (
           <Container fluid className="px-0">
@@ -256,6 +258,7 @@ const Coupons = () => {
                     filter={filter}
                     onFilterChange={_onFilterChange}
                     isDataLoading={isFetching}
+                    deletePermissionReq="delete_coupon"
                   />
                 </>
               )}

@@ -8,9 +8,11 @@ import { BiSad } from "react-icons/bi";
 import { useMutation, useQuery } from "react-query";
 import { useHistory } from "react-router-dom";
 import { handleApiError } from "../../hooks/handleApiErrors";
+import useUserProfileStore from "../../hooks/useUserProfileStore";
 import EditButton from "../../shared-components/EditButton";
 import IsLoading from "../../shared-components/isLoading";
 import PageHeading from "../../shared-components/PageHeading";
+import Restricted from "../../shared-components/Restricted";
 import API from "../../utils/API";
 import { primaryColor } from "../../utils/constants";
 import { queryClient } from "../../utils/queryClient";
@@ -26,6 +28,7 @@ const deletePage = (id: any) => {
 };
 const StaticPages = () => {
   const history = useHistory();
+  const isRestricted = useUserProfileStore((state) => state.isRestricted);
 
   const { data, isLoading, isFetching } = useQuery<any>([key]);
   const { mutate, isLoading: isUpdatedLoading } = useMutation(updatePageData, {
@@ -74,6 +77,7 @@ const StaticPages = () => {
   };
 
   const handleSave = (editorState: EditorState, pagedata: any) => {
+    if (isRestricted("update_staticpage")) return;
     const content = editorState.toHTML();
     const formdata = {
       ...pagedata,
@@ -102,10 +106,16 @@ const StaticPages = () => {
   return (
     <>
       <Container fluid className="card component-wrapper view-padding">
-        <PageHeading title="Static Pages" onClick={_onCreateClick} />
-        <p className="small text-muted">
-          Press "Ctrl+S" inside editor to save content
-        </p>
+        <PageHeading
+          title="Static Pages"
+          onClick={_onCreateClick}
+          permissionReq="create_staticpage"
+        />
+        {!isRestricted("update_staticpage") && (
+          <p className="small text-muted">
+            Press "Ctrl+S" inside editor to save content
+          </p>
+        )}
         <Container fluid className="px-0 my-3">
           {titles?.map((title) => (
             <Button
@@ -131,15 +141,17 @@ const StaticPages = () => {
                   {page.title}
                 </p>
                 <div className="d-flex align-items-center">
-                  <Button
-                    size="sm"
-                    className="mr-2"
-                    variant="danger"
-                    onClick={() => _onDeletePage(page.id)}
-                    disabled={isDeleteLoading}
-                  >
-                    {isDeleteLoading ? "Loading..." : "Delete page"}
-                  </Button>
+                  <Restricted to="delete_staticpage">
+                    <Button
+                      size="sm"
+                      className="mr-2"
+                      variant="danger"
+                      onClick={() => _onDeletePage(page.id)}
+                      disabled={isDeleteLoading}
+                    >
+                      {isDeleteLoading ? "Loading..." : "Delete page"}
+                    </Button>
+                  </Restricted>
                   {/* <EditButton onClick={() => _onEditPageClick(page.id)} /> */}
                 </div>
               </div>

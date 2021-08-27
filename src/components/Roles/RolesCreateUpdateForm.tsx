@@ -10,6 +10,7 @@ import useGetSingleQuery from "../../hooks/useGetSingleQuery";
 import BackButton from "../../shared-components/BackButton";
 import { InputField } from "../../shared-components/InputFeild";
 import IsLoading from "../../shared-components/isLoading";
+import Restricted from "../../shared-components/Restricted";
 import API from "../../utils/API";
 import { isActiveArray } from "../../utils/arrays";
 import { queryClient } from "../../utils/queryClient";
@@ -48,7 +49,7 @@ const RolesCreateUpdateForm = () => {
   });
   const { mutate, isLoading } = useMutation(createUpdataBrand, {
     onSuccess: () => {
-      setTimeout(() => queryClient.invalidateQueries("get-all-roles/1"), 500);
+      setTimeout(() => queryClient.invalidateQueries("get-all-roles"), 500);
       history.replace("/roles");
       if (id) return showMsgToast("Role updated successfully");
       showMsgToast("Role created successfully");
@@ -111,17 +112,19 @@ const RolesCreateUpdateForm = () => {
 
                   <Row className="d-flex justify-content-start">
                     <Col md="2">
-                      <Button
-                        type="submit"
-                        disabled={isLoading}
-                        className="w-100"
-                      >
-                        {isLoading ? (
-                          <Spinner animation="border" size="sm" />
-                        ) : (
-                          "Submit"
-                        )}
-                      </Button>
+                      <Restricted to={id ? "update_role" : "create_role"}>
+                        <Button
+                          type="submit"
+                          disabled={isLoading}
+                          className="w-100"
+                        >
+                          {isLoading ? (
+                            <Spinner animation="border" size="sm" />
+                          ) : (
+                            "Submit"
+                          )}
+                        </Button>
+                      </Restricted>
                     </Col>
                   </Row>
                 </Form>

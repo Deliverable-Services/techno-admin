@@ -2,6 +2,7 @@ import React, { useContext } from "react";
 import { Button } from "react-bootstrap";
 import { AiFillPlusSquare, AiOutlinePlusSquare } from "react-icons/ai";
 import { IsDesktopContext } from "../context/IsDesktopContext";
+import Restricted from "./Restricted";
 interface Props {
   title: string;
   onClick?: () => void;
@@ -30,12 +31,14 @@ const PageHeading: React.FC<Props> = ({
       </p>
 
       {onClick && (
-        <Button variant="primary" onClick={onClick} size={"sm"}>
-          <div className="text-white d-flex align-items-center">
-            <AiOutlinePlusSquare size={18} />
-            <p className="mb-0 ml-1">Create</p>
-          </div>
-        </Button>
+        <Restricted to={permissionReq}>
+          <Button variant="primary" onClick={onClick} size={"sm"}>
+            <div className="text-white d-flex align-items-center">
+              <AiOutlinePlusSquare size={18} />
+              <p className="mb-0 ml-1">Create</p>
+            </div>
+          </Button>
+        </Restricted>
       )}
     </div>
   );

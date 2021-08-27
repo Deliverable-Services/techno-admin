@@ -7,9 +7,11 @@ import { useMutation } from "react-query";
 import { useHistory, useLocation } from "react-router-dom";
 import { handleApiError } from "../../hooks/handleApiErrors";
 import useGetSingleQuery from "../../hooks/useGetSingleQuery";
+import useUserProfileStore from "../../hooks/useUserProfileStore";
 import BackButton from "../../shared-components/BackButton";
 import { InputField } from "../../shared-components/InputFeild";
 import IsLoading from "../../shared-components/isLoading";
+import Restricted from "../../shared-components/Restricted";
 import API from "../../utils/API";
 import { isActiveArray } from "../../utils/arrays";
 import { queryClient } from "../../utils/queryClient";
@@ -63,9 +65,9 @@ const BrandsCreateUpdateForm = () => {
   return (
     <>
       <div className="card view-padding p-2 d-flex mt-3">
-        <BackButton title="Add brand" />
+        <BackButton title={id ? "Update brand" : "Add brand"} />
 
-        <div className="text-primary">
+        {/* <div className="text-primary">
           <div className="d-flex justify-content-between">
             <div
               className="text-black pb-3"
@@ -76,7 +78,7 @@ const BrandsCreateUpdateForm = () => {
           </div>
         </div>
 
-        <hr className="mb-3" />
+        <hr className="mb-3" /> */}
 
         <Row className="rounded">
           <Col className="mx-auto">
@@ -129,17 +131,19 @@ const BrandsCreateUpdateForm = () => {
 
                   <Row className="d-flex justify-content-start">
                     <Col md="2">
-                      <Button
-                        type="submit"
-                        disabled={isLoading}
-                        className="w-100"
-                      >
-                        {isLoading ? (
-                          <Spinner animation="border" size="sm" />
-                        ) : (
-                          "Submit"
-                        )}
-                      </Button>
+                      <Restricted to={id ? "update_brand" : "create_brand"}>
+                        <Button
+                          type="submit"
+                          disabled={isLoading}
+                          className="w-100"
+                        >
+                          {isLoading ? (
+                            <Spinner animation="border" size="sm" />
+                          ) : (
+                            "Submit"
+                          )}
+                        </Button>
+                      </Restricted>
                     </Col>
                   </Row>
                 </Form>

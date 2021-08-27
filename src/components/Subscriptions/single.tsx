@@ -17,6 +17,7 @@ import { showMsgToast } from "../../utils/showMsgToast";
 import { AiFillPlusSquare } from "react-icons/ai";
 import IsActiveBadge from "../../shared-components/IsActiveBadge";
 import CustomBadge from "../../shared-components/CustomBadge";
+import Restricted from "../../shared-components/Restricted";
 
 const dateFormat = "DD MMMM YY (hh:mm a)";
 const key = "user-subscriptions";
@@ -93,13 +94,14 @@ const SingleSubscription = () => {
                   >
                     Customer
                   </div>
-
-                  <div
-                    className="text-primary small"
-                    onClick={() => _onUserClick(data.user_id)}
-                  >
-                    Edit Info
-                  </div>
+                  <Restricted to="update_user">
+                    <div
+                      className="text-primary small"
+                      onClick={() => _onUserClick(data.user_id)}
+                    >
+                      Edit Info
+                    </div>
+                  </Restricted>
                 </div>
               </div>
 
@@ -138,13 +140,15 @@ const SingleSubscription = () => {
                     </tr>
                   </tbody>
                 </table>
-                <span
-                  className="small text-primary font-weight-bold"
-                  onClick={() => _onUserClick(data.user_id)}
-                  style={{ cursor: "pointer" }}
-                >
-                  View Profile
-                </span>
+                <Restricted to="read_user">
+                  <span
+                    className="small text-primary font-weight-bold"
+                    onClick={() => _onUserClick(data.user_id)}
+                    style={{ cursor: "pointer" }}
+                  >
+                    View Profile
+                  </span>
+                </Restricted>
               </div>
             </div>
           </div>

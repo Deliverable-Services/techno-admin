@@ -119,6 +119,7 @@ const Cities = () => {
               onClick={() => {
                 _onEditClick(data.row.values.id);
               }}
+              permissionReq="update_city"
             />
           );
         },
@@ -145,6 +146,7 @@ const Cities = () => {
           title="Serviceable Cities"
           onClick={_onCreateClick}
           totalRecords={data?.total}
+          permissionReq="create_city"
         />
 
         <Container fluid className="h-100 p-0">
@@ -161,6 +163,7 @@ const Cities = () => {
                   onFilterChange={_onFilterChange}
                   isDataLoading={isFetching}
                   searchPlaceHolder="Search using city, state"
+                  deletePermissionReq="delete_city"
                 />
               )}
               {!error && data?.data?.length > 0 ? (

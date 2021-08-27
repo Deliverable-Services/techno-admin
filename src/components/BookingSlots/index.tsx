@@ -26,6 +26,7 @@ import EventEmitter from "events";
 import API from "../../utils/API";
 import { queryClient } from "../../utils/queryClient";
 import { showMsgToast } from "../../utils/showMsgToast";
+import useUserProfileStore from "../../hooks/useUserProfileStore";
 // dummy event data
 
 const key = "disabled-slots";
@@ -39,6 +40,7 @@ const intitialFilter = {
 };
 
 const BookingSlots = () => {
+  const isRestricted = useUserProfileStore((state) => state.isRestricted);
   const history = useHistory();
   const [selectedRows, setSelectedRows] = useState([]);
   const [deletePopup, setDeletePopup] = useState(false);
@@ -130,6 +132,7 @@ const BookingSlots = () => {
           title="Booking Slots"
           onClick={_onCreateClick}
           totalRecords={data?.total}
+          permissionReq="create_bookingslot"
         />
         <Container fluid className="h-100 p-0">
           {isLoading ? (
@@ -141,8 +144,10 @@ const BookingSlots = () => {
                 events={formattedDataForCalendar}
                 onClickEvent={(event: any) => {
                   //here event return the id of the slot
-                  setSelectedRowId(event);
-                  setDeletePopup(true);
+                  if (!isRestricted("delete_bookingslot")) {
+                    setSelectedRowId(event);
+                    setDeletePopup(true);
+                  }
                 }}
               />
               {/* ) : (

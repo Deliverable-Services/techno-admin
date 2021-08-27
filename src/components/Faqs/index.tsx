@@ -107,6 +107,7 @@ const Faqs = () => {
               onClick={() => {
                 _onEditClick(data.row.values.id);
               }}
+              permissionReq="update_faq"
             />
           );
         },
@@ -133,6 +134,7 @@ const Faqs = () => {
           title="Faqs"
           onClick={_onCreateClick}
           totalRecords={data?.total}
+          permissionReq="create_faq"
         />
         {!isLoading && (
           <Container fluid className="px-0">
@@ -183,6 +185,7 @@ const Faqs = () => {
                   onFilterChange={_onFilterChange}
                   isDataLoading={isFetching}
                   searchPlaceHolder="Search using title"
+                  deletePermissionReq="delete_faq"
                 />
               )}
               {!error && data?.data?.length > 0 ? (

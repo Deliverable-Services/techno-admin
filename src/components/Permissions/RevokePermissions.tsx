@@ -56,21 +56,8 @@ const RevokePermission = () => {
 
   return (
     <>
-      <BackButton title={"Revoke Permission Role"} />
-
       <div className="card view-padding p-2 d-flex mt-3">
-        <div className="text-primary">
-          <div className="d-flex justify-content-between">
-            <div
-              className="text-black pb-3"
-              style={{ cursor: "pointer", fontWeight: 600 }}
-            >
-              Basic Information
-            </div>
-          </div>
-        </div>
-
-        <hr className="mb-3" />
+        <BackButton title={"Revoke Permission Role"} />
 
         <Row className="rounded">
           <Col className="mx-auto">
@@ -97,7 +84,7 @@ const RevokePermission = () => {
                     </p>
                   </div>
                   <Row>
-                    <Col>
+                    <Col sm={6}>
                       <p className="text-muted">Permissions</p>
 
                       <InputField

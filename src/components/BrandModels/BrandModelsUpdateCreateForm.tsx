@@ -7,9 +7,11 @@ import { useMutation, useQuery } from "react-query";
 import { useHistory, useLocation } from "react-router-dom";
 import { handleApiError } from "../../hooks/handleApiErrors";
 import useGetSingleQuery from "../../hooks/useGetSingleQuery";
+import useUserProfileStore from "../../hooks/useUserProfileStore";
 import BackButton from "../../shared-components/BackButton";
 import { InputField } from "../../shared-components/InputFeild";
 import IsLoading from "../../shared-components/isLoading";
+import Restricted from "../../shared-components/Restricted";
 import API from "../../utils/API";
 import { isActiveArray } from "../../utils/arrays";
 import { queryClient } from "../../utils/queryClient";
@@ -121,17 +123,21 @@ const BrandModlesCreateUpdateForm = () => {
                   </div>
                   <Row className="d-flex justify-content-start">
                     <Col md="2">
-                      <Button
-                        type="submit"
-                        disabled={isLoading}
-                        className="w-100"
+                      <Restricted
+                        to={id ? "update_brandmodel" : "create_brandmodel"}
                       >
-                        {isLoading ? (
-                          <Spinner animation="border" size="sm" />
-                        ) : (
-                          "Submit"
-                        )}
-                      </Button>
+                        <Button
+                          type="submit"
+                          disabled={isLoading}
+                          className="w-100"
+                        >
+                          {isLoading ? (
+                            <Spinner animation="border" size="sm" />
+                          ) : (
+                            "Submit"
+                          )}
+                        </Button>
+                      </Restricted>
                     </Col>
                   </Row>
                 </Form>

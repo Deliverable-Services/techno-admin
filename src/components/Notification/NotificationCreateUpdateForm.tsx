@@ -18,6 +18,7 @@ import { InputField } from "../../shared-components/InputFeild";
 import IsActiveBadge from "../../shared-components/IsActiveBadge";
 import IsLoading from "../../shared-components/isLoading";
 import ReactTable from "../../shared-components/ReactTable";
+import Restricted from "../../shared-components/Restricted";
 import TextEditor from "../../shared-components/TextEditor";
 import API from "../../utils/API";
 import { NotificationSendToCategories } from "../../utils/arrays";
@@ -271,6 +272,7 @@ const NotificationCreateUpdateForm = () => {
                             selectedRowIds,
                           }}
                           setSelectedRowIds={setSelectedRowIds}
+                          deletePermissionReq="read_user"
                         />
                       )}
                     </Col>
@@ -278,17 +280,21 @@ const NotificationCreateUpdateForm = () => {
 
                   <Row className="d-flex justify-content-start">
                     <Col md="2">
-                      <Button
-                        type="submit"
-                        disabled={isLoading}
-                        className="w-100"
+                      <Restricted
+                        to={id ? "update_notification" : "create_notification"}
                       >
-                        {isLoading ? (
-                          <Spinner animation="border" size="sm" />
-                        ) : (
-                          "Submit"
-                        )}
-                      </Button>
+                        <Button
+                          type="submit"
+                          disabled={isLoading}
+                          className="w-100"
+                        >
+                          {isLoading ? (
+                            <Spinner animation="border" size="sm" />
+                          ) : (
+                            "Submit"
+                          )}
+                        </Button>
+                      </Restricted>
                     </Col>
                   </Row>
                 </Form>

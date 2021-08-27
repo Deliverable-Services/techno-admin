@@ -10,6 +10,7 @@ import useGetSingleQuery from "../../hooks/useGetSingleQuery";
 import BackButton from "../../shared-components/BackButton";
 import { InputField } from "../../shared-components/InputFeild";
 import IsLoading from "../../shared-components/isLoading";
+import Restricted from "../../shared-components/Restricted";
 import API from "../../utils/API";
 import { isActiveArray } from "../../utils/arrays";
 import { queryClient } from "../../utils/queryClient";
@@ -105,17 +106,19 @@ const ConfigCreateUpdateForm = () => {
 
                   <Row className="d-flex justify-content-start">
                     <Col md="2">
-                      <Button
-                        type="submit"
-                        disabled={isLoading}
-                        className="w-100"
-                      >
-                        {isLoading ? (
-                          <Spinner animation="border" size="sm" />
-                        ) : (
-                          "Submit"
-                        )}
-                      </Button>
+                      <Restricted to={id ? "update_config" : "create_config"}>
+                        <Button
+                          type="submit"
+                          disabled={isLoading}
+                          className="w-100"
+                        >
+                          {isLoading ? (
+                            <Spinner animation="border" size="sm" />
+                          ) : (
+                            "Submit"
+                          )}
+                        </Button>
+                      </Restricted>
                     </Col>
                   </Row>
                 </Form>

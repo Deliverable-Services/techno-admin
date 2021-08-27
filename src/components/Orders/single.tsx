@@ -12,10 +12,12 @@ import { handleApiError } from "../../hooks/handleApiErrors";
 import useGetSingleQuery from "../../hooks/useGetSingleQuery";
 import CustomBadge from "../../shared-components/CustomBadge";
 import IsLoading from "../../shared-components/isLoading";
+import Restricted from "../../shared-components/Restricted";
 import API from "../../utils/API";
 import { OrderStatus } from "../../utils/arrays";
 import { primaryColor } from "../../utils/constants";
 import { queryClient } from "../../utils/queryClient";
+import { showErrorToast } from "../../utils/showErrorToast";
 import { showMsgToast } from "../../utils/showMsgToast";
 import ProgressBar from "./ProgressBar";
 
@@ -26,7 +28,7 @@ const assignAgent = ({
   formdata,
   id,
 }: {
-  formdata: { agent_id: string };
+  formdata: { agent_id: string; date: string; time: string };
   id: string;
 }) => {
   return API.post(`bookings/${id}/assign-agent`, formdata, {
@@ -71,7 +73,12 @@ const SingleOrder = () => {
 
   const { mutate, isLoading: isAsigningLoading } = useMutation(assignAgent, {
     onSuccess: (data) => {
-      showMsgToast("Agent assigned successfully");
+      if (!data.data.data) {
+        showErrorToast(data.data.message);
+        return;
+      }
+      _onformChange("agent_id", data?.data?.data?.agent_id);
+      showMsgToast(data.data.message);
       setTimeout(() => {
         queryClient.invalidateQueries(key);
         queryClient.invalidateQueries(`${key}/${id}`);
@@ -199,15 +206,18 @@ const SingleOrder = () => {
               )}
             </Button>
           )}
-          <Button
-            size="sm"
-            className="ml-2"
-            onClick={() => _onCreateIssueClick()}
-          >
-            <div className="d-flex text-white align-items-center">
-              <AiFillPlusSquare size={18} /> <p className="mb-0 ml-1">Issue</p>
-            </div>
-          </Button>
+          <Restricted to="create_ticket">
+            <Button
+              size="sm"
+              className="ml-2"
+              onClick={() => _onCreateIssueClick()}
+            >
+              <div className="d-flex text-white align-items-center">
+                <AiFillPlusSquare size={18} />{" "}
+                <p className="mb-0 ml-1">Issue</p>
+              </div>
+            </Button>
+          </Restricted>
           <Button className="ml-2" onClick={() => history.goBack()} size="sm">
             <div className="text-white d-flex align-items-center">
               <BiArrowFromRight size={18} /> <p className="ml-1 mb-0">Back</p>
@@ -228,161 +238,186 @@ const SingleOrder = () => {
 
       <div className="dashboard-page w-100">
         <Container fluid className="status-container mt-2">
-          <div className="card p-2 view-padding right-div d-flex mb-3">
-            <div className="d-flex flex-column">
-              <div className="text-primary">
-                <div
-                  className="text-black pb-3"
-                  style={{ cursor: "pointer", fontWeight: 600 }}
-                  onClick={() => _onUserClick(data.user_id)}
-                >
-                  Update order status
+          <Restricted to="update_booking">
+            <div className="card p-2 view-padding right-div d-flex mb-3">
+              <div className="d-flex flex-column">
+                <div className="text-primary">
+                  <div
+                    className="text-black pb-3"
+                    style={{ cursor: "pointer", fontWeight: 600 }}
+                    onClick={() => _onUserClick(data.user_id)}
+                  >
+                    Update order status
+                  </div>
+                </div>
+
+                <hr className="mb-3" />
+
+                <div className="d-flex flex-column" style={{ fontSize: 18 }}>
+                  <Row>
+                    <Col md="auto">
+                      <Form.Group>
+                        <Form.Control
+                          as="select"
+                          value={data?.status}
+                          onChange={(e) => {
+                            _onformChange("status", e.target.value);
+                            mutateOrderStatus({
+                              formdata: { status: e.target.value },
+                              id,
+                            });
+                          }}
+                          style={{
+                            width: "200px",
+                            fontSize: 14,
+                          }}
+                        >
+                          {OrderStatus.map((item) => {
+                            if (item.id !== "")
+                              return (
+                                <option value={item["id"]}>
+                                  {item["name"]}
+                                </option>
+                              );
+                          })}
+                        </Form.Control>
+                      </Form.Group>
+
+                      <p
+                        style={{
+                          fontSize: 13,
+                          lineHeight: 1.3,
+                          marginBottom: 5,
+                        }}
+                        className="text-muted"
+                      >
+                        Do note: Status should be changed by the agent from the
+                        app, as it should be to avoid complection in the
+                        database. Please try to avoid changing from here if
+                        possible.
+                      </p>
+                    </Col>
+                  </Row>
                 </div>
               </div>
+            </div>
+          </Restricted>
 
-              <hr className="mb-3" />
+          <Restricted to="assign_agent">
+            <div className="card p-2  view-padding right-div d-flex mb-3">
+              <div className="d-flex flex-column">
+                <div className="d-flex justify-content-between">
+                  <div
+                    className="text-black pb-3"
+                    style={{ cursor: "pointer", fontWeight: 600 }}
+                    onClick={() => _onUserClick(data.user_id)}
+                  >
+                    {!isLoading && !data?.agent_id
+                      ? "Assign Agent"
+                      : "Assigned Agent"}
+                  </div>
 
-              <div className="d-flex flex-column" style={{ fontSize: 18 }}>
-                <Row>
-                  <Col md="auto">
-                    <Form.Group>
-                      <Form.Control
-                        as="select"
-                        value={data?.status}
-                        onChange={(e) => {
-                          _onformChange("status", e.target.value);
-                          mutateOrderStatus({
-                            formdata: { status: e.target.value },
-                            id,
-                          });
-                        }}
-                        style={{
-                          width: "200px",
-                          fontSize: 14,
-                        }}
-                      >
-                        {OrderStatus.map((item) => {
-                          if (item.id !== "")
-                            return (
-                              <option value={item["id"]}>{item["name"]}</option>
+                  <div
+                    className="text-primary small"
+                    onClick={() => setShowAssignAgent(!showAssignAgent)}
+                  >
+                    {showAssignAgent && data?.agent_id
+                      ? "Close"
+                      : "Assign agent"}
+                  </div>
+                </div>
+
+                <hr className="mb-3" />
+
+                <div className="d-flex flex-column" style={{ fontSize: 18 }}>
+                  {!isLoading && (!data?.agent_id || showAssignAgent) && (
+                    <Col md="auto">
+                      <Form.Group>
+                        <Form.Control
+                          as="select"
+                          value={form.agent_id || ""}
+                          onChange={(e) => {
+                            const date = moment(data.scheduled_at).format(
+                              "YYYY-MM-DD"
                             );
-                        })}
-                      </Form.Control>
-                    </Form.Group>
+                            const time = moment(data.scheduled_at).format(
+                              "hh:mm:ss"
+                            );
+                            mutate({
+                              formdata: {
+                                agent_id: e.target.value,
+                                date,
+                                time,
+                              },
+                              id,
+                            });
+                          }}
+                          style={{
+                            width: "200px",
+                            fontSize: 14,
+                          }}
+                        >
+                          <option value="">Select Agent</option>
+                          {!isAgentLoading &&
+                            Agents?.data.map((item) => (
+                              <option value={item["id"]}>{item["name"]}</option>
+                            ))}
+                        </Form.Control>
+                      </Form.Group>
+                    </Col>
+                  )}
 
-                    <p
-                      style={{ fontSize: 13, lineHeight: 1.3, marginBottom: 5 }}
-                      className="text-muted"
-                    >
-                      Do note: Status should be changed by the agent from the
-                      app, as it should be to avoid complection in the database.
-                      Please try to avoid changing from here if possible.
-                    </p>
-                  </Col>
-                </Row>
+                  {data.agent && (
+                    <>
+                      <table className="w-100">
+                        <tbody>
+                          <tr>
+                            <td className="text-muted">
+                              <p className="view-heading">Name</p>
+                            </td>
+                            <td className="text-right">
+                              <p className="view-subheading">
+                                {data.agent.name}
+                              </p>
+                            </td>
+                          </tr>
+                          <tr>
+                            <td className="text-muted ">
+                              <p className="view-heading">Email</p>
+                            </td>
+                            <td className="text-primary  font-weight-bold text-right">
+                              <p className="view-subheading">
+                                {data.agent.email}
+                              </p>
+                            </td>
+                          </tr>
+                          <tr>
+                            <td className="text-muted ">
+                              <p className="view-heading phone-padd">Phone</p>
+                            </td>
+                            <td className="text-primary  font-weight-bold text-right">
+                              <p className="view-subheading">
+                                {data.agent.phone}
+                              </p>
+                            </td>
+                          </tr>
+                        </tbody>
+                      </table>
+                      <Restricted to="read_user">
+                        <span
+                          className="small text-primary font-weight-bold"
+                          onClick={() => _onUserClick(data.agent_id)}
+                          style={{ cursor: "pointer" }}
+                        >
+                          View Profile
+                        </span>
+                      </Restricted>
+                    </>
+                  )}
+                </div>
               </div>
             </div>
-          </div>
-
-          <div className="card p-2  view-padding right-div d-flex mb-3">
-            <div className="d-flex flex-column">
-              <div className="d-flex justify-content-between">
-                <div
-                  className="text-black pb-3"
-                  style={{ cursor: "pointer", fontWeight: 600 }}
-                  onClick={() => _onUserClick(data.user_id)}
-                >
-                  {!isLoading && !data?.agent_id
-                    ? "Assign Agent"
-                    : "Assigned Agent"}
-                </div>
-
-                <div
-                  className="text-primary small"
-                  onClick={() => setShowAssignAgent(!showAssignAgent)}
-                >
-                  {showAssignAgent && data?.agent_id ? "Close" : "Assign agent"}
-                </div>
-              </div>
-
-              <hr className="mb-3" />
-
-              <div className="d-flex flex-column" style={{ fontSize: 18 }}>
-                {!isLoading && (!data?.agent_id || showAssignAgent) && (
-                  <Col md="auto">
-                    <Form.Group>
-                      <Form.Control
-                        as="select"
-                        value={form.agent_id || ""}
-                        onChange={(e) => {
-                          _onformChange("agent_id", e.target.value);
-                          mutate({
-                            formdata: { agent_id: e.target.value },
-                            id,
-                          });
-                        }}
-                        style={{
-                          width: "200px",
-                          fontSize: 14,
-                        }}
-                      >
-                        <option value="">Select Agent</option>
-                        {!isAgentLoading &&
-                          Agents?.data.map((item) => (
-                            <option value={item["id"]}>{item["name"]}</option>
-                          ))}
-                      </Form.Control>
-                    </Form.Group>
-                  </Col>
-                )}
-
-                {data.agent && (
-                  <>
-                    <table className="w-100">
-                      <tbody>
-                        <tr>
-                          <td className="text-muted">
-                            <p className="view-heading">Name</p>
-                          </td>
-                          <td className="text-right">
-                            <p className="view-subheading">{data.agent.name}</p>
-                          </td>
-                        </tr>
-                        <tr>
-                          <td className="text-muted ">
-                            <p className="view-heading">Email</p>
-                          </td>
-                          <td className="text-primary  font-weight-bold text-right">
-                            <p className="view-subheading">
-                              {data.agent.email}
-                            </p>
-                          </td>
-                        </tr>
-                        <tr>
-                          <td className="text-muted ">
-                            <p className="view-heading phone-padd">Phone</p>
-                          </td>
-                          <td className="text-primary  font-weight-bold text-right">
-                            <p className="view-subheading">
-                              {data.agent.phone}
-                            </p>
-                          </td>
-                        </tr>
-                      </tbody>
-                    </table>
-
-                    <span
-                      className="small text-primary font-weight-bold"
-                      onClick={() => _onUserClick(data.agent_id)}
-                      style={{ cursor: "pointer" }}
-                    >
-                      View Profile
-                    </span>
-                  </>
-                )}
-              </div>
-            </div>
-          </div>
+          </Restricted>
 
           <div className="card p-2 view-padding right-div d-flex">
             <div className="d-flex flex-column">
@@ -440,13 +475,15 @@ const SingleOrder = () => {
                     </tr>
                   </tbody>
                 </table>
-                <span
-                  className="small text-primary font-weight-bold"
-                  onClick={() => _onUserClick(data.user_id)}
-                  style={{ cursor: "pointer" }}
-                >
-                  View Profile
-                </span>
+                <Restricted to="read_user">
+                  <span
+                    className="small text-primary font-weight-bold"
+                    onClick={() => _onUserClick(data.user_id)}
+                    style={{ cursor: "pointer" }}
+                  >
+                    View Profile
+                  </span>
+                </Restricted>
               </div>
 
               <hr className="mb-3 mt-3" />

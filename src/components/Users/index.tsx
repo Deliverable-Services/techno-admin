@@ -151,6 +151,7 @@ const Users = () => {
               onClick={() => {
                 _onEditClick(data.row.values.id, data.row.values.role);
               }}
+              permissionReq="update_user"
             />
           );
         },
@@ -177,6 +178,7 @@ const Users = () => {
           title="Customers"
           onClick={_onCreateClick}
           totalRecords={data?.total}
+          permissionReq="create_user"
         />
 
         {/* {!isLoading && (
@@ -268,6 +270,7 @@ const Users = () => {
                     onFilterChange={_onFilterChange}
                     isDataLoading={isFetching}
                     searchPlaceHolder="Search using name, phone, email"
+                    deletePermissionReq="delete_user"
                   />
                 </>
               )}

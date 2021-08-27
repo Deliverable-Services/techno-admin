@@ -29,6 +29,7 @@ export const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
       staleTime: 60 * 1000 * 5,
+      // staleTime: 100,
       queryFn: defaultQueryFn,
       onError: (error: any) => {
         showErrorToast(error.message);

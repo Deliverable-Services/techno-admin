@@ -144,6 +144,7 @@ const Plans = () => {
               onClick={() => {
                 _onEditClick(data.row.values.id);
               }}
+              permissionReq="update_plan"
             />
           );
         },
@@ -170,6 +171,7 @@ const Plans = () => {
           title="Plans"
           onClick={_onCreateClick}
           totalRecords={data?.total}
+          permissionReq="create_plan"
         />
 
         {!isLoading && (
@@ -273,6 +275,7 @@ const Plans = () => {
                     onFilterChange={_onFilterChange}
                     isDataLoading={isFetching}
                     searchPlaceHolder="Search using name"
+                    deletePermissionReq="delete_plan"
                   />
                 </>
               )}

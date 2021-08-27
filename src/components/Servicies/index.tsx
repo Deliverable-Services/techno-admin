@@ -133,6 +133,7 @@ const Services = () => {
               onClick={() => {
                 _onEditClick(data.row.values.id);
               }}
+              permissionReq="update_service"
             />
           );
         },
@@ -159,6 +160,7 @@ const Services = () => {
           title="Services"
           onClick={_onCreateClick}
           totalRecords={50}
+          permissionReq="create_service"
         />
 
         <Container fluid className="h-100 p-0">
@@ -174,6 +176,7 @@ const Services = () => {
                   filter={filter}
                   onFilterChange={_onFilterChange}
                   isDataLoading={isFetching}
+                  deletePermissionReq="delete_service"
                 />
               )}
               {!error && data?.data?.length > 0 ? (

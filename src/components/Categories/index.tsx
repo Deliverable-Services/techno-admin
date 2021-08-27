@@ -168,6 +168,7 @@ const Categories = () => {
               onClick={() => {
                 _onEditClick(data.row.values.id);
               }}
+              permissionReq="update_category"
             />
           );
         },
@@ -194,6 +195,7 @@ const Categories = () => {
           title="Categories"
           onClick={_onCreateClick}
           totalRecords={data?.total}
+          permissionReq="create_category"
         />
         {!isLoading && (
           <Container fluid className="px-0">
@@ -286,6 +288,7 @@ const Categories = () => {
                     isDraggable={isDraggable}
                     updateOrder={updateOrder}
                     searchPlaceHolder="Search using name, url"
+                    deletePermissionReq="delete_category"
                   />
                 </>
               )}

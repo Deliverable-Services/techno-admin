@@ -41,7 +41,6 @@ const updateProfileImage = ({ formdata }: { formdata: FormData }) => {
 const ProfilePage = () => {
   const history = useHistory();
   const loggedInUser = useUserProfileStore((state) => state.user);
-  console.log({ loggedInUser });
   const { mutate, isLoading, error, status } = useMutation(updateUser, {
     onSuccess: () => {
       queryClient.invalidateQueries(key);

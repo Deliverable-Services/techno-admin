@@ -52,7 +52,7 @@ const PermissionsCreateUpdateForm = () => {
         () => queryClient.invalidateQueries("get-all-permission"),
         500
       );
-      history.replace("/permissions");
+      // history.replace("/permissions");
       if (id) return showMsgToast("Permission updated successfully");
       showMsgToast("Permission created successfully");
     },

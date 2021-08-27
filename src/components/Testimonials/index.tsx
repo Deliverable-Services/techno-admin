@@ -141,6 +141,7 @@ const Testimonial = () => {
               onClick={() => {
                 _onEditClick(data.row.values.id);
               }}
+              permissionReq="update_testimonial"
             />
           );
         },
@@ -167,6 +168,7 @@ const Testimonial = () => {
           title="Testimonials"
           onClick={_onCreateClick}
           totalRecords={data?.total}
+          permissionReq="create_testimonial"
         />
 
         <Container fluid className="h-100 p-0">
@@ -183,6 +185,7 @@ const Testimonial = () => {
                   onFilterChange={_onFilterChange}
                   isDataLoading={isFetching}
                   searchPlaceHolder="Search using name, link"
+                  deletePermissionReq="delete_testimonial"
                 />
               )}
               {!error && data?.data?.length > 0 ? (

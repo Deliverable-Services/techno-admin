@@ -14,33 +14,39 @@ const key = "get-all-permission";
 export const PrivateRoute = ({
   component: Component,
   permissionReq,
+  skipPermission,
   ...rest
 }: any) => {
-  const loggedInUserPermissoins = useUserProfileStore(
-    (state) => state?.user?.roles?.permissions
+  const loggedInUserPermissions = useUserProfileStore(
+    (state) => state?.permissions
   );
 
-  console.log({ loggedInUserPermissoins });
-
-  const isAllowed = (to: string) => loggedInUserPermissoins.includes(to);
-
-  // const { isFetching, isLoading, error } = useMeQuery();
-
   // checking for read permission of the route here
-  // if (!isAllowed(permissionReq)) {
-  //   return (
-  //     <Container
-  //       fluid
-  //       className="d-flex justify-content-center align-items-center mt-4"
-  //     >
-  //       <Container fluid className="d-flex justify-content-center display-3">
-  //         <div className="d-flex flex-column align-items-center">
-  //           <FaBan color="red" />
-  //           <span className="text-danger display-3">Unauthorised</span>
-  //         </div>
-  //       </Container>
-  //     </Container>
-  //   );
-  // }
+  const isAllowed = (to: string) =>
+    loggedInUserPermissions && loggedInUserPermissions.length > 0
+      ? loggedInUserPermissions.includes(to)
+      : false;
+
+  console.log(
+    "is allowed to view",
+    { isAllowed: isAllowed(permissionReq) },
+    permissionReq
+  );
+
+  if (!skipPermission && !isAllowed(permissionReq)) {
+    return (
+      <Container
+        fluid
+        className="d-flex justify-content-center align-items-center mt-4"
+      >
+        <Container fluid className="d-flex justify-content-center display-3">
+          <div className="d-flex flex-column align-items-center">
+            <FaBan color="red" />
+            <span className="text-danger display-3">Unauthorised</span>
+          </div>
+        </Container>
+      </Container>
+    );
+  }
   return <Route {...rest} render={(props) => <Component {...props} />} />;
 };

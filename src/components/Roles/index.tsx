@@ -26,7 +26,7 @@ import { showMsgToast } from "../../utils/showMsgToast";
 const key = "get-all-roles";
 
 const removeRole = (id: string) => {
-  return API.get(`remove-role/${id}`);
+  return API.post(`remove-role/${id}`);
 };
 
 const intitialFilter = {
@@ -130,6 +130,7 @@ const Roles = () => {
           title="Roles"
           onClick={_onCreateClick}
           totalRecords={data?.total}
+          permissionReq="create_role"
         />
 
         <Container fluid className="h-100 p-0">
@@ -145,6 +146,7 @@ const Roles = () => {
                   filter={filter}
                   onFilterChange={_onFilterChange}
                   isDataLoading={isFetching}
+                  deletePermissionReq="delete_role"
                 />
               )}
             </>

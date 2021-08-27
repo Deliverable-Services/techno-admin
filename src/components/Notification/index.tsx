@@ -136,6 +136,7 @@ const Notifications = () => {
               onClick={() => {
                 _onEditClick(data.row.values.id);
               }}
+              permissionReq="update_notification"
             />
           );
         },
@@ -162,6 +163,7 @@ const Notifications = () => {
           title="Notifications"
           onClick={_onCreateClick}
           totalRecords={data?.total}
+          permissionReq="create_notification"
         />
         {!isLoading && (
           <Container fluid className="px-0">
@@ -266,6 +268,7 @@ const Notifications = () => {
                     onFilterChange={_onFilterChange}
                     isDataLoading={isFetching}
                     searchPlaceHolder="Search using title"
+                    deletePermissionReq="delete_notification"
                   />
                 </>
               )}

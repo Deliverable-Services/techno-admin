@@ -1,9 +1,9 @@
 import { AxiosError } from "axios";
 import bsCustomFileInput from "bs-custom-file-input";
 import { Form, Formik } from "formik";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { Alert, Button, Col, Row, Spinner } from "react-bootstrap";
-import { useMutation } from "react-query";
+import { useMutation, useQuery } from "react-query";
 import { useHistory, useLocation } from "react-router-dom";
 import { handleApiError } from "../../hooks/handleApiErrors";
 import useGetSingleQuery from "../../hooks/useGetSingleQuery";
@@ -11,10 +11,11 @@ import BackButton from "../../shared-components/BackButton";
 import { InputField } from "../../shared-components/InputFeild";
 import IsLoading from "../../shared-components/isLoading";
 import API from "../../utils/API";
-import { isActiveArray, userRoles } from "../../utils/arrays";
+import { isActiveArray } from "../../utils/arrays";
 import { queryClient } from "../../utils/queryClient";
 import { showMsgToast } from "../../utils/showMsgToast";
 import * as Yup from "yup";
+import Restricted from "../../shared-components/Restricted";
 
 const key = "users";
 const ValidationSchema = Yup.object().shape({
@@ -47,14 +48,37 @@ const UserBasics = () => {
   const history = useHistory();
   const id = state ? (state as any).id : null;
   const role = state ? (state as any).role : null;
+  const [allRoles, setAllRoles] = useState([]);
   useEffect(() => {
     bsCustomFileInput.init();
   }, []);
   const { data, isLoading: dataLoading } = useGetSingleQuery({ id, key });
+  const { data: Roles, isLoading: isRolesLoading } = useQuery<any>(
+    ["get-all-roles", , {}],
+    {
+      onError: (error: AxiosError) => {
+        handleApiError(error, history);
+      },
+    }
+  );
+
+  useEffect(() => {
+    console.log("entering the useeffect");
+    if (isRolesLoading) return;
+
+    // if (!Roles || Roles.length === 0) return;
+    console.log("are we running ");
+    const r = [];
+    Roles.forEach((role) => {
+      r.push({ id: role.name.toLowerCase(), name: role.name.toUpperCase() });
+    });
+    setAllRoles([...r]);
+  }, [Roles, isRolesLoading]);
+
   const { mutate, isLoading, error, status } = useMutation(createUpdateUser, {
     onSuccess: () => {
       setTimeout(() => queryClient.invalidateQueries(key), 500);
-      history.replace("/users");
+      history.goBack();
       if (id) return showMsgToast("User updated successfully");
       showMsgToast("User created successfully");
     },
@@ -120,7 +144,7 @@ const UserBasics = () => {
                     />
                     <InputField
                       as="select"
-                      selectData={userRoles}
+                      selectData={allRoles}
                       name="role"
                       label="Role"
                       placeholder="Role"
@@ -135,17 +159,19 @@ const UserBasics = () => {
                   </div>
                   <Row className="d-flex justify-content-start">
                     <Col md="2">
-                      <Button
-                        type="submit"
-                        disabled={isLoading}
-                        className="w-100"
-                      >
-                        {isLoading ? (
-                          <Spinner animation="border" size="sm" />
-                        ) : (
-                          "Submit"
-                        )}
-                      </Button>
+                      <Restricted to={id ? "update_user" : "create_user"}>
+                        <Button
+                          type="submit"
+                          disabled={isLoading}
+                          className="w-100"
+                        >
+                          {isLoading ? (
+                            <Spinner animation="border" size="sm" />
+                          ) : (
+                            "Submit"
+                          )}
+                        </Button>
+                      </Restricted>
                     </Col>
                   </Row>
                 </Form>

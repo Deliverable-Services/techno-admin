@@ -10,6 +10,7 @@ import { handleApiError } from "../../hooks/handleApiErrors";
 import useGetSingleQuery from "../../hooks/useGetSingleQuery";
 import BackButton from "../../shared-components/BackButton";
 import IsLoading from "../../shared-components/isLoading";
+import Restricted from "../../shared-components/Restricted";
 import API from "../../utils/API";
 import { IssueStatus } from "../../utils/arrays";
 import { primaryColor } from "../../utils/constants";
@@ -118,7 +119,7 @@ const SingleIssue = () => {
 
       <div className="dashboard-page w-100 ">
         <Container fluid className="status-container mt-2 px-0">
-          <div className="card  view-padding right-div d-flex mb-3">
+          <Restricted to="update_ticket">
             <div className="d-flex flex-column">
               <div className="text-primary">
                 <div
@@ -167,7 +168,8 @@ const SingleIssue = () => {
                 </Row>
               </div>
             </div>
-          </div>
+          </Restricted>
+          <div className="card  view-padding right-div d-flex mb-3"></div>
           <div className="card p-2 view-padding right-div d-flex mb-3">
             <div className="d-flex flex-column">
               <div className="text-primary">
@@ -289,23 +291,26 @@ const SingleIssue = () => {
                     </tr>
                   </tbody>
                 </table>
-                <span
-                  className="small text-primary font-weight-bold"
-                  style={{ cursor: "pointer" }}
-                  onClick={() => _onUserClick(data?.user_id)}
-                >
-                  View Profile
-                </span>
+                <Restricted to="read_user">
+                  <span
+                    className="small text-primary font-weight-bold"
+                    style={{ cursor: "pointer" }}
+                    onClick={() => _onUserClick(data?.user_id)}
+                  >
+                    View Profile
+                  </span>
+                </Restricted>
               </div>
 
               <hr className="mb-3 mt-3" />
             </div>
           </div>
         </Container>
-
-        <Container fluid className="charts-container">
-          <ChatBox initialMessages={data?.messages} id={id} />
-        </Container>
+        <Restricted to="update_ticket">
+          <Container fluid className="charts-container">
+            <ChatBox initialMessages={data?.messages} id={id} />
+          </Container>
+        </Restricted>
       </div>
     </Container>
   );

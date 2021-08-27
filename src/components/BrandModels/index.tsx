@@ -1,3 +1,4 @@
+import { SatelliteSharp } from "@material-ui/icons";
 import { AxiosError } from "axios";
 import { useMemo, useState } from "react";
 import { Button, Col, Container, Row } from "react-bootstrap";
@@ -6,6 +7,7 @@ import { useMutation, useQuery } from "react-query";
 import { useHistory } from "react-router-dom";
 import { Cell } from "react-table";
 import { handleApiError } from "../../hooks/handleApiErrors";
+import useUserProfileStore from "../../hooks/useUserProfileStore";
 import BreadCrumb from "../../shared-components/BreadCrumb";
 import CreatedUpdatedAt from "../../shared-components/CreatedUpdatedAt";
 import EditButton from "../../shared-components/EditButton";
@@ -16,6 +18,7 @@ import PageHeading from "../../shared-components/PageHeading";
 import TablePagination from "../../shared-components/Pagination";
 import ReactTable from "../../shared-components/ReactTable";
 import TableImage from "../../shared-components/TableImage";
+import TableLink from "../../shared-components/TableLink";
 import API from "../../utils/API";
 import { areTwoObjEqual } from "../../utils/areTwoObjEqual";
 import {
@@ -43,6 +46,7 @@ const intitialFilter = {
 };
 
 const BrandModels = () => {
+  const isRestricted = useUserProfileStore((state) => state.isRestricted);
   const history = useHistory();
   const [selectedRows, setSelectedRows] = useState([]);
   const [filter, setFilter] = useState(intitialFilter);
@@ -89,6 +93,11 @@ const BrandModels = () => {
   const _onUrlClick = (data: Cell) => {
     window.open(clientWebUrl);
   };
+
+  const _onBrandClick = (id: string) => {
+    if (!id) return;
+    history.push("/brands/create-edit", { id });
+  };
   const columns = useMemo(
     () => [
       {
@@ -122,6 +131,15 @@ const BrandModels = () => {
       {
         Header: "Brand",
         accessor: "brand.name",
+        Cell: (data: Cell) => {
+          return (
+            <TableLink
+              onClick={_onBrandClick}
+              id={(data.row.original as any).brand_id}
+              title={data.row.values["brand.name"]}
+            />
+          );
+        },
       },
       {
         Header: "Is Active?",
@@ -152,6 +170,7 @@ const BrandModels = () => {
               onClick={() => {
                 _onEditClick(data.row.values.id);
               }}
+              permissionReq="update_brandmodel"
             />
           );
         },
@@ -178,6 +197,7 @@ const BrandModels = () => {
           title="Brand Models"
           onClick={_onCreateClick}
           totalRecords={data?.total}
+          permissionReq="create_brandmodel"
         />
 
         {!isLoading && (
@@ -262,6 +282,7 @@ const BrandModels = () => {
                     onFilterChange={_onFilterChange}
                     isDataLoading={isFetching}
                     searchPlaceHolder="Search using name"
+                    deletePermissionReq="delete_brandmodel"
                   />
                 </>
               )}

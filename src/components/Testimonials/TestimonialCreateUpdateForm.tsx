@@ -17,6 +17,7 @@ import { queryClient } from "../../utils/queryClient";
 import { showMsgToast } from "../../utils/showMsgToast";
 import SelectSearch, { SelectSearchOption } from "react-select-search";
 import Users from "../Users";
+import Restricted from "../../shared-components/Restricted";
 
 const key = "testimonial";
 
@@ -140,17 +141,21 @@ const TestimonialCreateUpdateForm = () => {
 
                   <Row className="d-flex justify-content-start">
                     <Col md="2">
-                      <Button
-                        type="submit"
-                        disabled={isLoading}
-                        className="w-100"
+                      <Restricted
+                        to={id ? "update_testimonial" : "create_testimonial"}
                       >
-                        {isLoading ? (
-                          <Spinner animation="border" size="sm" />
-                        ) : (
-                          "Submit"
-                        )}
-                      </Button>
+                        <Button
+                          type="submit"
+                          disabled={isLoading}
+                          className="w-100"
+                        >
+                          {isLoading ? (
+                            <Spinner animation="border" size="sm" />
+                          ) : (
+                            "Submit"
+                          )}
+                        </Button>
+                      </Restricted>
                     </Col>
                   </Row>
                 </Form>

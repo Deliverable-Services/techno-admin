@@ -39,20 +39,15 @@ const VerifyOtp = (props: Props) => {
   const history = useHistory();
   const setToken = useTokenStore((state) => state.setToken);
   const setUser = useUserProfileStore((state) => state.setUser);
+  const setUserPermissions = useUserProfileStore(
+    (state) => state.setUserPermssions
+  );
 
   const { mutate, isLoading } = useMutation(verifyOtp, {
     onSuccess: (data) => {
-      const roles = {
-        role: "admin",
-        permissions: [
-          "update_brand",
-          "create_brand",
-          "delete_brand",
-          "read_brand",
-        ],
-      };
       setToken(data.data.token);
-      setUser({ ...data.data.user, ...roles });
+      setUser(data.data.user);
+      setUserPermissions(data?.data?.permissions);
       history.push("/");
     },
     onError: (error: AxiosError) => {

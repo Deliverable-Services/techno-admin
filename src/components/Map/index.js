@@ -9,6 +9,7 @@ import { AiFillHome, AiFillCar } from "react-icons/ai";
 import PolyLine from "./Polyline";
 import axios from "axios";
 import { primaryColor } from "../../utils/constants";
+import API from "../../utils/API";
 const mapBoxToken =
   "pk.eyJ1IjoibmV1cmFmYXJtcy1haSIsImEiOiJja2tqdjcyMzgwbndjMm9xc3U1YTFzcGs2In0.qHHKandtpLSd1f11nSpEFw";
 const defaultLat = 28.6139;
@@ -25,13 +26,13 @@ const TrackingMap = ({ order }) => {
     longitude: Number(userAddress?.lng) || defaultLng,
     zoom: 15,
   });
-  // useEffect(() => {
-  //   getAgentLocation();
-  //   const interval = setInterval(() => getAgentLocation(), 10000);
-  //   return () => {
-  //     clearInterval(interval);
-  //   };
-  // }, []);
+  useEffect(() => {
+    getAgentLocation();
+    const interval = setInterval(() => getAgentLocation(), 10000);
+    return () => {
+      clearInterval(interval);
+    };
+  }, []);
 
   useEffect(() => {
     if (!agentLocation) return;
@@ -42,17 +43,15 @@ const TrackingMap = ({ order }) => {
   // get the agent locatoin
   const getAgentLocation = async () => {
     if (!order.agent_id) return;
-    // const {
-    //   data: { agent_location: location },
-    // } = await API.get(`/orders/${order.id}/get-agent-location`, {
-    //   headers: { Authorization: `Bearer ${token}` },
-    // });
+    const {
+      data: { agent_location: location },
+    } = await API.get(`/orders/${order.id}/get-agent-location`);
 
-    // if (location)
-    //   setAgentLocation({
-    //     lat: parseFloat(location.lat),
-    //     lng: parseFloat(location.lng),
-    //   });
+    if (location)
+      setAgentLocation({
+        lat: parseFloat(location.lat),
+        lng: parseFloat(location.lng),
+      });
   };
 
   // getting the coords of the path

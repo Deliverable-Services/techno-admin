@@ -17,6 +17,7 @@ import { isActiveArray } from "../../utils/arrays";
 import { queryClient } from "../../utils/queryClient";
 import { showMsgToast } from "../../utils/showMsgToast";
 import ImagesContainer from "../../shared-components/ImagesContainer";
+import Restricted from "../../shared-components/Restricted";
 
 const key = "plans";
 
@@ -230,17 +231,19 @@ const PlanCreateUpdateForm = () => {
                   </Row>
                   <Row className="d-flex justify-content-start">
                     <Col md="2">
-                      <Button
-                        type="submit"
-                        disabled={isLoading}
-                        className="w-100"
-                      >
-                        {isLoading ? (
-                          <Spinner animation="border" size="sm" />
-                        ) : (
-                          "Submit"
-                        )}
-                      </Button>
+                      <Restricted to={id ? "update_plan" : "create_plan"}>
+                        <Button
+                          type="submit"
+                          disabled={isLoading}
+                          className="w-100"
+                        >
+                          {isLoading ? (
+                            <Spinner animation="border" size="sm" />
+                          ) : (
+                            "Submit"
+                          )}
+                        </Button>
+                      </Restricted>
                     </Col>
                   </Row>
                 </Form>
@@ -249,65 +252,70 @@ const PlanCreateUpdateForm = () => {
           </Col>
         </Row>
         {id && (
-          <div className="card view-padding p-2 d-flex mt-3 ">
-            <div className="text-primary">
-              <div className="d-flex justify-content-between">
-                <div
-                  className="text-black pb-3"
-                  style={{ cursor: "pointer", fontWeight: 600 }}
-                >
-                  Plans Images
-                </div>
-              </div>
-            </div>
-            <div className="text-primary">
-              <div className="d-flex justify-content-between">
-                <div
-                  className="text-black pb-3"
-                  style={{ cursor: "pointer", fontWeight: 600 }}
-                >
-                  <Formik
-                    initialValues={{ images: [] }}
-                    onSubmit={(values) => {
-                      const { images } = values;
-                      const formdata = new FormData();
-                      for (let k in images)
-                        formdata.append("images[]", images[k]);
-
-                      formdata.append("id", id);
-
-                      mutateImages({ formdata });
-                    }}
+          <Restricted to="update_plan">
+            <div className="card view-padding p-2 d-flex mt-3 ">
+              <div className="text-primary">
+                <div className="d-flex justify-content-between">
+                  <div
+                    className="text-black pb-3"
+                    style={{ cursor: "pointer", fontWeight: 600 }}
                   >
-                    {({ setFieldValue, values }) => (
-                      <Form>
-                        <div className="w-100 d-flex align-items-start ">
-                          <InputField
-                            name="images"
-                            label="Choose Plans Images"
-                            isFile
-                            multipleImages
-                            setFieldValue={setFieldValue}
-                          />
-                        </div>
-                        <Button type="submit" disabled={isImagesUploadLoading}>
-                          {isImagesUploadLoading ? (
-                            <Spinner animation="border" size="sm" />
-                          ) : (
-                            "Add Imges"
-                          )}
-                        </Button>
-                      </Form>
-                    )}
-                  </Formik>
+                    Plans Images
+                  </div>
                 </div>
               </div>
+              <div className="text-primary">
+                <div className="d-flex justify-content-between">
+                  <div
+                    className="text-black pb-3"
+                    style={{ cursor: "pointer", fontWeight: 600 }}
+                  >
+                    <Formik
+                      initialValues={{ images: [] }}
+                      onSubmit={(values) => {
+                        const { images } = values;
+                        const formdata = new FormData();
+                        for (let k in images)
+                          formdata.append("images[]", images[k]);
+
+                        formdata.append("id", id);
+
+                        mutateImages({ formdata });
+                      }}
+                    >
+                      {({ setFieldValue, values }) => (
+                        <Form>
+                          <div className="w-100 d-flex align-items-start ">
+                            <InputField
+                              name="images"
+                              label="Choose Plans Images"
+                              isFile
+                              multipleImages
+                              setFieldValue={setFieldValue}
+                            />
+                          </div>
+                          <Button
+                            type="submit"
+                            disabled={isImagesUploadLoading}
+                          >
+                            {isImagesUploadLoading ? (
+                              <Spinner animation="border" size="sm" />
+                            ) : (
+                              "Add Imges"
+                            )}
+                          </Button>
+                        </Form>
+                      )}
+                    </Formik>
+                  </div>
+                </div>
+              </div>
+              <ImagesContainer
+                folder="plans"
+                images={!isLoading && data?.images}
+              />
             </div>
-            <ImagesContainer
-              folder="plans"
-              images={!isLoading && data?.images}
-            />
-          </div>
+          </Restricted>
         )}
       </div>
     </>

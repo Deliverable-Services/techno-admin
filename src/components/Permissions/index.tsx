@@ -1,4 +1,5 @@
 import { AxiosError } from "axios";
+import { spawn } from "child_process";
 import React, { useMemo, useState } from "react";
 import { Button, Container } from "react-bootstrap";
 import { BiSad } from "react-icons/bi";
@@ -14,6 +15,7 @@ import IsLoading from "../../shared-components/isLoading";
 import PageHeading from "../../shared-components/PageHeading";
 import TablePagination from "../../shared-components/Pagination";
 import ReactTable from "../../shared-components/ReactTable";
+import Restricted from "../../shared-components/Restricted";
 import API from "../../utils/API";
 import {
   baseUploadUrl,
@@ -108,7 +110,11 @@ const Permissions = () => {
         Cell: (data: Cell) => {
           const p = data.row.values.permissions;
           const list = p.map((x) => x.name).join(", ");
-          return <span>{list}</span>;
+          return (
+            <div>
+              <span>{list} </span>
+            </div>
+          );
         },
       },
       {
@@ -116,23 +122,27 @@ const Permissions = () => {
         Cell: (data: Cell) => {
           return (
             <div className="d-flex">
-              <Button
-                variant="outline-primary"
-                onClick={() => {
-                  _onGiveClick((data.row.original as any).id);
-                }}
-              >
-                Give
-              </Button>
-              <Button
-                className="ml-2"
-                variant="outline-danger"
-                onClick={() => {
-                  _onRevokeClick((data.row.original as any).id);
-                }}
-              >
-                Revoke
-              </Button>
+              <Restricted to="assign_permission">
+                <Button
+                  variant="outline-primary"
+                  onClick={() => {
+                    _onGiveClick((data.row.original as any).id);
+                  }}
+                >
+                  Give
+                </Button>
+              </Restricted>
+              <Restricted to="revoke_permission">
+                <Button
+                  className="ml-2"
+                  variant="outline-danger"
+                  onClick={() => {
+                    _onRevokeClick((data.row.original as any).id);
+                  }}
+                >
+                  Revoke
+                </Button>
+              </Restricted>
             </div>
           );
         },
@@ -218,6 +228,7 @@ const Permissions = () => {
           title="Permissions"
           onClick={_onCreateClick}
           totalRecords={data?.total}
+          permissionReq="create_permission"
         />
 
         <Container fluid className="h-100 p-0">

@@ -149,6 +149,7 @@ const Agents = () => {
                 onClick={() => {
                   _onEditClick(data.row.values.id, data.row.values.role);
                 }}
+                permissionReq="update_user"
               />
               {/* <Button
                 variant="outline-primary"
@@ -184,6 +185,7 @@ const Agents = () => {
           title="Agents"
           onClick={_onCreateClick}
           totalRecords={data?.total}
+          permissionReq="create_user"
         />
 
         <Container fluid className="h-100 p-0">
@@ -234,6 +236,7 @@ const Agents = () => {
                     onFilterChange={_onFilterChange}
                     isDataLoading={isFetching}
                     searchPlaceHolder="Search using name, phone, email"
+                    deletePermissionReq="delete_user"
                   />
                 </>
               )}

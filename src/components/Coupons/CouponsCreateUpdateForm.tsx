@@ -12,6 +12,7 @@ import BackButton from "../../shared-components/BackButton";
 import DatePicker from "../../shared-components/DatePicker";
 import { InputField } from "../../shared-components/InputFeild";
 import IsLoading from "../../shared-components/isLoading";
+import Restricted from "../../shared-components/Restricted";
 import TextEditor from "../../shared-components/TextEditor";
 import API from "../../utils/API";
 import { conditionType, isActiveArray } from "../../utils/arrays";
@@ -145,17 +146,19 @@ const CouponCreateUpdateForm = () => {
                   />
                   <Row className="d-flex justify-content-center">
                     <Col md="6">
-                      <Button
-                        type="submit"
-                        disabled={isLoading}
-                        className="w-100"
-                      >
-                        {isLoading ? (
-                          <Spinner animation="border" size="sm" />
-                        ) : (
-                          "Submit"
-                        )}
-                      </Button>
+                      <Restricted to={id ? "update_coupon" : "create_coupon"}>
+                        <Button
+                          type="submit"
+                          disabled={isLoading}
+                          className="w-100"
+                        >
+                          {isLoading ? (
+                            <Spinner animation="border" size="sm" />
+                          ) : (
+                            "Submit"
+                          )}
+                        </Button>
+                      </Restricted>
                     </Col>
                   </Row>
                 </Form>

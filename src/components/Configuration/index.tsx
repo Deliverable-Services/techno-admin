@@ -115,6 +115,7 @@ const Configurations = () => {
               onClick={() => {
                 _onEditClick(data.row.values.id);
               }}
+              permissionReq="update_config"
             />
           );
         },
@@ -141,6 +142,7 @@ const Configurations = () => {
           title="Configurations"
           onClick={_onCreateClick}
           totalRecords={data?.total}
+          permissionReq="create_config"
         />
 
         <Container fluid className="h-100 p-0">
@@ -157,6 +159,7 @@ const Configurations = () => {
                   onFilterChange={_onFilterChange}
                   isDataLoading={isFetching}
                   searchPlaceHolder="Search using title"
+                  deletePermissionReq="delete_config"
                 />
               )}
               {!error && data?.data?.length > 0 ? (

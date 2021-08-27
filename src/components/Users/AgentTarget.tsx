@@ -98,6 +98,7 @@ const AgentTargets = () => {
               onClick={() => {
                 _onEditClick(data.row.values.id);
               }}
+              permissionReq="update_agenttarget"
             />
           );
         },
@@ -123,6 +124,7 @@ const AgentTargets = () => {
         title={`${data?.data[0]?.agent?.name || "Agent"} Targets`}
         onClick={_onCreateClick}
         totalRecords={data?.total}
+        permissionReq="create_agenttarget"
       />
 
       <Container fluid className="card component-wrapper px-0 py-2">

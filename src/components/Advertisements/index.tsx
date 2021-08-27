@@ -197,6 +197,7 @@ const Advertisements = () => {
               onClick={() => {
                 _onEditClick(data.row.values.id);
               }}
+              permissionReq="update_banner"
             />
           );
         },
@@ -223,6 +224,7 @@ const Advertisements = () => {
           title="Banners"
           onClick={() => _onCreateClick()}
           totalRecords={data?.total}
+          permissionReq="create_banner"
         />
 
         {(!isLoading || !isFetching) && (
@@ -326,6 +328,7 @@ const Advertisements = () => {
                     isDataLoading={isFetching}
                     isDraggable={isDraggable}
                     searchPlaceHolder="Search using name"
+                    deletePermissionReq="delete_banner"
                   />
                 </>
               )}

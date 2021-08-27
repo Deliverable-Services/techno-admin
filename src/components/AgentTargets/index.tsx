@@ -157,6 +157,7 @@ const AgentTargets = () => {
           title="Agent Targets"
           onClick={_onCreateClick}
           totalRecords={data?.total}
+          permissionReq="create_agenttarget"
         />
 
         <Container fluid className="h-100 p-0">

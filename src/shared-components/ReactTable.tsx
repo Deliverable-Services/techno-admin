@@ -26,6 +26,7 @@ import { primaryColor } from "../utils/constants";
 import { ImCheckboxUnchecked } from "react-icons/im";
 import { useContext } from "react";
 import { IsDesktopContext } from "../context/IsDesktopContext";
+import useUserProfileStore from "../hooks/useUserProfileStore";
 
 interface Props {
   data: any;
@@ -40,6 +41,7 @@ interface Props {
   setSelectedRowIds?: any;
   isSelectable?: boolean;
   searchPlaceHolder?: string;
+  deletePermissionReq?: string;
 }
 interface ISearchInput {
   preGlobalFilteredRows: any;
@@ -113,7 +115,9 @@ function ReactTable({
   setSelectedRowIds,
   isSelectable = true,
   searchPlaceHolder,
+  deletePermissionReq = "",
 }: Props): ReactElement {
+  const isRestricted = useUserProfileStore((state) => state.isRestricted);
   const [records, setRecords] = React.useState(data);
   const updateMyData = (rowIndex: any, columnID: any, newValue: any) => {
     setRecords((oldData: any) =>
@@ -170,7 +174,8 @@ function ReactTable({
     useRowSelect,
     getRowId,
     (hooks) => {
-      isSelectable &&
+      !isRestricted(deletePermissionReq) &&
+        isSelectable &&
         hooks.visibleColumns.push((columns) => [
           {
             id: "selection",

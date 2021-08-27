@@ -6,6 +6,7 @@ import { useMutation, useQuery } from "react-query";
 import { useHistory } from "react-router-dom";
 import { Cell } from "react-table";
 import { handleApiError } from "../../hooks/handleApiErrors";
+import useUserProfileStore from "../../hooks/useUserProfileStore";
 import BreadCrumb from "../../shared-components/BreadCrumb";
 import CreatedUpdatedAt from "../../shared-components/CreatedUpdatedAt";
 import EditButton from "../../shared-components/EditButton";
@@ -43,9 +44,7 @@ const intitialFilter = {
 const Brands = () => {
   const history = useHistory();
   const [selectedRows, setSelectedRows] = useState([]);
-  console.log(selectedRows.map((item) => item.id));
   const [filter, setFilter] = useState(intitialFilter);
-  console.log({ filter });
   const { data, isLoading, isFetching, error } = useQuery<any>(
     [key, , filter],
     {
@@ -141,6 +140,7 @@ const Brands = () => {
               onClick={() => {
                 _onEditClick(data.row.values.id);
               }}
+              permissionReq="update_brand"
             />
           );
         },
@@ -167,6 +167,7 @@ const Brands = () => {
           title="Brands"
           onClick={_onCreateClick}
           totalRecords={data?.total}
+          permissionReq="create_brand"
         />
 
         {!isLoading && (
@@ -217,6 +218,7 @@ const Brands = () => {
                   onFilterChange={_onFilterChange}
                   isDataLoading={isFetching}
                   searchPlaceHolder="Search using brand name"
+                  deletePermissionReq="delete_brand"
                 />
               )}
               {!error && data?.data?.length > 0 ? (

@@ -147,6 +147,7 @@ const Admins = () => {
               onClick={() => {
                 _onEditClick(data.row.values.id, data.row.values.role);
               }}
+              permissionReq="update_user"
             />
           );
         },
@@ -173,6 +174,7 @@ const Admins = () => {
           title="Admins"
           onClick={_onCreateClick}
           totalRecords={data?.total}
+          permissionReq="create_user"
         />
 
         <Container fluid className="h-100 p-0">
@@ -223,6 +225,7 @@ const Admins = () => {
                     onFilterChange={_onFilterChange}
                     isDataLoading={isFetching}
                     searchPlaceHolder="Search using name, phone, email"
+                    deletePermissionReq="delete_user"
                   />
                 </>
               )}
