@@ -136,10 +136,15 @@ const NotificationCreateUpdateForm = () => {
               enableReinitialize
               initialValues={apiData || { is_sms: "0" }}
               onSubmit={(values) => {
+                const { is_sms, ...rest } = values;
                 const formdata = {
-                  ...values,
+                  ...rest,
                   users: selectedRows.map((i) => i.id),
                 };
+
+                if (is_sms === "1") {
+                  formdata["is_sms"] = is_sms;
+                }
 
                 if (!values?.scheduled_at)
                   formdata["scheduled_at"] = moment().format(
@@ -148,7 +153,7 @@ const NotificationCreateUpdateForm = () => {
                 // const { logo, ...rest } = values;
                 // const formdata = new FormData();
                 // for (let k in rest) formdata.append(k, rest[k]);
-
+                console.log("hellow", { formdata });
                 mutate({ formdata, id });
               }}
             >

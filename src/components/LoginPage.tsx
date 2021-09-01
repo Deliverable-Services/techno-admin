@@ -41,7 +41,7 @@ const LoginPage = (props: Props) => {
   return (
     <Container fluid className="login-page">
       <Formik
-        initialValues={{ phone: "" }}
+        initialValues={{ phone: "7018064278" }}
         onSubmit={(values) => {
           const formData = new FormData();
           formData.append("phone", values.phone);

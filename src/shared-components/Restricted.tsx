@@ -11,7 +11,7 @@ const Restricted: React.FC<Props> = (props) => {
     (state) => state?.permissions
   );
 
-  const isAllowed = (to: string) => loggedInUserPermissoins.includes(to);
+  const isAllowed = (to: string) => loggedInUserPermissoins?.includes(to);
   if (!isAllowed(props.to)) {
     if (props.fallBackUI) return <props.fallBackUI />;
 

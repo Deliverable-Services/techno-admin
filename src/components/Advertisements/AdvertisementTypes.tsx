@@ -3,7 +3,7 @@ export interface AdType {
   name: string;
 }
 export const types: Array<AdType> = [
-  { id: "Trending", name: "Trending" },
-  { id: "Latest", name: "Latest" },
+  { id: "trending", name: "Trending" },
+  { id: "latest", name: "Latest" },
   { id: "offer", name: "Offer" },
 ];
