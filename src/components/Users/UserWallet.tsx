@@ -5,7 +5,7 @@ import { useMemo, useState } from "react";
 import { Button, Col, Container, Row, Spinner } from "react-bootstrap";
 import { HiMinusSm, HiPlus } from "react-icons/hi";
 import { MdRemoveShoppingCart } from "react-icons/md";
-import { useMutation } from "react-query";
+import { useMutation, useQuery } from "react-query";
 import { useHistory, useLocation } from "react-router-dom";
 import { Cell } from "react-table";
 import { handleApiError } from "../../hooks/handleApiErrors";
@@ -21,33 +21,6 @@ import { showMsgToast } from "../../utils/showMsgToast";
 import AddressCard from "./AddressCard";
 
 const key = "user-balance";
-
-const WalletTransactions = [
-  {
-    user_id: 1,
-    amount: 10,
-    type: "deposit",
-    created_at: moment().format("YYYY-MM-DD hh:mm:ss"),
-  },
-  {
-    user_id: 1,
-    amount: 5,
-    type: "withdraw",
-    created_at: moment().format("YYYY-MM-DD hh:mm:ss"),
-  },
-  {
-    user_id: 1,
-    amount: 5,
-    type: "deposit",
-    created_at: moment().format("YYYY-MM-DD hh:mm:ss"),
-  },
-  {
-    user_id: 1,
-    amount: 10,
-    type: "withdraw",
-    created_at: moment().format("YYYY-MM-DD hh:mm:ss"),
-  },
-];
 
 const walletAction = ({ formdata }: { formdata: any }) => {
   if (formdata.action === "deposit") {
@@ -66,12 +39,18 @@ const UserWallet = () => {
   const history = useHistory();
   const { state } = useLocation();
   const id = state ? (state as any).id : null;
-  const { data, isLoading: dataLoading } = useGetSingleQuery({ id, key });
-
   const [filter, setFilter] = useState(intitialFilter);
+  const { data, isLoading: dataLoading } = useGetSingleQuery({ id, key });
+  const {
+    data: WalletTransactions,
+    isLoading: isTransactionLoading,
+    isFetching: isTransactionFetching,
+  } = useQuery<any>(["get-users-trasaction", , { ...filter, user_id: id }]);
+
   const { mutate, isLoading, error, status } = useMutation(walletAction, {
     onSuccess: () => {
       setTimeout(() => queryClient.invalidateQueries(key), 500);
+      queryClient.invalidateQueries("get-users-trasaction");
       showMsgToast("Transaction successfull");
     },
     onError: (error: AxiosError) => handleApiError(error, history),
@@ -92,13 +71,13 @@ const UserWallet = () => {
 
           if (type === "deposit")
             return (
-              <p className="text-danger mb-0">
+              <p className="text-success mb-0">
                 <HiPlus className="mb-1" />₹{amount}
               </p>
             );
           if (type === "withdraw")
             return (
-              <p className="text-success mb-0 ">
+              <p className="text-danger mb-0 ">
                 <HiMinusSm />₹{amount}
               </p>
             );
@@ -184,15 +163,17 @@ const UserWallet = () => {
         </Row>
         <hr className="my-2" />
         <PageHeading title="Wallet History" />
-        <ReactTable
-          data={WalletTransactions}
-          columns={columns}
-          filter={filter}
-          onFilterChange={_onFilterChange}
-          // isDataLoading={isFetching}
-          searchPlaceHolder="Search using amount"
-          isSelectable={false}
-        />
+        {!isTransactionLoading && (
+          <ReactTable
+            data={WalletTransactions?.data}
+            columns={columns}
+            filter={filter}
+            onFilterChange={_onFilterChange}
+            isDataLoading={isTransactionFetching}
+            searchPlaceHolder="Search using amount"
+            isSelectable={false}
+          />
+        )}
       </div>
     </>
   );
