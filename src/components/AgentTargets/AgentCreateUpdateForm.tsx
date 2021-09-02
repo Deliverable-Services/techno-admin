@@ -92,9 +92,8 @@ const TargetCreateUpdateForm = () => {
                   : { agent_id: agentId }
               }
               onSubmit={(values) => {
-                const m = moment(values.month).format("MMMM YYYY");
-                console.log({ values, m });
-                mutate({ formdata: { ...values, month: m }, id });
+                console.log({ values });
+                mutate({ formdata: values, id });
               }}
             >
               {({ setFieldValue }) => (

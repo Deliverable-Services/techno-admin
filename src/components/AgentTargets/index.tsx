@@ -187,7 +187,7 @@ const AgentTargets = () => {
                             value={moment(filter.month).format("YYYY-MM")}
                             onChange={(e) => {
                               const value = moment(e.target.value).format(
-                                "MMMM YYYY"
+                                "MMM-YYYY"
                               );
                               _onFilterChange("month", value);
                             }}
