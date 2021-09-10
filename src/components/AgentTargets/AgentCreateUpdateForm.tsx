@@ -86,8 +86,9 @@ const TargetCreateUpdateForm = () => {
               initialValues={
                 data
                   ? {
-                      ...data,
-                      month: moment(data.month).format("YYYY-MM"),
+                      ...data?.agent,
+                      month: moment(data?.agent?.month).format("YYYY-MM"),
+                      targetAchieved: data?.target_achieved,
                     }
                   : { agent_id: agentId }
               }
@@ -120,6 +121,13 @@ const TargetCreateUpdateForm = () => {
                       type="month"
                       required
                     />
+                    {id && (
+                      <InputField
+                        name="targetAchieved"
+                        label="Achieved Target"
+                        isDisabled={true}
+                      />
+                    )}
                   </div>
 
                   <Row className="d-flex justify-content-start">

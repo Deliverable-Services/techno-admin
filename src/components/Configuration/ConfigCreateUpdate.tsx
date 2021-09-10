@@ -87,6 +87,7 @@ const ConfigCreateUpdateForm = () => {
                       name="key"
                       placeholder="key"
                       label="Key"
+                      isDisabled={id}
                       required
                     />
 

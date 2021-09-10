@@ -134,7 +134,11 @@ const NotificationCreateUpdateForm = () => {
           <Col className="mx-auto">
             <Formik
               enableReinitialize
-              initialValues={apiData || { is_sms: "0" }}
+              initialValues={
+                apiData
+                  ? { ...apiData, is_sms: apiData?.is_sms ? "1" : "0" }
+                  : { is_sms: "0" }
+              }
               onSubmit={(values) => {
                 const { is_sms, ...rest } = values;
                 const formdata = {

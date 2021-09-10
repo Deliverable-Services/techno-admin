@@ -147,6 +147,7 @@ const Roles = () => {
                   onFilterChange={_onFilterChange}
                   isDataLoading={isFetching}
                   deletePermissionReq="delete_role"
+                  isSelectable={false}
                 />
               )}
             </>

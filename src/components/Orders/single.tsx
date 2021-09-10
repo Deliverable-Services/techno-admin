@@ -84,6 +84,9 @@ const SingleOrder = () => {
         queryClient.invalidateQueries(`${key}/${id}`);
       }, 500);
     },
+    onError: (error: AxiosError) => {
+      handleApiError(error, history);
+    },
   });
   const { mutate: mutateOrderStatus, isLoading: isOrderStatusMutateLoading } =
     useMutation(updateOrderStatus, {
@@ -93,6 +96,9 @@ const SingleOrder = () => {
           queryClient.invalidateQueries(key);
           queryClient.invalidateQueries(`${key}/${id}`);
         }, 500);
+      },
+      onError: (error: AxiosError) => {
+        handleApiError(error, history);
       },
     });
   const [form, setForm] = useState({
@@ -238,7 +244,7 @@ const SingleOrder = () => {
 
       <div className="dashboard-page w-100">
         <Container fluid className="status-container mt-2">
-          <Restricted to="update_booking">
+          <Restricted to="update_order">
             <div className="card p-2 view-padding right-div d-flex mb-3">
               <div className="d-flex flex-column">
                 <div className="text-primary">

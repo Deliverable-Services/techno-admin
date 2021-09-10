@@ -105,10 +105,10 @@ const AgentTargets = () => {
         Header: "Assigned Target",
         accessor: "target",
       },
-      {
-        Header: "Achieved Target",
-        accessor: "achieved",
-      },
+      // {
+      //   Header: "Achieved Target",
+      //   accessor: "achieved",
+      // },
       {
         Header: "Created At",
         accessor: "created_at",
@@ -131,6 +131,7 @@ const AgentTargets = () => {
               onClick={() => {
                 _onEditClick(data.row.values.id);
               }}
+              permissionReq="update_agenttarget"
             />
           );
         },
