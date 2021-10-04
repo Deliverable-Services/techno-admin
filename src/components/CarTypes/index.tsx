@@ -23,10 +23,12 @@ import {
 import { queryClient } from "../../utils/queryClient";
 import { showMsgToast } from "../../utils/showMsgToast";
 
-const key = "get-all-roles";
+const key = "brand-model-type";
 
-const removeRole = (id: string) => {
-  return API.post(`remove-role/${id}`);
+const deleteCities = (id: Array<any>) => {
+  return API.post(`${key}/delete`, {
+    id,
+  });
 };
 
 const intitialFilter = {
@@ -35,7 +37,7 @@ const intitialFilter = {
   perPage: 25,
 };
 
-const Roles = () => {
+const CarTypes = () => {
   const history = useHistory();
   const [selectedRows, setSelectedRows] = useState([]);
   const [filter, setFilter] = useState(intitialFilter);
@@ -48,10 +50,10 @@ const Roles = () => {
     }
   );
 
-  const { mutate, isLoading: isRemoveLoading } = useMutation(removeRole, {
+  const { mutate, isLoading: isDeleteLoading } = useMutation(deleteCities, {
     onSuccess: () => {
       queryClient.invalidateQueries(key);
-      showMsgToast("Role removed successfully");
+      showMsgToast("Car types deleted successfully");
     },
     onError: (error: AxiosError) => {
       handleApiError(error, history);
@@ -59,10 +61,10 @@ const Roles = () => {
   });
 
   const _onCreateClick = () => {
-    history.push("/roles/create-edit");
+    history.push("/car-types/create-edit");
   };
   const _onEditClick = (id: string) => {
-    history.push("/roles/create-edit", { id });
+    history.push("/car-types/create-edit", { id });
   };
 
   const _onFilterChange = (idx: string, value: any) => {
@@ -96,18 +98,19 @@ const Roles = () => {
           return <CreatedUpdatedAt date={data.row.values.updated_at} />;
         },
       },
-      // {
-      //   Header: "Actions",
-      //   Cell: (data: Cell) => {
-      //     return (
-      //       <EditButton
-      //         onClick={() => {
-      //           _onEditClick(data.row.values.id);
-      //         }}
-      //       />
-      //     );
-      //   },
-      // },
+      {
+        Header: "Actions",
+        Cell: (data: Cell) => {
+          return (
+            <EditButton
+              onClick={() => {
+                _onEditClick(data.row.values.id);
+              }}
+              permissionReq="update_brandmodelType"
+            />
+          );
+        },
+      },
     ],
     []
   );
@@ -127,10 +130,10 @@ const Roles = () => {
     <>
       <Container fluid className="card component-wrapper view-padding">
         <PageHeading
-          title="Roles"
+          title="Car types"
           onClick={_onCreateClick}
           totalRecords={data?.total}
-          permissionReq="create_role"
+          permissionReq="create_brandmodelType"
         />
 
         <Container fluid className="h-100 p-0">
@@ -146,10 +149,19 @@ const Roles = () => {
                   filter={filter}
                   onFilterChange={_onFilterChange}
                   isDataLoading={isFetching}
-                  deletePermissionReq="delete_role"
-                  isSelectable={false}
+                  searchPlaceHolder="Search using name"
+                  deletePermissionReq="delete_brandmodelType"
                 />
               )}
+              {!error && data?.data?.length > 0 ? (
+                <TablePagination
+                  currentPage={data?.current_page}
+                  lastPage={data?.last_page}
+                  setPage={_onFilterChange}
+                  hasNextPage={!!data?.next_page_url}
+                  hasPrevPage={!!data?.prev_page_url}
+                />
+              ) : null}{" "}
             </>
           )}
         </Container>
@@ -162,10 +174,10 @@ const Roles = () => {
           <Button
             variant="danger"
             onClick={() => {
-              mutate(selectedRows.map((i) => i.id)[0]);
+              mutate(selectedRows.map((i) => i.id));
             }}
           >
-            {isRemoveLoading ? "Loading..." : "Remove"}
+            {isDeleteLoading ? "Loading..." : "Delete"}
           </Button>
         </div>
       )}
@@ -173,4 +185,4 @@ const Roles = () => {
   );
 };
 
-export default Roles;
+export default CarTypes;

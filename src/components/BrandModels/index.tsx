@@ -98,6 +98,10 @@ const BrandModels = () => {
     if (!id) return;
     history.push("/brands/create-edit", { id });
   };
+  const _onCarTypeClick = (id: string) => {
+    if (!id) return;
+    history.push("/car-types/create-edit", { id });
+  };
   const columns = useMemo(
     () => [
       {
@@ -137,6 +141,19 @@ const BrandModels = () => {
               onClick={_onBrandClick}
               id={(data.row.original as any).brand_id}
               title={data.row.values["brand.name"]}
+            />
+          );
+        },
+      },
+      {
+        Header: "Car Type",
+        accessor: "brand_model_type.name",
+        Cell: (data: Cell) => {
+          return (
+            <TableLink
+              onClick={_onCarTypeClick}
+              id={(data.row.original as any).brand_model_type?.id}
+              title={data.row.values["brand_model_type.name"]}
             />
           );
         },

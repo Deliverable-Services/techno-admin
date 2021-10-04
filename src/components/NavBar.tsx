@@ -50,6 +50,12 @@ const manageLinks: Array<INavLink> = [
     permissionReq: "read_brandmodel",
   },
   {
+    title: "Car Types",
+    path: "/car-types",
+    icon: <IoLogoModelS />,
+    permissionReq: "read_brandmodel",
+  },
+  {
     title: "Categories",
     path: "/categories",
     icon: <FaDiceFour />,

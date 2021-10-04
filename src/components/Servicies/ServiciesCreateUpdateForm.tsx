@@ -1,8 +1,16 @@
 import { AxiosError } from "axios";
 import bsCustomFileInput from "bs-custom-file-input";
-import { Form, Formik } from "formik";
+import { Field, FieldArray, Form, Formik } from "formik";
 import { useEffect } from "react";
-import { Alert, Button, Col, Container, Row, Spinner } from "react-bootstrap";
+import {
+  Alert,
+  Button,
+  Col,
+  Container,
+  Row,
+  Spinner,
+  Form as BForm,
+} from "react-bootstrap";
 import { useMutation, useQuery } from "react-query";
 import { useHistory, useLocation } from "react-router-dom";
 import { handleApiError } from "../../hooks/handleApiErrors";
@@ -70,6 +78,9 @@ const ServicesCreateUpdateForm = () => {
     }
   );
 
+  const { data: CarType, isLoading: isCarTypeLoading } = useQuery<any>([
+    "brand-model-type",
+  ]);
   const {
     mutate: mutateImages,
     isLoading: isServicesImageLoading,
@@ -86,6 +97,18 @@ const ServicesCreateUpdateForm = () => {
   });
   const apiData = data && (data as any);
 
+  const formIntialValues = () => {
+    let values = { ...apiData };
+    CarType?.data?.map((car) => {
+      const obj = apiData.brand_type_services.find(
+        (i) => i.brand_model_type === car.id
+      );
+      if (obj) values[car.id] = obj.price;
+    });
+
+    return values;
+  };
+
   if (dataLoading) return <IsLoading />;
 
   return (
@@ -96,19 +119,24 @@ const ServicesCreateUpdateForm = () => {
           <Col className="mx-auto">
             <Formik
               enableReinitialize
-              initialValues={apiData || {}}
+              initialValues={apiData ? formIntialValues() : {}}
               onSubmit={(values) => {
-                // console.log("values", values)
                 const formdata = new FormData();
                 const { image, images, ...rest } = values;
                 for (let k in rest) formdata.append(k, rest[k]);
 
                 for (let k in images) formdata.append("images[]", images[k]);
                 if (values.image) formdata.append("image", values.image);
+
+                CarType &&
+                  CarType?.data?.map((car) => {
+                    formdata.append("pricearray[]", values[car.id]);
+                    formdata.append("brandtype[]", car.id);
+                  });
                 mutate({ formdata, id });
               }}
             >
-              {({ setFieldValue }) => (
+              {({ setFieldValue, values }) => (
                 <Form>
                   <div className="form-container  py-2 ">
                     <InputField
@@ -124,12 +152,12 @@ const ServicesCreateUpdateForm = () => {
                       label="Url"
                       required
                     />
-                    <InputField
+                    {/* <InputField
                       name="price"
                       placeholder="Price"
                       label="Price"
                       type="number"
-                    />
+                    /> */}
                     <InputField
                       name="category_id"
                       placeholder="Category"
@@ -154,6 +182,46 @@ const ServicesCreateUpdateForm = () => {
                       setFieldValue={setFieldValue}
                     />
                   </div>
+                  <Container fluid className="p-0">
+                    <PageHeading title="Prices" />
+
+                    <FieldArray
+                      name="pricearray"
+                      render={(arrayHelpers) => (
+                        <div className="form-container py-2">
+                          {!isCarTypeLoading
+                            ? CarType?.data?.map((p) => (
+                                <BForm.Group key={`${p.id}`}>
+                                  <BForm.Label htmlFor={p.name}>
+                                    {p.name.toUpperCase()}
+                                  </BForm.Label>
+                                  <Field
+                                    name={`${p.id}`}
+                                    as={BForm.Control}
+                                    placeholder={`Enter ${p.name} price`}
+                                    required
+                                    type="number"
+                                  />
+                                </BForm.Group>
+                              ))
+                            : null}
+                        </div>
+                      )}
+                    />
+
+                    {/* {!isCarTypeLoading && (
+                      <div className="form-container py-2">
+                        {CarType.data.map((type) => (
+                          <InputField
+                            type="number"
+                            name={type.name}
+                            label={type.name.toUpperCase()}
+                            placeholder={`Enter ${type.name} price`}
+                          />
+                        ))}
+                      </div>
+                    )} */}
+                  </Container>
                   <TextEditor
                     name="details"
                     label="Details"

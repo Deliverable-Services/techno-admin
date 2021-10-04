@@ -454,8 +454,8 @@ const Row = ({ row }: any) => (
       return (
         <td {...cell.getCellProps()} style={{ verticalAlign: "middle" }}>
           {cell.value ||
-          cell.column.id === "selection" ||
-          cell.column.id === "Actions" ? (
+            cell.column.id === "selection" ||
+            cell.column.id === "Actions" ? (
             cell.render("Cell")
           ) : (
             <span className="text-muted">NA</span>

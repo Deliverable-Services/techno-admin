@@ -63,13 +63,13 @@ const UserBasics = () => {
   );
 
   useEffect(() => {
-    console.log("entering the useeffect");
+
     if (isRolesLoading) return;
 
     // if (!Roles || Roles.length === 0) return;
     console.log("are we running ");
     const r = [];
-    Roles.forEach((role) => {
+    Roles?.data?.forEach((role) => {
       r.push({ id: role.name.toLowerCase(), name: role.name.toUpperCase() });
     });
     setAllRoles([...r]);

@@ -93,10 +93,6 @@ const Services = () => {
         accessor: "name",
       },
       {
-        Header: "Price",
-        accessor: "price",
-      },
-      {
         Header: "Category",
         accessor: "category.name",
       },

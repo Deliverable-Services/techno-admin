@@ -13,6 +13,8 @@ import BrandModlesCreateUpdateForm from "./components/BrandModels/BrandModelsUpd
 import Brands from "./components/Brands";
 import BrandsCreateUpdateForm from "./components/Brands/BrandsCreateUpdateForm";
 import Cart from "./components/Cart";
+import CarTypes from "./components/CarTypes";
+import CarTypesCreateUpdateForm from "./components/CarTypes/CarTypesCreateUpdateForm";
 import Categories from "./components/Categories";
 import CategoriesCreateUpdateForm from "./components/Categories/CategoriesCreateUpdateForm";
 import Cities from "./components/Cities";
@@ -154,6 +156,12 @@ const App = () => {
               permissionReq="read_brandmodel"
             />
             <PrivateRoute
+              path="/car-types"
+              exact
+              component={CarTypes}
+              permissionReq="read_brandmodelType"
+            />
+            <PrivateRoute
               path="/categories"
               exact
               component={Categories}
@@ -247,6 +255,12 @@ const App = () => {
               path="/brand-models/create-edit"
               exact
               component={BrandModlesCreateUpdateForm}
+              permissionReq="read_brandmodel"
+            />
+            <PrivateRoute
+              path="/car-types/create-edit"
+              exact
+              component={CarTypesCreateUpdateForm}
               permissionReq="read_brandmodel"
             />
             <PrivateRoute

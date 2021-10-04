@@ -17,6 +17,7 @@ import API from "../../utils/API";
 import { OrderStatus } from "../../utils/arrays";
 import { primaryColor } from "../../utils/constants";
 import { queryClient } from "../../utils/queryClient";
+import renderHTML from "../../utils/renderHTML";
 import { showErrorToast } from "../../utils/showErrorToast";
 import { showMsgToast } from "../../utils/showMsgToast";
 import ProgressBar from "./ProgressBar";
@@ -736,7 +737,6 @@ const SingleOrder = () => {
                   <div
                     className="text-black pb-3"
                     style={{ cursor: "pointer", fontWeight: 600 }}
-                    onClick={() => _onUserClick(data.user_id)}
                   >
                     Payment Summary
                   </div>
@@ -795,11 +795,21 @@ const SingleOrder = () => {
           </div>
 
           {data.plan && (
-            <div className="card p-2 d-flex mt-3">
+            <div className="card view-padding p-2 d-flex mt-3">
               <div className="d-flex flex-column">
                 <div className="text-primary">
-                  <h5>Plan</h5>
+                  <div className="d-flex justify-content-between">
+                    <div
+                      className="text-black pb-3"
+                      style={{ cursor: "pointer", fontWeight: 600 }}
+                    >
+                      Plan
+                    </div>
+                  </div>
                 </div>
+
+                <hr className="mb-3" />
+
                 <div
                   className="d-flex flex-column w-100"
                   style={{ fontSize: 18 }}
@@ -808,23 +818,24 @@ const SingleOrder = () => {
                     <tbody>
                       <tr>
                         <td className="view-heading">Name</td>
-                        <td className="view-subheading font-weight-bold text-right">
-                          {data.plan.name}
+                        <td className="text-right">
+                          <p className="view-subheading">{data?.plan?.name}</p>
                         </td>
                       </tr>
                       <tr>
-                        <td className="view-heading py-2">Description</td>
-                        <td className="view-subheading font-weight-light text-capitalize">
-                          {data.plan.description}
+                        <td className="view-heading">Description</td>
+                        <td className="text-right">
+                          <p className="view-subheading">
+                            {renderHTML(data?.plan?.description || "-")}
+                          </p>
                         </td>
                       </tr>
                       <tr>
-                        <td className="view-heading pt-3">Price</td>
-                        <td
-                          className="view-subheading pt-2 font-weight-bold text-right"
-                          style={{ fontSize: "24px" }}
-                        >
-                          ₹{data.plan.price}
+                        <td className="view-heading">Price</td>
+                        <td className="text-success font-weight-bold text-right">
+                          <p className="view-subheading">
+                            ₹{data?.plan?.price}
+                          </p>
                         </td>
                       </tr>
                     </tbody>

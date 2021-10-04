@@ -9,7 +9,7 @@ import UserWallet from "./UserWallet";
 const UserCreateUpdateForm = () => {
   const { state } = useLocation();
   const id = state ? (state as any).id : null;
-  const role = state ? (state as any).role : null;
+  const role = state ? (state as any)?.role : null;
   return (
     <>
       <UserBasics />
