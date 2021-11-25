@@ -1,7 +1,6 @@
 import { AxiosError } from "axios";
 import { useMemo, useState } from "react";
-import { Button, Col, Container, Modal, Row, Spinner } from "react-bootstrap";
-import Switch from "react-switch";
+import { Button, Container, Row } from "react-bootstrap";
 import { BiSad } from "react-icons/bi";
 import { useMutation, useQuery } from "react-query";
 import { useHistory } from "react-router-dom";
@@ -16,11 +15,7 @@ import PageHeading from "../../shared-components/PageHeading";
 import TablePagination from "../../shared-components/Pagination";
 import ReactTable from "../../shared-components/ReactTable";
 import API from "../../utils/API";
-import {
-  clientWebUrl,
-  primaryColor,
-  secondaryColor,
-} from "../../utils/constants";
+import { config, primaryColor } from "../../utils/constants";
 import { queryClient } from "../../utils/queryClient";
 import { showErrorToast } from "../../utils/showErrorToast";
 import { showMsgToast } from "../../utils/showMsgToast";
@@ -102,7 +97,7 @@ const Categories = () => {
     history.push("/categories/create-edit", { id });
   };
   const _onUrlClick = (data: Cell) => {
-    window.open(clientWebUrl);
+    window.open(config.clientWebUrl);
   };
 
   const _onFilterChange = (idx: string, value: any) => {

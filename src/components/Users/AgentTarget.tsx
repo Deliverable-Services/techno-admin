@@ -1,32 +1,17 @@
 import { AxiosError } from "axios";
-import moment from "moment";
 import React, { useMemo, useState } from "react";
-import { Button, Col, Container, Form, Row } from "react-bootstrap";
+import { Container } from "react-bootstrap";
 import { BiSad } from "react-icons/bi";
-import { useMutation, useQuery } from "react-query";
+import { useQuery } from "react-query";
 import { useHistory, useLocation } from "react-router-dom";
 import { Cell } from "react-table";
 import { handleApiError } from "../../hooks/handleApiErrors";
-import BreadCrumb from "../../shared-components/BreadCrumb";
-import CreatedUpdatedAt from "../../shared-components/CreatedUpdatedAt";
 import EditButton from "../../shared-components/EditButton";
-import FilterSelect from "../../shared-components/FilterSelect";
-import IsActiveBadge from "../../shared-components/IsActiveBadge";
 import IsLoading from "../../shared-components/isLoading";
 import PageHeading from "../../shared-components/PageHeading";
 import TablePagination from "../../shared-components/Pagination";
 import ReactTable from "../../shared-components/ReactTable";
-import TableLink from "../../shared-components/TableLink";
-import API from "../../utils/API";
-import { areTwoObjEqual } from "../../utils/areTwoObjEqual";
-import {
-  baseUploadUrl,
-  clientWebUrl,
-  primaryColor,
-} from "../../utils/constants";
-import { queryClient } from "../../utils/queryClient";
-import { showMsgToast } from "../../utils/showMsgToast";
-import Brands from "../Brands";
+import { primaryColor } from "../../utils/constants";
 
 const key = "create-target";
 

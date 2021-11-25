@@ -1,21 +1,11 @@
 import { AxiosError } from "axios";
 import { useMemo, useState } from "react";
-import {
-  Button,
-  Col,
-  Container,
-  Form,
-  Modal,
-  Row,
-  Spinner,
-} from "react-bootstrap";
-import { AiFillPlusSquare } from "react-icons/ai";
+import { Button, Col, Container, Modal, Row, Spinner } from "react-bootstrap";
 import { BiSad } from "react-icons/bi";
 import { useMutation, useQuery } from "react-query";
 import { useHistory } from "react-router-dom";
 import { Cell } from "react-table";
 import { handleApiError } from "../../hooks/handleApiErrors";
-import BreadCrumb from "../../shared-components/BreadCrumb";
 import CreatedUpdatedAt from "../../shared-components/CreatedUpdatedAt";
 import CustomBadge from "../../shared-components/CustomBadge";
 import EditButton from "../../shared-components/EditButton";
@@ -28,8 +18,8 @@ import ReactTable from "../../shared-components/ReactTable";
 import TableImage from "../../shared-components/TableImage";
 import API from "../../utils/API";
 import { areTwoObjEqual } from "../../utils/areTwoObjEqual";
-import { isActiveArray, userRoles } from "../../utils/arrays";
-import { baseUploadUrl, primaryColor } from "../../utils/constants";
+import { isActiveArray } from "../../utils/arrays";
+import { primaryColor } from "../../utils/constants";
 import { queryClient } from "../../utils/queryClient";
 import { showMsgToast } from "../../utils/showMsgToast";
 interface IFilter {

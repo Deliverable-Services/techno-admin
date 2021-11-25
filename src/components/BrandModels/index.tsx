@@ -21,11 +21,7 @@ import TableImage from "../../shared-components/TableImage";
 import TableLink from "../../shared-components/TableLink";
 import API from "../../utils/API";
 import { areTwoObjEqual } from "../../utils/areTwoObjEqual";
-import {
-  baseUploadUrl,
-  clientWebUrl,
-  primaryColor,
-} from "../../utils/constants";
+import { config, primaryColor } from "../../utils/constants";
 import { queryClient } from "../../utils/queryClient";
 import { showMsgToast } from "../../utils/showMsgToast";
 
@@ -91,7 +87,7 @@ const BrandModels = () => {
   };
 
   const _onUrlClick = (data: Cell) => {
-    window.open(clientWebUrl);
+    window.open(config.clientWebUrl);
   };
 
   const _onBrandClick = (id: string) => {

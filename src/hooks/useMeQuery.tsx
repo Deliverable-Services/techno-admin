@@ -1,14 +1,13 @@
 import axios, { AxiosError } from "axios";
 import { QueryFunction, useQuery } from "react-query";
 import { useHistory } from "react-router-dom";
-import API from "../utils/API";
-import { adminApiBaseUrl, appApiBaseUrl } from "../utils/constants";
+import { config } from "../utils/constants";
 import { handleApiError } from "./handleApiErrors";
 import useTokenStore from "./useTokenStore";
 import useUserProfileStore from "./useUserProfileStore";
 
 const getProfile: QueryFunction = async ({ queryKey }) => {
-  const r = await axios.get(`${adminApiBaseUrl}${queryKey[0]}`, {
+  const r = await axios.get(`${config.adminApiBaseUrl}${queryKey[0]}`, {
     headers: {
       Authorization: `Bearer ${queryKey[1]}`,
     },

@@ -19,7 +19,7 @@ import TableImage from "../../shared-components/TableImage";
 import API from "../../utils/API";
 import { areTwoObjEqual } from "../../utils/areTwoObjEqual";
 import { InsideCart, isActiveArray } from "../../utils/arrays";
-import { baseUploadUrl, primaryColor } from "../../utils/constants";
+import { primaryColor } from "../../utils/constants";
 import { queryClient } from "../../utils/queryClient";
 import { showMsgToast } from "../../utils/showMsgToast";
 

@@ -5,7 +5,7 @@ import { BiUpload } from "react-icons/bi";
 import useUserProfileStore from "../../hooks/useUserProfileStore";
 import { InputField } from "../../shared-components/InputFeild";
 import PageHeading from "../../shared-components/PageHeading";
-import { baseUploadUrl } from "../../utils/constants";
+import { config } from "../../utils/constants";
 import * as Yup from "yup";
 import isLoading from "../../shared-components/isLoading";
 import API from "../../utils/API";
@@ -86,7 +86,9 @@ const ProfilePage = () => {
         >
           {loggedInUser?.profile_pic ? (
             <img
-              src={baseUploadUrl + "profile_pic/" + loggedInUser.profile_pic}
+              src={
+                config.baseUploadUrl + "profile_pic/" + loggedInUser.profile_pic
+              }
               style={{ borderRadius: "50%", objectFit: "cover" }}
             />
           ) : (

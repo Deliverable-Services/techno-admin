@@ -20,11 +20,7 @@ import ReactTable from "../../shared-components/ReactTable";
 import API from "../../utils/API";
 import { areTwoObjEqual } from "../../utils/areTwoObjEqual";
 import { isActiveArray } from "../../utils/arrays";
-import {
-  baseUploadUrl,
-  clientWebUrl,
-  primaryColor,
-} from "../../utils/constants";
+import { primaryColor, config } from "../../utils/constants";
 import { queryClient } from "../../utils/queryClient";
 import { showMsgToast } from "../../utils/showMsgToast";
 const key = "banners/list";
@@ -108,7 +104,7 @@ const Advertisements = () => {
   };
 
   const _onDeepLinkClick = (data: Cell) => {
-    window.open(clientWebUrl);
+    window.open(config.clientWebUrl);
   };
 
   const columns = useMemo(
@@ -124,7 +120,7 @@ const Advertisements = () => {
           <LightBox
             images={[
               {
-                src: `${baseUploadUrl}banners/${data.row.values.image}`,
+                src: `${config.baseUploadUrl}banners/${data.row.values.image}`,
                 title: data.row.values.image,
               },
             ]}
