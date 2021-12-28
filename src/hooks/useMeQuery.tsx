@@ -29,6 +29,7 @@ const useMeQuery = () => {
       setUserPermissions(data?.permissions);
     },
     onError: (error: AxiosError) => {
+      if (!token) history.push("/login");
       handleApiError(error, history);
     },
   });
