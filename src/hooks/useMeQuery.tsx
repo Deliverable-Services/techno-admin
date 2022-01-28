@@ -24,6 +24,8 @@ const useMeQuery = () => {
   );
 
   const me = useQuery(["profile", token], getProfile, {
+    refetchOnMount: false,
+    refetchOnWindowFocus: false,
     onSuccess: (data: any) => {
       setUser(data.user);
       setUserPermissions(data?.permissions);

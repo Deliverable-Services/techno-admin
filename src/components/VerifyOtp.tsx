@@ -33,6 +33,8 @@ const resendOtp = (formData: FormData) => {
 
 const VerifyOtp = (props: Props) => {
   const { state } = useLocation();
+
+  console.log({ state });
   const history = useHistory();
   const setToken = useTokenStore((state) => state.setToken);
   const setUser = useUserProfileStore((state) => state.setUser);
@@ -67,9 +69,7 @@ const VerifyOtp = (props: Props) => {
         onSubmit={(values) => {
           const formData = new FormData();
           formData.append("phone", (state as any).phone);
-          formData.append("otp", (state as any).otp);
-          // formData.append("otp", values.otp);
-
+          formData.append("otp", values.otp);
           mutate(formData);
         }}
         validationSchema={VerifySchema}

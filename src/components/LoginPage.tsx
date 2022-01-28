@@ -1,6 +1,6 @@
 import { AxiosError } from "axios";
 import { Form, Formik } from "formik";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { Button, Container, Spinner } from "react-bootstrap";
 import { useMutation } from "react-query";
 import { useHistory } from "react-router";
@@ -25,12 +25,13 @@ const sendOtp = (formData: FormData) => {
 
 const LoginPage = (props: Props) => {
   const history = useHistory();
+  const [phone, setPhone] = useState("");
 
   const { mutate, data, isLoading } = useMutation(sendOtp, {
-    onSuccess: (data) => {
+    onSuccess: (data, vars) => {
+      console.log({ data });
       history.push(`/verify-otp/`, {
-        phone: data.data.user.phone,
-        otp: data.data.user.otp,
+        phone,
       });
     },
     onError: (error: AxiosError) => {
@@ -45,7 +46,7 @@ const LoginPage = (props: Props) => {
         onSubmit={(values) => {
           const formData = new FormData();
           formData.append("phone", values.phone);
-
+          setPhone(values.phone);
           mutate(formData);
         }}
         validationSchema={LoginSchema}
