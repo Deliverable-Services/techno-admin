@@ -47,9 +47,9 @@ const CarTypesCreateUpdateForm = () => {
   const { mutate, isLoading } = useMutation(createUpdateCarType, {
     onSuccess: () => {
       setTimeout(() => queryClient.invalidateQueries(key), 500);
-      history.replace("/car-types");
       if (id) return showMsgToast("Car type updated successfully");
       showMsgToast("Car type created successfully");
+      history.replace("/car-types");
     },
     onError: (error: AxiosError) => {
       handleApiError(error, history);

@@ -1,6 +1,8 @@
 import React, { ChangeEvent, ElementType, InputHTMLAttributes } from "react";
 import { useField } from "formik";
-import { Form } from "react-bootstrap";
+import { Form, Image } from "react-bootstrap";
+import { config } from "process";
+import TableImage from "./TableImage";
 
 type InputFieldProps = InputHTMLAttributes<HTMLInputElement> & {
   label?: string;
@@ -8,6 +10,8 @@ type InputFieldProps = InputHTMLAttributes<HTMLInputElement> & {
   as?: ElementType<any> | undefined;
   error?: string;
   isFile?: boolean;
+  folder?: string;
+  showImage?: boolean;
   setFieldValue?: (
     field: string,
     value: any,
@@ -35,6 +39,8 @@ export const InputField: React.FC<InputFieldProps> = ({
   selectValueKey,
   selectTitleKey,
   altTitleKey,
+  folder,
+  showImage = true,
   multipleImages = false,
   isDisabled = false,
   ...props
@@ -94,6 +100,33 @@ export const InputField: React.FC<InputFieldProps> = ({
         )}
         {error && <Form.Text className="text-danger">{error}</Form.Text>}
       </Form.Group>
+
+      {showImage && isFile && field?.value && (
+        <div className="mb-2 bg-light p-2" style={{ position: "relative" }}>
+          {console.log({ image: field.value })}
+          <button
+            className="h5"
+            style={{
+              position: "absolute",
+              top: "50%",
+              right: 10,
+              transform: "translateY(-50%)",
+            }}
+            onClick={() => setFieldValue(field.name, null)}
+          >
+            x
+          </button>
+          {typeof field.value === "string" ? (
+            <TableImage folder={folder} file={field.value} />
+          ) : (
+            <div className="table-image">
+              {field.value.length !== 0 && (
+                <img src={URL.createObjectURL(field.value)} alt="temp-image" />
+              )}
+            </div>
+          )}
+        </div>
+      )}
     </div>
   );
 };

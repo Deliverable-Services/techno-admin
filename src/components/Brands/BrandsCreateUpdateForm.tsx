@@ -45,9 +45,9 @@ const BrandsCreateUpdateForm = () => {
   const { mutate, isLoading } = useMutation(createUpdataBrand, {
     onSuccess: () => {
       setTimeout(() => queryClient.invalidateQueries(key), 500);
-      history.replace("/brands");
       if (id) return showMsgToast("Brand updated successfully");
       showMsgToast("Brands created successfully");
+      history.replace("/brands");
     },
     onError: (error: AxiosError) => {
       handleApiError(error, history);
@@ -86,12 +86,12 @@ const BrandsCreateUpdateForm = () => {
               enableReinitialize
               initialValues={apiData || { is_active: "1" }}
               onSubmit={(values) => {
+                console.log({ values });
                 const { logo, ...rest } = values;
                 const formdata = new FormData();
                 for (let k in rest) formdata.append(k, rest[k]);
 
-                if (logo && typeof logo !== "string")
-                  formdata.append("logo", logo);
+                if (typeof logo !== "string") formdata.append("logo", logo);
 
                 mutate({ formdata, id });
               }}
@@ -114,6 +114,7 @@ const BrandsCreateUpdateForm = () => {
                     />
                     <InputField
                       name="logo"
+                      folder="brands"
                       placeholder="logo"
                       label="Choose Brand Logo"
                       isFile

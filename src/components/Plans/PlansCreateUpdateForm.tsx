@@ -65,9 +65,9 @@ const PlanCreateUpdateForm = () => {
     {
       onSuccess: () => {
         setTimeout(() => queryClient.invalidateQueries(key), 500);
-        history.replace("/plans");
         if (id) return showMsgToast("Plan updated successfully");
         showMsgToast("Plan created successfully");
+        history.replace("/plans");
       },
       onError: (error: AxiosError) => {
         handleApiError(error, history);
@@ -118,8 +118,7 @@ const PlanCreateUpdateForm = () => {
                 for (let k in services)
                   formdata.append("services[]", services[k]);
 
-                if (image && typeof image !== "string")
-                  formdata.append("image", image);
+                if (typeof image !== "string") formdata.append("image", image);
 
                 mutate({ formdata, id });
               }}
@@ -152,6 +151,7 @@ const PlanCreateUpdateForm = () => {
                     <InputField
                       name="image"
                       placeholder="image"
+                      folder="plans"
                       label="Choose Plan Feature Image"
                       isFile
                       setFieldValue={setFieldValue}
@@ -288,6 +288,7 @@ const PlanCreateUpdateForm = () => {
                           <div className="w-100 d-flex align-items-start ">
                             <InputField
                               name="images"
+                              showImage={false}
                               label="Choose Plans Images"
                               isFile
                               multipleImages

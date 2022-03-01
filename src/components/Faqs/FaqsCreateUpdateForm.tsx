@@ -49,9 +49,9 @@ const FaqCreateUpdateForm = () => {
   const { mutate, isLoading } = useMutation(createUpdataFaq, {
     onSuccess: () => {
       setTimeout(() => queryClient.invalidateQueries(key), 500);
-      history.replace("/faqs");
       if (id) return showMsgToast("Faq updated successfully");
       showMsgToast("Faq created successfully");
+      history.replace("/faqs");
     },
     onError: (error: AxiosError) => {
       handleApiError(error, history);

@@ -83,10 +83,9 @@ const AdvertisementCreateUpdateForm = () => {
               }
               onSubmit={(values) => {
                 const { image, ...rest } = values;
-                console.log({ values });
                 const formdata = new FormData();
                 for (let k in rest) formdata.append(k, rest[k]);
-                if (image) formdata.append("image", values.image);
+                if (typeof image !== "string") formdata.append("image", image);
 
                 mutate({ formdata, id });
               }}
@@ -135,6 +134,7 @@ const AdvertisementCreateUpdateForm = () => {
                     />
                     <InputField
                       name="image"
+                      folder="banners"
                       placeholder="image"
                       label="Image"
                       isFile

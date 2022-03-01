@@ -51,9 +51,9 @@ const CouponCreateUpdateForm = () => {
     {
       onSuccess: () => {
         setTimeout(() => queryClient.invalidateQueries(key), 500);
-        history.replace("/coupons");
         if (id) return showMsgToast("Brand updated successfully");
         showMsgToast("Brands created successfully");
+        history.replace("/coupons");
       },
       onError: (error: AxiosError) => {
         handleApiError(error, history);

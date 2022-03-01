@@ -63,7 +63,6 @@ const UserBasics = () => {
   );
 
   useEffect(() => {
-
     if (isRolesLoading) return;
 
     // if (!Roles || Roles.length === 0) return;
@@ -78,9 +77,9 @@ const UserBasics = () => {
   const { mutate, isLoading, error, status } = useMutation(createUpdateUser, {
     onSuccess: () => {
       setTimeout(() => queryClient.invalidateQueries(key), 500);
-      history.goBack();
       if (id) return showMsgToast("User updated successfully");
       showMsgToast("User created successfully");
+      history.goBack();
     },
     onError: (error: AxiosError) => {
       handleApiError(error, history);
@@ -106,7 +105,7 @@ const UserBasics = () => {
                 const formdata = new FormData();
                 for (let k in rest) formdata.append(k, rest[k]);
 
-                if (typeof profile_pic !== "string" && profile_pic)
+                if (typeof profile_pic !== "string")
                   formdata.append("profile_pic", profile_pic);
 
                 mutate({ formdata, id });
@@ -153,6 +152,7 @@ const UserBasics = () => {
                       name="profile_pic"
                       placeholder="Profile Pic"
                       label="Choose Profile Pic"
+                      folder="profile_pic"
                       isFile
                       setFieldValue={setFieldValue}
                     />

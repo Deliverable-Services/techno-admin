@@ -53,9 +53,9 @@ const BrandModlesCreateUpdateForm = () => {
   const { mutate, isLoading } = useMutation(createUpdataBrand, {
     onSuccess: () => {
       setTimeout(() => queryClient.invalidateQueries(key), 500);
-      history.replace("/brand-models");
       if (id) return showMsgToast("Brand Model updated successfully");
       showMsgToast("Brand Model created successfully");
+      history.replace("/brand-models");
     },
     onError: (error: AxiosError) => {
       handleApiError(error, history);
@@ -79,7 +79,7 @@ const BrandModlesCreateUpdateForm = () => {
                 const formdata = new FormData();
                 const { image, ...rest } = values;
                 for (let k in rest) formdata.append(k, rest[k]);
-                if (values.image && typeof values.image !== "string")
+                if (typeof values.image !== "string")
                   formdata.append("image", values.image);
 
                 mutate({ formdata, id });
@@ -103,6 +103,7 @@ const BrandModlesCreateUpdateForm = () => {
                     />
                     <InputField
                       name="image"
+                      folder="brand-models"
                       placeholder="image"
                       label="Choose Brand Model Image"
                       isFile

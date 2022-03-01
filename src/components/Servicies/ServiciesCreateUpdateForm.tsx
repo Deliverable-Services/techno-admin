@@ -68,9 +68,9 @@ const ServicesCreateUpdateForm = () => {
     {
       onSuccess: () => {
         setTimeout(() => queryClient.invalidateQueries(key), 500);
-        history.replace("/services");
         if (id) return showMsgToast("Service updated successfully");
         showMsgToast("Service created successfully");
+        history.replace("/services");
       },
       onError: (error: AxiosError) => {
         handleApiError(error, history);
@@ -126,7 +126,7 @@ const ServicesCreateUpdateForm = () => {
                 for (let k in rest) formdata.append(k, rest[k]);
 
                 for (let k in images) formdata.append("images[]", images[k]);
-                if (values.image) formdata.append("image", values.image);
+                if (typeof image) formdata.append("image", image);
 
                 CarType &&
                   CarType?.data?.map((car) => {
@@ -179,6 +179,7 @@ const ServicesCreateUpdateForm = () => {
                       placeholder="image"
                       label="Choose Service  Featured Image"
                       isFile
+                      folder="services"
                       setFieldValue={setFieldValue}
                     />
                   </div>
@@ -286,6 +287,7 @@ const ServicesCreateUpdateForm = () => {
                         <div className="w-100 d-flex align-items-start ">
                           <InputField
                             name="images"
+                            showImage={false}
                             label="Choose Plans Images"
                             isFile
                             multipleImages

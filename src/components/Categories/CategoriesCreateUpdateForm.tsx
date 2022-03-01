@@ -49,9 +49,9 @@ const CategoriesCreateUpdateForm = () => {
     {
       onSuccess: () => {
         setTimeout(() => queryClient.invalidateQueries(key), 500);
-        history.replace("/categories");
         if (id) return showMsgToast("Category  updated successfully");
         showMsgToast("Categoryj  created successfully");
+        history.replace("/categories");
       },
       onError: (error: AxiosError) => {
         handleApiError(error, history);
@@ -78,7 +78,7 @@ const CategoriesCreateUpdateForm = () => {
                 formdata.append("url", values.url);
                 formdata.append("order", values.order);
                 formdata.append("is_active", values.is_active);
-                if (values.logo && typeof values.logo !== "string")
+                if (typeof values.logo !== "string")
                   formdata.append("logo", values.logo);
 
                 mutate({ formdata, id });

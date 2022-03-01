@@ -50,12 +50,12 @@ const TargetCreateUpdateForm = () => {
     onSuccess: () => {
       setTimeout(() => queryClient.invalidateQueries(key), 500);
       queryClient.invalidateQueries("users");
+      if (id) return showMsgToast("Target updated successfully");
       if (agentId) {
         history.goBack();
       } else {
         history.replace("/agent-targets");
       }
-      if (id) return showMsgToast("Target updated successfully");
       showMsgToast("Target created successfully");
     },
     onError: (error: AxiosError) => {
