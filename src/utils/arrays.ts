@@ -70,6 +70,7 @@ export const NotificationSendToCategories = [
   { id: "subscribed-users", name: "Subscribed Users" },
   { id: "not-subscribed-users", name: "Not Subscribed Users" },
   { id: "agents", name: "Agents" },
+  { id: "custom", name: "Custom Users" },
 ];
 
 export const PermissionsData = [

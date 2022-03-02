@@ -15,7 +15,6 @@ let store = combine(
       if (permission && permission.length > 0) {
         bool = get().permissions.includes(permission);
       } else bool = false;
-      console.log("asked permission", { permission, bool });
       return !bool;
     },
   })

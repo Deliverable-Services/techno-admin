@@ -27,12 +27,6 @@ export const PrivateRoute = ({
       ? loggedInUserPermissions.includes(to)
       : false;
 
-  console.log(
-    "is allowed to view",
-    { isAllowed: isAllowed(permissionReq) },
-    permissionReq
-  );
-
   if (!skipPermission && !isAllowed(permissionReq)) {
     return (
       <Container
