@@ -105,8 +105,7 @@ const UserBasics = () => {
                 const formdata = new FormData();
                 for (let k in rest) formdata.append(k, rest[k]);
 
-                if (typeof profile_pic !== "string")
-                  formdata.append("profile_pic", profile_pic);
+                if (profile_pic) formdata.append("profile_pic", profile_pic);
 
                 mutate({ formdata, id });
               }}

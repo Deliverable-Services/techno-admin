@@ -79,8 +79,7 @@ const BrandModlesCreateUpdateForm = () => {
                 const formdata = new FormData();
                 const { image, ...rest } = values;
                 for (let k in rest) formdata.append(k, rest[k]);
-                if (typeof values.image !== "string")
-                  formdata.append("image", values.image);
+                if (values.image) formdata.append("image", values.image);
 
                 mutate({ formdata, id });
               }}

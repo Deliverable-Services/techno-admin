@@ -91,7 +91,7 @@ const BrandsCreateUpdateForm = () => {
                 const formdata = new FormData();
                 for (let k in rest) formdata.append(k, rest[k]);
 
-                if (typeof logo !== "string") formdata.append("logo", logo);
+                if (logo) formdata.append("logo", logo);
 
                 mutate({ formdata, id });
               }}

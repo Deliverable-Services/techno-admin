@@ -53,9 +53,9 @@ const AdvertisementCreateUpdateForm = () => {
     {
       onSuccess: () => {
         setTimeout(() => queryClient.invalidateQueries("banners/list"), 500);
-        history.replace("/advertisements");
         if (id) return showMsgToast("Banner updated successfully");
         showMsgToast("Bannner created successfully");
+        history.replace("/advertisements");
       },
       onError: (error: AxiosError) => {
         handleApiError(error, history);
@@ -85,7 +85,7 @@ const AdvertisementCreateUpdateForm = () => {
                 const { image, ...rest } = values;
                 const formdata = new FormData();
                 for (let k in rest) formdata.append(k, rest[k]);
-                if (typeof image !== "string") formdata.append("image", image);
+                if (image) formdata.append("image", image);
 
                 mutate({ formdata, id });
               }}
@@ -104,17 +104,24 @@ const AdvertisementCreateUpdateForm = () => {
                   )}
                   <div className={`form-container  py-2 `}>
                     <InputField name="name" placeholder="Name" label="Name" />
-                    <InputField
-                      name="goto_link"
-                      placeholder="eg: /coupons/1 "
-                      label="Goto Link"
-                    />
 
                     <InputField
                       name="deeplink"
-                      placeholder="Deep Link"
-                      label="Deep Link"
+                      placeholder="Page url"
+                      label="Page url"
                     />
+
+                    <InputField
+                      name="button_text"
+                      placeholder="Button text"
+                      label="Button text"
+                    />
+                    <InputField
+                      name="goto_link"
+                      placeholder="eg: /coupons/1 "
+                      label="Button Link"
+                    />
+
                     <InputField
                       type="number"
                       name="order"

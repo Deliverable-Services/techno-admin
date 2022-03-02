@@ -47,9 +47,9 @@ const CitiesCreateUpdateForm = () => {
   const { mutate, isLoading } = useMutation(createUpdataBrand, {
     onSuccess: () => {
       setTimeout(() => queryClient.invalidateQueries(key), 500);
-      history.replace("/cities");
       if (id) return showMsgToast("City updated successfully");
       showMsgToast("City created successfully");
+      history.replace("/cities");
     },
     onError: (error: AxiosError) => {
       handleApiError(error, history);

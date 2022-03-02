@@ -118,7 +118,7 @@ const PlanCreateUpdateForm = () => {
                 for (let k in services)
                   formdata.append("services[]", services[k]);
 
-                if (typeof image !== "string") formdata.append("image", image);
+                if (image) formdata.append("image", image);
 
                 mutate({ formdata, id });
               }}

@@ -126,7 +126,7 @@ const ServicesCreateUpdateForm = () => {
                 for (let k in rest) formdata.append(k, rest[k]);
 
                 for (let k in images) formdata.append("images[]", images[k]);
-                if (typeof image) formdata.append("image", image);
+                if (image) formdata.append("image", image);
 
                 CarType &&
                   CarType?.data?.map((car) => {

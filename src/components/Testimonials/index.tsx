@@ -62,10 +62,6 @@ const Testimonial = () => {
   const _onEditClick = (id: string) => {
     history.push("/testimonials/create-edit", { id });
   };
-  const _onUserClick = (id: string) => {
-    if (!id) return;
-    history.push("/users/create-edit", { id });
-  };
 
   const _onFilterChange = (idx: string, value: any) => {
     setFilter((prev) => ({
@@ -85,8 +81,8 @@ const Testimonial = () => {
         accessor: "picture",
         Cell: (data: Cell) => (
           <TableImage
-            file={(data.row.original as any).user.profile_pic}
-            folder="profile_pic"
+            file={(data.row.original as any).picture}
+            folder="testimonials"
           />
         ),
       },
@@ -97,21 +93,6 @@ const Testimonial = () => {
       {
         Header: "Link",
         accessor: "link",
-      },
-      {
-        Header: "User",
-        accessor: "user.name",
-        Cell: (data: Cell) => {
-          return (
-            <p
-              className="text-primary m-0"
-              style={{ cursor: "pointer" }}
-              onClick={() => _onUserClick((data.row.original as any).user_id)}
-            >
-              {data.row.values["user.name"] || "NA"}
-            </p>
-          );
-        },
       },
       {
         Header: "Created At",

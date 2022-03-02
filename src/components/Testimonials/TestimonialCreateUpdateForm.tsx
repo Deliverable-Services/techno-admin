@@ -96,12 +96,11 @@ const TestimonialCreateUpdateForm = () => {
               enableReinitialize
               initialValues={apiData || {}}
               onSubmit={(values) => {
-                const { picture, ...rest } = values;
+                const { picture, user_id, ...rest } = values;
                 const formdata = new FormData();
                 for (let k in rest) formdata.append(k, rest[k]);
 
-                if (typeof picture !== "string")
-                  formdata.append("picture", picture);
+                if (picture) formdata.append("picture", picture);
 
                 console.log({ formdata });
                 mutate({ formdata, id });
