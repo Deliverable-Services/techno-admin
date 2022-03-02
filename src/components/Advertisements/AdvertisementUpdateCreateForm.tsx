@@ -161,7 +161,6 @@ const AdvertisementCreateUpdateForm = () => {
                       as="select"
                       selectData={types}
                     />
-                    <span></span>
                     <InputField
                       as="textarea"
                       name="details"
