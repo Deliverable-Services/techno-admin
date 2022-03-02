@@ -134,7 +134,7 @@ const Advertisements = () => {
         accessor: "name",
       },
       {
-        Header: "Deep Link",
+        Header: "Page url",
         accessor: "deeplink",
         Cell: (data: Cell) => (
           <p

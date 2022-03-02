@@ -1,5 +1,5 @@
 import { AxiosResponse } from "axios";
-import React, { ReactElement } from "react";
+import React, { ReactElement, useMemo } from "react";
 import { DragDropContext, Draggable, Droppable } from "react-beautiful-dnd";
 import { Container, Dropdown, Spinner, Table } from "react-bootstrap";
 import { DndProvider } from "react-dnd";
@@ -112,26 +112,30 @@ function ReactTable({
   filter,
   onFilterChange,
   isDataLoading,
-  setSelectedRowIds,
+  // setSelectedRowIds,
   isSelectable = true,
   searchPlaceHolder,
   deletePermissionReq = "",
 }: Props): ReactElement {
   const isRestricted = useUserProfileStore((state) => state.isRestricted);
   const [records, setRecords] = React.useState(data);
-  const updateMyData = (rowIndex: any, columnID: any, newValue: any) => {
-    setRecords((oldData: any) =>
-      oldData.map((row: any, index: any) => {
-        if (index === rowIndex) {
-          return {
-            ...oldData[rowIndex],
-            [columnID]: newValue,
-          };
-        }
-        return row;
-      })
-    );
-  };
+  const [rowIds, setSelectedRowIds] = React.useState<Record<any, any> | null>(
+    null
+  );
+
+  const [pageWiseRows, setPageWiseRows] = React.useState<Record<
+    any,
+    any
+  > | null>(null);
+
+  const formtatedSelectedRows = useMemo(() => {
+    const temp = { ...pageWiseRows };
+    let data = [];
+    Object.values(temp).forEach((d) => {
+      data = [...data, ...d];
+    });
+    return data;
+  }, [pageWiseRows]);
 
   const reorderData = (startIndex: any, endIndex: any) => {
     const newData = [...records];
@@ -153,6 +157,7 @@ function ReactTable({
     getTableBodyProps,
     headerGroups,
     rows,
+    page,
     prepareRow,
     allColumns,
     state,
@@ -169,6 +174,7 @@ function ReactTable({
         ...initialState,
         pageSize: filter.perPage,
         hiddenColumns: ["id"],
+        selectedRowIds: rowIds ? rowIds[filter?.page ?? 1] : [],
       },
     },
     useFilters,
@@ -203,7 +209,7 @@ function ReactTable({
         ]);
     }
   );
-
+  console.log("selected flat rows", selectedFlatRows);
   React.useEffect(() => {
     function filterRows() {
       let data = [];
@@ -213,10 +219,22 @@ function ReactTable({
 
       return data;
     }
-    if (setSelectedRowIds) setSelectedRowIds(selectedRowIds);
+    // setting row indexes based on current page
+    setSelectedRowIds((prev) => ({
+      ...prev,
+      [filter?.page ?? 1]: selectedRowIds,
+    }));
 
-    if (setSelectedRows) setSelectedRows(filterRows);
+    // setting row list  based on current page
+    setPageWiseRows((prev) => ({
+      ...prev,
+      [filter?.page ?? 1]: filterRows(),
+    }));
   }, [selectedRowIds]);
+
+  React.useEffect(() => {
+    if (setSelectedRows) setSelectedRows(formtatedSelectedRows);
+  }, [formtatedSelectedRows, setSelectedRows]);
 
   const handleDragEnd = (result: any) => {
     const { source, destination } = result;

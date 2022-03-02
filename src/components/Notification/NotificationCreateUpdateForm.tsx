@@ -40,7 +40,7 @@ const createUpdataBrand = ({ formdata, id }: { formdata: any; id: string }) => {
 const intitialFilter = {
   q: "",
   role: "",
-  page: null,
+  page: 1,
   perPage: 25,
 };
 
@@ -52,10 +52,12 @@ const NotificationCreateUpdateForm = () => {
     id ? true : false
   );
   const [selectedRows, setSelectedRows] = useState([]);
+  // const [selectedRowIds, setSelectedRowIds] = useState<Record<
+  //   string,
+  //   any
+  // > | null>(null);
+
   console.log({ selectedRows });
-  const [selectedRowIds, setSelectedRowIds] = useState<Record<string, boolean>>(
-    {}
-  );
   const [filter, setFilter] = useState(intitialFilter);
   useEffect(() => {
     bsCustomFileInput.init();
@@ -108,6 +110,18 @@ const NotificationCreateUpdateForm = () => {
     ],
     []
   );
+
+  // const rows = useMemo(() => {
+  //   let ids = {}
+  //   if(!Users) return {};
+  //   if(!selectedRows.length) return {} ;
+  //     selectedRows.forEach((row: any) => {
+  //     const user = Users.data.find(u=>u.id === row.id)
+  //     if(!user) return;
+  //       const index = Users.data.indexof(user)
+  //       console.log({index})
+  // }, [Users,selectedRows]);
+
   const { mutate, isLoading } = useMutation(createUpdataBrand, {
     onSuccess: () => {
       setTimeout(() => queryClient.invalidateQueries(key), 500);
@@ -279,10 +293,11 @@ const NotificationCreateUpdateForm = () => {
                               filter={filter}
                               onFilterChange={_onFilterChange}
                               isDataLoading={isFetching}
-                              initialState={{
-                                selectedRowIds,
-                              }}
-                              setSelectedRowIds={setSelectedRowIds}
+                              // initialState={{
+                              //   selectedRowIds: selectedRowIds
+                              //     ? selectedRowIds[filter.page]
+                              //     : [],
+                              // }}
                               deletePermissionReq="read_user"
                             />
                             <TablePagination

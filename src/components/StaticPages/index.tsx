@@ -152,7 +152,7 @@ const PageContainer = ({ page, selectedTitle }) => {
         <div className="card-title d-flex align-items-center justify-content-between">
           <p className="text-black px-2 lead font-weight-bold">{page.title}</p>
           <div className="d-flex align-items-center">
-            <Restricted to="delete_staticpage">
+            <Restricted to="update_staticpage">
               <Button
                 size="sm"
                 className="mr-2"
