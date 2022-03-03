@@ -50,6 +50,7 @@ interface ISearchInput {
   searchValue: string;
   onSearchChange: any;
   placeholder?: string;
+  disabled?: boolean;
 }
 
 function SearchInput({
@@ -59,6 +60,7 @@ function SearchInput({
   searchValue,
   onSearchChange,
   placeholder,
+  disabled,
 }: ISearchInput) {
   const count = preGlobalFilteredRows.length;
   const [value, setValue] = React.useState(searchValue);
@@ -75,6 +77,7 @@ function SearchInput({
         // onChange(e.target.value);
       }}
       placeholder={placeholder ? placeholder : `Search ${count} records...`}
+      style={{ pointerEvents: disabled ? "none" : "auto" }}
     />
   );
 }
@@ -263,6 +266,7 @@ function ReactTable({
               searchValue={filter?.query}
               onSearchChange={onFilterChange}
               placeholder={searchPlaceHolder}
+              disabled={formtatedSelectedRows.length > 0}
             />
           </div>
         </div>
