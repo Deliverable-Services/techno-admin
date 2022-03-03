@@ -132,6 +132,21 @@ const CouponCreateUpdateForm = () => {
                       label="Condition Type"
                       placeholder="Condition Type"
                     />
+
+                    <InputField
+                      name="allowed_usage"
+                      type="number"
+                      placeholder="Enter allowed usage"
+                      label="Allowed Usage"
+                      required
+                    />
+                    <InputField
+                      type="number"
+                      name="user_limit"
+                      placeholder="Single User limit"
+                      label="Single user limit"
+                      required
+                    />
                   </div>
                   <TextEditor
                     name="description"
