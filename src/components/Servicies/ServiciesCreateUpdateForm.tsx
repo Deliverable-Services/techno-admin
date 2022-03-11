@@ -11,6 +11,7 @@ import {
   Spinner,
   Form as BForm,
 } from "react-bootstrap";
+import { FaTrash } from "react-icons/fa";
 import { useMutation, useQuery } from "react-query";
 import { useHistory, useLocation } from "react-router-dom";
 import { handleApiError } from "../../hooks/handleApiErrors";
@@ -270,39 +271,98 @@ const ServicesCreateUpdateForm = () => {
                   style={{ cursor: "pointer", fontWeight: 600 }}
                 >
                   <Formik
-                    initialValues={{ images: [] }}
-                    onSubmit={(values) => {
+                    initialValues={{ images: null }}
+                    onSubmit={(values, { resetForm }) => {
                       const { images } = values;
                       const formdata = new FormData();
-                      for (let k in images)
-                        formdata.append("images[]", images[k]);
+                      if (!images) return;
+                      images.forEach((e: any) => {
+                        formdata.append("images[]", e);
+                      });
 
                       formdata.append("id", id);
-
                       mutateImages({ formdata });
+                      resetForm({ values: { images: null } });
                     }}
                   >
                     {({ setFieldValue, values }) => (
                       <Form>
-                        <div className="w-100 d-flex align-items-start ">
-                          <InputField
-                            name="images"
-                            showImage={false}
-                            label="Choose Plans Images"
-                            isFile
-                            multipleImages
-                            setFieldValue={setFieldValue}
-                          />
+                        <div
+                          className="w-100 d-flex align-items-start "
+                          style={{ minWidth: "250px" }}
+                        >
+                          <label className="d-block w-100">
+                            <input
+                              className="d-none"
+                              type="file"
+                              name="images"
+                              multiple={true}
+                              onChange={(e) => {
+                                setFieldValue(
+                                  "images",
+                                  Object.values(e.target.files)
+                                );
+                              }}
+                            />
+                            <div
+                              className="border rounded p-2 w-100 mb-2"
+                              style={{ width: "250px", cursor: "pointer" }}
+                            >
+                              <p className="mb-0 text-center">
+                                Choose service images
+                              </p>
+                            </div>
+                          </label>
                         </div>
+
+                        <Row className="mb-2">
+                          {values.images &&
+                            values.images.map((e: any, i: number) => (
+                              <Col md={6}>
+                                <div
+                                  className="d-flex align-items-center"
+                                  key={i}
+                                >
+                                  <div className="mr-2">
+                                    <img
+                                      src={URL.createObjectURL(e)}
+                                      alt="image"
+                                      style={{
+                                        width: "80px",
+                                        height: "80px",
+                                      }}
+                                    />
+                                  </div>
+                                  <div className="d-flex align-items-center">
+                                    <div
+                                      className="text-danger"
+                                      onClick={() => {
+                                        const idx = values.images.indexOf(e);
+                                        values.images.splice(idx, 1);
+                                        setFieldValue("images", values.images);
+                                      }}
+                                    >
+                                      <FaTrash />
+                                    </div>
+                                  </div>
+                                </div>
+                              </Col>
+                            ))}
+                        </Row>
+
                         <Restricted to="update_service">
                           <Button
                             type="submit"
-                            disabled={isServicesImageLoading}
+                            disabled={
+                              isServicesImageLoading ||
+                              values?.images === null ||
+                              values?.images?.length === 0
+                            }
                           >
                             {isServicesImageLoading ? (
                               <Spinner animation="border" size="sm" />
                             ) : (
-                              "Add Imges"
+                              "Upload Images"
                             )}
                           </Button>
                         </Restricted>

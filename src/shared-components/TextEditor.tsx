@@ -29,6 +29,7 @@ const TextEditor = ({ name, label, setFieldValue, ...props }: Props) => {
         height: "400px",
         zIndex: -1,
         overflow: "hidden",
+        marginTop: 10,
       }}
     >
       <span className="text-black " style={{ fontWeight: 500 }}>
@@ -39,11 +40,11 @@ const TextEditor = ({ name, label, setFieldValue, ...props }: Props) => {
           value={value}
           onChange={handleChange}
           language="en"
+          contentStyle={{ height: "300px", overflow: "auto" }}
           style={{
             height: "100%",
-            zIndex: 0,
+            zIndex: 999999,
             background: "#f0f0f0",
-            marginTop: 10,
           }}
         />
       </div>
