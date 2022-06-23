@@ -21,9 +21,22 @@ import renderHTML from "../../utils/renderHTML";
 import { showErrorToast } from "../../utils/showErrorToast";
 import { showMsgToast } from "../../utils/showMsgToast";
 import ProgressBar from "./ProgressBar";
+import { config } from "../../utils/constants";
 
 const key = "bookings";
 const dateFormat = "DD MMMM YY (hh:mm a)";
+
+
+function saveAsFile(blog, filename = "jobcard.pdf") {
+  const url = window.URL.createObjectURL(new Blob([blog],{type: "octet/stream"}));
+  const link = document.createElement("a");
+  link.href = url;
+  link.setAttribute("download", filename);
+  document.body.appendChild(link);
+  link.click();
+  link.remove();
+}
+
 
 const assignAgent = ({
   formdata,
@@ -49,6 +62,7 @@ const SingleOrder = () => {
   const [showAssignAgent, setShowAssignAgent] = useState(false);
   const { data, isLoading, isFetching } = useGetSingleQuery({ id, key });
   const [isDownloadingInvoice, setIsDownloadingInvoice] = useState(false);
+  const [isDownloadingJobCard, setIsDownloadingJobCard] = useState(false);
 
   // const { data: Invoice, isLoading: isInvoiceLoading } = useQuery<any>(
   //   [`${key}/${15}/download-invoice`],
@@ -70,6 +84,23 @@ const SingleOrder = () => {
       setIsDownloadingInvoice(false);
     }
   };
+
+  const _onDownloadJobCard = async (id) => {
+    setIsDownloadingJobCard(true);
+    try {
+      const res = await API.get("/job-card-pdf/" + id, {
+        headers: {
+          "Content-Type": "application/pdf",
+        },
+      });
+      if (res) saveAsFile(res);
+    } catch (error) {
+      handleApiError(error, history);
+    } finally {
+      setIsDownloadingJobCard(false);
+    }
+  };
+
   // );
 
   const { mutate, isLoading: isAsigningLoading } = useMutation(assignAgent, {
@@ -195,6 +226,22 @@ const SingleOrder = () => {
           </div>
         </div>
         <div className="mt-1 mt-md-0">
+          <Button
+            size="sm"
+            variant="success"
+            // onClick={() => _onDownloadJobCard(id)}
+            disabled={isDownloadingJobCard}
+          >
+            {isDownloadingJobCard ? (
+              <p className="text-white m-0">Downloading...</p>
+            ) : (
+              <div className=" d-flex align-items-center text-white">
+                <BiDownload size={18} />
+
+                <a target="_blank" href={ config.adminApiBaseUrl + "job-card-pdf/" + id }>Job Card</a>
+              </div>
+            )}
+          </Button>
           {!isLoading && data.transaction && data.transaction.length > 0 && (
             <Button
               size="sm"
@@ -225,6 +272,7 @@ const SingleOrder = () => {
               </div>
             </Button>
           </Restricted>
+
           <Button className="ml-2" onClick={() => history.goBack()} size="sm">
             <div className="text-white d-flex align-items-center">
               <BiArrowFromRight size={18} /> <p className="ml-1 mb-0">Back</p>
