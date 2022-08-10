@@ -50,9 +50,9 @@ const RolesCreateUpdateForm = () => {
   const { mutate, isLoading } = useMutation(createUpdataBrand, {
     onSuccess: () => {
       setTimeout(() => queryClient.invalidateQueries("get-all-roles"), 500);
-      history.replace("/roles");
       if (id) return showMsgToast("Role updated successfully");
       showMsgToast("Role created successfully");
+      history.replace("/roles");
     },
     onError: (error: AxiosError) => {
       handleApiError(error, history);

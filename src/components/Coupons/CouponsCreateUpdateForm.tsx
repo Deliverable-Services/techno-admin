@@ -51,9 +51,9 @@ const CouponCreateUpdateForm = () => {
     {
       onSuccess: () => {
         setTimeout(() => queryClient.invalidateQueries(key), 500);
+        if (id) return showMsgToast("Coupon updated successfully");
+        showMsgToast("Coupon created successfully");
         history.replace("/coupons");
-        if (id) return showMsgToast("Brand updated successfully");
-        showMsgToast("Brands created successfully");
       },
       onError: (error: AxiosError) => {
         handleApiError(error, history);
@@ -102,6 +102,13 @@ const CouponCreateUpdateForm = () => {
                       required
                     />
                     <InputField
+                      as="select"
+                      selectData={conditionType}
+                      name="condition_type"
+                      label="Condition Type"
+                      placeholder="Condition Type"
+                    />
+                    <InputField
                       type="number"
                       name="condition"
                       placeholder="Condition"
@@ -119,18 +126,25 @@ const CouponCreateUpdateForm = () => {
                       setFieldValue={setFieldValue}
                     />
                     <InputField
+                      name="allowed_usage"
+                      type="number"
+                      placeholder="Enter allowed usage"
+                      label="Allowed Usage"
+                      required
+                    />
+                    <InputField
+                      type="number"
+                      name="user_limit"
+                      placeholder="Single User limit"
+                      label="Single user limit"
+                      required
+                    />
+                    <InputField
                       as="select"
                       selectData={isActiveArray}
                       name="is_active"
                       label="Is active?"
                       placeholder="Choose is active"
-                    />
-                    <InputField
-                      as="select"
-                      selectData={conditionType}
-                      name="condition_type"
-                      label="Condition Type"
-                      placeholder="Condition Type"
                     />
                   </div>
                   <TextEditor

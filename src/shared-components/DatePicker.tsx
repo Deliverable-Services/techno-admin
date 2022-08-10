@@ -2,6 +2,7 @@ import { useField } from "formik";
 import moment from "moment";
 import React, { useState } from "react";
 import { Form } from "react-bootstrap";
+import { DefaultInputHeight } from "../utils/constants";
 
 interface Props {
   label?: string;
@@ -41,6 +42,9 @@ const DatePicker: React.FC<Props> = ({
             value={value}
             onChange={handleChange}
             type={pickerType}
+            style={{
+              height: DefaultInputHeight,
+            }}
           />
         }
         {error && <Form.Text className="text-danger">{error}</Form.Text>}

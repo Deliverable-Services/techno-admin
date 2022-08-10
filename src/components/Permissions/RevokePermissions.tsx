@@ -42,7 +42,6 @@ const RevokePermission = () => {
         () => queryClient.invalidateQueries("roles-with-permission"),
         500
       );
-      history.replace("/permissions");
       showMsgToast("Permission revoked successfully");
     },
     onError: (error: AxiosError) => {

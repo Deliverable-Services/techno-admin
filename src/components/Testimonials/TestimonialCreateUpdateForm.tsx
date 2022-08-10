@@ -58,9 +58,9 @@ const TestimonialCreateUpdateForm = () => {
       setTimeout(() => queryClient.invalidateQueries(key), 500);
       if (id)
         setTimeout(() => queryClient.invalidateQueries(`${key}/${id}`), 500);
-      history.replace("/testimonials");
       if (id) return showMsgToast("Testimonial updated successfully");
       showMsgToast("Testimonial created successfully");
+      history.replace("/testimonials");
     },
     onError: (error: AxiosError) => {
       handleApiError(error, history);
@@ -96,12 +96,11 @@ const TestimonialCreateUpdateForm = () => {
               enableReinitialize
               initialValues={apiData || {}}
               onSubmit={(values) => {
-                const { picture, ...rest } = values;
+                const { picture, user_id, ...rest } = values;
                 const formdata = new FormData();
                 for (let k in rest) formdata.append(k, rest[k]);
 
-                if (picture && typeof picture !== "string")
-                  formdata.append("picture", picture);
+                if (picture) formdata.append("picture", picture);
 
                 console.log({ formdata });
                 mutate({ formdata, id });
@@ -112,21 +111,14 @@ const TestimonialCreateUpdateForm = () => {
                   <div className="form-container ">
                     <InputField name="name" placeholder="Name" label="Name" />
 
+                    <InputField name="link" placeholder="Link" label="Link" />
                     <InputField
                       name="picture"
                       placeholder="picture"
                       label="Picture"
                       isFile
+                      folder="testimonials"
                       setFieldValue={setFieldValue}
-                    />
-                    <InputField name="link" placeholder="Link" label="Link" />
-                    <InputField
-                      name="user_id"
-                      placeholder="User"
-                      label="Choose User"
-                      as="select"
-                      selectData={!isUsersLoading && Users.data}
-                      altTitleKey="id"
                     />
                   </div>
                   <Row>

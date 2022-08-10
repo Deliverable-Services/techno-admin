@@ -1,18 +1,15 @@
-import axios, { AxiosError } from "axios";
+import { AxiosError } from "axios";
 import { Form, Formik } from "formik";
-import { useEffect } from "react";
-import { Alert, Button, Container, Spinner } from "react-bootstrap";
+import { Button, Container, Spinner } from "react-bootstrap";
 import { useMutation } from "react-query";
-import { useHistory, useParams } from "react-router";
+import { useHistory } from "react-router";
 import { useLocation } from "react-router-dom";
 import * as Yup from "yup";
 import { handleApiError } from "../hooks/handleApiErrors";
 import useTokenStore from "../hooks/useTokenStore";
 import useUserProfileStore from "../hooks/useUserProfileStore";
 import { InputField } from "../shared-components/InputFeild";
-import Logo from "../shared-components/Logo";
 import API from "../utils/API";
-import { appApiBaseUrl } from "../utils/constants";
 import { showErrorToast } from "../utils/showErrorToast";
 import { showMsgToast } from "../utils/showMsgToast";
 
@@ -36,6 +33,8 @@ const resendOtp = (formData: FormData) => {
 
 const VerifyOtp = (props: Props) => {
   const { state } = useLocation();
+
+  console.log({ state });
   const history = useHistory();
   const setToken = useTokenStore((state) => state.setToken);
   const setUser = useUserProfileStore((state) => state.setUser);
@@ -70,9 +69,7 @@ const VerifyOtp = (props: Props) => {
         onSubmit={(values) => {
           const formData = new FormData();
           formData.append("phone", (state as any).phone);
-          formData.append("otp", (state as any).otp);
-          // formData.append("otp", values.otp);
-
+          formData.append("otp", values.otp);
           mutate(formData);
         }}
         validationSchema={VerifySchema}

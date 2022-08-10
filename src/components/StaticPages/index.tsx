@@ -31,27 +31,6 @@ const StaticPages = () => {
   const isRestricted = useUserProfileStore((state) => state.isRestricted);
 
   const { data, isLoading, isFetching } = useQuery<any>([key]);
-  const { mutate, isLoading: isUpdatedLoading } = useMutation(updatePageData, {
-    onSuccess: () => {
-      showMsgToast("Page  saved successfully");
-      setTimeout(() => queryClient.invalidateQueries(key), 500);
-    },
-    onError: (error: AxiosError) => {
-      handleApiError(error, history);
-    },
-  });
-  const { mutate: mutateDelete, isLoading: isDeleteLoading } = useMutation(
-    deletePage,
-    {
-      onSuccess: () => {
-        showMsgToast("Page  deleted successfully");
-        setTimeout(() => queryClient.invalidateQueries(key), 500);
-      },
-      onError: (error: AxiosError) => {
-        handleApiError(error, history);
-      },
-    }
-  );
   const [titles, setTitles] = useState([]);
   const [selectedTitle, setSelectedTitle] = useState(titles[0]);
 
@@ -69,25 +48,6 @@ const StaticPages = () => {
 
   const _onCreateClick = () => {
     history.push("/static-pages/create-edit");
-  };
-
-  const _onEditPageClick = (pageId: any) => {
-    // history.push("/static-pages/create-edit");
-    console.log("on edit ", pageId);
-  };
-
-  const handleSave = (editorState: EditorState, pagedata: any) => {
-    if (isRestricted("update_staticpage")) return;
-    const content = editorState.toHTML();
-    const formdata = {
-      ...pagedata,
-      content,
-    };
-    mutate({ formdata, id: pagedata.id });
-  };
-  const _onDeletePage = (pageId: any) => {
-    console.log("delete page", pageId);
-    mutateDelete(pageId);
   };
 
   if (!data && (!isLoading || !isFetching)) {
@@ -130,52 +90,113 @@ const StaticPages = () => {
         </Container>
 
         {data?.data.map((page) => (
-          <Container
-            fluid
-            className="p-0 mb-3"
-            style={{ display: selectedTitle === page.title ? "block" : "none" }}
-          >
-            <div className="">
-              <div className="card-title d-flex align-items-center justify-content-between">
-                <p className="text-black px-2 lead font-weight-bold">
-                  {page.title}
-                </p>
-                <div className="d-flex align-items-center">
-                  <Restricted to="delete_staticpage">
-                    <Button
-                      size="sm"
-                      className="mr-2"
-                      variant="danger"
-                      onClick={() => _onDeletePage(page.id)}
-                      disabled={isDeleteLoading}
-                    >
-                      {isDeleteLoading ? "Loading..." : "Delete page"}
-                    </Button>
-                  </Restricted>
-                  {/* <EditButton onClick={() => _onEditPageClick(page.id)} /> */}
-                </div>
-              </div>
-              <p className="text-muted px-2">{page.description}</p>
-              <div className="mx-auto">
-                {isFetching || isUpdatedLoading ? (
-                  <IsLoading />
-                ) : (
-                  <div className="bg-light rounded">
-                    <BraftEditor
-                      value={BraftEditor.createEditorState(page.content)}
-                      onSave={(editorState: EditorState) =>
-                        handleSave(editorState, page)
-                      }
-                      language="en"
-                    />
-                  </div>
-                )}
-              </div>
-            </div>
-          </Container>
+          <PageContainer page={page} selectedTitle={selectedTitle} />
         ))}
       </Container>
     </>
+  );
+};
+
+const PageContainer = ({ page, selectedTitle }) => {
+  const history = useHistory();
+  const isRestricted = useUserProfileStore((state) => state.isRestricted);
+  const [contentDetails, setContentDetials] = useState<EditorState>();
+
+  useEffect(() => {
+    if (page) setContentDetials(BraftEditor.createEditorState(page.content));
+  }, [page]);
+
+  const { mutate, isLoading: isUpdatedLoading } = useMutation(updatePageData, {
+    onSuccess: () => {
+      showMsgToast("Page  saved successfully");
+      setTimeout(() => queryClient.invalidateQueries(key), 500);
+    },
+    onError: (error: AxiosError) => {
+      handleApiError(error, history);
+    },
+  });
+  const { mutate: mutateDelete, isLoading: isDeleteLoading } = useMutation(
+    deletePage,
+    {
+      onSuccess: () => {
+        showMsgToast("Page  deleted successfully");
+        setTimeout(() => queryClient.invalidateQueries(key), 500);
+      },
+      onError: (error: AxiosError) => {
+        handleApiError(error, history);
+      },
+    }
+  );
+
+  const handleSave = (editorState: EditorState, pagedata: any) => {
+    if (isRestricted("update_staticpage")) return;
+    const content = editorState.toHTML();
+    const formdata = {
+      ...pagedata,
+      content,
+    };
+    mutate({ formdata, id: pagedata.id });
+  };
+  const _onDeletePage = (pageId: any) => {
+    console.log("delete page", pageId);
+    mutateDelete(pageId);
+  };
+
+  return (
+    <Container
+      fluid
+      className="p-0 mb-3"
+      style={{ display: selectedTitle === page.title ? "block" : "none" }}
+    >
+      <div className="">
+        <div className="card-title d-flex align-items-center justify-content-between">
+          <p className="text-black px-2 lead font-weight-bold">{page.title}</p>
+          <div className="d-flex align-items-center">
+            <Restricted to="update_staticpage">
+              <Button
+                size="sm"
+                className="mr-2"
+                onClick={() => handleSave(contentDetails, page)}
+                disabled={isUpdatedLoading}
+              >
+                {isUpdatedLoading ? "Loading..." : "Save Changes"}
+              </Button>
+            </Restricted>
+            <Restricted to="delete_staticpage">
+              <Button
+                size="sm"
+                className="mr-2"
+                variant="danger"
+                onClick={() => _onDeletePage(page.id)}
+                disabled={isDeleteLoading}
+              >
+                {isDeleteLoading ? "Loading..." : "Delete page"}
+              </Button>
+            </Restricted>
+            {/* <EditButton onClick={() => _onEditPageClick(page.id)} /> */}
+          </div>
+        </div>
+        <p className="text-muted px-2">{page.description}</p>
+        <div className="mx-auto">
+          {isUpdatedLoading ? (
+            <IsLoading />
+          ) : (
+            <div className="bg-light rounded">
+              <BraftEditor
+                value={contentDetails}
+                onSave={(editorState: EditorState) =>
+                  handleSave(editorState, page)
+                }
+                onChange={(editorState: EditorState) =>
+                  setContentDetials(editorState)
+                }
+                language="en"
+              />
+            </div>
+          )}
+        </div>
+      </div>
+    </Container>
   );
 };
 

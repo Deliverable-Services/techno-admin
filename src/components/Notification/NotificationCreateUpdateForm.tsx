@@ -17,6 +17,7 @@ import DatePicker from "../../shared-components/DatePicker";
 import { InputField } from "../../shared-components/InputFeild";
 import IsActiveBadge from "../../shared-components/IsActiveBadge";
 import IsLoading from "../../shared-components/isLoading";
+import TablePagination from "../../shared-components/Pagination";
 import ReactTable from "../../shared-components/ReactTable";
 import Restricted from "../../shared-components/Restricted";
 import TextEditor from "../../shared-components/TextEditor";
@@ -39,7 +40,7 @@ const createUpdataBrand = ({ formdata, id }: { formdata: any; id: string }) => {
 const intitialFilter = {
   q: "",
   role: "",
-  page: null,
+  page: 1,
   perPage: 25,
 };
 
@@ -51,9 +52,12 @@ const NotificationCreateUpdateForm = () => {
     id ? true : false
   );
   const [selectedRows, setSelectedRows] = useState([]);
-  const [selectedRowIds, setSelectedRowIds] = useState<Record<string, boolean>>(
-    {}
-  );
+  // const [selectedRowIds, setSelectedRowIds] = useState<Record<
+  //   string,
+  //   any
+  // > | null>(null);
+
+  console.log({ selectedRows });
   const [filter, setFilter] = useState(intitialFilter);
   useEffect(() => {
     bsCustomFileInput.init();
@@ -106,12 +110,24 @@ const NotificationCreateUpdateForm = () => {
     ],
     []
   );
+
+  // const rows = useMemo(() => {
+  //   let ids = {}
+  //   if(!Users) return {};
+  //   if(!selectedRows.length) return {} ;
+  //     selectedRows.forEach((row: any) => {
+  //     const user = Users.data.find(u=>u.id === row.id)
+  //     if(!user) return;
+  //       const index = Users.data.indexof(user)
+  //       console.log({index})
+  // }, [Users,selectedRows]);
+
   const { mutate, isLoading } = useMutation(createUpdataBrand, {
     onSuccess: () => {
       setTimeout(() => queryClient.invalidateQueries(key), 500);
-      history.replace("/push-notifications");
       if (id) return showMsgToast("Notification updated successfully");
       showMsgToast("Notification created successfully");
+      history.replace("/push-notifications");
     },
     onError: (error: AxiosError) => {
       handleApiError(error, history);
@@ -140,11 +156,13 @@ const NotificationCreateUpdateForm = () => {
                   : { is_sms: "0" }
               }
               onSubmit={(values) => {
-                const { is_sms, ...rest } = values;
+                const { is_sms, send_to, ...rest } = values;
                 const formdata = {
                   ...rest,
                   users: selectedRows.map((i) => i.id),
                 };
+
+                if (send_to !== "custom") formdata["send_to"] = send_to;
 
                 if (is_sms === "1") {
                   formdata["is_sms"] = is_sms;
@@ -154,10 +172,6 @@ const NotificationCreateUpdateForm = () => {
                   formdata["scheduled_at"] = moment().format(
                     "YYYY-MM-DD hh:mm:ss"
                   );
-                // const { logo, ...rest } = values;
-                // const formdata = new FormData();
-                // for (let k in rest) formdata.append(k, rest[k]);
-                console.log("hellow", { formdata });
                 mutate({ formdata, id });
               }}
             >
@@ -268,23 +282,35 @@ const NotificationCreateUpdateForm = () => {
                         </div>
                       )}
                     </Col>
-                    <Col md={12} xl={12}>
-                      {!error && !isUsersLoading && Users && (
-                        <ReactTable
-                          data={Users?.data}
-                          columns={columns}
-                          setSelectedRows={setSelectedRows}
-                          filter={filter}
-                          onFilterChange={_onFilterChange}
-                          isDataLoading={isFetching}
-                          initialState={{
-                            selectedRowIds,
-                          }}
-                          setSelectedRowIds={setSelectedRowIds}
-                          deletePermissionReq="read_user"
-                        />
-                      )}
-                    </Col>
+                    {values?.send_to === "custom" && (
+                      <Col md={12} xl={12}>
+                        {!error && !isUsersLoading && Users && (
+                          <>
+                            <ReactTable
+                              data={Users?.data}
+                              columns={columns}
+                              setSelectedRows={setSelectedRows}
+                              filter={filter}
+                              onFilterChange={_onFilterChange}
+                              isDataLoading={isFetching}
+                              // initialState={{
+                              //   selectedRowIds: selectedRowIds
+                              //     ? selectedRowIds[filter.page]
+                              //     : [],
+                              // }}
+                              deletePermissionReq="read_user"
+                            />
+                            <TablePagination
+                              currentPage={Users?.current_page}
+                              lastPage={Users?.last_page}
+                              setPage={_onFilterChange}
+                              hasNextPage={!!Users?.next_page_url}
+                              hasPrevPage={!!Users?.prev_page_url}
+                            />
+                          </>
+                        )}
+                      </Col>
+                    )}
                   </Row>
 
                   <Row className="d-flex justify-content-start">

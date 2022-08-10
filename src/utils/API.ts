@@ -1,10 +1,8 @@
 import axios from "axios";
-import { adminApiBaseUrl } from "./constants";
+import { config } from "./constants";
 
 const API = axios.create({
-  baseURL: adminApiBaseUrl,
-
-  // baseURL: config.baseURL,
+  baseURL: config.adminApiBaseUrl,
 });
 
 export default API;

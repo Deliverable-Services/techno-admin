@@ -10,7 +10,7 @@ import { useMutation } from "react-query";
 import { useHistory } from "react-router-dom";
 import { handleApiError } from "../hooks/handleApiErrors";
 import API from "../utils/API";
-import { baseUploadUrl } from "../utils/constants";
+import { config } from "../utils/constants";
 import { queryClient } from "../utils/queryClient";
 import { showMsgToast } from "../utils/showMsgToast";
 
@@ -78,7 +78,7 @@ const ImagesContainer = ({ images, folder }: Props) => {
                 </button>
               </div>
               <img
-                src={`${baseUploadUrl}${folder}/${file.image}`}
+                src={`${config.baseUploadUrl}${folder}/${file.image}`}
                 alt={file.image}
               />
             </div>

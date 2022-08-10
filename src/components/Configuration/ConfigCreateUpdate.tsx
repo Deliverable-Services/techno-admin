@@ -47,9 +47,9 @@ const ConfigCreateUpdateForm = () => {
   const { mutate, isLoading } = useMutation(createUpdateConfig, {
     onSuccess: () => {
       setTimeout(() => queryClient.invalidateQueries(key), 500);
-      history.replace("/configurations");
       if (id) return showMsgToast("Config updated successfully");
       showMsgToast("Config created successfully");
+      history.replace("/configurations");
     },
     onError: (error: AxiosError) => {
       handleApiError(error, history);

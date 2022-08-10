@@ -8,11 +8,7 @@ import { useHistory } from "react-router-dom";
 import IsActiveBadge from "../../shared-components/IsActiveBadge";
 import IsLoading from "../../shared-components/isLoading";
 import API from "../../utils/API";
-import {
-  baseUploadUrl,
-  primaryColor,
-  secondaryColor
-} from "../../utils/constants";
+import { config, primaryColor, secondaryColor } from "../../utils/constants";
 import { types } from "./AdvertisementTypes";
 import useCurrentAdTypeSelectedStore from "./useCurrentAdTypeSelectedStore";
 
@@ -30,24 +26,21 @@ const getBanners: QueryFunction = async ({ queryKey }) => {
   return await r.data;
 };
 
-const LatestAd: React.FC<Props> = ({
-  setDeletePopup,
-  setSelectedRowId,
-}) => {
+const LatestAd: React.FC<Props> = ({ setDeletePopup, setSelectedRowId }) => {
   const selectedType = useCurrentAdTypeSelectedStore((state) => state.type);
   const setSelectedType = useCurrentAdTypeSelectedStore(
     (state) => state.setCurrentType
   );
   // const [selectedType, setSelectedType] = useState(types[0])
-  const history = useHistory()
+  const history = useHistory();
 
   const { data, isLoading, isFetching } = useQuery<any>(
     [key, selectedType.id],
     getBanners
   );
   const _onEditClick = (id: string) => {
-    history.push("/advertisements/create-edit", { id })
-  }
+    history.push("/advertisements/create-edit", { id });
+  };
   if (isLoading || isFetching) return <IsLoading />;
 
   return (
@@ -84,18 +77,18 @@ const LatestAd: React.FC<Props> = ({
                 <Card>
                   <Card.Img
                     variant="top"
-                    src={`${baseUploadUrl}banners/${ad.image}`}
+                    src={`${config.baseUploadUrl}banners/${ad.image}`}
                     style={{ height: "12rem" }}
                     className="advertisement-image"
                   />
-                  <Card.Body >
+                  <Card.Body>
                     <div className="d-flex w-100 justify-content-between">
-                      <h4 >{ad.name}</h4>
+                      <h4>{ad.name}</h4>
                       <div className="advertisements-actions ">
                         <button
                           onClick={() => {
                             setSelectedRowId(ad.id);
-                            _onEditClick(ad.id)
+                            _onEditClick(ad.id);
                           }}
                         >
                           <AiFillEdit color={secondaryColor} size={24} />
@@ -109,7 +102,7 @@ const LatestAd: React.FC<Props> = ({
                         >
                           <AiFillDelete color="red" size={24} />
                         </button>
-                      </div >
+                      </div>
                     </div>
                     <table className="w-100">
                       <tbody>
@@ -145,7 +138,6 @@ const LatestAd: React.FC<Props> = ({
                         </tr>
                       </tbody>
                     </table>
-
                   </Card.Body>
                 </Card>
               </Col>
