@@ -2,6 +2,7 @@ export const isDesktop = window.innerHeight <= 800;
 export const primaryColor = "#2c7be5";
 export const secondaryColor = "#ECB054";
 export const LocalStorageKey = "carsafai_admin_";
+export const DefaultInputHeight = 40;
 
 const serverPort = process.env.REACT_APP_SERVER_PORT || 4000;
 

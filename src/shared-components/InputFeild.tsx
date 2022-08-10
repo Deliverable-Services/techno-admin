@@ -3,6 +3,7 @@ import { useField } from "formik";
 import { Form, Image } from "react-bootstrap";
 import { config } from "process";
 import TableImage from "./TableImage";
+import { DefaultInputHeight } from "../utils/constants";
 
 type InputFieldProps = InputHTMLAttributes<HTMLInputElement> & {
   label?: string;
@@ -80,6 +81,10 @@ export const InputField: React.FC<InputFieldProps> = ({
             id={field.name}
             as="select"
             disabled={isDisabled}
+            style={{
+              height: DefaultInputHeight,
+              ...props.style,
+            }}
           >
             <option value="">{label}</option>
             {selectData &&
@@ -96,6 +101,10 @@ export const InputField: React.FC<InputFieldProps> = ({
             id={field.name}
             as={as}
             disabled={isDisabled}
+            style={{
+              height: DefaultInputHeight,
+              ...props.style,
+            }}
           />
         )}
         {error && <Form.Text className="text-danger">{error}</Form.Text>}

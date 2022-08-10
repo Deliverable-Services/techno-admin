@@ -102,6 +102,13 @@ const CouponCreateUpdateForm = () => {
                       required
                     />
                     <InputField
+                      as="select"
+                      selectData={conditionType}
+                      name="condition_type"
+                      label="Condition Type"
+                      placeholder="Condition Type"
+                    />
+                    <InputField
                       type="number"
                       name="condition"
                       placeholder="Condition"
@@ -119,21 +126,6 @@ const CouponCreateUpdateForm = () => {
                       setFieldValue={setFieldValue}
                     />
                     <InputField
-                      as="select"
-                      selectData={isActiveArray}
-                      name="is_active"
-                      label="Is active?"
-                      placeholder="Choose is active"
-                    />
-                    <InputField
-                      as="select"
-                      selectData={conditionType}
-                      name="condition_type"
-                      label="Condition Type"
-                      placeholder="Condition Type"
-                    />
-
-                    <InputField
                       name="allowed_usage"
                       type="number"
                       placeholder="Enter allowed usage"
@@ -146,6 +138,13 @@ const CouponCreateUpdateForm = () => {
                       placeholder="Single User limit"
                       label="Single user limit"
                       required
+                    />
+                    <InputField
+                      as="select"
+                      selectData={isActiveArray}
+                      name="is_active"
+                      label="Is active?"
+                      placeholder="Choose is active"
                     />
                   </div>
                   <TextEditor
