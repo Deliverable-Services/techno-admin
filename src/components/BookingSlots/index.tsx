@@ -129,7 +129,7 @@ const BookingSlots = () => {
     <>
       <Container fluid className="card component-wrapper view-padding">
         <PageHeading
-          title="Booking Slots"
+          title="CRM Bookings"
           onClick={_onCreateClick}
           totalRecords={data?.total}
           permissionReq="create_bookingslot"

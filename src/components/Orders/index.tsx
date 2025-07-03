@@ -163,7 +163,7 @@ const Orders = () => {
         Cell: (data: Cell) => <Status status={data.row.values.order_type} />,
       },
       {
-        Header: "Order Status",
+        Header: "CRM Status",
         accessor: "status",
         Cell: (data: Cell) => <Status status={data.row.values.status} />,
       },
@@ -174,14 +174,14 @@ const Orders = () => {
           <CreatedUpdatedAt date={data.row.values.scheduled_at} />
         ),
       },
-      {
-        Header: "Paid Amount",
-        accessor: "payable_amount",
-      },
-      {
-        Header: "Payment Method",
-        accessor: "payment_method",
-      },
+      // {
+      //   Header: "Paid Amount",
+      //   accessor: "payable_amount",
+      // },
+      // {
+      //   Header: "Payment Method",
+      //   accessor: "payment_method",
+      // },
       {
         Header: "Rating",
         accessor: "rating",

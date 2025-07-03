@@ -10,6 +10,7 @@ import {
   FaUserSecret,
   FaArrowAltCircleLeft,
   FaArrowLeft,
+  FaUsersCog,
 } from "react-icons/fa";
 import { GoIssueOpened } from "react-icons/go";
 import { IoLogoModelS } from "react-icons/io";
@@ -35,23 +36,24 @@ import { AiFillIdcard, AiFillSetting } from "react-icons/ai";
 import { BsClock, BsShieldLock } from "react-icons/bs";
 import { GrDocumentConfig } from "react-icons/gr";
 import { primaryColor } from "../utils/constants";
+import useUserProfileStore from "../hooks/useUserProfileStore";
 
 const manageLinks: Array<INavLink> = [
   {
-    title: "Brands",
-    path: "/brands",
-    icon: <SiBrandfolder />,
-    permissionReq: "read_brand",
-  },
-  {
-    title: "Brand Models",
-    path: "/brand-models",
+    title: "Products",
+    path: "/products",
     icon: <IoLogoModelS />,
     permissionReq: "read_brandmodel",
   },
   {
-    title: "Car Types",
-    path: "/car-types",
+    title: "Product Brands",
+    path: "/product-brands",
+    icon: <SiBrandfolder />,
+    permissionReq: "read_brand",
+  },
+  {
+    title: "Product Types",
+    path: "/product-types",
     icon: <IoLogoModelS />,
     permissionReq: "read_brandmodel",
   },
@@ -68,52 +70,70 @@ const manageLinks: Array<INavLink> = [
     permissionReq: "read_user",
   },
   {
-    title: "Admins",
-    path: "/admin",
+    title: "Team Members",
+    path: "/team-members",
     icon: <RiAdminFill />,
     permissionReq: "read_user",
   },
-  {
-    title: "Agents",
-    path: "/agent",
-    icon: <FaUserSecret />,
-    permissionReq: "read_user",
-  },
-  {
-    title: "Agent Targets",
-    path: "/agent-targets",
-    icon: <GiOnTarget />,
-    permissionReq: "read_agenttarget",
-  },
+  // {
+  //   title: "Agents",
+  //   path: "/agent",
+  //   icon: <FaUserSecret />,
+  //   permissionReq: "read_user",
+  // },
+  // {
+  //   title: "Agent Targets",
+  //   path: "/agent-targets",
+  //   icon: <GiOnTarget />,
+  //   permissionReq: "read_agenttarget",
+  // },
   {
     title: "Services",
     path: "/services",
     icon: <RiServiceFill />,
     permissionReq: "read_service",
   },
-  {
-    title: "Faqs",
-    path: "/faqs",
-    icon: <FaQuestionCircle />,
-    permissionReq: "read_faq",
-  },
-  {
-    title: "Plans",
-    path: "/plans",
-    icon: <FaRegLightbulb />,
-    permissionReq: "read_plan",
-  },
+  // {
+  //   title: "Faqs",
+  //   path: "/faqs",
+  //   icon: <FaQuestionCircle />,
+  //   permissionReq: "read_faq",
+  // },
+  // {
+  //   title: "Plans",
+  //   path: "/plans",
+  //   icon: <FaRegLightbulb />,
+  //   permissionReq: "read_plan",
+  // },
   {
     title: "Coupons",
     path: "/coupons",
     icon: <RiCoupon3Line />,
     permissionReq: "read_coupon",
   },
+  // {
+  //   title: "Banners",
+  //   path: "/advertisements",
+  //   icon: <RiAdvertisementFill />,
+  //   permissionReq: "read_banner",
+  // },
   {
-    title: "Banners",
-    path: "/advertisements",
-    icon: <RiAdvertisementFill />,
-    permissionReq: "read_banner",
+    title: "CMS",
+    path: "/cms",
+    icon: <FaQuestionCircle />,
+    permissionReq: "read_faq",
+  },
+  {
+    title: "Testimonials",
+    path: "/testimonials",
+    icon: <AiFillIdcard />,
+    permissionReq: "read_testimonial",
+  },
+  {
+    title: "Static Pages",
+    path: "/static-pages",
+    icon: <RiPagesLine />,
+    permissionReq: "read_staticpage",
   },
   {
     title: "Permissions",
@@ -134,28 +154,10 @@ const manageLinks: Array<INavLink> = [
     permissionReq: "read_config",
   },
   {
-    title: "Booking Slots",
-    path: "/booking-slots",
-    icon: <BsClock />,
-    permissionReq: "read_bookingslot",
-  },
-  {
     title: "Cities",
     path: "/cities",
     icon: <GiModernCity />,
     permissionReq: "read_city",
-  },
-  {
-    title: "Testimonials",
-    path: "/testimonials",
-    icon: <AiFillIdcard />,
-    permissionReq: "read_testimonial",
-  },
-  {
-    title: "Static Pages",
-    path: "/static-pages",
-    icon: <RiPagesLine />,
-    permissionReq: "read_staticpage",
   },
 ];
 
@@ -167,17 +169,29 @@ const mainLinks: Array<INavLink> = [
     permissionReq: "read_booking",
   },
   {
+    title: "CRM",
+    path: "/crm",
+    icon: <FaUsersCog />,
+    permissionReq: "read_booking",
+  },
+  {
+    title: "CRM Bookings",
+    path: "/crm-bookings",
+    icon: <BsClock />,
+    permissionReq: "read_bookingslot",
+  },
+  {
     title: "Cart",
     path: "/cart",
     icon: <MdShoppingCart />,
     permissionReq: "read_booking",
   },
-  {
-    title: "Subscriptions",
-    path: "/subscriptions",
-    icon: <FaAddressCard />,
-    permissionReq: "read_subscription",
-  },
+  // {
+  //   title: "Subscriptions",
+  //   path: "/subscriptions",
+  //   icon: <FaAddressCard />,
+  //   permissionReq: "read_subscription",
+  // },
   {
     title: "Transactions",
     path: "/transactions",
@@ -198,9 +212,13 @@ const mainLinks: Array<INavLink> = [
   },
 ];
 
+const hiddenRoutesForCRM = ["/orders", "/cart", "/products", "/product-brands", "/product-types"];
+const hiddenRoutesForEcommerce = ["/crm", "/crm-bookings", "/services"];
+
 const NavBar = ({ isNavOpen, setIsNavOpen }: INavBar) => {
   const isDesktop = useContext(IsDesktopContext);
-
+  const loggedInUser = useUserProfileStore((state) => state.user);
+  
   const closeNavBar = () => {
     if (isDesktop) return;
     if (setIsNavOpen) {
@@ -212,7 +230,29 @@ const NavBar = ({ isNavOpen, setIsNavOpen }: INavBar) => {
       setIsNavOpen(!isNavOpen);
     }
   };
+  
+  if (loggedInUser) loggedInUser.storeType= "ecommerce"; // to be removed later [added for testing purpose]
 
+  // Filtered links for sidebar
+  const filteredMainLinks = mainLinks.filter(link => {
+    if (loggedInUser?.storeType === 'ecommerce') {
+      return hiddenRoutesForEcommerce.includes(link.path) ? false : true;
+    }else if (loggedInUser?.storeType === 'crm') {
+      return hiddenRoutesForCRM.includes(link.path) ? false : true;
+    }
+  });
+
+  const filteredManageLinks = manageLinks.filter(link => {
+    if (loggedInUser?.storeType === 'ecommerce') {
+      return hiddenRoutesForEcommerce.includes(link.path) ? false : true;
+    }else if (loggedInUser?.storeType === 'crm') {
+      return hiddenRoutesForCRM.includes(link.path) ? false : true;
+    }
+  });
+
+  console.log({filteredMainLinks})
+  console.log({filteredManageLinks})
+  
   return (
     <>
       <nav className={isNavOpen ? "active" : ""}>
@@ -243,7 +283,7 @@ const NavBar = ({ isNavOpen, setIsNavOpen }: INavBar) => {
 
           <p className="text-muted mb-2">Main</p>
           <ul>
-            {mainLinks.map(({ title, path, icon, permissionReq }) => (
+            {filteredMainLinks.map(({ title, path, icon, permissionReq }) => (
               <Navlink
                 path={path}
                 title={title}
@@ -258,7 +298,7 @@ const NavBar = ({ isNavOpen, setIsNavOpen }: INavBar) => {
 
           <p className="text-muted mb-2">Manage</p>
           <ul>
-            {manageLinks.map(({ title, path, icon, permissionReq }) => (
+            {filteredManageLinks.map(({ title, path, icon, permissionReq }) => (
               <Navlink
                 path={path}
                 title={title}

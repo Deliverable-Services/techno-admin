@@ -68,6 +68,7 @@ import MsgToast from "./shared-components/MsgToast/MsgToast";
 import { PrivateRoute } from "./shared-components/PrivateRoute";
 import VerifingUserLoader from "./shared-components/VerifingUserLoader";
 import API from "./utils/API";
+import CMS from "./components/CMS";
 
 const App = () => {
   const [isDesktop, setIsDesktop] = useState<boolean>(false);
@@ -144,19 +145,19 @@ const App = () => {
               skipPermission
             />
             <PrivateRoute
-              path="/brands"
+              path="/product-brands"
               exact
               component={Brands}
               permissionReq="read_brand"
             />
             <PrivateRoute
-              path="/brand-models"
+              path="/products"
               exact
               component={BrandModels}
               permissionReq="read_brandmodel"
             />
             <PrivateRoute
-              path="/car-types"
+              path="/product-types"
               exact
               component={CarTypes}
               permissionReq="read_brandmodelType"
@@ -174,7 +175,7 @@ const App = () => {
               permissionReq="read_user"
             />
             <PrivateRoute
-              path="/admin"
+              path="/team-members"
               exact
               component={Admins}
               permissionReq="read_user"
@@ -192,12 +193,6 @@ const App = () => {
               permissionReq="read_service"
             />
             <PrivateRoute
-              path="/faqs"
-              exact
-              component={Faqs}
-              permissionReq="read_faq"
-            />
-            <PrivateRoute
               path="/plans"
               exact
               component={Plans}
@@ -211,6 +206,12 @@ const App = () => {
             />
             <PrivateRoute
               path="/orders"
+              exact
+              component={Orders}
+              permissionReq="read_booking"
+            />
+            <PrivateRoute
+              path="/crm"
               exact
               component={Orders}
               permissionReq="read_booking"
@@ -240,10 +241,10 @@ const App = () => {
               permissionReq="read_config"
             />
             <PrivateRoute
-              path="/advertisements"
+              path="/cms"
               exact
-              component={Advertisements}
-              permissionReq="read_banner"
+              component={CMS}
+              permissionReq="read_faq"
             />
             <PrivateRoute
               path="/brands/create-edit"
@@ -366,7 +367,7 @@ const App = () => {
               permissionReq="read_booking"
             />
             <PrivateRoute
-              path="/booking-slots"
+              path="/crm-bookings"
               exact
               component={BookingSlots}
               permissionReq="read_bookingslot"

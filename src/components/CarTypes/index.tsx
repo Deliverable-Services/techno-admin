@@ -124,7 +124,7 @@ const CarTypes = () => {
     <>
       <Container fluid className="card component-wrapper view-padding">
         <PageHeading
-          title="Car types"
+          title="Product types"
           onClick={_onCreateClick}
           totalRecords={data?.total}
           permissionReq="create_brandmodelType"

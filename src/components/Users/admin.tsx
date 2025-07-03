@@ -161,7 +161,7 @@ const Admins = () => {
     <>
       <Container fluid className="card component-wrapper view-padding">
         <PageHeading
-          title="Admins"
+          title="Team Members"
           onClick={_onCreateClick}
           totalRecords={data?.total}
           permissionReq="create_user"

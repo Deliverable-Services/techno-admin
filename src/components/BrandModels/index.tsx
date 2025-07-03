@@ -207,7 +207,7 @@ const BrandModels = () => {
     <>
       <Container fluid className="card component-wrapper view-padding">
         <PageHeading
-          title="Brand Models"
+          title="Product"
           onClick={_onCreateClick}
           totalRecords={data?.total}
           permissionReq="create_brandmodel"

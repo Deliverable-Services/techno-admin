@@ -11,14 +11,24 @@ import useUserProfileStore from "../hooks/useUserProfileStore";
 import API from "../utils/API";
 
 const key = "get-all-permission";
+
+const restrictedRoutesForStoreType = {
+  ecommerce: ["/crm", "/crm-bookings", "/services"], 
+  crm: ["/orders", "/cart", "/products", "/product-brands", "/product-types"],
+};
+
 export const PrivateRoute = ({
   component: Component,
   permissionReq,
   skipPermission,
+  path,
   ...rest
 }: any) => {
   const loggedInUserPermissions = useUserProfileStore(
     (state) => state?.permissions
+  );
+  const loggedInUser = useUserProfileStore(
+    (state) => state?.user
   );
 
   // checking for read permission of the route here
@@ -27,7 +37,14 @@ export const PrivateRoute = ({
       ? loggedInUserPermissions.includes(to)
       : false;
 
-  if (!skipPermission && !isAllowed(permissionReq)) {
+  const hasPermission = skipPermission || isAllowed(permissionReq);
+  
+  // Check storeType restrictions
+  if (loggedInUser) loggedInUser.storeType= "ecommerce"; // to be removed later [added for testing purpose]
+  const restrictedRoutes = restrictedRoutesForStoreType[loggedInUser?.storeType] || [];
+  const isStoreTypeBlocked = restrictedRoutes.includes(path);
+
+  if (!hasPermission || isStoreTypeBlocked) {
     return (
       <Container
         fluid
