@@ -22,6 +22,7 @@ export interface ICreateUpdateForm {
 }
 
 export type User = {
+  storeType: string;
   created_at: string;
   disabled: number;
   email: string | null;
