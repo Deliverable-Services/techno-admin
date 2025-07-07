@@ -34,6 +34,8 @@ import { MdShoppingCart } from "react-icons/md";
 import { ImUsers } from "react-icons/im";
 import { AiFillIdcard, AiFillSetting } from "react-icons/ai";
 import { BsClock, BsShieldLock } from "react-icons/bs";
+import { SiCivicrm } from "react-icons/si";
+
 import { GrDocumentConfig } from "react-icons/gr";
 import { primaryColor } from "../utils/constants";
 import useUserProfileStore from "../hooks/useUserProfileStore";
@@ -159,6 +161,12 @@ const manageLinks: Array<INavLink> = [
     icon: <GiModernCity />,
     permissionReq: "read_city",
   },
+  {
+    title: "CRM NEW",
+    path: "/new-crm",
+    icon: <SiCivicrm />,
+    permissionReq: "read_city",
+  },
 ];
 
 const mainLinks: Array<INavLink> = [
@@ -213,7 +221,7 @@ const mainLinks: Array<INavLink> = [
 ];
 
 const hiddenRoutesForCRM = ["/orders", "/cart", "/products", "/product-brands", "/product-types"];
-const hiddenRoutesForEcommerce = ["/crm", "/crm-bookings", "/services"];
+const hiddenRoutesForEcommerce = [ "/crm-bookings", "/services"];
 
 const NavBar = ({ isNavOpen, setIsNavOpen }: INavBar) => {
   const isDesktop = useContext(IsDesktopContext);
@@ -259,13 +267,18 @@ const NavBar = ({ isNavOpen, setIsNavOpen }: INavBar) => {
         {isDesktop && (
           <div className="d-flex  justify-content-between align-items-center">
             <Logo />
-            <FaArrowLeft
+            {/* <FaArrowLeft
               onClick={desktopNavClose}
               // color={""}
               size={20}
               className="mr-2"
               style={{ cursor: "pointer", color: "#707070" }}
-            />
+            /> */}
+            <svg 
+              className="mr-3 w-20"
+              style={{ cursor: "pointer", color: "#181d27", width:"25px", height:"25px", marginRight:"5px" }}  onClick={desktopNavClose} xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-bar-left" viewBox="0 0 16 16">
+              <path fill-rule="evenodd" d="M12.5 15a.5.5 0 0 1-.5-.5v-13a.5.5 0 0 1 1 0v13a.5.5 0 0 1-.5.5M10 8a.5.5 0 0 1-.5.5H3.707l2.147 2.146a.5.5 0 0 1-.708.708l-3-3a.5.5 0 0 1 0-.708l3-3a.5.5 0 1 1 .708.708L3.707 7.5H9.5a.5.5 0 0 1 .5.5"/>
+            </svg>
           </div>
         )}
 

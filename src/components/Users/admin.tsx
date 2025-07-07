@@ -175,7 +175,7 @@ const Admins = () => {
               {!error && (
                 <>
                   <Container fluid className="pt-3 px-0">
-                    <Row className="select-filter d-flex">
+                    <Row className="select-filter d-flex align-items-end ">
                       <Col md="auto">
                         <FilterSelect
                           currentValue={filter.disabled}

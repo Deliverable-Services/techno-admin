@@ -10,25 +10,25 @@ const CustomBadge = ({ variant, title, fontSize = 14 }: Props) => {
   const setBgAndColor: () => { bg: string; color: string } = () => {
     if (variant === "danger")
       return {
-        bg: "#f8d7da",
+        bg: "#f52c3d",
         color: "red",
       };
 
     if (variant === "warning")
       return {
-        bg: "#fff3cd",
+        bg: "#f2bf18",
         color: "#ccb81f",
       };
 
     if (variant === "success")
       return {
-        bg: "#d4edda",
+        bg: "#20e34d",
         color: "green",
       };
 
     if (variant === "primary")
       return {
-        bg: "#cce5ff",
+        bg: "#137ae8",
         color: "blue",
       };
   };
@@ -36,14 +36,15 @@ const CustomBadge = ({ variant, title, fontSize = 14 }: Props) => {
   return (
     <span
       style={{
-        backgroundColor: setBgAndColor().bg,
-        color: setBgAndColor().color,
+       
+      
         fontSize,
         padding: "3px 6px",
         whiteSpace: "nowrap",
       }}
-      className="text-capitalize rounded"
+      className="text-capitalize rounded indicator-box"
     >
+      <span className="status-indicator" style={{ backgroundColor: setBgAndColor().bg,}}></span>
       {title}
     </span>
   );

@@ -207,7 +207,7 @@ const Notifications = () => {
               {!error && (
                 <>
                   <Container fluid className="pt-3 px-0">
-                    <Row className="select-filter d-flex">
+                    <Row className="select-filter d-flex ">
                       <Col md="auto">
                         <FilterSelect
                           currentValue={filter.send_to}
@@ -244,6 +244,7 @@ const Notifications = () => {
                         className="d-flex align-items-center justify-md-content-center"
                       >
                         <Button
+                        className="mt-27px"
                           variant={
                             areTwoObjEqual(intitialFilter, filter)
                               ? "light"

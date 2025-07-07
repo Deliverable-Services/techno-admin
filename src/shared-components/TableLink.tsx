@@ -10,7 +10,7 @@ const TableLink = (props: Props) => {
   if (!props.id) return <p className="text-muted m-0">NA</p>;
   return (
     <p
-      className="text-primary m-0"
+      classname="text-darkGray m-0" 
       style={{ cursor: "pointer" }}
       onClick={() => props.onClick(props.id)}
     >

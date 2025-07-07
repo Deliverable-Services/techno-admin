@@ -253,7 +253,7 @@ function ReactTable({
     <div>
       <Container
         fluid
-        className="card-header pb-3 d-flex align-items-end position-relative px-0 "
+        className="card-header pb-3 d-flex align-items-end position-relative px-0 align-items-end "
         style={{ flexDirection: isDesktop ? "row" : "column-reverse" }}
       >
         <div className="w-100">
@@ -271,7 +271,7 @@ function ReactTable({
           </div>
         </div>
 
-        <div className="d-flex ">
+        <div className="d-flex align-items-center">
           <div className="d-flex align-items-center justify-content-center">
             <span className="text-muted">Records </span>
             <select

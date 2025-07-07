@@ -112,7 +112,7 @@ const Issues = () => {
           if ((data.row.original as any).user_id)
             return (
               <p
-                className="text-primary m-0"
+                classname="text-darkGray m-0" 
                 style={{ cursor: "pointer" }}
                 onClick={() => _onUserClick((data.row.original as any).user_id)}
               >
@@ -129,7 +129,7 @@ const Issues = () => {
           if ((data.row.original as any).order_id)
             return (
               <p
-                className="text-primary m-0"
+                classname="text-darkGray m-0" 
                 style={{ cursor: "pointer" }}
                 onClick={() =>
                   _onOrderClick((data.row.original as any).order_id)
@@ -222,7 +222,7 @@ const Issues = () => {
               {!error && (
                 <>
                   <Container fluid className="pt-2 px-0">
-                    <Row className="select-filter d-flex">
+                    <Row className="select-filter d-flex  ">
                       <Col md="auto">
                         <FilterSelect
                           currentValue={filter.user_id}
@@ -279,6 +279,7 @@ const Issues = () => {
                         className="d-flex align-items-center justify-md-content-center"
                       >
                         <Button
+                        className="mt-27px"
                           onClick={() => {
                             setFilter(intitialFilter);
                           }}

@@ -319,7 +319,7 @@ const Orders = () => {
                 {!error && (
                   <>
                     <Container fluid className="pt-2 px-0">
-                      <Row className="select-filter d-flex">
+                      <Row className="select-filter d-flex ">
                         <Col md="auto">
                           <FilterSelect
                             currentValue={filter.user_id}
@@ -381,7 +381,7 @@ const Orders = () => {
 
                         <Col
                           md="auto"
-                          className="d-flex align-items-center mt-1 justify-md-content-center"
+                          className="d-flex align-items-center mt-1 justify-md-content-center mt-27px" 
                         >
                           <Button
                             onClick={() => {

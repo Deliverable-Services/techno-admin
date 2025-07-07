@@ -13,7 +13,7 @@ import API from "../utils/API";
 const key = "get-all-permission";
 
 const restrictedRoutesForStoreType = {
-  ecommerce: ["/crm", "/crm-bookings", "/services"], 
+  ecommerce: [ "/crm-bookings", "/services"], 
   crm: ["/orders", "/cart", "/products", "/product-brands", "/product-types"],
 };
 
