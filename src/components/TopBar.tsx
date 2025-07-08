@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext, useEffect } from "react";
 import { Container, Dropdown, Form } from "react-bootstrap";
 import { BiMenuAltLeft } from "react-icons/bi";
 import { BsBell } from "react-icons/bs";
@@ -83,9 +83,10 @@ const TopBar = ({ isNavOpen, setIsNavOpen }: INavBar) => {
         {isDesktop && (
           <Form.Group className="form-group store-select ">
             <Form.Label className="text-muted font-weight-bold">
-              Select Store
+              Select Organisation
             </Form.Label>
 
+           {/* org details will go here */}
             <Form.Control
               as="select"
               style={{
@@ -94,7 +95,7 @@ const TopBar = ({ isNavOpen, setIsNavOpen }: INavBar) => {
               }}
               disabled
             >
-              <option value="carsafai">Car Safai</option>
+              <option value="carsafai">{user?.organisation?.name}</option>
             </Form.Control>
           </Form.Group>
         )}

@@ -41,6 +41,15 @@ export type User = {
     role: string;
     permissions: Array<string>;
   };
+  organisation: {
+    id: number;
+    name: string;
+    email: string;
+    phone: string;
+    address: string;
+    created_at: string;
+    updated_at: string;
+  };
 };
 
 export type IInitialTableState = Partial<TableState<object>>;
