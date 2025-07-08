@@ -12187,7 +12187,7 @@ th {
   background-color: #eee;
   -webkit-box-shadow: 0 -4px 44px rgba(0, 0, 0, 0.2);
   box-shadow: 0 -4px 44px rgba(0, 0, 0, 0.2);
-  padding: 6px;
+ padding:6px 25px !important;
   -webkit-animation: slide 0.3s ease;
   animation: slide 0.3s ease;
   z-index: 100000000000000000;

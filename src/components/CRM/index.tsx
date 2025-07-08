@@ -1,10 +1,9 @@
-import React from 'react';
-function CRM() {
-  return (
-    <div>
-     <h1>hello</h1>
-    </div>
-  );
-}
+// components/CRM/index.tsx
+import React from "react";
+import CRMBoard from "./CRMBoard";
 
-export default CRM;
+const Index: React.FC = () => {
+  return <CRMBoard />;
+};
+
+export default Index;
