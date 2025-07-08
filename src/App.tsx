@@ -70,6 +70,8 @@ import VerifingUserLoader from "./shared-components/VerifingUserLoader";
 import API from "./utils/API";
 import CMS from "./components/CMS";
 import CRM from "./components/CRM";
+import CRMBoard from "./components/CRM/CRMBoard";
+
 
 const App = () => {
   const [isDesktop, setIsDesktop] = useState<boolean>(false);
@@ -457,12 +459,12 @@ const App = () => {
               component={AssignAgent}
               permissionReq="assign_agent"
             />
-             {/* <PrivateRoute
+             <PrivateRoute
               path="/new-crm"
               exact
-              component={CRM}
+              component={CRMBoard}
                permissionReq="read_user"
-            /> */}
+            />
             
             <Route path="/login" exact component={LoginPage} />
             <Route path="/verify-otp" exact component={VerifyOtp} />
