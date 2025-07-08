@@ -457,12 +457,12 @@ const App = () => {
               component={AssignAgent}
               permissionReq="assign_agent"
             />
-             <PrivateRoute
+             {/* <PrivateRoute
               path="/new-crm"
               exact
               component={CRM}
                permissionReq="read_user"
-            />
+            /> */}
             
             <Route path="/login" exact component={LoginPage} />
             <Route path="/verify-otp" exact component={VerifyOtp} />

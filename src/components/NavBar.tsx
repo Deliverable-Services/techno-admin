@@ -77,54 +77,54 @@ const manageLinks: Array<INavLink> = [
     icon: <RiAdminFill />,
     permissionReq: "read_user",
   },
-  // {
-  //   title: "Agents",
-  //   path: "/agent",
-  //   icon: <FaUserSecret />,
-  //   permissionReq: "read_user",
-  // },
-  // {
-  //   title: "Agent Targets",
-  //   path: "/agent-targets",
-  //   icon: <GiOnTarget />,
-  //   permissionReq: "read_agenttarget",
-  // },
+  {
+    title: "Agents",
+    path: "/agent",
+    icon: <FaUserSecret />,
+    permissionReq: "read_user",
+  },
+  {
+    title: "Agent Targets",
+    path: "/agent-targets",
+    icon: <GiOnTarget />,
+    permissionReq: "read_agenttarget",
+  },
   {
     title: "Services",
     path: "/services",
     icon: <RiServiceFill />,
     permissionReq: "read_service",
   },
-  // {
-  //   title: "Faqs",
-  //   path: "/faqs",
-  //   icon: <FaQuestionCircle />,
-  //   permissionReq: "read_faq",
-  // },
-  // {
-  //   title: "Plans",
-  //   path: "/plans",
-  //   icon: <FaRegLightbulb />,
-  //   permissionReq: "read_plan",
-  // },
+  {
+    title: "Faqs",
+    path: "/faqs",
+    icon: <FaQuestionCircle />,
+    permissionReq: "read_faq",
+  },
+  {
+    title: "Plans",
+    path: "/plans",
+    icon: <FaRegLightbulb />,
+    permissionReq: "read_plan",
+  },
   {
     title: "Coupons",
     path: "/coupons",
     icon: <RiCoupon3Line />,
     permissionReq: "read_coupon",
   },
-  // {
-  //   title: "Banners",
-  //   path: "/advertisements",
-  //   icon: <RiAdvertisementFill />,
-  //   permissionReq: "read_banner",
-  // },
   {
-    title: "CMS",
-    path: "/cms",
-    icon: <FaQuestionCircle />,
-    permissionReq: "read_faq",
+    title: "Banners",
+    path: "/advertisements",
+    icon: <RiAdvertisementFill />,
+    permissionReq: "read_banner",
   },
+  // {
+  //   title: "CMS",
+  //   path: "/cms",
+  //   icon: <FaQuestionCircle />,
+  //   permissionReq: "read_faq",
+  // },
   {
     title: "Testimonials",
     path: "/testimonials",
@@ -161,12 +161,12 @@ const manageLinks: Array<INavLink> = [
     icon: <GiModernCity />,
     permissionReq: "read_city",
   },
-  {
-    title: "CRM NEW",
-    path: "/new-crm",
-    icon: <SiCivicrm />,
-    permissionReq: "read_city",
-  },
+  // {
+  //   title: "CRM NEW",
+  //   path: "/new-crm",
+  //   icon: <SiCivicrm />,
+  //   permissionReq: "read_city",
+  // },
 ];
 
 const mainLinks: Array<INavLink> = [
@@ -194,12 +194,12 @@ const mainLinks: Array<INavLink> = [
     icon: <MdShoppingCart />,
     permissionReq: "read_booking",
   },
-  // {
-  //   title: "Subscriptions",
-  //   path: "/subscriptions",
-  //   icon: <FaAddressCard />,
-  //   permissionReq: "read_subscription",
-  // },
+  {
+    title: "Subscriptions",
+    path: "/subscriptions",
+    icon: <FaAddressCard />,
+    permissionReq: "read_subscription",
+  },
   {
     title: "Transactions",
     path: "/transactions",
@@ -220,8 +220,8 @@ const mainLinks: Array<INavLink> = [
   },
 ];
 
-const hiddenRoutesForCRM = ["/orders", "/cart", "/products", "/product-brands", "/product-types"];
-const hiddenRoutesForEcommerce = [ "/crm-bookings", "/services"];
+const hiddenRoutesForCRM = ["/orders", "/cart", "/plans", "/coupons", "/agent", "/agent-targets", "/cities"];
+const hiddenRoutesForEcommerce = [ "/crm", "/crm-bookings", "/services", "/products", "/product-brands", "/product-types", "/categories"];
 
 const NavBar = ({ isNavOpen, setIsNavOpen }: INavBar) => {
   const isDesktop = useContext(IsDesktopContext);
@@ -239,7 +239,7 @@ const NavBar = ({ isNavOpen, setIsNavOpen }: INavBar) => {
     }
   };
   
-  if (loggedInUser) loggedInUser.storeType= "ecommerce"; // to be removed later [added for testing purpose]
+  if (loggedInUser) loggedInUser.storeType= "crm"; // to be removed later [added for testing purpose]
 
   // Filtered links for sidebar
   const filteredMainLinks = mainLinks.filter(link => {
