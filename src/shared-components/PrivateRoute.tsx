@@ -13,7 +13,7 @@ import API from "../utils/API";
 const key = "get-all-permission";
 
 const restrictedRoutesForStoreType = {
-  ecommerce: [ "/crm", "/crm-bookings", "/services", "/products", "/product-brands", "/product-types", "/categories"], 
+  ecommerce: ["/crm", "/crm-bookings", "/services", "/products", "/product-brands", "/product-types", "/categories"],
   crm: ["/orders", "/cart", "/plans", "/coupons", "/agent", "/agent-targets", "/cities"],
 };
 
@@ -40,8 +40,9 @@ export const PrivateRoute = ({
   const hasPermission = skipPermission || isAllowed(permissionReq);
   
   // Check storeType restrictions
-  if (loggedInUser) loggedInUser.storeType= "crm"; // to be removed later [added for testing purpose]
-  const restrictedRoutes = restrictedRoutesForStoreType[loggedInUser?.storeType] || [];
+  if (loggedInUser.organisation && !loggedInUser.organisation.hasOwnProperty("store_type")) loggedInUser.organisation.store_type = "crm"; // setting default to CRM if no organisation found
+
+  const restrictedRoutes = restrictedRoutesForStoreType[loggedInUser?.organisation.store_type.toLowerCase()] || [];
   const isStoreTypeBlocked = restrictedRoutes.includes(path);
 
   if (!hasPermission || isStoreTypeBlocked) {

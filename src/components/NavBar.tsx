@@ -240,21 +240,23 @@ const NavBar = ({ isNavOpen, setIsNavOpen }: INavBar) => {
     }
   };
   
-  if (loggedInUser) loggedInUser.storeType= "crm"; // to be removed later [added for testing purpose]
+  if (loggedInUser.organisation && !loggedInUser.organisation.hasOwnProperty("store_type")) loggedInUser.organisation.store_type = "crm"; // setting default to CRM if no organisation found
+
+  console.log('loggedInUser',loggedInUser)
 
   // Filtered links for sidebar
   const filteredMainLinks = mainLinks.filter(link => {
-    if (loggedInUser?.storeType === 'ecommerce') {
+    if (loggedInUser?.organisation.store_type.toLowerCase() === 'ecommerce') {
       return hiddenRoutesForEcommerce.includes(link.path) ? false : true;
-    }else if (loggedInUser?.storeType === 'crm') {
+    }else if (loggedInUser?.organisation.store_type.toLowerCase() === 'crm') {
       return hiddenRoutesForCRM.includes(link.path) ? false : true;
     }
   });
 
   const filteredManageLinks = manageLinks.filter(link => {
-    if (loggedInUser?.storeType === 'ecommerce') {
+    if (loggedInUser?.organisation.store_type.toLowerCase() === 'ecommerce') {
       return hiddenRoutesForEcommerce.includes(link.path) ? false : true;
-    }else if (loggedInUser?.storeType === 'crm') {
+    }else if (loggedInUser?.organisation.store_type.toLowerCase() === 'crm') {
       return hiddenRoutesForCRM.includes(link.path) ? false : true;
     }
   });
