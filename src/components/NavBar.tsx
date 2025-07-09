@@ -161,12 +161,7 @@ const manageLinks: Array<INavLink> = [
     icon: <GiModernCity />,
     permissionReq: "read_city",
   },
-  {
-    title: "CRM NEW",
-    path: "/new-crm",
-    icon: <SiCivicrm />,
-    permissionReq: "read_city",
-  },
+
 ];
 
 const mainLinks: Array<INavLink> = [
@@ -176,11 +171,17 @@ const mainLinks: Array<INavLink> = [
     icon: <FaBoxes />,
     permissionReq: "read_booking",
   },
-  {
+  // {
+  //   title: "CRM",
+  //   path: "/crm",
+  //   icon: <FaUsersCog />,
+  //   permissionReq: "read_booking",
+  // },
+    {
     title: "CRM",
-    path: "/crm",
-    icon: <FaUsersCog />,
-    permissionReq: "read_booking",
+    path: "/new-crm",
+    icon: <SiCivicrm />,
+    permissionReq: "read_city",
   },
   {
     title: "CRM Bookings",
