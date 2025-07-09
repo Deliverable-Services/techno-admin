@@ -1,4 +1,6 @@
 // components/CRM/CRMBoard.tsx
+
+
 import React, { useState } from "react";
 import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
@@ -43,9 +45,10 @@ const CRMBoard: React.FC = () => {
     <>
       <DndProvider backend={HTML5Backend}>
         <div className="crm-container">
-          <div className="crm-header">
-            <div className="crm-breadcrumb">Projects / Beyond Gravity</div>
-            <h2 className="crm-title">Board</h2>
+          <div className="crm-header px-3">
+            <h2 className="crm-title">CRM</h2>
+            {/* <div className="crm-breadcrumb">Projects / Beyond Gravity</div> */}
+            
             <div className="crm-users">
               <img src="https://i.pravatar.cc/32?img=1" alt="" className="crm-avatar" />
               <img src="https://i.pravatar.cc/32?img=2" alt="" className="crm-avatar" />

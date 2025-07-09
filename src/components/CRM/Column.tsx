@@ -1,3 +1,5 @@
+// components/CRM/Column.tsx
+
 import React from "react";
 import { useDrop } from "react-dnd";
 import { Task } from "./types";

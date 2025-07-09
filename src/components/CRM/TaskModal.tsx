@@ -1,4 +1,6 @@
-import React, { useState } from "react";
+// components/CRM/TaskModal.tsx
+
+import React, { useEffect, useRef } from "react";
 import { Task } from "./types";
 
 interface Props {
@@ -7,29 +9,41 @@ interface Props {
   onAddComment: (taskId: string, comment: string) => void;
 }
 
-const TaskModal: React.FC<Props> = ({ task, onClose, onAddComment }) => {
-  const [draft, setDraft] = useState("");
+const TaskModal: React.FC<Props> = ({ task, onClose }) => {
+  const editorRef = useRef<HTMLDivElement>(null);
+  const localStorageKey = `draft-comment-${task.id}`; // unique per task
 
-  const submit = () => {
-    if (!draft.trim()) return;
-    onAddComment(task.id, draft.trim());
-    setDraft("");
+  // Load saved content on mount
+  useEffect(() => {
+    const savedContent = localStorage.getItem(localStorageKey);
+    if (editorRef.current && savedContent) {
+      editorRef.current.innerText = savedContent;
+    }
+  }, [localStorageKey]);
+
+  // Auto-save on input
+  const handleInput = () => {
+    const content = editorRef.current?.innerText || "";
+    localStorage.setItem(localStorageKey, content);
   };
 
   return (
     <div className="modal show d-block" tabIndex={-1}>
-      <div className="modal-dialog">
+      <div className="modal-dialog modal-dialog-centered modal-lg">
         <div className="modal-content">
           <div className="modal-header">
-            <h5 className="modal-title">{task.ticketId}: {task.title}</h5>
+            <h5 className="modal-title">
+              {task.ticketId}: {task.title}
+            </h5>
             <button type="button" className="close" onClick={onClose}>
               <span>&times;</span>
             </button>
           </div>
+
           <div className="modal-body">
             <p>{task.description}</p>
 
-            <hr/>
+            <hr />
 
             <h6 className="pt-3">Comments</h6>
             <ul className="list-unstyled">
@@ -40,22 +54,23 @@ const TaskModal: React.FC<Props> = ({ task, onClose, onAddComment }) => {
               ))}
             </ul>
 
-            <div className="input-group">
-                <textarea className="form-control"
-                 id="exampleFormControlTextarea1"
-                 placeholder="Write a comment…"
-                value={draft}
-                onChange={e => setDraft(e.target.value)}
-                onKeyDown={e => e.key === "Enter" && submit()}
-                ></textarea>
-        
-           
+            {/* ✅ Editor with Auto-Save */}
+            <div className="mt-4">
+              <label className="text-muted mb-2 d-block">
+                Type your message (auto-saved)
+              </label>
+              <div
+                ref={editorRef}
+                contentEditable
+                className="form-control"
+                style={{ minHeight: "100px", whiteSpace: "pre-wrap" }}
+                onInput={handleInput}
+                suppressContentEditableWarning={true}
+              ></div>
+              <small className="text-muted d-block mt-1">
+                Your message is auto-saved and will appear when you return.
+              </small>
             </div>
-               <div className="input-group-append mt-3 text-right justify-end">
-                <button className="btn btn-primary" onClick={submit}>
-                  Post
-                </button>
-              </div>
           </div>
         </div>
       </div>

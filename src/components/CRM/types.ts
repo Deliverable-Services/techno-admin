@@ -1,3 +1,5 @@
+// components/CRM/types.ts
+
 export type Status = "TODO" | "IN_PROGRESS" | "IN_REVIEW" | "DONE";
 
 export interface Task {
