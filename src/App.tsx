@@ -71,6 +71,9 @@ import API from "./utils/API";
 import CMS from "./components/CMS";
 import CRM from "./components/CRM";
 import CRMBoard from "./components/CRM/CRMBoard";
+import organization from "./components/Organization";
+
+
 
 
 const App = () => {
@@ -213,12 +216,12 @@ const App = () => {
               component={Orders}
               permissionReq="read_booking"
             />
-            <PrivateRoute
+            {/* <PrivateRoute
               path="/crm"
               exact
               component={Orders}
               permissionReq="read_booking"
-            />
+            /> */}
             <PrivateRoute
               path="/cities"
               exact
@@ -241,6 +244,12 @@ const App = () => {
               path="/configurations"
               exact
               component={Configurations}
+              permissionReq="read_config"
+            />
+             <PrivateRoute
+              path="/organization"
+              exact
+              component={organization}
               permissionReq="read_config"
             />
             <PrivateRoute
@@ -460,7 +469,7 @@ const App = () => {
               permissionReq="assign_agent"
             />
              <PrivateRoute
-              path="/new-crm"
+              path="/crm"
               exact
               component={CRMBoard}
                permissionReq="read_user"

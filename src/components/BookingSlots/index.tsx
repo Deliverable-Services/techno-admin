@@ -141,7 +141,7 @@ const BookingSlots = () => {
             <>
               {/* {Object.entries(data) && Object.entries(data).length ? ( */}
               <Calendar
-                events={formattedDataForCalendar}
+                // events={formattedDataForCalendar}
                 onClickEvent={(event: any) => {
                   //here event return the id of the slot
                   if (!isRestricted("delete_bookingslot")) {

@@ -12634,3 +12634,10 @@ hr {
 li.navLink svg {
   color: #a4a7ae;
 }
+.currentDay {
+    height: 24px !important;
+    width: 24px !important;
+}
+li.navLink.my-1 svg path {
+    stroke: #a4a7ae;
+}

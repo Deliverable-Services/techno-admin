@@ -35,6 +35,8 @@ import { ImUsers } from "react-icons/im";
 import { AiFillIdcard, AiFillSetting } from "react-icons/ai";
 import { BsClock, BsShieldLock } from "react-icons/bs";
 import { SiCivicrm } from "react-icons/si";
+import { GrOrganization } from "react-icons/gr";
+
 
 import { GrDocumentConfig } from "react-icons/gr";
 import { primaryColor } from "../utils/constants";
@@ -156,6 +158,12 @@ const manageLinks: Array<INavLink> = [
     permissionReq: "read_config",
   },
   {
+    title: "Organization",
+    path: "/organization",
+    icon: <GrOrganization />,
+    permissionReq: "read_city",
+  },
+  {
     title: "Cities",
     path: "/cities",
     icon: <GiModernCity />,
@@ -179,7 +187,7 @@ const mainLinks: Array<INavLink> = [
   // },
     {
     title: "CRM",
-    path: "/new-crm",
+    path: "/crm",
     icon: <SiCivicrm />,
     permissionReq: "read_city",
   },

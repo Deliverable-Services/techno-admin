@@ -57,4 +57,13 @@ export const initialTasks: Task[] = [
     tags: ["FORMS"],
     comments: [],
   },
+   {
+    id: "7",
+    ticketId: "NUC-334",
+    title: "Internal code error",
+    description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque eu felis diam. Curabitur maximus sapien ut hendrerit rutrum. Aliquam ullamcorper auctor odio vel gravida. Donec eu risus ut mi sagittis rutrum. Nullam eleifend, nibh quis tincidunt tincidunt, ipsum justo fringilla erat, ut vehicula tortor lacus id augue. Donec eget enim id diam pharetra tempus ut vitae sem. Morbi ultrices posuere consequat.",
+    status: "DONE",
+    tags: ["FORMS"],
+    comments: [],
+  },
 ];

@@ -1,6 +1,12 @@
-// components/CRM/types.ts
+// File: components/CRM/types.ts
 
-export type Status = "TODO" | "IN_PROGRESS" | "IN_REVIEW" | "DONE";
+export interface Comment {
+  id: string;
+  text: string;
+  image?: string;
+  username: string;
+  avatar?: string;
+}
 
 export interface Task {
   id: string;
@@ -9,6 +15,5 @@ export interface Task {
   description: string;
   status: string;
   tags: string[];
-  assignee?: string;
-  comments: string[];
+  comments: Comment[];
 }

@@ -1,0 +1,115 @@
+/* // File: components/CRM/task-drawer.css */
+
+.task-drawer {
+  position: fixed;
+  right: -400px;
+  top: 0;
+  width: 400px;
+  height: 100%;
+  background: white;
+  box-shadow: -2px 0 5px rgba(0,0,0,0.1);
+  z-index: 1050;
+  overflow-y: auto;
+  padding: 1rem;
+  transition: right 0.4s ease-in-out;
+}
+
+.task-drawer.slide-in {
+  right: 0;
+}
+
+.task-drawer-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 400px;
+  bottom: 0;
+  background: rgba(0,0,0,0.2);
+  z-index: 1049;
+  transition: opacity 0.3s;
+}
+
+.drawer-header {
+  border-bottom: 1px solid #eee;
+  padding-bottom: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+.activity-log li {
+    padding: 3px 0;
+    font-size: 12px;
+    color: #555555cf;
+}
+.comments-div span {
+    font-size: 14px;
+    cursor: pointer;
+}
+
+.close-drawer
+{
+    font-size: 30px;
+}
+
+.drawer-body {
+    height: 92%;
+    display: flex
+;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+
+
+.drawer-body {
+  height: calc(100% - 60px); /* Header height offset */
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.drawer-scroll-content {
+  flex: 1;
+  overflow-y: auto;
+  padding-right: 5px;
+}
+
+/* Fixed footer */
+.drawer-footer {
+  border-top: 1px solid #e0e0e0;
+  background: #fff;
+  padding-top: 10px;
+  position: sticky;
+  bottom: 0;
+  z-index: 10;
+  padding-bottom: 10px;
+}
+
+.comment-editor {
+  min-height: 80px;
+  max-height: 120px;
+  overflow-y: auto;
+  border: 1px solid #ced4da;
+  border-radius: 4px;
+  padding: 0.5rem;
+}
+.mb-4.ticket-drawer-status p {
+    margin-bottom: 6px;
+    font-size: 14px;
+}
+
+.ticket-drawer-status {
+    border-bottom: solid 1px #eee;
+    padding-bottom: 14px;
+}
+
+.activies {
+    border-bottom: solid 1px #eee;
+    padding-bottom: 14px;
+}
+.list-unstyled.activity-log svg g {
+    fill: gray;
+}
+
+
+
+
