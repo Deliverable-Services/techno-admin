@@ -1,5 +1,3 @@
-// File: components/CRM/TaskDrawer.tsx
-
 import React, { useEffect, useRef, useState } from "react";
 import { Task, Comment } from "./types";
 import { FcProcess } from "react-icons/fc";
@@ -52,7 +50,7 @@ const TaskDrawer: React.FC<Props> = ({
 
   const handleCommentSubmit = () => {
     const text = editorRef.current?.innerText.trim() || "";
-    if (!text) return;
+    if (!text && !imageData) return;
 
     const username = localStorage.getItem("username") || "User Name";
     const avatar = localStorage.getItem("avatar") || "https://i.pravatar.cc/40?u=default";
@@ -85,14 +83,12 @@ const TaskDrawer: React.FC<Props> = ({
         <div className="drawer-body">
           <div className="drawer-scroll-content">
             <div className="mb-4 ticket-drawer-status">
-
               {task.description && (
                 <div className="mb-3">
                   <h6 className="text-secondary">Description</h6>
                   <p>{task.description}</p>
                 </div>
               )}
-
               <p><strong>Created by:</strong> Rakesh Verma</p>
               <p><strong>Due date:</strong> July 30, 2024, 02:54 PM</p>
               <p><strong>Status:</strong> {task.status}</p>
@@ -160,10 +156,15 @@ const TaskDrawer: React.FC<Props> = ({
                         />
                       )}
                       <div className="d-flex justify-content-end py-1">
-                        <span className="mr-2" onClick={() => {
-                          setEditingCommentId(comment.id);
-                          setEditText(comment.text);
-                        }}>Edit</span>
+                        <span
+                          className="mr-2"
+                          onClick={() => {
+                            setEditingCommentId(comment.id);
+                            setEditText(comment.text);
+                          }}
+                        >
+                          Edit
+                        </span>
                         <span onClick={() => onDeleteComment(task.id, comment.id)}>Delete</span>
                       </div>
                     </>
@@ -181,6 +182,12 @@ const TaskDrawer: React.FC<Props> = ({
                 contentEditable
                 className="form-control mb-2 comment-editor"
                 onInput={handleInput}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter" && !e.shiftKey) {
+                    e.preventDefault();
+                    handleCommentSubmit();
+                  }
+                }}
               />
               {imageData && (
                 <div className="mb-2">
