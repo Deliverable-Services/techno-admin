@@ -13,6 +13,7 @@ import Logo from "../shared-components/Logo";
 import { INavBar } from "../types/interface";
 import API from "../utils/API";
 import { primaryColor } from "../utils/constants";
+import { FaClock, FaEnvelope, FaMap, FaPhone } from "react-icons/fa";
 
 const logout = () => {
   return API.post("/auth/logout");
@@ -42,6 +43,21 @@ const TopBar = ({ isNavOpen, setIsNavOpen }: INavBar) => {
       setIsNavOpen(true);
     }
   };
+  // console.log({ user })
+
+  function formatTimestamp(timestamp) {
+    const date = new Date(timestamp);
+
+    const day = date.getUTCDate();
+    const month = date.toLocaleString('en-US', { month: 'long' });
+    const year = date.getUTCFullYear();
+
+    const hours = String(date.getUTCHours()).padStart(2, '0');
+    const minutes = String(date.getUTCMinutes()).padStart(2, '0');
+
+    return `${day} ${month}, ${year} - ${hours}:${minutes}`;
+  }
+
 
   return (
     <Container
@@ -55,7 +71,7 @@ const TopBar = ({ isNavOpen, setIsNavOpen }: INavBar) => {
           <GiHamburgerMenu
             size={28}
             onClick={openNavBar}
-            // color={primaryColor}
+          // color={primaryColor}
           />
         </div>
       ) : null}
@@ -80,24 +96,29 @@ const TopBar = ({ isNavOpen, setIsNavOpen }: INavBar) => {
             </p>
           </div>
         </div> */}
-        {isDesktop && (
-          <Form.Group className="form-group store-select ">
-            <Form.Label className="text-muted font-weight-bold">
-              Select Organisation
-            </Form.Label>
 
-           {/* org details will go here */}
-            <Form.Control
-              as="select"
-              style={{
-                width: 150,
-                fontSize: 14,
-              }}
-              disabled
-            >
-              <option value="carsafai">{user?.organisation?.name}</option>
-            </Form.Control>
-          </Form.Group>
+        {isDesktop && (
+          <div className="d-flex align-items-center justify-content-center ml-4">
+            <Dropdown className="ml-4">
+              <section style={{ fontSize: "11px", fontWeight: "bold", color: "#667085", textAlign: "center" }}>Organisation</section>
+              <Dropdown.Toggle
+                id="dropdown-basic"
+                className="filter-button bg-transparent border-0"
+                style={{ color: "#000" }}
+              >
+                <span>{user?.organisation?.name}</span>
+              </Dropdown.Toggle>
+
+              <Dropdown.Menu>
+                <div className="d-flex flex-column gap-10 px-4 py-2">
+                  <section className="d-flex align-items-center gap-10"><FaEnvelope size={14} /> {user?.organisation?.email}</section>
+                  <section className="d-flex align-items-center gap-10"><FaPhone size={14} /> {user?.organisation?.phone}</section>
+                  <section className="d-flex align-items-center gap-10"><FaMap size={14} />{user?.organisation?.address}</section>
+                  <section className="d-flex align-items-center gap-10"><FaClock size={14} /> {formatTimestamp(user?.organisation?.created_at)}</section>
+                </div>
+              </Dropdown.Menu>
+            </Dropdown>
+          </div>
         )}
 
         <div className="d-flex align-items-center justify-content-center ml-4">

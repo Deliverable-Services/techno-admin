@@ -8288,6 +8288,9 @@ span.status-indicator {
 .gap-3 {
   gap: 5px;
 }
+.gap-10 {
+  gap: 10px;
+}
 
 .d-inline-flex {
   display: -webkit-inline-box !important;
@@ -12490,7 +12493,7 @@ th {
 }
 
 .form-group.store-select select:hover {
-  cursor: not-allowed;
+  /* cursor: not-allowed; */
 }
 
 .tag {

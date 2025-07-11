@@ -47,6 +47,7 @@ export type User = {
     email: string;
     phone: string;
     address: string;
+    store_type: string;
     created_at: string;
     updated_at: string;
   };
