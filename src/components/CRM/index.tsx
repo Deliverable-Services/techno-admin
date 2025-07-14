@@ -1,6 +1,3 @@
-// components/CRM/index.tsx
-
-
 import React from "react";
 import CRMBoard from "./CRMBoard";
 

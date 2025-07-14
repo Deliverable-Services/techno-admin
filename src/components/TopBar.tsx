@@ -14,6 +14,7 @@ import { INavBar } from "../types/interface";
 import API from "../utils/API";
 import { primaryColor } from "../utils/constants";
 import { FaClock, FaEnvelope, FaMap, FaPhone } from "react-icons/fa";
+import { formatTimestamp } from "../utils/utitlity";
 
 const logout = () => {
   return API.post("/auth/logout");
@@ -43,21 +44,6 @@ const TopBar = ({ isNavOpen, setIsNavOpen }: INavBar) => {
       setIsNavOpen(true);
     }
   };
-  // console.log({ user })
-
-  function formatTimestamp(timestamp) {
-    const date = new Date(timestamp);
-
-    const day = date.getUTCDate();
-    const month = date.toLocaleString('en-US', { month: 'long' });
-    const year = date.getUTCFullYear();
-
-    const hours = String(date.getUTCHours()).padStart(2, '0');
-    const minutes = String(date.getUTCMinutes()).padStart(2, '0');
-
-    return `${day} ${month}, ${year} - ${hours}:${minutes}`;
-  }
-
 
   return (
     <Container
