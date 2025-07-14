@@ -9,6 +9,9 @@ import { useQuery } from "react-query";
 import { AxiosError } from "axios";
 import { handleApiError } from "../../hooks/handleApiErrors";
 import { useHistory } from "react-router-dom";
+import API from "../../utils/API";
+import { showMsgToast } from "../../utils/showMsgToast";
+import { showErrorToast } from "../../utils/showErrorToast";
 
 const key = "leads";
 const statusMap: { [key in string]: string } = {
@@ -43,12 +46,20 @@ const CRMBoard: React.FC = () => {
     }
   }, [data]);
 
-  const handleDrop = (leadId: number, newStatus: string) => {
+  const handleDrop = async (leadId: number, newStatus: string) => {
     setLeads((prev) =>
       prev.map((lead) =>
         lead.id === leadId ? { ...lead, status: newStatus } : lead
       )
     );
+    const response = await API.post(`${key}/${leadId}/change-status`, {
+      status: newStatus,
+    });
+    if (response.status === 200) {
+      showMsgToast("Status updated successfully");
+    }else{
+        showErrorToast("Error updating lead status")
+    }
   };
 
   const handleCardClick = (leadId: number) => setSelectedId(leadId);
