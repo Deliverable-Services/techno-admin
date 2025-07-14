@@ -185,7 +185,7 @@ const mainLinks: Array<INavLink> = [
   //   icon: <FaUsersCog />,
   //   permissionReq: "read_booking",
   // },
-    {
+  {
     title: "CRM",
     path: "/crm",
     icon: <SiCivicrm />,
@@ -230,12 +230,12 @@ const mainLinks: Array<INavLink> = [
 ];
 
 const hiddenRoutesForCRM = ["/orders", "/cart", "/plans", "/coupons", "/agent", "/agent-targets", "/cities"];
-const hiddenRoutesForEcommerce = [ "/crm", "/crm-bookings", "/services", "/products", "/product-brands", "/product-types", "/categories"];
+const hiddenRoutesForEcommerce = ["/crm", "/crm-bookings", "/services", "/products", "/product-brands", "/product-types", "/categories"];
 
 const NavBar = ({ isNavOpen, setIsNavOpen }: INavBar) => {
   const isDesktop = useContext(IsDesktopContext);
   const loggedInUser = useUserProfileStore((state) => state.user);
-  
+
   const closeNavBar = () => {
     if (isDesktop) return;
     if (setIsNavOpen) {
@@ -247,16 +247,16 @@ const NavBar = ({ isNavOpen, setIsNavOpen }: INavBar) => {
       setIsNavOpen(!isNavOpen);
     }
   };
-  
+
   if (loggedInUser.organisation && !loggedInUser.organisation.hasOwnProperty("store_type")) loggedInUser.organisation.store_type = "crm"; // setting default to CRM if no organisation found
 
-  console.log('loggedInUser',loggedInUser)
+  console.log('loggedInUser', loggedInUser)
 
   // Filtered links for sidebar
   const filteredMainLinks = mainLinks.filter(link => {
     if (loggedInUser?.organisation.store_type.toLowerCase() === 'ecommerce') {
       return hiddenRoutesForEcommerce.includes(link.path) ? false : true;
-    }else if (loggedInUser?.organisation.store_type.toLowerCase() === 'crm') {
+    } else if (loggedInUser?.organisation.store_type.toLowerCase() === 'crm') {
       return hiddenRoutesForCRM.includes(link.path) ? false : true;
     }
   });
@@ -264,14 +264,14 @@ const NavBar = ({ isNavOpen, setIsNavOpen }: INavBar) => {
   const filteredManageLinks = manageLinks.filter(link => {
     if (loggedInUser?.organisation.store_type.toLowerCase() === 'ecommerce') {
       return hiddenRoutesForEcommerce.includes(link.path) ? false : true;
-    }else if (loggedInUser?.organisation.store_type.toLowerCase() === 'crm') {
+    } else if (loggedInUser?.organisation.store_type.toLowerCase() === 'crm') {
       return hiddenRoutesForCRM.includes(link.path) ? false : true;
     }
   });
 
-  console.log({filteredMainLinks})
-  console.log({filteredManageLinks})
-  
+  console.log({ filteredMainLinks })
+  console.log({ filteredManageLinks })
+
   return (
     <>
       <nav className={isNavOpen ? "active" : ""}>
@@ -285,10 +285,10 @@ const NavBar = ({ isNavOpen, setIsNavOpen }: INavBar) => {
               className="mr-2"
               style={{ cursor: "pointer", color: "#707070" }}
             /> */}
-            <svg 
+            <svg
               className="mr-3 w-20 bi bi-arrow-bar-left"
-              style={{ cursor: "pointer", color: "#181d27", width:"25px", height:"25px", marginRight:"5px" }}  onClick={desktopNavClose} xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
-              <path fill-rule="evenodd" d="M12.5 15a.5.5 0 0 1-.5-.5v-13a.5.5 0 0 1 1 0v13a.5.5 0 0 1-.5.5M10 8a.5.5 0 0 1-.5.5H3.707l2.147 2.146a.5.5 0 0 1-.708.708l-3-3a.5.5 0 0 1 0-.708l3-3a.5.5 0 1 1 .708.708L3.707 7.5H9.5a.5.5 0 0 1 .5.5"/>
+              style={{ cursor: "pointer", color: "#181d27", width: "25px", height: "25px", marginRight: "5px" }} onClick={desktopNavClose} xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+              <path fill-rule="evenodd" d="M12.5 15a.5.5 0 0 1-.5-.5v-13a.5.5 0 0 1 1 0v13a.5.5 0 0 1-.5.5M10 8a.5.5 0 0 1-.5.5H3.707l2.147 2.146a.5.5 0 0 1-.708.708l-3-3a.5.5 0 0 1 0-.708l3-3a.5.5 0 1 1 .708.708L3.707 7.5H9.5a.5.5 0 0 1 .5.5" />
             </svg>
           </div>
         )}
