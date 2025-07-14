@@ -5,35 +5,47 @@ import { MdCreate } from "react-icons/md";
 import "./lead-drawer.css";
 import { formatTimestamp } from "../../utils/utitlity";
 import useUserProfileStore from "../../hooks/useUserProfileStore";
+import API from "../../utils/API";
+import { useQuery } from "react-query";
+import { AxiosError } from "axios";
+import { handleApiError } from "../../hooks/handleApiErrors";
+import { useHistory } from "react-router-dom";
+import { showMsgToast } from "../../utils/showMsgToast";
+import { showErrorToast } from "../../utils/showErrorToast";
 
+const key = "leads";
 interface Props {
   lead: Lead;
   onClose: () => void;
-  onAddComment: (leadId: number, comment: Comment) => void;
-  onUpdateComment: (leadId: number, commentId: string, newText: string) => void;
-  onDeleteComment: (leadId: number, commentId: string) => void;
 }
 
 const LeadDrawer: React.FC<Props> = ({
   lead,
   onClose,
-  onAddComment,
-  onUpdateComment,
-  onDeleteComment,
 }) => {
+  const history = useHistory();
   const editorRef = useRef<HTMLDivElement>(null);
   const localStorageKey = `draft-comment-${lead.id}`;
   const loggedInUser = useUserProfileStore((state) => state.user);
   const [imageData, setImageData] = useState<string | null>(null);
+  const [comments, setComments] = useState<Comment[] | null>(null);
   const [editingCommentId, setEditingCommentId] = useState<string | null>(null);
   const [editText, setEditText] = useState<string>("");
 
-  useEffect(() => {
-    const savedContent = localStorage.getItem(localStorageKey);
-    if (editorRef.current && savedContent) {
-      editorRef.current.innerText = savedContent;
+  const { data, isLoading, isFetching, error } = useQuery<any>(
+    [`${key}/${lead.id}`, ,],
+    {
+      onError: (error: AxiosError) => {
+        handleApiError(error, history);
+      },
     }
-  }, [localStorageKey]);
+  );
+
+  // console.log({ data });
+
+  useEffect(() => {
+    if (data) setComments(data.comments);
+  }, [data]);
 
   const handleInput = () => {
     const content = editorRef.current?.innerText || "";
@@ -51,25 +63,70 @@ const LeadDrawer: React.FC<Props> = ({
     reader.readAsDataURL(file);
   };
 
-  const handleCommentSubmit = () => {
+  const handleCommentSubmit = async () => {
     const text = editorRef.current?.innerText.trim() || "";
     if (!text && !imageData) return;
     const username = loggedInUser?.name || "User Name";
     const avatar =
       localStorage.getItem("avatar") || "https://i.pravatar.cc/40?u=default";
 
-    const newComment: Comment = {
+    const response = await API.post(`${key}/${lead.id}/comment`, {
+      comment: text,
+    });
+    if (response.status !== 201) {
+      showErrorToast("Error making a comment");
+    }
+
+    const newComment = {
       id: Date.now().toString(),
-      text,
+      comment: text,
       image: imageData || undefined,
       username,
       avatar,
+      user_id: loggedInUser.id,
+      lead_id: lead.id,
     };
+    setComments((prev) => [...prev, newComment]);
 
-    onAddComment(lead.id, newComment);
     editorRef.current!.innerText = "";
     setImageData(null);
     localStorage.removeItem(localStorageKey);
+  };
+
+  const handleCommentUpdate = async (
+    leadId: number,
+    commentId: string,
+    editText: string,
+    comment: Comment
+  ) => {
+    if (!editText && !imageData) return;
+
+    const response = await API.put(`${key}/${leadId}/comment/${commentId}`, {
+      comment: editText,
+    });
+    if (response.status === 200) {
+      showMsgToast("Comment updated successfully");
+      comment.comment = editText;
+      setComments((prev) =>
+        prev.map((t) => (t.id === commentId ? comment : t))
+      );
+    } else {
+      showErrorToast("Error updating comment");
+    }
+
+    setImageData(null);
+  };
+
+  const handleCommentDelete = async (leadId: number, commentId: string) => {
+    if (!commentId) return;
+
+    const response = await API.delete(`${key}/${leadId}/comment/${commentId}`);
+    if (response.status === 204) {
+      showMsgToast("Comment deleted successfully");
+      setComments((prev) => prev.filter((t) => t.id !== commentId));
+    } else {
+      showErrorToast("Error deleting comment");
+    }
   };
 
   return (
@@ -116,7 +173,9 @@ const LeadDrawer: React.FC<Props> = ({
               <p>
                 <strong>Status:</strong>&nbsp;{lead.status}
               </p>
-              <p><strong>Message :</strong>&nbsp;{lead.message}</p>
+              {/* <p>
+                <strong>Message :</strong>&nbsp;{lead.message}
+              </p> */}
               {/* <p><strong>Priority:</strong> Medium</p> */}
             </div>
 
@@ -133,7 +192,7 @@ const LeadDrawer: React.FC<Props> = ({
             </div>
 
             <div className="comments-box">
-              {lead.comments?.map((comment) => (
+              {comments?.map((comment) => (
                 <div
                   key={comment.id}
                   className="mb-3 p-2 border rounded bg-light comments-div"
@@ -148,7 +207,12 @@ const LeadDrawer: React.FC<Props> = ({
                       <button
                         className="btn btn-sm btn-success mr-2"
                         onClick={() => {
-                          onUpdateComment(lead.id, comment.id, editText);
+                          handleCommentUpdate(
+                            lead.id,
+                            comment.id,
+                            editText,
+                            comment
+                          );
                           setEditingCommentId(null);
                         }}
                       >
@@ -165,7 +229,7 @@ const LeadDrawer: React.FC<Props> = ({
                     <>
                       <div className="d-flex justify-content-between align-items-center mb-2">
                         <div className="d-flex align-items-center">
-                          <img
+                          {/* <img
                             src={
                               comment.avatar ||
                               "https://i.pravatar.cc/40?u=default"
@@ -177,14 +241,27 @@ const LeadDrawer: React.FC<Props> = ({
                               height: "30px",
                               objectFit: "cover",
                             }}
-                          />
-                          <strong>{comment.username}</strong>
+                          /> */}
+                          <div
+                            className="d-flex align-items-center justify-content-center bg-primary"
+                            style={{
+                              height: 30,
+                              width: 30,
+                              borderRadius: "50%",
+                            }}
+                          >
+                            <p className="mb-0 text-white display-5">
+                              {comment.user?.name?.charAt(0).toUpperCase() ||
+                                " "}
+                            </p>
+                          </div>
+                          <strong>{comment.user?.name}</strong>
                         </div>
                         <small className="text-muted">
                           {new Date(Number(comment.id)).toLocaleString()}
                         </small>
                       </div>
-                      <p>{comment.text}</p>
+                      <p>{comment.comment}</p>
                       {comment.image && (
                         <img
                           src={comment.image}
@@ -197,13 +274,15 @@ const LeadDrawer: React.FC<Props> = ({
                           className="mr-2"
                           onClick={() => {
                             setEditingCommentId(comment.id);
-                            setEditText(comment.text);
+                            setEditText(comment.comment);
                           }}
                         >
                           Edit
                         </span>
                         <span
-                          onClick={() => onDeleteComment(lead.id, comment.id)}
+                          onClick={() =>
+                            handleCommentDelete(lead.id, comment.id)
+                          }
                         >
                           Delete
                         </span>

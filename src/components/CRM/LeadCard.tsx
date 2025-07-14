@@ -15,8 +15,6 @@ const LeadCard: React.FC<Props> = ({ lead }) => {
     }),
   }));
 
-  console.log({ lead });
-
   return (
     <div
       className={`card mb-2 border-left-billing shadow-sm`}

@@ -40,7 +40,6 @@ const CRMBoard: React.FC = () => {
         if (lead?.hasOwnProperty("status")) {
           lead.status = lead.status.toUpperCase();
         }
-        if (!lead?.hasOwnProperty("comments")) lead.comments = [];
       });
       setLeads(data);
     }
@@ -57,8 +56,8 @@ const CRMBoard: React.FC = () => {
     });
     if (response.status === 200) {
       showMsgToast("Status updated successfully");
-    }else{
-        showErrorToast("Error updating lead status")
+    } else {
+      showErrorToast("Error updating lead status");
     }
   };
 
@@ -117,39 +116,6 @@ const CRMBoard: React.FC = () => {
         <LeadDrawer
           lead={selectedLead}
           onClose={handleClose}
-          onAddComment={(id, comment) => {
-            setLeads((prev) =>
-              prev.map((t) =>
-                t.id === id ? { ...t, comments: [...t.comments, comment] } : t
-              )
-            );
-          }}
-          onUpdateComment={(id, commentId, newText) => {
-            setLeads((prev) =>
-              prev.map((t) =>
-                t.id === id
-                  ? {
-                      ...t,
-                      comments: t.comments.map((c) =>
-                        c.id === commentId ? { ...c, text: newText } : c
-                      ),
-                    }
-                  : t
-              )
-            );
-          }}
-          onDeleteComment={(id, commentId) => {
-            setLeads((prev) =>
-              prev.map((t) =>
-                t.id === id
-                  ? {
-                      ...t,
-                      comments: t.comments.filter((c) => c.id !== commentId),
-                    }
-                  : t
-              )
-            );
-          }}
         />
       )}
     </>
