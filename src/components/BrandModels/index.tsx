@@ -120,7 +120,7 @@ const BrandModels = () => {
         accessor: "url",
         Cell: (data: Cell) => (
           <p
-            className="text-primary m-0"
+            classname="text-darkGray m-0" 
             style={{ cursor: "pointer" }}
             onClick={() => _onUrlClick(data)}
           >
@@ -255,7 +255,7 @@ const BrandModels = () => {
               {!error && (
                 <>
                   <Container fluid className="px-0">
-                    <Row className="select-filter d-flex">
+                    <Row className="select-filter d-flex align-items-end">
                       <Col md="auto">
                         <FilterSelect
                           currentValue={filter.brand_id}

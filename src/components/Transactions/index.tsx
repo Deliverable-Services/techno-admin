@@ -98,7 +98,7 @@ const Transactions = () => {
         Cell: (data: Cell) => {
           return (
             <p
-              className="text-primary m-0"
+              classname="text-darkGray m-0" 
               style={{ cursor: "pointer" }}
               onClick={() => _onUserClick((data.row.original as any).user_id)}
             >
@@ -114,7 +114,7 @@ const Transactions = () => {
           console.log({ data });
           return (
             <p
-              className="text-primary m-0"
+              classname="text-darkGray m-0" 
               style={{ cursor: "pointer" }}
               onClick={() => _onOrderClick(data.row.original["order_id"])}
             >
@@ -212,7 +212,7 @@ const Transactions = () => {
               {!error && (
                 <>
                   <Container fluid className="pt-2 px-0">
-                    <Row className="select-filter d-flex">
+                    <Row className="select-filter d-flex align-items-end">
                       <Col md="auto">
                         <FilterSelect
                           currentValue={filter.user_id}

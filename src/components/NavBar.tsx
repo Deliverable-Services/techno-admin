@@ -34,6 +34,10 @@ import { MdShoppingCart } from "react-icons/md";
 import { ImUsers } from "react-icons/im";
 import { AiFillIdcard, AiFillSetting } from "react-icons/ai";
 import { BsClock, BsShieldLock } from "react-icons/bs";
+import { SiCivicrm } from "react-icons/si";
+import { GrOrganization } from "react-icons/gr";
+
+
 import { GrDocumentConfig } from "react-icons/gr";
 import { primaryColor } from "../utils/constants";
 import useUserProfileStore from "../hooks/useUserProfileStore";
@@ -75,54 +79,54 @@ const manageLinks: Array<INavLink> = [
     icon: <RiAdminFill />,
     permissionReq: "read_user",
   },
-  // {
-  //   title: "Agents",
-  //   path: "/agent",
-  //   icon: <FaUserSecret />,
-  //   permissionReq: "read_user",
-  // },
-  // {
-  //   title: "Agent Targets",
-  //   path: "/agent-targets",
-  //   icon: <GiOnTarget />,
-  //   permissionReq: "read_agenttarget",
-  // },
+  {
+    title: "Agents",
+    path: "/agent",
+    icon: <FaUserSecret />,
+    permissionReq: "read_user",
+  },
+  {
+    title: "Agent Targets",
+    path: "/agent-targets",
+    icon: <GiOnTarget />,
+    permissionReq: "read_agenttarget",
+  },
   {
     title: "Services",
     path: "/services",
     icon: <RiServiceFill />,
     permissionReq: "read_service",
   },
-  // {
-  //   title: "Faqs",
-  //   path: "/faqs",
-  //   icon: <FaQuestionCircle />,
-  //   permissionReq: "read_faq",
-  // },
-  // {
-  //   title: "Plans",
-  //   path: "/plans",
-  //   icon: <FaRegLightbulb />,
-  //   permissionReq: "read_plan",
-  // },
+  {
+    title: "Faqs",
+    path: "/faqs",
+    icon: <FaQuestionCircle />,
+    permissionReq: "read_faq",
+  },
+  {
+    title: "Plans",
+    path: "/plans",
+    icon: <FaRegLightbulb />,
+    permissionReq: "read_plan",
+  },
   {
     title: "Coupons",
     path: "/coupons",
     icon: <RiCoupon3Line />,
     permissionReq: "read_coupon",
   },
-  // {
-  //   title: "Banners",
-  //   path: "/advertisements",
-  //   icon: <RiAdvertisementFill />,
-  //   permissionReq: "read_banner",
-  // },
   {
-    title: "CMS",
-    path: "/cms",
-    icon: <FaQuestionCircle />,
-    permissionReq: "read_faq",
+    title: "Banners",
+    path: "/advertisements",
+    icon: <RiAdvertisementFill />,
+    permissionReq: "read_banner",
   },
+  // {
+  //   title: "CMS",
+  //   path: "/cms",
+  //   icon: <FaQuestionCircle />,
+  //   permissionReq: "read_faq",
+  // },
   {
     title: "Testimonials",
     path: "/testimonials",
@@ -154,11 +158,18 @@ const manageLinks: Array<INavLink> = [
     permissionReq: "read_config",
   },
   {
+    title: "Organization",
+    path: "/organization",
+    icon: <GrOrganization />,
+    permissionReq: "read_city",
+  },
+  {
     title: "Cities",
     path: "/cities",
     icon: <GiModernCity />,
     permissionReq: "read_city",
   },
+
 ];
 
 const mainLinks: Array<INavLink> = [
@@ -168,11 +179,17 @@ const mainLinks: Array<INavLink> = [
     icon: <FaBoxes />,
     permissionReq: "read_booking",
   },
+  // {
+  //   title: "CRM",
+  //   path: "/crm",
+  //   icon: <FaUsersCog />,
+  //   permissionReq: "read_booking",
+  // },
   {
     title: "CRM",
     path: "/crm",
-    icon: <FaUsersCog />,
-    permissionReq: "read_booking",
+    icon: <SiCivicrm />,
+    permissionReq: "read_city",
   },
   {
     title: "CRM Bookings",
@@ -186,12 +203,12 @@ const mainLinks: Array<INavLink> = [
     icon: <MdShoppingCart />,
     permissionReq: "read_booking",
   },
-  // {
-  //   title: "Subscriptions",
-  //   path: "/subscriptions",
-  //   icon: <FaAddressCard />,
-  //   permissionReq: "read_subscription",
-  // },
+  {
+    title: "Subscriptions",
+    path: "/subscriptions",
+    icon: <FaAddressCard />,
+    permissionReq: "read_subscription",
+  },
   {
     title: "Transactions",
     path: "/transactions",
@@ -212,13 +229,13 @@ const mainLinks: Array<INavLink> = [
   },
 ];
 
-const hiddenRoutesForCRM = ["/orders", "/cart", "/products", "/product-brands", "/product-types"];
-const hiddenRoutesForEcommerce = ["/crm", "/crm-bookings", "/services"];
+const hiddenRoutesForCRM = ["/orders", "/cart", "/plans", "/coupons", "/agent", "/agent-targets", "/cities"];
+const hiddenRoutesForEcommerce = ["/crm", "/crm-bookings", "/services", "/products", "/product-brands", "/product-types", "/categories"];
 
 const NavBar = ({ isNavOpen, setIsNavOpen }: INavBar) => {
   const isDesktop = useContext(IsDesktopContext);
   const loggedInUser = useUserProfileStore((state) => state.user);
-  
+
   const closeNavBar = () => {
     if (isDesktop) return;
     if (setIsNavOpen) {
@@ -230,42 +247,49 @@ const NavBar = ({ isNavOpen, setIsNavOpen }: INavBar) => {
       setIsNavOpen(!isNavOpen);
     }
   };
-  
-  if (loggedInUser) loggedInUser.storeType= "ecommerce"; // to be removed later [added for testing purpose]
+
+  if (loggedInUser.organisation && !loggedInUser.organisation.hasOwnProperty("store_type")) loggedInUser.organisation.store_type = "crm"; // setting default to CRM if no organisation found
+
+  console.log('loggedInUser', loggedInUser)
 
   // Filtered links for sidebar
   const filteredMainLinks = mainLinks.filter(link => {
-    if (loggedInUser?.storeType === 'ecommerce') {
+    if (loggedInUser?.organisation.store_type.toLowerCase() === 'ecommerce') {
       return hiddenRoutesForEcommerce.includes(link.path) ? false : true;
-    }else if (loggedInUser?.storeType === 'crm') {
+    } else if (loggedInUser?.organisation.store_type.toLowerCase() === 'crm') {
       return hiddenRoutesForCRM.includes(link.path) ? false : true;
     }
   });
 
   const filteredManageLinks = manageLinks.filter(link => {
-    if (loggedInUser?.storeType === 'ecommerce') {
+    if (loggedInUser?.organisation.store_type.toLowerCase() === 'ecommerce') {
       return hiddenRoutesForEcommerce.includes(link.path) ? false : true;
-    }else if (loggedInUser?.storeType === 'crm') {
+    } else if (loggedInUser?.organisation.store_type.toLowerCase() === 'crm') {
       return hiddenRoutesForCRM.includes(link.path) ? false : true;
     }
   });
 
-  console.log({filteredMainLinks})
-  console.log({filteredManageLinks})
-  
+  console.log({ filteredMainLinks })
+  console.log({ filteredManageLinks })
+
   return (
     <>
       <nav className={isNavOpen ? "active" : ""}>
         {isDesktop && (
           <div className="d-flex  justify-content-between align-items-center">
             <Logo />
-            <FaArrowLeft
+            {/* <FaArrowLeft
               onClick={desktopNavClose}
               // color={""}
               size={20}
               className="mr-2"
               style={{ cursor: "pointer", color: "#707070" }}
-            />
+            /> */}
+            <svg
+              className="mr-3 w-20 bi bi-arrow-bar-left"
+              style={{ cursor: "pointer", color: "#181d27", width: "25px", height: "25px", marginRight: "5px" }} onClick={desktopNavClose} xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+              <path fill-rule="evenodd" d="M12.5 15a.5.5 0 0 1-.5-.5v-13a.5.5 0 0 1 1 0v13a.5.5 0 0 1-.5.5M10 8a.5.5 0 0 1-.5.5H3.707l2.147 2.146a.5.5 0 0 1-.708.708l-3-3a.5.5 0 0 1 0-.708l3-3a.5.5 0 1 1 .708.708L3.707 7.5H9.5a.5.5 0 0 1 .5.5" />
+            </svg>
           </div>
         )}
 

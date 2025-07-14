@@ -69,6 +69,12 @@ import { PrivateRoute } from "./shared-components/PrivateRoute";
 import VerifingUserLoader from "./shared-components/VerifingUserLoader";
 import API from "./utils/API";
 import CMS from "./components/CMS";
+import CRM from "./components/CRM";
+import CRMBoard from "./components/CRM/CRMBoard";
+import organization from "./components/Organization";
+
+
+
 
 const App = () => {
   const [isDesktop, setIsDesktop] = useState<boolean>(false);
@@ -210,12 +216,12 @@ const App = () => {
               component={Orders}
               permissionReq="read_booking"
             />
-            <PrivateRoute
+            {/* <PrivateRoute
               path="/crm"
               exact
               component={Orders}
               permissionReq="read_booking"
-            />
+            /> */}
             <PrivateRoute
               path="/cities"
               exact
@@ -238,6 +244,12 @@ const App = () => {
               path="/configurations"
               exact
               component={Configurations}
+              permissionReq="read_config"
+            />
+            <PrivateRoute
+              path="/organization"
+              exact
+              component={organization}
               permissionReq="read_config"
             />
             <PrivateRoute
@@ -307,6 +319,12 @@ const App = () => {
               permissionReq="read_coupon"
             />
             <PrivateRoute
+              path="/faqs"
+              exact
+              component={FaqCreateUpdateForm}
+              permissionReq="read_faq"
+            />
+            <PrivateRoute
               path="/faqs/create-edit"
               exact
               component={FaqCreateUpdateForm}
@@ -317,6 +335,12 @@ const App = () => {
               exact
               component={CitiesCreateUpdateForm}
               permissionReq="read_city"
+            />
+            <PrivateRoute
+              path="/advertisements"
+              exact
+              component={AdvertisementCreateUpdateForm}
+              permissionReq="read_banner"
             />
             <PrivateRoute
               path="/advertisements/create-edit"
@@ -456,6 +480,13 @@ const App = () => {
               component={AssignAgent}
               permissionReq="assign_agent"
             />
+            <PrivateRoute
+              path="/crm"
+              exact
+              component={CRMBoard}
+              permissionReq="read_user"
+            />
+
             <Route path="/login" exact component={LoginPage} />
             <Route path="/verify-otp" exact component={VerifyOtp} />
           </Switch>

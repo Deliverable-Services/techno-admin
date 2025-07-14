@@ -92,7 +92,7 @@ const Subscription = () => {
         Cell: (data: Cell) => {
           return (
             <p
-              className="text-primary m-0"
+              classname="text-darkGray m-0" 
               style={{ cursor: "pointer" }}
               onClick={() => _onUserClick((data.row.original as any).user_id)}
             >
@@ -107,7 +107,7 @@ const Subscription = () => {
         Cell: (data: Cell) => {
           return (
             <p
-              className="text-primary m-0"
+              classname="text-darkGray m-0" 
               style={{ cursor: "pointer" }}
               onClick={() => _onPlanClick((data.row.original as any).plan_id)}
             >
@@ -227,7 +227,7 @@ const Subscription = () => {
           ) : (
             <>
               <Container fluid className="pt-2 px-0">
-                <Row className="select-filter d-flex">
+                <Row className="select-filter d-flex ">
                   <Col md="auto">
                     <FilterSelect
                       currentValue={filter.user_id}

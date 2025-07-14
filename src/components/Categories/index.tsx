@@ -121,7 +121,7 @@ const Categories = () => {
         accessor: "url",
         Cell: (data: Cell) => (
           <p
-            className="text-primary m-0"
+            classname="text-darkGray m-0" 
             style={{ cursor: "pointer" }}
             onClick={() => _onUrlClick(data)}
           >
@@ -233,7 +233,7 @@ const Categories = () => {
               {!error && (
                 <>
                   <Container className="pt-3">
-                    <Row className="select-filter d-flex">
+                    <Row className="select-filter d-flex ">
                       {/* <Col md="auto">
                         <div className=" d-flex align-items-center "
                           style={{

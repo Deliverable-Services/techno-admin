@@ -1,5 +1,5 @@
 export const isDesktop = window.innerHeight <= 800;
-export const primaryColor = "#2c7be5";
+export const primaryColor = "#013D7A";
 export const secondaryColor = "#ECB054";
 export const LocalStorageKey = "carsafai_admin_";
 export const DefaultInputHeight = 40;

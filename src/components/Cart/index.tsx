@@ -249,7 +249,7 @@ const InsideCart = () => {
                 {!error && (
                   <>
                     <Container fluid className="pt-2 px-0">
-                      <Row className="select-filter d-flex">
+                      <Row className="select-filter d-flex align-items-end">
                         <Col md="auto">
                           <FilterSelect
                             currentValue={filter.user_id}

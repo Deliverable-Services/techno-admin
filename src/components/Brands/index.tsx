@@ -100,7 +100,7 @@ const Brands = () => {
         accessor: "url",
         Cell: (data: Cell) => (
           <p
-            className="text-primary m-0"
+            classname="text-darkGray m-0" 
             style={{ cursor: "pointer" }}
             onClick={() => _onUrlClick(data)}
           >
