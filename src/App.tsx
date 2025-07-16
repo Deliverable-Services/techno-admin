@@ -339,7 +339,7 @@ const App = () => {
             <PrivateRoute
               path="/advertisements"
               exact
-              component={AdvertisementCreateUpdateForm}
+              component={Advertisements}
               permissionReq="read_banner"
             />
             <PrivateRoute

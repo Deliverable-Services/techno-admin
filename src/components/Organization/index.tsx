@@ -58,6 +58,9 @@ const Organization: React.FC = () => {
           </div>
         </div>
       </div>
+     <div className="text-right mt-3">
+     <button className="btn btn-primary cursor-pointer organize-switch">Save</button>
+     </div>
     </div>
   );
 };
