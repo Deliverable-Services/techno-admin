@@ -11759,7 +11759,7 @@ a.text-text-muted:focus {
 }
 
 nav {
-  background-color: #fff;
+  background-color: #f4f6f8;
   min-width: 300px;
   width: 25vh;
   height: 100vh;
@@ -11780,7 +11780,7 @@ nav {
 @media (min-width: 800px) {
   nav {
     position: fixed;
-    min-width: 14rem;
+    min-width: 14%;
   }
   nav .logo-wrapper {
     width: auto;
@@ -11810,7 +11810,7 @@ nav p {
 
 nav .navLink {
   width: 100%;
-  color: #414651;
+  color: #000;
   -webkit-transition: all 0.3s ease;
   transition: all 0.3s ease;
   font-size: 0.9rem;
@@ -11820,11 +11820,15 @@ nav .navLink {
   border-left: 4px solid transparent;
 }
 
+
+
 nav .navLink svg {
   margin-right: 10px;
   height: 16px;
   width: 16px;
 }
+
+
 
 nav .navLink.active,
 nav .navLink:hover {
@@ -11851,6 +11855,24 @@ button {
   border: none;
   outline: none;
   background-color: transparent;
+}
+
+.collapse-svg svg {
+  padding: 0;
+  margin: 0 !important;
+  width: 20px;
+  height: 19px !important;
+}
+.collapse-svg
+{
+  display: flex;
+  background: white;
+  width: fit-content;
+  align-items: center;
+  justify-content: center;
+  margin-right: 10px;
+  padding: 6px 6px;
+  border-radius: 4px;
 }
 
 button.full-width {
@@ -12563,7 +12585,7 @@ body {
 @media (min-width: 800px) {
   .App {
     -ms-grid-columns: 14rem 1fr;
-    grid-template-columns: 14rem 1fr;
+    grid-template-columns: 14% 1fr;
   }
   .App .main-layout {
     -ms-grid-column: 2;
@@ -12665,14 +12687,14 @@ hr {
 }
 
 li.navLink svg {
-  color: #a4a7ae;
+  color: #000;
 }
 .currentDay {
   height: 24px !important;
   width: 24px !important;
 }
 li.navLink.my-1 svg path {
-  stroke: #a4a7ae;
+  stroke: #000;
 }
 
 
