@@ -2,14 +2,43 @@
 
 import React, { useState } from "react";
 import "./organization.css"; // Optional custom styles
+import API from "../../utils/API";
+import useTokenStore from "../../hooks/useTokenStore";
+import IsLoading from "../../shared-components/isLoading";
+import { useMsgToastStore } from "../../shared-components/MsgToast/useMsgToastStore";
 
 const Organization: React.FC = () => {
   const [selectedOrg, setSelectedOrg] = useState<"crm" | "ecommerce">("crm"); // Default is CRM
+  const token = useTokenStore((state) => state.accessToken);
+  const [isLoading, setIsLoading] = useState(false);
+  const showToast = useMsgToastStore((state) => state.showToast);
 
   const handleSelect = (org: "crm" | "ecommerce") => {
     setSelectedOrg(org);
-    console.log("Selected:", org);
-    // Add logic to save selection or navigate
+  };
+
+  const handleSave = async () => {
+    const storeType = selectedOrg === "crm" ? "CRM" : "ECOMMERCE";
+    setIsLoading(true);
+    try {
+      const response = await API.put(
+        "organisation/store-type",
+        { store_type: storeType },
+        {
+          headers: {
+            Authorization: token ? `Bearer ${token}` : undefined,
+            "Content-Type": "application/json",
+          },
+        }
+      );
+      setIsLoading(false);
+      showToast({ message: "Organization type updated successfully!" });
+      // Optionally show a success message here
+    } catch (error) {
+      setIsLoading(false);
+      console.error(error);
+      // Optionally show an error message here
+    }
   };
 
   return (
@@ -59,7 +88,9 @@ const Organization: React.FC = () => {
         </div>
       </div>
      <div className="text-right mt-3">
-     <button className="btn btn-primary cursor-pointer organize-switch">Save</button>
+     <button className="btn btn-primary cursor-pointer organize-switch d-flex justify-content-center align-items-center" style={{height:"38px", marginLeft:"auto"}} onClick={handleSave} disabled={isLoading}>
+     {isLoading ? <IsLoading /> : "Save"}
+     </button>
      </div>
     </div>
   );
