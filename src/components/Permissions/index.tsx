@@ -1,3 +1,6 @@
+// Permissions/index.tsx
+
+
 import { AxiosError } from "axios";
 import React, { useMemo, useState } from "react";
 import { Button, Container } from "react-bootstrap";
@@ -16,6 +19,7 @@ import API from "../../utils/API";
 import { primaryColor } from "../../utils/constants";
 import { queryClient } from "../../utils/queryClient";
 import { showMsgToast } from "../../utils/showMsgToast";
+import Roles from "../Roles";
 
 const key = "get-all-permission";
 
@@ -192,7 +196,9 @@ const Permissions = () => {
 
   return (
     <>
-      <Container fluid className="card component-wrapper view-padding mb-3">
+      <Roles />
+
+      <Container fluid className="card component-wrapper view-padding mb-3 mt-3">
         <PageHeading title="Assign Permission" />
 
         <Container fluid className="h-100 p-0">
