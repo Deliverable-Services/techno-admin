@@ -163,7 +163,7 @@ const App = () => {
               permissionReq="read_brandmodel"
             />
             <PrivateRoute
-              path="/product-types"
+              path="/product-variants"
               exact
               component={CarTypes}
               permissionReq="read_brandmodelType"
