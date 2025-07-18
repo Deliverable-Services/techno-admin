@@ -47,7 +47,7 @@ const CarTypes = () => {
   const { mutate, isLoading: isDeleteLoading } = useMutation(deleteCities, {
     onSuccess: () => {
       queryClient.invalidateQueries(key);
-      showMsgToast("Car types deleted successfully");
+      showMsgToast("Product types deleted successfully");
     },
     onError: (error: AxiosError) => {
       handleApiError(error, history);
@@ -124,7 +124,7 @@ const CarTypes = () => {
     <>
       <Container fluid className="card component-wrapper view-padding">
         <PageHeading
-          title="Product types"
+          title="Product variants"
           onClick={_onCreateClick}
           totalRecords={data?.total}
           permissionReq="create_brandmodelType"

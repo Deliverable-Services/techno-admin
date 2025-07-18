@@ -6,9 +6,12 @@ import API from "../../utils/API";
 import useTokenStore from "../../hooks/useTokenStore";
 import IsLoading from "../../shared-components/isLoading";
 import { useMsgToastStore } from "../../shared-components/MsgToast/useMsgToastStore";
+import useUserProfileStore from "../../hooks/useUserProfileStore";
 
 const Organization: React.FC = () => {
-  const [selectedOrg, setSelectedOrg] = useState<"crm" | "ecommerce">("crm"); // Default is CRM
+  const loggedInUser = useUserProfileStore((state) => state.user);
+  let storeType = loggedInUser?.organisation?.store_type.toLowerCase() || "crm"; // Default to CRM if not set
+  const [selectedOrg, setSelectedOrg] = useState(storeType);
   const token = useTokenStore((state) => state.accessToken);
   const [isLoading, setIsLoading] = useState(false);
   const showToast = useMsgToastStore((state) => state.showToast);

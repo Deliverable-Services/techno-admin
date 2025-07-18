@@ -56,8 +56,8 @@ const manageLinks: Array<INavLink> = [
     permissionReq: "read_brand",
   },
   {
-    title: "Product Types",
-    path: "/product-types",
+    title: "Product Variants",
+    path: "/product-variants",
     icon: <IoLogoModelS />,
     permissionReq: "read_brandmodel",
   },
@@ -229,8 +229,8 @@ const mainLinks: Array<INavLink> = [
   },
 ];
 
-const hiddenRoutesForCRM = ["/orders", "/cart", "/plans", "/coupons", "/agent", "/agent-targets", "/cities"];
-const hiddenRoutesForEcommerce = ["/crm", "/crm-bookings", "/services", "/products", "/product-brands", "/product-types", "/categories"];
+const hiddenRoutesForCRM = ["/orders", "/cart", "/plans", "/coupons", "/agent", "/agent-targets", "/cities", "/product-variants"];
+const hiddenRoutesForEcommerce = ["/crm", "/crm-bookings", "/services", "/products", "/product-brands", "/categories"];
 
 const NavBar = ({ isNavOpen, setIsNavOpen }: INavBar) => {
   const isDesktop = useContext(IsDesktopContext);
