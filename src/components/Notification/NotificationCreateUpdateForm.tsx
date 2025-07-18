@@ -166,6 +166,9 @@ const NotificationCreateUpdateForm = () => {
 
                 if (is_sms === "1") {
                   formdata["is_sms"] = is_sms;
+                  formdata["channels"] = ["sms"]
+                } else {
+                  formdata["channels"] = ["pushnotification"]
                 }
 
                 if (!values?.scheduled_at)
