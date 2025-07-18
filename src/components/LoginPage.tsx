@@ -40,6 +40,7 @@ const LoginFlow = () => {
   const [activeTab, setActiveTab] = useState<"login" | "signup">("login");
   const [step, setStep] = useState<"login" | "otp">("login");
   const [phone, setPhone] = useState("");
+  const [countryCode, setCountryCode] = useState('+91');
 
   const setToken = useTokenStore((state) => state.setToken);
   const setUser = useUserProfileStore((state) => state.setUser);
@@ -148,21 +149,34 @@ const LoginFlow = () => {
                 initialValues={{ phone: "" }}
                 onSubmit={(values) => {
                   const formData = new FormData();
-                  formData.append("phone", values.phone);
-                  setPhone(values.phone);
+                  formData.append("phone", `${countryCode}${values.phone}`);
+                  setPhone(`${countryCode}${values.phone}`);
                   sendOtpMutate(formData);
                 }}
                 validationSchema={LoginSchema}
               >
                 {({ errors }) => (
                   <Form>
-                    <InputField
-                      name="phone"
-                      placeholder="Enter phone number"
-                      label="Phone number"
-                      type="text"
-                      error={errors.phone}
-                    />
+                    <label htmlFor="phone">Phone number</label>
+                    <div className="d-flex">
+                      <select
+                        className="form-select"
+                        style={{ maxWidth: 100, marginRight: 8,height: 40, border: '1px solid #d2ddec', borderRadius: '0.25rem' }}
+                        value={countryCode}
+                        onChange={e => setCountryCode(e.target.value)}
+                      >
+                        <option value="+91">🇮🇳 +91</option>
+                        <option value="+1">🇺🇸 +1</option>
+                      </select>
+                      <InputField
+                        name="phone"
+                        placeholder="Enter phone number"
+                        type="text"
+                      />
+                    </div>
+                    {errors.phone &&
+                    <small className="text-danger">{errors.phone}</small>
+                    }
                     <Button
                       type="submit"
                       className="btn btn-primary btn-block mt-3"
