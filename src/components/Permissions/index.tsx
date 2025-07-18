@@ -151,6 +151,9 @@ const Permissions = () => {
       {
         Header: "Name",
         accessor: "name",
+        Cell: (data: Cell) => {
+          return <span>{data.row.values.name.replace(/_/g, ' ').replace(/\b\w/g, c => c.toUpperCase())}</span>;
+        },
       },
       {
         Header: "Created At",

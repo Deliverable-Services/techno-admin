@@ -125,7 +125,7 @@ const AssignPermissionForm = () => {
                                       }
                                     }}
                                   />
-                                  <span className=" ml-2 ">{p.name}</span>
+                                  <span className=" ml-2 ">{p.name.replace(/_/g, ' ').replace(/\b\w/g, c => c.toUpperCase())}</span>
                                 </label>
                               </div>
                             ))}

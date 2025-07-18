@@ -133,10 +133,6 @@
     width: 26px;
     height: 26px;
 }
-.modal-backdrop {
-    z-index: -2 !important;
-  
-}
 .justify-end {
     justify-content: end;
 }

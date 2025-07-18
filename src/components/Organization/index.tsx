@@ -33,6 +33,7 @@ const Organization: React.FC = () => {
       );
       setIsLoading(false);
       showToast({ message: "Organization type updated successfully!" });
+      window.location.reload();
       // Optionally show a success message here
     } catch (error) {
       setIsLoading(false);

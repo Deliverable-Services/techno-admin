@@ -216,7 +216,7 @@ const mainLinks: Array<INavLink> = [
     permissionReq: "read_transaction",
   },
   {
-    title: "Issues",
+    title: "Help Center",
     path: "/issues",
     icon: <GoIssueOpened />,
     permissionReq: "read_ticket",

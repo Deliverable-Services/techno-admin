@@ -7232,7 +7232,7 @@ a.close.disabled {
   position: fixed;
   top: 0;
   left: 0;
-  z-index: 1040;
+  z-index: 555 !important;
   width: 100vw;
   height: 100vh;
   background-color: #000;
@@ -11761,7 +11761,7 @@ a.text-text-muted:focus {
 nav {
   background-color: #f4f6f8;
   min-width: 300px;
-  width: 25vh;
+  /* width: 25vh; */
   height: 100vh;
   position: fixed;
   top: 0;
@@ -11772,7 +11772,7 @@ nav {
   -webkit-transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
   transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
   z-index: 100;
-  padding: 1rem 0;
+  padding: 1rem 0 !important;
   border-right: 1px solid #e7eaf3;
   overflow: auto;
 }
@@ -12541,7 +12541,6 @@ body {
   display: grid;
   background-color: #fff;
   color: #1e2022;
-  overflow-x: hidden;
 }
 
 .login-main .nav-link:focus {

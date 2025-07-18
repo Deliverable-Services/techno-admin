@@ -321,7 +321,7 @@ const App = () => {
             <PrivateRoute
               path="/faqs"
               exact
-              component={FaqCreateUpdateForm}
+              component={Faqs}
               permissionReq="read_faq"
             />
             <PrivateRoute
