@@ -2,10 +2,15 @@
 
 export interface Comment {
   id: string;
-  text: string;
+  lead_id: number;
+  comment: string;
   image?: string;
   username: string;
   avatar?: string;
+  user_id: number;
+  created_at?: string;
+  updated_at?: string;
+  user?: User;
 }
 
 export interface Task {

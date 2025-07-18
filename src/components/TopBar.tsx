@@ -84,7 +84,7 @@ const TopBar = ({ isNavOpen, setIsNavOpen }: INavBar) => {
         </div> */}
 
         {isDesktop && (
-          <div className="d-flex align-items-center justify-content-center ml-4">
+          <div className="d-flex align-items-center justify-content-center ml-4 ">
             <Dropdown className="ml-4">
               <section style={{ fontSize: "11px", fontWeight: "bold", color: "#667085", textAlign: "center" }}>Organisation</section>
               <Dropdown.Toggle
@@ -106,6 +106,7 @@ const TopBar = ({ isNavOpen, setIsNavOpen }: INavBar) => {
             </Dropdown>
           </div>
         )}
+
 
         <div className="d-flex align-items-center justify-content-center ml-4">
           <Dropdown className="ml-4">
@@ -131,6 +132,8 @@ const TopBar = ({ isNavOpen, setIsNavOpen }: INavBar) => {
           {user && <p className="text-muted small mb-0">{user?.name}</p>}
         </div>
       </div>
+
+
     </Container>
   );
 };
