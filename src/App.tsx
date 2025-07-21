@@ -163,7 +163,7 @@ const App = () => {
               permissionReq="read_brandmodel"
             />
             <PrivateRoute
-              path="/product-types"
+              path="/product-variants"
               exact
               component={CarTypes}
               permissionReq="read_brandmodelType"
@@ -321,7 +321,7 @@ const App = () => {
             <PrivateRoute
               path="/faqs"
               exact
-              component={FaqCreateUpdateForm}
+              component={Faqs}
               permissionReq="read_faq"
             />
             <PrivateRoute
@@ -339,7 +339,7 @@ const App = () => {
             <PrivateRoute
               path="/advertisements"
               exact
-              component={AdvertisementCreateUpdateForm}
+              component={Advertisements}
               permissionReq="read_banner"
             />
             <PrivateRoute

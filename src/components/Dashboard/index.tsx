@@ -20,6 +20,7 @@ import {
   ChartLine,
   RevenueLineChart,
 } from "./Chart";
+import useUserProfileStore from "../../hooks/useUserProfileStore";
 
 interface IDates {
   start_date: Moment;
@@ -65,6 +66,7 @@ const Dashboard = () => {
         handleApiError(error, history);
       },
     });
+  const loggedInUser = useUserProfileStore((state) => state.user);
 
   const _onFilterChange = (idx: any, value: any) => {
     setFilter((prev) => ({
@@ -222,7 +224,7 @@ const Dashboard = () => {
                       width="16"
                       height="16"
                       fill="currentColor"
-                      class="bi bi-box2-heart"
+                      className="bi bi-box2-heart"
                       viewBox="0 0 16 16"
                     >
                       <path d="M8 7.982C9.664 6.309 13.825 9.236 8 13 2.175 9.236 6.336 6.31 8 7.982" />
@@ -230,7 +232,7 @@ const Dashboard = () => {
                     </svg>
                   </div>
                   <div>
-                    <div className="lead">Orders</div>
+                    <div className="lead">{loggedInUser?.organisation?.store_type?.toLowerCase() === 'crm' ? 'Leads' : 'Orders'}</div>
 
                     <div className="d-flex align-items-center justify-content-between mt-2">
                       <h1 className="text-black font-weight-bold">
@@ -264,7 +266,7 @@ const Dashboard = () => {
                       width="16"
                       height="16"
                       fill="currentColor"
-                      class="bi bi-eye"
+                      className="bi bi-eye"
                       viewBox="0 0 16 16"
                     >
                       <path d="M16 8s-3-5.5-8-5.5S0 8 0 8s3 5.5 8 5.5S16 8 16 8M1.173 8a13 13 0 0 1 1.66-2.043C4.12 4.668 5.88 3.5 8 3.5s3.879 1.168 5.168 2.457A13 13 0 0 1 14.828 8q-.086.13-.195.288c-.335.48-.83 1.12-1.465 1.755C11.879 11.332 10.119 12.5 8 12.5s-3.879-1.168-5.168-2.457A13 13 0 0 1 1.172 8z" />
@@ -309,7 +311,7 @@ const Dashboard = () => {
                       width="16"
                       height="16"
                       fill="currentColor"
-                      class="bi bi-person-check-fill"
+                      className="bi bi-person-check-fill"
                       viewBox="0 0 16 16"
                     >
                       <path

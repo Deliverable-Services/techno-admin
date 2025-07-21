@@ -47,7 +47,7 @@ export type User = {
     email: string;
     phone: string;
     address: string;
-    store_type: string;
+    store_type: "crm" | "ecommerce";
     created_at: string;
     updated_at: string;
   };

@@ -184,7 +184,7 @@ const ServicesCreateUpdateForm = () => {
                       setFieldValue={setFieldValue}
                     />
                   </div>
-                  <Container fluid className="p-0">
+                  {/* <Container fluid className="p-0">
                     <PageHeading title="Prices" />
 
                     <FieldArray
@@ -210,20 +210,7 @@ const ServicesCreateUpdateForm = () => {
                         </div>
                       )}
                     />
-
-                    {/* {!isCarTypeLoading && (
-                      <div className="form-container py-2">
-                        {CarType.data.map((type) => (
-                          <InputField
-                            type="number"
-                            name={type.name}
-                            label={type.name.toUpperCase()}
-                            placeholder={`Enter ${type.name} price`}
-                          />
-                        ))}
-                      </div>
-                    )} */}
-                  </Container>
+                  </Container> */}
                   <TextEditor
                     name="details"
                     label="Details"

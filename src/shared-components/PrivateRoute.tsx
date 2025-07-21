@@ -13,8 +13,8 @@ import API from "../utils/API";
 const key = "get-all-permission";
 
 const restrictedRoutesForStoreType = {
-  ecommerce: ["/crm", "/crm-bookings", "/services", "/products", "/product-brands", "/product-types", "/categories"],
-  crm: ["/orders", "/cart", "/plans", "/coupons", "/agent", "/agent-targets", "/cities"],
+  ecommerce: ["/crm", "/crm-bookings", "/services", "/products", "/product-brands", "/categories"],
+  crm: ["/orders", "/cart", "/plans", "/coupons", "/agent", "/agent-targets", "/cities", "/product-variants"],
 };
 
 export const PrivateRoute = ({
