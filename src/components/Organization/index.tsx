@@ -7,6 +7,7 @@ import useTokenStore from "../../hooks/useTokenStore";
 import IsLoading from "../../shared-components/isLoading";
 import { useMsgToastStore } from "../../shared-components/MsgToast/useMsgToastStore";
 import useUserProfileStore from "../../hooks/useUserProfileStore";
+import { GoogleBusinessProfile } from "../Integrations";
 
 const Organization: React.FC = () => {
   const loggedInUser = useUserProfileStore((state) => state.user);
@@ -44,6 +45,8 @@ const Organization: React.FC = () => {
       // Optionally show an error message here
     }
   };
+
+  // Google Business Profile connection is now handled by the GoogleBusinessProfile component
 
   return (
     <div className="container mt-5 organization-main">
@@ -91,11 +94,29 @@ const Organization: React.FC = () => {
           </div>
         </div>
       </div>
-     <div className="text-right mt-3">
-     <button className="btn btn-primary cursor-pointer organize-switch d-flex justify-content-center align-items-center" style={{height:"38px", marginLeft:"auto"}} onClick={handleSave} disabled={isLoading}>
-     {isLoading ? <IsLoading /> : "Save"}
-     </button>
-     </div>
+      <div className="text-right mt-3">
+        <button
+          className="btn btn-primary cursor-pointer organize-switch d-flex justify-content-center align-items-center"
+          style={{ height: "38px", marginLeft: "auto" }}
+          onClick={handleSave}
+          disabled={isLoading}
+        >
+          {isLoading ? <IsLoading /> : "Save"}
+        </button>
+      </div>
+
+      {/* Fivetran Integrations Section */}
+      <div className="mt-5">
+        <h4 className="text-center mb-4">Data Integrations</h4>
+        <div className="row justify-content-center">
+          <div className="col-md-8">
+            <GoogleBusinessProfile
+              organisationId={loggedInUser?.organisation?.id}
+              className="mb-3"
+            />
+          </div>
+        </div>
+      </div>
     </div>
   );
 };
