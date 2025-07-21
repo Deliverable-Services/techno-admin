@@ -43,7 +43,7 @@ const sampleData = {
         metaTitle: "Meta A",
         metaDescription: "Description A",
         metaKeywords: ["keyword1", "keyword2"],
-        socialFeaturedImage: "https://via.placeholder.com/100",
+        socialFeaturedImage: "https://picsum.photos/300/200",
       },
       organisationId: "org-123",
       lastEditedOn: "2025-07-20",
@@ -57,7 +57,7 @@ const sampleData = {
         metaTitle: "Meta B",
         metaDescription: "Description B",
         metaKeywords: ["b1", "b2", "b3"],
-        socialFeaturedImage: "https://via.placeholder.com/100",
+        socialFeaturedImage: "https://picsum.photos/300/200",
       },
       organisationId: "org-456",
       lastEditedOn: "2025-07-18",
@@ -119,64 +119,6 @@ const Website = () => {
       [idx]: value,
     }));
   };
-  //   const columns = useMemo(
-  //     () => [
-  //       //   {
-  //       //     Header: "#Id",
-  //       //     accessor: "id", //accessor is the "key" in the data
-  //       //   },
-  //       //   {
-  //       //     Header: "Image",
-  //       //     accessor: "image", //accessor is the "key" in the data
-  //       //     Cell: (data: Cell) => (
-  //       //       <TableImage file={data.row.values.image} folder="services" />
-  //       //     ),
-  //       //   },
-  //       {
-  //         Header: "Name",
-  //         accessor: "name",
-  //       },
-  //       {
-  //         Header: "Organisation Id",
-  //         accessor: "category.name",
-  //       },
-  //       {
-  //         Header: "Last Edited On",
-  //         accessor: "created_at",
-  //         Cell: (data: Cell) => {
-  //           return <CreatedUpdatedAt date={data.row.values.created_at} />;
-  //         },
-  //       },
-  //       {
-  //         Header: "Is Published",
-  //         accessor: "is_active",
-  //         Cell: (data: Cell) => {
-  //           return <IsActiveBadge value={data.row.values.is_active} />;
-  //         },
-  //       },
-  //       {
-  //         Header: "Is Archived",
-  //         accessor: "is_archived",
-  //         Cell: (data: Cell) => {
-  //           return <IsActiveBadge value={data.row.values.is_active} />;
-  //         },
-  //       },
-  //       {
-  //         Header: "Actions",
-  //         Cell: (data: Cell) => {
-  //           return (
-  //             <EditButton
-  //               onClick={() => {
-  //                 _onEditClick(data.row.values.id);
-  //               }}
-  //               permissionReq="update_service"
-  //             />
-  //           );
-  //         },
-  //       },
-  //     ],
-  //     []
-  //   );
 
   const columns = useMemo(
     () => [
@@ -232,7 +174,6 @@ const Website = () => {
       {
         Header: "Actions",
         Cell: (data: Cell) => {
-          // console.log(data.row.values.id, "id", data);
           return (
             <ViewButton
               onClick={() => {

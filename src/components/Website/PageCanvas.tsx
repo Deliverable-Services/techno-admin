@@ -1,7 +1,10 @@
-import React from 'react';
+import React from "react";
 
 const PageCanvas = ({ sections }) => (
-  <div className="space-y-4">
+  <div
+    className="space-y-4"
+    style={{ gap: "10px", display: "flex", flexDirection: "column" }}
+  >
     {sections.map((section, idx) => (
       <div key={section.id} className="p-4 border rounded bg-white">
         <h4 className="font-bold">{section.name}</h4>

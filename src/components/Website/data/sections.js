@@ -8,7 +8,7 @@ export const prebuiltSections = [
       variables: {
         title: 'Edit your photos',
         description: 'AI powered editor',
-        featuredImage: 'https://via.placeholder.com/300',
+        featuredImage: 'https://picsum.photos/300/200',
       },
     },
   },
@@ -19,7 +19,7 @@ export const prebuiltSections = [
       variables: {
         title: 'Superfast Delivery',
         description: 'Delivered in 15 minutes!',
-        featuredImage: '',
+        featuredImage: 'https://picsum.photos/300/200',
       },
     },
   },

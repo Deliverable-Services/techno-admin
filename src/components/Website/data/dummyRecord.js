@@ -6,7 +6,7 @@ export const dummyRecord = {
     metaDescription:
       "Edit your photos in one click with the AI powered photo editor.",
     metaKeywords: ["ai", "photo", "editor"],
-    socialFeaturedImage: "https://via.placeholder.com/400",
+    socialFeaturedImage: "https://picsum.photos/300/200",
   },
   sections: [], // Dropped sections will populate here
   organisationId: "org-123",
