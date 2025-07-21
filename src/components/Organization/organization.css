@@ -17,3 +17,41 @@ width: 100%;
 height: 300px;
 object-fit: cover;
 }
+.organization-main .nav-tabs{
+  background: #fff;
+    width: fit-content;
+    box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
+    padding: 10px;
+    border-radius: 6px !important;
+    border: 0;
+}
+.organization-main .nav-tabs .nav-link{
+  border: 0;
+  background: transparent;
+  border-radius: 0.25rem;
+}
+.organization-main .nav-tabs .nav-link.active{
+    cursor: pointer;
+    border: 0;
+    background: #173d76;
+    color: white;
+}
+.left-header{
+    max-width: 400px;
+    min-width: 400px;
+}
+.right-content{
+  width: 100%;
+}
+.right-content .profile-card .form-group label{
+  min-width: 400px;
+  font-weight: 600;
+  font-size: 16px;
+}
+.right-content input.color{
+    border: 0;
+    width: 40px;
+    height: 40px;
+    padding: 0;
+    border-radius: 16px;
+}
