@@ -72,6 +72,8 @@ import CMS from "./components/CMS";
 import CRM from "./components/CRM";
 import CRMBoard from "./components/CRM/CRMBoard";
 import organization from "./components/Organization";
+import Website from "./components/Website";
+import ViewWebsite from "./components/Website/ViewWebsite";
 
 
 
@@ -443,6 +445,18 @@ const App = () => {
               exact
               component={Subscriptions}
               permissionReq="read_subscription"
+            />
+            <PrivateRoute
+              path="/website"
+              exact
+              component={Website}
+              permissionReq="read_staticpage"
+            />
+            <PrivateRoute
+              path="/website/:id"
+              exact
+              component={ViewWebsite}
+              permissionReq="read_staticpage"
             />
             <PrivateRoute
               path="/static-pages"

@@ -20,6 +20,7 @@ import {
   RiAdvertisementFill,
   RiCoupon3Line,
   RiDashboardFill,
+  RiGlobalLine,
   RiNotification2Line,
   RiPagesLine,
   RiServiceFill,
@@ -137,6 +138,12 @@ const manageLinks: Array<INavLink> = [
     title: "Static Pages",
     path: "/static-pages",
     icon: <RiPagesLine />,
+    permissionReq: "read_staticpage",
+  },
+  {
+    title: "Website",
+    path: "/website",
+    icon: <RiGlobalLine />,
     permissionReq: "read_staticpage",
   },
   {
