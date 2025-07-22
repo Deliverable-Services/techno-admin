@@ -11,3 +11,20 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
+
+.gap-4{
+  gap: 4px;
+}
+.gap-10{
+  gap: 10px;
+}
+.br-12 {
+  border-radius: 12px;
+}
+.br-8 {
+  border-radius: 8px;
+}
+
+.bg-select {
+  background-color: #f4f6f8;
+}

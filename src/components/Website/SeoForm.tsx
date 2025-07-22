@@ -1,7 +1,8 @@
 import React, { useEffect } from "react";
 import { Formik, Form, Field } from "formik";
 import * as Yup from "yup";
-import { Button, Spinner } from "react-bootstrap";
+import { Button, Col, Container, Row, Spinner } from "react-bootstrap";
+import PageHeading from "../../shared-components/PageHeading";
 
 const sampleData = {
   id: 1,
@@ -31,92 +32,107 @@ const SeoForm = ({ seoDetails }) => {
   }, []);
   console.log(seoDetails, "seoDetails");
   return (
-    <div className="card view-padding p-4 mt-3">
-      <h4 className="mb-3">SEO Details</h4>
-      <Formik
-        initialValues={{
-          metaTitle: seoDetails.metaTitle,
-          metaDescription: seoDetails.metaDescription,
-          metaKeywords: seoDetails.metaKeywords.join(", "),
-          socialFeaturedImage: seoDetails.socialFeaturedImage,
-        }}
-        validationSchema={validationSchema}
-        onSubmit={(values, { setSubmitting }) => {
-          console.log("Submitting", values);
-          setTimeout(() => setSubmitting(false), 1000);
-        }}
-      >
-        {({ errors, touched, isSubmitting }) => (
-          <Form className="space-y-4">
-            <div>
-              <label>Meta Title</label>
-              <Field
-                name="metaTitle"
-                className="form-control"
-                placeholder="Enter Meta Title"
-              />
-              {touched.metaTitle && errors.metaTitle && (
-                <div className="text-danger">{errors.metaTitle}</div>
-              )}
-            </div>
+    <Container fluid className="card component-wrapper view-padding mb-3 mt-3">
+      {/* <div className="card view-padding p-4 mt-3"> */}
+      <PageHeading title="SEO Details" />
+      <hr className="mb-3" />
 
-            <div>
-              <label>Meta Description</label>
-              <Field
-                as="textarea"
-                name="metaDescription"
-                className="form-control"
-                placeholder="Enter Meta Description"
-              />
-              {touched.metaDescription && errors.metaDescription && (
-                <div className="text-danger">{errors.metaDescription}</div>
-              )}
-            </div>
+      <Row className="rounded">
+        <Col className="mx-auto">
+          <Formik
+            initialValues={{
+              metaTitle: seoDetails.metaTitle,
+              metaDescription: seoDetails.metaDescription,
+              metaKeywords: seoDetails.metaKeywords.join(", "),
+              socialFeaturedImage: seoDetails.socialFeaturedImage,
+            }}
+            validationSchema={validationSchema}
+            onSubmit={(values, { setSubmitting }) => {
+              console.log("Submitting", values);
+              setTimeout(() => setSubmitting(false), 1000);
+            }}
+          >
+            {({ errors, touched, isSubmitting }) => (
+              <Form className="space-y-4">
+                <div className="form-container ">
+                  <div>
+                    <label>Meta Title</label>
+                    <Field
+                      name="metaTitle"
+                      className="form-control"
+                      placeholder="Enter Meta Title"
+                    />
+                    {touched.metaTitle && errors.metaTitle && (
+                      <div className="text-danger">{errors.metaTitle}</div>
+                    )}
+                  </div>
 
-            <div>
-              <label>Meta Keywords</label>
-              <Field
-                name="metaKeywords"
-                className="form-control"
-                placeholder="e.g. ai, photo, editor"
-              />
-              {touched.metaKeywords && errors.metaKeywords && (
-                <div className="text-danger">{errors.metaKeywords}</div>
-              )}
-            </div>
+                  <div>
+                    <label>Meta Keywords</label>
+                    <Field
+                      name="metaKeywords"
+                      className="form-control"
+                      placeholder="e.g. ai, photo, editor"
+                    />
+                    {touched.metaKeywords && errors.metaKeywords && (
+                      <div className="text-danger">{errors.metaKeywords}</div>
+                    )}
+                  </div>
 
-            <div>
-              <label>Social Featured Image</label>
-              <Field
-                name="socialFeaturedImage"
-                className="form-control"
-                placeholder="https://image.url"
-              />
-              {touched.socialFeaturedImage && errors.socialFeaturedImage && (
-                <div className="text-danger">{errors.socialFeaturedImage}</div>
-              )}
-              {seoDetails.socialFeaturedImage && (
-                <img
-                  src={seoDetails.socialFeaturedImage}
-                  alt="Preview"
-                  className="mt-3 w-25"
-                />
-              )}
-            </div>
+                  <div>
+                    <label>Social Featured Image</label>
+                    <Field
+                      name="socialFeaturedImage"
+                      className="form-control"
+                      placeholder="https://image.url"
+                    />
+                    {touched.socialFeaturedImage &&
+                      errors.socialFeaturedImage && (
+                        <div className="text-danger">
+                          {errors.socialFeaturedImage}
+                        </div>
+                      )}
+                    {seoDetails.socialFeaturedImage && (
+                      <img
+                        src={seoDetails.socialFeaturedImage}
+                        alt="Preview"
+                        className="mt-3 w-25 h-50 rounded-lg"
+                      />
+                    )}
+                  </div>
 
-            <div className="pt-3">
-              <Button type="submit" disabled={isSubmitting}>
-                {isSubmitting ? (
-                  <Spinner animation="border" size="sm" />
-                ) : (
-                  "Submit"
-                )}
-              </Button>
-            </div>
-          </Form>
-        )}
-      </Formik>
-    </div>
+                  <div>
+                    <label>Meta Description</label>
+                    <Field
+                      as="textarea"
+                      name="metaDescription"
+                      className="form-control h-50"
+                      placeholder="Enter Meta Description"
+                    />
+                    {touched.metaDescription && errors.metaDescription && (
+                      <div className="text-danger">
+                        {errors.metaDescription}
+                      </div>
+                    )}
+                  </div>
+
+                  <div className="pt-3">
+                    <Button type="submit" disabled={isSubmitting}>
+                      {isSubmitting ? (
+                        <Spinner animation="border" size="sm" />
+                      ) : (
+                        "Submit"
+                      )}
+                    </Button>
+                  </div>
+                </div>
+              </Form>
+            )}
+          </Formik>
+        </Col>
+      </Row>
+      {/* </div> */}
+    </Container>
   );
 };
 

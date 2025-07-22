@@ -106,7 +106,7 @@ const Website = () => {
   });
 
   const _onCreateClick = () => {
-    history.push("/services/create-edit");
+    history.push("/website/create-edit");
   };
   const _onEditClick = (id: string) => {
     history.push(`/website/${id}`);
