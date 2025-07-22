@@ -43,8 +43,8 @@ const Organization: React.FC = () => {
     organizationSlug: '',
     storeType: storeType, // 'crm' or 'ecommerce'
     // Appearance
-    primary: '#007bff',
-    secondary: '#6c757d',
+    primary: '',
+    secondary: '',
     language: '',
     currency: '',
     // Website
@@ -123,7 +123,7 @@ const Organization: React.FC = () => {
       setIsLoading(false);
       showToast({ message: 'Organization type updated successfully!' });
       setTimeout(() => {
-        window.location.reload();
+      window.location.reload();
       }, 2000);
     } catch (error) {
       setIsLoading(false);
@@ -353,7 +353,7 @@ const Organization: React.FC = () => {
                       <div className="border-div form-group w-100 mt-3 d-flex">
                         <label htmlFor="organizationSlug">Organisation Preference</label>
                         <div className="row" style={{gap:'30px'}}>
-                  {/* CRM */}
+        {/* CRM */}
                   <div className="position-relative" style={{width:'250px'}}>
                     <div
                       className={`card mb-4 ${selectedOrg === "crm" ? "border-crm selected" : ""}`}
@@ -361,24 +361,24 @@ const Organization: React.FC = () => {
                         setSelectedOrg("crm");
                         setFormData(prev => ({ ...prev, storeType: 'crm' }));
                       }}
-                      style={{ cursor: "pointer" }}
-                    >
-                      <img
+            style={{ cursor: "pointer" }}
+          >
+            <img
                         src="https://miro.medium.com/v2/resize:fit:1400/1*TR-8mgpp0_X5P0ZbB6XYfQ.jpeg"
-                        className="card-img-top"
-                        alt="CRM"
-                      />
+              className="card-img-top"
+              alt="CRM"
+            />
                       {selectedOrg === "crm" &&
                       <div className="active-dot">
                       </div>
                       }
                     </div>
                     <div className="position-relative">
-                       <h5 className="card-title text-primary" style={{fontSize:'16px'}}>CRM </h5>
-                        <p style={{fontSize:'14px'}}>Manage leads, sales, and customer relationships.</p>
-                    </div>
-                  </div>
-                  {/* Ecommerce */}
+              <h5 className="card-title text-primary">CRM </h5>
+              <p>Manage leads, sales, and customer relationships.</p>
+            </div>
+          </div>
+        {/* Ecommerce */}
                   <div className="position-relative" style={{width:'250px'}}>
                     <div
                       className={`card mb-4 shadow ${selectedOrg === "ecommerce" ? "border-crm selected" : ""}`}
@@ -386,25 +386,25 @@ const Organization: React.FC = () => {
                         setSelectedOrg("ecommerce");
                         setFormData(prev => ({ ...prev, storeType: 'ecommerce' }));
                       }}
-                      style={{ cursor: "pointer" }}
-                    >
-                      <img
+            style={{ cursor: "pointer" }}
+          >
+            <img
                         src="https://s3.envato.com/files/101016168/2a.UCM-CRM-dashboard-desktop.png"
-                        className="card-img-top"
-                        alt="Ecommerce"
-                      />
+              className="card-img-top"
+              alt="Ecommerce"
+            />
                       {selectedOrg === "ecommerce" &&
                       <div className="active-dot">
                       </div>
                       }
                     </div>
                     <div className="text-left">
-                        <h5 className="card-title" style={{fontSize:'16px'}}>Ecommerce </h5>
-                        <p style={{fontSize:'14px'}}>Control your online store, products, and orders.</p>
-                      </div>
-                  </div>
-                </div>
-                      </div>
+              <h5 className="card-title">Ecommerce </h5>
+              <p>Control your online store, products, and orders.</p>
+            </div>
+          </div>
+        </div>
+      </div>
                     </div>
                   </div>
                 </div>
@@ -415,13 +415,11 @@ const Organization: React.FC = () => {
           <div className={`tab-pane fade${activeTab === 'appearance' ? ' show active' : ''}`}>
             {activeTab === 'appearance' && (
               <div>
-                   <div className="tab-header">
-                    <h4>Appearance</h4>
-                    <p>Used to manage the organisation’s branding and color scheme.</p>
-                  </div>
+                <h2 className="mb-2">Appearance</h2>
+                <p className="mb-5">Used to manage the organisation’s branding and color scheme.</p>
                 <div className="right-content">
                   <div className="profile-card d-flex flex-column align-items-center">
-                    <div className="border-div form-group w-100 mt-4 d-flex align-items-center">
+                    <div className="form-group w-100 mt-4 d-flex align-items-center">
                       <label htmlFor="primary">Brand Primary Color</label>
                       <input
                         type="color"
@@ -432,9 +430,8 @@ const Organization: React.FC = () => {
                         onChange={handleInputChange}
                         placeholder="Enter organisation name "
                       />
-                      <span className="ms-3 input-color">{formData.primary}</span>
                     </div>
-                    <div className="border-div form-group w-100 mt-3 d-flex align-items-center">
+                    <div className="form-group w-100 mt-3 d-flex align-items-center">
                       <label htmlFor="secondary">Brand Secondary Color</label>
                       <input
                         type="color"
@@ -445,20 +442,19 @@ const Organization: React.FC = () => {
                         onChange={handleInputChange}
                         placeholder="Enter organisation email"
                       />
-                      <span className="ms-3 input-color">{formData.secondary}</span>
                     </div>
-                    <div className="border-div form-group w-100 mt-3 d-flex align-items-center">
+                    <div className="form-group w-100 mt-3 d-flex align-items-center">
                       <label htmlFor="language">Preferences Language</label>
-                      <select className="form-control input-div" id="language" name="language" value={formData.language} onChange={handleInputChange}>
+                      <select className="form-control" id="language" name="language" value={formData.language} onChange={handleInputChange}>
                         <option value="">Select Language</option>
                         <option value="English">English</option>
                         <option value="Spanish">Spanish</option>
                         <option value="Turkey">Turkey</option>
                       </select>
                     </div>
-                    <div className="form-group border-div w-100 mt-3 d-flex align-items-center">
+                    <div className="form-group w-100 mt-3 d-flex align-items-center">
                       <label htmlFor="currency">Preferences Currency</label>
-                      <select className="form-control input-div" id="currency" name="currency" value={formData.currency} onChange={handleInputChange}>
+                      <select className="form-control" id="currency" name="currency" value={formData.currency} onChange={handleInputChange}>
                         <option value="">Select Currency</option>
                         <option value="IN">IN</option>
                         <option value="US">US</option>
@@ -473,19 +469,15 @@ const Organization: React.FC = () => {
           <div className={`tab-pane fade${activeTab === 'website' ? ' show active' : ''}`}>
             {activeTab === 'website' && (
               <>
-               <div className="tab-header">
-                    <h4>Contact Details</h4>
-                    <p>Update your website contact details here.</p>
-                  </div>
-               
+                <h2 className="mb-5">Contact Details</h2>
                 <div>
                   <div className="right-content">
                     <div className="profile-card d-flex flex-column align-items-center">
-                      <div className="border-div form-group w-100 mt-4 d-flex align-items-center">
+                      <div className="form-group w-100 mt-4 d-flex align-items-center">
                         <label htmlFor="cemail">Contact Email</label>
                         <input
                           type="email"
-                          className="form-control input-div"
+                          className="form-control"
                           id="cemail"
                           name="cemail"
                           value={formData.cemail}
@@ -493,11 +485,11 @@ const Organization: React.FC = () => {
                           placeholder="Enter contact email"
                         />
                       </div>
-                      <div className="border-div form-group w-100 mt-3 d-flex align-items-center">
+                      <div className="form-group w-100 mt-3 d-flex align-items-center">
                         <label htmlFor="cphone">Contact Phone</label>
                         <input
                           type="phone"
-                          className="form-control input-div"
+                          className="form-control"
                           id="cphone"
                           name="cphone"
                           value={formData.cphone}
@@ -505,11 +497,11 @@ const Organization: React.FC = () => {
                           placeholder="Enter contact phone"
                         />
                       </div>
-                      <div className="border-div form-group w-100 mt-3 d-flex align-items-center">
+                      <div className="form-group w-100 mt-3 d-flex align-items-center">
                         <label htmlFor="caddress">Contact Address</label>
                         <input
                           type="text"
-                          className="form-control input-div"
+                          className="form-control"
                           id="caddress"
                           name="caddress"
                           value={formData.caddress}
@@ -526,17 +518,15 @@ const Organization: React.FC = () => {
           <div className={`tab-pane fade${activeTab === 'platform' ? ' show active' : ''}`}>
             {activeTab === 'platform' && (
               <div>
-                <div className="tab-header">
-                    <h4>Platform Configurations</h4>
-                    <p>Used for setting global business rules or platform logic.</p>
-                  </div>
+                <h2 className="mb-2">Platform Configurations</h2>
+                <p className="mb-5">Used for setting global business rules or platform logic.</p>
                 <div className="right-content">
                   <div className="profile-card d-flex flex-column align-items-center">
-                    <div className="border-div form-group w-100 mt-4 d-flex align-items-center">
+                    <div className="form-group w-100 mt-4 d-flex align-items-center">
                       <label htmlFor="minOrderCart">Minimum Order Cart</label>
                       <input
                         type="number"
-                        className="form-control input-div"
+                        className="form-control"
                         id="minOrderCart"
                         name="minOrderCart"
                         value={formData.minOrderCart}
@@ -544,11 +534,11 @@ const Organization: React.FC = () => {
                         placeholder="Enter minimum order cart value"
                       />
                     </div>
-                    <div className="border-div form-group w-100 mt-3 d-flex align-items-center">
+                    <div className="form-group w-100 mt-3 d-flex align-items-center">
                       <label htmlFor="copyrightMsg">Copyright Message</label>
                       <input
                         type="text"
-                        className="form-control input-div"
+                        className="form-control"
                         id="copyrightMsg"
                         name="copyrightMsg"
                         value={formData.copyrightMsg}
@@ -581,7 +571,7 @@ const Organization: React.FC = () => {
                         />
                         <button type="button" className="btn btn-success" onClick={handleAddSocial} disabled={!selectedSocial || !socialValue}>
                           Add
-                        </button>
+     </button>
                       </div>
                       {/* List of added social links */}
                       <ul className="list-group">
@@ -604,22 +594,18 @@ const Organization: React.FC = () => {
                     </div>
                   </div>
                 </div>
-
               </div>
             )}
           </div>
           <div className={`tab-pane fade${activeTab === 'integrations' ? ' show active' : ''}`}>
             {activeTab === 'integrations' && (
               <div>
-                <div className="tab-header">
-                    <h4>Integrations</h4>
-                    <p>This will have third-party platform integration options.</p>
-                  </div>
-                
+                <h2 className="mb-2">Integrations</h2>
+                <p className="mb-5">This will have third-party platform integration options.</p>
                 <div className="right-content">
 
                   <div className="profile-card d-flex flex-column align-items-center">
-                    <div className="mt-5 w-100">
+                    <div className="mt-5">
                       <h4 className="mb-4">Data Integrations</h4>
                       <div className="row justify-content-start">
                         <div className="col-md-8">
@@ -695,7 +681,7 @@ const Organization: React.FC = () => {
             )}
           </div>
         </div>
-      </div>
+     </div>
     </div>
   );
 };

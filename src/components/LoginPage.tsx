@@ -85,30 +85,15 @@ const LoginFlow = () => {
 
   return (
     <div className="vh-100 px-0 login-main m-0 p-0">
-      <div className="row h-100 no-gutters align-items-center">
-        {/* LEFT SIDE IMAGE */}
-        <div
-          className="col-md-6 d-none d-md-block h-100 text-center text-white login-left-panel"
-          style={{
-            backgroundImage: 'url("/assets/order.png")',
-            backgroundSize: "cover",
-            backgroundPosition: "center",
-          }}
-        >
-          <img
-            src={logo}
-            alt="Logo"
-            style={{ width: 200, marginBottom: 30 }}
-          />
-          <h1 className="px-4">Your Smart Workspace for Growth & Success</h1>
-        </div>
+      <img src="/assets/new-logo.svg" alt="Logo" style={{ width: 120, marginBottom: 30,marginLeft: 60,height: 'auto',position:'absolute' }} />
+      <div className="row h-100 no-gutters align-items-center justify-content-center">
 
         {/* RIGHT SIDE FORM */}
         <div className="col-md-6 d-flex align-items-center justify-content-center bg-white">
-          <div className="w-100 px-4 py-5" style={{ maxWidth: "400px" }}>
+          <div className="w-100 px-4 py-5 login-wrapper" style={{ maxWidth: "400px" }}>
             {/* Title and description - Only in login step */}
             {step === "login" && (
-              <div className="text-center mb-3">
+              <div className="text-left mb-3">
                 <h4 className="mb-0 font-weight-bold">Sign In</h4>
                 <small className="text-muted">
                   OTP will be sent to your number.
@@ -118,7 +103,7 @@ const LoginFlow = () => {
 
             {/* Tabs - Only in login step */}
             {step === "login" && (
-              <ul className="nav nav-pills nav-justified mb-4 login-tab">
+              <ul className="nav nav-tabs nav-justified mb-4 login-tab">
                 <li className="nav-item">
                   <a
                     className={`nav-link btn ${activeTab === "login" ? "active" : ""}`}
@@ -180,6 +165,7 @@ const LoginFlow = () => {
                     <Button
                       type="submit"
                       className="btn btn-primary btn-block mt-3"
+                      style={{height: '52px'}}
                       disabled={isSendingOtp}
                     >
                       {isSendingOtp ? (
@@ -242,6 +228,7 @@ const LoginFlow = () => {
                     <Button
                       type="submit"
                       className="btn btn-primary btn-block mt-3"
+                      style={{height: '52px'}}
                       disabled={isVerifyingOtp}
                     >
                       {isVerifyingOtp ? (
