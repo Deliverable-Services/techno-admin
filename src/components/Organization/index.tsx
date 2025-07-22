@@ -10,6 +10,9 @@ import useUserProfileStore from "../../hooks/useUserProfileStore";
 import { GoogleBusinessProfile } from "../Integrations";
 import profile from "../../assets/profile.svg";
 import { FaFacebook, FaTwitter, FaInstagram, FaLinkedin, FaYoutube, FaGlobe } from 'react-icons/fa';
+import { Card, Button, Row, Col } from "react-bootstrap";
+
+
 
 const Organization: React.FC = () => {
   const loggedInUser = useUserProfileStore((state) => state.user);
@@ -239,7 +242,7 @@ const Organization: React.FC = () => {
                             name="lname"
                             value={formData.lname}
                             onChange={handleInputChange}
-                             placeholder="Last Name"
+                            placeholder="Last Name"
                           />
                         </div>
                       </div>
@@ -287,7 +290,7 @@ const Organization: React.FC = () => {
                             />
                             <label htmlFor="contained-button-file">
                               <div className="text-center px-2 py-1" style={{ cursor: 'pointer' }}>
-                                
+
                                 <p className="mb-0">Click to upload or drag and drop
                                   <br />
                                   SVG, PNG, JPG or GIF (max. 800x400px)
@@ -308,9 +311,9 @@ const Organization: React.FC = () => {
             {activeTab === 'organization' && (
               <>
                 <div className="tab-header">
-                    <h4>Choose Your Organization</h4>
-                    <p></p>
-                  </div>
+                  <h4>Choose Your Organization</h4>
+                  <p></p>
+                </div>
                 <div>
                   <div className="right-content">
                     <div className="profile-card d-flex flex-column align-items-center">
@@ -352,73 +355,73 @@ const Organization: React.FC = () => {
                       </div>
                       <div className="border-div form-group w-100 mt-3 d-flex">
                         <label htmlFor="organizationSlug">Organisation Preference</label>
-                        <div className="row" style={{gap:'30px'}}>
-                  {/* CRM */}
-                  <div className="position-relative" style={{width:'250px'}}>
-                    <div
-                      className={`card mb-4 ${selectedOrg === "crm" ? "border-crm selected" : ""}`}
-                      onClick={() => {
-                        setSelectedOrg("crm");
-                        setFormData(prev => ({ ...prev, storeType: 'crm' }));
-                      }}
-                      style={{ cursor: "pointer" }}
-                    >
-                      <img
-                        src="https://miro.medium.com/v2/resize:fit:1400/1*TR-8mgpp0_X5P0ZbB6XYfQ.jpeg"
-                        className="card-img-top"
-                        alt="CRM"
-                      />
-                      {selectedOrg === "crm" &&
-                      <div className="active-dot">
+                        <div className="row" style={{ gap: '30px' }}>
+                          {/* CRM */}
+                          <div className="position-relative" style={{ width: '250px' }}>
+                            <div
+                              className={`card mb-4 ${selectedOrg === "crm" ? "border-crm selected" : ""}`}
+                              onClick={() => {
+                                setSelectedOrg("crm");
+                                setFormData(prev => ({ ...prev, storeType: 'crm' }));
+                              }}
+                              style={{ cursor: "pointer" }}
+                            >
+                              <img
+                                src="https://miro.medium.com/v2/resize:fit:1400/1*TR-8mgpp0_X5P0ZbB6XYfQ.jpeg"
+                                className="card-img-top"
+                                alt="CRM"
+                              />
+                              {selectedOrg === "crm" &&
+                                <div className="active-dot">
+                                </div>
+                              }
+                            </div>
+                            <div className="position-relative">
+                              <h5 className="card-title text-primary" style={{ fontSize: '16px' }}>CRM </h5>
+                              <p style={{ fontSize: '14px' }}>Manage leads, sales, and customer relationships.</p>
+                            </div>
+                          </div>
+                          {/* Ecommerce */}
+                          <div className="position-relative" style={{ width: '250px' }}>
+                            <div
+                              className={`card mb-4 shadow ${selectedOrg === "ecommerce" ? "border-crm selected" : ""}`}
+                              onClick={() => {
+                                setSelectedOrg("ecommerce");
+                                setFormData(prev => ({ ...prev, storeType: 'ecommerce' }));
+                              }}
+                              style={{ cursor: "pointer" }}
+                            >
+                              <img
+                                src="https://s3.envato.com/files/101016168/2a.UCM-CRM-dashboard-desktop.png"
+                                className="card-img-top"
+                                alt="Ecommerce"
+                              />
+                              {selectedOrg === "ecommerce" &&
+                                <div className="active-dot">
+                                </div>
+                              }
+                            </div>
+                            <div className="text-left">
+                              <h5 className="card-title" style={{ fontSize: '16px' }}>Ecommerce </h5>
+                              <p style={{ fontSize: '14px' }}>Control your online store, products, and orders.</p>
+                            </div>
+                          </div>
+                        </div>
                       </div>
-                      }
                     </div>
-                    <div className="position-relative">
-                       <h5 className="card-title text-primary" style={{fontSize:'16px'}}>CRM </h5>
-                        <p style={{fontSize:'14px'}}>Manage leads, sales, and customer relationships.</p>
-                    </div>
-                  </div>
-                  {/* Ecommerce */}
-                  <div className="position-relative" style={{width:'250px'}}>
-                    <div
-                      className={`card mb-4 shadow ${selectedOrg === "ecommerce" ? "border-crm selected" : ""}`}
-                      onClick={() => {
-                        setSelectedOrg("ecommerce");
-                        setFormData(prev => ({ ...prev, storeType: 'ecommerce' }));
-                      }}
-                      style={{ cursor: "pointer" }}
-                    >
-                      <img
-                        src="https://s3.envato.com/files/101016168/2a.UCM-CRM-dashboard-desktop.png"
-                        className="card-img-top"
-                        alt="Ecommerce"
-                      />
-                      {selectedOrg === "ecommerce" &&
-                      <div className="active-dot">
-                      </div>
-                      }
-                    </div>
-                    <div className="text-left">
-                        <h5 className="card-title" style={{fontSize:'16px'}}>Ecommerce </h5>
-                        <p style={{fontSize:'14px'}}>Control your online store, products, and orders.</p>
-                      </div>
                   </div>
                 </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                
+
               </>
             )}
           </div>
           <div className={`tab-pane fade${activeTab === 'appearance' ? ' show active' : ''}`}>
             {activeTab === 'appearance' && (
               <div>
-                   <div className="tab-header">
-                    <h4>Appearance</h4>
-                    <p>Used to manage the organisation’s branding and color scheme.</p>
-                  </div>
+                <div className="tab-header">
+                  <h4>Appearance</h4>
+                  <p>Used to manage the organisation’s branding and color scheme.</p>
+                </div>
                 <div className="right-content">
                   <div className="profile-card d-flex flex-column align-items-center">
                     <div className="border-div form-group w-100 mt-4 d-flex align-items-center">
@@ -473,11 +476,11 @@ const Organization: React.FC = () => {
           <div className={`tab-pane fade${activeTab === 'website' ? ' show active' : ''}`}>
             {activeTab === 'website' && (
               <>
-               <div className="tab-header">
-                    <h4>Contact Details</h4>
-                    <p>Update your website contact details here.</p>
-                  </div>
-               
+                <div className="tab-header">
+                  <h4>Contact Details</h4>
+                  <p>Update your website contact details here.</p>
+                </div>
+
                 <div>
                   <div className="right-content">
                     <div className="profile-card d-flex flex-column align-items-center">
@@ -527,9 +530,9 @@ const Organization: React.FC = () => {
             {activeTab === 'platform' && (
               <div>
                 <div className="tab-header">
-                    <h4>Platform Configurations</h4>
-                    <p>Used for setting global business rules or platform logic.</p>
-                  </div>
+                  <h4>Platform Configurations</h4>
+                  <p>Used for setting global business rules or platform logic.</p>
+                </div>
                 <div className="right-content">
                   <div className="profile-card d-flex flex-column align-items-center">
                     <div className="border-div form-group w-100 mt-4 d-flex align-items-center">
@@ -558,7 +561,7 @@ const Organization: React.FC = () => {
                     </div>
                     <div className="form-group w-100 mt-3">
                       <label>Social Media Links</label>
-                      <div className="d-flex align-items-center mb-2">
+                      <div className="d-flex align-items-center justify-end mb-4">
                         <select
                           className="form-control mr-2"
                           style={{ maxWidth: 180 }}
@@ -579,28 +582,38 @@ const Organization: React.FC = () => {
                           onChange={e => setSocialValue(e.target.value)}
                           disabled={!selectedSocial}
                         />
-                        <button type="button" className="btn btn-success" onClick={handleAddSocial} disabled={!selectedSocial || !socialValue}>
+                        <button type="button" className="btn btn-primary" onClick={handleAddSocial} disabled={!selectedSocial || !socialValue}>
                           Add
                         </button>
                       </div>
-                      {/* List of added social links */}
-                      <ul className="list-group">
+                      <Row className="g-3 social-cards">
                         {formData.socialLinks.map((link, idx) => {
                           const opt = socialOptions.find(o => o.value === link.type);
                           return (
-                            <li key={idx} className="list-group-item d-flex align-items-center justify-content-between">
-                              <span className="d-flex align-items-center">
-                                <span style={{ fontSize: 20, marginRight: 8 }}>{opt?.icon}</span>
-                                <span className="font-weight-bold mr-2">{opt?.label}:</span>
-                                <span>{link.value}</span>
-                              </span>
-                              <button type="button" className="btn btn-sm btn-danger" onClick={() => handleRemoveSocial(idx)}>
-                                Remove
-                              </button>
-                            </li>
+                            <Col key={idx} xs={12} sm={6} md={4} lg={3}>
+                              <Card className="h-100 shadow-sm">
+                                <Card.Body className="d-flex justify-content-between">
+                                  <div className="mb-2 d-flex align-items-center">
+                                    <span style={{ fontSize: 35, marginRight: 8 }}>{opt?.icon}</span>
+                                    <div>
+                                      <div className="fw-bold">{opt?.label}</div>
+                                      <div className="text-muted" style={{ wordBreak: 'break-word' }}>{link.value}</div>
+                                    </div>
+                                  </div>
+                                  <Button
+                                    variant="danger"
+                                    size="sm"
+                                    onClick={() => handleRemoveSocial(idx)}
+                                    className="mt-2 align-self-start"
+                                  >
+                                    Remove
+                                  </Button>
+                                </Card.Body>
+                              </Card>
+                            </Col>
                           );
                         })}
-                      </ul>
+                      </Row>
                     </div>
                   </div>
                 </div>
@@ -612,10 +625,10 @@ const Organization: React.FC = () => {
             {activeTab === 'integrations' && (
               <div>
                 <div className="tab-header">
-                    <h4>Integrations</h4>
-                    <p>This will have third-party platform integration options.</p>
-                  </div>
-                
+                  <h4>Integrations</h4>
+                  <p>This will have third-party platform integration options.</p>
+                </div>
+
                 <div className="right-content">
 
                   <div className="profile-card d-flex flex-column align-items-center">
