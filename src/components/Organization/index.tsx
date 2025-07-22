@@ -33,7 +33,8 @@ const Organization: React.FC = () => {
   const [formData, setFormData] = useState({
     // Profile
     profileImage: null as string | null,
-    name: '',
+    fname: '',
+    lname: '',
     email: '',
     phone: '',
     // Organization
@@ -42,8 +43,8 @@ const Organization: React.FC = () => {
     organizationSlug: '',
     storeType: storeType, // 'crm' or 'ecommerce'
     // Appearance
-    primary: '',
-    secondary: '',
+    primary: '#007bff',
+    secondary: '#6c757d',
     language: '',
     currency: '',
     // Website
@@ -175,8 +176,17 @@ const Organization: React.FC = () => {
   return (
     <div>
       <div className="organization-main">
+        <div className="d-flex justify-content-between">
+          <h2 className="main-head">Organization Settings</h2>
+          <input style={{ width: "300px" }}
+            type="search"
+            className="form-control"
+            name="search"
+            placeholder="Search"
+          />
+        </div>
         {/* Save Button on top */}
-        <div className="d-flex justify-content-between align-items-center mb-4 mx-auto px-5" style={{ maxWidth: '1040px' }}>
+        <div className="d-flex justify-content-between align-items-center mb-4 mx-auto">
           {/* Bootstrap Nav Tabs with map */}
           <ul className="nav nav-tabs">
             {tabs.map(tab => (
@@ -197,52 +207,47 @@ const Organization: React.FC = () => {
         </div>
 
         {/* Tab Content */}
-        <div className="tab-content px-5" style={{ maxWidth: '1040px', margin: 'auto' }}>
+        <div className="tab-content">
           <div className={`tab-pane fade${activeTab === 'profile' ? ' show active' : ''}`}>
             {activeTab === 'profile' && (
               <div className="mt-5">
                 <div>
+                  <div className="tab-header">
+                    <h4>Personal Info</h4>
+                    <p>Update your photo and personal details here.</p>
+                  </div>
                   <div className="right-content">
                     <div className="profile-card d-flex flex-column align-items-center">
-                      <div className="mx-auto" style={{ height: 100, width: 100 }}>
-                        <img
-                          src={formData.profileImage || profile}
-                          alt="Profile"
-                          style={{ borderRadius: "50%", objectFit: "cover", width: 100, height: 100 }}
-                        />
+
+
+                      <div className="border-div form-group w-100 mt-4 d-flex align-items-center">
+                        <label htmlFor="fname">Name</label>
+                        <div className="input-div w-100 d-flex align-items-center gap-3">
+                          <input
+                            type="text"
+                            className="form-control"
+                            id="fname"
+                            name="fname"
+                            value={formData.fname}
+                            onChange={handleInputChange}
+                            placeholder="First Name"
+                          />
+                          <input
+                            type="text"
+                            className="form-control"
+                            id="lname"
+                            name="lname"
+                            value={formData.lname}
+                            onChange={handleInputChange}
+                             placeholder="Last Name"
+                          />
+                        </div>
                       </div>
-                      <div className="update-profile-pic mt-3">
-                        <input
-                          accept="image/*"
-                          className={"d-none"}
-                          id="contained-button-file"
-                          type="file"
-                          onChange={handleImageChange}
-                        />
-                        <label htmlFor="contained-button-file">
-                          <div className="d-flex bg-primary text-white align-items-center px-2 py-1 rounded" style={{ cursor: 'pointer' }}>
-                            <span style={{ fontSize: 18, marginRight: 8 }}>⬆️</span>
-                            <p className="mb-0 ml-2">Change Profile Picture</p>
-                          </div>
-                        </label>
-                      </div>
-                      <div className="form-group w-100 mt-4 d-flex align-items-center">
-                        <label htmlFor="name">Name</label>
-                        <input
-                          type="text"
-                          className="form-control"
-                          id="name"
-                          name="name"
-                          value={formData.name}
-                          onChange={handleInputChange}
-                          placeholder="Enter your name"
-                        />
-                      </div>
-                      <div className="form-group w-100 mt-3 d-flex align-items-center">
+                      <div className="border-div form-group w-100 mt-3 d-flex align-items-center">
                         <label htmlFor="email">Email</label>
                         <input
                           type="email"
-                          className="form-control"
+                          className="form-control input-div"
                           id="email"
                           name="email"
                           value={formData.email}
@@ -250,17 +255,48 @@ const Organization: React.FC = () => {
                           placeholder="Enter your email"
                         />
                       </div>
-                      <div className="form-group w-100 mt-3 d-flex align-items-center">
+                      <div className="border-div form-group w-100 mt-3 d-flex align-items-center">
                         <label htmlFor="phone">Phone</label>
                         <input
                           type="text"
-                          className="form-control"
+                          className="form-control input-div"
                           id="phone"
                           name="phone"
                           value={formData.phone}
                           onChange={handleInputChange}
                           placeholder="Enter your phone number"
                         />
+                      </div>
+                      <div className="update-profile-pic mt-3 form-group w-100 mt-3 d-flex align-items-start">
+                        <label>
+                          Your photo
+                        </label>
+                        <div className="d-flex gap-3">
+                          <img
+                            src={formData.profileImage || profile}
+                            alt="Profile"
+                            style={{ borderRadius: "50%", objectFit: "cover", width: 64, height: 64 }}
+                          />
+                          <div className="position-relative upload-container">
+                            <input
+                              accept="image/*"
+                              className={"d-none"}
+                              id="contained-button-file"
+                              type="file"
+                              onChange={handleImageChange}
+                            />
+                            <label htmlFor="contained-button-file">
+                              <div className="text-center px-2 py-1" style={{ cursor: 'pointer' }}>
+                                
+                                <p className="mb-0">Click to upload or drag and drop
+                                  <br />
+                                  SVG, PNG, JPG or GIF (max. 800x400px)
+                                </p>
+                              </div>
+                            </label>
+                          </div>
+                        </div>
+
                       </div>
                     </div>
                   </div>
@@ -271,15 +307,18 @@ const Organization: React.FC = () => {
           <div className={`tab-pane fade${activeTab === 'organization' ? ' show active' : ''}`}>
             {activeTab === 'organization' && (
               <>
-                <h2 className="mb-5">Choose Your Organization</h2>
+                <div className="tab-header">
+                    <h4>Choose Your Organization</h4>
+                    <p></p>
+                  </div>
                 <div>
                   <div className="right-content">
                     <div className="profile-card d-flex flex-column align-items-center">
-                      <div className="form-group w-100 mt-4 d-flex align-items-center">
+                      <div className="border-div form-group w-100 mt-4 d-flex align-items-center">
                         <label htmlFor="organizationName">Organisation Name</label>
                         <input
                           type="text"
-                          className="form-control"
+                          className="form-control input-div"
                           id="organizationName"
                           name="organizationName"
                           value={formData.organizationName}
@@ -287,11 +326,11 @@ const Organization: React.FC = () => {
                           placeholder="Enter organisation name "
                         />
                       </div>
-                      <div className="form-group w-100 mt-3 d-flex align-items-center">
+                      <div className="border-div form-group w-100 mt-3 d-flex align-items-center">
                         <label htmlFor="organizationEmail">Organisation Email</label>
                         <input
                           type="email"
-                          className="form-control"
+                          className="form-control input-div"
                           id="organizationEmail"
                           name="organizationEmail"
                           value={formData.organizationEmail}
@@ -299,11 +338,11 @@ const Organization: React.FC = () => {
                           placeholder="Enter organisation email"
                         />
                       </div>
-                      <div className="form-group w-100 mt-3 d-flex align-items-center">
+                      <div className="border-div form-group w-100 mt-3 d-flex align-items-center">
                         <label htmlFor="organizationSlug">Organisation Slug</label>
                         <input
                           type="text"
-                          className="form-control"
+                          className="form-control input-div"
                           id="organizationSlug"
                           name="organizationSlug"
                           value={formData.organizationSlug}
@@ -311,14 +350,13 @@ const Organization: React.FC = () => {
                           placeholder="Enter organisation slug"
                         />
                       </div>
-                    </div>
-                  </div>
-                </div>
-                <div className="row justify-content-center mt-5">
+                      <div className="border-div form-group w-100 mt-3 d-flex">
+                        <label htmlFor="organizationSlug">Organisation Preference</label>
+                        <div className="row" style={{gap:'30px'}}>
                   {/* CRM */}
-                  <div className="col-md-6">
+                  <div className="position-relative" style={{width:'250px'}}>
                     <div
-                      className={`card mb-4 shadow ${selectedOrg === "crm" ? "border-primary selected" : ""}`}
+                      className={`card mb-4 ${selectedOrg === "crm" ? "border-crm selected" : ""}`}
                       onClick={() => {
                         setSelectedOrg("crm");
                         setFormData(prev => ({ ...prev, storeType: 'crm' }));
@@ -330,16 +368,20 @@ const Organization: React.FC = () => {
                         className="card-img-top"
                         alt="CRM"
                       />
-                      <div className="card-body text-center">
-                        <h5 className="card-title text-primary">CRM </h5>
-                        <p>Manage leads, sales, and customer relationships.</p>
+                      {selectedOrg === "crm" &&
+                      <div className="active-dot">
                       </div>
+                      }
+                    </div>
+                    <div className="position-relative">
+                       <h5 className="card-title text-primary" style={{fontSize:'16px'}}>CRM </h5>
+                        <p style={{fontSize:'14px'}}>Manage leads, sales, and customer relationships.</p>
                     </div>
                   </div>
                   {/* Ecommerce */}
-                  <div className="col-md-6">
+                  <div className="position-relative" style={{width:'250px'}}>
                     <div
-                      className={`card mb-4 shadow ${selectedOrg === "ecommerce" ? "border-success selected" : ""}`}
+                      className={`card mb-4 shadow ${selectedOrg === "ecommerce" ? "border-crm selected" : ""}`}
                       onClick={() => {
                         setSelectedOrg("ecommerce");
                         setFormData(prev => ({ ...prev, storeType: 'ecommerce' }));
@@ -351,24 +393,35 @@ const Organization: React.FC = () => {
                         className="card-img-top"
                         alt="Ecommerce"
                       />
-                      <div className="card-body text-center">
-                        <h5 className="card-title">Ecommerce </h5>
-                        <p>Control your online store, products, and orders.</p>
+                      {selectedOrg === "ecommerce" &&
+                      <div className="active-dot">
+                      </div>
+                      }
+                    </div>
+                    <div className="text-left">
+                        <h5 className="card-title" style={{fontSize:'16px'}}>Ecommerce </h5>
+                        <p style={{fontSize:'14px'}}>Control your online store, products, and orders.</p>
+                      </div>
+                  </div>
+                </div>
                       </div>
                     </div>
                   </div>
                 </div>
+                
               </>
             )}
           </div>
           <div className={`tab-pane fade${activeTab === 'appearance' ? ' show active' : ''}`}>
             {activeTab === 'appearance' && (
               <div>
-                <h2 className="mb-2">Appearance</h2>
-                <p className="mb-5">Used to manage the organisation’s branding and color scheme.</p>
+                   <div className="tab-header">
+                    <h4>Appearance</h4>
+                    <p>Used to manage the organisation’s branding and color scheme.</p>
+                  </div>
                 <div className="right-content">
                   <div className="profile-card d-flex flex-column align-items-center">
-                    <div className="form-group w-100 mt-4 d-flex align-items-center">
+                    <div className="border-div form-group w-100 mt-4 d-flex align-items-center">
                       <label htmlFor="primary">Brand Primary Color</label>
                       <input
                         type="color"
@@ -379,8 +432,9 @@ const Organization: React.FC = () => {
                         onChange={handleInputChange}
                         placeholder="Enter organisation name "
                       />
+                      <span className="ms-3 input-color">{formData.primary}</span>
                     </div>
-                    <div className="form-group w-100 mt-3 d-flex align-items-center">
+                    <div className="border-div form-group w-100 mt-3 d-flex align-items-center">
                       <label htmlFor="secondary">Brand Secondary Color</label>
                       <input
                         type="color"
@@ -391,19 +445,20 @@ const Organization: React.FC = () => {
                         onChange={handleInputChange}
                         placeholder="Enter organisation email"
                       />
+                      <span className="ms-3 input-color">{formData.secondary}</span>
                     </div>
-                    <div className="form-group w-100 mt-3 d-flex align-items-center">
+                    <div className="border-div form-group w-100 mt-3 d-flex align-items-center">
                       <label htmlFor="language">Preferences Language</label>
-                      <select className="form-control" id="language" name="language" value={formData.language} onChange={handleInputChange}>
+                      <select className="form-control input-div" id="language" name="language" value={formData.language} onChange={handleInputChange}>
                         <option value="">Select Language</option>
                         <option value="English">English</option>
                         <option value="Spanish">Spanish</option>
                         <option value="Turkey">Turkey</option>
                       </select>
                     </div>
-                    <div className="form-group w-100 mt-3 d-flex align-items-center">
+                    <div className="form-group border-div w-100 mt-3 d-flex align-items-center">
                       <label htmlFor="currency">Preferences Currency</label>
-                      <select className="form-control" id="currency" name="currency" value={formData.currency} onChange={handleInputChange}>
+                      <select className="form-control input-div" id="currency" name="currency" value={formData.currency} onChange={handleInputChange}>
                         <option value="">Select Currency</option>
                         <option value="IN">IN</option>
                         <option value="US">US</option>
@@ -418,15 +473,19 @@ const Organization: React.FC = () => {
           <div className={`tab-pane fade${activeTab === 'website' ? ' show active' : ''}`}>
             {activeTab === 'website' && (
               <>
-                <h2 className="mb-5">Contact Details</h2>
+               <div className="tab-header">
+                    <h4>Contact Details</h4>
+                    <p>Update your website contact details here.</p>
+                  </div>
+               
                 <div>
                   <div className="right-content">
                     <div className="profile-card d-flex flex-column align-items-center">
-                      <div className="form-group w-100 mt-4 d-flex align-items-center">
+                      <div className="border-div form-group w-100 mt-4 d-flex align-items-center">
                         <label htmlFor="cemail">Contact Email</label>
                         <input
                           type="email"
-                          className="form-control"
+                          className="form-control input-div"
                           id="cemail"
                           name="cemail"
                           value={formData.cemail}
@@ -434,11 +493,11 @@ const Organization: React.FC = () => {
                           placeholder="Enter contact email"
                         />
                       </div>
-                      <div className="form-group w-100 mt-3 d-flex align-items-center">
+                      <div className="border-div form-group w-100 mt-3 d-flex align-items-center">
                         <label htmlFor="cphone">Contact Phone</label>
                         <input
                           type="phone"
-                          className="form-control"
+                          className="form-control input-div"
                           id="cphone"
                           name="cphone"
                           value={formData.cphone}
@@ -446,11 +505,11 @@ const Organization: React.FC = () => {
                           placeholder="Enter contact phone"
                         />
                       </div>
-                      <div className="form-group w-100 mt-3 d-flex align-items-center">
+                      <div className="border-div form-group w-100 mt-3 d-flex align-items-center">
                         <label htmlFor="caddress">Contact Address</label>
                         <input
                           type="text"
-                          className="form-control"
+                          className="form-control input-div"
                           id="caddress"
                           name="caddress"
                           value={formData.caddress}
@@ -467,15 +526,17 @@ const Organization: React.FC = () => {
           <div className={`tab-pane fade${activeTab === 'platform' ? ' show active' : ''}`}>
             {activeTab === 'platform' && (
               <div>
-                <h2 className="mb-2">Platform Configurations</h2>
-                <p className="mb-5">Used for setting global business rules or platform logic.</p>
+                <div className="tab-header">
+                    <h4>Platform Configurations</h4>
+                    <p>Used for setting global business rules or platform logic.</p>
+                  </div>
                 <div className="right-content">
                   <div className="profile-card d-flex flex-column align-items-center">
-                    <div className="form-group w-100 mt-4 d-flex align-items-center">
+                    <div className="border-div form-group w-100 mt-4 d-flex align-items-center">
                       <label htmlFor="minOrderCart">Minimum Order Cart</label>
                       <input
                         type="number"
-                        className="form-control"
+                        className="form-control input-div"
                         id="minOrderCart"
                         name="minOrderCart"
                         value={formData.minOrderCart}
@@ -483,11 +544,11 @@ const Organization: React.FC = () => {
                         placeholder="Enter minimum order cart value"
                       />
                     </div>
-                    <div className="form-group w-100 mt-3 d-flex align-items-center">
+                    <div className="border-div form-group w-100 mt-3 d-flex align-items-center">
                       <label htmlFor="copyrightMsg">Copyright Message</label>
                       <input
                         type="text"
-                        className="form-control"
+                        className="form-control input-div"
                         id="copyrightMsg"
                         name="copyrightMsg"
                         value={formData.copyrightMsg}
@@ -543,18 +604,22 @@ const Organization: React.FC = () => {
                     </div>
                   </div>
                 </div>
+
               </div>
             )}
           </div>
           <div className={`tab-pane fade${activeTab === 'integrations' ? ' show active' : ''}`}>
             {activeTab === 'integrations' && (
               <div>
-                <h2 className="mb-2">Integrations</h2>
-                <p className="mb-5">This will have third-party platform integration options.</p>
+                <div className="tab-header">
+                    <h4>Integrations</h4>
+                    <p>This will have third-party platform integration options.</p>
+                  </div>
+                
                 <div className="right-content">
 
                   <div className="profile-card d-flex flex-column align-items-center">
-                    <div className="mt-5">
+                    <div className="mt-5 w-100">
                       <h4 className="mb-4">Data Integrations</h4>
                       <div className="row justify-content-start">
                         <div className="col-md-8">

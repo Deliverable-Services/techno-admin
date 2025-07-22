@@ -11759,7 +11759,7 @@ a.text-text-muted:focus {
 }
 
 nav {
-  background-color: #f4f6f8;
+  background-color: #ffffff;
   min-width: 300px;
   /* width: 25vh; */
   height: 100vh;
@@ -12461,6 +12461,7 @@ th {
   font-size: 14px;
   height: auto;
   color: #12263f;
+  border-radius: 8px;
 }
 
 .form-group input::-webkit-input-placeholder {
