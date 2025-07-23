@@ -46,8 +46,8 @@ const Organization: React.FC = () => {
     organizationSlug: '',
     storeType: storeType, // 'crm' or 'ecommerce'
     // Appearance
-    primary: '',
-    secondary: '',
+    primary: '#007bff',
+    secondary: '#6c757d',
     language: '',
     currency: '',
     // Website
@@ -424,7 +424,7 @@ const Organization: React.FC = () => {
                 </div>
                 <div className="right-content">
                   <div className="profile-card d-flex flex-column align-items-center">
-                    <div className="form-group w-100 mt-4 d-flex align-items-center">
+                    <div className="border-div form-group w-100 mt-4 d-flex align-items-center">
                       <label htmlFor="primary">Brand Primary Color</label>
                       <input
                         type="color"
@@ -435,8 +435,9 @@ const Organization: React.FC = () => {
                         onChange={handleInputChange}
                         placeholder="Enter organisation name "
                       />
+                      <span className="ms-3 input-color">{formData.primary}</span>
                     </div>
-                    <div className="form-group w-100 mt-3 d-flex align-items-center">
+                    <div className="border-div form-group w-100 mt-3 d-flex align-items-center">
                       <label htmlFor="secondary">Brand Secondary Color</label>
                       <input
                         type="color"
@@ -447,19 +448,20 @@ const Organization: React.FC = () => {
                         onChange={handleInputChange}
                         placeholder="Enter organisation email"
                       />
+                      <span className="ms-3 input-color">{formData.secondary}</span>
                     </div>
-                    <div className="form-group w-100 mt-3 d-flex align-items-center">
+                    <div className="border-div form-group w-100 mt-3 d-flex align-items-center">
                       <label htmlFor="language">Preferences Language</label>
-                      <select className="form-control" id="language" name="language" value={formData.language} onChange={handleInputChange}>
+                      <select className="form-control input-div" id="language" name="language" value={formData.language} onChange={handleInputChange}>
                         <option value="">Select Language</option>
                         <option value="English">English</option>
                         <option value="Spanish">Spanish</option>
                         <option value="Turkey">Turkey</option>
                       </select>
                     </div>
-                    <div className="form-group w-100 mt-3 d-flex align-items-center">
+                    <div className="border-div form-group w-100 mt-3 d-flex align-items-center">
                       <label htmlFor="currency">Preferences Currency</label>
-                      <select className="form-control" id="currency" name="currency" value={formData.currency} onChange={handleInputChange}>
+                      <select className="form-control input-div" id="currency" name="currency" value={formData.currency} onChange={handleInputChange}>
                         <option value="">Select Currency</option>
                         <option value="IN">IN</option>
                         <option value="US">US</option>
@@ -482,11 +484,11 @@ const Organization: React.FC = () => {
                 <div>
                   <div className="right-content">
                     <div className="profile-card d-flex flex-column align-items-center">
-                      <div className="form-group w-100 mt-4 d-flex align-items-center">
+                      <div className="border-div form-group w-100 mt-4 d-flex align-items-center">
                         <label htmlFor="cemail">Contact Email</label>
                         <input
                           type="email"
-                          className="form-control"
+                          className="form-control input-div"
                           id="cemail"
                           name="cemail"
                           value={formData.cemail}
@@ -494,11 +496,11 @@ const Organization: React.FC = () => {
                           placeholder="Enter contact email"
                         />
                       </div>
-                      <div className="form-group w-100 mt-3 d-flex align-items-center">
+                      <div className="border-div form-group w-100 mt-3 d-flex align-items-center">
                         <label htmlFor="cphone">Contact Phone</label>
                         <input
                           type="phone"
-                          className="form-control"
+                          className="form-control input-div"
                           id="cphone"
                           name="cphone"
                           value={formData.cphone}
@@ -506,11 +508,11 @@ const Organization: React.FC = () => {
                           placeholder="Enter contact phone"
                         />
                       </div>
-                      <div className="form-group w-100 mt-3 d-flex align-items-center">
+                      <div className="border-div form-group w-100 mt-3 d-flex align-items-center">
                         <label htmlFor="caddress">Contact Address</label>
                         <input
                           type="text"
-                          className="form-control"
+                          className="form-control input-div"
                           id="caddress"
                           name="caddress"
                           value={formData.caddress}
@@ -533,11 +535,11 @@ const Organization: React.FC = () => {
                 </div>
                 <div className="right-content">
                   <div className="profile-card d-flex flex-column align-items-center">
-                    <div className="form-group w-100 mt-4 d-flex align-items-center">
+                    <div className="border-div form-group w-100 mt-4 d-flex align-items-center">
                       <label htmlFor="minOrderCart">Minimum Order Cart</label>
                       <input
                         type="number"
-                        className="form-control"
+                        className="form-control input-div"
                         id="minOrderCart"
                         name="minOrderCart"
                         value={formData.minOrderCart}
@@ -545,11 +547,11 @@ const Organization: React.FC = () => {
                         placeholder="Enter minimum order cart value"
                       />
                     </div>
-                    <div className="form-group w-100 mt-3 d-flex align-items-center">
+                    <div className="border-div form-group w-100 mt-3 d-flex align-items-center">
                       <label htmlFor="copyrightMsg">Copyright Message</label>
                       <input
                         type="text"
-                        className="form-control"
+                        className="form-control input-div"
                         id="copyrightMsg"
                         name="copyrightMsg"
                         value={formData.copyrightMsg}
@@ -629,7 +631,7 @@ const Organization: React.FC = () => {
                 <div className="right-content">
 
                   <div className="profile-card d-flex flex-column align-items-center">
-                    <div className="mt-5">
+                    <div className="mt-5 w-100">
                       <h4 className="mb-4">Data Integrations</h4>
                       <div className="row justify-content-start">
                         <div className="col-md-8">

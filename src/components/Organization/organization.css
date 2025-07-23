@@ -11,113 +11,111 @@
 .border-success {
   border: 3px solid #28a745 !important;
 }
-.organization-main .card img
-{
-width: 100%;
-height: 140px;
-object-fit: cover;
-border-radius: 12px;
+.organization-main .card img {
+  width: 100%;
+  height: 140px;
+  object-fit: cover;
+  border-radius: 12px;
 }
-.organization-main .main-head{
+.organization-main .main-head {
   font-size: 24px;
   font-weight: 600 !important;
 }
-.border-crm{
-  border: 3px solid #0B64FE !important;
+.border-crm {
+  border: 3px solid #0b64fe !important;
 }
-.active-dot{
-    width: 20px;
-    height: 20px;
-    position: absolute;
-    bottom: 10px;
-    right: 10px;
-    background: #0B64FE;
-    border-radius: 50%;
+.active-dot {
+  width: 20px;
+  height: 20px;
+  position: absolute;
+  bottom: 10px;
+  right: 10px;
+  background: #0b64fe;
+  border-radius: 50%;
 }
-.active-dot::before{
+.active-dot::before {
   content: "";
   position: absolute;
-   inset: 5px;
-    background: white;
-    border-radius: 50%;
+  inset: 5px;
+  background: white;
+  border-radius: 50%;
 }
-.organization-main .nav-tabs{
-    background: #FAFAFA;
-    padding: 0;
-    border-radius: 6px !important;
-    border: 1px solid #E9EAEB;
-    width: 100%;
-    margin-top: 30px;
+.organization-main .nav-tabs {
+  background: #fafafa;
+  padding: 0;
+  border-radius: 6px !important;
+  border: 1px solid #e9eaeb;
+  width: 100%;
+  margin-top: 30px;
 }
-.organization-main .nav-tabs .nav-link{
+.organization-main .nav-tabs .nav-link {
   border: 0;
   background: transparent;
   border-radius: 0.25rem;
   color: #717680;
 }
-.organization-main .nav-tabs .nav-link.active{
-    cursor: pointer;
-    border: 0;
-    background: white;
-    border: 1px solid #D5D7DA;
+.organization-main .nav-tabs .nav-link.active {
+  cursor: pointer;
+  border: 0;
+  background: white;
+  border: 1px solid #d5d7da;
 }
-.left-header{
-    max-width: 400px;
-    min-width: 400px;
+.left-header {
+  max-width: 400px;
+  min-width: 400px;
 }
-.tab-header{
-   border-bottom: 1px solid #E9EAEB;
+.tab-header {
+  border-bottom: 1px solid #e9eaeb;
 }
 .border-div {
-   border-bottom: 1px solid #E9EAEB;
-   padding-bottom: 20px;
+  border-bottom: 1px solid #e9eaeb;
+  padding-bottom: 20px;
 }
-.input-div{
+.input-div {
   max-width: 512px;
   width: 100%;
 }
-.upload-container{
-    border: 2px solid #7F56D9;
-    background: white;
-    border-radius: 12px;
-    min-height: 126px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-direction: column;
+.upload-container {
+  border: 2px solid #7f56d9;
+  background: white;
+  border-radius: 12px;
+  min-height: 126px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
 }
-.tab-header h4{
-    font-size: 18px;
-    line-height: 28px;
-    font-weight: 600;
+.tab-header h4 {
+  font-size: 18px;
+  line-height: 28px;
+  font-weight: 600;
 }
-.tab-header p{
-font-weight: 400;
-font-size: 14px;
-line-height: 20px;
-
+.tab-header p {
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 20px;
 }
-.right-content{
+.right-content {
   width: 100%;
 }
-.right-content .profile-card .form-group label{
+.right-content .profile-card .form-group label {
   min-width: 400px;
   font-weight: 600;
   font-size: 16px;
 }
-.right-content input.color{
-    border: 0;
-    width: 40px;
-    height: 40px;
-    padding: 0;
-    border-radius: 16px;
+.right-content input.color {
+  border: 0;
+  width: 40px;
+  height: 40px;
+  padding: 0;
+  border-radius: 16px;
 }
-.organization-main input{
+.organization-main input {
   height: 44px;
 }
-.input-color{
-    border: 1px solid #D5D7DA;
-    border-radius: 8px;
-    padding: 8px 12px;
-    margin-left: 10px;
+.input-color {
+  border: 1px solid #d5d7da;
+  border-radius: 8px;
+  padding: 8px 12px;
+  margin-left: 10px;
 }
