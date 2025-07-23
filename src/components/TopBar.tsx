@@ -31,12 +31,12 @@ const TopBar = ({ isNavOpen, setIsNavOpen }: INavBar) => {
     onSuccess: () => {
       removeUser();
       removeToken();
-      history.push("/login");
+      window.location.href = "/login";
     },
     onError: () => {
       removeUser();
       removeToken();
-      history.push("/login");
+      window.location.href = "/login";
     },
   });
   const openNavBar = () => {
