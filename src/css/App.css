@@ -3040,6 +3040,13 @@ fieldset:disabled a.btn {
   border-radius: 8px;
   padding: 1px 3px;
 }
+.DateRangePickerInput_calendarIcon{
+  padding: 5px 10px;
+  margin: 0;
+}
+.DateInput{
+  width: 100px;
+}
 button.DateRangePickerInput_calendarIcon.DateRangePickerInput_calendarIcon_1
   svg {
   color: #495057 !important;
@@ -5292,8 +5299,8 @@ input[type="button"].btn-block {
 }
 
 .crad-icon {
-  width: 50px;
-  height: 50px;
+  width: 36px;
+  height: 36px;
   border: solid 1px #d5d7da;
   padding: 8px;
   border-radius: 8px;
@@ -5309,12 +5316,13 @@ input[type="button"].btn-block {
   /* border: solid 1px #D5D7DA; */
 }
 .per-tag {
-  border: solid 1px #d5d7da;
   gap: 6px;
+  background-color: rgb(45 138 125 / 20%);
+  color: #2d8a7d;
 }
 .per-tag svg {
   rotate: 47deg;
-  color: green;
+  color: #2d8a7d;
   stroke-width: 100px;
 }
 
@@ -12140,8 +12148,9 @@ th {
 }
 
 .DateInput_input {
-  font-size: 18px;
-  padding: 6px 11px 9px;
+  font-size: 14px;
+  padding: 4px 11px 4px;
+  font-weight: 600;
 }
 
 .CalendarDay__default:hover {
@@ -12532,7 +12541,7 @@ th {
 
 .tag {
   padding: 3px 6px;
-  border-radius: 4px;
+  border-radius: 6px;
 }
 
 .tag.tag-success {

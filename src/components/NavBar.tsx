@@ -36,11 +36,16 @@ import { AiFillIdcard, AiFillSetting } from "react-icons/ai";
 import { BsClock, BsShieldLock } from "react-icons/bs";
 import { SiCivicrm } from "react-icons/si";
 import { GrOrganization } from "react-icons/gr";
+import profile from "../assets/profile.svg";
 
 
 import { GrDocumentConfig } from "react-icons/gr";
 import { primaryColor } from "../utils/constants";
 import useUserProfileStore from "../hooks/useUserProfileStore";
+import { Dropdown } from "react-bootstrap";
+import { useMutation } from "react-query";
+import useTokenStore from "../hooks/useTokenStore";
+import API from "../utils/API";
 
 const manageLinks: Array<INavLink> = [
   {
@@ -231,10 +236,16 @@ const mainLinks: Array<INavLink> = [
 
 const hiddenRoutesForCRM = ["/orders", "/cart", "/plans", "/coupons", "/agent", "/agent-targets", "/cities", "/product-variants"];
 const hiddenRoutesForEcommerce = ["/crm", "/crm-bookings", "/services", "/products", "/product-brands", "/categories"];
+const logout = () => {
+  return API.post("/auth/logout");
+};
 
 const NavBar = ({ isNavOpen, setIsNavOpen }: INavBar) => {
   const isDesktop = useContext(IsDesktopContext);
   const loggedInUser = useUserProfileStore((state) => state.user);
+  const removeToken = useTokenStore((state) => state.removeToken);
+  const removeUser = useUserProfileStore((state) => state.removeUser);
+   const user = useUserProfileStore((state) => state.user);
 
   const closeNavBar = () => {
     if (isDesktop) return;
@@ -269,12 +280,22 @@ const NavBar = ({ isNavOpen, setIsNavOpen }: INavBar) => {
     }
   });
 
-  console.log({ filteredMainLinks })
-  console.log({ filteredManageLinks })
+const { mutate, isLoading } = useMutation(logout, {
+    onSuccess: () => {
+      removeUser();
+      removeToken();
+      window.location.href = "/login";
+    },
+    onError: () => {
+      removeUser();
+      removeToken();
+      window.location.href = "/login";
+    },
+  });
 
   return (
     <>
-      <nav className={isNavOpen ? "active" : ""}>
+      <nav className={isNavOpen ? "active pb-0" : ""}>
         {isDesktop && (
           <div className="d-flex  justify-content-between align-items-center">
             <Logo />
@@ -336,6 +357,30 @@ const NavBar = ({ isNavOpen, setIsNavOpen }: INavBar) => {
               />
             ))}
           </ul>
+        </div>
+        <div className="top-bar d-flex align-items-center" style={{borderTop:'1px solid #E0E0E0',borderBottom:'0',bottom:'0',top:'unset'}}>
+          <Dropdown className="ml-4">
+            <Dropdown.Toggle
+              id="dropdown-basic"
+              className="d-flex align-items-center filter-button bg-transparent border-0"
+              style={{ color: "#000" }}
+            >
+              {isLoading ? (
+                "Loading"
+              ) : (
+                <img src={profile} alt="profile" className="profile" />
+              )}
+              {user && <p className="text-muted small mb-0">{user?.name}</p>}
+            </Dropdown.Toggle>
+
+            <Dropdown.Menu>
+              <Dropdown.Item href="/profile">Profile</Dropdown.Item>
+              <Dropdown.Item onClick={() => mutate()}>
+                {isLoading ? "Loading" : "Log out"}
+              </Dropdown.Item>
+            </Dropdown.Menu>
+          </Dropdown>
+          
         </div>
       </nav>
       {isNavOpen && !isDesktop && <Overlay onClick={closeNavBar} />}

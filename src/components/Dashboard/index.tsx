@@ -21,6 +21,7 @@ import {
   RevenueLineChart,
 } from "./Chart";
 import useUserProfileStore from "../../hooks/useUserProfileStore";
+import "./dashboard.css";
 
 interface IDates {
   start_date: Moment;
@@ -99,11 +100,13 @@ const Dashboard = () => {
   return (
     <>
       <Container fluid className="component-wrapper px-0 py-2">
+        <div className="page-title">
+          Dashboard
+        </div>
         {isDesktop && (
-          <div className="card">
-            <div className="card-content d-flex align-items-center justify-content-between">
-              <Container
-                fluid
+          <div className="">
+            <div className="card-content d-flex flex-row-reverse align-items-center justify-content-between">
+              <div
                 className="d-flex align-items-center justify-content-start"
               >
                 <DateRangePicker
@@ -134,8 +137,8 @@ const Dashboard = () => {
                   onChange={(e) => {
                     _onFilterChange("duration", e.target.value);
                   }}
-                  className="bg-transparent m-0 ml-4"
-                  style={{ width: "100px", height: "44px" }}
+                  className="bg-transparent m-0 ml-3"
+                  style={{ width: "100px", height: "38px",fontSize:'14px',fontWeight:'600' }}
                   value={filter.duration}
                 >
                   {/* <option value="year">Year</option> */}
@@ -143,14 +146,14 @@ const Dashboard = () => {
                   <option value="week">Week</option>
                   <option value="day">Daily</option>
                 </Form.Control>
-              </Container>
-              <div>
-                <p className="m-0 text-right lead">
+              </div>
+              <div className="time d-flex align-items-center text-nowrap gap-3">
+                <p className="m-0 text-right" style={{fontSize:'14px',fontWeight:'300'}}>
                   {moment().format("DD-MMMM")}
                 </p>
                 <p
-                  style={{ whiteSpace: "nowrap", fontSize: "20px" }}
-                  className="font-weight-bold  text-right"
+                  style={{ whiteSpace: "nowrap", fontSize: "14px" }}
+                  className="font-weight-bold mb-0 text-right"
                 >
                   {currentTime}
                 </p>
@@ -168,11 +171,11 @@ const Dashboard = () => {
 
         <Container fluid className="px-0">
           <div
-            className="my-3"
+            className="my-4"
             style={{
               display: "grid",
               gridTemplateColumns: "repeat( auto-fit, minmax(200px, 1fr) )",
-              gap: "10px",
+              gap: "20px",
             }}
           >
             <div className="card hoverable stats-card d-flex w-100 ">
@@ -206,7 +209,7 @@ const Dashboard = () => {
                         </strong>
                       </span>
 
-                      <span className="text-muted ml-2">
+                      <span className="text-muted ml-2 tag-text">
                         from {data?.customerprev}
                       </span>
                     </div>
@@ -248,7 +251,7 @@ const Dashboard = () => {
                         </strong>
                       </span>
 
-                      <span className="text-muted ml-2">
+                      <span className="text-muted ml-2 tag-text">
                         from {data?.orderprev}
                       </span>
                     </div>
@@ -293,7 +296,7 @@ const Dashboard = () => {
                         </strong>
                       </span>
 
-                      <span className="text-muted ml-2">
+                      <span className="text-muted ml-2 tag-text">
                         from {data?.subscriptionprev}
                       </span>
                     </div>
@@ -337,7 +340,7 @@ const Dashboard = () => {
                         </strong>
                       </span>
 
-                      <span className="text-muted ml-2">
+                      <span className="text-muted ml-2 tag-text">
                         from {data?.agentprev}
                       </span>
                     </div>
@@ -350,11 +353,55 @@ const Dashboard = () => {
 
         <div className="dashboard-page w-100 mt-4">
           <Container fluid className=" mt-0 pl-2 pr-0">
-            <div className="card hoverable stats-card d-flex w-100 mb-3">
+            
+            <div className="charts-row">
+              <div className="d-flex align-items-center" style={{gap:'20px'}}>
+                 <div className="card w-100">
+                <div className="card-header pb-3 d-flex justify-content-between align-items-center">
+                  <h5 className="mb-0">
+                    <strong>Bookings</strong>
+                  </h5>
+                </div>
+
+                <div className="card-content chart-container">
+                  {isBookingAnalyticsLoading ? (
+                    <IsLoading />
+                  ) : (
+                    <BookingLineChart
+                      data={BookingAnalytics?.booking}
+                      xAxisDataKey="date"
+                      dataKey="order"
+                    />
+                  )}
+                </div>
+              </div>
+              <div className="card w-100">
+                <div className="card-header pb-3 d-flex justify-content-between align-items-center">
+                  <h5 className="mb-0">
+                    <strong>Revenue</strong>
+                  </h5>
+                </div>
+
+                <div className="card-content chart-container">
+                  {isBookingAnalyticsLoading ? (
+                    <IsLoading />
+                  ) : (
+                    <ChartBar
+                      data={RevenueAnalytics?.revenue}
+                      xAxisDataKey="date"
+                      dataKey1="total_amount"
+                      dataKey2="discount_amount"
+                    />
+                  )}
+                </div>
+              </div>
+              </div>
+             
+              <div className="card hoverable d-flex w-100 mb-3">
               <div className="card-header">
                 <p className="text-black">Reports overview</p>
               </div>
-              <div className="card-content">
+              <div className="card-content reports-table">
                 <table className="w-100">
                   <tbody>
                     {data?.data_total &&
@@ -383,46 +430,6 @@ const Dashboard = () => {
                 </table>
               </div>
             </div>
-            <div className="charts-row">
-              <div className="card">
-                <div className="card-header pb-3 d-flex justify-content-between align-items-center">
-                  <h5 className="mb-0">
-                    <strong>Bookings</strong>
-                  </h5>
-                </div>
-
-                <div className="card-content chart-container">
-                  {isBookingAnalyticsLoading ? (
-                    <IsLoading />
-                  ) : (
-                    <BookingLineChart
-                      data={BookingAnalytics?.booking}
-                      xAxisDataKey="date"
-                      dataKey="order"
-                    />
-                  )}
-                </div>
-              </div>
-              <div className="card">
-                <div className="card-header pb-3 d-flex justify-content-between align-items-center">
-                  <h5 className="mb-0">
-                    <strong>Revenue</strong>
-                  </h5>
-                </div>
-
-                <div className="card-content chart-container">
-                  {isBookingAnalyticsLoading ? (
-                    <IsLoading />
-                  ) : (
-                    <ChartBar
-                      data={RevenueAnalytics?.revenue}
-                      xAxisDataKey="date"
-                      dataKey1="total_amount"
-                      dataKey2="discount_amount"
-                    />
-                  )}
-                </div>
-              </div>
             </div>
           </Container>
         </div>
