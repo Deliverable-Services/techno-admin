@@ -12745,3 +12745,6 @@ li.navLink.my-1 svg path {
   inset: 0;
   background: #0000008f;
 }
+.social-cards{
+  row-gap: 20px;
+}

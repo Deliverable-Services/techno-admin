@@ -10,6 +10,9 @@ import useUserProfileStore from "../../hooks/useUserProfileStore";
 import { GoogleBusinessProfile } from "../Integrations";
 import profile from "../../assets/profile.svg";
 import { FaFacebook, FaTwitter, FaInstagram, FaLinkedin, FaYoutube, FaGlobe } from 'react-icons/fa';
+import { Card, Button, Row, Col } from "react-bootstrap";
+
+
 
 const Organization: React.FC = () => {
   const loggedInUser = useUserProfileStore((state) => state.user);
@@ -43,8 +46,8 @@ const Organization: React.FC = () => {
     organizationSlug: '',
     storeType: storeType, // 'crm' or 'ecommerce'
     // Appearance
-    primary: '',
-    secondary: '',
+    primary: '#007bff',
+    secondary: '#6c757d',
     language: '',
     currency: '',
     // Website
@@ -123,7 +126,7 @@ const Organization: React.FC = () => {
       setIsLoading(false);
       showToast({ message: 'Organization type updated successfully!' });
       setTimeout(() => {
-      window.location.reload();
+        window.location.reload();
       }, 2000);
     } catch (error) {
       setIsLoading(false);
@@ -239,7 +242,7 @@ const Organization: React.FC = () => {
                             name="lname"
                             value={formData.lname}
                             onChange={handleInputChange}
-                             placeholder="Last Name"
+                            placeholder="Last Name"
                           />
                         </div>
                       </div>
@@ -287,7 +290,7 @@ const Organization: React.FC = () => {
                             />
                             <label htmlFor="contained-button-file">
                               <div className="text-center px-2 py-1" style={{ cursor: 'pointer' }}>
-                                
+
                                 <p className="mb-0">Click to upload or drag and drop
                                   <br />
                                   SVG, PNG, JPG or GIF (max. 800x400px)
@@ -308,9 +311,9 @@ const Organization: React.FC = () => {
             {activeTab === 'organization' && (
               <>
                 <div className="tab-header">
-                    <h4>Choose Your Organization</h4>
-                    <p></p>
-                  </div>
+                  <h4>Choose Your Organization</h4>
+                  <p></p>
+                </div>
                 <div>
                   <div className="right-content">
                     <div className="profile-card d-flex flex-column align-items-center">
@@ -352,74 +355,76 @@ const Organization: React.FC = () => {
                       </div>
                       <div className="border-div form-group w-100 mt-3 d-flex">
                         <label htmlFor="organizationSlug">Organisation Preference</label>
-                        <div className="row" style={{gap:'30px'}}>
-        {/* CRM */}
-                  <div className="position-relative" style={{width:'250px'}}>
-                    <div
-                      className={`card mb-4 ${selectedOrg === "crm" ? "border-crm selected" : ""}`}
-                      onClick={() => {
-                        setSelectedOrg("crm");
-                        setFormData(prev => ({ ...prev, storeType: 'crm' }));
-                      }}
-            style={{ cursor: "pointer" }}
-          >
-            <img
-                        src="https://miro.medium.com/v2/resize:fit:1400/1*TR-8mgpp0_X5P0ZbB6XYfQ.jpeg"
-              className="card-img-top"
-              alt="CRM"
-            />
-                      {selectedOrg === "crm" &&
-                      <div className="active-dot">
+                        <div className="row" style={{ gap: '30px' }}>
+                          {/* CRM */}
+                          <div className="position-relative" style={{ width: '250px' }}>
+                            <div
+                              className={`card mb-4 ${selectedOrg === "crm" ? "border-crm selected" : ""}`}
+                              onClick={() => {
+                                setSelectedOrg("crm");
+                                setFormData(prev => ({ ...prev, storeType: 'crm' }));
+                              }}
+                              style={{ cursor: "pointer" }}
+                            >
+                              <img
+                                src="https://miro.medium.com/v2/resize:fit:1400/1*TR-8mgpp0_X5P0ZbB6XYfQ.jpeg"
+                                className="card-img-top"
+                                alt="CRM"
+                              />
+                              {selectedOrg === "crm" &&
+                                <div className="active-dot">
+                                </div>
+                              }
+                            </div>
+                            <div className="position-relative">
+                              <h5 className="card-title text-primary" style={{ fontSize: '16px' }}>CRM </h5>
+                              <p style={{ fontSize: '14px' }}>Manage leads, sales, and customer relationships.</p>
+                            </div>
+                          </div>
+                          {/* Ecommerce */}
+                          <div className="position-relative" style={{ width: '250px' }}>
+                            <div
+                              className={`card mb-4 shadow ${selectedOrg === "ecommerce" ? "border-crm selected" : ""}`}
+                              onClick={() => {
+                                setSelectedOrg("ecommerce");
+                                setFormData(prev => ({ ...prev, storeType: 'ecommerce' }));
+                              }}
+                              style={{ cursor: "pointer" }}
+                            >
+                              <img
+                                src="https://s3.envato.com/files/101016168/2a.UCM-CRM-dashboard-desktop.png"
+                                className="card-img-top"
+                                alt="Ecommerce"
+                              />
+                              {selectedOrg === "ecommerce" &&
+                                <div className="active-dot">
+                                </div>
+                              }
+                            </div>
+                            <div className="text-left">
+                              <h5 className="card-title" style={{ fontSize: '16px' }}>Ecommerce </h5>
+                              <p style={{ fontSize: '14px' }}>Control your online store, products, and orders.</p>
+                            </div>
+                          </div>
+                        </div>
                       </div>
-                      }
-                    </div>
-                    <div className="position-relative">
-              <h5 className="card-title text-primary">CRM </h5>
-              <p>Manage leads, sales, and customer relationships.</p>
-            </div>
-          </div>
-        {/* Ecommerce */}
-                  <div className="position-relative" style={{width:'250px'}}>
-                    <div
-                      className={`card mb-4 shadow ${selectedOrg === "ecommerce" ? "border-crm selected" : ""}`}
-                      onClick={() => {
-                        setSelectedOrg("ecommerce");
-                        setFormData(prev => ({ ...prev, storeType: 'ecommerce' }));
-                      }}
-            style={{ cursor: "pointer" }}
-          >
-            <img
-                        src="https://s3.envato.com/files/101016168/2a.UCM-CRM-dashboard-desktop.png"
-              className="card-img-top"
-              alt="Ecommerce"
-            />
-                      {selectedOrg === "ecommerce" &&
-                      <div className="active-dot">
-                      </div>
-                      }
-                    </div>
-                    <div className="text-left">
-              <h5 className="card-title">Ecommerce </h5>
-              <p>Control your online store, products, and orders.</p>
-            </div>
-          </div>
-        </div>
-      </div>
                     </div>
                   </div>
                 </div>
-                
+
               </>
             )}
           </div>
           <div className={`tab-pane fade${activeTab === 'appearance' ? ' show active' : ''}`}>
             {activeTab === 'appearance' && (
               <div>
-                <h2 className="mb-2">Appearance</h2>
-                <p className="mb-5">Used to manage the organisation’s branding and color scheme.</p>
+                <div className="tab-header">
+                  <h4>Appearance</h4>
+                  <p>Used to manage the organisation’s branding and color scheme.</p>
+                </div>
                 <div className="right-content">
                   <div className="profile-card d-flex flex-column align-items-center">
-                    <div className="form-group w-100 mt-4 d-flex align-items-center">
+                    <div className="border-div form-group w-100 mt-4 d-flex align-items-center">
                       <label htmlFor="primary">Brand Primary Color</label>
                       <input
                         type="color"
@@ -430,8 +435,9 @@ const Organization: React.FC = () => {
                         onChange={handleInputChange}
                         placeholder="Enter organisation name "
                       />
+                      <span className="ms-3 input-color">{formData.primary}</span>
                     </div>
-                    <div className="form-group w-100 mt-3 d-flex align-items-center">
+                    <div className="border-div form-group w-100 mt-3 d-flex align-items-center">
                       <label htmlFor="secondary">Brand Secondary Color</label>
                       <input
                         type="color"
@@ -442,19 +448,20 @@ const Organization: React.FC = () => {
                         onChange={handleInputChange}
                         placeholder="Enter organisation email"
                       />
+                      <span className="ms-3 input-color">{formData.secondary}</span>
                     </div>
-                    <div className="form-group w-100 mt-3 d-flex align-items-center">
+                    <div className="border-div form-group w-100 mt-3 d-flex align-items-center">
                       <label htmlFor="language">Preferences Language</label>
-                      <select className="form-control" id="language" name="language" value={formData.language} onChange={handleInputChange}>
+                      <select className="form-control input-div" id="language" name="language" value={formData.language} onChange={handleInputChange}>
                         <option value="">Select Language</option>
                         <option value="English">English</option>
                         <option value="Spanish">Spanish</option>
                         <option value="Turkey">Turkey</option>
                       </select>
                     </div>
-                    <div className="form-group w-100 mt-3 d-flex align-items-center">
+                    <div className="border-div form-group w-100 mt-3 d-flex align-items-center">
                       <label htmlFor="currency">Preferences Currency</label>
-                      <select className="form-control" id="currency" name="currency" value={formData.currency} onChange={handleInputChange}>
+                      <select className="form-control input-div" id="currency" name="currency" value={formData.currency} onChange={handleInputChange}>
                         <option value="">Select Currency</option>
                         <option value="IN">IN</option>
                         <option value="US">US</option>
@@ -469,15 +476,19 @@ const Organization: React.FC = () => {
           <div className={`tab-pane fade${activeTab === 'website' ? ' show active' : ''}`}>
             {activeTab === 'website' && (
               <>
-                <h2 className="mb-5">Contact Details</h2>
+                <div className="tab-header">
+                  <h4>Contact Details</h4>
+                  <p>Update your website contact details here.</p>
+                </div>
+
                 <div>
                   <div className="right-content">
                     <div className="profile-card d-flex flex-column align-items-center">
-                      <div className="form-group w-100 mt-4 d-flex align-items-center">
+                      <div className="border-div form-group w-100 mt-4 d-flex align-items-center">
                         <label htmlFor="cemail">Contact Email</label>
                         <input
                           type="email"
-                          className="form-control"
+                          className="form-control input-div"
                           id="cemail"
                           name="cemail"
                           value={formData.cemail}
@@ -485,11 +496,11 @@ const Organization: React.FC = () => {
                           placeholder="Enter contact email"
                         />
                       </div>
-                      <div className="form-group w-100 mt-3 d-flex align-items-center">
+                      <div className="border-div form-group w-100 mt-3 d-flex align-items-center">
                         <label htmlFor="cphone">Contact Phone</label>
                         <input
                           type="phone"
-                          className="form-control"
+                          className="form-control input-div"
                           id="cphone"
                           name="cphone"
                           value={formData.cphone}
@@ -497,11 +508,11 @@ const Organization: React.FC = () => {
                           placeholder="Enter contact phone"
                         />
                       </div>
-                      <div className="form-group w-100 mt-3 d-flex align-items-center">
+                      <div className="border-div form-group w-100 mt-3 d-flex align-items-center">
                         <label htmlFor="caddress">Contact Address</label>
                         <input
                           type="text"
-                          className="form-control"
+                          className="form-control input-div"
                           id="caddress"
                           name="caddress"
                           value={formData.caddress}
@@ -518,15 +529,17 @@ const Organization: React.FC = () => {
           <div className={`tab-pane fade${activeTab === 'platform' ? ' show active' : ''}`}>
             {activeTab === 'platform' && (
               <div>
-                <h2 className="mb-2">Platform Configurations</h2>
-                <p className="mb-5">Used for setting global business rules or platform logic.</p>
+                <div className="tab-header">
+                  <h4>Platform Configurations</h4>
+                  <p>Used for setting global business rules or platform logic.</p>
+                </div>
                 <div className="right-content">
                   <div className="profile-card d-flex flex-column align-items-center">
-                    <div className="form-group w-100 mt-4 d-flex align-items-center">
+                    <div className="border-div form-group w-100 mt-4 d-flex align-items-center">
                       <label htmlFor="minOrderCart">Minimum Order Cart</label>
                       <input
                         type="number"
-                        className="form-control"
+                        className="form-control input-div"
                         id="minOrderCart"
                         name="minOrderCart"
                         value={formData.minOrderCart}
@@ -534,11 +547,11 @@ const Organization: React.FC = () => {
                         placeholder="Enter minimum order cart value"
                       />
                     </div>
-                    <div className="form-group w-100 mt-3 d-flex align-items-center">
+                    <div className="border-div form-group w-100 mt-3 d-flex align-items-center">
                       <label htmlFor="copyrightMsg">Copyright Message</label>
                       <input
                         type="text"
-                        className="form-control"
+                        className="form-control input-div"
                         id="copyrightMsg"
                         name="copyrightMsg"
                         value={formData.copyrightMsg}
@@ -548,7 +561,7 @@ const Organization: React.FC = () => {
                     </div>
                     <div className="form-group w-100 mt-3">
                       <label>Social Media Links</label>
-                      <div className="d-flex align-items-center mb-2">
+                      <div className="d-flex align-items-center justify-end mb-4">
                         <select
                           className="form-control mr-2"
                           style={{ maxWidth: 180 }}
@@ -569,28 +582,38 @@ const Organization: React.FC = () => {
                           onChange={e => setSocialValue(e.target.value)}
                           disabled={!selectedSocial}
                         />
-                        <button type="button" className="btn btn-success" onClick={handleAddSocial} disabled={!selectedSocial || !socialValue}>
+                        <button type="button" className="btn btn-primary" onClick={handleAddSocial} disabled={!selectedSocial || !socialValue}>
                           Add
-     </button>
+                        </button>
                       </div>
-                      {/* List of added social links */}
-                      <ul className="list-group">
+                      <Row className="g-3 social-cards">
                         {formData.socialLinks.map((link, idx) => {
                           const opt = socialOptions.find(o => o.value === link.type);
                           return (
-                            <li key={idx} className="list-group-item d-flex align-items-center justify-content-between">
-                              <span className="d-flex align-items-center">
-                                <span style={{ fontSize: 20, marginRight: 8 }}>{opt?.icon}</span>
-                                <span className="font-weight-bold mr-2">{opt?.label}:</span>
-                                <span>{link.value}</span>
-                              </span>
-                              <button type="button" className="btn btn-sm btn-danger" onClick={() => handleRemoveSocial(idx)}>
-                                Remove
-                              </button>
-                            </li>
+                            <Col key={idx} xs={12} sm={6} md={4} lg={3}>
+                              <Card className="h-100 shadow-sm">
+                                <Card.Body className="d-flex justify-content-between">
+                                  <div className="mb-2 d-flex align-items-center">
+                                    <span style={{ fontSize: 35, marginRight: 8 }}>{opt?.icon}</span>
+                                    <div>
+                                      <div className="fw-bold">{opt?.label}</div>
+                                      <div className="text-muted" style={{ wordBreak: 'break-word' }}>{link.value}</div>
+                                    </div>
+                                  </div>
+                                  <Button
+                                    variant="danger"
+                                    size="sm"
+                                    onClick={() => handleRemoveSocial(idx)}
+                                    className="mt-2 align-self-start"
+                                  >
+                                    Remove
+                                  </Button>
+                                </Card.Body>
+                              </Card>
+                            </Col>
                           );
                         })}
-                      </ul>
+                      </Row>
                     </div>
                   </div>
                 </div>
@@ -600,12 +623,15 @@ const Organization: React.FC = () => {
           <div className={`tab-pane fade${activeTab === 'integrations' ? ' show active' : ''}`}>
             {activeTab === 'integrations' && (
               <div>
-                <h2 className="mb-2">Integrations</h2>
-                <p className="mb-5">This will have third-party platform integration options.</p>
+                <div className="tab-header">
+                  <h4>Integrations</h4>
+                  <p>This will have third-party platform integration options.</p>
+                </div>
+
                 <div className="right-content">
 
                   <div className="profile-card d-flex flex-column align-items-center">
-                    <div className="mt-5">
+                    <div className="mt-5 w-100">
                       <h4 className="mb-4">Data Integrations</h4>
                       <div className="row justify-content-start">
                         <div className="col-md-8">
@@ -681,7 +707,7 @@ const Organization: React.FC = () => {
             )}
           </div>
         </div>
-     </div>
+      </div>
     </div>
   );
 };
