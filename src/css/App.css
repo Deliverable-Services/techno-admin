@@ -6360,7 +6360,8 @@ a.badge-text-muted.focus {
 
 .alert {
   position: relative;
-  padding: 0.75rem 1.25rem;
+  padding: 5px 15px;
+  font-size: 14px;
   margin-bottom: 1rem;
   border: 1px solid transparent;
   border-radius: 0.25rem;
@@ -12756,4 +12757,81 @@ li.navLink.my-1 svg path {
 }
 .social-cards{
   row-gap: 20px;
+}
+.shadow-natural
+{
+  box-shadow: 0px 15px 32px 0px #0000000D, 0px 59px 59px 0px #0000000A, 0px 132px 79px 0px #00000008, 0px 234px 94px 0px #00000003, 0px 366px 103px 0px #00000000;
+}
+
+.custom-badge-coming-soon {
+  display: inline-block;
+  background: linear-gradient(135deg, #FFCC33 0%, #fda085 100%);
+  color: #212529;
+  font-weight: 600;
+  font-size: 0.69rem;
+  padding: 0.35rem 0.75rem;
+  border-radius: 999px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  animation: pulse-badge 1.8s infinite ease-in-out;
+}
+
+@keyframes pulse-badge {
+  0% {
+    transform: scale(1);
+    box-shadow: 0 0 0 0 rgba(253, 160, 133, 0.7);
+  }
+  70% {
+    transform: scale(1.05);
+    box-shadow: 0 0 0 10px rgba(253, 160, 133, 0);
+  }
+  100% {
+    transform: scale(1);
+    box-shadow: 0 0 0 0 rgba(253, 160, 133, 0);
+  }
+}
+
+.title-style
+{
+  min-width: 400px !important;
+    font-weight: 600;
+    font-size: 16px;
+}
+.w-60 {
+  width: 60%;
+}
+.form-custom{
+  padding: 0;
+}
+.form-custom {
+  padding: 11px 34px !important;
+  font-size: 14px;
+  height: fit-content;
+  border-radius: 8px !important;
+}
+
+
+.alert-danger {
+  background-color: #fdecea;
+  color: #b02a37;
+}
+
+.alert-new {
+  width: fit-content;
+  padding: 6px 10px !important;
+  font-size: 13px !important;
+  border: none;
+  font-size: 0.95rem;
+}
+
+.btn-fixed-bottom-right {
+  position: fixed;
+  right: 20px;
+  bottom: 50px;
+}
+.icon-social-media img {
+  width: 50px !important;
+  height: 50px !important;
+  object-fit: contain;
 }
