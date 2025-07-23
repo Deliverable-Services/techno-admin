@@ -11829,11 +11829,20 @@ nav .navLink svg {
 }
 
 
-
+.all-links{
+  padding: 0 16px;
+}
+nav .navLink{
+  padding: 8px 20px;
+  border-left: 0;
+}
 nav .navLink.active,
 nav .navLink:hover {
-  color: #0B64FE;
-  border-left: 4px solid #0B64FE;
+  background: #FAFAFA;
+  font-weight: 600;
+  color: #252B37;
+  border-radius: 8px;
+  border-left: 0;
   -webkit-transition: all 0.3s ease;
   transition: all 0.3s ease;
 }
