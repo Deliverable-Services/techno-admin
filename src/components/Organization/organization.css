@@ -23,7 +23,7 @@ border-radius: 12px;
   font-weight: 600 !important;
 }
 .border-crm{
-  border: 3px solid #013d7a !important;
+  border: 3px solid #0B64FE !important;
 }
 .active-dot{
     width: 20px;
@@ -31,7 +31,7 @@ border-radius: 12px;
     position: absolute;
     bottom: 10px;
     right: 10px;
-    background: #013d7a;
+    background: #0B64FE;
     border-radius: 50%;
 }
 .active-dot::before{
