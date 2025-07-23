@@ -1,10 +1,17 @@
 import React from "react";
-import { Button, Card, Badge, Spinner, Alert } from "react-bootstrap";
+import {
+  Card,
+  Button,
+  Badge,
+  Spinner,
+  Alert,
+  Row,
+  Col,
+} from "react-bootstrap";
 import { useGoogleBusinessIntegration } from "../../hooks/useGoogleBusinessIntegration";
-import IsLoading from "../../shared-components/isLoading";
 import moment from "moment";
+import IsLoading from "../../shared-components/isLoading";
 
-// Extend the status type to include our new fields
 interface ExtendedStatus {
   business_profiles_count?: number;
   oauth_completed?: boolean;
@@ -24,7 +31,6 @@ const GoogleBusinessProfile: React.FC<GoogleBusinessProfileProps> = ({
     isConnected,
     connectionStatus,
     hasValidToken,
-    connectorName,
     connectedAt,
     lastSyncAt,
     latestSync,
@@ -39,112 +45,115 @@ const GoogleBusinessProfile: React.FC<GoogleBusinessProfileProps> = ({
   } = useGoogleBusinessIntegration({ organisationId });
 
   const getStatusBadge = () => {
-    if (!isConnected) {
-      return <Badge variant="secondary">Not Connected</Badge>;
-    }
+    const variantMap: Record<string, string> = {
+      connected: "success",
+      paused: "warning",
+      broken: "danger",
+      pending: "info",
+    };
 
-    switch (connectionStatus) {
-      case "connected":
-        return <Badge variant="success">Connected</Badge>;
-      case "paused":
-        return <Badge variant="warning">Paused</Badge>;
-      case "broken":
-        return <Badge variant="danger">Connection Issues</Badge>;
-      case "pending":
-        return <Badge variant="info">Connecting...</Badge>;
-      default:
-        return <Badge variant="secondary">{connectionStatus}</Badge>;
-    }
+    const variant = variantMap[connectionStatus] || "secondary";
+    const label = connectionStatus ? connectionStatus.charAt(0).toUpperCase() + connectionStatus.slice(1) : "Not Connected";
+
+    return <Badge bg={variant} className="me-2">{label}</Badge>;
   };
 
-  const getSyncStatusBadge = () => {
+  const getSyncBadge = () => {
     if (!latestSync) return null;
 
-    switch (latestSync.status) {
-      case "completed":
-        return (
-          <Badge variant="success" className="ml-2">
-            Last Sync: Success
-          </Badge>
-        );
-      case "failed":
-        return (
-          <Badge variant="danger" className="ml-2">
-            Last Sync: Failed
-          </Badge>
-        );
-      case "running":
-        return (
-          <Badge variant="warning" className="ml-2">
-            Syncing...
-          </Badge>
-        );
-      default:
-        return (
-          <Badge variant="info" className="ml-2">
-            Sync: {latestSync.status}
-          </Badge>
-        );
-    }
+    const variantMap: Record<string, string> = {
+      completed: "success",
+      failed: "danger",
+      running: "warning",
+    };
+
+    const variant = variantMap[latestSync.status] || "info";
+    const label =
+      latestSync.status === "completed"
+        ? "Sync: Success"
+        : latestSync.status === "failed"
+        ? "Sync: Failed"
+        : latestSync.status === "running"
+        ? "Syncing..."
+        : `Sync: ${latestSync.status}`;
+
+    return <Badge bg={variant}>{label}</Badge>;
   };
 
-  const renderConnectionInfo = () => {
+  const renderInfoList = () => {
     if (!isConnected) return null;
 
-    return (
-      <div className="mt-3">
-        <small className="text-muted">
-          {connectedAt && (
-            <div>
-              Connected: {moment(connectedAt).format("MMM D, YYYY [at] h:mm A")}
-            </div>
-          )}
-          {lastSyncAt && <div>Last Sync: {moment(lastSyncAt).fromNow()}</div>}
-          {latestSync && latestSync.records_synced > 0 && (
-            <div>
-              Records Synced: {latestSync.records_synced.toLocaleString()}
-            </div>
-          )}
-          {/* Show business profiles count */}
-          {status &&
-            (status as ExtendedStatus)?.business_profiles_count !==
-              undefined && (
-              <div>
-                Business Profiles:{" "}
-                {(status as ExtendedStatus).business_profiles_count}
-              </div>
-            )}
-          {/* Show OAuth completion status */}
-          {status && (status as ExtendedStatus)?.oauth_completed && (
-            <div className="text-success">
-              <i className="fas fa-check-circle"></i> OAuth completed
-              successfully
-            </div>
-          )}
-          {/* Show Fivetran error if exists */}
-          {status && (status as ExtendedStatus)?.fivetran_error && (
-            <div className="text-warning">
-              <i className="fas fa-exclamation-triangle"></i> Fivetran setup
-              pending
-            </div>
-          )}
-          {!hasValidToken && (
-            <div className="text-warning">
-              <i className="fas fa-exclamation-triangle"></i> Token expired -
-              reconnection required
-            </div>
-          )}
-        </small>
-      </div>
-    );
+    const infoItems: React.ReactNode[] = [];
+
+    if (connectedAt) {
+      infoItems.push(
+        <li key="connectedAt">
+          <strong>Connected:</strong>{" "}
+          {moment(connectedAt).format("MMM D, YYYY h:mm A")}
+        </li>
+      );
+    }
+
+    if (lastSyncAt) {
+      infoItems.push(
+        <li key="lastSync">
+          <strong>Last Sync:</strong> {moment(lastSyncAt).fromNow()}
+        </li>
+      );
+    }
+
+    if (latestSync?.records_synced) {
+      infoItems.push(
+        <li key="records">
+          <strong>Records Synced:</strong>{" "}
+          {latestSync.records_synced.toLocaleString()}
+        </li>
+      );
+    }
+
+    const extStatus = status as ExtendedStatus;
+
+    if (extStatus?.business_profiles_count !== undefined) {
+      infoItems.push(
+        <li key="profiles">
+          <strong>Profiles:</strong> {extStatus.business_profiles_count}
+        </li>
+      );
+    }
+
+    if (extStatus?.oauth_completed) {
+      infoItems.push(
+        <li key="oauth" className="text-success">
+          <i className="fas fa-check-circle me-1"></i> OAuth completed
+        </li>
+      );
+    }
+
+    if (extStatus?.fivetran_error) {
+      infoItems.push(
+        <li key="fivetran" className="text-warning">
+          <i className="fas fa-exclamation-triangle me-1"></i> Fivetran setup pending
+        </li>
+      );
+    }
+
+    if (!hasValidToken) {
+      infoItems.push(
+        <li key="token" className="text-danger">
+          <i className="fas fa-exclamation-circle me-1"></i> Token expired
+        </li>
+      );
+    }
+
+    return <ul className="text-muted small ps-3 mb-0">{infoItems}</ul>;
   };
 
   const renderActionButton = () => {
     if (isLoading) {
       return (
         <Button variant="outline-primary" disabled>
-          <Spinner as="span" animation="border" size="sm" className="mr-2" />
-          {isConnecting ? "Connecting..." : "Loading..."}
+          <Spinner animation="border" size="sm" className="me-2" />
+          Loading...
         </Button>
       );
     }
@@ -159,12 +168,7 @@ const GoogleBusinessProfile: React.FC<GoogleBusinessProfileProps> = ({
         >
           {isDisconnecting ? (
             <>
-              <Spinner
-                as="span"
-                animation="border"
-                size="sm"
-                className="mr-2"
-              />
+              <Spinner animation="border" size="sm" className="me-2" />
               Disconnecting...
             </>
           ) : (
@@ -176,21 +180,20 @@ const GoogleBusinessProfile: React.FC<GoogleBusinessProfileProps> = ({
 
     return (
       <Button
-        variant="success"
+        variant="primary"
         onClick={connect}
         disabled={isConnectingOAuth}
-        className="d-flex align-items-center justify-content-center"
-        style={{ height: "38px" }}
+        size="sm"
       >
         {isConnectingOAuth ? (
           <>
-            <Spinner as="span" animation="border" size="sm" className="mr-2" />
+            <Spinner animation="border" size="sm" className="me-2" />
             Connecting...
           </>
         ) : (
           <>
-            <i className="fab fa-google mr-2"></i>
-            Connect Google Business Profile
+            <i className="fab fa-google me-2" />
+            Connect Google
           </>
         )}
       </Button>
@@ -208,46 +211,43 @@ const GoogleBusinessProfile: React.FC<GoogleBusinessProfileProps> = ({
   }
 
   return (
-    <Card className={className}>
+    <Card className={` border-0 rounded ${className}`}>
       <Card.Body>
-        <div className="d-flex justify-content-between align-items-start">
-          <div>
-            <h6 className="card-title mb-2">
-              <i className="fab fa-google mr-2 text-primary"></i>
+        <div className="align-items-top d-flex justify-content-between">
+          <Col md={9} className="p-0">
+            <h5 className="mb-1 text-primary d-flex align-items-center">
+              <i className="fab fa-google fa-lg me-2" />
               Google Business Profile
-            </h6>
-            <div className="d-flex align-items-center">
+            </h5>
+            <div className="mb-2 pl-0">
               {getStatusBadge()}
-              {getSyncStatusBadge()}
+              {getSyncBadge()}
             </div>
-            {renderConnectionInfo()}
-          </div>
-          <div className="ml-3">{renderActionButton()}</div>
+            {renderInfoList()}
+          </Col>
+          <Col md="auto">{renderActionButton()}</Col>
         </div>
 
-        {/* Show additional info for broken connections */}
         {connectionStatus === "broken" && (
-          <Alert variant="warning" className="mt-3 mb-0">
-            <i className="fas fa-exclamation-triangle mr-2"></i>
-            There's an issue with your Google Business Profile connection.
-            Please reconnect to resume data synchronization.
+          <Alert variant="warning" className="mt-3">
+            <i className="fas fa-exclamation-triangle me-2" />
+            Connection broken. Please reconnect.
           </Alert>
         )}
 
-        {/* Show warning if token is invalid */}
         {isConnected && !hasValidToken && (
-          <Alert variant="warning" className="mt-3 mb-0">
-            <i className="fas fa-exclamation-triangle mr-2"></i>
-            Your Google access token has expired. Please reconnect to continue
-            syncing data.
-          </Alert>
+        <Alert variant="danger" className="mt-3 p-3 alert-new rounded-3 shadow-sm d-flex align-items-center">
+        <i className="fas fa-exclamation-circle me-3 text-danger fs-5" />
+        <div className="flex-grow-1">
+          <strong>Token Expired:</strong> Please reconnect your Google account to resume syncing.
+        </div>
+      </Alert>
         )}
 
-        {/* Show error message if there's an API error */}
         {error && (error as any)?.response?.status !== 404 && (
-          <Alert variant="danger" className="mt-3 mb-0">
-            <i className="fas fa-exclamation-circle mr-2"></i>
-            Unable to load connection status. Please try again.
+          <Alert variant="danger" className="mt-3">
+            <i className="fas fa-exclamation-circle me-2" />
+            Unable to load status. Try again later.
           </Alert>
         )}
       </Card.Body>

@@ -84,12 +84,12 @@ const Organization: React.FC = () => {
   const [selectedSocial, setSelectedSocial] = useState('');
   const [socialValue, setSocialValue] = useState('');
   const socialOptions = [
-    { value: 'facebook', label: 'Facebook', icon: <FaFacebook /> },
-    { value: 'twitter', label: 'Twitter', icon: <FaTwitter /> },
-    { value: 'instagram', label: 'Instagram', icon: <FaInstagram /> },
-    { value: 'linkedin', label: 'LinkedIn', icon: <FaLinkedin /> },
-    { value: 'youtube', label: 'YouTube', icon: <FaYoutube /> },
-    { value: 'website', label: 'Website', icon: <FaGlobe /> },
+    { value: 'facebook', label: 'Facebook', icon: <img src="/assets/facebook.png" alt="fb" /> },
+    { value: 'twitter', label: 'Twitter', icon: <img src="/assets/twitter.png" alt="tw" />  },
+    { value: 'instagram', label: 'Instagram', icon: <img src="/assets/instagram.png" alt="insta" />  },
+    { value: 'linkedin', label: 'LinkedIn', icon: <img src="/assets/linkedin.png" alt="li" />  },
+    { value: 'youtube', label: 'YouTube', icon: <img src="/assets/youtube.png" alt="yt" /> },
+    { value: 'website', label: 'Website', icon: <img src="/assets/website.png" alt="web" />  },
   ];
   const handleAddSocial = () => {
     if (selectedSocial && socialValue) {
@@ -189,9 +189,9 @@ const Organization: React.FC = () => {
           />
         </div>
         {/* Save Button on top */}
-        <div className="d-flex justify-content-between align-items-center mb-4 mx-auto">
+        <div className="d-flex g-4 align-items-center mb-4 mx-auto">
           {/* Bootstrap Nav Tabs with map */}
-          <ul className="nav nav-tabs">
+          <ul className="nav nav-tabs m-0 my-4 w-auto mr-4">
             {tabs.map(tab => (
               <li className="nav-item" key={tab.key}>
                 <button
@@ -204,7 +204,7 @@ const Organization: React.FC = () => {
               </li>
             ))}
           </ul>
-          <button className="btn btn-primary" onClick={handleSave} disabled={isLoading}>
+          <button className="btn btn-primary btn-fixed-bottom-right" onClick={handleSave} disabled={isLoading}>
             {isLoading ? <IsLoading /> : 'Save'}
           </button>
         </div>
@@ -560,54 +560,58 @@ const Organization: React.FC = () => {
                       />
                     </div>
                     <div className="form-group w-100 mt-3">
-                      <label>Social Media Links</label>
-                      <div className="d-flex align-items-center justify-end mb-4">
-                        <select
-                          className="form-control mr-2"
-                          style={{ maxWidth: 180 }}
-                          value={selectedSocial}
-                          onChange={e => setSelectedSocial(e.target.value)}
-                        >
-                          <option value="">Select Social Platform</option>
-                          {socialOptions.map(opt => (
-                            <option key={opt.value} value={opt.value}>{opt.label}</option>
-                          ))}
-                        </select>
-                        <input
-                          type="text"
-                          className="form-control mr-2"
-                          style={{ maxWidth: 300 }}
-                          placeholder="Enter link or username"
-                          value={socialValue}
-                          onChange={e => setSocialValue(e.target.value)}
-                          disabled={!selectedSocial}
-                        />
-                        <button type="button" className="btn btn-primary" onClick={handleAddSocial} disabled={!selectedSocial || !socialValue}>
-                          Add
-                        </button>
+                      <div className="d-flex">
+                        <label>Social Media Links</label>
+                        <div className="d-flex align-items-center justify-end mb-4">
+                          <select
+                            className="form-control mr-2 form-custom"
+                            style={{ maxWidth: 'fit-content' }}
+                            value={selectedSocial}
+                            onChange={e => setSelectedSocial(e.target.value)}
+                          >
+                            <option value="">Select Social Platform</option>
+                            {socialOptions.map(opt => (
+                              <option key={opt.value} value={opt.value}>{opt.label}</option>
+                            ))}
+                          </select>
+                          <input
+                            type="text"
+                            className="form-control mr-2"
+                            style={{ maxWidth: 300 }}
+                            placeholder="Enter link or username"
+                            value={socialValue}
+                            onChange={e => setSocialValue(e.target.value)}
+                            disabled={!selectedSocial}
+                          />
+                          <button type="button" className="btn btn-primary" onClick={handleAddSocial} disabled={!selectedSocial || !socialValue}>
+                            Add
+                          </button>
+                        </div>
                       </div>
                       <Row className="g-3 social-cards">
                         {formData.socialLinks.map((link, idx) => {
                           const opt = socialOptions.find(o => o.value === link.type);
                           return (
                             <Col key={idx} xs={12} sm={6} md={4} lg={3}>
-                              <Card className="h-100 shadow-sm">
-                                <Card.Body className="d-flex justify-content-between">
-                                  <div className="mb-2 d-flex align-items-center">
-                                    <span style={{ fontSize: 35, marginRight: 8 }}>{opt?.icon}</span>
+                              <Card className="position-relative mb-3 shadow-sm border-0">
+                                {/* Cross remove button */}
+                                <button
+                                  type="button"
+                                  className="close position-absolute"
+                                  style={{ top: '10px', right: '10px', zIndex: 1 }}
+                                  onClick={() => handleRemoveSocial(idx)}
+                                >
+                                  <span aria-hidden="true">&times;</span>
+                                </button>
+
+                                <Card.Body className="d-flex align-items-center">
+                                  <div className="d-flex align-items-top">
+                                    <span className="d-flex icon-social-media" style={{ fontSize: 30, marginRight: 10 }}>{opt?.icon}</span>
                                     <div>
-                                      <div className="fw-bold">{opt?.label}</div>
-                                      <div className="text-muted" style={{ wordBreak: 'break-word' }}>{link.value}</div>
+                                      <div className="font-weight-bold ">{opt?.label}</div>
+                                      <div className="text-muted small" style={{ wordBreak: 'break-word' }}>{link.value}</div>
                                     </div>
                                   </div>
-                                  <Button
-                                    variant="danger"
-                                    size="sm"
-                                    onClick={() => handleRemoveSocial(idx)}
-                                    className="mt-2 align-self-start"
-                                  >
-                                    Remove
-                                  </Button>
                                 </Card.Body>
                               </Card>
                             </Col>
@@ -631,9 +635,9 @@ const Organization: React.FC = () => {
                 <div className="right-content">
 
                   <div className="profile-card d-flex flex-column align-items-center">
-                    <div className="mt-5 w-100">
-                      <h4 className="mb-4">Data Integrations</h4>
-                      <div className="row justify-content-start">
+                    <div className="mt-5 border-div form-group w-100 mt-4 d-flex align-items-center">
+                      <h4 className="mb-4 title-style">Data Integrations</h4>
+                      <div className="row justify-content-start w-100">
                         <div className="col-md-8">
                           <GoogleBusinessProfile
                             organisationId={loggedInUser?.organisation?.id}
@@ -643,8 +647,8 @@ const Organization: React.FC = () => {
                       </div>
                     </div>
                     {/* Google Tag Manager */}
-                    <div className="form-group w-100 mt-4 d-flex align-items-center">
-                      <label htmlFor="gtmTagId" style={{ minWidth: 200 }}>Google Tag Manager</label>
+                    <div className="form-group w-100 mt-4 d-flex align-items-center border-bottom pb-4 ">
+                      <label htmlFor="gtmTagId" style={{ minWidth: 200 }} className="title-style">Google Tag Manager</label>
                       <input
                         type="text"
                         className="form-control"
@@ -657,8 +661,8 @@ const Organization: React.FC = () => {
                       />
                     </div>
                     {/* Google Analytics */}
-                    <div className="form-group w-100 mt-3 d-flex align-items-center">
-                      <label htmlFor="ga" style={{ minWidth: 200 }}>Google Analytics</label>
+                    <div className="form-group w-100 mt-3 d-flex align-items-center border-bottom pb-4">
+                      <label htmlFor="ga" style={{ minWidth: 200 }} className="title-style">Google Analytics</label>
                       <input
                         type="text"
                         className="form-control"
@@ -669,11 +673,13 @@ const Organization: React.FC = () => {
                         placeholder="Coming Soon"
                         style={{ maxWidth: 300 }}
                       />
-                      <span className="badge badge-warning ml-2">Coming Soon</span>
+
+                      <span className="custom-badge-coming-soon ml-3">Coming Soon</span>
+
                     </div>
                     {/* Quickbooks */}
-                    <div className="form-group w-100 mt-3 d-flex align-items-center">
-                      <label htmlFor="quickbooks" style={{ minWidth: 200 }}>Quickbooks</label>
+                    <div className="form-group w-100 mt-3 d-flex align-items-center border-bottom pb-4">
+                      <label htmlFor="quickbooks" style={{ minWidth: 200 }} className="title-style">Quickbooks</label>
                       <input
                         type="text"
                         className="form-control"
@@ -684,11 +690,11 @@ const Organization: React.FC = () => {
                         placeholder="Coming Soon"
                         style={{ maxWidth: 300 }}
                       />
-                      <span className="badge badge-warning ml-2">Coming Soon</span>
+                      <span className="custom-badge-coming-soon ml-3">Coming Soon</span>
                     </div>
                     {/* Xero */}
                     <div className="form-group w-100 mt-3 d-flex align-items-center">
-                      <label htmlFor="xero" style={{ minWidth: 200 }}>Xero</label>
+                      <label htmlFor="xero" style={{ minWidth: 200 }} className="title-style">Xero</label>
                       <input
                         type="text"
                         className="form-control"
@@ -699,7 +705,7 @@ const Organization: React.FC = () => {
                         placeholder="Coming Soon"
                         style={{ maxWidth: 300 }}
                       />
-                      <span className="badge badge-warning ml-2">Coming Soon</span>
+                      <span className="custom-badge-coming-soon ml-3">Coming Soon</span>
                     </div>
                   </div>
                 </div>
