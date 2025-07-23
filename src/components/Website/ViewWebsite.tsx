@@ -3,17 +3,39 @@ import { Button, Col, Container, Row, Spinner } from "react-bootstrap";
 import { DndProvider, useDrag, useDrop } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
 
-import { prebuiltSections } from "./data/sections";
-import { dummyRecord } from "./data/dummyRecord";
 import SeoForm from "./SeoForm";
 import BackButton from "../../shared-components/BackButton";
 import PageHeading from "../../shared-components/PageHeading";
-import API from "../../utils/API";
 import { handleApiError } from "../../hooks/handleApiErrors";
-import { useHistory } from "react-router-dom";
-import { BiCopy, BiGridVertical, BiMove, BiSave, BiTrash } from "react-icons/bi";
+import { useHistory, useParams } from "react-router-dom";
+import {
+  BiCopy,
+  BiGridVertical,
+  BiMove,
+  BiSave,
+  BiTrash,
+} from "react-icons/bi";
+import { AxiosError } from "axios";
+import { useQuery } from "react-query";
+import moment from "moment";
 
-const key = "sections";
+const sectionsKey = "sections";
+const pagesKey = "pages";
+
+const formattedDate = (date) => {
+  return (
+    <>
+      {date ? (
+        <>
+          <span>{date ? moment(date).format("DD MMMM YY") : "NA"}</span>
+          &nbsp;<span>({date ? moment(date).format("hh:mm a") : "NA"})</span>
+        </>
+      ) : (
+        <span>NA</span>
+      )}
+    </>
+  );
+};
 
 const SectionItem = ({ section }) => {
   const [, drag] = useDrag(() => ({
@@ -21,15 +43,14 @@ const SectionItem = ({ section }) => {
     item: section,
   }));
 
+  // console.log("section", section);
+
   return (
     <>
-      <div ref={drag} className="mb-2" key={section.id}>
+      <div ref={drag} className="mb-2" key={section?.id}>
         <div className="d-flex align-items-center">
           <img
-            src={
-              section.json.variables.featuredImage ||
-              "https://via.placeholder.com/80"
-            }
+            src={section?.featured_image_url || "https://picsum.photos/300/200"}
             alt="image"
             className="rounded-lg"
           />
@@ -39,10 +60,10 @@ const SectionItem = ({ section }) => {
         </div>
 
         <div className="bg-gray-100 cursor-pointer font-weight-bold hover:bg-gray-200 pt-2 text-black-50">
-          {section.name}
+          {section?.name}
         </div>
         <div className="text-muted small" style={{ marginTop: "-0.2rem" }}>
-          {section.category || "Uncategorized"}
+          {section?.category_name || "Uncategorized"}
         </div>
       </div>
     </>
@@ -74,24 +95,24 @@ const DropCanvas = ({ sections, onDrop, onDelete, onCopy }) => {
       }}
       ref={drop}
     >
-      {sections.length ? (
+      {sections?.length ? (
         sections.map((section, idx) => (
-          <div key={section.id} className="border rounded-lg">
+          <div key={section?.id} className="border rounded-lg">
             <div className="d-flex justify-content-between align-items-center rounded-top p-2 bg-select">
-              <section className="font-bold">{section.name}</section>
+              <section className="font-bold">{section?.name}</section>
               <div className="d-flex gap-4">
                 {/* <button className="bg-white border p-1 rounded-lg">
                   <BiMove size={18} />
                 </button> */}
                 <button
                   className="bg-white border p-1 rounded-lg"
-                  onClick={() => onCopy(section.id)}
+                  onClick={() => onCopy(section?.id)}
                 >
                   <BiCopy size={18} />
                 </button>
                 <button
                   className="bg-white border p-1 rounded-lg"
-                  onClick={() => onDelete(section.id)}
+                  onClick={() => onDelete(section?.id)}
                 >
                   <BiTrash size={18} />
                 </button>
@@ -99,9 +120,12 @@ const DropCanvas = ({ sections, onDrop, onDelete, onCopy }) => {
             </div>
             <div className="d-flex gap-10 p-2 rounded-bottom  bg-white">
               <div>
-                {section.json.variables?.featuredImage && (
+                {section?.json?.variables?.featuredImage && (
                   <img
-                    src={section.json.variables.featuredImage}
+                    src={
+                      section?.json?.variables?.featuredImage ||
+                      "https://picsum.photos/300/200"
+                    }
                     alt="Preview"
                     className="w-32"
                     style={{
@@ -113,9 +137,9 @@ const DropCanvas = ({ sections, onDrop, onDelete, onCopy }) => {
                 )}
               </div>
               <div>
-                <h5 className="font-bold">{section.name}</h5>
-                <p className="my-0">{section.json.variables?.title}</p>
-                <p className="my-0">{section.json.variables?.description}</p>
+                <h5 className="font-bold">{section?.name}</h5>
+                <p className="my-0">{section?.json?.variables?.title}</p>
+                <p className="my-0">{section?.json?.variables?.description}</p>
               </div>
             </div>
           </div>
@@ -136,40 +160,40 @@ const DropCanvas = ({ sections, onDrop, onDelete, onCopy }) => {
 
 const ViewWebsite = () => {
   const history = useHistory();
+  const { id } = useParams<{ id: string }>();
   const [activeTab, setActiveTab] = useState("MAIN");
-  const [pageData, setPageData] = useState(dummyRecord);
+  const [pageData, setPageData] = useState([]);
+
+  const {
+    data: sectionsData,
+    // isLoading,
+    // isFetching,
+    // error,
+  } = useQuery<any>([sectionsKey, ,], {
+    onError: (error: AxiosError) => {
+      handleApiError(error, history);
+    },
+  });
+
+  const {
+    data: currentPageData,
+    // isLoading,
+    // isFetching,
+    // error,
+  } = useQuery<any>([`${pagesKey}/${id}`, ,], {
+    onError: (error: AxiosError) => {
+      handleApiError(error, history);
+    },
+  });
+  console.log("PageData", pageData);
+  console.log("sectionsData", sectionsData);
 
   useEffect(() => {
-    const getSelection = async () => {
-      try {
-        const res = await API.post(
-          `${key}`,
-          {
-            name: "Some section name testt",
-            type: "pricing_basic",
-            featuredImage: "https:////",
-            section_category_id: 1,
-            html_content: "<sadasd />",
-            configuration: {
-              editable_fields: ["title", "price", "features"],
-            },
-            default_data: {
-              title: "some section title",
-              price: "$price",
-            },
-          },
-          {
-            headers: { "Content-Type": "application/json" },
-          }
-        );
-        const data = res;
-        if (data) console.log({ data });
-      } catch (error) {
-        handleApiError(error, history);
-      }
-    };
-    getSelection();
-  }, []);
+    if (currentPageData) {
+      currentPageData.data.sections = [];
+      setPageData(currentPageData?.data);
+    }
+  }, [currentPageData]);
 
   const addSection = (section) => {
     setPageData((prev) => ({
@@ -189,7 +213,9 @@ const ViewWebsite = () => {
   };
 
   const _onCopyClick = (id) => {
-    const sectionToCopy = pageData.sections.find((section) => section.id === id);
+    const sectionToCopy = pageData.sections.find(
+      (section) => section.id === id
+    );
     if (sectionToCopy) {
       setPageData((prev) => ({
         ...prev,
@@ -212,7 +238,7 @@ const ViewWebsite = () => {
         >
           <div className="d-flex justify-content-between">
             <small className="text-mutes">
-              Last Edited On: &nbsp;{pageData.lastEditedOn}
+              Last Edited On: {formattedDate(pageData?.last_edited_on)}
             </small>
           </div>
         </div>
@@ -257,10 +283,10 @@ const ViewWebsite = () => {
                 <hr className="mb-3" />
 
                 <Container fluid className="h-100 p-0">
-                  {prebuiltSections.map((section, index) => (
+                  {sectionsData?.data?.map((section, index) => (
                     <div key={section.id}>
                       <SectionItem section={section} />
-                      {index < prebuiltSections.length - 1 && (
+                      {index < sectionsData?.data?.length - 1 && (
                         <hr className="mb-3" />
                       )}
                     </div>
@@ -293,7 +319,7 @@ const ViewWebsite = () => {
             </Col>
           </Row>
         ) : (
-          <SeoForm seoDetails={pageData.seoDetails} />
+          <SeoForm seoDetails={pageData.seo_details} />
         )}
       </div>
     </DndProvider>

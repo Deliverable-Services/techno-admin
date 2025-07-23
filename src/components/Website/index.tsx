@@ -1,30 +1,29 @@
 import { AxiosError } from "axios";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Button, Container } from "react-bootstrap";
-import { BiSad } from "react-icons/bi";
+import { BiCopy, BiSad } from "react-icons/bi";
 import { useMutation, useQuery } from "react-query";
 import { useHistory } from "react-router-dom";
 import { Cell } from "react-table";
 import { handleApiError } from "../../hooks/handleApiErrors";
 import CreatedUpdatedAt from "../../shared-components/CreatedUpdatedAt";
 import EditButton from "../../shared-components/EditButton";
-import IsActiveBadge from "../../shared-components/IsActiveBadge";
 import IsLoading from "../../shared-components/isLoading";
 import PageHeading from "../../shared-components/PageHeading";
 import TablePagination from "../../shared-components/Pagination";
 import ReactTable from "../../shared-components/ReactTable";
-import TableImage from "../../shared-components/TableImage";
 import API from "../../utils/API";
 import { primaryColor } from "../../utils/constants";
 import { queryClient } from "../../utils/queryClient";
 import { showMsgToast } from "../../utils/showMsgToast";
 import ViewButton from "../../shared-components/ViewButton";
 import BreadCrumb from "../../shared-components/BreadCrumb";
+import { AiFillCopy, AiFillDelete } from "react-icons/ai";
 
-const key = "services";
+const key = "pages";
 
 const deleteServices = (id: Array<any>) => {
-  return API.post(`${key}/delete`, { id });
+  return API.delete(`${key}/${id}`);
 };
 
 const intitialFilter = {
@@ -34,66 +33,55 @@ const intitialFilter = {
   isArchived: "0",
 };
 
-const sampleData = {
-  data: [
-    {
-      id: 1,
-      name: "Website A",
-      seoDetails: {
-        metaTitle: "Meta A",
-        metaDescription: "Description A",
-        metaKeywords: ["keyword1", "keyword2"],
-        socialFeaturedImage: "https://picsum.photos/300/200",
-      },
-      organisationId: "org-123",
-      lastEditedOn: "2025-07-20",
-      isPublished: 1,
-      isArchived: 0,
-    },
-    {
-      id: 2,
-      name: "Website B",
-      seoDetails: {
-        metaTitle: "Meta B",
-        metaDescription: "Description B",
-        metaKeywords: ["b1", "b2", "b3"],
-        socialFeaturedImage: "https://picsum.photos/300/200",
-      },
-      organisationId: "org-456",
-      lastEditedOn: "2025-07-18",
-      isPublished: 0,
-      isArchived: 1,
-    },
-  ],
-  current_page: 1,
-  first_page_url:
-    "https://api-techno.dishantagnihotri.com/admin/v1/services?page=1",
-  last_page: 1,
-  last_page_url:
-    "https://api-techno.dishantagnihotri.com/admin/v1/services?page=1",
-  next_page_url: null,
-  path: "https://api-techno.dishantagnihotri.com/admin/v1/services",
-  per_page: "25",
-  prev_page_url: null,
-  total: 7,
-};
-
 const Website = () => {
   const history = useHistory();
   const [selectedRows, setSelectedRows] = useState([]);
   console.log(selectedRows.map((item) => item.id));
   const [filter, setFilter] = useState(intitialFilter);
   console.log({ filter });
-  const { data, isLoading, isFetching, error } = useQuery<any>(
-    [key, , filter],
-    {
-      onError: (error: AxiosError) => {
-        handleApiError(error, history);
-      },
-    }
-  );
+  const {
+    data: pageData,
+    isLoading,
+    isFetching,
+    error,
+  } = useQuery<any>([key, , filter], {
+    onError: (error: AxiosError) => {
+      handleApiError(error, history);
+    },
+  });
 
-  console.log("data", data);
+  // useEffect(() => {
+  //   const getSelection = async () => {
+  //     try {
+  //       const res = await API.post(
+  //         `${key}`,
+  //         {
+  //           name: "Home Page",
+  //           slug: "home-page",
+  //           seo_details: {
+  //             title: "Home",
+  //             description: "Welcome to our homepage",
+  //             keywords: "home, welcome",
+  //             og_title: "Home OG",
+  //             og_description: "OG for home",
+  //             og_image: "https://example.com/img1.jpg",
+  //           },
+  //           is_published: true,
+  //         },
+  //         {
+  //           headers: { "Content-Type": "application/json" },
+  //         }
+  //       );
+  //       const data = res;
+  //       if (data) console.log({ data });
+  //     } catch (error) {
+  //       handleApiError(error, history);
+  //     }
+  //   };
+  //   // getSelection();
+  // }, []);
+
+  console.log("pageData", pageData);
 
   const { mutate, isLoading: isDeleteLoading } = useMutation(deleteServices, {
     onSuccess: () => {
@@ -109,7 +97,27 @@ const Website = () => {
     history.push("/website/create-edit");
   };
   const _onEditClick = (id: string) => {
+    history.push(`/website/create-edit`, { id });
+  };
+  const _onViewClick = (id: string) => {
     history.push(`/website/${id}`);
+  };
+
+  const _onCopyClick = async (copiedData: any, id: string) => {
+    // console.log("Copying page with id:", id, pData);
+    // let copiedData = pData?.find((item) => item.id === id);
+    console.log("Copied Data:", copiedData);
+    copiedData['name'] = `${copiedData.name} - Copy`;
+    copiedData['slug'] = `${copiedData.slug}-copy`;
+    try {
+      const res = await API.post(`${key}/${id}/duplicate`, copiedData, {
+        headers: { "Content-Type": "application/json" },
+      });
+      const data = res;
+      if (data) console.log({ data });
+    } catch (error) {
+      handleApiError(error, history);
+    }
   };
 
   const _onFilterChange = (idx: string, value: any) => {
@@ -131,8 +139,16 @@ const Website = () => {
         accessor: "name",
       },
       {
+        Header: "Organisation ID",
+        accessor: "organisation_id",
+      },
+      {
+        Header: "Slug",
+        accessor: "slug",
+      },
+      {
         Header: "Meta Title",
-        accessor: "seoDetails.metaTitle",
+        accessor: "seo_details.title",
       },
       //   {
       //     Header: "Meta Description",
@@ -151,36 +167,61 @@ const Website = () => {
       //     ),
       //   },
       {
-        Header: "Organisation ID",
-        accessor: "organisationId",
-      },
-      {
         Header: "Last Edited",
-        accessor: "lastEditedOn",
+        accessor: "last_edited_on",
         Cell: (data: Cell) => {
-          return <CreatedUpdatedAt date={data.row.values.lastEditedOn} />;
+          return <CreatedUpdatedAt date={data.row.values.last_edited_on} />;
         },
       },
       {
         Header: "Published",
-        accessor: "isPublished",
+        accessor: "is_published",
         Cell: ({ value }) => (value ? "Yes" : "No"),
       },
-      {
-        Header: "Archived",
-        accessor: "isArchived",
-        Cell: ({ value }) => (value ? "Yes" : "No"),
-      },
+      // {
+      //   Header: "Archived",
+      //   accessor: "isArchived",
+      //   Cell: ({ value }) => (value ? "Yes" : "No"),
+      // },
       {
         Header: "Actions",
         Cell: (data: Cell) => {
           return (
-            <ViewButton
-              onClick={() => {
-                _onEditClick(data.row.values.id);
-              }}
-              permissionReq="update_service"
-            />
+            <div className="d-flex align-items-center gap-3">
+              <ViewButton
+                onClick={() => {
+                  _onViewClick(data.row.values.id);
+                }}
+                permissionReq="update_service"
+              />
+              <EditButton
+                onClick={() => {
+                  _onEditClick(data.row.values.id);
+                }}
+                permissionReq="update_service"
+              />
+              <Button
+                variant="outline-primary"
+                className="d-flex align-items-center"
+                onClick={() => {
+                  console.log('pd', data);
+                  _onCopyClick(data.row.original, data.row.values.id);
+                }}
+                style={{ padding: "0.25rem 0.5rem" }}
+              >
+                <BiCopy size={16} className="mr-1" /> Copy
+              </Button>
+              <Button
+                variant="outline-danger"
+                className="d-flex align-items-center"
+                onClick={() => {
+                  mutate(data.row.values.id);
+                }}
+                style={{ padding: "0.25rem 0.5rem" }}
+              >
+                <AiFillDelete size={16} className="mr-1" /> Delete
+              </Button>
+            </div>
           );
         },
       },
@@ -188,18 +229,18 @@ const Website = () => {
     [history]
   );
 
-  const filteredData = sampleData?.data?.filter(
-    (item) => item.isArchived === Number(filter.isArchived)
-  );
+  // const filteredData = pageData?.data?.filter(
+  //   (item) => item.isArchived === Number(filter.isArchived)
+  // );
 
-  const totalActive = sampleData?.data?.filter(
-    (d) => d.isArchived === 0
-  ).length;
-  const totalArchived = sampleData?.data?.filter(
-    (d) => d.isArchived === 1
-  ).length;
+  // const totalActive = pageData?.data?.filter(
+  //   (d) => d.isArchived === 0
+  // ).length;
+  // const totalArchived = pageData?.data?.filter(
+  //   (d) => d.isArchived === 1
+  // ).length;
 
-  if (!data && (!isLoading || !isFetching)) {
+  if (!pageData && (!isLoading || !isFetching)) {
     return (
       <Container fluid className="d-flex justify-content-center display-3">
         <div className="d-flex flex-column align-items-center">
@@ -216,7 +257,7 @@ const Website = () => {
         <PageHeading
           title="Websites"
           onClick={_onCreateClick}
-          totalRecords={50}
+          totalRecords={pageData?.data?.length || 0}
           permissionReq="create_service"
         />
 
@@ -228,7 +269,7 @@ const Website = () => {
                   onFilterChange={_onFilterChange}
                   value="0"
                   currentValue={filter.isArchived}
-                  dataLength={totalActive}
+                  dataLength={1}
                   idx="isArchived"
                   //   idx="status"
                   title="Active"
@@ -237,7 +278,7 @@ const Website = () => {
                   onFilterChange={_onFilterChange}
                   value="1"
                   currentValue={filter.isArchived}
-                  dataLength={totalArchived}
+                  dataLength={1}
                   //   idx="status"
                   idx="isArchived"
                   title="Archived"
@@ -256,7 +297,7 @@ const Website = () => {
               {!error && (
                 <ReactTable
                   //   data={sampleData?.data}
-                  data={filteredData}
+                  data={pageData?.data || []}
                   columns={columns}
                   setSelectedRows={setSelectedRows}
                   filter={filter}
@@ -265,13 +306,13 @@ const Website = () => {
                   deletePermissionReq="delete_service"
                 />
               )}
-              {!error && sampleData?.data?.length > 0 ? (
+              {!error && pageData?.data?.length > 0 ? (
                 <TablePagination
-                  currentPage={sampleData?.current_page}
-                  lastPage={sampleData?.last_page}
+                  currentPage={pageData?.pagination?.current_page}
+                  lastPage={pageData?.pagination?.last_page}
                   setPage={_onFilterChange}
-                  hasNextPage={!!sampleData?.next_page_url}
-                  hasPrevPage={!!sampleData?.prev_page_url}
+                  hasNextPage={!!pageData?.pagination?.next_page_url}
+                  hasPrevPage={!!pageData?.pagination?.prev_page_url}
                 />
               ) : null}{" "}
             </>

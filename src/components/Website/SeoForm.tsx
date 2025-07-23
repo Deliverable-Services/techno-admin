@@ -1,137 +1,192 @@
 import React, { useEffect } from "react";
-import { Formik, Form, Field } from "formik";
-import * as Yup from "yup";
+import { Formik, Form } from "formik";
 import { Button, Col, Container, Row, Spinner } from "react-bootstrap";
 import PageHeading from "../../shared-components/PageHeading";
+import { InputField } from "../../shared-components/InputFeild";
+import Restricted from "../../shared-components/Restricted";
+import { useMutation } from "react-query";
+import { queryClient } from "../../utils/queryClient";
+import { showMsgToast } from "../../utils/showMsgToast";
+import { useHistory, useParams } from "react-router-dom";
+import { handleApiError } from "../../hooks/handleApiErrors";
+import { AxiosError } from "axios";
+import API from "../../utils/API";
 
-const sampleData = {
-  id: 1,
-  name: "Website A",
-  seoDetails: {
-    metaTitle: "Meta A",
-    metaDescription: "Description A",
-    metaKeywords: ["keyword1", "keyword2"],
-    socialFeaturedImage: "https://picsum.photos/300/200",
-  },
-  organisationId: "org-123",
-  lastEditedOn: "2025-07-20",
-  isPublished: 1,
-  isArchived: 0,
+const key = "pages";
+
+const createUpdataBrand = ({
+  formdata,
+  id,
+}: {
+  formdata: FormData;
+  id: string;
+}) => {
+  if (id)
+    return API.put(`${key}/${id}`, formdata, {
+      headers: { "Content-Type": "multipart/form-data" },
+    });
 };
 
-const validationSchema = Yup.object().shape({
-  metaTitle: Yup.string().required("Meta title is required"),
-  metaDescription: Yup.string().required("Meta description is required"),
-  metaKeywords: Yup.string().required("Meta keywords are required"),
-  socialFeaturedImage: Yup.string().url("Must be a valid URL"),
-});
+interface SeoDetails {
+  title?: string;
+  description?: string;
+  keywords?: string;
+  og_title?: string;
+  og_description?: string;
+  og_image?: string;
+}
+
+interface UpdatePageData {
+  seo_details?: SeoDetails;
+  [key: string]: any;
+}
+
+const updatePage = async (data: UpdatePageData, id: string): Promise<void> => {
+  try {
+    const res = await API.put(`${key}/${id}`, data, {
+      headers: { "Content-Type": "application/json" },
+    });
+
+    if (res) showMsgToast("SEO details updated successfully");
+    else {
+    }
+  } catch (error: any) {
+    throw error;
+  }
+};
 
 const SeoForm = ({ seoDetails }) => {
-  useEffect(() => {
-    // Any bootstrap input init logic if needed
-  }, []);
+  const history = useHistory();
+  const { id } = useParams<{ id: string }>();
+
+  const { mutate, isLoading } = useMutation(createUpdataBrand, {
+    onSuccess: () => {
+      setTimeout(() => queryClient.invalidateQueries(key), 500);
+      if (id) return showMsgToast("Brand updated successfully");
+      showMsgToast("Page created successfully");
+      history.replace("/website");
+    },
+    onError: (error: AxiosError) => {
+      handleApiError(error, history);
+    },
+  });
+
+  const initialValues = {
+    title: seoDetails?.title || "",
+    description: seoDetails?.description || "",
+    keywords: seoDetails?.keywords || "",
+    og_title: seoDetails?.og_title || "",
+    og_description: seoDetails?.og_description || "",
+    og_image: seoDetails?.og_image || "",
+  };
+
   console.log(seoDetails, "seoDetails");
   return (
     <Container fluid className="card component-wrapper view-padding mb-3 mt-3">
-      {/* <div className="card view-padding p-4 mt-3"> */}
       <PageHeading title="SEO Details" />
       <hr className="mb-3" />
 
       <Row className="rounded">
         <Col className="mx-auto">
           <Formik
-            initialValues={{
-              metaTitle: seoDetails.metaTitle,
-              metaDescription: seoDetails.metaDescription,
-              metaKeywords: seoDetails.metaKeywords.join(", "),
-              socialFeaturedImage: seoDetails.socialFeaturedImage,
-            }}
-            validationSchema={validationSchema}
-            onSubmit={(values, { setSubmitting }) => {
-              console.log("Submitting", values);
-              setTimeout(() => setSubmitting(false), 1000);
+            enableReinitialize
+            initialValues={initialValues}
+            onSubmit={(values) => {
+              const editedData: any = {};
+              const { ...rest } = values;
+
+              const seoKeys = [
+                "title",
+                "description",
+                "keywords",
+                "og_title",
+                "og_description",
+                "og_image",
+              ];
+
+              if (id) {
+                // Extract and group seo_details
+                seoKeys.forEach((key) => {
+                  editedData.seo_details = editedData.seo_details || {};
+                  editedData.seo_details[key] = values[key];
+                });
+
+                updatePage(editedData, id);
+              }
+              // mutate({ formdata, id });
             }}
           >
-            {({ errors, touched, isSubmitting }) => (
-              <Form className="space-y-4">
+            {({ setFieldValue }) => (
+              <Form>
                 <div className="form-container ">
-                  <div>
-                    <label>Meta Title</label>
-                    <Field
-                      name="metaTitle"
-                      className="form-control"
-                      placeholder="Enter Meta Title"
-                    />
-                    {touched.metaTitle && errors.metaTitle && (
-                      <div className="text-danger">{errors.metaTitle}</div>
-                    )}
-                  </div>
+                  <InputField
+                    name="title"
+                    placeholder="Meta Title"
+                    label="Meta Title"
+                    // required
+                  />
+                  <InputField
+                    name="description"
+                    placeholder="Meta Description"
+                    label="Meta Description"
+                    // required
+                  />
+                  <InputField
+                    name="keywords"
+                    placeholder="Meta Keywords"
+                    label="Meta Keywords"
+                    // required
+                  />
 
-                  <div>
-                    <label>Meta Keywords</label>
-                    <Field
-                      name="metaKeywords"
-                      className="form-control"
-                      placeholder="e.g. ai, photo, editor"
-                    />
-                    {touched.metaKeywords && errors.metaKeywords && (
-                      <div className="text-danger">{errors.metaKeywords}</div>
-                    )}
-                  </div>
-
-                  <div>
-                    <label>Social Featured Image</label>
-                    <Field
-                      name="socialFeaturedImage"
-                      className="form-control"
-                      placeholder="https://image.url"
-                    />
-                    {touched.socialFeaturedImage &&
-                      errors.socialFeaturedImage && (
-                        <div className="text-danger">
-                          {errors.socialFeaturedImage}
-                        </div>
-                      )}
-                    {seoDetails.socialFeaturedImage && (
-                      <img
-                        src={seoDetails.socialFeaturedImage}
-                        alt="Preview"
-                        className="mt-3 w-25 h-50 rounded-lg"
-                      />
-                    )}
-                  </div>
-
-                  <div>
-                    <label>Meta Description</label>
-                    <Field
-                      as="textarea"
-                      name="metaDescription"
-                      className="form-control h-50"
-                      placeholder="Enter Meta Description"
-                    />
-                    {touched.metaDescription && errors.metaDescription && (
-                      <div className="text-danger">
-                        {errors.metaDescription}
-                      </div>
-                    )}
-                  </div>
-
-                  <div className="pt-3">
-                    <Button type="submit" disabled={isSubmitting}>
-                      {isSubmitting ? (
-                        <Spinner animation="border" size="sm" />
-                      ) : (
-                        "Submit"
-                      )}
-                    </Button>
-                  </div>
+                  <InputField
+                    name="og_image"
+                    folder="brands"
+                    placeholder="OG Image"
+                    label="OG Image"
+                    isFile
+                    // setFieldValue={setFieldValue}
+                    // onChange={(e) => {
+                    //   console.log("e.target.files", e.target);
+                    //   setFieldValue("og_image", Object.values(e.target.files));
+                    // }}
+                    // required
+                  />
+                  <InputField
+                    name="og_title"
+                    placeholder="OG Title"
+                    label="OG Title"
+                    // required
+                  />
+                  <InputField
+                    name="og_description"
+                    placeholder="OG Description"
+                    label="OG Description"
+                    // required
+                  />
                 </div>
+
+                <Row className="d-flex justify-content-start">
+                  <Col md="2">
+                    <Restricted to={id ? "update_brand" : "create_brand"}>
+                      <Button
+                        type="submit"
+                        disabled={isLoading}
+                        className="w-100"
+                      >
+                        {isLoading ? (
+                          <Spinner animation="border" size="sm" />
+                        ) : (
+                          "Submit"
+                        )}
+                      </Button>
+                    </Restricted>
+                  </Col>
+                </Row>
               </Form>
             )}
           </Formik>
         </Col>
       </Row>
-      {/* </div> */}
     </Container>
   );
 };
