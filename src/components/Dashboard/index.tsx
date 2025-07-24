@@ -138,7 +138,7 @@ const Dashboard = () => {
                     _onFilterChange("duration", e.target.value);
                   }}
                   className="bg-transparent m-0 ml-3"
-                  style={{ width: "100px", height: "38px",fontSize:'14px',fontWeight:'600' }}
+                  style={{ width: "100px", height: "38px", fontSize: '14px', fontWeight: '600' }}
                   value={filter.duration}
                 >
                   {/* <option value="year">Year</option> */}
@@ -148,7 +148,7 @@ const Dashboard = () => {
                 </Form.Control>
               </div>
               <div className="time d-flex align-items-center text-nowrap gap-3">
-                <p className="m-0 text-right" style={{fontSize:'14px',fontWeight:'300'}}>
+                <p className="m-0 text-right" style={{ fontSize: '14px', fontWeight: '300' }}>
                   {moment().format("DD-MMMM")}
                 </p>
                 <p
@@ -353,83 +353,83 @@ const Dashboard = () => {
 
         <div className="dashboard-page w-100 mt-4">
           <Container fluid className=" mt-0 pl-2 pr-0">
-            
+
             <div className="charts-row">
-              <div className="d-flex align-items-center" style={{gap:'20px'}}>
-                 <div className="card w-100">
-                <div className="card-header pb-3 d-flex justify-content-between align-items-center">
-                  <h5 className="mb-0">
-                    <strong>Bookings</strong>
-                  </h5>
-                </div>
+              <div className="d-flex flex-column flex-lg-row align-items-center" style={{ gap: '20px' }}>
+                <div className="card w-100">
+                  <div className="card-header pb-3 d-flex justify-content-between align-items-center">
+                    <h5 className="mb-0">
+                      <strong>Bookings</strong>
+                    </h5>
+                  </div>
 
-                <div className="card-content chart-container">
-                  {isBookingAnalyticsLoading ? (
-                    <IsLoading />
-                  ) : (
-                    <BookingLineChart
-                      data={BookingAnalytics?.booking}
-                      xAxisDataKey="date"
-                      dataKey="order"
-                    />
-                  )}
+                  <div className="card-content chart-container">
+                    {isBookingAnalyticsLoading ? (
+                      <IsLoading />
+                    ) : (
+                      <BookingLineChart
+                        data={BookingAnalytics?.booking}
+                        xAxisDataKey="date"
+                        dataKey="order"
+                      />
+                    )}
+                  </div>
                 </div>
-              </div>
-              <div className="card w-100">
-                <div className="card-header pb-3 d-flex justify-content-between align-items-center">
-                  <h5 className="mb-0">
-                    <strong>Revenue</strong>
-                  </h5>
-                </div>
+                <div className="card w-100">
+                  <div className="card-header pb-3 d-flex justify-content-between align-items-center">
+                    <h5 className="mb-0">
+                      <strong>Revenue</strong>
+                    </h5>
+                  </div>
 
-                <div className="card-content chart-container">
-                  {isBookingAnalyticsLoading ? (
-                    <IsLoading />
-                  ) : (
-                    <ChartBar
-                      data={RevenueAnalytics?.revenue}
-                      xAxisDataKey="date"
-                      dataKey1="total_amount"
-                      dataKey2="discount_amount"
-                    />
-                  )}
+                  <div className="card-content chart-container">
+                    {isBookingAnalyticsLoading ? (
+                      <IsLoading />
+                    ) : (
+                      <ChartBar
+                        data={RevenueAnalytics?.revenue}
+                        xAxisDataKey="date"
+                        dataKey1="total_amount"
+                        dataKey2="discount_amount"
+                      />
+                    )}
+                  </div>
                 </div>
               </div>
-              </div>
-             
+
               <div className="card hoverable d-flex w-100 mb-3">
-              <div className="card-header">
-                <p className="text-black">Reports overview</p>
-              </div>
-              <div className="card-content reports-table">
-                <table className="w-100">
-                  <tbody>
-                    {data?.data_total &&
-                      Object.entries(data?.data_total).map((item) => (
-                        <tr>
-                          <td className="text-grey text-capitalize">
-                            <p>{item[0].replace("_", " ")}</p>
-                          </td>
-                          <td
-                            className="text-left text-grey"
-                            style={{ width: "30px" }}
-                          >
-                            <p>
-                              <b>{item[1]}</b>
-                            </p>
-                          </td>
-                          {/* <td className="text-right" style={{ width: "24px" }}>
+                <div className="card-header">
+                  <p className="text-black">Reports overview</p>
+                </div>
+                <div className="card-content reports-table">
+                  <table className="w-100">
+                    <tbody>
+                      {data?.data_total &&
+                        Object.entries(data?.data_total).map((item) => (
+                          <tr>
+                            <td className="text-grey text-capitalize">
+                              <p>{item[0].replace("_", " ")}</p>
+                            </td>
+                            <td
+                              className="text-left text-grey"
+                              style={{ width: "30px" }}
+                            >
+                              <p>
+                                <b>{item[1]}</b>
+                              </p>
+                            </td>
+                            {/* <td className="text-right" style={{ width: "24px" }}>
                             <span className="tag  d-flex align-items-center w-100">
                               <AiOutlineArrowUp size={13} />
                               <strong>10%</strong>
                             </span>
                           </td> */}
-                        </tr>
-                      ))}
-                  </tbody>
-                </table>
+                          </tr>
+                        ))}
+                    </tbody>
+                  </table>
+                </div>
               </div>
-            </div>
             </div>
           </Container>
         </div>
