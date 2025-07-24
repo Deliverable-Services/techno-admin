@@ -42,6 +42,7 @@ interface Props {
   isSelectable?: boolean;
   searchPlaceHolder?: string;
   deletePermissionReq?: string;
+  showSearch?:boolean
 }
 interface ISearchInput {
   preGlobalFilteredRows: any;
@@ -119,6 +120,7 @@ function ReactTable({
   isSelectable = true,
   searchPlaceHolder,
   deletePermissionReq = "",
+  showSearch = true,
 }: Props): ReactElement {
   const isRestricted = useUserProfileStore((state) => state.isRestricted);
   const [records, setRecords] = React.useState(data);
@@ -250,13 +252,14 @@ function ReactTable({
   };
 
   return (
-    <div>
+    <div className="card">
       <Container
         fluid
         className="card-header pb-3 d-flex align-items-end position-relative px-0 align-items-end "
         style={{ flexDirection: isDesktop ? "row" : "column-reverse" }}
       >
         <div className="w-100">
+          {showSearch &&
           <div className="search-input">
             <AiOutlineSearch size={18} />
             <SearchInput
@@ -269,6 +272,7 @@ function ReactTable({
               disabled={formtatedSelectedRows.length > 0}
             />
           </div>
+          }
         </div>
 
         <div className="d-flex align-items-center">
@@ -301,7 +305,7 @@ function ReactTable({
               className="filter-button bg-transparent border-0 text-primary"
             >
               <GoSettings size={17} color={primaryColor} />{" "}
-              <span className="text-muted my-auto">Filter</span>
+              <span className="text-muted my-auto">Manage Column</span>
             </Dropdown.Toggle>
 
             <Dropdown.Menu className="p-2">
