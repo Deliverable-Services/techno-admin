@@ -60,24 +60,50 @@ const TopBar = ({ isNavOpen, setIsNavOpen }: INavBar) => {
         {isDesktop && (
           <div className="d-flex align-items-center justify-content-center ml-4 ">
             <Dropdown className="ml-4">
-              <section style={{ fontSize: "11px", fontWeight: "bold", color: "#667085", textAlign: "center" }}>Organisation</section>
-              <Dropdown.Toggle
-                id="dropdown-basic"
-                className="filter-button bg-transparent border-0"
-                style={{ color: "#000" }}
-              >
-                <span>{user?.organisation?.name}</span>
-              </Dropdown.Toggle>
+  <section
+    style={{
+      fontSize: "11px",
+      fontWeight: "bold",
+      color: "#667085",
+      textAlign: "center",
+      marginBottom: "4px",
+    }}
+  >
+    Organisation
+  </section>
 
-              <Dropdown.Menu>
-                <div className="d-flex flex-column gap-10 px-4 py-2">
-                  <section className="d-flex align-items-center gap-10"><FaEnvelope size={14} /> {user?.organisation?.email}</section>
-                  <section className="d-flex align-items-center gap-10"><FaPhone size={14} /> {user?.organisation?.phone}</section>
-                  <section className="d-flex align-items-center gap-10"><FaMap size={14} />{user?.organisation?.address}</section>
-                  <section className="d-flex align-items-center gap-10"><FaClock size={14} /> {formatTimestamp(user?.organisation?.created_at)}</section>
-                </div>
-              </Dropdown.Menu>
-            </Dropdown>
+  <Dropdown.Toggle
+    id="dropdown-basic"
+    className="bg-white border rounded-pill px-3 py-1 shadow-sm d-flex align-items-center"
+    style={{ color: "#000", fontWeight: "500", fontSize: "14px" }}
+  >
+    <span className="text-truncate" style={{ maxWidth: 150 }}>
+      {user?.organisation?.name}
+    </span>
+  </Dropdown.Toggle>
+
+  <Dropdown.Menu className=" rounded border-0 mt-2 p-3 global-card" style={{ minWidth: "260px" }}>
+    <div className="d-flex flex-column gap-2">
+      <section className="d-flex align-items-center">
+        <FaEnvelope className="text-primary mr-2" size={14} />
+        <span>{user?.organisation?.email}</span>
+      </section>
+      <section className="d-flex align-items-center">
+        <FaPhone className="text-success mr-2" size={14} />
+        <span>{user?.organisation?.phone}</span>
+      </section>
+      <section className="d-flex align-items-center">
+        <FaMap className="text-warning mr-2" size={14} />
+        <span>{user?.organisation?.address}</span>
+      </section>
+      <section className="d-flex align-items-center">
+        <FaClock className="text-info mr-2" size={14} />
+        <span>{formatTimestamp(user?.organisation?.created_at)}</span>
+      </section>
+    </div>
+  </Dropdown.Menu>
+</Dropdown>
+
           </div>
         )}
       </div>

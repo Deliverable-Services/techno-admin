@@ -588,11 +588,11 @@ const Organization: React.FC = () => {
                           </button>
                         </div>
                       </div>
-                      <Row className="g-3 social-cards">
+                      <Row className="g-3 social-cards px-2">
                         {formData.socialLinks.map((link, idx) => {
                           const opt = socialOptions.find(o => o.value === link.type);
                           return (
-                            <Col key={idx} xs={12} sm={6} md={4} lg={3}>
+                            <Col key={idx} xs={12} sm={6} md={4} lg={3} className="p-2">
                               <Card className="position-relative mb-3 shadow-sm border-0">
                                 {/* Cross remove button */}
                                 <button

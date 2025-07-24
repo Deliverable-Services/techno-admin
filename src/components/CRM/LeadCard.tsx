@@ -26,13 +26,13 @@ const LeadCard: React.FC<Props> = ({ lead }) => {
           <h6 className="card-title mb-1 text-truncate">{lead.name}</h6>
           <span className={`badge badge-billing`}>{lead.page}</span>
         </div>
-        <div className="d-flex justify-content-between align-items-end mt-2">
+        <div className="d-flex justify-content-between align-items-end mt-2 flex-wrap">
           <div className="d-flex flex-column">
             <span className="text-muted small font-weight-bold">
               {lead.phone}
             </span>
             <span
-              className="text-muted small font-weight-bold"
+              className="text-muted small font-weight-bold w-140px"
               style={{
                 whiteSpace: "nowrap",
                 overflow: "hidden",

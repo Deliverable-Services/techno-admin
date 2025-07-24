@@ -1,3 +1,5 @@
+// CRMBorad.tsx
+
 import React, { useEffect, useState } from "react";
 import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
@@ -94,6 +96,7 @@ const CRMBoard: React.FC = () => {
             </div>
           </div>
 
+          <div className="crm-board-overflow">
           <div className="row no-gutters crm-board">
             {Object.keys(statusMap).map((key) => {
               const typedKey = key as string;
@@ -108,6 +111,7 @@ const CRMBoard: React.FC = () => {
                 />
               );
             })}
+          </div>
           </div>
         </div>
       </DndProvider>

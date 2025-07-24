@@ -12756,7 +12756,7 @@ li.navLink.my-1 svg path {
   background: #0000008f;
 }
 .social-cards{
-  row-gap: 20px;
+  row-gap: 10px;
 }
 .shadow-natural
 {
@@ -12834,4 +12834,43 @@ li.navLink.my-1 svg path {
   width: 50px !important;
   height: 50px !important;
   object-fit: contain;
+}
+
+.w-140px{
+  width: 140px;
+}
+
+.ticket-main-div
+{
+    background: #FAFAFA;
+    height: 100%;
+}
+
+.lead-card:hover {
+  transform: translateY(-2px);
+  transition: 0.2s ease-in-out;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.font-weight-semibold {
+  font-weight: 600;
+}
+.text-orange{
+  color: #ff4501;
+}
+.text-blue
+{
+  color: #1b6bc0;
+}
+.text-green
+{
+  color: #00c317;
+}
+.text-blue-dark
+{
+color: #4b6cff;
+}
+.crm-board-overflow {
+  overflow: auto;
+  height: 100vh;
 }
