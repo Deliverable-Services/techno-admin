@@ -209,7 +209,7 @@ const Website = () => {
                 }}
                 style={{ padding: "0.25rem 0.5rem" }}
               >
-                <BiCopy size={16} className="mr-1" /> Copy
+                <BiCopy size={16} className="mr-1" /> Duplicate
               </Button>
               <Button
                 variant="outline-danger"
