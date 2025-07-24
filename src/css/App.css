@@ -11789,7 +11789,7 @@ nav {
 @media (min-width: 800px) {
   nav {
     position: fixed;
-    min-width: 14%;
+    min-width: 250px;
   }
   nav .logo-wrapper {
     width: auto;
@@ -12027,7 +12027,7 @@ th {
 
 @media (min-width: 800px) {
   .search-input {
-    width: 50%;
+    width: 40%;
   }
 }
 
@@ -12549,6 +12549,13 @@ th {
   background-color: rgb(165 135 229 / 95%);
   color: #ffffff;
 }
+.filter-dropdown .dropdown-toggle{
+font-size: 14px;
+font-weight: 500;
+}
+.filter-dropdown .dropdown-toggle::after{
+  display: none;
+}
 .filter-dropdown .dropdown-menu{
   min-width: 400px;
   top: 10px !important;
@@ -12582,12 +12589,40 @@ border-bottom: 1px solid #f5f5f5;
   margin-bottom: 0;
 }
 .global-card{
-    border-radius: 10px;
+    border-radius: 10px !important;
     min-height: 44px;
-    background-color: white;
-    border: 1px solid #E9EAEB;
-    color: #181D27;
+    background-color: white !important;
+    border: 1px solid #E9EAEB !important;
+    color: #181D27 !important;
     box-shadow: 0px 15px 32px 0px #0000000D, 0px 59px 59px 0px #0000000A, 0px 132px 79px 0px #00000008, 0px 234px 94px 0px #00000003, 0px 366px 103px 0px #00000000;
+}
+.global-navs {
+  background: #fafafa;
+  padding: 4px;
+  border-radius: 6px !important;
+  border: 1px solid #e9eaeb;
+}
+.global-navs.nav-tabs .nav-link {
+  border: 0;
+  background: transparent;
+  border-radius: 0.25rem;
+  color: #717680;
+  font-size: 0.8em;
+  font-weight: 700;
+}
+.global-navs.nav-tabs .nav-link.active {
+  cursor: pointer;
+  border-radius: 10px;
+  background: white;
+  border: 0;
+  box-shadow: 0px 15px 32px 0px #0000000D, 0px 59px 59px 0px #0000000A, 0px 132px 79px 0px #00000008, 0px 234px 94px 0px #00000003, 0px 366px 103px 0px #00000000;
+}
+.manage-column{
+    font-size: 14px;
+    font-weight: 500;
+}
+.manage-column::after{
+  display: none !important;
 }
 body {
   font-family: "Inter", sans-serif;
@@ -12596,10 +12631,10 @@ body {
 }
 
 .App {
-  display: -ms-grid;
-  display: grid;
+  display: -ms-flex;
+  display: flex;
   background-color: #fff;
-  color: #1e2022;
+  color: #1e2022; 
 }
 
 .login-main .nav-link:focus {
@@ -12650,7 +12685,7 @@ body {
     -ms-grid-column: 2;
     -ms-grid-column-span: 1;
     grid-column: 2/3;
-    max-width: calc(100vw - 15.4rem);
+    /* max-width: calc(100vw - 15.4rem); */
   }
 }
 

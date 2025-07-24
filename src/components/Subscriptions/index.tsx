@@ -1,7 +1,7 @@
 import { AxiosError } from "axios";
 import moment from "moment";
 import { useMemo, useState } from "react";
-import { Button, Col, Container, Dropdown, Form, Row } from "react-bootstrap";
+import { Button, Col, Container, Dropdown, Form, Nav, Row } from "react-bootstrap";
 import { BiSad } from "react-icons/bi";
 import { BsFunnel } from "react-icons/bs";
 import { useQuery } from "react-query";
@@ -190,162 +190,138 @@ const Subscription = () => {
   return (
     <>
       <Container fluid className="component-wrapper view-padding">
-        <PageHeading title="Subscriptions" totalRecords={data?.total} />
+          <PageHeading title="Subscriptions" totalRecords={data?.total} />
+        <div className="d-flex justify-content-between pb-3 mt-3">
+          {(!isLoading || !isFetching) && (
+              <Nav className="global-navs" variant="tabs" activeKey={filter.status} onSelect={(selectedKey) => _onFilterChange('status', selectedKey)}>
+                <Nav.Item>
+                  <Nav.Link eventKey="">All ({data?.data?.length || 0})</Nav.Link>
+                </Nav.Item>
 
-        {(!isLoading || !isFetching) && (
-          <div className="filter my-2">
-            {/* <BreadCrumb
-            onFilterChange={_onFilterChange}
-            value=""
-            currentValue={filter.status}
-            dataLength={data?.data?.length}
-            idx="status"
-            title="All"
-          /> */}
-            <BreadCrumb
-              onFilterChange={_onFilterChange}
-              value="active"
-              currentValue={filter.status}
-              dataLength={data?.data?.length}
-              idx="status"
-              title="Active"
-            />
-            <BreadCrumb
-              onFilterChange={_onFilterChange}
-              value="expired"
-              currentValue={filter.status}
-              dataLength={data?.data?.length}
-              idx="status"
-              title="Expired"
-              isLast
-            />
-          </div>
-        )}
+                <Nav.Item>
+                  <Nav.Link eventKey="active">
+                    Active ({data?.data?.filter(item => item.status === 'active').length || 0})
+                  </Nav.Link>
+                </Nav.Item>
+
+                <Nav.Item>
+                  <Nav.Link eventKey="expired">
+                    Expired ({data?.data?.filter(item => item.status === 'expired').length || 0})
+                  </Nav.Link>
+                </Nav.Item>
+              </Nav>
+          )}
+          <Dropdown className="filter-dropdown">
+            <Dropdown.Toggle as={Button} variant="primary" className="global-card">
+              <BsFunnel /> Filters
+            </Dropdown.Toggle>
+            <Dropdown.Menu>
+              <div className="filter-dropdown-heading d-flex justify-content-between w-100">
+                <h4>Filter</h4>
+                <div
+                  className="d-flex align-items-center justify-md-content-center"
+                >
+                  <Button
+                    onClick={() => setFilter(intitialFilter)}
+                    variant={
+                      areTwoObjEqual(intitialFilter, filter)
+                        ? "light"
+                        : "primary"
+                    }
+                    style={{
+                      fontSize: 14,
+                    }}
+                  >
+                    Reset Filters
+                  </Button>
+                </div>
+              </div>
+              <div className="select-filter">
+                <div>
+                  <FilterSelect
+                    currentValue={filter.user_id}
+                    data={!isCustomersLoading && Customers.data}
+                    label="User"
+                    idx="user_id"
+                    onFilterChange={_onFilterChange}
+                  />
+                </div>
+                <div>
+                  <FilterSelect
+                    currentValue={filter.plan_id}
+                    data={!isPlansLoading && Plans.data}
+                    label="Plan"
+                    idx="plan_id"
+                    onFilterChange={_onFilterChange}
+                  />
+                </div>
+                <div>
+                  <FilterSelect
+                    currentValue={filter.allowed_usage}
+                    data={InsideCart}
+                    label="Allowed Usage"
+                    idx="allowed_usage"
+                    onFilterChange={_onFilterChange}
+                  />
+                </div>
+
+                <div>
+                  <Form.Group>
+                    <Form.Label className="text-muted">
+                      Purchased on
+                    </Form.Label>
+                    <Form.Control
+                      type="date"
+                      value={filter.created_at}
+                      onChange={(e) => {
+                        const value = moment(e.target.value).format(
+                          "YYYY-MM-DD"
+                        );
+                        _onFilterChange("created_at", value);
+                      }}
+                      style={{
+                        fontSize: 14,
+                        width: 150,
+                        height: 35,
+                      }}
+                    />
+                  </Form.Group>
+                </div>
+                <div>
+                  <Form.Group>
+                    <Form.Label className="text-muted">
+                      Last used at
+                    </Form.Label>
+                    <Form.Control
+                      type="date"
+                      value={filter.last_used_at}
+                      onChange={(e) => {
+                        const value = moment(e.target.value).format(
+                          "YYYY-MM-DD"
+                        );
+                        _onFilterChange("last_used_at", value);
+                      }}
+                      style={{
+                        fontSize: 14,
+                        width: 150,
+                        height: 35,
+                      }}
+                    />
+                  </Form.Group>
+                </div>
+
+              </div>
+            </Dropdown.Menu>
+          </Dropdown>
+        </div>
+
         <hr />
         <Container fluid className="h-100 p-0">
           {isLoading ? (
             <IsLoading />
           ) : (
             <>
-              <Container fluid className="px-0 pt-3 pb-2">
-                <div className="d-flex align-items-center justify-content-end">
-                  <div style={{ minWidth: "300px" }}>
-                    <Form.Control
-                      type="text"
-                      placeholder="Search by Razorpay ID, Usage, Transaction ID"
-                      value={filter.q}
-                      onChange={(e) => _onFilterChange("q", e.target.value)}
-                      style={{ fontSize: 14, height: 44 }}
-                      className="global-card"
-                    />
-                  </div>
-                  <div className="ml-3">
-                    <Dropdown className="filter-dropdown">
-                      <Dropdown.Toggle as={Button} variant="primary" className="global-card">
-                        <BsFunnel /> Filters
-                      </Dropdown.Toggle>
-                      <Dropdown.Menu>
-                        <div className="filter-dropdown-heading d-flex justify-content-between w-100">
-                          <h4>Filter</h4>
-                          <div
-                            className="d-flex align-items-center justify-md-content-center"
-                          >
-                            <Button
-                              onClick={() => setFilter(intitialFilter)}
-                              variant={
-                                areTwoObjEqual(intitialFilter, filter)
-                                  ? "light"
-                                  : "primary"
-                              }
-                              style={{
-                                fontSize: 14,
-                              }}
-                            >
-                              Reset Filters
-                            </Button>
-                          </div>
-                        </div>
-                        <div className="select-filter">
-                          <div>
-                            <FilterSelect
-                              currentValue={filter.user_id}
-                              data={!isCustomersLoading && Customers.data}
-                              label="User"
-                              idx="user_id"
-                              onFilterChange={_onFilterChange}
-                            />
-                          </div>
-                          <div>
-                            <FilterSelect
-                              currentValue={filter.plan_id}
-                              data={!isPlansLoading && Plans.data}
-                              label="Plan"
-                              idx="plan_id"
-                              onFilterChange={_onFilterChange}
-                            />
-                          </div>
-                          <div>
-                            <FilterSelect
-                              currentValue={filter.allowed_usage}
-                              data={InsideCart}
-                              label="Allowed Usage"
-                              idx="allowed_usage"
-                              onFilterChange={_onFilterChange}
-                            />
-                          </div>
-
-                          <div>
-                            <Form.Group>
-                              <Form.Label className="text-muted">
-                                Purchased on
-                              </Form.Label>
-                              <Form.Control
-                                type="date"
-                                value={filter.created_at}
-                                onChange={(e) => {
-                                  const value = moment(e.target.value).format(
-                                    "YYYY-MM-DD"
-                                  );
-                                  _onFilterChange("created_at", value);
-                                }}
-                                style={{
-                                  fontSize: 14,
-                                  width: 150,
-                                  height: 35,
-                                }}
-                              />
-                            </Form.Group>
-                          </div>
-                          <div>
-                            <Form.Group>
-                              <Form.Label className="text-muted">
-                                Last used at
-                              </Form.Label>
-                              <Form.Control
-                                type="date"
-                                value={filter.last_used_at}
-                                onChange={(e) => {
-                                  const value = moment(e.target.value).format(
-                                    "YYYY-MM-DD"
-                                  );
-                                  _onFilterChange("last_used_at", value);
-                                }}
-                                style={{
-                                  fontSize: 14,
-                                  width: 150,
-                                  height: 35,
-                                }}
-                              />
-                            </Form.Group>
-                          </div>
-                          
-                        </div>
-                      </Dropdown.Menu>
-                    </Dropdown>
-                  </div>
-                </div>
-              </Container>
-              <div className="mt-2" />
+              <div className="mt-3" />
               {!error && (
                 <ReactTable
                   data={data?.data}
@@ -355,8 +331,7 @@ const Subscription = () => {
                   onFilterChange={_onFilterChange}
                   isDataLoading={isFetching}
                   isSelectable={false}
-                  showSearch={false}
-                // searchPlaceHolder="Search using rzr order id, allowed usage, transaction id"
+                  searchPlaceHolder="Search using rzr order id, allowed usage, transaction id"
                 />
               )}
               {!error && data?.data?.length > 0 ? (

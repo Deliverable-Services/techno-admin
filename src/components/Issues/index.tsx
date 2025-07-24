@@ -1,7 +1,7 @@
 import { AxiosError } from "axios";
 import moment from "moment";
 import { useMemo, useState } from "react";
-import { Button, Col, Container, Form, Row } from "react-bootstrap";
+import { Button, Col, Container, Dropdown, Form, Nav, Row } from "react-bootstrap";
 import { BiSad } from "react-icons/bi";
 import { useQuery } from "react-query";
 import { useHistory } from "react-router-dom";
@@ -20,6 +20,7 @@ import { areTwoObjEqual } from "../../utils/areTwoObjEqual";
 import { IssueRelatedTo, OrderType } from "../../utils/arrays";
 import { primaryColor } from "../../utils/constants";
 import { showErrorToast } from "../../utils/showErrorToast";
+import { BsFunnel } from "react-icons/bs";
 
 const key = "tickets";
 const intitialFilter = {
@@ -186,72 +187,68 @@ const Issues = () => {
 
   return (
     <>
-      <Container fluid className="card component-wrapper view-padding">
+      <Container fluid className="component-wrapper view-padding">
         <PageHeading title="Issues" totalRecords={data?.total} />
+        <div className="d-flex justify-content-between pb-3 mt-3">
         {!isLoading && (
-          <Container fluid className="px-0">
-            <div>
-              <div className="filter">
-                <BreadCrumb
-                  onFilterChange={_onFilterChange}
-                  value="active"
-                  currentValue={filter.status}
-                  dataLength={data?.data?.length}
-                  idx="status"
-                  title="Active"
-                />
-                <BreadCrumb
-                  onFilterChange={_onFilterChange}
-                  value="closed"
-                  currentValue={filter.status}
-                  dataLength={data?.data?.length}
-                  idx="status"
-                  title="Closed"
-                  isLast
-                />
-              </div>
-            </div>
-          </Container>
+             <Nav className="global-navs" variant="tabs" activeKey={filter.status} onSelect={(selectedKey) => _onFilterChange('status', selectedKey)}>
+                <Nav.Item>
+                  <Nav.Link eventKey="">All ({data?.data?.length || 0})</Nav.Link>
+                </Nav.Item>
+
+                <Nav.Item>
+                  <Nav.Link eventKey="active">
+                    Active ({data?.data?.filter(item => item.status === 'active').length || 0})
+                  </Nav.Link>
+                </Nav.Item>
+
+                <Nav.Item>
+                  <Nav.Link eventKey="closed">
+                    Closed ({data?.data?.filter(item => item.status === 'closed').length || 0})
+                  </Nav.Link>
+                </Nav.Item>
+              </Nav>
         )}
-        <hr className="mt-2" />
-        <Container fluid className="h-100 p-0">
-          {isLoading ? (
-            <IsLoading />
-          ) : (
-            <>
-              {!error && (
-                <>
-                  <Container fluid className="pt-2 px-0">
-                    <Row className="select-filter d-flex  ">
-                      <Col md="auto">
-                        <FilterSelect
+         <Dropdown className="filter-dropdown">
+            <Dropdown.Toggle as={Button} variant="primary" className="global-card">
+              <BsFunnel /> Filters
+            </Dropdown.Toggle>
+            <Dropdown.Menu>
+              <div className="filter-dropdown-heading d-flex justify-content-between w-100">
+                <h4>Filter</h4>
+                <div
+                  className="d-flex align-items-center justify-md-content-center"
+                >
+                  <Button
+                    onClick={() => setFilter(intitialFilter)}
+                    variant={
+                      areTwoObjEqual(intitialFilter, filter)
+                        ? "light"
+                        : "primary"
+                    }
+                    style={{
+                      fontSize: 14,
+                    }}
+                  >
+                    Reset Filters
+                  </Button>
+                </div>
+              </div>
+                <div className="select-filter">
+                 <FilterSelect
                           currentValue={filter.user_id}
                           data={!isCustomerLoading && Customers.data}
                           label="Customer"
                           idx="user_id"
                           onFilterChange={_onFilterChange}
                         />
-                      </Col>
-                      {/* <Col md="auto">
-                          <FilterSelect
-                            currentValue={filter.inside_cart}
-                            data={InsideCart}
-                            label="Inside Cart"
-                            idx="inside_cart"
-                            width="80px"
-                            onFilterChange={onFilterChange}
-                          />
-                        </Col> */}
-                      <Col md="auto">
-                        <FilterSelect
+                         <FilterSelect
                           currentValue={filter.related_to}
                           data={IssueRelatedTo}
                           label="Related to"
                           idx="related_to"
                           onFilterChange={_onFilterChange}
                         />
-                      </Col>
-                      <Col md="auto">
                         <Form.Group>
                           <Form.Label className="text-muted">
                             Raised At
@@ -272,33 +269,20 @@ const Issues = () => {
                             }}
                           />
                         </Form.Group>
-                      </Col>
-
-                      <Col
-                        md="auto"
-                        className="d-flex align-items-center justify-md-content-center"
-                      >
-                        <Button
-                        className="mt-27px"
-                          onClick={() => {
-                            setFilter(intitialFilter);
-                          }}
-                          variant={
-                            areTwoObjEqual(intitialFilter, filter)
-                              ? "light"
-                              : "primary"
-                          }
-                          style={{
-                            // backgroundColor: "#eee",
-                            fontSize: 14,
-                          }}
-                        >
-                          Reset Filters
-                        </Button>
-                      </Col>
-                    </Row>
-                  </Container>
-                  <hr className="mt-2" />
+              </div>
+            </Dropdown.Menu>
+           
+           
+          </Dropdown>
+        </div>
+        <hr />
+        <Container fluid className="h-100 p-0">
+          {isLoading ? (
+            <IsLoading />
+          ) : (
+            <>
+            <div className="mt-2" />
+              {!error && (
                   <ReactTable
                     data={data?.data}
                     columns={columns}
@@ -309,7 +293,6 @@ const Issues = () => {
                     isSelectable={false}
                     searchPlaceHolder="Search using title,ref_id"
                   />
-                </>
               )}
               {!error && data.length > 0 ? (
                 <TablePagination

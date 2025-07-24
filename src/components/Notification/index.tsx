@@ -1,7 +1,7 @@
 import { AxiosError } from "axios";
 import moment from "moment";
 import React, { useMemo, useState } from "react";
-import { Button, Col, Container, Form, Row } from "react-bootstrap";
+import { Button, Col, Container, Dropdown, Form, Nav, Row } from "react-bootstrap";
 import { AiFillEdit } from "react-icons/ai";
 import { BiSad } from "react-icons/bi";
 import { useMutation, useQuery } from "react-query";
@@ -25,6 +25,7 @@ import { primaryColor, secondaryColor } from "../../utils/constants";
 import { queryClient } from "../../utils/queryClient";
 import { showMsgToast } from "../../utils/showMsgToast";
 import Brands from "../Brands";
+import { BsFunnel } from "react-icons/bs";
 
 const key = "fcm-notification";
 const intitialFilter = {
@@ -158,67 +159,67 @@ const Notifications = () => {
 
   return (
     <>
-      <Container fluid className="card component-wrapper view-padding">
+      <Container fluid className="component-wrapper view-padding">
         <PageHeading
           title="Notifications"
           onClick={_onCreateClick}
           totalRecords={data?.total}
           permissionReq="create_notification"
         />
+        <div className="d-flex justify-content-between pb-3 mt-3">
         {!isLoading && (
-          <Container fluid className="px-0">
-            <div>
-              <div className="filter">
-                <BreadCrumb
-                  onFilterChange={_onFilterChange}
-                  value=""
-                  currentValue={filter.sent}
-                  dataLength={data?.data?.length}
-                  idx="sent"
-                  title="All"
-                />
-                <BreadCrumb
-                  onFilterChange={_onFilterChange}
-                  value="1"
-                  currentValue={filter.sent}
-                  dataLength={data?.data?.length}
-                  idx="sent"
-                  title="Sent"
-                />
-                <BreadCrumb
-                  onFilterChange={_onFilterChange}
-                  value="0"
-                  currentValue={filter.sent}
-                  dataLength={data?.data?.length}
-                  idx="sent"
-                  title="Not Sent"
-                  isLast
-                />
-              </div>
-            </div>
-          </Container>
+            <Nav className="global-navs" variant="tabs" activeKey={filter.sent} onSelect={(selectedKey) => _onFilterChange('sent', selectedKey)}>
+                <Nav.Item>
+                  <Nav.Link eventKey="">All ({data?.data?.length || 0})</Nav.Link>
+                </Nav.Item>
+
+                <Nav.Item>
+                  <Nav.Link eventKey="1">
+                    Sent ({data?.data?.filter(item => item.status === '1').length || 0})
+                  </Nav.Link>
+                </Nav.Item>
+
+                <Nav.Item>
+                  <Nav.Link eventKey="0">
+                    Not Sent ({data?.data?.filter(item => item.status === '0').length || 0})
+                  </Nav.Link>
+                </Nav.Item>
+              </Nav>
         )}
-        <hr className="mt-2" />
-        <Container fluid className="h-100 p-0">
-          {isLoading ? (
-            <IsLoading />
-          ) : (
-            <>
-              {!error && (
-                <>
-                  <Container fluid className="pt-3 px-0">
-                    <Row className="select-filter d-flex ">
-                      <Col md="auto">
-                        <FilterSelect
+         <Dropdown className="filter-dropdown">
+            <Dropdown.Toggle as={Button} variant="primary" className="global-card">
+              <BsFunnel /> Filters
+            </Dropdown.Toggle>
+            <Dropdown.Menu>
+              <div className="filter-dropdown-heading d-flex justify-content-between w-100">
+                <h4>Filter</h4>
+                <div
+                  className="d-flex align-items-center justify-md-content-center"
+                >
+                  <Button
+                    variant={
+                            areTwoObjEqual(intitialFilter, filter)
+                              ? "light"
+                              : "primary"
+                          }
+                          style={{
+                            fontSize: 14,
+                          }}
+                          onClick={() => setFilter(intitialFilter)}
+                  >
+                    Reset Filters
+                  </Button>
+                </div>
+              </div>
+             <div className="select-filter">
+              <FilterSelect
                           currentValue={filter.send_to}
                           data={NotificationSendToCategories}
                           label="Send To"
                           idx="send_to"
                           onFilterChange={_onFilterChange}
                         />
-                      </Col>
-                      <Col md="auto">
-                        <Form.Group>
+                         <Form.Group>
                           <Form.Label className="text-muted">
                             Scheduled At
                           </Form.Label>
@@ -238,29 +239,19 @@ const Notifications = () => {
                             }}
                           />
                         </Form.Group>
-                      </Col>
-                      <Col
-                        md="auto"
-                        className="d-flex align-items-center justify-md-content-center"
-                      >
-                        <Button
-                        className="mt-27px"
-                          variant={
-                            areTwoObjEqual(intitialFilter, filter)
-                              ? "light"
-                              : "primary"
-                          }
-                          style={{
-                            fontSize: 14,
-                          }}
-                          onClick={() => setFilter(intitialFilter)}
-                        >
-                          Reset Filters
-                        </Button>
-                      </Col>
-                    </Row>
-                  </Container>
-                  <hr />
+             </div>
+            </Dropdown.Menu>
+          </Dropdown>
+        </div>
+        <hr />
+        <Container fluid className="h-100 p-0">
+          {isLoading ? (
+            <IsLoading />
+          ) : (
+            <>
+             <div className="mt-3" />
+              {!error && (
+                
                   <ReactTable
                     data={data?.data}
                     columns={columns}
@@ -271,7 +262,6 @@ const Notifications = () => {
                     searchPlaceHolder="Search using title"
                     deletePermissionReq="delete_notification"
                   />
-                </>
               )}
               {!error && data.length > 0 ? (
                 <TablePagination
