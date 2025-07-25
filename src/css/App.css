@@ -3004,11 +3004,11 @@ fieldset:disabled a.btn {
   background-color: #0B64FE;
   border-color: #0B64FE;
 }
-.btn-primary:focus 
+/* .btn-primary:focus 
 {
    background-color: none !important;
    background: none !important;
-}
+} */
 .btn-primary:hover {
   color: #fff;
   background-color: #0B64FEbf;
@@ -12965,20 +12965,8 @@ background: none !important;
 }
 
 .user-dd .dropdown-menu {
-  width: 100% !important;
-  transform: translate3d(0px, -48px, 0px) !important;
-  left: -23px !important;
-  inset: 0;
-  position: absolute !important;
-  border-radius: 5px 5px 0 0;
-  min-width: 15.3rem;
+  transform: translate3d(20px, -56px, 0px) !important;
 }
 
-@media screen and (max-width:800px){
-  .user-dd .dropdown-menu {
-    min-width: 18.5rem;
-  }
-
-}
 
 

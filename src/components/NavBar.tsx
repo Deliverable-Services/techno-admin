@@ -377,8 +377,8 @@ const NavBar = ({ isNavOpen, setIsNavOpen }: INavBar) => {
               {user && <p className="text-muted small mb-0">{user?.name}</p>}
             </Dropdown.Toggle>
 
-            <Dropdown.Menu>
-              <Dropdown.Item href="/profile"> <FaUserCog className="mr-3" />Profile</Dropdown.Item>
+            <Dropdown.Menu className="global-card">
+              <Dropdown.Item href="/profile" className="border-bottom "> <FaUserCog className="mr-3" />Profile</Dropdown.Item>
               <Dropdown.Item onClick={() => mutate()}>
                 <BiLogOut className="mr-3" /> {isLoading ? "Loading" : "Log out"}
               </Dropdown.Item>

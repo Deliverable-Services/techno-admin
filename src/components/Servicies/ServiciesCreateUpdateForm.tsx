@@ -305,7 +305,7 @@ const ServicesCreateUpdateForm = () => {
                         <Row className="mb-2">
                           {values.images &&
                             values.images.map((e: any, i: number) => (
-                              <Col md={6}>
+                              <Col md={6} className="mb-2">
                                 <div
                                   className="d-flex align-items-center"
                                   key={i}

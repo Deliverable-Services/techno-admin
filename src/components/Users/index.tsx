@@ -1,6 +1,6 @@
 import { AxiosError } from "axios";
 import { useMemo, useState } from "react";
-import { Button, Col, Container, Modal, Row, Spinner } from "react-bootstrap";
+import { Button, Col, Container, Dropdown, Modal, Row, Spinner } from "react-bootstrap";
 import { BiSad } from "react-icons/bi";
 import { useMutation, useQuery } from "react-query";
 import { useHistory } from "react-router-dom";
@@ -23,6 +23,7 @@ import { primaryColor } from "../../utils/constants";
 import { queryClient } from "../../utils/queryClient";
 import { showMsgToast } from "../../utils/showMsgToast";
 import { AiFillDelete } from "react-icons/ai";
+import { BsFunnel } from "react-icons/bs";
 interface IFilter {
   role: string | null;
 }
@@ -177,7 +178,7 @@ const Users = () => {
 
   return (
     <>
-      <Container fluid className="card component-wrapper view-padding">
+      <Container fluid className=" component-wrapper view-padding">
         <PageHeading
           title="Customers"
           onClick={_onCreateClick}
@@ -226,6 +227,46 @@ const Users = () => {
           </div>
         </Container>
       )} */}
+        <div className="d-flex justify-content-end pb-3 mt-3 border-bottom">
+          <Dropdown className="filter-dropdown">
+            <Dropdown.Toggle as={Button} variant="primary" className="global-card">
+              <BsFunnel /> Filters
+            </Dropdown.Toggle>
+            <Dropdown.Menu>
+              <div className="filter-dropdown-heading d-flex justify-content-between w-100">
+                <h4>Filter</h4>
+                <div
+                  className="d-flex align-items-center justify-md-content-center"
+                >
+                  <Button
+                    variant={
+                      areTwoObjEqual(intitialFilter, filter)
+                        ? "light"
+                        : "primary"
+                    }
+                    style={{
+                      fontSize: 14,
+                    }}
+                    onClick={() => setFilter(intitialFilter)}
+                  >
+                    Reset Filters
+                  </Button>
+                </div>
+              </div>
+              <div className="select-filter">
+                <FilterSelect
+                  currentValue={filter.disabled}
+                  data={isActiveArray}
+                  label="Disabled Users?"
+                  idx="disabled"
+                  onFilterChange={_onFilterChange}
+                  defaultSelectTitle="Show All"
+                />
+              </div>
+            </Dropdown.Menu>
+          </Dropdown>
+        </div>
+        <div className="hr" />
         <Container fluid className="h-100 p-0 ">
           {isLoading ? (
             <IsLoading />
@@ -233,39 +274,7 @@ const Users = () => {
             <>
               {!error && (
                 <>
-                  <Container fluid className="pt-3 px-0">
-                    <Row className="select-filter d-flex align-items-end">
-                      <Col md="auto">
-                        <FilterSelect
-                          currentValue={filter.disabled}
-                          data={isActiveArray}
-                          label="Disabled Users?"
-                          idx="disabled"
-                          onFilterChange={_onFilterChange}
-                          defaultSelectTitle="Show All"
-                        />
-                      </Col>
-                      <Col
-                        md="auto"
-                        className="d-flex align-items-end  justify-md-content-center"
-                      >
-                        <Button
-                          variant={
-                            areTwoObjEqual(intitialFilter, filter)
-                              ? "light"
-                              : "primary"
-                          }
-                          style={{
-                            fontSize: 14,
-                          }}
-                          onClick={() => setFilter(intitialFilter)}
-                        >
-                          Reset Filters
-                        </Button>
-                      </Col>
-                    </Row>
-                  </Container>
-                  <hr className="mt-2" />
+                  <div className="mt-3" />
                   <ReactTable
                     data={data?.data}
                     columns={columns}

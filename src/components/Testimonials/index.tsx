@@ -155,7 +155,7 @@ const Testimonial = () => {
 
   return (
     <>
-      <Container fluid className="card component-wrapper view-padding">
+      <Container fluid className=" component-wrapper view-padding">
         <PageHeading
           title="Testimonials"
           onClick={_onCreateClick}
