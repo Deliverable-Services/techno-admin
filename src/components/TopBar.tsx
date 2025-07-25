@@ -74,7 +74,7 @@ const TopBar = ({ isNavOpen, setIsNavOpen }: INavBar) => {
 
   <Dropdown.Toggle
     id="dropdown-basic"
-    className="bg-white border rounded-pill px-3 py-1 shadow-sm d-flex align-items-center"
+    className="bg-white border rounded-pill px-3 py-1 shadow-sm d-flex align-items-center btn-focus-none"
     style={{ color: "#000", fontWeight: "500", fontSize: "14px" }}
   >
     <span className="text-truncate" style={{ maxWidth: 150 }}>
@@ -82,22 +82,22 @@ const TopBar = ({ isNavOpen, setIsNavOpen }: INavBar) => {
     </span>
   </Dropdown.Toggle>
 
-  <Dropdown.Menu className=" rounded border-0 mt-2 p-3 global-card" style={{ minWidth: "260px" }}>
+  <Dropdown.Menu className=" rounded border-0 mt-2  global-card" style={{ minWidth: "260px" }}>
     <div className="d-flex flex-column gap-2">
-      <section className="d-flex align-items-center">
+      <section className="d-flex align-items-center py-2 px-4 border-bottom">
         <FaEnvelope className="text-primary mr-2" size={14} />
         <span>{user?.organisation?.email}</span>
       </section>
-      <section className="d-flex align-items-center">
-        <FaPhone className="text-success mr-2" size={14} />
+      <section className="d-flex align-items-center py-2 px-4 border-bottom">
+        <FaPhone className="text-primary mr-2" size={14} />
         <span>{user?.organisation?.phone}</span>
       </section>
-      <section className="d-flex align-items-center">
-        <FaMap className="text-warning mr-2" size={14} />
+      <section className="d-flex align-items-center py-2 px-4 border-bottom">
+        <FaMap className="text-primary mr-2" size={14} />
         <span>{user?.organisation?.address}</span>
       </section>
-      <section className="d-flex align-items-center">
-        <FaClock className="text-info mr-2" size={14} />
+      <section className="d-flex align-items-center py-2 px-4 ">
+        <FaClock className="text-primary mr-2" size={14} />
         <span>{formatTimestamp(user?.organisation?.created_at)}</span>
       </section>
     </div>

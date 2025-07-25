@@ -12910,8 +12910,8 @@ li.navLink.my-1 svg path {
   object-fit: contain;
 }
 
-.w-140px{
-  width: 140px;
+.w-250px{
+  width: 250px;
 }
 
 .ticket-main-div
@@ -12947,4 +12947,13 @@ color: #4b6cff;
 .crm-board-overflow {
   overflow: auto;
   height: 100vh;
+}
+.btn-focus-none:focus{
+background-color: none !important;
+background: none !important;
+}
+
+.ticket-width {
+  flex: 0 0 40% !important;
+  max-width: 365px !important;
 }

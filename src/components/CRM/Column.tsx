@@ -40,7 +40,7 @@ const Column: React.FC<Props> = ({ title, status, leads, onDrop, onCardClick }) 
   const Icon = statusIcons[status];
 
   return (
-    <div className="col-md-3 p-2 col-sm-2" ref={drop}>
+    <div className="col-md-3 p-2 col-sm-2 ticket-width" ref={drop}>
       <div className="rounded shadow-sm p-3 ticket-main-div">
         <div className="d-flex justify-content-between align-items-center mb-3">
           <h6 className="mb-0 font-weight-bold text-uppercase text-primary text-capitalize d-flex align-items-center">

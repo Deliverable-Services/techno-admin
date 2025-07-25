@@ -32,7 +32,7 @@ const LeadCard: React.FC<Props> = ({ lead }) => {
               {lead.phone}
             </span>
             <span
-              className="text-muted small font-weight-bold w-140px"
+              className="text-muted small font-weight-bold w-250px"
               style={{
                 whiteSpace: "nowrap",
                 overflow: "hidden",
