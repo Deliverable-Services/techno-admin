@@ -593,7 +593,7 @@ const Organization: React.FC = () => {
                           const opt = socialOptions.find(o => o.value === link.type);
                           return (
                             <Col key={idx} xs={12} sm={6} md={4} lg={3} className="p-2">
-                              <Card className="position-relative mb-3 shadow-sm border-0">
+                              <Card className="position-relative mb-3 shadow-sm border-0 mb-0">
                                 {/* Cross remove button */}
                                 <button
                                   type="button"

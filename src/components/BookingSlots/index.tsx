@@ -127,6 +127,10 @@ const BookingSlots = () => {
 
   return (
     <>
+    <div className="">
+      <div></div>
+      <div></div>
+    </div>
       <Container fluid className="card component-wrapper view-padding">
         <PageHeading
           title="CRM Bookings"

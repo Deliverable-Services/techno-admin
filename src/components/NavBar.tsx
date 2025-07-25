@@ -15,6 +15,10 @@ import {
 import { GoIssueOpened } from "react-icons/go";
 import { IoLogoModelS } from "react-icons/io";
 import { GiModernCity, GiOnTarget } from "react-icons/gi";
+import { FaUserCog } from "react-icons/fa";
+import { BiLogOut } from "react-icons/bi";
+
+
 import {
   RiAdminFill,
   RiAdvertisementFill,
@@ -358,7 +362,7 @@ const { mutate, isLoading } = useMutation(logout, {
             ))}
           </ul>
         </div>
-        <div className="top-bar d-flex align-items-center" style={{borderTop:'1px solid #E0E0E0',borderBottom:'0',bottom:'0',top:'unset'}}>
+        <div className="top-bar d-flex align-items-center user-dd" style={{borderTop:'1px solid #E0E0E0',borderBottom:'0',bottom:'0',top:'unset'}}>
           <Dropdown className="ml-4">
             <Dropdown.Toggle
               id="dropdown-basic"
@@ -374,9 +378,9 @@ const { mutate, isLoading } = useMutation(logout, {
             </Dropdown.Toggle>
 
             <Dropdown.Menu>
-              <Dropdown.Item href="/profile">Profile</Dropdown.Item>
+              <Dropdown.Item href="/profile"> <FaUserCog className="mr-3"/>Profile</Dropdown.Item>
               <Dropdown.Item onClick={() => mutate()}>
-                {isLoading ? "Loading" : "Log out"}
+              <BiLogOut className="mr-3" /> {isLoading ? "Loading" : "Log out"}
               </Dropdown.Item>
             </Dropdown.Menu>
           </Dropdown>

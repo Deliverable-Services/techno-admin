@@ -3004,7 +3004,11 @@ fieldset:disabled a.btn {
   background-color: #0B64FE;
   border-color: #0B64FE;
 }
-
+.btn-primary:focus 
+{
+   background-color: none !important;
+   background: none !important;
+}
 .btn-primary:hover {
   color: #fff;
   background-color: #0B64FEbf;
@@ -3030,8 +3034,7 @@ fieldset:disabled a.btn {
 .btn-primary.focus {
   outline: none !important;
   box-shadow: none !important;
-  background-color: #0B64FE !important;
-  background: #0B64FE !important;
+ 
 }
 .filter-button:focus {
   background: none !important;
@@ -4137,7 +4140,7 @@ input[type="button"].btn-block {
 .dropdown-item {
   display: block;
   width: 100%;
-  padding: 0.25rem 1.5rem;
+  padding: 0.25rem 2.5rem;
   clear: both;
   font-weight: 400;
   color: #212529;
@@ -12829,9 +12832,7 @@ li.navLink.my-1 svg path {
   inset: 0;
   background: #0000008f;
 }
-.social-cards{
-  row-gap: 10px;
-}
+
 .shadow-natural
 {
   box-shadow: 0px 15px 32px 0px #0000000D, 0px 59px 59px 0px #0000000A, 0px 132px 79px 0px #00000008, 0px 234px 94px 0px #00000003, 0px 366px 103px 0px #00000000;
@@ -12903,6 +12904,7 @@ li.navLink.my-1 svg path {
   position: fixed;
   right: 20px;
   bottom: 50px;
+  z-index: 1;
 }
 .icon-social-media img {
   width: 50px !important;
@@ -12957,3 +12959,26 @@ background: none !important;
   flex: 0 0 40% !important;
   max-width: 365px !important;
 }
+
+.mb-0{
+  margin-bottom: 0 !important;
+}
+
+.user-dd .dropdown-menu {
+  width: 100% !important;
+  transform: translate3d(0px, -48px, 0px) !important;
+  left: -23px !important;
+  inset: 0;
+  position: absolute !important;
+  border-radius: 5px 5px 0 0;
+  min-width: 15.3rem;
+}
+
+@media screen and (max-width:800px){
+  .user-dd .dropdown-menu {
+    min-width: 18.5rem;
+  }
+
+}
+
+

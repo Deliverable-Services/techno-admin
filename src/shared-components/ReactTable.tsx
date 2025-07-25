@@ -256,7 +256,7 @@ function ReactTable({
     <div className="">
       <Container
         fluid
-        className="pb-3 d-flex align-items-end position-relative px-0"
+        className="pb-3 pt-3 d-flex align-items-end position-relative px-0"
         style={{ flexDirection: isDesktop ? "row" : "column-reverse" }}
       >
         <div className="w-100">

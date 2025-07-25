@@ -1,6 +1,6 @@
 import { AxiosError } from "axios";
 import { useMemo, useState } from "react";
-import { Button, Col, Container, Row } from "react-bootstrap";
+import { Button, Col, Container, Dropdown, Nav, Row } from "react-bootstrap";
 import { BiSad } from "react-icons/bi";
 import LightBox from "react-lightbox-component";
 import { QueryFunction, useMutation, useQuery } from "react-query";
@@ -23,6 +23,7 @@ import { isActiveArray } from "../../utils/arrays";
 import { primaryColor, config } from "../../utils/constants";
 import { queryClient } from "../../utils/queryClient";
 import { showMsgToast } from "../../utils/showMsgToast";
+import { BsFunnel } from "react-icons/bs";
 const key = "banners/list";
 
 const deleteAd = (id: Array<any>) => {
@@ -138,7 +139,7 @@ const Advertisements = () => {
         accessor: "deeplink",
         Cell: (data: Cell) => (
           <p
-            classname="text-darkGray m-0" 
+            classname="text-darkGray m-0"
             style={{ cursor: "pointer" }}
             onClick={() => _onDeepLinkClick(data)}
           >
@@ -222,41 +223,66 @@ const Advertisements = () => {
           totalRecords={data?.total}
           permissionReq="create_banner"
         />
+        <div className="d-flex justify-content-between pb-3 mt-3">
+          {(!isLoading || !isFetching) && (
+            <Nav className="global-navs" variant="tabs" activeKey={filter.type} onSelect={(selectedKey) => _onFilterChange('type', selectedKey)}>
+              <Nav.Item>
+                <Nav.Link eventKey="offer">
+                  Offer ({data?.data?.filter(item => item.status === 'offer').length || 0})
+                </Nav.Link>
+              </Nav.Item>
+              <Nav.Item>
+                <Nav.Link eventKey="latest">
+                  Latest ({data?.data?.filter(item => item.status === 'latest').length || 0})
+                </Nav.Link>
+              </Nav.Item>
 
-        {(!isLoading || !isFetching) && (
-          <Container fluid className="px-0">
-            <div>
-              <div className="filter">
-                <BreadCrumb
+              <Nav.Item>
+                <Nav.Link eventKey="trending">
+                  Trending ({data?.data?.filter(item => item.status === 'trending').length || 0})
+                </Nav.Link>
+              </Nav.Item>
+            </Nav>
+          )}
+          <Dropdown className="filter-dropdown">
+            <Dropdown.Toggle as={Button} variant="primary" className="global-card">
+              <BsFunnel /> Filters
+            </Dropdown.Toggle>
+            <Dropdown.Menu>
+              <div className="filter-dropdown-heading d-flex justify-content-between w-100">
+                <h4>Filter</h4>
+                <div
+                  className="d-flex align-items-center justify-md-content-center"
+                >
+                  <Button
+                    variant={
+                      areTwoObjEqual(initialFilter, filter)
+                        ? "light"
+                        : "primary"
+                    }
+                    style={{
+                      fontSize: 14,
+                    }}
+                    onClick={() => setFilter(initialFilter)}
+                  >
+                    Reset Filters
+                  </Button>
+                </div>
+              </div>
+              <div className="select-filter">
+                <FilterSelect
+                  currentValue={filter.active}
+                  data={isActiveArray}
+                  label="Is Active?"
+                  idx="active"
                   onFilterChange={_onFilterChange}
-                  value="offer"
-                  currentValue={filter.type}
-                  dataLength={data?.data?.length}
-                  idx="type"
-                  title="Offer"
-                />
-                <BreadCrumb
-                  onFilterChange={_onFilterChange}
-                  value="latest"
-                  currentValue={filter.type}
-                  dataLength={data?.data?.length}
-                  idx="type"
-                  title="Latest"
-                />
-                <BreadCrumb
-                  onFilterChange={_onFilterChange}
-                  value="trending"
-                  currentValue={filter.type}
-                  dataLength={data?.data?.length}
-                  idx="type"
-                  title="Trending"
-                  isLast
+                  defaultSelectTitle="Show All"
                 />
               </div>
-            </div>
-          </Container>
-        )}
-        <hr className="mt-2" />
+            </Dropdown.Menu>
+          </Dropdown>
+        </div>
+        <hr />
         <Container fluid className="h-100 p-0">
           {isLoading ? (
             <IsLoading />
@@ -264,57 +290,7 @@ const Advertisements = () => {
             <>
               {!error && (
                 <>
-                  <Container fluid className="pt-3 px-0">
-                    <Row className="select-filter d-flex ">
-                      <Col md="auto">
-                        <FilterSelect
-                          currentValue={filter.active}
-                          data={isActiveArray}
-                          label="Is Active?"
-                          idx="active"
-                          onFilterChange={_onFilterChange}
-                          defaultSelectTitle="Show All"
-                        />
-                      </Col>
-
-                      {/* <Col md="auto" className=" d-flex align-items-center ">
-                        <div className=" d-flex align-items-center "
-                        >
-                          <span className="text-muted mr-2">IsDraggable?</span>
-                          <Switch
-                            checked={isDraggable}
-                            onChange={handleChange}
-                            className="react-switch"
-                            onColor={primaryColor}
-                            uncheckedIcon={false}
-                            checkedIcon={false}
-                            height={20}
-                          />
-
-                        </div>
-                      </Col> */}
-
-                      <Col
-                        md="auto"
-                        className="d-flex align-items-end justify-md-content-center"
-                      >
-                        <Button
-                          variant={
-                            areTwoObjEqual(initialFilter, filter)
-                              ? "light"
-                              : "primary"
-                          }
-                          style={{
-                            fontSize: 14,
-                          }}
-                          onClick={() => setFilter(initialFilter)}
-                        >
-                          Reset Filters
-                        </Button>
-                      </Col>
-                    </Row>
-                  </Container>
-                  <hr className="mt-2" />
+                  <div className="mt-3" />
                   <ReactTable
                     data={data.data}
                     columns={columns}
