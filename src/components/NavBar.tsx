@@ -249,7 +249,7 @@ const NavBar = ({ isNavOpen, setIsNavOpen }: INavBar) => {
   const loggedInUser = useUserProfileStore((state) => state.user);
   const removeToken = useTokenStore((state) => state.removeToken);
   const removeUser = useUserProfileStore((state) => state.removeUser);
-   const user = useUserProfileStore((state) => state.user);
+  const user = useUserProfileStore((state) => state.user);
 
   const closeNavBar = () => {
     if (isDesktop) return;
@@ -284,7 +284,7 @@ const NavBar = ({ isNavOpen, setIsNavOpen }: INavBar) => {
     }
   });
 
-const { mutate, isLoading } = useMutation(logout, {
+  const { mutate, isLoading } = useMutation(logout, {
     onSuccess: () => {
       removeUser();
       removeToken();
@@ -362,11 +362,11 @@ const { mutate, isLoading } = useMutation(logout, {
             ))}
           </ul>
         </div>
-        <div className="top-bar d-flex align-items-center user-dd" style={{borderTop:'1px solid #E0E0E0',borderBottom:'0',bottom:'0',top:'unset'}}>
-          <Dropdown className="ml-4">
+        <div className="top-bar d-flex align-items-center user-dd" style={{ borderTop: '1px solid #E0E0E0', borderBottom: '0', bottom: '0', top: 'unset', padding: '0 20px' }}>
+          <Dropdown className="global-card w-100" style={{ background: '#fff', borderRadius: '10px', boxShadow: '0px 15px 32px 0px #0000000D, 0px 59px 59px 0px #0000000A, 0px 132px 79px 0px #00000008, 0px 234px 94px 0px #00000003, 0px 366px 103px 0px #00000000', padding: '12px 20px' }}>
             <Dropdown.Toggle
               id="dropdown-basic"
-              className="d-flex align-items-center filter-button bg-transparent border-0"
+              className="d-flex align-items-center filter-button bg-transparent border-0 p-0"
               style={{ color: "#000" }}
             >
               {isLoading ? (
@@ -378,13 +378,13 @@ const { mutate, isLoading } = useMutation(logout, {
             </Dropdown.Toggle>
 
             <Dropdown.Menu>
-              <Dropdown.Item href="/profile"> <FaUserCog className="mr-3"/>Profile</Dropdown.Item>
+              <Dropdown.Item href="/profile"> <FaUserCog className="mr-3" />Profile</Dropdown.Item>
               <Dropdown.Item onClick={() => mutate()}>
-              <BiLogOut className="mr-3" /> {isLoading ? "Loading" : "Log out"}
+                <BiLogOut className="mr-3" /> {isLoading ? "Loading" : "Log out"}
               </Dropdown.Item>
             </Dropdown.Menu>
           </Dropdown>
-          
+
         </div>
       </nav>
       {isNavOpen && !isDesktop && <Overlay onClick={closeNavBar} />}
