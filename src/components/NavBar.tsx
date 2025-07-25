@@ -77,6 +77,12 @@ const manageLinks: Array<INavLink> = [
     permissionReq: "read_category",
   },
   {
+    title: "Invoices",
+    path: "/Invoices",
+    icon: <SiCivicrm />,
+    permissionReq: "read_city",
+  },
+  {
     title: "Customers",
     path: "/users",
     icon: <ImUsers />,

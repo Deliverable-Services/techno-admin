@@ -72,7 +72,7 @@ import CMS from "./components/CMS";
 import CRM from "./components/CRM";
 import CRMBoard from "./components/CRM/CRMBoard";
 import organization from "./components/Organization";
-
+import InvoicePage from "./components/Invoices";
 
 
 
@@ -485,6 +485,12 @@ const App = () => {
                 exact
                 component={CRMBoard}
                 permissionReq="read_user"
+              />
+              <PrivateRoute
+                path="/Invoices"
+                exact
+                component={InvoicePage}
+                permissionReq="read_city"
               />
 
               <Route path="/login" exact component={LoginPage} />

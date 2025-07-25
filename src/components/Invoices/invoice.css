@@ -1,0 +1,146 @@
+.invoice-container {
+  margin: 20px auto;
+  background: #fff;
+  border-radius: 10px;
+  /* box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04); */
+  padding: 32px 40px;
+}
+
+.invoice-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 32px;
+}
+
+.primary-btn {
+  background: #222;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  padding: 8px 18px;
+  font-weight: 500;
+  cursor: pointer;
+  font-size: 16px;
+  transition: background 0.2s;
+}
+.primary-btn:hover {
+  background: #444;
+}
+.secondary-btn {
+  background: #f3f3f3;
+  color: #222;
+  border: none;
+  border-radius: 6px;
+  padding: 8px 18px;
+  font-weight: 500;
+  cursor: pointer;
+  font-size: 16px;
+  margin-left: 10px;
+}
+
+.invoice-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 16px;
+  background: #fafbfc;
+  border-radius: 8px;
+  overflow: hidden;
+}
+.invoice-table th,
+.invoice-table td {
+  padding: 14px 16px;
+  text-align: left;
+}
+.invoice-table th {
+  background: #f5f6fa;
+  font-weight: 600;
+  color: #222;
+  font-size: 15px;
+}
+.invoice-table tr {
+  border-bottom: 1px solid #ececec;
+}
+.invoice-table tr:last-child {
+  border-bottom: none;
+}
+.status-open {
+  background: #e6edff;
+  color: #3b5bdb;
+  padding: 4px 14px;
+  border-radius: 12px;
+  font-size: 13px;
+  font-weight: 500;
+}
+.avatar {
+  display: inline-block;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: #e5e7eb;
+  color: #222;
+  text-align: center;
+  line-height: 28px;
+  font-weight: 600;
+  margin-right: 8px;
+}
+.invoice-empty {
+  text-align: center;
+  margin: 80px 0;
+}
+.invoice-empty h4 {
+  font-size: 20px;
+  margin-bottom: 0;
+}
+.invoice-empty p {
+  font-size: 20px;
+  color: #888;
+  margin-bottom: 18px;
+}
+
+.invoice-form {
+  max-width: 500px;
+  margin: 0 auto;
+  padding: 0px 28px;
+}
+.invoice-form h3 {
+  margin-bottom: 24px;
+  font-size: 22px;
+  font-weight: 600;
+}
+.form-group {
+  margin-bottom: 18px;
+}
+.form-group label {
+  display: block;
+  font-size: 15px;
+  font-weight: 500;
+  margin-bottom: 6px;
+}
+.form-group input {
+  width: 100%;
+  padding: 8px 10px;
+  border: 1px solid #e5e7eb;
+  border-radius: 6px;
+  font-size: 15px;
+  background: #fff;
+}
+.item-row {
+  display: flex;
+  gap: 10px;
+  margin-top: 8px;
+}
+.item-row input {
+  flex: 1;
+}
+.item-total {
+  margin-top: 8px;
+  font-size: 15px;
+  color: #222;
+  font-weight: 500;
+}
+.form-actions {
+  margin-top: 24px;
+  display: flex;
+  justify-content: flex-end;
+}
