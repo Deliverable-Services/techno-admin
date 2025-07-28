@@ -18,19 +18,22 @@ import { queryClient } from "../../utils/queryClient";
 import { showMsgToast } from "../../utils/showMsgToast";
 import ViewButton from "../../shared-components/ViewButton";
 import BreadCrumb from "../../shared-components/BreadCrumb";
-import { AiFillCopy, AiFillDelete } from "react-icons/ai";
+import { AiFillDelete } from "react-icons/ai";
 
 const key = "pages";
 
-const deleteServices = (id: Array<any>) => {
+const deletePage = (id: Array<any>) => {
   return API.delete(`${key}/${id}`);
+};
+const copyPage = (id: Array<any>) => {
+  return API.post(`${key}/${id}/duplicate`);
 };
 
 const intitialFilter = {
   q: "",
   page: null,
   perPage: 25,
-  isArchived: "0",
+  isArchived: false,
 };
 
 const Website = () => {
@@ -50,48 +53,36 @@ const Website = () => {
     },
   });
 
-  // useEffect(() => {
-  //   const getSelection = async () => {
-  //     try {
-  //       const res = await API.post(
-  //         `${key}`,
-  //         {
-  //           name: "Home Page",
-  //           slug: "home-page",
-  //           seo_details: {
-  //             title: "Home",
-  //             description: "Welcome to our homepage",
-  //             keywords: "home, welcome",
-  //             og_title: "Home OG",
-  //             og_description: "OG for home",
-  //             og_image: "https://example.com/img1.jpg",
-  //           },
-  //           is_published: true,
-  //         },
-  //         {
-  //           headers: { "Content-Type": "application/json" },
-  //         }
-  //       );
-  //       const data = res;
-  //       if (data) console.log({ data });
-  //     } catch (error) {
-  //       handleApiError(error, history);
-  //     }
-  //   };
-  //   // getSelection();
-  // }, []);
-
   console.log("pageData", pageData);
-
-  const { mutate, isLoading: isDeleteLoading } = useMutation(deleteServices, {
-    onSuccess: () => {
-      queryClient.invalidateQueries(key);
-      showMsgToast("Services deleted successfully");
-    },
-    onError: (error: AxiosError) => {
-      handleApiError(error, history);
-    },
+  pageData?.data?.map((page, i) => {
+    page["isArchived"] = i === pageData.data.length - 1 ? true : false;
   });
+
+  const { mutate: mutateDelete, isLoading: isDeleteLoading } = useMutation(
+    deletePage,
+    {
+      onSuccess: () => {
+        queryClient.invalidateQueries(key);
+        showMsgToast("Page deleted successfully");
+      },
+      onError: (error: AxiosError) => {
+        handleApiError(error, history);
+      },
+    }
+  );
+
+  const { mutate: mutateCopy, isLoading: isCopyLoading } = useMutation(
+    copyPage,
+    {
+      onSuccess: () => {
+        queryClient.invalidateQueries(key);
+        showMsgToast("Page duplicated successfully");
+      },
+      onError: (error: AxiosError) => {
+        handleApiError(error, history);
+      },
+    }
+  );
 
   const _onCreateClick = () => {
     history.push("/website/create-edit");
@@ -103,28 +94,12 @@ const Website = () => {
     history.push(`/website/${id}`);
   };
 
-  const _onCopyClick = async (copiedData: any, id: string) => {
-    // console.log("Copying page with id:", id, pData);
-    // let copiedData = pData?.find((item) => item.id === id);
-    console.log("Copied Data:", copiedData);
-    copiedData['name'] = `${copiedData.name} - Copy`;
-    copiedData['slug'] = `${copiedData.slug}-copy`;
-    try {
-      const res = await API.post(`${key}/${id}/duplicate`, copiedData, {
-        headers: { "Content-Type": "application/json" },
-      });
-      const data = res;
-      if (data) console.log({ data });
-    } catch (error) {
-      handleApiError(error, history);
-    }
-  };
-
   const _onFilterChange = (idx: string, value: any) => {
-    console.log("filter change", idx, value);
+    const parsedValue =
+      value === "true" ? true : value === "false" ? false : value;
     setFilter((prev) => ({
       ...prev,
-      [idx]: value,
+      [idx]: parsedValue,
     }));
   };
 
@@ -178,14 +153,15 @@ const Website = () => {
         accessor: "is_published",
         Cell: ({ value }) => (value ? "Yes" : "No"),
       },
-      // {
-      //   Header: "Archived",
-      //   accessor: "isArchived",
-      //   Cell: ({ value }) => (value ? "Yes" : "No"),
-      // },
+      {
+        Header: "Archived",
+        accessor: "isArchived",
+        Cell: ({ value }) => (value ? "Yes" : "No"),
+      },
       {
         Header: "Actions",
         Cell: (data: Cell) => {
+          if (data.row.values.isArchived) return null;
           return (
             <div className="d-flex align-items-center gap-3">
               <ViewButton
@@ -204,8 +180,7 @@ const Website = () => {
                 variant="outline-primary"
                 className="d-flex align-items-center"
                 onClick={() => {
-                  console.log('pd', data);
-                  _onCopyClick(data.row.original, data.row.values.id);
+                  mutateCopy(data.row.values.id);
                 }}
                 style={{ padding: "0.25rem 0.5rem" }}
               >
@@ -215,7 +190,7 @@ const Website = () => {
                 variant="outline-danger"
                 className="d-flex align-items-center"
                 onClick={() => {
-                  mutate(data.row.values.id);
+                  mutateDelete(data.row.values.id);
                 }}
                 style={{ padding: "0.25rem 0.5rem" }}
               >
@@ -229,16 +204,13 @@ const Website = () => {
     [history]
   );
 
-  // const filteredData = pageData?.data?.filter(
-  //   (item) => item.isArchived === Number(filter.isArchived)
-  // );
+  const filteredData = pageData?.data?.filter(
+    (item) => item.isArchived === filter.isArchived
+  );
 
-  // const totalActive = pageData?.data?.filter(
-  //   (d) => d.isArchived === 0
-  // ).length;
-  // const totalArchived = pageData?.data?.filter(
-  //   (d) => d.isArchived === 1
-  // ).length;
+  const totalCount = pageData?.data?.filter(
+    (d) => d.isArchived === filter.isArchived
+  ).length;
 
   if (!pageData && (!isLoading || !isFetching)) {
     return (
@@ -267,19 +239,17 @@ const Website = () => {
               <div className="filter">
                 <BreadCrumb
                   onFilterChange={_onFilterChange}
-                  value="0"
-                  currentValue={filter.isArchived}
-                  dataLength={1}
+                  value="false"
+                  currentValue={filter.isArchived.toString()}
+                  dataLength={totalCount}
                   idx="isArchived"
-                  //   idx="status"
                   title="Active"
                 />
                 <BreadCrumb
                   onFilterChange={_onFilterChange}
-                  value="1"
-                  currentValue={filter.isArchived}
-                  dataLength={1}
-                  //   idx="status"
+                  value="true"
+                  currentValue={filter.isArchived.toString()}
+                  dataLength={totalCount}
                   idx="isArchived"
                   title="Archived"
                   isLast
@@ -296,8 +266,8 @@ const Website = () => {
             <>
               {!error && (
                 <ReactTable
-                  //   data={sampleData?.data}
-                  data={pageData?.data || []}
+                  data={filteredData}
+                  // data={pageData?.data || []}
                   columns={columns}
                   setSelectedRows={setSelectedRows}
                   filter={filter}
@@ -328,7 +298,7 @@ const Website = () => {
           <Button
             variant="danger"
             onClick={() => {
-              mutate(selectedRows.map((i) => i.id));
+              mutateDelete(selectedRows.map((i) => i.id));
             }}
           >
             {isDeleteLoading ? "Loading..." : "Delete"}

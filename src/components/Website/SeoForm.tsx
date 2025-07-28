@@ -1,4 +1,3 @@
-import React, { useEffect } from "react";
 import { Formik, Form } from "formik";
 import { Button, Col, Container, Row, Spinner } from "react-bootstrap";
 import PageHeading from "../../shared-components/PageHeading";
@@ -14,7 +13,7 @@ import API from "../../utils/API";
 
 const key = "pages";
 
-const createUpdataBrand = ({
+const createUpdataSEO = ({
   formdata,
   id,
 }: {
@@ -59,12 +58,10 @@ const SeoForm = ({ seoDetails }) => {
   const history = useHistory();
   const { id } = useParams<{ id: string }>();
 
-  const { mutate, isLoading } = useMutation(createUpdataBrand, {
+  const { mutate, isLoading } = useMutation(createUpdataSEO, {
     onSuccess: () => {
       setTimeout(() => queryClient.invalidateQueries(key), 500);
-      if (id) return showMsgToast("Brand updated successfully");
-      showMsgToast("Page created successfully");
-      history.replace("/website");
+      if (id) return showMsgToast("SEO details updated successfully");
     },
     onError: (error: AxiosError) => {
       handleApiError(error, history);
@@ -93,7 +90,9 @@ const SeoForm = ({ seoDetails }) => {
             initialValues={initialValues}
             onSubmit={(values) => {
               const editedData: any = {};
-              const { ...rest } = values;
+              const { og_image, ...rest } = values;
+
+              console.log("ogimage", og_image);
 
               const seoKeys = [
                 "title",
@@ -105,16 +104,32 @@ const SeoForm = ({ seoDetails }) => {
               ];
 
               if (id) {
-                // Extract and group seo_details
+                const formdata = new FormData();
                 seoKeys.forEach((key) => {
                   editedData.seo_details = editedData.seo_details || {};
                   editedData.seo_details[key] = values[key];
+                  formdata.append(key, values[key]);
+                  // formdata.append(`seo_details[${key}]`, values[key]);
                 });
 
-                updatePage(editedData, id);
+                // formdata.append("name", "Page Name");
+                // formdata.append("slug", "page-name");
+
+                // updatePage(formdata, id); // sends json, yet working (for field value only)
+                createUpdataSEO({ formdata, id }); // formdata, not wokring
               }
               // mutate({ formdata, id });
             }}
+            // onSubmit={(values) => {
+            //   console.log(values);
+            //   const { ...rest } = values;
+            //   const formdata = new FormData();
+            //   for (let k in rest) formdata.append(k, rest[k]);
+
+            //   // if (og_image) formdata.append("og_image", og_image);
+
+            //   mutate({ formdata, id });
+            // }}
           >
             {({ setFieldValue }) => (
               <Form>
@@ -140,11 +155,11 @@ const SeoForm = ({ seoDetails }) => {
 
                   <InputField
                     name="og_image"
-                    folder="brands"
+                    folder="website"
                     placeholder="OG Image"
                     label="OG Image"
                     isFile
-                    // setFieldValue={setFieldValue}
+                    setFieldValue={setFieldValue}
                     // onChange={(e) => {
                     //   console.log("e.target.files", e.target);
                     //   setFieldValue("og_image", Object.values(e.target.files));
