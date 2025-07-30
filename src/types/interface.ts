@@ -37,6 +37,7 @@ export type User = {
   two_factor_secret: string | null;
   updated_at: string | null;
   profile_pic: string;
+  stripe_account_id?: string;
   roles: {
     role: string;
     permissions: Array<string>;

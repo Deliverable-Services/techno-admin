@@ -47,6 +47,12 @@
   border-radius: 8px;
   overflow: hidden;
 }
+
+.handleButton {
+  display: flex;
+  justify-content: center;
+  margin: auto;
+}
 .invoice-table th,
 .invoice-table td {
   padding: 14px 16px;
