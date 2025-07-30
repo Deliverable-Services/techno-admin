@@ -70,7 +70,7 @@ const PageCreateUpdateForm = () => {
   const initialValues = {
     name: apiData?.name || "",
     slug: apiData?.slug || "",
-    organisation_id: loggedInUser?.organisation?.id || "",
+    organisation_id: loggedInUser?.organisation[0]?.id || "",
     title: apiData?.seo_details?.title || "",
     description: apiData?.seo_details?.description || "",
     keywords: apiData?.seo_details?.keywords || "",
@@ -181,9 +181,9 @@ const PageCreateUpdateForm = () => {
                       name="organisation_id"
                       placeholder="Organisation Id"
                       label="Organisation Id"
-                      value={loggedInUser?.organisation?.id}
-                      required
+                      value={loggedInUser?.organisation[0]?.id}
                       readOnly
+                      required
                     />
 
                     <InputField

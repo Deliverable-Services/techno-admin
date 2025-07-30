@@ -29,7 +29,7 @@ const PageCanvas = ({
     [onDrop]
   );
 
-  // console.log("page- sections", sections);
+  console.log("page- sections", sections);
 
   return (
     <div
@@ -57,9 +57,7 @@ const PageCanvas = ({
             return (
               <div key={sectionKey} className="border rounded-lg">
                 <div className="d-flex justify-content-between align-items-center rounded-top p-2 bg-select">
-                  <section className="font-bold">
-                    {section.name}
-                  </section>
+                  <section className="font-bold">{section.name}</section>
                   <div className="d-flex gap-4">
                     <button
                       className={`bg-white border p-1 rounded-lg ${
@@ -95,7 +93,34 @@ const PageCanvas = ({
                 </div>
                 <div className="d-flex gap-10 p-2 mt-1 rounded-bottom bg-white">
                   <div>
-                    <img
+                    {(() => {
+                      const imageField =
+                        section.configuration?.editable_fields?.find(
+                          (f) => f.type === "image"
+                        );
+                      const imageValue =
+                        imageField && section.variables?.[imageField.name];
+                      // If imageValue is a File object (from input), create a URL for preview
+                      let imageUrl = "";
+                      if (imageValue instanceof File) {
+                        imageUrl = URL.createObjectURL(imageValue);
+                      } else if (typeof imageValue === "string" && imageValue) {
+                        imageUrl = imageValue;
+                      }
+                      return imageField ? (
+                        <img
+                          src={"https://picsum.photos/300/200"}
+                          alt="Preview"
+                          className="w-32"
+                          style={{
+                            maxHeight: "100px",
+                            maxWidth: "150px",
+                            borderRadius: "8px",
+                          }}
+                        />
+                      ) : null;
+                    })()}
+                    {/* <img
                       src="https://picsum.photos/300/200"
                       alt="Preview"
                       className="w-32"
@@ -104,30 +129,50 @@ const PageCanvas = ({
                         maxWidth: "150px",
                         borderRadius: "8px",
                       }}
-                    />
+                    /> */}
                   </div>
                   <div className="w-100">
-                    {Object.keys(section.variables || {}).map((field) => (
+                    {section.configuration?.editable_fields?.map((field) => (
                       <div
-                        key={field}
+                        key={field.name}
                         style={{ marginBottom: "1rem" }}
                         className="editable-field form-group"
                       >
                         <label className="text-muted">
-                          {field.charAt(0).toUpperCase() + field.slice(1)}
+                          {field.label ||
+                            field.name.charAt(0).toUpperCase() +
+                              field.name.slice(1)}
                         </label>
-                        <input
-                          type="text"
-                          value={section.variables?.[field] || ""}
-                          onChange={(e) =>
-                            updateSectionField(
-                              sectionKey,
-                              field,
-                              e.target.value
-                            )
-                          }
-                          placeholder={`Enter ${field}`}
-                        />
+                        {field.type === "image" ? (
+                          <input
+                            type="file"
+                            accept="image/*"
+                            onChange={(e) =>
+                              updateSectionField(
+                                sectionKey,
+                                field.name,
+                                e.target.files?.[0]
+                              )
+                            }
+                            placeholder={field.placeholder}
+                          />
+                        ) : (
+                          <input
+                            type={field.type}
+                            value={section.variables?.[field.name] || ""}
+                            onChange={(e) =>
+                              updateSectionField(
+                                sectionKey,
+                                field.name,
+                                e.target.value
+                              )
+                            }
+                            placeholder={
+                              field.placeholder ||
+                              `Enter ${field.label || field.name}`
+                            }
+                          />
+                        )}
                       </div>
                     ))}
                   </div>
@@ -149,6 +194,5 @@ const PageCanvas = ({
     </div>
   );
 };
-
 
 export default PageCanvas;

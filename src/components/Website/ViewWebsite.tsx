@@ -119,11 +119,14 @@ const ViewWebsite = () => {
     }
   );
 
-  const { data: sectionsData } = useQuery<any>([`${sectionsKey}?per_page=50`, ,], {
-    onError: (error: AxiosError) => {
-      handleApiError(error, history);
-    },
-  });
+  const { data: sectionsData } = useQuery<any>(
+    [`${sectionsKey}?per_page=50`, ,],
+    {
+      onError: (error: AxiosError) => {
+        handleApiError(error, history);
+      },
+    }
+  );
 
   const { data: currentPageData } = useQuery<any>([`${pagesKey}/${id}`, ,], {
     onError: (error: AxiosError) => {
@@ -142,33 +145,43 @@ const ViewWebsite = () => {
   // console.log("pageSectionsData", pageSectionsData);
 
   useEffect(() => {
-    const simplifiedSections = pageSectionsData?.data?.map((section) => {
-      const allowedKeys = section.configurations?.editable_fields || [];
-      const filteredVariables = Object.fromEntries(
-        Object.entries(section.variables || {}).filter(([key]) =>
-          allowedKeys.includes(key)
-        )
-      );
+    if (pageSectionsData?.data && sectionsData?.data) {
+      const mergedSections = pageSectionsData.data.map((section, idx) => {
+        // Find the section template by id
+        const template = sectionsData.data.find(
+          (tpl) => tpl.id === section.section_id || tpl.id === section.id
+        );
+        const editableFields = template?.configuration?.editable_fields || [];
+        const defaultData = template?.default_data || {};
 
-      return {
-        id: section.id,
-        name: section.name,
-        section_id: section.section_id,
-        order: section.order,
-        variables: filteredVariables,
-      };
-    });
+        // Build variables using field.name
+        const variables = editableFields.reduce((acc, field) => {
+          acc[field.name] =
+            section.variables?.[field.name] ?? defaultData[field.name] ?? "";
+          return acc;
+        }, {});
 
-    setCurrentPageSectionData(simplifiedSections || []);
-  }, [currentPageData, pageSectionsData, sectionsData]);
+        return {
+          ...section,
+          name: template?.name || section.name,
+          configuration: template?.configuration,
+          order: section.order ?? idx + 1,
+          variables,
+        };
+      });
+
+      setCurrentPageSectionData(mergedSections);
+    }
+  }, [pageSectionsData, sectionsData]);
 
   const addSection = (section) => {
     const uniqueId = `${section.id}-${Date.now()}`;
     const editableFields = section.configuration?.editable_fields || [];
     const defaultData = section.default_data || {};
 
-    const variables = editableFields?.reduce((acc, key) => {
-      acc[key] = defaultData[key] ?? ""; // fallback to empty string if not present
+    // Use field.name for keys
+    const variables = editableFields.reduce((acc, field) => {
+      acc[field.name] = defaultData[field.name] ?? "";
       return acc;
     }, {});
 
@@ -179,6 +192,7 @@ const ViewWebsite = () => {
         name: section.name,
         section_id: section.id,
         order: prev.length + 1,
+        configuration: section.configuration, // <-- Add this line!
         variables,
       },
     ]);
@@ -204,22 +218,6 @@ const ViewWebsite = () => {
       showMsgToast("Section Deleted Successfully");
     }
   };
-
-  // const _onCopyClick = (sectionId) => {
-  //   const sectionToCopy = currentPageSectionsData.find(
-  //     (section) => section.id === sectionId
-  //   );
-
-  //   if (sectionToCopy) {
-  //     const newSection = {
-  //       ...sectionToCopy,
-  //       id: `${sectionToCopy.section_id}-${Date.now()}`,
-  //       order: currentPageSectionsData.length + 1,
-  //     };
-
-  //     setCurrentPageSectionData((prev) => [...prev, newSection]);
-  //   }
-  // };
 
   const _onCopyClick = async (sectionId) => {
     const sectionToCopy = currentPageSectionsData.find(
@@ -260,13 +258,26 @@ const ViewWebsite = () => {
     }
   };
 
-  const _onSavePageSection = async (sectionData: any) => {
-    try {
-      if (!id) return;
-      mutateSave({ id, sectionData });
-    } catch (error) {
-      handleApiError(error, history);
-    }
+  const _onSavePageSection = async (sectionData) => {
+    // Filter variables to only those in editable_fields
+    const filteredSections = sectionData.map((section) => {
+      const editableFields =
+        section.configuration?.editable_fields?.map((f) => f.name) || [];
+      const filteredVariables = Object.fromEntries(
+        Object.entries(section.variables || {}).filter(([key]) =>
+          editableFields.includes(key)
+        )
+      );
+      return {
+        ...section,
+        variables: filteredVariables,
+      };
+    });
+
+    await mutateSave({
+      id,
+      sectionData: filteredSections,
+    });
   };
 
   const onMoveUp = (idx) => {

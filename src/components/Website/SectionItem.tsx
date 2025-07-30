@@ -1,11 +1,16 @@
 import { useDrag } from "react-dnd";
-import { BiGridVertical } from "react-icons/bi";
+import { BiGridVertical, BiTrash } from "react-icons/bi";
+import API from "../../utils/API";
 
 const SectionItem = ({ section }) => {
   const [, drag] = useDrag(() => ({
     type: "SECTION",
     item: section,
   }));
+
+  const deleteSection = ({ id }: { id: string }) => {
+    return API.delete(`sections/${id}`);
+  };
 
   return (
     <>
@@ -27,6 +32,12 @@ const SectionItem = ({ section }) => {
         <div className="text-muted small" style={{ marginTop: "-0.2rem" }}>
           {section?.category_name || "Uncategorized"}
         </div>
+        {/* <button
+          className="bg-white border p-1 rounded-lg"
+          onClick={() => deleteSection({ id: section?.id })}
+        >
+          <BiTrash size={18} />
+        </button> */}
       </div>
     </>
   );
