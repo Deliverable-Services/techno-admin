@@ -272,42 +272,42 @@ const NavBar = ({ isNavOpen, setIsNavOpen }: INavBar) => {
   };
   console.log("loggedInUser", loggedInUser);
   if (
-    loggedInUser.organisation &&
-    !loggedInUser.organisation.hasOwnProperty("store_type")
+    loggedInUser.organisations &&
+    !loggedInUser.organisations[0].hasOwnProperty("store_type")
   )
-    loggedInUser.organisation.store_type = "crm"; // setting default to CRM if no organisation found
+    loggedInUser.organisations.store_type = "crm"; // setting default to CRM if no organisation found
 
   console.log("loggedInUser", loggedInUser);
 
   // Filtered links for sidebar
   const filteredMainLinks = mainLinks.filter((link) => {
-    if (loggedInUser?.organisation.store_type.toLowerCase() === "ecommerce") {
+    if (loggedInUser?.organisations[0].store_type.toLowerCase() === "ecommerce") {
       return hiddenRoutesForEcommerce.includes(link.path) ? false : true;
-    } else if (loggedInUser?.organisation.store_type.toLowerCase() === "crm") {
+    } else if (loggedInUser?.organisations[0].store_type.toLowerCase() === "crm") {
       return hiddenRoutesForCRM.includes(link.path) ? false : true;
     }
   });
 
   const filteredWebsiteinks = websiteLinks.filter((link) => {
-    if (loggedInUser?.organisation.store_type.toLowerCase() === "ecommerce") {
+    if (loggedInUser?.organisations[0].store_type.toLowerCase() === "ecommerce") {
       return hiddenRoutesForEcommerce.includes(link.path) ? false : true;
-    } else if (loggedInUser?.organisation.store_type.toLowerCase() === "crm") {
+    } else if (loggedInUser?.organisations[0].store_type.toLowerCase() === "crm") {
       return hiddenRoutesForCRM.includes(link.path) ? false : true;
     }
   });
 
   const filterinventoryLinks = inventoryLinks.filter((link) => {
-    if (loggedInUser?.organisation.store_type.toLowerCase() === "ecommerce") {
+    if (loggedInUser?.organisations[0].store_type.toLowerCase() === "ecommerce") {
       return hiddenRoutesForEcommerce.includes(link.path) ? false : true;
-    } else if (loggedInUser?.organisation.store_type.toLowerCase() === "crm") {
+    } else if (loggedInUser?.organisations[0].store_type.toLowerCase() === "crm") {
       return hiddenRoutesForCRM.includes(link.path) ? false : true;
     }
   });
 
   const filterOrganisationLinks = organisationLinks.filter((link) => {
-    if (loggedInUser?.organisation.store_type.toLowerCase() === "ecommerce") {
+    if (loggedInUser?.organisations[0].store_type.toLowerCase() === "ecommerce") {
       return hiddenRoutesForEcommerce.includes(link.path) ? false : true;
-    } else if (loggedInUser?.organisation.store_type.toLowerCase() === "crm") {
+    } else if (loggedInUser?.organisations[0].store_type.toLowerCase() === "crm") {
       return hiddenRoutesForCRM.includes(link.path) ? false : true;
     }
   });
