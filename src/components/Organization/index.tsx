@@ -209,13 +209,12 @@ const Organization: React.FC = () => {
       <div className="organization-main">
         <div className="d-flex justify-content-between">
           <h2 className="main-head">Organization Settings</h2>
-          <input
-            style={{ width: "300px" }}
+          {/* <input style={{ width: "300px" }}
             type="search"
             className="form-control"
             name="search"
             placeholder="Search"
-          />
+          /> */}
         </div>
         {/* Save Button on top */}
         <div className="d-flex g-4 align-items-center mb-4 mx-auto">

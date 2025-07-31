@@ -487,7 +487,7 @@ const App = () => {
                   permissionReq="read_user"
                 />
                 <PrivateRoute
-                  path="/Invoices"
+                  path="/invoices"
                   exact
                   component={InvoicePage}
                   permissionReq="read_city"
