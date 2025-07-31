@@ -76,6 +76,7 @@ import InvoicePage from "./components/Invoices";
 
 
 
+
 const App = () => {
   const [isDesktop, setIsDesktop] = useState<boolean>(false);
   const { isLoading: isVerifingLoggedInUser } = useMeQuery();
@@ -487,7 +488,7 @@ const App = () => {
                 permissionReq="read_user"
               />
               <PrivateRoute
-                path="/Invoices"
+                path="/invoices"
                 exact
                 component={InvoicePage}
                 permissionReq="read_city"
