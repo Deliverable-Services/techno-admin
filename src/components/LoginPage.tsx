@@ -10,6 +10,7 @@ import { InputField } from "../shared-components/InputFeild";
 import { handleApiError } from "../hooks/handleApiErrors";
 import useTokenStore from "../hooks/useTokenStore";
 import useUserProfileStore from "../hooks/useUserProfileStore";
+import { useOrganisation } from "../context/OrganisationContext";
 import API from "../utils/API";
 import { showErrorToast } from "../utils/showErrorToast";
 import { showMsgToast } from "../utils/showMsgToast";
@@ -17,8 +18,7 @@ import { showMsgToast } from "../utils/showMsgToast";
 import logo from "../assets/logo.svg";
 
 const LoginSchema = Yup.object().shape({
-  phone: Yup.string()
-    .required("Phone number required"),
+  phone: Yup.string().required("Phone number required"),
 });
 
 const VerifySchema = Yup.object().shape({
@@ -40,28 +40,34 @@ const LoginFlow = () => {
   const [activeTab, setActiveTab] = useState<"login" | "signup">("login");
   const [step, setStep] = useState<"login" | "otp">("login");
   const [phone, setPhone] = useState("");
-  const [countryCode, setCountryCode] = useState('+91');
+  const [countryCode, setCountryCode] = useState("+91");
 
   const setToken = useTokenStore((state) => state.setToken);
   const setUser = useUserProfileStore((state) => state.setUser);
   const setUserPermissions = useUserProfileStore(
     (state) => state.setUserPermssions
   );
+  const { setOrganisations, selectedOrg, setSelectedOrg } =
+    useOrganisation();
 
-  const { mutate: sendOtpMutate, isLoading: isSendingOtp } = useMutation(sendOtp, {
-    onSuccess: () => {
-      showMsgToast("OTP sent successfully");
-      setStep("otp");
-    },
-    onError: (error: AxiosError) => {
-      handleApiError(error);
-    },
-  });
+  const { mutate: sendOtpMutate, isLoading: isSendingOtp } = useMutation(
+    sendOtp,
+    {
+      onSuccess: () => {
+        showMsgToast("OTP sent successfully");
+        setStep("otp");
+      },
+      onError: (error: AxiosError) => {
+        handleApiError(error);
+      },
+    }
+  );
 
   const { mutate: verifyOtpMutate, isLoading: isVerifyingOtp } = useMutation(
     verifyOtp,
     {
       onSuccess: (data) => {
+        handleSetOrganisations(data?.data?.user?.organisations);
         setToken(data.data.token);
         setUser(data.data.user);
         setUserPermissions(data?.data?.permissions);
@@ -83,14 +89,38 @@ const LoginFlow = () => {
     },
   });
 
+  const handleSetOrganisations = (orgs) => {
+    setOrganisations(orgs);
+
+    // set default org if not selected
+    if (!selectedOrg && orgs.length) {
+      const stored = localStorage.getItem("selectedOrganisation");
+      if (!stored) {
+        setSelectedOrg(orgs[0]);
+      }
+    }
+  };
+
   return (
     <div className="vh-100 px-0 login-main m-0 p-0">
-      <img src="/assets/new-logo.svg" alt="Logo" style={{ width: 120, marginBottom: 30,marginLeft: 60,height: 'auto',position:'absolute' }} />
+      <img
+        src="/assets/new-logo.svg"
+        alt="Logo"
+        style={{
+          width: 120,
+          marginBottom: 30,
+          marginLeft: 60,
+          height: "auto",
+          position: "absolute",
+        }}
+      />
       <div className="row h-100 no-gutters align-items-center justify-content-center">
-
         {/* RIGHT SIDE FORM */}
         <div className="col-md-6 d-flex align-items-center justify-content-center bg-white">
-          <div className="w-100 px-4 py-5 login-wrapper" style={{ maxWidth: "400px" }}>
+          <div
+            className="w-100 px-4 py-5 login-wrapper"
+            style={{ maxWidth: "400px" }}
+          >
             {/* Title and description - Only in login step */}
             {step === "login" && (
               <div className="text-left mb-3">
@@ -106,7 +136,9 @@ const LoginFlow = () => {
               <ul className="nav nav-tabs nav-justified mb-4 login-tab">
                 <li className="nav-item">
                   <a
-                    className={`nav-link btn ${activeTab === "login" ? "active" : ""}`}
+                    className={`nav-link btn ${
+                      activeTab === "login" ? "active" : ""
+                    }`}
                     href="#"
                     onClick={() => {
                       setActiveTab("login");
@@ -118,7 +150,9 @@ const LoginFlow = () => {
                 </li>
                 <li className="nav-item">
                   <a
-                    className={`nav-link btn ${activeTab === "signup" ? "active" : ""}`}
+                    className={`nav-link btn ${
+                      activeTab === "signup" ? "active" : ""
+                    }`}
                     href="#"
                     onClick={() => setActiveTab("signup")}
                   >
@@ -146,9 +180,15 @@ const LoginFlow = () => {
                     <div className="d-flex">
                       <select
                         className="form-select"
-                        style={{ maxWidth: 100, marginRight: 8,height: 40, border: '1px solid #d2ddec', borderRadius: '0.25rem' }}
+                        style={{
+                          maxWidth: 100,
+                          marginRight: 8,
+                          height: 40,
+                          border: "1px solid #d2ddec",
+                          borderRadius: "0.25rem",
+                        }}
                         value={countryCode}
-                        onChange={e => setCountryCode(e.target.value)}
+                        onChange={(e) => setCountryCode(e.target.value)}
                       >
                         <option value="+91">🇮🇳 +91</option>
                         <option value="+1">🇺🇸 +1</option>
@@ -159,13 +199,13 @@ const LoginFlow = () => {
                         type="text"
                       />
                     </div>
-                    {errors.phone &&
-                    <small className="text-danger">{errors.phone}</small>
-                    }
+                    {errors.phone && (
+                      <small className="text-danger">{errors.phone}</small>
+                    )}
                     <Button
                       type="submit"
                       className="btn btn-primary btn-block mt-3"
-                      style={{height: '52px'}}
+                      style={{ height: "52px" }}
                       disabled={isSendingOtp}
                     >
                       {isSendingOtp ? (
@@ -208,8 +248,6 @@ const LoginFlow = () => {
                       error={errors.otp}
                     />
 
-                
-
                     {/* Resend OTP */}
                     <div className="text-right">
                       <small
@@ -228,7 +266,7 @@ const LoginFlow = () => {
                     <Button
                       type="submit"
                       className="btn btn-primary btn-block mt-3"
-                      style={{height: '52px'}}
+                      style={{ height: "52px" }}
                       disabled={isVerifyingOtp}
                     >
                       {isVerifyingOtp ? (
@@ -237,8 +275,8 @@ const LoginFlow = () => {
                         <b>Verify</b>
                       )}
                     </Button>
-                        {/* Back button */}
-                        <div className="mb-2 mt-2 text-center">
+                    {/* Back button */}
+                    <div className="mb-2 mt-2 text-center">
                       <Button
                         variant="link"
                         className="px-0"
