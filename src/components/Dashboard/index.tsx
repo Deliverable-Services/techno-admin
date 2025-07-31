@@ -178,7 +178,7 @@ const Dashboard = () => {
               gap: "20px",
             }}
           >
-            <div className="card hoverable stats-card d-flex w-100 ">
+            <div className="card hoverable  d-flex w-100 ">
               <div className="card-content">
                 <div className="card-data-box d-flex">
                   <div className="crad-icon">
@@ -218,7 +218,7 @@ const Dashboard = () => {
               </div>
             </div>
 
-            <div className="card hoverable stats-card d-flex w-100 ">
+            <div className="card hoverable  d-flex w-100 ">
               <div className="card-content">
                 <div className="card-data-box d-flex">
                   <div className="crad-icon">
@@ -260,7 +260,7 @@ const Dashboard = () => {
               </div>
             </div>
 
-            <div className="card hoverable stats-card d-flex w-100">
+            <div className="card hoverable  d-flex w-100">
               <div className="card-content">
                 <div className="card-data-box d-flex">
                   <div className="crad-icon">
@@ -305,7 +305,7 @@ const Dashboard = () => {
               </div>
             </div>
 
-            <div className="card hoverable stats-card d-flex w-100">
+            <div className="card hoverable  d-flex w-100">
               <div className="card-content">
                 <div className="card-data-box d-flex">
                   <div className="crad-icon">

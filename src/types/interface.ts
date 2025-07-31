@@ -42,7 +42,7 @@ export type User = {
     role: string;
     permissions: Array<string>;
   };
-  organisation: {
+  organisations: {
     id: number;
     name: string;
     email: string;
