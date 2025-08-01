@@ -1,4 +1,4 @@
-/* // File: components/CRM/task-drawer.css */
+/* // File: components/CRM/lead-drawer.css */
 
 .task-drawer {
   position: fixed;
@@ -109,6 +109,141 @@
 .list-unstyled.activity-log svg g {
     fill: gray;
 }
+
+
+
+.task-drawer {
+  position: fixed;
+  top: 0;
+  right: 0;
+  width: calc(100vw - 300px);
+  height: 100%;
+  background: #fff;
+  z-index: 1000;
+  display: flex;
+  flex-direction: column;
+  animation: slideIn 0.3s ease-in-out;
+  box-shadow: -2px 0 5px rgba(0, 0, 0, 0.1);
+}
+
+.task-drawer-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 100%;
+  z-index: 999;
+  background: rgba(0, 0, 0, 0.3);
+}
+
+.drawer-header {
+  padding: 16px;
+  border-bottom: 1px solid #eee;
+}
+
+.drawer-body {
+  display: flex;
+  flex: 1;
+  overflow: hidden;
+}
+
+.drawer-left,
+.drawer-center,
+.drawer-right {
+  padding: 16px;
+  overflow-y: auto;
+}
+
+.drawer-left {
+  width: 300px;
+  border-right: 1px solid #eee;
+}
+
+.drawer-center {
+  flex: 1;
+  border-right: 1px solid #eee;
+}
+
+.drawer-right {
+  width: 300px;
+  background: #f8f9fa;
+}
+
+.drawer-footer {
+  padding: 16px;
+  border-top: 1px solid #eee;
+}
+
+@keyframes slideIn {
+  from {
+    transform: translateX(100%);
+  }
+  to {
+    transform: translateX(0%);
+  }
+}
+
+.text-30px{
+  font-size: 30px;
+}
+
+
+.gap-5 {
+  gap: 20px;
+}
+.action-link svg {
+  color: #a6a6a6;
+}
+.text-14px
+{
+  font-size: 14px;
+}
+.font-500
+{
+  font-weight: 500;
+}
+.history-leads img {
+  width: 30px;
+  height: 30px;
+}
+/* 
+.timeline-icon::after {
+  position: absolute;
+  content: "";
+  left: 9px;
+  top: 9px;
+  width: 2px;
+  background: #66708563;
+  height: 130%;
+}
+
+.timeline-icon {
+  position: relative;
+} */
+
+
+.timeline
+{
+  border-left: solid 1px gray;
+}
+
+.timeline-icon svg {
+  background: #667085;
+  padding: 7px;
+  border-radius: 50%;
+  width: 25px;
+  color: white !important;
+  height: 25px;
+}
+
+.timeline-icon {
+  margin-right: 5px !important;
+  position: relative;
+  left: -13px;
+  top: -2px;
+}
+
+
 
 
 
