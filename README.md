@@ -1,1 +1,1 @@
-# Car Safai Admin Panel
+# Admin Panel

@@ -20,7 +20,7 @@ import { FormEvent } from "react";
 const ValidationSchema = Yup.object().shape({
   phone: Yup.string()
     .nullable()
-    .matches(/^[6-9]\d{9}$/, "Phone number is not valid")
+    .matches(/^\+91[6-9]\d{9}$/, "Phone number is not valid")
     .required("Phone number required"),
   email: Yup.string().email().required(),
   name: Yup.string().required("Name is required"),

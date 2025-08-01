@@ -21,6 +21,27 @@ export interface ICreateUpdateForm {
   id?: string;
 }
 
+export type Organisation = {
+  id: number;
+  name: string;
+  domain: string;
+  logo: string;
+  email: string;
+  phone: string;
+  address: string;
+  store_type: "crm" | "ecommerce";
+  created_at: string;
+  updated_at: string;
+  pivot?: {
+    user_id: number;
+    organisation_id: number;
+    role: string;
+    is_primary: number;
+    created_at: string;
+    updated_at: string;
+  };
+};
+
 export type User = {
   storeType: string;
   created_at: string;
@@ -40,18 +61,9 @@ export type User = {
   stripe_account_id?: string;
   roles: {
     role: string;
-    permissions: Array<string>;
+    permissions: string[];
   };
-  organisations: {
-    id: number;
-    name: string;
-    email: string;
-    phone: string;
-    address: string;
-    store_type: "crm" | "ecommerce";
-    created_at: string;
-    updated_at: string;
-  };
+  organisations: Organisation[];
 };
 
 export type IInitialTableState = Partial<TableState<object>>;

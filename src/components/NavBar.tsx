@@ -1,4 +1,4 @@
-import { useContext } from "react";
+import { useContext, useEffect } from "react";
 import {
   FaAddressCard,
   FaBoxes,
@@ -23,6 +23,7 @@ import {
   RiAdvertisementFill,
   RiCoupon3Line,
   RiDashboardFill,
+  RiGlobalLine,
   RiNotification2Line,
   RiPagesLine,
   RiServiceFill,
@@ -48,6 +49,7 @@ import { Dropdown } from "react-bootstrap";
 import { useMutation } from "react-query";
 import useTokenStore from "../hooks/useTokenStore";
 import API from "../utils/API";
+import { useOrganisation } from "../context/OrganisationContext";
 
 const mainLinks: Array<INavLink> = [
   {
@@ -76,7 +78,7 @@ const mainLinks: Array<INavLink> = [
   },
   {
     title: "Invoices",
-    path: "/Invoices",
+    path: "/invoices",
     icon: <SiCivicrm />,
     permissionReq: "read_city",
   },
@@ -131,10 +133,22 @@ const websiteLinks: Array<INavLink> = [
     icon: <AiFillIdcard />,
     permissionReq: "read_testimonial",
   },
+  // {
+  //   title: "Static Pages",
+  //   path: "/static-pages",
+  //   icon: <RiPagesLine />,
+  //   permissionReq: "read_staticpage",
+  // },
+  // {
+  //   title: "Website",
+  //   path: "/website",
+  //   icon: <RiGlobalLine />,
+  //   permissionReq: "read_staticpage",
+  // },
   {
-    title: "Static Pages",
-    path: "/static-pages",
-    icon: <RiPagesLine />,
+    title: "Website Pages",
+    path: "/website-pages",
+    icon: <RiGlobalLine />,
     permissionReq: "read_staticpage",
   },
 ];
@@ -258,6 +272,23 @@ const NavBar = ({ isNavOpen, setIsNavOpen }: INavBar) => {
   const removeToken = useTokenStore((state) => state.removeToken);
   const removeUser = useUserProfileStore((state) => state.removeUser);
   const user = useUserProfileStore((state) => state.user);
+  const { organisations, setOrganisations, selectedOrg, setSelectedOrg } =
+    useOrganisation();
+
+  useEffect(() => {
+    const handleSetOrganisations = (orgs: any) => {
+      setOrganisations(orgs);
+
+      // set default org if not selected
+      if (!selectedOrg && orgs.length) {
+        const stored = localStorage.getItem("selectedOrganisation");
+        if (!stored) {
+          setSelectedOrg(orgs[0]);
+        }
+      }
+    };
+    if (loggedInUser) handleSetOrganisations(loggedInUser.organisations);
+  }, []);
 
   const closeNavBar = () => {
     if (isDesktop) return;
@@ -270,44 +301,38 @@ const NavBar = ({ isNavOpen, setIsNavOpen }: INavBar) => {
       setIsNavOpen(!isNavOpen);
     }
   };
-  console.log("loggedInUser", loggedInUser);
-  if (
-    loggedInUser.organisations &&
-    !loggedInUser.organisations[0].hasOwnProperty("store_type")
-  )
-    loggedInUser.organisations.store_type = "crm"; // setting default to CRM if no organisation found
-
-  console.log("loggedInUser", loggedInUser);
+  // if (selectedOrg && !selectedOrg?.hasOwnProperty("store_type"))
+  //   selectedOrg.store_type = "crm"; // setting default to CRM if no organisation found
 
   // Filtered links for sidebar
   const filteredMainLinks = mainLinks.filter((link) => {
-    if (loggedInUser?.organisations[0].store_type.toLowerCase() === "ecommerce") {
+    if (selectedOrg?.store_type.toLowerCase() === "ecommerce") {
       return hiddenRoutesForEcommerce.includes(link.path) ? false : true;
-    } else if (loggedInUser?.organisations[0].store_type.toLowerCase() === "crm") {
+    } else if (selectedOrg?.store_type.toLowerCase() === "crm") {
       return hiddenRoutesForCRM.includes(link.path) ? false : true;
     }
   });
 
   const filteredWebsiteinks = websiteLinks.filter((link) => {
-    if (loggedInUser?.organisations[0].store_type.toLowerCase() === "ecommerce") {
+    if (selectedOrg?.store_type.toLowerCase() === "ecommerce") {
       return hiddenRoutesForEcommerce.includes(link.path) ? false : true;
-    } else if (loggedInUser?.organisations[0].store_type.toLowerCase() === "crm") {
+    } else if (selectedOrg?.store_type.toLowerCase() === "crm") {
       return hiddenRoutesForCRM.includes(link.path) ? false : true;
     }
   });
 
   const filterinventoryLinks = inventoryLinks.filter((link) => {
-    if (loggedInUser?.organisations[0].store_type.toLowerCase() === "ecommerce") {
+    if (selectedOrg?.store_type.toLowerCase() === "ecommerce") {
       return hiddenRoutesForEcommerce.includes(link.path) ? false : true;
-    } else if (loggedInUser?.organisations[0].store_type.toLowerCase() === "crm") {
+    } else if (selectedOrg?.store_type.toLowerCase() === "crm") {
       return hiddenRoutesForCRM.includes(link.path) ? false : true;
     }
   });
 
   const filterOrganisationLinks = organisationLinks.filter((link) => {
-    if (loggedInUser?.organisations[0].store_type.toLowerCase() === "ecommerce") {
+    if (selectedOrg?.store_type.toLowerCase() === "ecommerce") {
       return hiddenRoutesForEcommerce.includes(link.path) ? false : true;
-    } else if (loggedInUser?.organisations[0].store_type.toLowerCase() === "crm") {
+    } else if (selectedOrg?.store_type.toLowerCase() === "crm") {
       return hiddenRoutesForCRM.includes(link.path) ? false : true;
     }
   });
@@ -463,11 +488,11 @@ const NavBar = ({ isNavOpen, setIsNavOpen }: INavBar) => {
             </Dropdown.Toggle>
 
             <Dropdown.Menu className="global-card">
-              <Dropdown.Item href="/profile" className="border-bottom ">
+              {/* <Dropdown.Item href="/profile" className="border-bottom ">
                 {" "}
                 <FaUserCog className="mr-3" />
                 Profile
-              </Dropdown.Item>
+              </Dropdown.Item> */}
               <Dropdown.Item onClick={() => mutate()}>
                 <BiLogOut className="mr-3" />{" "}
                 {isLoading ? "Loading" : "Log out"}
