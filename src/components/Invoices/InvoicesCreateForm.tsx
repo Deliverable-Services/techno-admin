@@ -5,6 +5,8 @@ import { showMsgToast } from "../../utils/showMsgToast";
 import { showErrorToast } from "../../utils/showErrorToast";
 import { useState } from "react";
 import AsyncSelect from "react-select/async";
+import * as Yup from 'yup';
+import { ErrorMessage } from "formik";
 
 const initialValues = {
     user_id: "",
@@ -19,7 +21,23 @@ const initialValues = {
     items: [
         { item_name: "", quantity: 1, unit_price: "", total: "" },
     ],
+    addTax: false, // <-- add this
 };
+
+const validationSchema = Yup.object().shape({
+    user_id: Yup.string().required('User is required'),
+    items: Yup.array().of(
+        Yup.object().shape({
+            item_name: Yup.string().required('Item name is required'),
+            unit_price: Yup.number().typeError('Unit price must be a number').required('Unit price is required'),
+            quantity: Yup.number()
+                .typeError('Quantity must be a number')
+                .integer('Quantity must be an integer')
+                .min(1, 'Quantity must be at least 1')
+                .required('Quantity is required'),
+        })
+    ),
+});
 
 const InvoicesCreateForm = ({ onSuccess }: { onSuccess?: () => void }) => {
     const [selectedUser, setSelectedUser] = useState<{ label: string; value: string } | null>(null);
@@ -43,6 +61,7 @@ const InvoicesCreateForm = ({ onSuccess }: { onSuccess?: () => void }) => {
             <h2 style={{ marginBottom: '20px' }}>Recipient</h2>
             <Formik
                 initialValues={initialValues}
+                validationSchema={validationSchema}
                 onSubmit={async (values, { setSubmitting, resetForm }) => {
                     try {
                         const items = values.items.map((item) => ({
@@ -82,7 +101,7 @@ const InvoicesCreateForm = ({ onSuccess }: { onSuccess?: () => void }) => {
                     }
                 }}
             >
-                {({ values, isSubmitting }) => (
+                {({ values, isSubmitting, setFieldValue, setFieldTouched, touched, errors }) => (
                     <Form>
                         <div className="form-group">
                             <AsyncSelect
@@ -90,10 +109,18 @@ const InvoicesCreateForm = ({ onSuccess }: { onSuccess?: () => void }) => {
                                 loadOptions={loadUserOptions}
                                 defaultOptions
                                 value={selectedUser}
-                                onChange={setSelectedUser}
+                                onChange={option => {
+                                    setSelectedUser(option);
+                                    setFieldValue('user_id', option ? option.value : '');
+                                    setFieldTouched('user_id', true, true);
+                                }}
+                                onBlur={() => setFieldTouched('user_id', true, true)}
                                 placeholder="Search user by name or email..."
                                 isClearable
                             />
+                            {touched.user_id && errors.user_id && (
+                                <div style={{ color: 'red', fontSize: 12 }}>{errors.user_id}</div>
+                            )}
                         </div>
                         <div className="form-group">
                             <label>Status</label>
@@ -119,9 +146,15 @@ const InvoicesCreateForm = ({ onSuccess }: { onSuccess?: () => void }) => {
                                             }}
                                         >
                                             <Field name={`items[${idx}].item_name`} className="form-control" placeholder="Item Name" />
+                                            {/* Error for item name */}
+                                            <ErrorMessage name={`items[${idx}].item_name`}>{msg => <div style={{ color: 'red', fontSize: 12 }}>{msg}</div>}</ErrorMessage>
                                             <div style={{ display: 'flex', gap: 8, marginBottom: 8, marginTop: 12 }}>
-                                                <Field name={`items[${idx}].quantity`} className="form-control" placeholder="Qty" type="number" />
-                                                <Field name={`items[${idx}].unit_price`} className="form-control" placeholder="Unit Price" type="number" />
+                                                <Field name={`items[${idx}].quantity`} className="form-control" placeholder="Qty" type="number" min="1" step="1" />
+                                                {/* Error for quantity */}
+                                                <ErrorMessage name={`items[${idx}].quantity`}>{msg => <div style={{ color: 'red', fontSize: 12 }}>{msg}</div>}</ErrorMessage>
+                                                <Field name={`items[${idx}].unit_price`} className="form-control" placeholder="Unit Price" type="number" min="0" step="0.01" />
+                                                {/* Error for unit price */}
+                                                <ErrorMessage name={`items[${idx}].unit_price`}>{msg => <div style={{ color: 'red', fontSize: 12 }}>{msg}</div>}</ErrorMessage>
                                                 <Button variant="danger" onClick={() => remove(idx)} disabled={values.items.length === 1}>-</Button>
                                             </div>
                                         </div>
@@ -132,10 +165,19 @@ const InvoicesCreateForm = ({ onSuccess }: { onSuccess?: () => void }) => {
                                 </div>
                             )}
                         </FieldArray>
-                        <div className="form-group" style={{ width: '30%' }}>
-                            <label>Tax %</label>
-                            <Field name="tax" className="form-control" />
+                        {/* AddTax Checkbox */}
+                        <div style={{ margin: '10px 0', display: 'flex', alignItems: 'center', gap: '10px' }}>
+                            <label style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                                <Field type="checkbox" name="addTax" />
+                                <p style={{ marginBottom: '0' }}>Add Tax %</p>
+                            </label>
                         </div>
+                        {values.addTax && (
+                            <div className="form-group" style={{ width: '30%' }}>
+
+                                <Field name="tax" className="form-control" />
+                            </div>
+                        )}
 
                         <div style={{ border: '1px solid #e7eaf3', borderRadius: '10px', padding: '10px', marginBottom: '10px' }}>
                             <div style={{ width: '100%', display: 'flex', alignItems: 'center', justifyContent: "space-between" }}>

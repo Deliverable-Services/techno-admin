@@ -7,10 +7,11 @@ import Logo from "../shared-components/Logo";
 import { INavBar } from "../types/interface";
 import { FaClock, FaEnvelope, FaMap, FaPhone } from "react-icons/fa";
 import { formatTimestamp } from "../utils/utitlity";
+import { useOrganisation } from "../context/OrganisationContext";
 
 const TopBar = ({ isNavOpen, setIsNavOpen }: INavBar) => {
   const isDesktop = useContext(IsDesktopContext);
-  const user = useUserProfileStore((state) => state.user);
+  const { selectedOrg } = useOrganisation();
 
   const openNavBar = () => {
     if (setIsNavOpen) {
@@ -77,7 +78,7 @@ const TopBar = ({ isNavOpen, setIsNavOpen }: INavBar) => {
                 style={{ color: "#000", fontWeight: "500", fontSize: "14px" }}
               >
                 <span className="text-truncate" style={{ maxWidth: 150 }}>
-                  {user?.organisations[0]?.name}
+                  {selectedOrg?.name}
                 </span>
               </Dropdown.Toggle>
 
@@ -88,21 +89,19 @@ const TopBar = ({ isNavOpen, setIsNavOpen }: INavBar) => {
                 <div className="d-flex flex-column gap-2">
                   <section className="d-flex align-items-center py-2 px-4 border-bottom">
                     <FaEnvelope className="text-primary mr-2" size={14} />
-                    <span>{user?.organisations[0]?.email}</span>
+                    <span>{selectedOrg?.email}</span>
                   </section>
                   <section className="d-flex align-items-center py-2 px-4 border-bottom">
                     <FaPhone className="text-primary mr-2" size={14} />
-                    <span>{user?.organisations[0]?.phone}</span>
+                    <span>{selectedOrg?.phone}</span>
                   </section>
                   <section className="d-flex align-items-center py-2 px-4 border-bottom">
                     <FaMap className="text-primary mr-2" size={14} />
-                    <span>{user?.organisations[0]?.address}</span>
+                    <span>{selectedOrg?.address}</span>
                   </section>
                   <section className="d-flex align-items-center py-2 px-4 ">
                     <FaClock className="text-primary mr-2" size={14} />
-                    <span>
-                      {formatTimestamp(user?.organisations[0]?.created_at)}
-                    </span>
+                    <span>{formatTimestamp(selectedOrg?.created_at)}</span>
                   </section>
                 </div>
               </Dropdown.Menu>

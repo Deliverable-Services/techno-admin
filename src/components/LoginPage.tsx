@@ -10,6 +10,7 @@ import { InputField } from "../shared-components/InputFeild";
 import { handleApiError } from "../hooks/handleApiErrors";
 import useTokenStore from "../hooks/useTokenStore";
 import useUserProfileStore from "../hooks/useUserProfileStore";
+import { useOrganisation } from "../context/OrganisationContext";
 import API from "../utils/API";
 import { showErrorToast } from "../utils/showErrorToast";
 import { showMsgToast } from "../utils/showMsgToast";
@@ -17,8 +18,7 @@ import { showMsgToast } from "../utils/showMsgToast";
 import logo from "../assets/logo.svg";
 
 const LoginSchema = Yup.object().shape({
-  phone: Yup.string()
-    .required("Phone number required"),
+  phone: Yup.string().required("Phone number required"),
 });
 
 const VerifySchema = Yup.object().shape({
@@ -40,28 +40,34 @@ const LoginFlow = () => {
   const [activeTab, setActiveTab] = useState<"login" | "signup">("login");
   const [step, setStep] = useState<"login" | "otp">("login");
   const [phone, setPhone] = useState("");
-  const [countryCode, setCountryCode] = useState('+91');
+  const [countryCode, setCountryCode] = useState("+91");
 
   const setToken = useTokenStore((state) => state.setToken);
   const setUser = useUserProfileStore((state) => state.setUser);
   const setUserPermissions = useUserProfileStore(
     (state) => state.setUserPermssions
   );
+  const { setOrganisations, selectedOrg, setSelectedOrg } =
+    useOrganisation();
 
-  const { mutate: sendOtpMutate, isLoading: isSendingOtp } = useMutation(sendOtp, {
-    onSuccess: () => {
-      showMsgToast("OTP sent successfully");
-      setStep("otp");
-    },
-    onError: (error: AxiosError) => {
-      handleApiError(error);
-    },
-  });
+  const { mutate: sendOtpMutate, isLoading: isSendingOtp } = useMutation(
+    sendOtp,
+    {
+      onSuccess: () => {
+        showMsgToast("OTP sent successfully");
+        setStep("otp");
+      },
+      onError: (error: AxiosError) => {
+        handleApiError(error);
+      },
+    }
+  );
 
   const { mutate: verifyOtpMutate, isLoading: isVerifyingOtp } = useMutation(
     verifyOtp,
     {
       onSuccess: (data) => {
+        handleSetOrganisations(data?.data?.user?.organisations);
         setToken(data.data.token);
         setUser(data.data.user);
         setUserPermissions(data?.data?.permissions);
@@ -83,10 +89,21 @@ const LoginFlow = () => {
     },
   });
 
+  const handleSetOrganisations = (orgs) => {
+    setOrganisations(orgs);
+
+    // set default org if not selected
+    if (!selectedOrg && orgs.length) {
+      const stored = localStorage.getItem("selectedOrganisation");
+      if (!stored) {
+        setSelectedOrg(orgs[0]);
+      }
+    }
+  };
+
   return (
     <div className="vh-100 px-0 login-main m-0 p-0" style={{ background: 'linear-gradient(to right, #004e92, #000428)' }}>
       <div className="row h-100 no-gutters align-items-center justify-content-center">
-
         {/* RIGHT SIDE FORM */}
         <div className="col-md-6 d-flex align-items-center justify-content-center">
           <div className="organization-main w-100 px-5 py-5 login-wrapper" style={{ maxWidth: "500px" }}>
@@ -105,7 +122,8 @@ const LoginFlow = () => {
               <ul className="nav nav-tabs mb-4" style={{ width: 'fit-content' }}>
                 <li className="nav-item">
                   <a
-                    className={`nav-link btn ${activeTab === "login" ? "active" : ""}`}
+                    className={`nav-link btn ${activeTab === "login" ? "active" : ""
+                      }`}
                     href="#"
                     onClick={() => {
                       setActiveTab("login");
@@ -117,7 +135,8 @@ const LoginFlow = () => {
                 </li>
                 <li className="nav-item">
                   <a
-                    className={`nav-link btn ${activeTab === "signup" ? "active" : ""}`}
+                    className={`nav-link btn ${activeTab === "signup" ? "active" : ""
+                      }`}
                     href="#"
                     onClick={() => setActiveTab("signup")}
                   >
@@ -147,7 +166,7 @@ const LoginFlow = () => {
                         className="form-select"
                         style={{ maxWidth: 100, marginRight: 8, height: 40, border: '1px solid #d2ddec', borderRadius: '0.25rem' }}
                         value={countryCode}
-                        onChange={e => setCountryCode(e.target.value)}
+                        onChange={(e) => setCountryCode(e.target.value)}
                       >
                         <option value="+91">🇮🇳 +91</option>
                         <option value="+1">🇺🇸 +1</option>
