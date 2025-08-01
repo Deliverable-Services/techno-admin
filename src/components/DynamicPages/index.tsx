@@ -1,5 +1,5 @@
 import { AxiosError } from "axios";
-import { useEffect, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import { Button, Container } from "react-bootstrap";
 import { BiCopy, BiSad } from "react-icons/bi";
 import { useMutation, useQuery } from "react-query";
@@ -36,12 +36,13 @@ const intitialFilter = {
   isArchived: false,
 };
 
-const Website = () => {
+const DynamicPages = () => {
   const history = useHistory();
+
   const [selectedRows, setSelectedRows] = useState([]);
   console.log(selectedRows.map((item) => item.id));
   const [filter, setFilter] = useState(intitialFilter);
-  console.log({ filter });
+
   const {
     data: pageData,
     isLoading,
@@ -53,7 +54,7 @@ const Website = () => {
     },
   });
 
-  console.log("pageData", pageData);
+  // console.log("pageData", pageData);
   pageData?.data?.map((page, i) => {
     page["isArchived"] = i === pageData.data.length - 1 ? true : false;
   });
@@ -85,13 +86,13 @@ const Website = () => {
   );
 
   const _onCreateClick = () => {
-    history.push("/website/create-edit");
+    history.push("/website-pages/dynamic/create-edit");
   };
   const _onEditClick = (id: string) => {
-    history.push(`/website/create-edit`, { id });
+    history.push(`/website-pages/dynamic/create-edit`, { id });
   };
   const _onViewClick = (id: string) => {
-    history.push(`/website/${id}`);
+    history.push(`/website-pages/dynamic/${id}`);
   };
 
   const _onFilterChange = (idx: string, value: any) => {
@@ -227,7 +228,7 @@ const Website = () => {
     <>
       <Container fluid className="card component-wrapper view-padding">
         <PageHeading
-          title="Websites"
+          title="Dynamic Pages"
           onClick={_onCreateClick}
           totalRecords={pageData?.data?.length || 0}
           permissionReq="create_service"
@@ -309,4 +310,4 @@ const Website = () => {
   );
 };
 
-export default Website;
+export default DynamicPages;

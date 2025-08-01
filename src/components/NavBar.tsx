@@ -133,19 +133,19 @@ const websiteLinks: Array<INavLink> = [
     icon: <AiFillIdcard />,
     permissionReq: "read_testimonial",
   },
+  // {
+  //   title: "Static Pages",
+  //   path: "/static-pages",
+  //   icon: <RiPagesLine />,
+  //   permissionReq: "read_staticpage",
+  // },
+  // {
+  //   title: "Website",
+  //   path: "/website",
+  //   icon: <RiGlobalLine />,
+  //   permissionReq: "read_staticpage",
+  // },
   {
-    title: "Static Pages",
-    path: "/static-pages",
-    icon: <RiPagesLine />,
-    permissionReq: "read_staticpage",
-  },
-    {
-    title: "Website",
-    path: "/website",
-    icon: <RiGlobalLine />,
-    permissionReq: "read_staticpage",
-  },
-    {
     title: "Website Pages",
     path: "/website-pages",
     icon: <RiGlobalLine />,
