@@ -24,17 +24,15 @@ const ValidationSchema = Yup.object().shape({
 
 const OrganizationTab = () => {
   const history = useHistory();
-
   const token = useTokenStore((state) => state.accessToken);
-  const { organisations, setOrganisations, selectedOrg, setSelectedOrg } =
+  const { organisations, selectedOrg, setSelectedOrg } =
     useOrganisation();
+
   const initialValues = {
     organizationName: selectedOrg?.name || "",
     organizationEmail: selectedOrg?.email || "",
     storeType: (selectedOrg?.store_type || "crm").toLowerCase(),
   };
-  //   console.log('selectedorg',selectedOrg)
-  //   console.log('initi',initialValues)
 
   const updateOrganisation = async (values) => {
     const storeType = values.storeType === "crm" ? "CRM" : "ECOMMERCE";
@@ -244,7 +242,7 @@ const OrganizationTab = () => {
                         {isLoading ? (
                           <Spinner animation="border" size="sm" />
                         ) : (
-                          "Submit"
+                          "Save"
                         )}
                       </Button>
                     </Col>
