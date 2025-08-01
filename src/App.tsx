@@ -74,6 +74,9 @@ import CRMBoard from "./components/CRM/CRMBoard";
 import organization from "./components/Organization";
 import InvoicePage from "./components/Invoices";
 import { OrganisationProvider } from "./context/OrganisationContext";
+import Website from "./components/Website";
+import ViewWebsite from "./components/Website/ViewWebsite";
+import PageCreateUpdateForm from "./components/Website/PageCreateUpdateForm";
 
 const App = () => {
   const [isDesktop, setIsDesktop] = useState<boolean>(false);
@@ -492,6 +495,24 @@ const App = () => {
                   component={InvoicePage}
                   permissionReq="read_city"
                 />
+                    <PrivateRoute
+              path="/website"
+              exact
+              component={Website}
+              permissionReq="read_staticpage"
+            />
+              <PrivateRoute
+                path="/website/create-edit"
+                exact
+                component={PageCreateUpdateForm}
+                permissionReq="read_staticpage"
+              />
+            <PrivateRoute
+              path="/website/:id"
+              exact
+              component={ViewWebsite}
+              permissionReq="read_staticpage"
+            />
 
                 <Route path="/login" exact component={LoginPage} />
                 <Route path="/verify-otp" exact component={VerifyOtp} />

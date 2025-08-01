@@ -46,6 +46,8 @@ const Issues = () => {
     }
   );
 
+  console.log(data, "data");
+
   const { data: Customers, isLoading: isCustomerLoading } = useQuery<any>(
     [
       "users",
