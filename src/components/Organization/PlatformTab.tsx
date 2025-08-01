@@ -88,7 +88,7 @@ const PlatformTab = () => {
       </div>
       <div className="right-content">
         <div className="profile-card d-flex flex-column align-items-center">
-          {!isLoading ? (
+          {isLoading ? (
             <Spinner className="mt-8" animation="border" />
           ) : (
             <Formik
