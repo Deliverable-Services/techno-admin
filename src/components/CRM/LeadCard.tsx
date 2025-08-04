@@ -116,7 +116,7 @@ const LeadCard: React.FC<Props> = ({ lead }) => {
         <div className="d-flex justify-content-between align-items-center border-top pt-2 mt-2">
           {/* Assignee Image */}
           <img
-            src={String(lead.assignee) || `https://i.pravatar.cc/24?u=${lead.id}`}
+            src={lead.assignee || `https://i.pravatar.cc/24?u=${lead.id}`}
             alt="user"
             className="rounded-circle crm-user-img"
             width={24}
