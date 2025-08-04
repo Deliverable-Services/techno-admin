@@ -1,5 +1,5 @@
 import { Formik, Form, Field, FieldArray } from "formik";
-import { Button } from "react-bootstrap";
+import { Button, Modal } from "react-bootstrap";
 import API from "../../utils/API";
 import { showMsgToast } from "../../utils/showMsgToast";
 import { showErrorToast } from "../../utils/showErrorToast";
@@ -41,9 +41,105 @@ const validationSchema = Yup.object().shape({
 
 const InvoicesCreateForm = ({ onSuccess }: { onSuccess?: () => void }) => {
     const [selectedUser, setSelectedUser] = useState<{ label: string; value: string } | null>(null);
+    const [showPreview, setShowPreview] = useState(false);
+    // const [isDownloading, setIsDownloading] = useState(false);
+
     const generateInvoiceNumber = () => {
         return Math.floor(100000 + Math.random() * 900000).toString();
     };
+
+    // Function to generate and download PDF
+    // const downloadInvoicePDF = (values: any) => {
+    //     setIsDownloading(true);
+    //     try {
+    //         const doc = new jsPDF();
+    //         const invoiceNumber = generateInvoiceNumber();
+    //         const today = new Date();
+    //         const invoiceDate = today.toLocaleDateString('en-GB');
+
+    //         // Calculate totals
+    //         const items = values.items.map((item: any) => ({
+    //             ...item,
+    //             total: Number(item.quantity) * Number(item.unit_price),
+    //         }));
+    //         const subtotal = items.reduce((sum: number, item: any) => sum + item.total, 0);
+    //         const tax = values.tax ? Number(values.tax) : 0;
+    //         const total = subtotal + tax;
+
+    //         // Header
+    //         doc.setFontSize(24);
+    //         doc.text('INVOICE', 20, 30);
+
+    //         // Invoice details
+    //         doc.setFontSize(12);
+    //         doc.text(`Invoice Number: ${invoiceNumber}`, 20, 50);
+    //         doc.text(`Date: ${invoiceDate}`, 20, 60);
+    //         doc.text(`Due Date: ${values.due_date || 'N/A'}`, 20, 70);
+
+    //         // Company logo placeholder
+    //         doc.setFillColor(255, 224, 102);
+    //         doc.rect(150, 20, 40, 40, 'F');
+    //         doc.setFontSize(20);
+    //         doc.text('🧾', 165, 45);
+
+    //         // Bill to section
+    //         doc.setFontSize(14);
+    //         doc.text('Bill To:', 20, 90);
+    //         doc.setFontSize(12);
+    //         doc.text(selectedUser?.label || 'N/A', 20, 100);
+
+    //         // Items table
+    //         const tableData = items.map((item: any) => [
+    //             item.item_name || 'N/A',
+    //             item.quantity.toString(),
+    //             `$${item.unit_price || 0}`,
+    //             `$${item.total.toFixed(2)}`
+    //         ]);
+
+    //         autoTable(doc, {
+    //             head: [['Description', 'Qty', 'Unit Price', 'Amount']],
+    //             body: tableData,
+    //             startY: 120,
+    //             styles: {
+    //                 fontSize: 10,
+    //                 cellPadding: 5,
+    //             },
+    //             headStyles: {
+    //                 fillColor: [66, 66, 66],
+    //                 textColor: 255,
+    //                 fontStyle: 'bold',
+    //             },
+    //         });
+
+    //         // Totals section
+    //         const finalY = (doc as any).lastAutoTable.finalY + 10;
+    //         doc.setFontSize(12);
+    //         doc.text(`Subtotal: $${subtotal.toFixed(2)}`, 140, finalY);
+    //         doc.text(`Tax: $${tax.toFixed(2)}`, 140, finalY + 10);
+    //         doc.setFontSize(14);
+    //         doc.setFont(undefined, 'bold');
+    //         doc.text(`Total: $${total.toFixed(2)}`, 140, finalY + 20);
+
+    //         // Description
+    //         if (values.description) {
+    //             doc.setFontSize(12);
+    //             doc.setFont(undefined, 'normal');
+    //             doc.text('Description:', 20, finalY + 40);
+    //             doc.setFontSize(10);
+    //             const splitDescription = doc.splitTextToSize(values.description, 170);
+    //             doc.text(splitDescription, 20, finalY + 50);
+    //         }
+
+    //         // Download the PDF
+    //         doc.save(`invoice-${invoiceNumber}.pdf`);
+    //         showMsgToast("Invoice PDF downloaded successfully");
+    //     } catch (error) {
+    //         showErrorToast("Failed to generate PDF");
+    //         console.error('PDF generation error:', error);
+    //     } finally {
+    //         setIsDownloading(false);
+    //     }
+    // };
 
     // Async load options for user search
     const loadUserOptions = async (inputValue: string) => {
@@ -58,7 +154,91 @@ const InvoicesCreateForm = ({ onSuccess }: { onSuccess?: () => void }) => {
 
     return (
         <>
-            <h2 style={{ marginBottom: '20px' }}>Recipient</h2>
+
+            {/* Invoice Preview Modal */}
+            <Modal
+                show={showPreview}
+                onHide={() => setShowPreview(false)}
+                className="invoice-preview-modal"
+                centered
+            >
+                <Modal.Header closeButton>
+                    <Modal.Title>Invoice Preview</Modal.Title>
+                </Modal.Header>
+                <Modal.Body>
+                    <div
+                        className="invoice-preview">
+                        <div className="invoice-header">
+                            <div>
+                                <h2>Invoice</h2>
+                                <div className="invoice-header-details">
+                                    <div>Invoice number <span>{generateInvoiceNumber()}</span></div>
+                                    <div>Issue date <span>{new Date().toLocaleDateString('en-GB')}</span></div>
+                                    <div>Due date <span>{'-'}</span></div>
+                                </div>
+                            </div>
+                            <div>
+                                {/* Placeholder for logo */}
+                                <div className="invoice-logo">
+                                    <span role="img" aria-label="logo">🧾</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div className="invoice-billed-to">
+                            <div>
+                                <div className="invoice-billed-to-label">Billed to</div>
+                                <div className="invoice-billed-to-name">{selectedUser?.label || '-'}</div>
+                                <div className="invoice-billed-to-email">{selectedUser ? '' : '-'}</div>
+                            </div>
+                        </div>
+                        <div className="invoice-total">
+                            ${0} due {new Date().toLocaleDateString('en-GB')}
+                        </div>
+                        <table className="invoice-table">
+                            <thead>
+                                <tr className="invoice-table-header" >
+                                    <th className="invoice-table-header-cell-left">Description</th>
+                                    <th className="invoice-table-header-cell">Qty</th>
+                                    <th className="invoice-table-header-cell">Unit price</th>
+                                    <th className="invoice-table-header-cell">Amount</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td className="invoice-table-cell-left">-</td>
+                                    <td className="invoice-table-cell">-</td>
+                                    <td className="invoice-table-cell">-</td>
+                                    <td className="invoice-table-cell">-</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <div className="invoice-summary-download">
+                            <div className="invoice-summary-item-download">
+                                <span>Subtotal</span>
+                                <span>${0}</span>
+                            </div>
+                            <div className="invoice-summary-item-download">
+                                <span>Tax</span>
+                                <span>${0}</span>
+                            </div>
+                            <div className="invoice-summary-item-download">
+                                <span>Total</span>
+                                <span>${0}</span>
+                            </div>
+                            <div className="invoice-summary-item-download">
+                                <span>Amount due</span>
+                                <span>${0}</span>
+                            </div>
+                        </div>
+                    </div>
+                </Modal.Body>
+                <Modal.Footer>
+                    <Button variant="secondary" onClick={() => setShowPreview(false)}>
+                        Close
+                    </Button>
+                </Modal.Footer>
+            </Modal>
+
             <Formik
                 initialValues={initialValues}
                 validationSchema={validationSchema}
@@ -102,113 +282,129 @@ const InvoicesCreateForm = ({ onSuccess }: { onSuccess?: () => void }) => {
                 }}
             >
                 {({ values, isSubmitting, setFieldValue, setFieldTouched, touched, errors }) => (
-                    <Form>
-                        <div className="form-group">
-                            <AsyncSelect
-                                cacheOptions
-                                loadOptions={loadUserOptions}
-                                defaultOptions
-                                value={selectedUser}
-                                onChange={option => {
-                                    setSelectedUser(option);
-                                    setFieldValue('user_id', option ? option.value : '');
-                                    setFieldTouched('user_id', true, true);
-                                }}
-                                onBlur={() => setFieldTouched('user_id', true, true)}
-                                placeholder="Search user by name or email..."
-                                isClearable
-                            />
-                            {touched.user_id && errors.user_id && (
-                                <div style={{ color: 'red', fontSize: 12 }}>{errors.user_id}</div>
-                            )}
-                        </div>
-                        <div className="form-group">
-                            <label>Status</label>
-                            <Field as="select" name="status" className="form-control">
-                                <option value="sent">Sent</option>
-                                <option value="draft">Draft</option>
-                                <option value="paid">Paid</option>
-                                <option value="overdue">Overdue</option>
-                            </Field>
-                        </div>
-
-                        <FieldArray name="items">
-                            {({ push, remove }) => (
-                                <div>
-                                    <label>Items</label>
-                                    {values.items.map((item, idx) => (
-                                        <div
-                                            key={idx}
-                                            style={{
-                                                borderBottom: values.items.length !== 1 ? '1px solid #e7eaf3' : 'none',
-                                                paddingBottom: '6px',
-                                                paddingTop: '10px'
-                                            }}
-                                        >
-                                            <Field name={`items[${idx}].item_name`} className="form-control" placeholder="Item Name" />
-                                            {/* Error for item name */}
-                                            <ErrorMessage name={`items[${idx}].item_name`}>{msg => <div style={{ color: 'red', fontSize: 12 }}>{msg}</div>}</ErrorMessage>
-                                            <div style={{ display: 'flex', gap: 8, marginBottom: 8, marginTop: 12 }}>
-                                                <Field name={`items[${idx}].quantity`} className="form-control" placeholder="Qty" type="number" min="1" step="1" />
-                                                {/* Error for quantity */}
-                                                <ErrorMessage name={`items[${idx}].quantity`}>{msg => <div style={{ color: 'red', fontSize: 12 }}>{msg}</div>}</ErrorMessage>
-                                                <Field name={`items[${idx}].unit_price`} className="form-control" placeholder="Unit Price" type="number" min="0" step="0.01" />
-                                                {/* Error for unit price */}
-                                                <ErrorMessage name={`items[${idx}].unit_price`}>{msg => <div style={{ color: 'red', fontSize: 12 }}>{msg}</div>}</ErrorMessage>
-                                                <Button variant="danger" onClick={() => remove(idx)} disabled={values.items.length === 1}>-</Button>
-                                            </div>
-                                        </div>
-                                    ))}
-                                    <Button className="primary-btn" style={{ marginBottom: '15px', marginTop: '10px', background: 'black !important' }} onClick={() => push({ item_name: "", quantity: 1, unit_price: "", total: "" })}>
-                                        + Add Item
+                    <div className="container-invoice">
+                        <Form>
+                            {/* Update the download button to use current form values */}
+                            <div className="recipient-header">
+                                <h2 className="recipient-heading">Recipient</h2>
+                                <div className="recipient-actions">
+                                    <Button className="primary-btn"
+                                        onClick={() => setShowPreview(true)}
+                                    >
+                                        Preview Invoice
                                     </Button>
                                 </div>
+                            </div>
+
+                            <div className="form-group">
+                                <AsyncSelect
+                                    cacheOptions
+                                    loadOptions={loadUserOptions}
+                                    defaultOptions
+                                    value={selectedUser}
+                                    onChange={option => {
+                                        setSelectedUser(option);
+                                        setFieldValue('user_id', option ? option.value : '');
+                                        setFieldTouched('user_id', true, true);
+                                    }}
+                                    onBlur={() => setFieldTouched('user_id', true, true)}
+                                    placeholder="Search user by name or email..."
+                                    isClearable
+                                />
+                                {touched.user_id && errors.user_id && (
+                                    <div className="error-message">{errors.user_id}</div>
+                                )}
+                            </div>
+                            <div className="form-group">
+                                <label>Status</label>
+                                <Field as="select" name="status" className="form-control">
+                                    <option value="sent">Sent</option>
+                                    <option value="draft">Draft</option>
+                                    <option value="paid">Paid</option>
+                                    <option value="overdue">Overdue</option>
+                                </Field>
+                            </div>
+
+                            <FieldArray name="items">
+                                {({ push, remove }) => (
+                                    <div>
+                                        <label>Items</label>
+                                        {values.items.map((item, idx) => (
+                                            <div
+                                                className="form-group-item"
+                                                key={idx}
+                                                style={{
+                                                    borderBottom: values.items.length !== 1 ? '1px solid #e7eaf3' : 'none',
+                                                }}
+                                            >
+                                                <Field name={`items[${idx}].item_name`} className="form-control" placeholder="Item Name" />
+                                                {/* Error for item name */}
+                                                <ErrorMessage name={`items[${idx}].item_name`}>{msg => <div className="error-message">{msg}</div>}</ErrorMessage>
+                                                <div className="item-quantity">
+                                                    <div>
+                                                        <Field name={`items[${idx}].quantity`} className="form-control" placeholder="Qty" type="number" min="1" step="1" />
+                                                        {/* Error for quantity */}
+                                                        <ErrorMessage name={`items[${idx}].quantity`}>{msg => <div className="error-message">{msg}</div>}</ErrorMessage>
+                                                    </div>
+
+                                                    <div>
+                                                        <Field name={`items[${idx}].unit_price`} className="form-control" placeholder="Unit Price" type="number" min="0" step="0.01" />
+                                                        {/* Error for unit price */}
+                                                        <ErrorMessage name={`items[${idx}].unit_price`}>{msg => <div className="error-message">{msg}</div>}</ErrorMessage>
+                                                    </div>
+                                                    <Button variant="danger" onClick={() => remove(idx)} disabled={values.items.length === 1}>-</Button>
+                                                </div>
+                                            </div>
+                                        ))}
+                                        <Button className="primary-btn wrapper-add-item" onClick={() => push({ item_name: "", quantity: 1, unit_price: "", total: "" })}>
+                                            + Add Item
+                                        </Button>
+                                    </div>
+                                )}
+                            </FieldArray>
+                            {/* AddTax Checkbox */}
+                            <div className="wrapperAddTax">
+                                <label className="AddTaxCheckbox">
+                                    <Field type="checkbox" name="addTax" />
+                                    <p>Add Tax %</p>
+                                </label>
+                            </div>
+                            {values.addTax && (
+                                <div className="form-group wrapperAddTaxForm">
+                                    <Field name="tax" className="form-control" />
+                                </div>
                             )}
-                        </FieldArray>
-                        {/* AddTax Checkbox */}
-                        <div style={{ margin: '10px 0', display: 'flex', alignItems: 'center', gap: '10px' }}>
-                            <label style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-                                <Field type="checkbox" name="addTax" />
-                                <p style={{ marginBottom: '0' }}>Add Tax %</p>
-                            </label>
-                        </div>
-                        {values.addTax && (
-                            <div className="form-group" style={{ width: '30%' }}>
 
-                                <Field name="tax" className="form-control" />
+                            <div className="invoice-summary">
+                                <div className="invoice-summary-item">
+                                    <label className="wrapper-summary-label">Subtotal</label>
+                                    {values.items.reduce((sum, item) => sum + (Number(item.quantity) * Number(item.unit_price)), 0)}
+                                </div>
+                                <div className="invoice-summary-item">
+                                    <label className="wrapper-summary-label">Tax (%)</label>
+                                    {values.tax ? values.tax : 0}
+                                </div>
+                                <div className="invoice-summary-item">
+                                    <label className="wrapper-summary-label">Total</label>
+                                    {values.items.reduce((sum, item) => sum + (Number(item.quantity) * Number(item.unit_price)), 0) + (values.tax ? Number(values.tax) : 0)}
+                                </div>
                             </div>
-                        )}
-
-                        <div style={{ border: '1px solid #e7eaf3', borderRadius: '10px', padding: '10px', marginBottom: '10px' }}>
-                            <div style={{ width: '100%', display: 'flex', alignItems: 'center', justifyContent: "space-between" }}>
-                                <label style={{ color: "gray", marginBottom: '0' }}>Subtotal</label>
-                                {values.items.reduce((sum, item) => sum + (Number(item.quantity) * Number(item.unit_price)), 0)}
+                            <div className="form-group">
+                                <label>Due Date</label>
+                                <Field name="due_date" className="form-control" placeholder="DD-MM-YYYY" />
                             </div>
-                            <div style={{ width: '100%', display: 'flex', alignItems: 'center', justifyContent: "space-between" }}>
-                                <label style={{ color: "gray", marginBottom: '0' }}>Tax (%)</label>
-                                {values.tax ? values.tax : 0}
+                            <div className="form-group">
+                                <label>Description</label>
+                                <Field name="description" as="textarea" className="form-control" />
                             </div>
-                            <div style={{ width: '100%', display: 'flex', alignItems: 'center', justifyContent: "space-between", }}>
-                                <label style={{ marginBottom: '0' }}>Total</label>
-                                {values.items.reduce((sum, item) => sum + (Number(item.quantity) * Number(item.unit_price)), 0) + (values.tax ? Number(values.tax) : 0)}
-                            </div>
-                        </div>
-                        <div className="form-group">
-                            <label>Due Date</label>
-                            <Field name="due_date" className="form-control" placeholder="DD-MM-YYYY" />
-                        </div>
-                        <div className="form-group">
-                            <label>Description</label>
-                            <Field name="description" as="textarea" className="form-control" />
-                        </div>
-                        <Button type="submit" disabled={isSubmitting} className="primary-btn">
-                            {isSubmitting ? "Saving..." : "Save Invoice"}
-                        </Button>
-                    </Form>
+                            <Button type="submit" disabled={isSubmitting} className="primary-btn">
+                                {isSubmitting ? "Saving..." : "Save Invoice"}
+                            </Button>
+                        </Form>
+                    </div>
                 )}
             </Formik>
         </>
-
     );
 };
 
