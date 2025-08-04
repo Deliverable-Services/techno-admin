@@ -15,6 +15,8 @@ import { showMsgToast } from "../../utils/showMsgToast";
 import { showErrorToast } from "../../utils/showErrorToast";
 import { RiChatFollowUpFill } from "react-icons/ri";
 import { GoPencil } from "react-icons/go";
+import { FaTrash } from "react-icons/fa"; // Add at the top with other imports
+
 
 
 import { Button } from "react-bootstrap";
@@ -169,6 +171,21 @@ const LeadDrawer: React.FC<Props> = ({ lead, onClose }) => {
       showErrorToast("Error deleting comment");
     }
   };
+
+  const [notes, setNotes] = useState<{ text: string; timestamp: string }[]>([]);
+const [newNote, setNewNote] = useState("");
+
+const handleAddNote = () => {
+  if (!newNote.trim()) return;
+  const timestamp = new Date().toLocaleString();
+  setNotes((prev) => [...prev, { text: newNote.trim(), timestamp }]);
+  setNewNote("");
+};
+
+const handleDeleteNote = (index: number) => {
+  setNotes((prev) => prev.filter((_, i) => i !== index));
+};
+
 
   return (
     <>
@@ -348,7 +365,58 @@ const LeadDrawer: React.FC<Props> = ({ lead, onClose }) => {
                 </div>
               </div>
             </div>
-            <div></div>
+            <div>
+            <div className="card m-3 p-3 shadow-sm" style={{ width: "300px" }}>
+  <h6 className="mb-3 d-flex align-items-center border-bottom pb-2">
+    <FaStickyNote className="mr-2" /> Notes
+  </h6>
+
+  {/* Add New Note */}
+  <div className="form-group">
+    <textarea
+      className="form-control"
+      rows={3}
+      placeholder="Write a note..."
+      value={newNote}
+      onChange={(e) => setNewNote(e.target.value)}
+    />
+    <Button
+      variant="primary"
+      size="sm"
+      className="mt-2"
+      onClick={handleAddNote}
+      disabled={!newNote.trim()}
+    >
+      Add Note
+    </Button>
+  </div>
+
+  {/* Notes List */}
+  <div className="mt-4">
+    {notes.length > 0 ? (
+      notes.map((note, index) => (
+        <div
+          key={index}
+          className="bg-light p-3 mb-3 rounded position-relative shadow-sm"
+        >
+          <div className="text-muted small mb-2">
+            📝 {note.timestamp}
+          </div>
+          <div>{note.text}</div>
+          <FaTrash
+            className="position-absolute text-danger"
+            style={{ top: 8, right: 8, cursor: "pointer" }}
+            onClick={() => handleDeleteNote(index)}
+          />
+        </div>
+      ))
+    ) : (
+      <div className="text-muted small">No notes yet.</div>
+    )}
+  </div>
+</div>
+
+            </div>
           </div>
         </div>
       </div>

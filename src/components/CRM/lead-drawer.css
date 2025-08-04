@@ -243,6 +243,11 @@
   top: -2px;
 }
 
+.notes-card textarea {
+  resize: none;
+}
+
+
 
 
 
