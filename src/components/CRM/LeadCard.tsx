@@ -10,6 +10,7 @@ import {
   FaCalendarAlt,
   FaRedoAlt,
 } from "react-icons/fa";
+import moment from "moment";
 
 interface Props {
   lead: Lead;
@@ -24,19 +25,34 @@ const LeadCard: React.FC<Props> = ({ lead }) => {
     }),
   }));
 
+  const formattedDate = (date) => {
+    return (
+      <>
+        {date ? (
+          <>
+            <span>{date ? moment(date).format("DD MMMM YY") : "NA"}</span>
+            &nbsp;<span>({date ? moment(date).format("hh:mm a") : "NA"})</span>
+          </>
+        ) : (
+          <span>NA</span>
+        )}
+      </>
+    );
+  };
+
   return (
     <div
       ref={drag}
       className="card shadow-sm mb-3 border-0"
       style={{
         opacity: isDragging ? 0.5 : 1,
-        borderLeft: lead.priority === "Urgent" ? "4px solid #eb5757" : "4px solid #2d9cdb",
+        borderLeft: "4px solid #eb5757",
       }}
     >
       <div className="card-body p-3">
         {/* Top row: Order ID, Lead Source, Priority */}
         <div className="d-flex justify-content-between align-items-center mb-2">
-          <span className="text-muted small"> 🔗 {lead.orderId || "ORD-456"}</span>
+          <span className="text-muted small"> 🔗 #{lead.id || "ORD-456"}</span>
 
           <span
             className="badge badge-light px-2 py-1 text-dark"
@@ -46,13 +62,13 @@ const LeadCard: React.FC<Props> = ({ lead }) => {
               borderRadius: "12px",
             }}
           >
-            {lead.source || "Lead"}
+            {lead.page || "Source"}
           </span>
 
-          <span className="text-danger small d-flex align-items-center">
+          {/* <span className="text-danger small d-flex align-items-center">
             <FaFlag className="mr-1" style={{ fontSize: 12 }} />
             {lead.priority || "Urgent"}
-          </span>
+          </span> */}
         </div>
 
         {/* Title */}
@@ -73,11 +89,9 @@ const LeadCard: React.FC<Props> = ({ lead }) => {
             lineHeight: "1.4",
             minHeight: "2.8em", // reserve height for 2 lines
           }}
-
         >
           <FaRedoAlt className="mr-2 text-secondary" />
-          {lead.message ||
-            "Landing page for microdose campaign and lead gen."}
+          {lead.message || "Landing page for microdose campaign and lead gen."}
         </p>
 
         {/* Date and Time */}
@@ -91,9 +105,9 @@ const LeadCard: React.FC<Props> = ({ lead }) => {
             }}
           >
             <FaCalendarAlt className="mr-1 text-muted" />
-            Due:{" "}
+            Created At:{" "}
             <strong className="text-dark">
-              {lead.dueDate || "July 29, ‘24"} {lead.time || "3:00 PM"}
+              {formattedDate(lead.created_at) || "July 29, ‘24 3:00 PM"}
             </strong>
           </span>
         </div>
@@ -102,7 +116,7 @@ const LeadCard: React.FC<Props> = ({ lead }) => {
         <div className="d-flex justify-content-between align-items-center border-top pt-2 mt-2">
           {/* Assignee Image */}
           <img
-            src={`https://i.pravatar.cc/24?u=${lead.id}`}
+            src={String(lead.assignee) || `https://i.pravatar.cc/24?u=${lead.id}`}
             alt="user"
             className="rounded-circle crm-user-img"
             width={24}
