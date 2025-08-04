@@ -24,6 +24,7 @@ import { queryClient } from "../../utils/queryClient";
 import { showMsgToast } from "../../utils/showMsgToast";
 import { AiFillDelete } from "react-icons/ai";
 import { BsFunnel } from "react-icons/bs";
+import { ImUsers } from "react-icons/im";
 interface IFilter {
   role: string | null;
 }
@@ -180,6 +181,7 @@ const Users = () => {
     <>
       <Container fluid className=" component-wrapper view-padding">
         <PageHeading
+          icon={<ImUsers />}
           title="Customers"
           onClick={_onCreateClick}
           totalRecords={data?.total}

@@ -11,6 +11,10 @@ import {
   FaArrowAltCircleLeft,
   FaArrowLeft,
   FaUsersCog,
+  FaEnvelope,
+  FaPhone,
+  FaMap,
+  FaClock,
 } from "react-icons/fa";
 import { GoIssueOpened } from "react-icons/go";
 import { IoLogoModelS } from "react-icons/io";
@@ -50,6 +54,7 @@ import { useMutation } from "react-query";
 import useTokenStore from "../hooks/useTokenStore";
 import API from "../utils/API";
 import { useOrganisation } from "../context/OrganisationContext";
+import { formatTimestamp } from "../utils/utitlity";
 
 const mainLinks: Array<INavLink> = [
   {
@@ -133,19 +138,19 @@ const websiteLinks: Array<INavLink> = [
     icon: <AiFillIdcard />,
     permissionReq: "read_testimonial",
   },
+  // {
+  //   title: "Static Pages",
+  //   path: "/static-pages",
+  //   icon: <RiPagesLine />,
+  //   permissionReq: "read_staticpage",
+  // },
+  // {
+  //   title: "Website",
+  //   path: "/website",
+  //   icon: <RiGlobalLine />,
+  //   permissionReq: "read_staticpage",
+  // },
   {
-    title: "Static Pages",
-    path: "/static-pages",
-    icon: <RiPagesLine />,
-    permissionReq: "read_staticpage",
-  },
-    {
-    title: "Website",
-    path: "/website",
-    icon: <RiGlobalLine />,
-    permissionReq: "read_staticpage",
-  },
-    {
     title: "Website Pages",
     path: "/website-pages",
     icon: <RiGlobalLine />,
@@ -383,7 +388,55 @@ const NavBar = ({ isNavOpen, setIsNavOpen }: INavBar) => {
         )}
 
         <div className="all-links">
-          <ul className="pt-4">
+          <div className="d-flex align-items-center justify-content-center">
+            <Dropdown className="w-100 pt-3" style={{ position: 'unset' }}>
+              <section
+                style={{
+                  fontSize: "11px",
+                  fontWeight: "bold",
+                  color: "#667085",
+                  marginBottom: "4px",
+                }}
+              >
+                Organisation
+              </section>
+
+              <Dropdown.Toggle
+                id="dropdown-basic"
+                className="bg-white w-100 border px-3 py-1 shadow-sm d-flex align-items-center btn-focus-none"
+                style={{ color: "#000", fontWeight: "500", fontSize: "14px", borderRadius: '6px' }}
+              >
+                <span className="text-truncate" style={{ width: '100%', textAlign: 'left' }}>
+                  {selectedOrg?.name}
+                </span>
+              </Dropdown.Toggle>
+
+              <Dropdown.Menu
+                className=" rounded border-0 mt-2  global-card"
+                style={{ minWidth: "260px" }}
+              >
+                <div className="d-flex flex-column gap-2">
+                  <section className="d-flex align-items-center py-2 px-4 border-bottom">
+                    <FaEnvelope className="text-primary mr-2" size={14} />
+                    <span>{selectedOrg?.email}</span>
+                  </section>
+                  <section className="d-flex align-items-center py-2 px-4 border-bottom">
+                    <FaPhone className="text-primary mr-2" size={14} />
+                    <span>{selectedOrg?.phone}</span>
+                  </section>
+                  <section className="d-flex align-items-center py-2 px-4 border-bottom">
+                    <FaMap className="text-primary mr-2" size={14} />
+                    <span>{selectedOrg?.address}</span>
+                  </section>
+                  <section className="d-flex align-items-center py-2 px-4 ">
+                    <FaClock className="text-primary mr-2" size={14} />
+                    <span>{formatTimestamp(selectedOrg?.created_at)}</span>
+                  </section>
+                </div>
+              </Dropdown.Menu>
+            </Dropdown>
+          </div>
+          <ul className="pt-3">
             <Navlink
               title="Dashboard"
               path="/dashboard"
@@ -453,52 +506,6 @@ const NavBar = ({ isNavOpen, setIsNavOpen }: INavBar) => {
               )
             )}
           </ul>
-        </div>
-        <div
-          className="top-bar d-flex align-items-center user-dd"
-          style={{
-            borderTop: "1px solid #E0E0E0",
-            borderBottom: "0",
-            bottom: "0",
-            top: "unset",
-            padding: "0 20px",
-          }}
-        >
-          <Dropdown
-            className="global-card w-100"
-            style={{
-              background: "#fff",
-              borderRadius: "10px",
-              boxShadow:
-                "0px 15px 32px 0px #0000000D, 0px 59px 59px 0px #0000000A, 0px 132px 79px 0px #00000008, 0px 234px 94px 0px #00000003, 0px 366px 103px 0px #00000000",
-              padding: "12px 20px",
-            }}
-          >
-            <Dropdown.Toggle
-              id="dropdown-basic"
-              className="d-flex align-items-center filter-button bg-transparent border-0 p-0"
-              style={{ color: "#000" }}
-            >
-              {isLoading ? (
-                "Loading"
-              ) : (
-                <img src={profile} alt="profile" className="profile" />
-              )}
-              {user && <p className="text-muted small mb-0">{user?.name}</p>}
-            </Dropdown.Toggle>
-
-            <Dropdown.Menu className="global-card">
-              {/* <Dropdown.Item href="/profile" className="border-bottom ">
-                {" "}
-                <FaUserCog className="mr-3" />
-                Profile
-              </Dropdown.Item> */}
-              <Dropdown.Item onClick={() => mutate()}>
-                <BiLogOut className="mr-3" />{" "}
-                {isLoading ? "Loading" : "Log out"}
-              </Dropdown.Item>
-            </Dropdown.Menu>
-          </Dropdown>
         </div>
       </nav>
       {isNavOpen && !isDesktop && <Overlay onClick={closeNavBar} />}

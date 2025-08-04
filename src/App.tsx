@@ -74,9 +74,9 @@ import CRMBoard from "./components/CRM/CRMBoard";
 import organization from "./components/Organization";
 import InvoicePage from "./components/Invoices";
 import { OrganisationProvider } from "./context/OrganisationContext";
-import Website from "./components/Website";
-import ViewWebsite from "./components/Website/ViewWebsite";
-import PageCreateUpdateForm from "./components/Website/PageCreateUpdateForm";
+import ViewWebsite from "./components/DynamicPages/ViewWebsite";
+import DynamicPageCreateUpdateForm from "./components/DynamicPages/DynamicPageCreateUpdateForm";
+import WebsitePages from "./components/WebsitePages";
 
 const App = () => {
   const [isDesktop, setIsDesktop] = useState<boolean>(false);
@@ -220,11 +220,11 @@ const App = () => {
                   permissionReq="read_booking"
                 />
                 {/* <PrivateRoute
-              path="/crm"
-              exact
-              component={Orders}
-              permissionReq="read_booking"
-            /> */}
+                   path="/crm"
+                   exact
+                   component={Orders}
+                   permissionReq="read_booking"
+                 /> */}
                 <PrivateRoute
                   path="/cities"
                   exact
@@ -447,16 +447,40 @@ const App = () => {
                   component={Subscriptions}
                   permissionReq="read_subscription"
                 />
-                <PrivateRoute
-                  path="/static-pages"
+                {/* <PrivateRoute
+                  path="/website-pages/static"
                   exact
                   component={StaticPages}
                   permissionReq="read_staticpage"
-                />
+                /> */}
                 <PrivateRoute
-                  path="/static-pages/create-edit"
+                  path="/website-pages/static/create-edit"
                   exact
                   component={StaticPageCreateForm}
+                  permissionReq="read_staticpage"
+                />
+                {/* <PrivateRoute
+                  path="/website"
+                  exact
+                  component={Website}
+                  permissionReq="read_staticpage"
+                /> */}
+                <PrivateRoute
+                  path="/website-pages/dynamic/create-edit"
+                  exact
+                  component={DynamicPageCreateUpdateForm}
+                  permissionReq="read_staticpage"
+                />
+                <PrivateRoute
+                  path="/website-pages/dynamic/:id"
+                  exact
+                  component={ViewWebsite}
+                  permissionReq="read_staticpage"
+                />
+                <PrivateRoute
+                  path="/website-pages"
+                  exact
+                  component={WebsitePages}
                   permissionReq="read_staticpage"
                 />
                 <PrivateRoute
@@ -495,24 +519,6 @@ const App = () => {
                   component={InvoicePage}
                   permissionReq="read_city"
                 />
-                    <PrivateRoute
-              path="/website"
-              exact
-              component={Website}
-              permissionReq="read_staticpage"
-            />
-              <PrivateRoute
-                path="/website/create-edit"
-                exact
-                component={PageCreateUpdateForm}
-                permissionReq="read_staticpage"
-              />
-            <PrivateRoute
-              path="/website/:id"
-              exact
-              component={ViewWebsite}
-              permissionReq="read_staticpage"
-            />
 
                 <Route path="/login" exact component={LoginPage} />
                 <Route path="/verify-otp" exact component={VerifyOtp} />

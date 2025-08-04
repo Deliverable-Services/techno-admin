@@ -4,8 +4,6 @@ import {
   BiArrowFromBottom,
   BiArrowFromTop,
   BiCopy,
-  BiGridVertical,
-  BiSave,
   BiTrash,
 } from "react-icons/bi";
 
@@ -29,7 +27,7 @@ const PageCanvas = ({
     [onDrop]
   );
 
-  console.log("page- sections", sections);
+  // console.log("page- sections", sections);
 
   return (
     <div

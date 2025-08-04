@@ -7,7 +7,6 @@ import { useMutation } from "react-query";
 import { useHistory, useLocation } from "react-router-dom";
 import { handleApiError } from "../../hooks/handleApiErrors";
 import useGetSingleQuery from "../../hooks/useGetSingleQuery";
-import useUserProfileStore from "../../hooks/useUserProfileStore";
 import BackButton from "../../shared-components/BackButton";
 import { InputField } from "../../shared-components/InputFeild";
 import IsLoading from "../../shared-components/isLoading";
@@ -43,18 +42,19 @@ const updatePage = async (data, id) => {
   });
 };
 
-const PageCreateUpdateForm = () => {
+const DynamicPageCreateUpdateForm = () => {
   const { state } = useLocation();
   const history = useHistory();
-  const loggedInUser = useUserProfileStore((state) => state.user);
   const id = state ? (state as any).id : null;
+  
   const { data, isLoading: dataLoading } = useGetSingleQuery({ id, key });
+
   const { mutate, isLoading } = useMutation(createUpdataPage, {
     onSuccess: () => {
       setTimeout(() => queryClient.invalidateQueries(key), 500);
       if (id) return showMsgToast("Page updated successfully");
       showMsgToast("Page created successfully");
-      history.replace("/website");
+      history.replace("/website-pages?tab=dynamic");
     },
     onError: (error: AxiosError) => {
       handleApiError(error, history);
@@ -70,7 +70,6 @@ const PageCreateUpdateForm = () => {
   const initialValues = {
     name: apiData?.name || "",
     slug: apiData?.slug || "",
-    organisation_id: loggedInUser?.organisation[0]?.id || "",
     title: apiData?.seo_details?.title || "",
     description: apiData?.seo_details?.description || "",
     keywords: apiData?.seo_details?.keywords || "",
@@ -85,7 +84,7 @@ const PageCreateUpdateForm = () => {
   return (
     <>
       <div className="card view-padding p-2 d-flex mt-3">
-        <BackButton title={id ? "Update Page" : "Add Page"} />
+        <BackButton title={id ? "Update Page" : "Create a dynamic Page"} />
 
         {/* <div className="text-primary">
           <div className="d-flex justify-content-between">
@@ -149,7 +148,11 @@ const PageCreateUpdateForm = () => {
                         Object.keys(value).length === 0
                       )
                     ) {
-                      formdata.append(key, value);
+                      if (value instanceof Blob) {
+                        formdata.append(key, value);
+                      } else {
+                        formdata.append(key, String(value));
+                      }
                     }
                   });
 
@@ -174,15 +177,6 @@ const PageCreateUpdateForm = () => {
                       name="slug"
                       placeholder="Slug"
                       label="Slug"
-                      required
-                    />
-
-                    <InputField
-                      name="organisation_id"
-                      placeholder="Organisation Id"
-                      label="Organisation Id"
-                      value={loggedInUser?.organisation[0]?.id}
-                      readOnly
                       required
                     />
 
@@ -231,15 +225,6 @@ const PageCreateUpdateForm = () => {
                       // required
                     />
 
-                    {/* <InputField
-                      name="socialFeaturedImage"
-                      folder="brands"
-                      placeholder="Featured Image"
-                      label="Choose Featured Image"
-                      isFile
-                      setFieldValue={setFieldValue}
-                    /> */}
-
                     <InputField
                       as="select"
                       selectData={isPublishedArray}
@@ -283,4 +268,4 @@ const PageCreateUpdateForm = () => {
   );
 };
 
-export default PageCreateUpdateForm;
+export default DynamicPageCreateUpdateForm;

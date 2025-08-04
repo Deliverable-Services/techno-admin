@@ -181,27 +181,30 @@ const Dashboard = () => {
             <div className="card hoverable  d-flex w-100 ">
               <div className="card-content">
                 <div className="card-data-box d-flex">
-                  <div className="crad-icon">
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      width="16"
-                      height="16"
-                      fill="currentColor"
-                      className="bi bi-people-fill"
-                      viewBox="0 0 16 16"
-                    >
-                      <path d="M7 14s-1 0-1-1 1-4 5-4 5 3 5 4-1 1-1 1zm4-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6m-5.784 6A2.24 2.24 0 0 1 5 13c0-1.355.68-2.75 1.936-3.72A6.3 6.3 0 0 0 5 9c-4 0-5 3-5 4s1 1 1 1zM4.5 8a2.5 2.5 0 1 0 0-5 2.5 2.5 0 0 0 0 5" />
-                    </svg>
-                  </div>
-                  <div>
-                    <div className="lead">Customers</div>
+
+                  <div className="w-100">
+                    <div className="d-flex align-items-center justify-content-between">
+                      <div className="lead">Customers</div>
+                      <div className="icon">
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          width="16"
+                          height="16"
+                          fill="currentColor"
+                          className="bi bi-people-fill"
+                          viewBox="0 0 16 16"
+                        >
+                          <path d="M7 14s-1 0-1-1 1-4 5-4 5 3 5 4-1 1-1 1zm4-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6m-5.784 6A2.24 2.24 0 0 1 5 13c0-1.355.68-2.75 1.936-3.72A6.3 6.3 0 0 0 5 9c-4 0-5 3-5 4s1 1 1 1zM4.5 8a2.5 2.5 0 1 0 0-5 2.5 2.5 0 0 0 0 5" />
+                        </svg>
+                      </div>
+                    </div>
 
                     <div className="d-flex align-items-center justify-content-between mt-2">
                       <h1 className="text-black font-weight-bold">
                         {data?.customer + data?.customerprev}
                       </h1>
                     </div>
-                    <div className="d-flex align-items-center justify-content-end">
+                    <div className="d-flex align-items-center justify-content-start">
                       <span className="tag  per-tag d-flex align-items-center">
                         <AiOutlineArrowUp size={13} />
                         <strong>
@@ -218,24 +221,26 @@ const Dashboard = () => {
               </div>
             </div>
 
-            <div className="card hoverable  d-flex w-100 ">
+            <div className="card hoverable d-flex w-100 ">
               <div className="card-content">
                 <div className="card-data-box d-flex">
-                  <div className="crad-icon">
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      width="16"
-                      height="16"
-                      fill="currentColor"
-                      className="bi bi-box2-heart"
-                      viewBox="0 0 16 16"
-                    >
-                      <path d="M8 7.982C9.664 6.309 13.825 9.236 8 13 2.175 9.236 6.336 6.31 8 7.982" />
-                      <path d="M3.75 0a1 1 0 0 0-.8.4L.1 4.2a.5.5 0 0 0-.1.3V15a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1V4.5a.5.5 0 0 0-.1-.3L13.05.4a1 1 0 0 0-.8-.4zm0 1H7.5v3h-6zM8.5 4V1h3.75l2.25 3zM15 5v10H1V5z" />
-                    </svg>
-                  </div>
-                  <div>
-                    <div className="lead">{loggedInUser?.organisation?.store_type?.toLowerCase() === 'crm' ? 'Leads' : 'Orders'}</div>
+                  <div className="w-100">
+                    <div className="d-flex align-items-center justify-content-between">
+                      <div className="lead">{loggedInUser?.organisation?.store_type?.toLowerCase() === 'crm' ? 'Leads' : 'Orders'}</div>
+                      <div className="icon">
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          width="16"
+                          height="16"
+                          fill="currentColor"
+                          className="bi bi-box2-heart"
+                          viewBox="0 0 16 16"
+                        >
+                          <path d="M8 7.982C9.664 6.309 13.825 9.236 8 13 2.175 9.236 6.336 6.31 8 7.982" />
+                          <path d="M3.75 0a1 1 0 0 0-.8.4L.1 4.2a.5.5 0 0 0-.1.3V15a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1V4.5a.5.5 0 0 0-.1-.3L13.05.4a1 1 0 0 0-.8-.4zm0 1H7.5v3h-6zM8.5 4V1h3.75l2.25 3zM15 5v10H1V5z" />
+                        </svg>
+                      </div>
+                    </div>
 
                     <div className="d-flex align-items-center justify-content-between mt-2">
                       <h1 className="text-black font-weight-bold">
@@ -260,25 +265,27 @@ const Dashboard = () => {
               </div>
             </div>
 
-            <div className="card hoverable  d-flex w-100">
+            <div className="card hoverable d-flex w-100">
               <div className="card-content">
                 <div className="card-data-box d-flex">
-                  <div className="crad-icon">
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      width="16"
-                      height="16"
-                      fill="currentColor"
-                      className="bi bi-eye"
-                      viewBox="0 0 16 16"
-                    >
-                      <path d="M16 8s-3-5.5-8-5.5S0 8 0 8s3 5.5 8 5.5S16 8 16 8M1.173 8a13 13 0 0 1 1.66-2.043C4.12 4.668 5.88 3.5 8 3.5s3.879 1.168 5.168 2.457A13 13 0 0 1 14.828 8q-.086.13-.195.288c-.335.48-.83 1.12-1.465 1.755C11.879 11.332 10.119 12.5 8 12.5s-3.879-1.168-5.168-2.457A13 13 0 0 1 1.172 8z" />
-                      <path d="M8 5.5a2.5 2.5 0 1 0 0 5 2.5 2.5 0 0 0 0-5M4.5 8a3.5 3.5 0 1 1 7 0 3.5 3.5 0 0 1-7 0" />
-                    </svg>
-                  </div>
-                  <div>
-                    <div className="lead">Active Subscriptions</div>
 
+                  <div className="w-100">
+                    <div className="d-flex align-items-center justify-content-between">
+                      <div className="lead">Active Subscriptions</div>
+                      <div className="icon">
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          width="16"
+                          height="16"
+                          fill="currentColor"
+                          className="bi bi-eye"
+                          viewBox="0 0 16 16"
+                        >
+                          <path d="M16 8s-3-5.5-8-5.5S0 8 0 8s3 5.5 8 5.5S16 8 16 8M1.173 8a13 13 0 0 1 1.66-2.043C4.12 4.668 5.88 3.5 8 3.5s3.879 1.168 5.168 2.457A13 13 0 0 1 14.828 8q-.086.13-.195.288c-.335.48-.83 1.12-1.465 1.755C11.879 11.332 10.119 12.5 8 12.5s-3.879-1.168-5.168-2.457A13 13 0 0 1 1.172 8z" />
+                          <path d="M8 5.5a2.5 2.5 0 1 0 0 5 2.5 2.5 0 0 0 0-5M4.5 8a3.5 3.5 0 1 1 7 0 3.5 3.5 0 0 1-7 0" />
+                        </svg>
+                      </div>
+                    </div>
                     <div className="d-flex align-items-center justify-content-between mt-2">
                       <h1 className="text-black font-weight-bold">
                         {data?.subscription + data?.subscriptionprev}
@@ -308,24 +315,27 @@ const Dashboard = () => {
             <div className="card hoverable  d-flex w-100">
               <div className="card-content">
                 <div className="card-data-box d-flex">
-                  <div className="crad-icon">
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      width="16"
-                      height="16"
-                      fill="currentColor"
-                      className="bi bi-person-check-fill"
-                      viewBox="0 0 16 16"
-                    >
-                      <path
-                        fillRule="evenodd"
-                        d="M15.854 5.146a.5.5 0 0 1 0 .708l-3 3a.5.5 0 0 1-.708 0l-1.5-1.5a.5.5 0 0 1 .708-.708L12.5 7.793l2.646-2.647a.5.5 0 0 1 .708 0"
-                      />
-                      <path d="M1 14s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1zm5-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6" />
-                    </svg>
-                  </div>
-                  <div>
-                    <div className="lead">Agents</div>
+
+                  <div className="w-100">
+                    <div className="d-flex align-items-center justify-content-between">
+                      <div className="lead">Agents</div>
+                      <div className="icon">
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          width="16"
+                          height="16"
+                          fill="currentColor"
+                          className="bi bi-person-check-fill"
+                          viewBox="0 0 16 16"
+                        >
+                          <path
+                            fillRule="evenodd"
+                            d="M15.854 5.146a.5.5 0 0 1 0 .708l-3 3a.5.5 0 0 1-.708 0l-1.5-1.5a.5.5 0 0 1 .708-.708L12.5 7.793l2.646-2.647a.5.5 0 0 1 .708 0"
+                          />
+                          <path d="M1 14s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1zm5-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6" />
+                        </svg>
+                      </div>
+                    </div>
 
                     <div className="d-flex align-items-center justify-content-between mt-2">
                       <h1 className="text-black font-weight-bold">
@@ -358,7 +368,7 @@ const Dashboard = () => {
               <div className="d-flex flex-column flex-lg-row align-items-center" style={{ gap: '20px' }}>
                 <div className="card w-100">
                   <div className="card-header pb-3 d-flex justify-content-between align-items-center">
-                    <h5 className="mb-0">
+                    <h5 className="mb-0" style={{ fontSize: '14px' }}>
                       <strong>Bookings</strong>
                     </h5>
                   </div>
@@ -377,7 +387,7 @@ const Dashboard = () => {
                 </div>
                 <div className="card w-100">
                   <div className="card-header pb-3 d-flex justify-content-between align-items-center">
-                    <h5 className="mb-0">
+                    <h5 className="mb-0" style={{ fontSize: '14px' }}>
                       <strong>Revenue</strong>
                     </h5>
                   </div>

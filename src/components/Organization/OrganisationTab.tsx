@@ -25,8 +25,7 @@ const ValidationSchema = Yup.object().shape({
 const OrganizationTab = () => {
   const history = useHistory();
   const token = useTokenStore((state) => state.accessToken);
-  const { organisations, selectedOrg, setSelectedOrg } =
-    useOrganisation();
+  const { organisations, selectedOrg, setSelectedOrg } = useOrganisation();
 
   const initialValues = {
     organizationName: selectedOrg?.name || "",
@@ -53,12 +52,20 @@ const OrganizationTab = () => {
   };
 
   const { mutate, isLoading } = useMutation(updateOrganisation, {
-    onSuccess: () => {
+    onSuccess: (_, variables) => {
+      const updatedOrg = {
+        ...selectedOrg,
+        name: variables.organizationName,
+        email: variables.organizationEmail,
+        store_type: variables.storeType.toUpperCase(),
+      };
+      setSelectedOrg(updatedOrg); // also update context and localstorage
+
       queryClient.invalidateQueries("profile");
       showMsgToast("Organization updated successfully!");
       setTimeout(() => {
         window.location.reload();
-      }, 2000);
+      }, 1000);
     },
     onError: (error: AxiosError) => {
       handleApiError(error, history);
