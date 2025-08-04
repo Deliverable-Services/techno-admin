@@ -436,7 +436,7 @@ const NavBar = ({ isNavOpen, setIsNavOpen }: INavBar) => {
               </Dropdown.Menu>
             </Dropdown>
           </div>
-          <ul className="pt-4">
+          <ul className="pt-3">
             <Navlink
               title="Dashboard"
               path="/dashboard"

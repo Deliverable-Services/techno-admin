@@ -5330,7 +5330,9 @@ input[type="button"].btn-block {
   color: #2d8a7d;
   stroke-width: 100px;
 }
-
+.profile-dropdown-menu{
+  top: 100px !important;
+}
 @media (max-width: 575.98px) {
   .navbar-expand-sm > .container,
   .navbar-expand-sm > .container-fluid,
