@@ -5,14 +5,13 @@ import { IsDesktopContext } from "../context/IsDesktopContext";
 import useUserProfileStore from "../hooks/useUserProfileStore";
 import Logo from "../shared-components/Logo";
 import { INavBar } from "../types/interface";
-import { FaClock, FaEnvelope, FaMap, FaPhone } from "react-icons/fa";
-import { formatTimestamp } from "../utils/utitlity";
 import { useOrganisation } from "../context/OrganisationContext";
 import { BiLogOut } from "react-icons/bi";
 import { useMutation } from "react-query";
 import useTokenStore from "../hooks/useTokenStore";
 import API from "../utils/API";
 import profile from "../assets/profile.svg";
+import { GoMail } from "react-icons/go";
 
 const logout = () => {
   return API.post("/auth/logout");
@@ -102,19 +101,18 @@ const TopBar = ({ isNavOpen, setIsNavOpen }: INavBar) => {
                   )}
                   {user && <div>
                     <p className="text-muted small mb-0">{user?.name}</p>
-                    <p className="text-muted small mb-0">{selectedOrg?.email}</p>
                   </div>}
                 </Dropdown.Toggle>
 
                 <Dropdown.Menu className="global-card profile-dropdown-menu">
-                  {/* <Dropdown.Item href="/profile" className="border-bottom ">
-                {" "}
-                <FaUserCog className="mr-3" />
-                Profile
-              </Dropdown.Item> */}
-                  <Dropdown.Item onClick={() => mutate()}>
-                    <BiLogOut className="mr-3" />{" "}
-                    {isLoading ? "Loading" : "Log out"}
+                  <Dropdown.Item href="/profile" className="border-bottom d-flex align-items-center">
+                    {" "}
+                    <GoMail className="mr-2" />
+                    <p className="text-muted small mb-0">{selectedOrg?.email}</p>
+                  </Dropdown.Item>
+                  <Dropdown.Item onClick={() => mutate()} className="d-flex align-items-center">
+                    <BiLogOut className="mr-2" />
+                    <p className="text-muted small mb-0">{isLoading ? "Loading" : "Log out"}</p>
                   </Dropdown.Item>
                 </Dropdown.Menu>
               </Dropdown>
