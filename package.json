@@ -21,6 +21,8 @@
     "html-react-parser": "1.4.0",
     "immutability-helper": "3.1.1",
     "install": "0.13.0",
+    "jspdf": "^3.0.1",
+    "jspdf-autotable": "^5.0.2",
     "mapbox-gl": "2.3.0",
     "moment": "2.29.1",
     "npm": "7.17.0",
