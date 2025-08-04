@@ -194,6 +194,12 @@ const organisationLinks: Array<INavLink> = [
     permissionReq: "read_agenttarget",
   },
   {
+    title: "Google Analytics",
+    path: "/google-analytics",
+    icon: <DiGoogleAnalytics />,
+    permissionReq: "read_agenttarget",
+  },
+  {
     title: "Roles & Permissions",
     path: "/permissions",
     icon: <BsShieldLock />,
