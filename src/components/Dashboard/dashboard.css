@@ -1,6 +1,6 @@
 .page-title{
 font-weight: 600;
-font-size: 24px;
+font-size: 1.125rem;
 line-height: 32px;
 margin-bottom: 20px;
 }
@@ -36,4 +36,6 @@ margin-bottom: 20px;
 }
 .reports-table table tr td p {
     margin-bottom: 0;
+    font-size: 14px;
+    font-weight: 600;
 }

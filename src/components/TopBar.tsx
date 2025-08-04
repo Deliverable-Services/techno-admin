@@ -8,9 +8,21 @@ import { INavBar } from "../types/interface";
 import { FaClock, FaEnvelope, FaMap, FaPhone } from "react-icons/fa";
 import { formatTimestamp } from "../utils/utitlity";
 import { useOrganisation } from "../context/OrganisationContext";
+import { BiLogOut } from "react-icons/bi";
+import { useMutation } from "react-query";
+import useTokenStore from "../hooks/useTokenStore";
+import API from "../utils/API";
+import profile from "../assets/profile.svg";
+
+const logout = () => {
+  return API.post("/auth/logout");
+};
 
 const TopBar = ({ isNavOpen, setIsNavOpen }: INavBar) => {
   const isDesktop = useContext(IsDesktopContext);
+  const removeToken = useTokenStore((state) => state.removeToken);
+  const removeUser = useUserProfileStore((state) => state.removeUser);
+  const user = useUserProfileStore((state) => state.user);
   const { selectedOrg } = useOrganisation();
 
   const openNavBar = () => {
@@ -18,6 +30,19 @@ const TopBar = ({ isNavOpen, setIsNavOpen }: INavBar) => {
       setIsNavOpen(true);
     }
   };
+
+  const { mutate, isLoading } = useMutation(logout, {
+    onSuccess: () => {
+      removeUser();
+      removeToken();
+      window.location.href = "/login";
+    },
+    onError: () => {
+      removeUser();
+      removeToken();
+      window.location.href = "/login";
+    },
+  });
 
   return (
     <Container
@@ -31,7 +56,7 @@ const TopBar = ({ isNavOpen, setIsNavOpen }: INavBar) => {
           <GiHamburgerMenu
             size={28}
             onClick={openNavBar}
-            // color={primaryColor}
+          // color={primaryColor}
           />
         </div>
       ) : null}
@@ -58,55 +83,93 @@ const TopBar = ({ isNavOpen, setIsNavOpen }: INavBar) => {
         </div> */}
 
         {isDesktop && (
-          <div className="d-flex align-items-center justify-content-center ml-4 ">
-            <Dropdown className="ml-4">
-              <section
-                style={{
-                  fontSize: "11px",
-                  fontWeight: "bold",
-                  color: "#667085",
-                  textAlign: "center",
-                  marginBottom: "4px",
-                }}
+          <>
+            <div
+              className="d-flex align-items-center user-dd"
+            >
+              <Dropdown
+                className="w-100"
               >
-                Organisation
-              </section>
+                <Dropdown.Toggle
+                  id="dropdown-basic"
+                  className="d-flex align-items-center text-left gap-3 filter-button bg-transparent border-0 p-0"
+                  style={{ color: "#000" }}
+                >
+                  {isLoading ? (
+                    "Loading"
+                  ) : (
+                    <img src={profile} alt="profile" className="profile" />
+                  )}
+                  {user && <div>
+                    <p className="text-muted small mb-0">{user?.name}</p>
+                    <p className="text-muted small mb-0">{selectedOrg?.email}</p>
+                  </div>}
+                </Dropdown.Toggle>
 
-              <Dropdown.Toggle
-                id="dropdown-basic"
-                className="bg-white border rounded-pill px-3 py-1 shadow-sm d-flex align-items-center btn-focus-none"
-                style={{ color: "#000", fontWeight: "500", fontSize: "14px" }}
-              >
-                <span className="text-truncate" style={{ maxWidth: 150 }}>
-                  {selectedOrg?.name}
-                </span>
-              </Dropdown.Toggle>
+                <Dropdown.Menu className="global-card">
+                  {/* <Dropdown.Item href="/profile" className="border-bottom ">
+                {" "}
+                <FaUserCog className="mr-3" />
+                Profile
+              </Dropdown.Item> */}
+                  <Dropdown.Item onClick={() => mutate()}>
+                    <BiLogOut className="mr-3" />{" "}
+                    {isLoading ? "Loading" : "Log out"}
+                  </Dropdown.Item>
+                </Dropdown.Menu>
+              </Dropdown>
+            </div>
 
-              <Dropdown.Menu
-                className=" rounded border-0 mt-2  global-card"
-                style={{ minWidth: "260px" }}
-              >
-                <div className="d-flex flex-column gap-2">
-                  <section className="d-flex align-items-center py-2 px-4 border-bottom">
-                    <FaEnvelope className="text-primary mr-2" size={14} />
-                    <span>{selectedOrg?.email}</span>
-                  </section>
-                  <section className="d-flex align-items-center py-2 px-4 border-bottom">
-                    <FaPhone className="text-primary mr-2" size={14} />
-                    <span>{selectedOrg?.phone}</span>
-                  </section>
-                  <section className="d-flex align-items-center py-2 px-4 border-bottom">
-                    <FaMap className="text-primary mr-2" size={14} />
-                    <span>{selectedOrg?.address}</span>
-                  </section>
-                  <section className="d-flex align-items-center py-2 px-4 ">
-                    <FaClock className="text-primary mr-2" size={14} />
-                    <span>{formatTimestamp(selectedOrg?.created_at)}</span>
-                  </section>
-                </div>
-              </Dropdown.Menu>
-            </Dropdown>
-          </div>
+            <div className="d-flex align-items-center justify-content-center ml-4 ">
+              <Dropdown className="ml-4">
+                <section
+                  style={{
+                    fontSize: "11px",
+                    fontWeight: "bold",
+                    color: "#667085",
+                    textAlign: "center",
+                    marginBottom: "4px",
+                  }}
+                >
+                  Organisation
+                </section>
+
+                <Dropdown.Toggle
+                  id="dropdown-basic"
+                  className="bg-white border rounded-pill px-3 py-1 shadow-sm d-flex align-items-center btn-focus-none"
+                  style={{ color: "#000", fontWeight: "500", fontSize: "14px" }}
+                >
+                  <span className="text-truncate" style={{ maxWidth: 150 }}>
+                    {selectedOrg?.name}
+                  </span>
+                </Dropdown.Toggle>
+
+                <Dropdown.Menu
+                  className=" rounded border-0 mt-2  global-card"
+                  style={{ minWidth: "260px" }}
+                >
+                  <div className="d-flex flex-column gap-2">
+                    <section className="d-flex align-items-center py-2 px-4 border-bottom">
+                      <FaEnvelope className="text-primary mr-2" size={14} />
+                      <span>{selectedOrg?.email}</span>
+                    </section>
+                    <section className="d-flex align-items-center py-2 px-4 border-bottom">
+                      <FaPhone className="text-primary mr-2" size={14} />
+                      <span>{selectedOrg?.phone}</span>
+                    </section>
+                    <section className="d-flex align-items-center py-2 px-4 border-bottom">
+                      <FaMap className="text-primary mr-2" size={14} />
+                      <span>{selectedOrg?.address}</span>
+                    </section>
+                    <section className="d-flex align-items-center py-2 px-4 ">
+                      <FaClock className="text-primary mr-2" size={14} />
+                      <span>{formatTimestamp(selectedOrg?.created_at)}</span>
+                    </section>
+                  </div>
+                </Dropdown.Menu>
+              </Dropdown>
+            </div>
+          </>
         )}
       </div>
     </Container>

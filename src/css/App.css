@@ -51,6 +51,7 @@
     "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
   --font-family-monospace: SFMono-Regular, Menlo, Monaco, Consolas,
     "Liberation Mono", "Courier New", monospace;
+  --shadow-main:0rem .3125rem .3125rem -.15625rem rgba(0, 0, 0, .03), 0rem .1875rem .1875rem -.09375rem rgba(0, 0, 0, .02), 0rem .125rem .125rem -.0625rem rgba(0, 0, 0, .02), 0rem .0625rem .0625rem -.03125rem rgba(0, 0, 0, .03), 0rem .03125rem .03125rem 0rem rgba(0, 0, 0, .04), 0rem 0rem 0rem .0625rem rgba(0, 0, 0, .06)
 }
 
 *,
@@ -438,8 +439,8 @@ h6,
 }
 
 .lead {
-  font-size: 1.25rem;
-  font-weight: 300;
+  font-size: 14px;
+  font-weight: 600;
 }
 
 .display-1 {
@@ -5320,8 +5321,9 @@ input[type="button"].btn-block {
 }
 .per-tag {
   gap: 6px;
-  background-color: rgb(45 138 125 / 20%);
   color: #2d8a7d;
+  font-size: 14px;
+  padding-right: 0 !important;
 }
 .per-tag svg {
   rotate: 47deg;
@@ -11771,7 +11773,7 @@ a.text-text-muted:focus {
 }
 
 nav {
-  background-color: #ffffff;
+  background-color: #ebebeb;
   min-width: 300px;
   /* width: 25vh; */
   height: 100vh;
@@ -11785,8 +11787,9 @@ nav {
   transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
   z-index: 100;
   padding: 1rem 0 !important;
-  border-right: 1px solid #e7eaf3;
-  overflow: auto;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
 }
 
 @media (min-width: 800px) {
@@ -11825,17 +11828,15 @@ nav .navLink {
   color: #000;
   -webkit-transition: all 0.3s ease;
   transition: all 0.3s ease;
-  font-size: 0.9rem;
+  font-size: .8125rem;
   font-weight: 500;
   padding: 5px 20px;
   letter-spacing: 0px;
   border-left: 4px solid transparent;
 }
 
-
-
 nav .navLink svg {
-  margin-right: 10px;
+  margin-right: 8px;
   height: 16px;
   width: 16px;
 }
@@ -11843,9 +11844,10 @@ nav .navLink svg {
 
 .all-links{
   padding: 0 16px;
+  overflow: auto;
 }
 nav .navLink{
-  padding: 8px 20px;
+  padding: 0.4rem 0.8rem;
   border-left: 0;
 }
 nav .navLink.active,
@@ -11978,13 +11980,14 @@ th {
   width: 100%;
   height: 65px;
   max-height: 65px;
-  background-color: #fff;
-  border-bottom: 1px solid #e7eaf3;
+  background-color: #f1f1f1;
+  border-bottom: 1px solid #ccc;
 }
 
 .top-bar .profile {
-  height: 1.5rem;
-  width: 1.5rem;
+    height: 2rem;
+    width: 2rem;
+    border-radius: 50%;
 }
 
 .top-bar .notification {
@@ -12380,9 +12383,9 @@ th {
   -webkit-transition: all 0.5s ease;
   transition: all 0.5s ease;
   /* -webkit-box-shadow: 0 6px 12px rgba(140, 152, 164, 0.1); */
-  /* box-shadow: 0 6px 12px rgba(140, 152, 164, 0.1); */
+  box-shadow: var(--shadow-main);
   background-color: #fff;
-  border: 0.0625rem solid #e9eaeb !important;
+  border: 0 !important;
   border-radius: 0.75rem !important;
   padding: 0px !important;
 }
@@ -12636,7 +12639,7 @@ body {
 .App {
   display: -ms-flex;
   display: flex;
-  background-color: #fff;
+  background-color: #f1f1f1;
   color: #1e2022; 
 }
 

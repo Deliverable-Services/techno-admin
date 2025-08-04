@@ -12,7 +12,7 @@ const Navlink = ({ title, path, onClick, icon, permissionReq }: INavLink) => {
       <Link to={path}>
         <li
           className={
-            pathname.includes(path) ? "navLink active" : "navLink my-1"
+            pathname.includes(path) ? "navLink active" : "navLink"
           }
           onClick={onClick}
         >
