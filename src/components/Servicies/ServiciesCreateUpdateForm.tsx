@@ -10,6 +10,7 @@ import {
   Row,
   Spinner,
   Form as BForm,
+  FormCheck,
 } from "react-bootstrap";
 import { FaTrash } from "react-icons/fa";
 import { useMutation, useQuery } from "react-query";
@@ -99,7 +100,11 @@ const ServicesCreateUpdateForm = () => {
   const apiData = data && (data as any);
 
   const formIntialValues = () => {
-    let values = { ...apiData };
+    let values = {
+      ...apiData,
+      enablePayment: apiData?.enablePayment || false,
+      paymentAmount: apiData?.paymentAmount || ""
+    };
     CarType?.data?.map((car) => {
       const obj = apiData.brand_type_services.find(
         (i) => i.brand_model_type === car.id
@@ -120,14 +125,25 @@ const ServicesCreateUpdateForm = () => {
           <Col className="mx-auto">
             <Formik
               enableReinitialize
-              initialValues={apiData ? formIntialValues() : {}}
+              initialValues={apiData ? formIntialValues() : {
+                enablePayment: false,
+                paymentAmount: ""
+              }}
               onSubmit={(values) => {
                 const formdata = new FormData();
-                const { image, images, ...rest } = values;
+                const { image, images, enablePayment, paymentAmount, ...rest } = values;
                 for (let k in rest) formdata.append(k, rest[k]);
 
                 for (let k in images) formdata.append("images[]", images[k]);
                 if (image) formdata.append("image", image);
+
+                // Add payment data if checkbox is checked
+                if (enablePayment) {
+                  formdata.append("enablePayment", "1");
+                  formdata.append("paymentAmount", paymentAmount);
+                } else {
+                  formdata.append("enablePayment", "0");
+                }
 
                 CarType &&
                   CarType?.data?.map((car) => {
@@ -183,6 +199,35 @@ const ServicesCreateUpdateForm = () => {
                       folder="services"
                       setFieldValue={setFieldValue}
                     />
+
+                    {/* Payment Checkbox and Input Field */}
+                    <BForm.Group style={{ marginBottom: "0px" }}>
+                      <div className="d-flex align-items-center" style={{ gap: "5px", marginBottom: "4px" }}>
+                        <input
+                          type="checkbox"
+                          style={{ width: '15px', height: '15px' }}
+                          id="enablePayment"
+                          checked={values.enablePayment || false}
+                          onChange={(e) => {
+                            setFieldValue("enablePayment", e.target.checked);
+                            if (!e.target.checked) {
+                              setFieldValue("paymentAmount", "");
+                            }
+                          }}
+                        />
+                        <BForm.Label htmlFor="enablePayment" className="mb-0">Payment</BForm.Label>
+                      </div>
+                      {values.enablePayment && (
+                        <InputField
+                          name="paymentAmount"
+                          placeholder="Enter payment amount"
+                          type="number"
+                          required
+                        />
+                      )}
+                    </BForm.Group>
+
+
                   </div>
                   {/* <Container fluid className="p-0">
                     <PageHeading title="Prices" />

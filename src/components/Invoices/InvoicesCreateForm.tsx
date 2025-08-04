@@ -22,6 +22,13 @@ const initialValues = {
         { item_name: "", quantity: 1, unit_price: "", total: "" },
     ],
     addTax: false, // <-- add this
+    payAt: false,
+    billing_period: "monthly",
+    start_date: "immediately",
+    end_date: "none",
+    custom_billing_period: "",
+    custom_start_date: "",
+    custom_end_date: "",
 };
 
 const validationSchema = Yup.object().shape({
@@ -363,17 +370,84 @@ const InvoicesCreateForm = ({ onSuccess }: { onSuccess?: () => void }) => {
                                 )}
                             </FieldArray>
                             {/* AddTax Checkbox */}
-                            <div className="wrapperAddTax">
-                                <label className="AddTaxCheckbox">
-                                    <Field type="checkbox" name="addTax" />
-                                    <p>Add Tax %</p>
-                                </label>
-                            </div>
-                            {values.addTax && (
-                                <div className="form-group wrapperAddTaxForm">
-                                    <Field name="tax" className="form-control" />
+                            <div style={{ width: '100%' }}>
+                                <div className="wrapperAddTax">
+                                    <label className="AddTaxCheckbox">
+                                        <Field type="checkbox" name="addTax" />
+                                        <p>Add Tax %</p>
+                                    </label>
                                 </div>
-                            )}
+                                {values.addTax && (
+                                    <div className="form-group wrapperAddTaxForm">
+                                        <Field name="tax" className="form-control" />
+                                    </div>
+                                )}
+                            </div>
+                            <div>
+                                <div className="wrapperAddTax">
+                                    <label className="AddTaxCheckbox">
+                                        <Field type="checkbox" name="payAt" />
+                                        <p>Schedule At</p>
+                                    </label>
+                                </div>
+                                {values.payAt && (
+                                    <div>
+                                        <div className="form-group wrapperAddTaxForm">
+                                            <label>Billing period</label>
+                                            <Field as="select" name="billing_period" className="form-control">
+                                                <option value="weekly">Weekly</option>
+                                                <option value="monthly">Monthly</option>
+                                                <option value="quarterly">Quarterly</option>
+                                                <option value="yearly">Yearly</option>
+                                                <option value="custom">Custom</option>
+                                            </Field>
+                                        </div>
+
+                                        {values.billing_period === "custom" && (
+                                            <div className="form-group wrapperAddTaxForm">
+                                                <label>Custom billing period (days)</label>
+                                                <Field name="custom_billing_period" className="form-control" type="number" min="1" placeholder="Enter number of days" />
+                                            </div>
+                                        )}
+
+                                        <div className="container-wrapper">
+                                            <div className="form-group wrapperAddTaxForm">
+                                                <label>Start date</label>
+                                                <Field as="select" name="start_date" className="form-control">
+                                                    <option value="immediately">Immediately</option>
+                                                    <option value="next_week">Next Week</option>
+                                                    <option value="next_month">Next Month</option>
+                                                    <option value="custom_start">Custom Date</option>
+                                                </Field>
+                                            </div>
+                                            <div className="form-group wrapperAddTaxForm">
+                                                <label>End date</label>
+                                                <Field as="select" name="end_date" className="form-control">
+                                                    <option value="none">None</option>
+                                                    <option value="after_3_months">After 3 Months</option>
+                                                    <option value="after_6_months">After 6 Months</option>
+                                                    <option value="after_1_year">After 1 Year</option>
+                                                    <option value="custom_end">Custom Date</option>
+                                                </Field>
+                                            </div>
+                                        </div>
+
+                                        {values.start_date === "custom_start" && (
+                                            <div className="form-group wrapperAddTaxForm">
+                                                <label>Custom start date</label>
+                                                <Field name="custom_start_date" className="form-control" type="date" />
+                                            </div>
+                                        )}
+
+                                        {values.end_date === "custom_end" && (
+                                            <div className="form-group wrapperAddTaxForm">
+                                                <label>Custom end date</label>
+                                                <Field name="custom_end_date" className="form-control" type="date" />
+                                            </div>
+                                        )}
+                                    </div>
+                                )}
+                            </div>
 
                             <div className="invoice-summary">
                                 <div className="invoice-summary-item">

@@ -19,6 +19,8 @@ import {
   ChartBar,
   ChartLine,
   RevenueLineChart,
+  WebsiteAnalyticsChart,
+  BrandGMBChart,
 } from "./Chart";
 import useUserProfileStore from "../../hooks/useUserProfileStore";
 import "./dashboard.css";
@@ -178,13 +180,13 @@ const Dashboard = () => {
               gap: "20px",
             }}
           >
-            <div className="card hoverable  d-flex w-100 ">
+            <div className="card hoverable d-flex w-100">
               <div className="card-content">
                 <div className="card-data-box d-flex">
 
                   <div className="w-100">
-                    <div className="d-flex align-items-center justify-content-between">
-                      <div className="lead">Customers</div>
+                    <div className="d-flex align-items-center justify-content-between mb-4">
+                      <strong style={{ fontSize: '14px' }}>Leads</strong>
                       <div className="icon">
                         <svg
                           xmlns="http://www.w3.org/2000/svg"
@@ -199,12 +201,27 @@ const Dashboard = () => {
                       </div>
                     </div>
 
-                    <div className="d-flex align-items-center justify-content-between mt-2">
-                      <h1 className="text-black font-weight-bold">
-                        {data?.customer + data?.customerprev}
-                      </h1>
+                    <div className="d-flex align-items-center justify-content-between" style={{ width: '80%' }}>
+                      <div>
+                        <h3 className="text-grey" style={{ fontSize: '16px', fontWeight: '400', marginBottom: '0' }}>
+                          Active
+                        </h3>
+                        <p className="text-black font-weight-bold" style={{ fontSize: '28px' }}>
+                          {data?.customer + data?.customerprev}
+                        </p>
+                      </div>
+                      <div style={{ borderLeft: '1px solid black', height: '60px', }} />
+
+                      <div>
+                        <h3 className="text-grey" style={{ fontSize: '16px', fontWeight: '400', marginBottom: '0' }}>
+                          New
+                        </h3>
+                        <p className="text-black font-weight-bold" style={{ fontSize: '28px' }}>
+                          {data?.customer + data?.customerprev}
+                        </p>
+                      </div>
                     </div>
-                    <div className="d-flex align-items-center justify-content-start">
+                    {/* <div className="d-flex align-items-center justify-content-start">
                       <span className="tag  per-tag d-flex align-items-center">
                         <AiOutlineArrowUp size={13} />
                         <strong>
@@ -215,18 +232,18 @@ const Dashboard = () => {
                       <span className="text-muted ml-2 tag-text">
                         from {data?.customerprev}
                       </span>
-                    </div>
+                    </div> */}
                   </div>
                 </div>
               </div>
             </div>
 
-            <div className="card hoverable d-flex w-100 ">
+            <div className="card hoverable d-flex w-100">
               <div className="card-content">
                 <div className="card-data-box d-flex">
                   <div className="w-100">
-                    <div className="d-flex align-items-center justify-content-between">
-                      <div className="lead">{loggedInUser?.organisation?.store_type?.toLowerCase() === 'crm' ? 'Leads' : 'Orders'}</div>
+                    <div className="d-flex align-items-center justify-content-between mb-4">
+                      <strong style={{ fontSize: '14px' }}>Customers</strong>
                       <div className="icon">
                         <svg
                           xmlns="http://www.w3.org/2000/svg"
@@ -242,24 +259,27 @@ const Dashboard = () => {
                       </div>
                     </div>
 
-                    <div className="d-flex align-items-center justify-content-between mt-2">
-                      <h1 className="text-black font-weight-bold">
-                        {data?.order + data?.orderprev}
-                      </h1>
+                    <div className="d-flex align-items-center justify-content-between" style={{ width: '80%' }}>
+                      <div>
+                        <h3 className="text-grey" style={{ fontSize: '16px', fontWeight: '400', marginBottom: '0' }}>
+                          Active
+                        </h3>
+                        <p className="text-black font-weight-bold" style={{ fontSize: '28px' }}>
+                          {data?.customer + data?.customerprev}
+                        </p>
+                      </div>
+                      <div style={{ borderLeft: '1px solid black', height: '60px', }} />
+
+                      <div>
+                        <h3 className="text-grey" style={{ fontSize: '16px', fontWeight: '400', marginBottom: '0' }}>
+                          New
+                        </h3>
+                        <p className="text-black font-weight-bold" style={{ fontSize: '28px' }}>
+                          {data?.customer + data?.customerprev}
+                        </p>
+                      </div>
                     </div>
 
-                    <div className="d-flex align-items-center">
-                      <span className="tag  per-tag d-flex align-items-center">
-                        <AiOutlineArrowUp size={13} />
-                        <strong>
-                          {returnPercentage(data?.order, data?.orderprev)}%
-                        </strong>
-                      </span>
-
-                      <span className="text-muted ml-2 tag-text">
-                        from {data?.orderprev}
-                      </span>
-                    </div>
                   </div>
                 </div>
               </div>
@@ -268,10 +288,9 @@ const Dashboard = () => {
             <div className="card hoverable d-flex w-100">
               <div className="card-content">
                 <div className="card-data-box d-flex">
-
                   <div className="w-100">
-                    <div className="d-flex align-items-center justify-content-between">
-                      <div className="lead">Active Subscriptions</div>
+                    <div className="d-flex align-items-center justify-content-between mb-4">
+                      <strong style={{ fontSize: '14px' }}>Invoices</strong>
                       <div className="icon">
                         <svg
                           xmlns="http://www.w3.org/2000/svg"
@@ -286,39 +305,37 @@ const Dashboard = () => {
                         </svg>
                       </div>
                     </div>
-                    <div className="d-flex align-items-center justify-content-between mt-2">
-                      <h1 className="text-black font-weight-bold">
-                        {data?.subscription + data?.subscriptionprev}
-                      </h1>
-                    </div>
-                    <div className="d-flex align-items-center">
-                      <span className="tag  per-tag d-flex align-items-center">
-                        <AiOutlineArrowUp size={13} />
-                        <strong>
-                          {returnPercentage(
-                            data?.subscription,
-                            data?.subscriptionprev
-                          )}
-                          %
-                        </strong>
-                      </span>
+                    <div className="d-flex align-items-center justify-content-between" style={{ width: '80%' }}>
+                      <div>
+                        <h3 className="text-grey" style={{ fontSize: '16px', fontWeight: '400', marginBottom: '0' }}>
+                          Total
+                        </h3>
+                        <p className="text-black font-weight-bold" style={{ fontSize: '28px' }}>
+                          $ {data?.customer + data?.customerprev}
+                        </p>
+                      </div>
+                      <div style={{ borderLeft: '1px solid black', height: '60px', }} />
 
-                      <span className="text-muted ml-2 tag-text">
-                        from {data?.subscriptionprev}
-                      </span>
+                      <div>
+                        <h3 className="text-grey" style={{ fontSize: '16px', fontWeight: '400', marginBottom: '0' }}>
+                          New
+                        </h3>
+                        <p className="text-black font-weight-bold" style={{ fontSize: '28px' }}>
+                          $ {data?.customer + data?.customerprev}
+                        </p>
+                      </div>
                     </div>
                   </div>
                 </div>
               </div>
             </div>
 
-            <div className="card hoverable  d-flex w-100">
+            <div className="card hoverable d-flex w-100">
               <div className="card-content">
                 <div className="card-data-box d-flex">
-
                   <div className="w-100">
-                    <div className="d-flex align-items-center justify-content-between">
-                      <div className="lead">Agents</div>
+                    <div className="d-flex align-items-center justify-content-between mb-4">
+                      <strong style={{ fontSize: '14px' }}>Issues</strong>
                       <div className="icon">
                         <svg
                           xmlns="http://www.w3.org/2000/svg"
@@ -337,23 +354,27 @@ const Dashboard = () => {
                       </div>
                     </div>
 
-                    <div className="d-flex align-items-center justify-content-between mt-2">
-                      <h1 className="text-black font-weight-bold">
-                        {data?.agent + data?.agentprev}
-                      </h1>
-                    </div>
-                    <div className="d-flex align-items-center">
-                      <span className="tag  per-tag d-flex align-items-center">
-                        <AiOutlineArrowUp size={13} />
-                        <strong>
-                          {returnPercentage(data?.agent, data?.agentprev)}%
-                        </strong>
-                      </span>
+                    <div className="d-flex align-items-center justify-content-between" style={{ width: '80%' }}>
+                      <div>
+                        <h3 className="text-grey" style={{ fontSize: '16px', fontWeight: '400', marginBottom: '0' }}>
+                          Open
+                        </h3>
+                        <p className="text-black font-weight-bold" style={{ fontSize: '28px' }}>
+                          {data?.customer + data?.customerprev}
+                        </p>
+                      </div>
+                      <div style={{ borderLeft: '1px solid black', height: '60px', }} />
 
-                      <span className="text-muted ml-2 tag-text">
-                        from {data?.agentprev}
-                      </span>
+                      <div>
+                        <h3 className="text-grey" style={{ fontSize: '16px', fontWeight: '400', marginBottom: '0' }}>
+                          Completed
+                        </h3>
+                        <p className="text-black font-weight-bold" style={{ fontSize: '28px' }}>
+                          {data?.customer + data?.customerprev}
+                        </p>
+                      </div>
                     </div>
+
                   </div>
                 </div>
               </div>
@@ -363,21 +384,34 @@ const Dashboard = () => {
 
         <div className="dashboard-page w-100 mt-4">
           <Container fluid className=" mt-0 pl-2 pr-0">
+            <div className="analytics-dashboard">
+              {/* Website Analytics Section */}
+              <div className="analytics-section">
+                <div className="analytics-header">
+                  <h3 className="analytics-title">Website Analytics</h3>
+                </div>
 
-            <div className="charts-row">
-              <div className="d-flex flex-column flex-lg-row align-items-center" style={{ gap: '20px' }}>
-                <div className="card w-100">
-                  <div className="card-header pb-3 d-flex justify-content-between align-items-center">
-                    <h5 className="mb-0" style={{ fontSize: '14px' }}>
-                      <strong>Bookings</strong>
-                    </h5>
+                <div className="metrics-row">
+                  <div className="metric-card">
+                    <div className="metric-label">Active Users</div>
+                    <div className="metric-value">24</div>
                   </div>
+                  <div className="metric-card">
+                    <div className="metric-label">New users</div>
+                    <div className="metric-value">500</div>
+                  </div>
+                  <div className="metric-card">
+                    <div className="metric-label">Alltime users</div>
+                    <div className="metric-value">5.4K</div>
+                  </div>
+                </div>
 
-                  <div className="card-content chart-container">
+                <div className="chart-container">
+                  <div className="chart-wrapper">
                     {isBookingAnalyticsLoading ? (
                       <IsLoading />
                     ) : (
-                      <BookingLineChart
+                      <WebsiteAnalyticsChart
                         data={BookingAnalytics?.booking}
                         xAxisDataKey="date"
                         dataKey="order"
@@ -385,18 +419,31 @@ const Dashboard = () => {
                     )}
                   </div>
                 </div>
-                <div className="card w-100">
-                  <div className="card-header pb-3 d-flex justify-content-between align-items-center">
-                    <h5 className="mb-0" style={{ fontSize: '14px' }}>
-                      <strong>Revenue</strong>
-                    </h5>
-                  </div>
+              </div>
 
-                  <div className="card-content chart-container">
-                    {isBookingAnalyticsLoading ? (
+              {/* Brand & GMB Section */}
+              <div className="analytics-section">
+                <div className="analytics-header">
+                  <h3 className="analytics-title">Brand & GMB</h3>
+                </div>
+
+                <div className="metrics-row">
+                  <div className="metric-card">
+                    <div className="metric-label">Reviews</div>
+                    <div className="metric-value">5</div>
+                  </div>
+                  <div className="metric-card">
+                    <div className="metric-label">Comments</div>
+                    <div className="metric-value">20</div>
+                  </div>
+                </div>
+
+                <div className="chart-container">
+                  <div className="chart-wrapper">
+                    {isRevenueAnalyticsLoading ? (
                       <IsLoading />
                     ) : (
-                      <ChartBar
+                      <BrandGMBChart
                         data={RevenueAnalytics?.revenue}
                         xAxisDataKey="date"
                         dataKey1="total_amount"
@@ -404,40 +451,6 @@ const Dashboard = () => {
                       />
                     )}
                   </div>
-                </div>
-              </div>
-
-              <div className="card hoverable d-flex w-100 mb-3">
-                <div className="card-header">
-                  <p className="text-black">Reports overview</p>
-                </div>
-                <div className="card-content reports-table">
-                  <table className="w-100">
-                    <tbody>
-                      {data?.data_total &&
-                        Object.entries(data?.data_total).map((item) => (
-                          <tr>
-                            <td className="text-grey text-capitalize">
-                              <p>{item[0].replace("_", " ")}</p>
-                            </td>
-                            <td
-                              className="text-left text-grey"
-                              style={{ width: "30px" }}
-                            >
-                              <p>
-                                <b>{item[1]}</b>
-                              </p>
-                            </td>
-                            {/* <td className="text-right" style={{ width: "24px" }}>
-                            <span className="tag  d-flex align-items-center w-100">
-                              <AiOutlineArrowUp size={13} />
-                              <strong>10%</strong>
-                            </span>
-                          </td> */}
-                          </tr>
-                        ))}
-                    </tbody>
-                  </table>
                 </div>
               </div>
             </div>

@@ -196,4 +196,129 @@ const ChartBar = ({ data, xAxisDataKey, dataKey1, dataKey2 }) => {
     </ResponsiveContainer>
   );
 };
-export { ChartLine, ChartArea, ChartBar, BookingLineChart, RevenueLineChart };
+
+// Website Analytics Chart with three lines
+const WebsiteAnalyticsChart = ({ data, xAxisDataKey, dataKey }) => {
+  return (
+    <ResponsiveContainer>
+      <LineChart
+        width={"100%"}
+        height={250}
+        data={data}
+        margin={{ top: 20, right: 30, left: 20, bottom: 20 }}
+      >
+        <XAxis
+          dataKey={xAxisDataKey}
+          tickLine={false}
+          axisLine={false}
+          tick={{ fontSize: 12, fill: '#666' }}
+          padding={{ left: 10, right: 10 }}
+        />
+        <YAxis
+          tickLine={false}
+          axisLine={false}
+          tick={{ fontSize: 12, fill: '#666' }}
+          tickFormatter={(value) => {
+            if (value >= 1000) return `${value / 1000}K`;
+            return value.toString();
+          }}
+        />
+        <Tooltip
+          contentStyle={{
+            backgroundColor: '#fff',
+            border: '1px solid #e0e0e0',
+            borderRadius: '8px',
+            boxShadow: '0 4px 12px rgba(0,0,0,0.1)'
+          }}
+        />
+        <Legend
+          verticalAlign="top"
+          align="right"
+          wrapperStyle={{ paddingBottom: '10px' }}
+        />
+        <Line
+          type="monotone"
+          dataKey="active"
+          stroke="#3B82F6"
+          strokeWidth={2}
+          activeDot={{ r: 6, fill: '#3B82F6' }}
+          dot={{ r: 3, fill: '#3B82F6' }}
+        />
+        <Line
+          type="monotone"
+          dataKey="new"
+          stroke="#10B981"
+          strokeWidth={2}
+          activeDot={{ r: 6, fill: '#10B981' }}
+          dot={{ r: 3, fill: '#10B981' }}
+        />
+        <Line
+          type="monotone"
+          dataKey="alltime"
+          stroke="#F59E0B"
+          strokeWidth={2}
+          activeDot={{ r: 6, fill: '#F59E0B' }}
+          dot={{ r: 3, fill: '#F59E0B' }}
+        />
+      </LineChart>
+    </ResponsiveContainer>
+  );
+};
+
+// Brand & GMB Chart with two lines
+const BrandGMBChart = ({ data, xAxisDataKey, dataKey1, dataKey2 }) => {
+  return (
+    <ResponsiveContainer>
+      <LineChart
+        width={"100%"}
+        height={250}
+        data={data}
+        margin={{ top: 20, right: 30, left: 20, bottom: 20 }}
+      >
+        <XAxis
+          dataKey={xAxisDataKey}
+          tickLine={false}
+          axisLine={false}
+          tick={{ fontSize: 12, fill: '#666' }}
+          padding={{ left: 10, right: 10 }}
+        />
+        <YAxis
+          tickLine={false}
+          axisLine={false}
+          tick={{ fontSize: 12, fill: '#666' }}
+        />
+        <Tooltip
+          contentStyle={{
+            backgroundColor: '#fff',
+            border: '1px solid #e0e0e0',
+            borderRadius: '8px',
+            boxShadow: '0 4px 12px rgba(0,0,0,0.1)'
+          }}
+        />
+        <Legend
+          verticalAlign="top"
+          align="right"
+          wrapperStyle={{ paddingBottom: '10px' }}
+        />
+        <Line
+          type="monotone"
+          dataKey={dataKey1}
+          stroke="#8B5CF6"
+          strokeWidth={2}
+          activeDot={{ r: 6, fill: '#8B5CF6' }}
+          dot={{ r: 3, fill: '#8B5CF6' }}
+        />
+        <Line
+          type="monotone"
+          dataKey={dataKey2}
+          stroke="#EF4444"
+          strokeWidth={2}
+          activeDot={{ r: 6, fill: '#EF4444' }}
+          dot={{ r: 3, fill: '#EF4444' }}
+        />
+      </LineChart>
+    </ResponsiveContainer>
+  );
+};
+
+export { ChartLine, ChartArea, ChartBar, BookingLineChart, RevenueLineChart, WebsiteAnalyticsChart, BrandGMBChart };
