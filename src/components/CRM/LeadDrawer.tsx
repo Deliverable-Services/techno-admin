@@ -430,7 +430,7 @@ const LeadDrawer: React.FC<Props> = ({ lead, onClose }) => {
                             👤 Added by: Lora Adams
                           </div>
                         </div>
-                        <div className="text-muted small">2 hours ago</div>
+                        <div className="text-muted small pl-3">2 hours ago</div>
                       </div>
                     </div>
                   </div>
