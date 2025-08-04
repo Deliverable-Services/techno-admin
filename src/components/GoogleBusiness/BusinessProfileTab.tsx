@@ -32,10 +32,15 @@ const BusinessProfileTab: React.FC<BusinessProfileTabProps> = ({
   }
 
   if (error) {
+    console.error("Profile error details:", error);
     return (
       <Alert variant="danger">
         <i className="fas fa-exclamation-circle me-2"></i>
         Failed to load business profile. Please try again later.
+        <details className="mt-2">
+          <summary>Error Details</summary>
+          <pre className="small">{JSON.stringify(error, null, 2)}</pre>
+        </details>
       </Alert>
     );
   }
@@ -45,6 +50,15 @@ const BusinessProfileTab: React.FC<BusinessProfileTabProps> = ({
       <Alert variant="info">
         <i className="fas fa-info-circle me-2"></i>
         No business profile data available.
+        <div className="mt-2 small">
+          <strong>Debug Info:</strong>
+          <br />
+          Organisation ID: {organisationId}
+          <br />
+          Loading: {isLoading ? "Yes" : "No"}
+          <br />
+          Error: {error ? "Yes" : "No"}
+        </div>
       </Alert>
     );
   }
@@ -236,6 +250,51 @@ const BusinessProfileTab: React.FC<BusinessProfileTabProps> = ({
                 className="w-100"
                 style={{ maxHeight: "300px", objectFit: "cover" }}
               />
+            </Card.Body>
+          </Card>
+        </Col>
+      )}
+
+      {/* Business Description */}
+      {profile.description && (
+        <Col md={12} className="mb-4">
+          <Card>
+            <Card.Body>
+              <h5 className="mb-3">
+                <i className="fas fa-info-circle me-2 text-info"></i>
+                About Our Business
+              </h5>
+              <p className="text-muted mb-0">{profile.description}</p>
+            </Card.Body>
+          </Card>
+        </Col>
+      )}
+
+      {/* Business Attributes */}
+      {profile.attributes && profile.attributes.length > 0 && (
+        <Col md={12} className="mb-4">
+          <Card>
+            <Card.Body>
+              <h5 className="mb-3">
+                <i className="fas fa-tags me-2 text-secondary"></i>
+                Business Features
+              </h5>
+              <Row>
+                {profile.attributes.map((attr, index) => (
+                  <Col md={6} key={index} className="mb-2">
+                    <div className="d-flex align-items-center">
+                      {attr.value ? (
+                        <i className="fas fa-check-circle text-success me-2"></i>
+                      ) : (
+                        <i className="fas fa-times-circle text-danger me-2"></i>
+                      )}
+                      <span className="text-capitalize">
+                        {attr.name.replace(/_/g, " ")}
+                      </span>
+                    </div>
+                  </Col>
+                ))}
+              </Row>
             </Card.Body>
           </Card>
         </Col>

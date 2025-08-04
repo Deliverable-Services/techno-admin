@@ -1,4 +1,4 @@
-import { useContext, useEffect } from "react";
+import React, { useContext, useEffect } from "react";
 import {
   FaAddressCard,
   FaBoxes,
@@ -40,6 +40,7 @@ import { SiCivicrm } from "react-icons/si";
 import { GrOrganization } from "react-icons/gr";
 
 import useUserProfileStore from "../hooks/useUserProfileStore";
+import { useGoogleBusinessConnection } from "../hooks/useGoogleBusinessConnection";
 import { Dropdown } from "react-bootstrap";
 import { useOrganisation } from "../context/OrganisationContext";
 import { formatTimestamp } from "../utils/utitlity";
@@ -75,12 +76,7 @@ const mainLinks: Array<INavLink> = [
     icon: <SiCivicrm />,
     permissionReq: "read_city",
   },
-  {
-    title: "Google Business",
-    path: "/google-business",
-    icon: <FaGoogle />,
-    permissionReq: "read_dashboard",
-  },
+
   {
     title: "Customers",
     path: "/users",
@@ -265,8 +261,11 @@ const hiddenRoutesForEcommerce = [
 const NavBar = ({ isNavOpen, setIsNavOpen }: INavBar) => {
   const isDesktop = useContext(IsDesktopContext);
   const loggedInUser = useUserProfileStore((state) => state.user);
-  const { setOrganisations, selectedOrg, setSelectedOrg } =
-    useOrganisation();
+  const { setOrganisations, selectedOrg, setSelectedOrg } = useOrganisation();
+  const {
+    isConnected: isGoogleBusinessConnected,
+    isLoading: isCheckingConnection,
+  } = useGoogleBusinessConnection();
 
   useEffect(() => {
     const handleSetOrganisations = (orgs: any) => {
@@ -292,14 +291,27 @@ const NavBar = ({ isNavOpen, setIsNavOpen }: INavBar) => {
   // if (selectedOrg && !selectedOrg?.hasOwnProperty("store_type"))
   //   selectedOrg.store_type = "crm"; // setting default to CRM if no organisation found
 
+  // Google Business link - only show when connected
+  const googleBusinessLink: INavLink = {
+    title: "Google Business",
+    path: "/google-business",
+    icon: <FaGoogle />,
+    permissionReq: "read_dashboard",
+  };
+
   // Filtered links for sidebar
-  const filteredMainLinks = mainLinks.filter((link) => {
+  let filteredMainLinks = mainLinks.filter((link) => {
     if (selectedOrg?.store_type.toLowerCase() === "ecommerce") {
       return hiddenRoutesForEcommerce.includes(link.path) ? false : true;
     } else if (selectedOrg?.store_type.toLowerCase() === "crm") {
       return hiddenRoutesForCRM.includes(link.path) ? false : true;
     }
   });
+
+  // Add Google Business link if connected
+  if (isGoogleBusinessConnected) {
+    filteredMainLinks = [...filteredMainLinks, googleBusinessLink];
+  }
 
   const filteredWebsiteinks = websiteLinks.filter((link) => {
     if (selectedOrg?.store_type.toLowerCase() === "ecommerce") {

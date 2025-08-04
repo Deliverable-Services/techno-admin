@@ -1,9 +1,18 @@
 import React, { useState } from "react";
 import { GoogleBusinessProfile } from "../Integrations";
 import useUserProfileStore from "../../hooks/useUserProfileStore";
+import { useQueryClient } from "react-query";
 
 const IntegrationsTab = () => {
   const loggedInUser = useUserProfileStore((state) => state.user);
+  const queryClient = useQueryClient();
+
+  // Function to refresh connection status
+  const handleConnectionChange = () => {
+    // Invalidate the connection status cache to force refresh
+    queryClient.invalidateQueries(["google-business-connection-status"]);
+    queryClient.invalidateQueries(["google-business-status"]);
+  };
 
   const [formData, setFormData] = useState({
     gtmTagId: "",
@@ -27,10 +36,17 @@ const IntegrationsTab = () => {
           <div className="mt-5 border-div form-group w-100 mt-4 d-flex align-items-center">
             <h4 className="mb-4 title-style">Data Integrations</h4>
             <div className="row justify-content-start w-100">
-              <div className="col-md-8">
+              <div className="col-md-12">
+                <div className="alert alert-info mb-3">
+                  <i className="fas fa-info-circle me-2"></i>
+                  <strong>Google My Business:</strong> Connect your Google
+                  Business Profile to access the dashboard and manage your
+                  business information, reviews, and images.
+                </div>
                 <GoogleBusinessProfile
                   organisationId={loggedInUser?.organisations[0]?.id}
                   className="mb-3"
+                  onConnectionChange={handleConnectionChange}
                 />
               </div>
             </div>

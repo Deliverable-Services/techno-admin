@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Container, Row, Col, Card, Tabs, Tab } from "react-bootstrap";
+import { Container, Row, Col, Card, Tabs, Tab, Button } from "react-bootstrap";
 import { useGoogleBusinessIntegration } from "../../hooks/useGoogleBusinessIntegration";
 import useUserProfileStore from "../../hooks/useUserProfileStore";
 import BackButton from "../../shared-components/BackButton";
@@ -12,7 +12,12 @@ import IsLoading from "../../shared-components/isLoading";
 const GoogleBusinessDashboard: React.FC = () => {
   const [activeTab, setActiveTab] = useState("profile");
   const loggedInUser = useUserProfileStore((state) => state.user);
-  const organisationId = loggedInUser?.organisation?.id;
+
+  // Use same organization ID logic as sidebar
+  const organisationId =
+    loggedInUser?.organisation?.id ||
+    loggedInUser?.organisations?.[0]?.id ||
+    loggedInUser?.primaryOrganisation?.id;
 
   const { isConnected, isLoading, connectionStatus } =
     useGoogleBusinessIntegration({
@@ -27,8 +32,14 @@ const GoogleBusinessDashboard: React.FC = () => {
     );
   }
 
-  // If not connected, show the connection interface
-  if (!isConnected || connectionStatus !== "connected") {
+  // If not connected, redirect to settings
+  // Use same logic as sidebar - accept connected, pending, or oauth_completed status
+  const isDashboardAccessible =
+    isConnected ||
+    connectionStatus === "connected" ||
+    connectionStatus === "pending";
+
+  if (!isDashboardAccessible) {
     return (
       <Container fluid className="py-4">
         <div className="d-flex align-items-center mb-4">
@@ -41,26 +52,25 @@ const GoogleBusinessDashboard: React.FC = () => {
             <Card className="text-center py-5">
               <Card.Body>
                 <i className="fab fa-google fa-4x text-muted mb-4"></i>
-                <h3 className="mb-3">Connect Your Google Business Profile</h3>
+                <h3 className="mb-3">Google Business Profile Not Connected</h3>
                 <p className="text-muted mb-4">
-                  Connect your Google Business Profile to view and manage your
-                  business information, reviews, and images all from one
-                  dashboard.
+                  Please connect your Google Business Profile from Settings to
+                  access this dashboard.
                 </p>
 
-                <GoogleBusinessProfile
-                  organisationId={organisationId}
-                  className="mb-4"
-                />
+                <Button
+                  variant="primary"
+                  onClick={() => (window.location.href = "/organization")}
+                  size="lg"
+                >
+                  <i className="fas fa-cog me-2"></i>
+                  Go to Settings
+                </Button>
 
                 <div className="mt-4 text-muted small">
-                  <p className="mb-2">
-                    <i className="fas fa-shield-alt me-2"></i>
-                    Secure connection powered by Google OAuth 2.0
-                  </p>
                   <p className="mb-0">
-                    <i className="fas fa-sync me-2"></i>
-                    Automatic data synchronization every hour
+                    Navigate to Settings → Integrations → Google My Business to
+                    connect your profile.
                   </p>
                 </div>
               </Card.Body>
@@ -80,10 +90,24 @@ const GoogleBusinessDashboard: React.FC = () => {
         </div>
 
         <div className="d-flex align-items-center">
-          <GoogleBusinessProfile
-            organisationId={organisationId}
-            className="mb-0"
-          />
+          <div className="text-muted small">
+            <i className="fas fa-check-circle text-success me-2"></i>
+            Connected to Google Business Profile
+            <span className="ms-2 badge bg-secondary">{connectionStatus}</span>
+          </div>
+        </div>
+      </div>
+
+      {/* Demo Data Notice */}
+      <div className="alert alert-info mb-4" role="alert">
+        <div className="d-flex align-items-center">
+          <i className="fas fa-info-circle me-2"></i>
+          <div>
+            <strong>Demo Data:</strong> You are viewing sample Google Business
+            Profile data. Once your real Google Business Profile API is fully
+            configured, this data will be replaced with your actual business
+            information, reviews, and images.
+          </div>
         </div>
       </div>
 

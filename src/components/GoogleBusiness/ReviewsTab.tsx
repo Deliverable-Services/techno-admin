@@ -112,16 +112,22 @@ const ReviewsTab: React.FC<ReviewsTabProps> = ({ organisationId }) => {
   }
 
   if (error) {
+    console.error("Reviews error details:", error);
     return (
       <Alert variant="danger">
         <i className="fas fa-exclamation-circle me-2"></i>
         Failed to load reviews. Please try again later.
+        <details className="mt-2">
+          <summary>Error Details</summary>
+          <pre className="small">{JSON.stringify(error, null, 2)}</pre>
+        </details>
       </Alert>
     );
   }
 
   const reviews = reviewsData?.reviews || [];
   const totalPages = reviewsData?.total_pages || 1;
+  const totalReviews = reviewsData?.total || 0;
 
   return (
     <>
@@ -131,22 +137,61 @@ const ReviewsTab: React.FC<ReviewsTabProps> = ({ organisationId }) => {
             <h4>
               <i className="fas fa-star me-2 text-warning"></i>
               Customer Reviews
-              {reviewsData?.total && (
-                <Badge bg="secondary" className="ms-2">
-                  {reviewsData.total} total
-                </Badge>
-              )}
+              <Badge bg="secondary" className="ms-2">
+                {totalReviews} total
+              </Badge>
             </h4>
+            <div className="text-muted small">
+              Page {currentPage} of {totalPages}
+              {reviews.length > 0 && (
+                <span className="ms-2">
+                  Showing {reviews.length} review
+                  {reviews.length !== 1 ? "s" : ""}
+                </span>
+              )}
+            </div>
           </div>
+
+          {/* Reviews Summary */}
+          {totalReviews > 0 && (
+            <div className="mt-3 p-3 bg-light rounded">
+              <Row className="text-center">
+                <Col md={3}>
+                  <div className="h5 mb-1 text-primary">{totalReviews}</div>
+                  <div className="small text-muted">Total Reviews</div>
+                </Col>
+                <Col md={3}>
+                  <div className="h5 mb-1 text-success">
+                    {reviews.filter((r) => r.rating >= 4).length}
+                  </div>
+                  <div className="small text-muted">Positive (4-5★)</div>
+                </Col>
+                <Col md={3}>
+                  <div className="h5 mb-1 text-warning">
+                    {reviews.filter((r) => r.rating === 3).length}
+                  </div>
+                  <div className="small text-muted">Neutral (3★)</div>
+                </Col>
+                <Col md={3}>
+                  <div className="h5 mb-1 text-info">
+                    {reviews.filter((r) => r.reply).length}
+                  </div>
+                  <div className="small text-muted">With Replies</div>
+                </Col>
+              </Row>
+            </div>
+          )}
         </Col>
 
         {reviews.length === 0 ? (
           <Col md={12}>
             <Alert variant="info" className="text-center py-5">
               <i className="fas fa-comment-slash fa-3x text-muted mb-3"></i>
-              <h5>No reviews yet</h5>
+              <h5>No reviews on this page</h5>
               <p className="mb-0">
-                Reviews from your Google Business Profile will appear here.
+                {totalReviews > 0
+                  ? `There are ${totalReviews} total reviews. Try navigating to other pages.`
+                  : "Reviews from your Google Business Profile will appear here."}
               </p>
             </Alert>
           </Col>
