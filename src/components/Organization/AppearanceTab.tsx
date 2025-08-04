@@ -2,7 +2,6 @@ import { Formik, Form, Field } from "formik";
 import { Button, Spinner } from "react-bootstrap";
 import { useMutation, useQuery } from "react-query";
 import * as Yup from "yup";
-import { useOrganisation } from "../../context/OrganisationContext";
 import API from "../../utils/API";
 import { showMsgToast } from "../../utils/showMsgToast";
 import { handleApiError } from "../../hooks/handleApiErrors";
@@ -29,6 +28,7 @@ const updateConfig = async (config) => {
     headers: { "Content-Type": "multipart/form-data" },
   });
 };
+
 const AppearanceTab = () => {
   const history = useHistory();
 
@@ -43,9 +43,6 @@ const AppearanceTab = () => {
     },
   });
 
-  //   console.log("configdata", configData);
-
-  // Prepare initial values for Formik
   const initialValues = {
     primary_color:
       configData?.data?.find((d) => d.key === "primary_color")?.value ||
@@ -60,7 +57,6 @@ const AppearanceTab = () => {
   const mutation = useMutation(updateConfig, {
     onSuccess: () => {
       queryClient.invalidateQueries(`${key}?per_page=50`);
-
       showMsgToast("Appearance updated successfully!");
     },
     onError: handleApiError,
@@ -75,38 +71,12 @@ const AppearanceTab = () => {
       <div className="right-content">
         <div className="profile-card d-flex flex-column align-items-center">
           {isLoading ? (
-            <Spinner animation="border" />
+            <Spinner className="mt-8" animation="border" />
           ) : (
             <Formik
               enableReinitialize
               initialValues={initialValues}
               validationSchema={ValidationSchema}
-              //   onSubmit={async (values, { setSubmitting, resetForm }) => {
-              //     setSubmitting(true);
-              //     // Find changed fields
-              //     const changed = Object.entries(values).filter(
-              //       ([key, value]) => {
-              //         const original = configData?.data.find(
-              //           (d) => d.key === key
-              //         )?.value;
-              //         return value !== original;
-              //       }
-              //     );
-
-              //     // Make API calls for each changed config
-              //     await Promise.all(
-              //       changed.map(([key, value]) => {
-              //         const config = configData?.data.find((d) => d.key === key);
-              //         return mutation.mutateAsync({
-              //           id: config.id,
-              //           key,
-              //           value,
-              //         });
-              //       })
-              //     );
-              //     setSubmitting(false);
-              //     resetForm({ values });
-              //   }}
               onSubmit={async (values, { setSubmitting, resetForm }) => {
                 setSubmitting(true);
                 // Find changed fields

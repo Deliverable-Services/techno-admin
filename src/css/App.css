@@ -12971,5 +12971,8 @@ background: none !important;
   transform: translate3d(20px, -56px, 0px) !important;
 }
 
+.crm-user-img {
+  width: 33px;
+}
 
 

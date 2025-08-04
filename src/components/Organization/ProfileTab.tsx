@@ -38,6 +38,7 @@ const updateProfileImage = ({ formdata }: { formdata: FormData }) => {
 const ProfileTab = () => {
   const history = useHistory();
   const loggedInUser = useUserProfileStore((state) => state.user);
+
   const { mutate, isLoading, error, status } = useMutation(updateUser, {
     onSuccess: () => {
       queryClient.invalidateQueries(key);
@@ -47,6 +48,7 @@ const ProfileTab = () => {
       handleApiError(error, history);
     },
   });
+
   const { mutate: mutateImage, isLoading: isImageLoading } = useMutation(
     updateProfileImage,
     {
@@ -169,7 +171,7 @@ const ProfileTab = () => {
                         {isLoading ? (
                           <Spinner animation="border" size="sm" />
                         ) : (
-                          "Submit"
+                          "Save"
                         )}
                       </Button>
                     </Col>

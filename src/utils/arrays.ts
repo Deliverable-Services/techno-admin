@@ -2,6 +2,10 @@ export const isActiveArray = [
   { id: "1", name: "Yes" },
   { id: "0", name: "No" },
 ];
+export const isPublishedArray = [
+  { id: 1, name:  "Yes" },
+  { id: 0, name: "No" },
+];
 
 export const conditionType = [
   { id: "percentage", name: "Percentage" },

@@ -153,6 +153,7 @@ const LoginFlow = () => {
                 onSubmit={(values) => {
                   const formData = new FormData();
                   formData.append("phone", `${countryCode}${values.phone}`);
+                  formData.append("organisation_id", `${countryCode}${values.phone}`);
                   setPhone(`${countryCode}${values.phone}`);
                   sendOtpMutate(formData);
                 }}
