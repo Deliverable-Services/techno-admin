@@ -75,9 +75,10 @@ import organization from "./components/Organization";
 import InvoicePage from "./components/Invoices";
 import GoogleBusinessDashboard from "./components/GoogleBusiness";
 import { OrganisationProvider } from "./context/OrganisationContext";
-import ViewWebsite from "./components/DynamicPages/ViewWebsite";
 import DynamicPageCreateUpdateForm from "./components/DynamicPages/DynamicPageCreateUpdateForm";
+import ViewWebsite from "./components/DynamicPages/ViewWebsite";
 import WebsitePages from "./components/WebsitePages";
+import { BottomNavigation } from "./components/BottomNavigation/BottomNavigation";
 
 const App = () => {
   const [isDesktop, setIsDesktop] = useState<boolean>(false);
@@ -520,11 +521,21 @@ const App = () => {
                   component={InvoicePage}
                   permissionReq="read_city"
                 />
-                <PrivateRoute
-                  path="/google-business"
+                <PrivateRoute path="/google-business"
                   exact
                   component={GoogleBusinessDashboard}
-                  permissionReq="read_dashboard"
+                  permissionReq="read_dashboard" />
+                <PrivateRoute
+                  path="/website"
+                  exact
+                  component={WebsitePages}
+                  permissionReq="read_staticpage"
+                />
+                <PrivateRoute
+                  path="/website/:id"
+                  exact
+                  component={ViewWebsite}
+                  permissionReq="read_staticpage"
                 />
 
                 <Route path="/login" exact component={LoginPage} />
@@ -533,6 +544,7 @@ const App = () => {
               <ErrorToast />
               <MsgToast />
             </Container>
+            {!isDesktop && <BottomNavigation />}
           </div>
         </div>
       </OrganisationProvider>
