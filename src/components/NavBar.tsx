@@ -78,6 +78,12 @@ const mainLinks: Array<INavLink> = [
   },
 
   {
+    title: "Google Business",
+    path: "/google-business",
+    icon: <FaGoogle />,
+    permissionReq: "read_dashboard",
+  },
+  {
     title: "Customers",
     path: "/users",
     icon: <ImUsers />,
