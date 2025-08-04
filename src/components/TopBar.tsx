@@ -26,7 +26,7 @@ const TopBar = ({ isNavOpen, setIsNavOpen }: INavBar) => {
 
   const openNavBar = () => {
     if (setIsNavOpen) {
-      setIsNavOpen(true);
+      setIsNavOpen(!isNavOpen);
     }
   };
 
@@ -50,15 +50,15 @@ const TopBar = ({ isNavOpen, setIsNavOpen }: INavBar) => {
       style={{ width: !isNavOpen ? "98vw" : "100%" }}
     >
       {/* {!isDesktop ? ( */}
-      {!isNavOpen ? (
-        <div className="menu-hamburger" style={{ cursor: "pointer" }}>
-          <GiHamburgerMenu
-            size={28}
-            onClick={openNavBar}
-          // color={primaryColor}
-          />
-        </div>
-      ) : null}
+
+      <div className="menu-hamburger" style={{ cursor: "pointer" }}>
+        <GiHamburgerMenu
+          size={28}
+          onClick={openNavBar}
+        // color={primaryColor}
+        />
+      </div>
+
       {/* ) : null} */}
 
       {isDesktop && !isNavOpen && <Logo />}
