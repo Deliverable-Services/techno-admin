@@ -1,27 +1,28 @@
-import React, { useContext } from "react";
+import React from "react";
 import { Button } from "react-bootstrap";
-import { AiFillPlusSquare, AiOutlinePlusSquare } from "react-icons/ai";
-import { IsDesktopContext } from "../context/IsDesktopContext";
+import { AiOutlinePlus } from "react-icons/ai";
 import Restricted from "./Restricted";
 interface Props {
   title: string;
+  icon?: React.ReactNode;
   onClick?: () => void;
   totalRecords?: number;
   permissionReq?: string;
 }
 const PageHeading: React.FC<Props> = ({
   title,
+  icon,
   onClick,
   totalRecords,
   permissionReq,
 }) => {
-  const isDesktop = useContext(IsDesktopContext);
   return (
-    <div className="d-flex justify-content-between py-2">
+    <div className="d-flex justify-content-between pb-2">
       <p
-        className="font-weight-bolder mb-0 lead"
+        className="font-weight-bolder mb-0 lead d-flex align-items-center gap-3"
         style={{ verticalAlign: "center" }}
       >
+        {icon}
         {title}
         {totalRecords ? (
           <small style={{ fontSize: 14, marginLeft: 5, opacity: 0.6 }}>
@@ -32,9 +33,9 @@ const PageHeading: React.FC<Props> = ({
 
       {onClick && (
         <Restricted to={permissionReq}>
-          <Button variant="primary" onClick={onClick} size={"sm"}>
+          <Button variant="primary" onClick={onClick} size={"sm"} style={{ background: '#303030', borderColor: '#303030' }}>
             <div className="text-white d-flex align-items-center">
-              <AiOutlinePlusSquare size={18} />
+              <AiOutlinePlus size={18} />
               <p className="mb-0 ml-1">Create</p>
             </div>
           </Button>
