@@ -1,5 +1,6 @@
 import { useState, useCallback } from "react";
 import { useQuery, useMutation, useQueryClient } from "react-query";
+import { useHistory } from "react-router-dom";
 import { AxiosError } from "axios";
 import fivetranService, {
   FivetranConnectorStatus,

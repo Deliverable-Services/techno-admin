@@ -73,6 +73,7 @@ import CRM from "./components/CRM";
 import CRMBoard from "./components/CRM/CRMBoard";
 import organization from "./components/Organization";
 import InvoicePage from "./components/Invoices";
+import GoogleBusinessDashboard from "./components/GoogleBusiness";
 import { OrganisationProvider } from "./context/OrganisationContext";
 import ViewWebsite from "./components/DynamicPages/ViewWebsite";
 import DynamicPageCreateUpdateForm from "./components/DynamicPages/DynamicPageCreateUpdateForm";
@@ -518,6 +519,12 @@ const App = () => {
                   exact
                   component={InvoicePage}
                   permissionReq="read_city"
+                />
+                <PrivateRoute
+                  path="/google-business"
+                  exact
+                  component={GoogleBusinessDashboard}
+                  permissionReq="read_dashboard"
                 />
 
                 <Route path="/login" exact component={LoginPage} />

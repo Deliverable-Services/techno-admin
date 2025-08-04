@@ -15,6 +15,7 @@ import {
   FaPhone,
   FaMap,
   FaClock,
+  FaGoogle,
 } from "react-icons/fa";
 import { GoIssueOpened } from "react-icons/go";
 import { IoLogoModelS } from "react-icons/io";
@@ -86,6 +87,12 @@ const mainLinks: Array<INavLink> = [
     path: "/invoices",
     icon: <SiCivicrm />,
     permissionReq: "read_city",
+  },
+  {
+    title: "Google Business",
+    path: "/google-business",
+    icon: <FaGoogle />,
+    permissionReq: "read_dashboard",
   },
   {
     title: "Customers",
@@ -389,7 +396,7 @@ const NavBar = ({ isNavOpen, setIsNavOpen }: INavBar) => {
 
         <div className="all-links">
           <div className="d-flex align-items-center justify-content-center">
-            <Dropdown className="w-100 pt-3" style={{ position: 'unset' }}>
+            <Dropdown className="w-100 pt-3" style={{ position: "unset" }}>
               <section
                 style={{
                   fontSize: "11px",
@@ -404,9 +411,17 @@ const NavBar = ({ isNavOpen, setIsNavOpen }: INavBar) => {
               <Dropdown.Toggle
                 id="dropdown-basic"
                 className="bg-white w-100 border px-3 py-1 shadow-sm d-flex align-items-center btn-focus-none"
-                style={{ color: "#000", fontWeight: "500", fontSize: "14px", borderRadius: '6px' }}
+                style={{
+                  color: "#000",
+                  fontWeight: "500",
+                  fontSize: "14px",
+                  borderRadius: "6px",
+                }}
               >
-                <span className="text-truncate" style={{ width: '100%', textAlign: 'left' }}>
+                <span
+                  className="text-truncate"
+                  style={{ width: "100%", textAlign: "left" }}
+                >
                   {selectedOrg?.name}
                 </span>
               </Dropdown.Toggle>
