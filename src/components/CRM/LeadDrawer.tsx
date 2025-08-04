@@ -245,9 +245,9 @@ const LeadDrawer: React.FC<Props> = ({ lead, onClose }) => {
               </div>
             </div>
           </div>
-          <div className="d-flex justify-content-between">
-            <div>
-              <div className="card m-3 p-3 card" style={{ maxWidth: "500px" }}>
+          <div className="d-flex">
+            <div className="flex-1">
+              <div className="card m-3 p-3 card">
                 <h6 className="mb-3 d-flex align-items-center border-bottom p-3">Company details</h6>
                 <div className="pb-3">
                   {["name", "city", "zipcode", "country", "address", "website"].map(
@@ -286,7 +286,7 @@ const LeadDrawer: React.FC<Props> = ({ lead, onClose }) => {
                 </div>
               </div>
 
-              <div className="card m-3 p-3 card" style={{ maxWidth: "500px" }}>
+              <div className="card m-3 p-3 card">
                 <h6 className="mb-3 d-flex align-items-center p-3 border-bottom">Contact details</h6>
                 <div className="pb-3">
                   {["contactName", "gender", "email", "phone"].map((field) => (
@@ -325,7 +325,7 @@ const LeadDrawer: React.FC<Props> = ({ lead, onClose }) => {
                 </div>
               </div>
             </div>
-            <div style={{ minWidth: "650px", maxWidth: "650px" }}>
+            <div className="flex-1">
               <div className="history-leads pl-4">
                 <h6 className="mb-3 d-flex align-items-center py-3">History</h6>
                 <div className="timeline">
@@ -390,7 +390,7 @@ const LeadDrawer: React.FC<Props> = ({ lead, onClose }) => {
                 </div>
               </div>
             </div>
-            <div>
+            <div className="flex-1">
               <div className="global-card m-3 p-3 notes-wrapper">
                 <h6 className="mb-3 d-flex align-items-center border-bottom pb-2">
                   <FaStickyNote className="mr-2" /> Notes

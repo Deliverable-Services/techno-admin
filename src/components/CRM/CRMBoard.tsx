@@ -17,6 +17,8 @@ import { showErrorToast } from "../../utils/showErrorToast";
 import { queryClient } from "../../utils/queryClient";
 
 const key = "leads";
+const membersKey = "users";
+
 const statusMap: { [key in string]: string } = {
   NEW: "New",
   SCHEDULED: "Scheduled",
@@ -38,6 +40,12 @@ const CRMBoard: React.FC = () => {
   const [selectedId, setSelectedId] = useState<number | null>(null);
 
   const { data, isLoading, isFetching, error } = useQuery<any>([key, ,], {
+    onError: (error: AxiosError) => {
+      handleApiError(error, history);
+    },
+  });
+
+  const { data: membersList } = useQuery<any>([`${membersKey}?role=admin`, ,], {
     onError: (error: AxiosError) => {
       handleApiError(error, history);
     },
@@ -89,22 +97,20 @@ const CRMBoard: React.FC = () => {
             {/* <div className="crm-breadcrumb">Projects / Beyond Gravity</div> */}
 
             <div className="crm-users">
-              <img
-                src="https://i.pravatar.cc/32?img=1"
-                alt=""
-                className="crm-avatar"
-              />
-              <img
-                src="https://i.pravatar.cc/32?img=2"
-                alt=""
-                className="crm-avatar"
-              />
-              <img
-                src="https://i.pravatar.cc/32?img=3"
-                alt=""
-                className="crm-avatar"
-              />
-              <span className="crm-avatar crm-avatar-extra">+3</span>
+              {membersList?.data.slice(0, 3).map((member, index) => (
+                <img
+                  key={index}
+                  src={member?.profile_pic || "https://i.pravatar.cc/32?img=1"}
+                  alt=""
+                  className="crm-avatar"
+                />
+              ))}
+
+              {membersList?.data.length > 3 && (
+                <span className="crm-avatar crm-avatar-extra">
+                  +{membersList.data.length - 3}
+                </span>
+              )}
             </div>
           </div>
 
