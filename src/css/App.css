@@ -12978,3 +12978,20 @@ background: none !important;
 }
 
 
+.global-card
+{
+  font-size: 1em;
+  transition: all 0.5s ease;
+  /* -webkit-box-shadow: 0 6px 12px rgba(140, 152, 164, 0.1); */
+  box-shadow: var(--shadow-main);
+  background-color: #fff;
+  border: 0 !important;
+  border-radius: 0.75rem !important;
+  padding: 20px !important;
+}
+
+.bg-global
+{
+  background-color: #f1f1f1 !important;
+}
+

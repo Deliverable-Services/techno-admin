@@ -15,7 +15,9 @@ import { showMsgToast } from "../../utils/showMsgToast";
 import { showErrorToast } from "../../utils/showErrorToast";
 import { RiChatFollowUpFill } from "react-icons/ri";
 import { GoPencil } from "react-icons/go";
-import { FaTrash } from "react-icons/fa"; // Add at the top with other imports
+import { FaTrash, FaFlag } from "react-icons/fa"; // Add at the top with other imports
+import { IoIosArrowRoundBack } from "react-icons/io";
+
 
 
 
@@ -53,7 +55,7 @@ const LeadDrawer: React.FC<Props> = ({ lead, onClose }) => {
     city: lead?.city || "Paris",
     zipcode: lead?.zipcode || "75010",
     country: lead?.country || "France",
-    address: lead?.address || "174 Quai de Jemmapes",
+    address: lead?.address || "174 Quai de Jemmas",
     website: lead?.website || "bb.agency",
     contactName: lead?.contact_name || "John Doe",
     gender: lead?.gender || "Male",
@@ -173,45 +175,68 @@ const LeadDrawer: React.FC<Props> = ({ lead, onClose }) => {
   };
 
   const [notes, setNotes] = useState<{ text: string; timestamp: string }[]>([]);
-const [newNote, setNewNote] = useState("");
+  const [newNote, setNewNote] = useState("");
 
-const handleAddNote = () => {
-  if (!newNote.trim()) return;
-  const timestamp = new Date().toLocaleString();
-  setNotes((prev) => [...prev, { text: newNote.trim(), timestamp }]);
-  setNewNote("");
-};
+  const handleAddNote = () => {
+    if (!newNote.trim()) return;
+    const timestamp = new Date().toLocaleString();
+    setNotes((prev) => [...prev, { text: newNote.trim(), timestamp }]);
+    setNewNote("");
+  };
 
-const handleDeleteNote = (index: number) => {
-  setNotes((prev) => prev.filter((_, i) => i !== index));
-};
+  const handleDeleteNote = (index: number) => {
+    setNotes((prev) => prev.filter((_, i) => i !== index));
+  };
 
 
   return (
     <>
       <div className="task-drawer-overlay" onClick={onClose} />
       <div className="task-drawer slide-in">
-        <div className="drawer-header d-flex justify-content-between align-items-center">
-          <h5 className="mb-0">
-            {lead.name} #{lead.id}
-          </h5>
-          <button className="close-drawer" onClick={onClose}>×</button>
+        <div className="drawer-header d-flex justify-content-between align-items-center mb-0 pb-0">
+       
+        <div className="close-drawer ">
+        <IoIosArrowRoundBack />
+        <button  onClick={onClose}>Back</button>
+        </div>
         </div>
 
         <div className="lead-details">
-          <div className="d-flex align-items-center p-3 border-bottom bg-white">
+          <div className="d-flex align-items-center p-3 border-bottom ">
             <div className="d-flex align-items-center">
-              <div className="company-logo mr-3">
+              <div className="company-logo global-card mr-3">
                 <img
                   src="https://static.vecteezy.com/system/resources/previews/008/214/517/non_2x/abstract-geometric-logo-or-infinity-line-logo-for-your-company-free-vector.jpg"
                   alt="Company Logo"
                   className="rounded p-1"
-                  style={{ backgroundColor: "#e8f8f9", width: 100, height: 100 }}
+                  style={{ width: 75, height: 75 }}
                 />
               </div>
               <div>
-                <h5 className="mb-2 font-weight-bold text-30px">Balkan Brothers</h5>
-                <div className="d-flex gap-5 align-items-center">
+                <div className="d-flex gap-3 align-items-center gap-5">
+                  <h5 className="mb-2 font-weight-bold text-30px">Balkan Brothers</h5>
+                  <span className="text-danger small d-flex align-items-center">
+                    <FaFlag className="mr-1" style={{ fontSize: 17 }} />
+                    {lead.priority || "Urgent"}
+                  </span>
+                </div>
+                <div className="d-flex gap-3 align-items-center mb-2">
+                  <span className="text-muted small"> 🔗  {lead.name} #{lead.id}</span>
+
+                  <span
+                    className="badge badge-light px-2 py-1 text-dark shadow-sm"
+                    style={{
+                      backgroundColor: "#e6f4ea", // light green bg
+                      fontSize: "12px",
+                      borderRadius: "12px",
+                    }}
+                  >
+                    {lead.source || "Lead"}
+                  </span>
+
+
+                </div>
+                <div className="d-flex gap-5 align-items-center w-600px">
                   <Action icon={<BsEnvelope />} label="Send Email" />
                   <Action icon={<FaComments />} label="Send SMS" />
                   <Action icon={<BsBellFill />} label="Create Reminder" />
@@ -222,7 +247,7 @@ const handleDeleteNote = (index: number) => {
           </div>
           <div className="d-flex justify-content-between">
             <div>
-              <div className="card m-3 p-3 shadow-sm" style={{ maxWidth: "500px" }}>
+              <div className="card m-3 p-3 card" style={{ maxWidth: "500px" }}>
                 <h6 className="mb-3 d-flex align-items-center border-bottom p-3">Company details</h6>
                 <div className="pb-3">
                   {["name", "city", "zipcode", "country", "address", "website"].map(
@@ -261,7 +286,7 @@ const handleDeleteNote = (index: number) => {
                 </div>
               </div>
 
-              <div className="card m-3 p-3 shadow-sm" style={{ maxWidth: "500px" }}>
+              <div className="card m-3 p-3 card" style={{ maxWidth: "500px" }}>
                 <h6 className="mb-3 d-flex align-items-center p-3 border-bottom">Contact details</h6>
                 <div className="pb-3">
                   {["contactName", "gender", "email", "phone"].map((field) => (
@@ -308,7 +333,7 @@ const handleDeleteNote = (index: number) => {
                     <div className="timeline-icon mr-3">
                       <FaComments className="text-muted" size={20} />
                     </div>
-                    <div className="timeline-content bg-light p-3 rounded shadow-sm flex-grow-1">
+                    <div className="timeline-content global-card  p-3 rounded  flex-grow-1">
                       <div className="d-flex justify-content-between">
                         <div>
                           <img
@@ -319,7 +344,7 @@ const handleDeleteNote = (index: number) => {
                             height="30"
                           />
                           <strong>Cameron McLawrence</strong> started a chat on
-                          <span className="badge bg-success ml-2">WhatsApp</span>
+                          <span className="badge bg-success ml-3">WhatsApp</span>
                           <div className="text-muted small mt-1">👤 Operator: Andrew Vance</div>
                         </div>
                         <div className="text-muted small">Active 12 min ago</div>
@@ -331,7 +356,7 @@ const handleDeleteNote = (index: number) => {
                     <div className="timeline-icon mr-3">
                       <FaBell className="text-muted" size={20} />
                     </div>
-                    <div className="timeline-content bg-light p-3 rounded shadow-sm flex-grow-1">
+                    <div className="timeline-content global-card p-3  flex-grow-1">
                       <div className="d-flex justify-content-between">
                         <div>
                           File has been uploaded
@@ -348,7 +373,7 @@ const handleDeleteNote = (index: number) => {
                     <div className="timeline-icon  mr-3">
                       <RiChatFollowUpFill className="text-muted" size={20} />
                     </div>
-                    <div className="timeline-content bg-light p-3 rounded shadow-sm flex-grow-1">
+                    <div className="timeline-content global-card p-3 flex-grow-1">
                       <div className="d-flex justify-content-between">
                         <div>
                           Triggered an event <span className="text-warning font-weight-bold">webinar-email-follow-up</span>
@@ -366,55 +391,60 @@ const handleDeleteNote = (index: number) => {
               </div>
             </div>
             <div>
-            <div className="card m-3 p-3 shadow-sm" style={{ width: "300px" }}>
-  <h6 className="mb-3 d-flex align-items-center border-bottom pb-2">
-    <FaStickyNote className="mr-2" /> Notes
-  </h6>
+              <div className="global-card m-3 p-3 notes-wrapper">
+                <h6 className="mb-3 d-flex align-items-center border-bottom pb-2">
+                  <FaStickyNote className="mr-2" /> Notes
+                </h6>
 
-  {/* Add New Note */}
-  <div className="form-group">
-    <textarea
-      className="form-control"
-      rows={3}
-      placeholder="Write a note..."
-      value={newNote}
-      onChange={(e) => setNewNote(e.target.value)}
-    />
-    <Button
-      variant="primary"
-      size="sm"
-      className="mt-2"
-      onClick={handleAddNote}
-      disabled={!newNote.trim()}
-    >
-      Add Note
-    </Button>
-  </div>
+                     {/* Notes List */}
+                     <div className="mt-4">
+                  {notes.length > 0 ? (
+                    notes.map((note, index) => (
+                      <div
+                        key={index}
+                        className="global-card p-3 mb-3 bg-global  position-relative "
+                      >
+                        <div className="text-muted small mb-2">
+                          📝 {note.timestamp}
+                        </div>
+                        <div>{note.text}</div>
+                        <FaTrash
+                          className="position-absolute text-danger"
+                          style={{ top: 8, right: 8, cursor: "pointer" }}
+                          onClick={() => handleDeleteNote(index)}
+                        />
+                      </div>
+                    ))
+                  ) : (
+                    <div className="text-muted small">No notes yet.</div>
+                  )}
+                </div>
 
-  {/* Notes List */}
-  <div className="mt-4">
-    {notes.length > 0 ? (
-      notes.map((note, index) => (
-        <div
-          key={index}
-          className="bg-light p-3 mb-3 rounded position-relative shadow-sm"
-        >
-          <div className="text-muted small mb-2">
-            📝 {note.timestamp}
-          </div>
-          <div>{note.text}</div>
-          <FaTrash
-            className="position-absolute text-danger"
-            style={{ top: 8, right: 8, cursor: "pointer" }}
-            onClick={() => handleDeleteNote(index)}
-          />
-        </div>
-      ))
-    ) : (
-      <div className="text-muted small">No notes yet.</div>
-    )}
-  </div>
-</div>
+                {/* Add New Note */}
+                <div className="form-group">
+                  <textarea
+                    className="form-control"
+                    rows={3}
+                    placeholder="Write a note..."
+                    value={newNote}
+                    onChange={(e) => setNewNote(e.target.value)}
+                  />
+                  <Button
+                    variant="primary"
+                    size="sm"
+                    className="mt-2"
+                    onClick={handleAddNote}
+                    disabled={!newNote.trim()}
+                  >
+                    Add Note
+                  </Button>
+                </div>
+
+           
+              </div>
+              <div className="blank-div global-card m-3 p-3 ">
+
+              </div>
 
             </div>
           </div>

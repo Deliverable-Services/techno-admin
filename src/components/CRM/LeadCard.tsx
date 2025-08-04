@@ -46,7 +46,7 @@ const LeadCard: React.FC<Props> = ({ lead }) => {
               borderRadius: "12px",
             }}
           >
-            {lead.source || "Website"}
+            {lead.source || "Lead"}
           </span>
 
           <span className="text-danger small d-flex align-items-center">
