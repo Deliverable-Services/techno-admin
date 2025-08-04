@@ -35,6 +35,8 @@ const PageCanvas = ({
       style={{
         border: "2px dashed rgb(204, 204, 204)",
         borderRadius: "12px",
+        overflowY: "auto",
+        height: "calc(100vh - 342px)",
       }}
     >
       <div

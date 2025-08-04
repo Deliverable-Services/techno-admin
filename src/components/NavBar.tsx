@@ -5,12 +5,8 @@ import {
   FaDiceFour,
   FaQuestionCircle,
   FaRegLightbulb,
-  FaUsers,
   FaMoneyCheck,
   FaUserSecret,
-  FaArrowAltCircleLeft,
-  FaArrowLeft,
-  FaUsersCog,
   FaEnvelope,
   FaPhone,
   FaMap,
@@ -20,8 +16,6 @@ import {
 import { GoIssueOpened } from "react-icons/go";
 import { IoLogoModelS } from "react-icons/io";
 import { GiModernCity, GiOnTarget } from "react-icons/gi";
-import { FaUserCog } from "react-icons/fa";
-import { BiLogOut } from "react-icons/bi";
 
 import {
   RiAdminFill,
@@ -30,7 +24,6 @@ import {
   RiDashboardFill,
   RiGlobalLine,
   RiNotification2Line,
-  RiPagesLine,
   RiServiceFill,
 } from "react-icons/ri";
 import { SiBrandfolder } from "react-icons/si";
@@ -45,15 +38,9 @@ import { AiFillIdcard, AiFillSetting } from "react-icons/ai";
 import { BsClock, BsShieldLock } from "react-icons/bs";
 import { SiCivicrm } from "react-icons/si";
 import { GrOrganization } from "react-icons/gr";
-import profile from "../assets/profile.svg";
 
-import { GrDocumentConfig } from "react-icons/gr";
-import { primaryColor } from "../utils/constants";
 import useUserProfileStore from "../hooks/useUserProfileStore";
 import { Dropdown } from "react-bootstrap";
-import { useMutation } from "react-query";
-import useTokenStore from "../hooks/useTokenStore";
-import API from "../utils/API";
 import { useOrganisation } from "../context/OrganisationContext";
 import { formatTimestamp } from "../utils/utitlity";
 
@@ -274,17 +261,11 @@ const hiddenRoutesForEcommerce = [
   "/product-brands",
   "/categories",
 ];
-const logout = () => {
-  return API.post("/auth/logout");
-};
 
 const NavBar = ({ isNavOpen, setIsNavOpen }: INavBar) => {
   const isDesktop = useContext(IsDesktopContext);
   const loggedInUser = useUserProfileStore((state) => state.user);
-  const removeToken = useTokenStore((state) => state.removeToken);
-  const removeUser = useUserProfileStore((state) => state.removeUser);
-  const user = useUserProfileStore((state) => state.user);
-  const { organisations, setOrganisations, selectedOrg, setSelectedOrg } =
+  const { setOrganisations, selectedOrg, setSelectedOrg } =
     useOrganisation();
 
   useEffect(() => {
@@ -306,11 +287,6 @@ const NavBar = ({ isNavOpen, setIsNavOpen }: INavBar) => {
     if (isDesktop) return;
     if (setIsNavOpen) {
       setIsNavOpen(false);
-    }
-  };
-  const desktopNavClose = () => {
-    if (setIsNavOpen) {
-      setIsNavOpen(!isNavOpen);
     }
   };
   // if (selectedOrg && !selectedOrg?.hasOwnProperty("store_type"))
@@ -349,48 +325,12 @@ const NavBar = ({ isNavOpen, setIsNavOpen }: INavBar) => {
     }
   });
 
-  const { mutate, isLoading } = useMutation(logout, {
-    onSuccess: () => {
-      removeUser();
-      removeToken();
-      window.location.href = "/login";
-    },
-    onError: () => {
-      removeUser();
-      removeToken();
-      window.location.href = "/login";
-    },
-  });
-
   return (
     <>
       <nav className={isNavOpen ? "active pb-0" : ""}>
         {isDesktop && (
           <div className="d-flex  justify-content-between align-items-center">
             <Logo />
-            <div className="collapse-svg">
-              <svg
-                className="mr-3 w-20 bi bi-arrow-bar-left"
-                style={{
-                  cursor: "pointer",
-                  color: "#181d27",
-                  width: "25px",
-                  height: "25px",
-                  marginRight: "5px",
-                }}
-                onClick={desktopNavClose}
-                xmlns="http://www.w3.org/2000/svg"
-                width="16"
-                height="16"
-                fill="currentColor"
-                viewBox="0 0 16 16"
-              >
-                <path
-                  fillRule="evenodd"
-                  d="M12.5 15a.5.5 0 0 1-.5-.5v-13a.5.5 0 0 1 1 0v13a.5.5 0 0 1-.5.5M10 8a.5.5 0 0 1-.5.5H3.707l2.147 2.146a.5.5 0 0 1-.708.708l-3-3a.5.5 0 0 1 0-.708l3-3a.5.5 0 1 1 .708.708L3.707 7.5H9.5a.5.5 0 0 1 .5.5"
-                />
-              </svg>
-            </div>
           </div>
         )}
 
