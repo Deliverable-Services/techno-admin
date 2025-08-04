@@ -377,7 +377,7 @@ const ViewWebsite = () => {
                 <Container
                   fluid
                   className=""
-                  style={{ height: "80vh", overflowY: "auto" }}
+                  style={{ height: "calc(100vh - 342px)", overflowY: "auto" }}
                 >
                   {sectionsData?.data?.map((section, index) => (
                     <div key={section.id}>
