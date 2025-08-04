@@ -7,12 +7,14 @@ import useTokenStore from "./useTokenStore";
 import useUserProfileStore from "./useUserProfileStore";
 
 const getProfile: QueryFunction = async ({ queryKey }) => {
-  const r = await axios.get(`${config.adminApiBaseUrl}${queryKey[0]}`, {
-    headers: {
-      Authorization: `Bearer ${queryKey[1]}`,
-    },
-  });
-  return r.data;
+  if (queryKey[1]) {
+    const r = await axios.get(`${config.adminApiBaseUrl}${queryKey[0]}`, {
+      headers: {
+        Authorization: `Bearer ${queryKey[1]}`,
+      },
+    });
+    return r.data;
+  }
 };
 
 const useMeQuery = () => {
@@ -27,7 +29,7 @@ const useMeQuery = () => {
     refetchOnMount: false,
     refetchOnWindowFocus: false,
     onSuccess: (data: any) => {
-      setUser(data.user);
+      setUser(data?.user);
       setUserPermissions(data?.permissions);
     },
     onError: (error: AxiosError) => {
