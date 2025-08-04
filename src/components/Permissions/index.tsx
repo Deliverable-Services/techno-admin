@@ -151,6 +151,9 @@ const Permissions = () => {
       {
         Header: "Name",
         accessor: "name",
+        Cell: (data: Cell) => {
+          return <span>{data.row.values.name.replace(/_/g, ' ').replace(/\b\w/g, c => c.toUpperCase())}</span>;
+        },
       },
       {
         Header: "Created At",
@@ -198,7 +201,7 @@ const Permissions = () => {
     <>
       <Roles />
 
-      <Container fluid className="card component-wrapper view-padding mb-3 mt-3">
+      <Container fluid className=" component-wrapper view-padding mb-3 mt-3">
         <PageHeading title="Assign Permission" />
 
         <Container fluid className="h-100 p-0">
@@ -221,7 +224,7 @@ const Permissions = () => {
         </Container>
       </Container>
 
-      <Container fluid className="card component-wrapper view-padding">
+      <Container fluid className=" component-wrapper view-padding">
         <PageHeading
           title="Permissions"
           onClick={_onCreateClick}

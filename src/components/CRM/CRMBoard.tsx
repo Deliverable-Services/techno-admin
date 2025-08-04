@@ -1,3 +1,5 @@
+// CRMBorad.tsx
+
 import React, { useEffect, useState } from "react";
 import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
@@ -5,13 +7,14 @@ import Column from "./Column";
 import { Lead } from "./types";
 import "./crm-board.css";
 import LeadDrawer from "./LeadDrawer";
-import { useQuery } from "react-query";
+import { useMutation, useQuery } from "react-query";
 import { AxiosError } from "axios";
 import { handleApiError } from "../../hooks/handleApiErrors";
 import { useHistory } from "react-router-dom";
 import API from "../../utils/API";
 import { showMsgToast } from "../../utils/showMsgToast";
 import { showErrorToast } from "../../utils/showErrorToast";
+import { queryClient } from "../../utils/queryClient";
 
 const key = "leads";
 const statusMap: { [key in string]: string } = {
@@ -21,6 +24,12 @@ const statusMap: { [key in string]: string } = {
   IN_PROGRESS: "In Progress",
   COMPLETED: "Completed",
   PAID: "PAID",
+};
+
+const changeStatus = ({ id, newStatus }: { id: number; newStatus: any }) => {
+  return API.post(`${key}/${id}/change-status`, {
+    status: newStatus,
+  });
 };
 
 const CRMBoard: React.FC = () => {
@@ -45,20 +54,25 @@ const CRMBoard: React.FC = () => {
     }
   }, [data]);
 
+  const { mutate } = useMutation(changeStatus, {
+    onSuccess: () => {
+      queryClient.invalidateQueries(key);
+      showMsgToast("Status updated successfully");
+    },
+    onError: (error: AxiosError) => {
+      showErrorToast("Error updating lead status");
+      handleApiError(error, history);
+    },
+  });
+
   const handleDrop = async (leadId: number, newStatus: string) => {
     setLeads((prev) =>
       prev.map((lead) =>
         lead.id === leadId ? { ...lead, status: newStatus } : lead
       )
     );
-    const response = await API.post(`${key}/${leadId}/change-status`, {
-      status: newStatus,
-    });
-    if (response.status === 200) {
-      showMsgToast("Status updated successfully");
-    } else {
-      showErrorToast("Error updating lead status");
-    }
+
+    mutate({ id: leadId, newStatus });
   };
 
   const handleCardClick = (leadId: number) => setSelectedId(leadId);
@@ -94,30 +108,27 @@ const CRMBoard: React.FC = () => {
             </div>
           </div>
 
-          <div className="row no-gutters crm-board">
-            {Object.keys(statusMap).map((key) => {
-              const typedKey = key as string;
-              return (
-                <Column
-                  key={typedKey}
-                  title={statusMap[typedKey]}
-                  status={typedKey}
-                  leads={leads?.filter((lead) => lead.status === typedKey)}
-                  onDrop={handleDrop}
-                  onCardClick={handleCardClick}
-                />
-              );
-            })}
+          <div className="crm-board-overflow">
+            <div className="row no-gutters crm-board">
+              {Object.keys(statusMap).map((key) => {
+                const typedKey = key as string;
+                return (
+                  <Column
+                    key={typedKey}
+                    title={statusMap[typedKey]}
+                    status={typedKey}
+                    leads={leads?.filter((lead) => lead.status === typedKey)}
+                    onDrop={handleDrop}
+                    onCardClick={handleCardClick}
+                  />
+                );
+              })}
+            </div>
           </div>
         </div>
       </DndProvider>
 
-      {selectedLead && (
-        <LeadDrawer
-          lead={selectedLead}
-          onClose={handleClose}
-        />
-      )}
+      {selectedLead && <LeadDrawer lead={selectedLead} onClose={handleClose} />}
     </>
   );
 };

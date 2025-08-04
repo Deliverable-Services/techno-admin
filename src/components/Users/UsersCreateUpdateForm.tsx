@@ -1,10 +1,7 @@
 import { useLocation } from "react-router-dom";
-import Restricted from "../../shared-components/Restricted";
 import AgentTargets from "./AgentTarget";
 import UserAddress from "./UserAddresses";
 import UserBasics from "./UserBasics";
-import UserVehicles from "./UserVechiles";
-import UserWallet from "./UserWallet";
 
 const UserCreateUpdateForm = () => {
   const { state } = useLocation();
@@ -16,14 +13,14 @@ const UserCreateUpdateForm = () => {
       <br />
       {id && (
         <>
-          {role === "customer" && (
+          {/* {role === "customer" && (
             <Restricted to="update_user">
               <UserWallet />
             </Restricted>
-          )}
+          )} */}
           {role === "agent" && <AgentTargets />}
           <UserAddress />
-          <UserVehicles />
+          {/* <UserVehicles /> */}
         </>
       )}
     </>

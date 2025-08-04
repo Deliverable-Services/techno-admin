@@ -145,7 +145,7 @@ const Services = () => {
 
   return (
     <>
-      <Container fluid className="card component-wrapper view-padding">
+      <Container fluid className=" component-wrapper view-padding">
         <PageHeading
           title="Services"
           onClick={_onCreateClick}

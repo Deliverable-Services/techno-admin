@@ -47,7 +47,7 @@ const StaticPages = () => {
   }, [titles.length]);
 
   const _onCreateClick = () => {
-    history.push("/static-pages/create-edit");
+    history.push("website-pages/static/create-edit");
   };
 
   if (!data && (!isLoading || !isFetching)) {

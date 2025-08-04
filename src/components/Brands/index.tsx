@@ -1,6 +1,6 @@
 import { AxiosError } from "axios";
 import React, { useMemo, useState } from "react";
-import { Button, Container } from "react-bootstrap";
+import { Button, Container, Nav } from "react-bootstrap";
 import { BiSad } from "react-icons/bi";
 import { useMutation, useQuery } from "react-query";
 import { useHistory } from "react-router-dom";
@@ -100,7 +100,7 @@ const Brands = () => {
         accessor: "url",
         Cell: (data: Cell) => (
           <p
-            classname="text-darkGray m-0" 
+            classname="text-darkGray m-0"
             style={{ cursor: "pointer" }}
             onClick={() => _onUrlClick(data)}
           >
@@ -159,7 +159,7 @@ const Brands = () => {
 
   return (
     <>
-      <Container fluid className="card component-wrapper view-padding">
+      <Container fluid className="component-wrapper view-padding">
         <PageHeading
           title="Brands"
           onClick={_onCreateClick}
@@ -167,45 +167,36 @@ const Brands = () => {
           permissionReq="create_brand"
         />
 
-        {!isLoading && (
-          <Container fluid className="px-0">
+        <div className="d-flex justify-content-between pb-3 mt-3">
+          {!isLoading && (
             <div>
-              <div className="filter">
-                <BreadCrumb
-                  onFilterChange={_onFilterChange}
-                  value=""
-                  currentValue={filter.active}
-                  dataLength={data?.data?.length}
-                  idx="active"
-                  title="All"
-                />
-                <BreadCrumb
-                  onFilterChange={_onFilterChange}
-                  value="1"
-                  currentValue={filter.active}
-                  dataLength={data?.data?.length}
-                  idx="active"
-                  title="Active"
-                />
-                <BreadCrumb
-                  onFilterChange={_onFilterChange}
-                  value="0"
-                  currentValue={filter.active}
-                  dataLength={data?.data?.length}
-                  idx="active"
-                  title="Not Active"
-                  isLast
-                />
-              </div>
+              <Nav className="global-navs" variant="tabs" activeKey={filter.active} onSelect={(selectedKey) => _onFilterChange('active', selectedKey)}>
+                <Nav.Item>
+                  <Nav.Link eventKey="">All ({data?.data?.length || 0})</Nav.Link>
+                </Nav.Item>
+
+                <Nav.Item>
+                  <Nav.Link eventKey="active">
+                    Active ({data?.data?.filter(item => item.status === '1').length || 0})
+                  </Nav.Link>
+                </Nav.Item>
+
+                <Nav.Item>
+                  <Nav.Link eventKey="notActive">
+                    Not Active ({data?.data?.filter(item => item.status === '0').length || 0})
+                  </Nav.Link>
+                </Nav.Item>
+              </Nav>
             </div>
-          </Container>
-        )}
-        <hr className="my-2" />
+          )}
+        </div>
+        <hr />
         <Container fluid className="h-100 p-0">
           {isLoading ? (
             <IsLoading />
           ) : (
             <>
+              <div className="mt-3" />
               {!error && (
                 <ReactTable
                   data={data?.data}

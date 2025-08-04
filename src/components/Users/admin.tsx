@@ -1,6 +1,6 @@
 import { AxiosError } from "axios";
 import { useMemo, useState } from "react";
-import { Button, Col, Container, Modal, Row, Spinner } from "react-bootstrap";
+import { Button, Col, Container, Dropdown, Modal, Row, Spinner } from "react-bootstrap";
 import { BiSad } from "react-icons/bi";
 import { useMutation, useQuery } from "react-query";
 import { useHistory } from "react-router-dom";
@@ -22,6 +22,8 @@ import { isActiveArray } from "../../utils/arrays";
 import { primaryColor } from "../../utils/constants";
 import { queryClient } from "../../utils/queryClient";
 import { showMsgToast } from "../../utils/showMsgToast";
+import { AiFillDelete } from "react-icons/ai";
+import { BsFunnel } from "react-icons/bs";
 interface IFilter {
   role: string | null;
 }
@@ -42,7 +44,7 @@ const intitialFilter = {
 const Admins = () => {
   const history = useHistory();
   const [deletePopup, setDeletePopup] = useState(false);
-  const [selectedRowId, setSelectedRowId] = useState<string>("");
+  const [selectedDeleteId, setSelectedDeleteId] = useState<string | null>(null);
   const [selectedRows, setSelectedRows] = useState([]);
   const [filter, setFilter] = useState(intitialFilter);
   console.log(selectedRows.map((item) => item.id));
@@ -133,12 +135,25 @@ const Admins = () => {
         Header: "Actions",
         Cell: (data: Cell) => {
           return (
-            <EditButton
-              onClick={() => {
-                _onEditClick(data.row.values.id, data.row.values.role);
-              }}
-              permissionReq="update_user"
-            />
+            <div className="d-flex align-items-center gap-2">
+              <EditButton
+                onClick={() => {
+                  _onEditClick(data.row.values.id, data.row.values.role);
+                }}
+                permissionReq="update_user"
+              />
+              <Button
+                variant="outline-danger"
+                className="d-flex align-items-center ml-2"
+                onClick={() => {
+                  setSelectedDeleteId(data.row.values.id);
+                  setDeletePopup(true);
+                }}
+                style={{ padding: "0.25rem 0.5rem" }}
+              >
+                <AiFillDelete size={16} className="mr-1" /> Delete
+              </Button>
+            </div>
           );
         },
       },
@@ -159,7 +174,7 @@ const Admins = () => {
 
   return (
     <>
-      <Container fluid className="card component-wrapper view-padding">
+      <Container fluid className=" component-wrapper view-padding">
         <PageHeading
           title="Team Members"
           onClick={_onCreateClick}
@@ -174,10 +189,34 @@ const Admins = () => {
             <>
               {!error && (
                 <>
-                  <Container fluid className="pt-3 px-0">
-                    <Row className="select-filter d-flex align-items-end ">
-                      <Col md="auto">
-                        <FilterSelect
+                <div className="d-flex justify-content-end pb-3 mt-3">
+                <Dropdown className="filter-dropdown">
+            <Dropdown.Toggle as={Button} variant="primary" className="global-card">
+              <BsFunnel /> Filters
+            </Dropdown.Toggle>
+            <Dropdown.Menu>
+              <div className="filter-dropdown-heading d-flex justify-content-between w-100">
+                <h4>Filter</h4>
+                <div
+                  className="d-flex align-items-center justify-md-content-center"
+                >
+                  <Button
+                   variant={
+                    areTwoObjEqual(intitialFilter, filter)
+                      ? "light"
+                      : "primary"
+                  }
+                  style={{
+                    fontSize: 14,
+                  }}
+                  onClick={() => setFilter(intitialFilter)}
+                >
+                    Reset Filters
+                  </Button>
+                </div>
+              </div>
+              <div className="select-filter">
+              <FilterSelect
                           currentValue={filter.disabled}
                           data={isActiveArray}
                           label="Disabled Users?"
@@ -185,27 +224,12 @@ const Admins = () => {
                           onFilterChange={_onFilterChange}
                           defaultSelectTitle="Show All"
                         />
-                      </Col>
-                      <Col
-                        md="auto"
-                        className="d-flex align-items-end  justify-md-content-center"
-                      >
-                        <Button
-                          variant={
-                            areTwoObjEqual(intitialFilter, filter)
-                              ? "light"
-                              : "primary"
-                          }
-                          style={{
-                            fontSize: 14,
-                          }}
-                          onClick={() => setFilter(intitialFilter)}
-                        >
-                          Reset Filters
-                        </Button>
-                      </Col>
-                    </Row>
-                  </Container>
+              </div>
+            </Dropdown.Menu>
+          </Dropdown>
+                </div>
+
+
                   <hr className="mt-2" />
                   <ReactTable
                     data={data?.data}
@@ -237,8 +261,7 @@ const Admins = () => {
           <Modal.Title>Are you sure?</Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          Do you really want to delete this record? This process cannot be
-          undone
+          Do you really want to delete this user? This process cannot be undone.
         </Modal.Body>
         <Modal.Footer>
           <Button variant="bg-light" onClick={() => setDeletePopup(false)}>
@@ -246,15 +269,16 @@ const Admins = () => {
           </Button>
           <Button
             variant="danger"
-            // onClick={() => {
-            //   mutate(selectedRowId);
-            // }}
+            onClick={() => {
+              if (selectedDeleteId) {
+                mutate([selectedDeleteId]);
+                setDeletePopup(false);
+                setSelectedDeleteId(null);
+              }
+            }}
+            disabled={isDeleteLoading}
           >
-            {isDeleteLoading ? (
-              <Spinner animation="border" size="sm" />
-            ) : (
-              "Disable"
-            )}
+            {isDeleteLoading ? "Loading..." : "Delete"}
           </Button>
         </Modal.Footer>
       </Modal>

@@ -1,100 +1,101 @@
-// components/Organization.tsx
-
 import React, { useState } from "react";
 import "./organization.css"; // Optional custom styles
-import API from "../../utils/API";
-import useTokenStore from "../../hooks/useTokenStore";
-import IsLoading from "../../shared-components/isLoading";
-import { useMsgToastStore } from "../../shared-components/MsgToast/useMsgToastStore";
-import useUserProfileStore from "../../hooks/useUserProfileStore";
+import ProfileTab from "./ProfileTab";
+import OrganizationTab from "./OrganisationTab";
+import AppearanceTab from "./AppearanceTab";
+import WebsiteTab from "./WebsiteTab";
+import PlatformTab from "./PlatformTab";
+import IntegrationsTab from "./IntegrationTab";
+
+const tabs = [
+  { key: "profile", label: "Profile" },
+  { key: "organization", label: "Organization" },
+  { key: "appearance", label: "Appearance" },
+  { key: "website", label: "Website Details" },
+  { key: "platform", label: "Platform Configurations" },
+  { key: "integrations", label: "Integrations" },
+];
 
 const Organization: React.FC = () => {
-  const loggedInUser = useUserProfileStore((state) => state.user);
-  let storeType = loggedInUser?.organisation?.store_type.toLowerCase() || "crm"; // Default to CRM if not set
-  const [selectedOrg, setSelectedOrg] = useState(storeType);
-  const token = useTokenStore((state) => state.accessToken);
-  const [isLoading, setIsLoading] = useState(false);
-  const showToast = useMsgToastStore((state) => state.showToast);
-
-  const handleSelect = (org: "crm" | "ecommerce") => {
-    setSelectedOrg(org);
-  };
-
-  const handleSave = async () => {
-    const storeType = selectedOrg === "crm" ? "CRM" : "ECOMMERCE";
-    setIsLoading(true);
-    try {
-      const response = await API.put(
-        "organisation/store-type",
-        { store_type: storeType },
-        {
-          headers: {
-            Authorization: token ? `Bearer ${token}` : undefined,
-            "Content-Type": "application/json",
-          },
-        }
-      );
-      setIsLoading(false);
-      showToast({ message: "Organization type updated successfully!" });
-      // Optionally show a success message here
-    } catch (error) {
-      setIsLoading(false);
-      console.error(error);
-      // Optionally show an error message here
-    }
-  };
+  const [activeTab, setActiveTab] = useState<string>("organization");
 
   return (
-    <div className="container mt-5 organization-main">
-      <h2 className="text-center mb-5">Choose Your Organization</h2>
-      <div className="row justify-content-center mt-5">
-        {/* CRM */}
-        <div className="col-md-5">
-          <div
-            className={`card mb-4 shadow ${
-              selectedOrg === "crm" ? "border-primary selected" : ""
-            }`}
-            onClick={() => handleSelect("crm")}
-            style={{ cursor: "pointer" }}
-          >
-            <img
-              src="https://miro.medium.com/v2/resize:fit:1400/1*TR-8mgpp0_X5P0ZbB6XYfQ.jpeg" // Your image path
-              className="card-img-top"
-              alt="CRM"
-            />
-            <div className="card-body text-center">
-              <h5 className="card-title text-primary">CRM </h5>
-              <p>Manage leads, sales, and customer relationships.</p>
-            </div>
-          </div>
+    <div>
+      <div className="organization-main">
+        <div className="d-flex justify-content-between">
+          <h2 className="main-head">Organization Settings</h2>
+          {/* <input style={{ width: "300px" }}
+            type="search"
+            className="form-control"
+            name="search"
+            placeholder="Search"
+          /> */}
+        </div>
+        <div className="d-flex g-4 align-items-center mb-4 mx-auto">
+          {/* Bootstrap Nav Tabs with map */}
+          <ul className="nav nav-tabs m-0 my-4 w-auto mr-4">
+            {tabs.map((tab) => (
+              <li className="nav-item" key={tab.key}>
+                <button
+                  className={`nav-link${
+                    activeTab === tab.key ? " active" : ""
+                  }`}
+                  style={{ cursor: "pointer" }}
+                  onClick={() => setActiveTab(tab.key)}
+                >
+                  {tab.label}
+                </button>
+              </li>
+            ))}
+          </ul>
         </div>
 
-        {/* Ecommerce */}
-        <div className="col-md-5">
+        {/* Tab Content */}
+        <div className="tab-content">
           <div
-            className={`card mb-4 shadow ${
-              selectedOrg === "ecommerce" ? "border-success selected" : ""
+            className={`tab-pane fade${
+              activeTab === "profile" ? " show active" : ""
             }`}
-            onClick={() => handleSelect("ecommerce")}
-            style={{ cursor: "pointer" }}
           >
-            <img
-              src="https://s3.envato.com/files/101016168/2a.UCM-CRM-dashboard-desktop.png" // Your image path
-              className="card-img-top"
-              alt="Ecommerce"
-            />
-            <div className="card-body text-center">
-              <h5 className="card-title">Ecommerce </h5>
-              <p>Control your online store, products, and orders.</p>
-            </div>
+            {activeTab === "profile" && <ProfileTab />}
+          </div>
+          <div
+            className={`tab-pane fade${
+              activeTab === "organization" ? " show active" : ""
+            }`}
+          >
+            {activeTab === "organization" && <OrganizationTab />}
+          </div>
+          <div
+            className={`tab-pane fade${
+              activeTab === "appearance" ? " show active" : ""
+            }`}
+          >
+            {activeTab === "appearance" && <AppearanceTab />}
+          </div>
+          <div
+            className={`tab-pane fade${
+              activeTab === "website" ? " show active" : ""
+            }`}
+          >
+            {activeTab === "website" && <WebsiteTab />}
+          </div>
+          <div
+            className={`tab-pane fade${
+              activeTab === "platform" ? " show active" : ""
+            }`}
+          >
+            {activeTab === "platform" && <PlatformTab />}
+          </div>
+          <div
+            className={`tab-pane fade${
+              activeTab === "integrations" ? " show active" : ""
+            }`}
+          >
+            {activeTab === "integrations" && <IntegrationsTab />}
           </div>
         </div>
       </div>
-     <div className="text-right mt-3">
-     <button className="btn btn-primary cursor-pointer organize-switch d-flex justify-content-center align-items-center" style={{height:"38px", marginLeft:"auto"}} onClick={handleSave} disabled={isLoading}>
-     {isLoading ? <IsLoading /> : "Save"}
-     </button>
-     </div>
     </div>
   );
 };

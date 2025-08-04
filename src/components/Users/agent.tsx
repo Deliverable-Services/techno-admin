@@ -22,6 +22,7 @@ import { isActiveArray } from "../../utils/arrays";
 import { primaryColor } from "../../utils/constants";
 import { queryClient } from "../../utils/queryClient";
 import { showMsgToast } from "../../utils/showMsgToast";
+import { AiFillDelete } from "react-icons/ai";
 interface IFilter {
   role: string | null;
 }
@@ -42,7 +43,7 @@ const intitialFilter = {
 const Agents = () => {
   const history = useHistory();
   const [deletePopup, setDeletePopup] = useState(false);
-  const [selectedRowId, setSelectedRowId] = useState<string>("");
+  const [selectedDeleteId, setSelectedDeleteId] = useState<string | null>(null);
   const [selectedRows, setSelectedRows] = useState([]);
   const [filter, setFilter] = useState(intitialFilter);
   console.log(selectedRows.map((item) => item.id));
@@ -134,21 +135,24 @@ const Agents = () => {
         Header: "Actions",
         Cell: (data: Cell) => {
           return (
-            <div className="d-flex">
+            <div className="d-flex align-items-center gap-2">
               <EditButton
                 onClick={() => {
                   _onEditClick(data.row.values.id, data.row.values.role);
                 }}
                 permissionReq="update_user"
               />
-              {/* <Button
-                variant="outline-primary"
-                onClick={() => console.log("hellow")}
-                className="ml-2"
+              <Button
+                variant="outline-danger"
+                className="d-flex align-items-center ml-2"
+                onClick={() => {
+                  setSelectedDeleteId(data.row.values.id);
+                  setDeletePopup(true);
+                }}
+                style={{ padding: "0.25rem 0.5rem" }}
               >
-                <AiFillEdit size={16} className="mr-1" />
-                Target
-              </Button> */}
+                <AiFillDelete size={16} className="mr-1" /> Delete
+              </Button>
             </div>
           );
         },
@@ -248,8 +252,7 @@ const Agents = () => {
           <Modal.Title>Are you sure?</Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          Do you really want to delete this record? This process cannot be
-          undone
+          Do you really want to delete this agent? This process cannot be undone.
         </Modal.Body>
         <Modal.Footer>
           <Button variant="bg-light" onClick={() => setDeletePopup(false)}>
@@ -257,15 +260,16 @@ const Agents = () => {
           </Button>
           <Button
             variant="danger"
-            // onClick={() => {
-            //   mutate(selectedRowId);
-            // }}
+            onClick={() => {
+              if (selectedDeleteId) {
+                mutate([selectedDeleteId]);
+                setDeletePopup(false);
+                setSelectedDeleteId(null);
+              }
+            }}
+            disabled={isDeleteLoading}
           >
-            {isDeleteLoading ? (
-              <Spinner animation="border" size="sm" />
-            ) : (
-              "Disable"
-            )}
+            {isDeleteLoading ? "Loading..." : "Delete"}
           </Button>
         </Modal.Footer>
       </Modal>

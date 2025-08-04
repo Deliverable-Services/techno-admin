@@ -8,6 +8,7 @@ import { AiOutlineSearch } from "react-icons/ai";
 import { MdRemoveShoppingCart } from "react-icons/md";
 import { GoSettings } from "react-icons/go";
 import { IoMdArrowDropdown, IoMdArrowDropup } from "react-icons/io";
+import { BsLayoutTextSidebar } from "react-icons/bs";
 // import Checkbox from 'react-checkbox-component'
 import { UseMutateAsyncFunction } from "react-query";
 import {
@@ -42,6 +43,7 @@ interface Props {
   isSelectable?: boolean;
   searchPlaceHolder?: string;
   deletePermissionReq?: string;
+  showSearch?:boolean
 }
 interface ISearchInput {
   preGlobalFilteredRows: any;
@@ -119,6 +121,7 @@ function ReactTable({
   isSelectable = true,
   searchPlaceHolder,
   deletePermissionReq = "",
+  showSearch = true,
 }: Props): ReactElement {
   const isRestricted = useUserProfileStore((state) => state.isRestricted);
   const [records, setRecords] = React.useState(data);
@@ -250,14 +253,15 @@ function ReactTable({
   };
 
   return (
-    <div>
+    <div className="">
       <Container
         fluid
-        className="card-header pb-3 d-flex align-items-end position-relative px-0 align-items-end "
+        className="pb-3 pt-3 d-flex align-items-end position-relative px-0"
         style={{ flexDirection: isDesktop ? "row" : "column-reverse" }}
       >
         <div className="w-100">
-          <div className="search-input">
+          {showSearch &&
+          <div className="search-input global-card" style={{paddingInline:'10px'}}>
             <AiOutlineSearch size={18} />
             <SearchInput
               preGlobalFilteredRows={preGlobalFilteredRows}
@@ -269,11 +273,12 @@ function ReactTable({
               disabled={formtatedSelectedRows.length > 0}
             />
           </div>
+          }
         </div>
 
-        <div className="d-flex align-items-center">
+        <div className="d-flex  align-items-center">
           <div className="d-flex align-items-center justify-content-center">
-            <span className="text-muted">Records </span>
+            <span className="text-muted" style={{fontSize:'14px'}}>Records </span>
             <select
               className="text-primary font-weight-bold"
               style={{
@@ -298,10 +303,10 @@ function ReactTable({
           <Dropdown>
             <Dropdown.Toggle
               id="dropdown-basic"
-              className="filter-button bg-transparent border-0 text-primary"
+              className="filter-button manage-column global-card d-flex gap-3 align-items-center bg-transparent border-0 text-primary"
             >
-              <GoSettings size={17} color={primaryColor} />{" "}
-              <span className="text-muted my-auto">Filter</span>
+              <BsLayoutTextSidebar />
+              <span className="text-muted my-auto">Manage Column</span>
             </Dropdown.Toggle>
 
             <Dropdown.Menu className="p-2">
@@ -343,6 +348,7 @@ function ReactTable({
       </Container>
 
       {/*-------------------- table---------------------  */}
+      <div className="card">
       <DndProvider backend={HTML5Backend}>
         <div className="tableFixed">
           <Table
@@ -439,8 +445,6 @@ function ReactTable({
           </Table>
         </div>
       </DndProvider>
-      {/* pagination  */}
-
       {rows.length === 0 ? (
         <Container fluid className="d-flex justify-content-center display-3">
           <div className="d-flex flex-column align-items-center pt-3 pb-3">
@@ -449,6 +453,10 @@ function ReactTable({
           </div>
         </Container>
       ) : null}
+      </div>
+      {/* pagination  */}
+
+      
     </div>
   );
 }
