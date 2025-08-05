@@ -1,20 +1,29 @@
-import { AxiosError } from "axios";
-import { useEffect } from "react";
-import { Container, Spinner } from "react-bootstrap";
+import { Container } from "react-bootstrap";
 import { FaBan } from "react-icons/fa";
-import { useQuery } from "react-query";
-import { Route, useHistory } from "react-router-dom";
-import { handleApiError } from "../hooks/handleApiErrors";
-import useMeQuery from "../hooks/useMeQuery";
-import useTokenStore from "../hooks/useTokenStore";
+import { Route } from "react-router-dom";
 import useUserProfileStore from "../hooks/useUserProfileStore";
-import API from "../utils/API";
+import { useOrganisation } from "../context/OrganisationContext";
 
 const key = "get-all-permission";
 
 const restrictedRoutesForStoreType = {
-  ecommerce: ["/crm", "/crm-bookings", "/services", "/products", "/product-brands", "/categories"],
-  crm: ["/orders", "/cart", "/plans", "/coupons", "/agent", "/agent-targets", "/cities", "/product-variants"],
+  ecommerce: [
+    "/crm",
+    "/crm-bookings",
+    "/services",
+    "/products",
+    "/product-brands",
+    "/categories",
+  ],
+  crm: [
+    "/orders",
+    "/cart",
+    "/plans",
+    "/coupons",
+    "/agent",
+    "/agent-targets",
+    "/product-variants",
+  ],
 };
 
 export const PrivateRoute = ({
@@ -27,9 +36,7 @@ export const PrivateRoute = ({
   const loggedInUserPermissions = useUserProfileStore(
     (state) => state?.permissions
   );
-  const loggedInUser = useUserProfileStore(
-    (state) => state?.user
-  );
+  const { selectedOrg } = useOrganisation();
 
   // checking for read permission of the route here
   const isAllowed = (to: string) =>
@@ -38,11 +45,9 @@ export const PrivateRoute = ({
       : false;
 
   const hasPermission = skipPermission || isAllowed(permissionReq);
-  
-  // Check storeType restrictions
-  if (loggedInUser && loggedInUser?.organisations && !loggedInUser?.organisations[0].hasOwnProperty("store_type")) loggedInUser.organisations[0].store_type = "crm"; // setting default to CRM if no organisation found
 
-  const restrictedRoutes = restrictedRoutesForStoreType[loggedInUser?.organisations[0].store_type.toLowerCase()] || [];
+  const restrictedRoutes =
+    restrictedRoutesForStoreType[selectedOrg?.store_type.toLowerCase()] || [];
   const isStoreTypeBlocked = restrictedRoutes.includes(path);
 
   if (!hasPermission || isStoreTypeBlocked) {
