@@ -3,11 +3,12 @@ import { TableState } from "react-table";
 
 export interface INavLink {
   title: string;
-  path: string;
+  path?: string;
   onClick?: () => void;
   icon?: IconBaseProps;
   isNavOpen?: boolean;
   permissionReq?: string;
+  children?: INavLink[];
 }
 export interface INavBar {
   isNavOpen: boolean;
