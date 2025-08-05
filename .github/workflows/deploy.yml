@@ -1,0 +1,46 @@
+name: Deploy Tradeo Admin
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  deploy:
+    name: Deploy via SSH
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '16.x'
+  
+      - name: Install dependencies
+        run: npm install
+  
+      - name: Build the project
+        run: npm run build
+
+      - name: Execute deployment script via SSH
+        uses: appleboy/ssh-action@v1.1.0
+        with:
+          host: ${{ secrets.REMOTE_HOST }}
+          username: ${{ secrets.REMOTE_USER }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          port: 22
+          script: |
+            cd /var/www/techno-admin
+            nvm use 16
+            # Install production dependencies only
+            npm install
+  
+            # Build the project
+            npm run build
+  
+            # Restart the application using PM2
+            pm2 reload all # Graceful restart without downtime
+            
