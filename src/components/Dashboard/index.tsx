@@ -42,6 +42,27 @@ const bookingFilter = {
   duration: "month",
 };
 
+const defaultData = [
+  { date: '2025-07-29', active: 120, new: 30, alltime: 500 },
+  { date: '2025-07-30', active: 150, new: 40, alltime: 540 },
+  { date: '2025-07-31', active: 200, new: 60, alltime: 600 },
+  { date: '2025-08-01', active: 180, new: 50, alltime: 650 },
+  { date: '2025-08-02', active: 220, new: 70, alltime: 720 },
+  { date: '2025-08-03', active: 250, new: 90, alltime: 800 },
+  { date: '2025-08-04', active: 300, new: 100, alltime: 900 },
+];
+
+
+const defaultDataSingle = [
+  { date: '2025-07-29', total_amount: 1200, discount_amount: 150 },
+  { date: '2025-07-30', total_amount: 1500, discount_amount: 200 },
+  { date: '2025-07-31', total_amount: 1700, discount_amount: 180 },
+  { date: '2025-08-01', total_amount: 1600, discount_amount: 220 },
+  { date: '2025-08-02', total_amount: 1800, discount_amount: 250 },
+  { date: '2025-08-03', total_amount: 2000, discount_amount: 300 },
+  { date: '2025-08-04', total_amount: 2100, discount_amount: 320 },
+];
+
 const Dashboard = () => {
   const history = useHistory();
   const [filter, setFilter] = useState(bookingFilter);
@@ -412,7 +433,7 @@ const Dashboard = () => {
                       <IsLoading />
                     ) : (
                       <WebsiteAnalyticsChart
-                        data={BookingAnalytics?.booking}
+                        data={defaultData}
                         xAxisDataKey="date"
                         dataKey="order"
                       />
@@ -444,7 +465,7 @@ const Dashboard = () => {
                       <IsLoading />
                     ) : (
                       <BrandGMBChart
-                        data={RevenueAnalytics?.revenue}
+                        data={defaultDataSingle}
                         xAxisDataKey="date"
                         dataKey1="total_amount"
                         dataKey2="discount_amount"

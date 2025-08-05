@@ -166,7 +166,10 @@ const InvoicesCreateForm = ({ onSuccess }: { onSuccess?: () => void }) => {
             <Modal
                 show={showPreview}
                 onHide={() => setShowPreview(false)}
-                className="invoice-preview-modal"
+                style={{
+                    margin: '0 auto',
+
+                }}
                 centered
             >
                 <Modal.Header closeButton>
