@@ -17,7 +17,7 @@ const PageHeading: React.FC<Props> = ({
   permissionReq,
 }) => {
   return (
-    <div className="d-flex justify-content-between pb-2">
+    <div className="d-flex justify-content-between pb-3">
       <p
         className="font-weight-bolder mb-0 lead d-flex align-items-center gap-3"
         style={{ verticalAlign: "center" }}

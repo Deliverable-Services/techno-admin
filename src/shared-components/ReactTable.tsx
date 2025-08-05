@@ -1,5 +1,5 @@
 import { AxiosResponse } from "axios";
-import React, { ReactElement, useMemo } from "react";
+import React, { ReactElement, useMemo, useState } from "react";
 import { DragDropContext, Draggable, Droppable } from "react-beautiful-dnd";
 import { Container, Dropdown, Spinner, Table } from "react-bootstrap";
 import { DndProvider } from "react-dnd";
@@ -7,7 +7,7 @@ import { HTML5Backend } from "react-dnd-html5-backend";
 import { AiOutlineSearch } from "react-icons/ai";
 import { MdRemoveShoppingCart } from "react-icons/md";
 import { GoSettings } from "react-icons/go";
-import { IoMdArrowDropdown, IoMdArrowDropup } from "react-icons/io";
+import { IoMdArrowDropdown, IoMdArrowDropup, IoMdClose } from "react-icons/io";
 import { BsLayoutTextSidebar } from "react-icons/bs";
 // import Checkbox from 'react-checkbox-component'
 import { UseMutateAsyncFunction } from "react-query";
@@ -31,6 +31,7 @@ import useUserProfileStore from "../hooks/useUserProfileStore";
 
 interface Props {
   data: any;
+  filters?: any;
   columns: Array<any>;
   updateOrder?: any;
   initialState?: Partial<TableState<object>>;
@@ -43,7 +44,7 @@ interface Props {
   isSelectable?: boolean;
   searchPlaceHolder?: string;
   deletePermissionReq?: string;
-  showSearch?:boolean
+  showSearch?: boolean
 }
 interface ISearchInput {
   preGlobalFilteredRows: any;
@@ -109,6 +110,7 @@ const IndeterminateCheckbox = React.forwardRef(
 
 function ReactTable({
   data,
+  filters,
   columns,
   updateOrder,
   initialState,
@@ -128,7 +130,7 @@ function ReactTable({
   const [rowIds, setSelectedRowIds] = React.useState<Record<any, any> | null>(
     null
   );
-
+  const [showSearchInput, setShowSearchInput] = useState(false);
   const [pageWiseRows, setPageWiseRows] = React.useState<Record<
     any,
     any
@@ -256,29 +258,79 @@ function ReactTable({
     <div className="">
       <Container
         fluid
-        className="pb-3 pt-3 d-flex align-items-end position-relative px-0"
+        className="pb-3 d-flex align-items-end position-relative px-3"
         style={{ flexDirection: isDesktop ? "row" : "column-reverse" }}
       >
-        <div className="w-100">
-          {showSearch &&
-          <div className="search-input global-card" style={{paddingInline:'10px'}}>
-            <AiOutlineSearch size={18} />
-            <SearchInput
-              preGlobalFilteredRows={preGlobalFilteredRows}
-              globalFilter={state.globalFilter}
-              setGlobalFilter={setGlobalFilter}
-              searchValue={filter?.query}
-              onSearchChange={onFilterChange}
-              placeholder={searchPlaceHolder}
-              disabled={formtatedSelectedRows.length > 0}
-            />
-          </div>
-          }
-        </div>
 
-        <div className="d-flex  align-items-center">
-          <div className="d-flex align-items-center justify-content-center">
-            <span className="text-muted" style={{fontSize:'14px'}}>Records </span>
+
+        <div className="d-flex align-items-center ml-auto">
+
+          <div className="w-100" style={{ minWidth: 300, marginRight: 8 }}>
+            {showSearch &&
+              <div className="search-input global-card" style={{ paddingInline: '10px' }}>
+                <AiOutlineSearch size={18} />
+                <SearchInput
+                  preGlobalFilteredRows={preGlobalFilteredRows}
+                  globalFilter={state.globalFilter}
+                  setGlobalFilter={setGlobalFilter}
+                  searchValue={filter?.query}
+                  onSearchChange={onFilterChange}
+                  placeholder={searchPlaceHolder}
+                  disabled={formtatedSelectedRows.length > 0}
+                />
+              </div>
+            }
+          </div>
+
+          <div className="search-filters-div">
+            {filters && filters}
+            <Dropdown>
+              <Dropdown.Toggle
+                id="dropdown-basic"
+                className="filter-button m-0 p-0 manage-column d-flex gap-3 align-items-center bg-transparent border-0 text-primary"
+              >
+                <BsLayoutTextSidebar />
+              </Dropdown.Toggle>
+
+              <Dropdown.Menu className="p-2 menu-dropdown">
+                {allColumns.map((column) => {
+                  column.disableGlobalFilter = !column.isVisible;
+                  return (
+                    <div
+                      key={column.id}
+                      className="custom-control custom-checkbox w-100 px-2 dropdown-item"
+                    >
+                      <input
+                        type="checkbox"
+                        {...column.getToggleHiddenProps()}
+                        className="d-none"
+                        id={column.id}
+                      />
+
+                      <div className="custom-control custom-checkbox ">
+                        <input
+                          type="checkbox"
+                          className="custom-control-input"
+                          id={column.id}
+                          {...column.getToggleHiddenProps()}
+                        />
+
+                        <label
+                          className="custom-control-label"
+                          htmlFor={column.id}
+                        >
+                          <p style={{ whiteSpace: "nowrap" }}>{column.Header}</p>
+                        </label>
+                      </div>
+                    </div>
+                  );
+                })}
+              </Dropdown.Menu>
+            </Dropdown>
+          </div>
+
+          {/* <div className="d-flex align-items-center justify-content-center">
+            <span className="text-muted" style={{ fontSize: '14px' }}>Records </span>
             <select
               className="text-primary font-weight-bold"
               style={{
@@ -298,165 +350,122 @@ function ReactTable({
                 </option>
               ))}
             </select>
-          </div>
+          </div> */}
 
-          <Dropdown>
-            <Dropdown.Toggle
-              id="dropdown-basic"
-              className="filter-button manage-column global-card d-flex gap-3 align-items-center bg-transparent border-0 text-primary"
-            >
-              <BsLayoutTextSidebar />
-              <span className="text-muted my-auto">Manage Column</span>
-            </Dropdown.Toggle>
 
-            <Dropdown.Menu className="p-2">
-              {allColumns.map((column) => {
-                column.disableGlobalFilter = !column.isVisible;
-                return (
-                  <div
-                    key={column.id}
-                    className="custom-control custom-checkbox w-100 px-2"
-                  >
-                    <input
-                      type="checkbox"
-                      {...column.getToggleHiddenProps()}
-                      className="d-none"
-                      id={column.id}
-                    />
-
-                    <div className="custom-control custom-checkbox ">
-                      <input
-                        type="checkbox"
-                        className="custom-control-input"
-                        id={column.id}
-                        {...column.getToggleHiddenProps()}
-                      />
-
-                      <label
-                        className="custom-control-label"
-                        htmlFor={column.id}
-                      >
-                        <p style={{ whiteSpace: "nowrap" }}>{column.Header}</p>
-                      </label>
-                    </div>
-                  </div>
-                );
-              })}
-            </Dropdown.Menu>
-          </Dropdown>
         </div>
       </Container>
 
       {/*-------------------- table---------------------  */}
-      <div className="card">
-      <DndProvider backend={HTML5Backend}>
-        <div className="tableFixed">
-          <Table
-            className="table-fixed"
-            {...getTableProps()}
-            responsive
-            hover
-            size="sm"
-          >
-            <thead className="bg-grey-primary">
-              {isDataLoading ? (
-                <tr>
-                  <td className="text-muted font-weight-bold w-100">
-                    Loading <Spinner size="sm" animation="border" />
-                  </td>
-                </tr>
-              ) : null}
-              {
-                // Loop over the header rows
-                headerGroups.map((headerGroup) => (
-                  // Apply the header row props
-                  <tr {...headerGroup.getHeaderGroupProps()}>
-                    {
-                      // Loop over the headers in each row
-                      headerGroup.headers.map((column) => {
-                        // Apply the header cell props
-                        return (
-                          <th
-                            {...column.getHeaderProps(
-                              column.getSortByToggleProps()
-                            )}
-                          >
-                            {
-                              // Render the header
-                              column.render("Header")
-                            }
-                            <span>
-                              {column.isSorted ? (
-                                column.isSortedDesc ? (
-                                  <IoMdArrowDropup />
-                                ) : (
-                                  <IoMdArrowDropdown />
-                                )
-                              ) : (
-                                ""
-                              )}
-                            </span>
-                          </th>
-                        );
-                      })
-                    }
+      <div className="">
+        <DndProvider backend={HTML5Backend}>
+          <div className="tableFixed">
+            <Table
+              className="table-fixed"
+              {...getTableProps()}
+              responsive
+              hover
+              size="sm"
+            >
+              <thead className="bg-grey-primary">
+                {isDataLoading ? (
+                  <tr>
+                    <td className="text-muted font-weight-bold w-100">
+                      Loading <Spinner size="sm" animation="border" />
+                    </td>
                   </tr>
-                ))
-              }
-            </thead>
-            {/* Apply the table body props */}
-            <DragDropContext onDragEnd={handleDragEnd}>
-              <Droppable droppableId="table-body">
-                {(provided, snapshot) => (
-                  <tbody ref={provided.innerRef} {...provided.droppableProps}>
-                    {rows.map((row, i) => {
-                      prepareRow(row);
+                ) : null}
+                {
+                  // Loop over the header rows
+                  headerGroups.map((headerGroup) => (
+                    // Apply the header row props
+                    <tr {...headerGroup.getHeaderGroupProps()}>
+                      {
+                        // Loop over the headers in each row
+                        headerGroup.headers.map((column) => {
+                          // Apply the header cell props
+                          return (
+                            <th
+                              {...column.getHeaderProps(
+                                column.getSortByToggleProps()
+                              )}
+                            >
+                              {
+                                // Render the header
+                                column.render("Header")
+                              }
+                              <span>
+                                {column.isSorted ? (
+                                  column.isSortedDesc ? (
+                                    <IoMdArrowDropup />
+                                  ) : (
+                                    <IoMdArrowDropdown />
+                                  )
+                                ) : (
+                                  ""
+                                )}
+                              </span>
+                            </th>
+                          );
+                        })
+                      }
+                    </tr>
+                  ))
+                }
+              </thead>
+              {/* Apply the table body props */}
+              <DragDropContext onDragEnd={handleDragEnd}>
+                <Droppable droppableId="table-body">
+                  {(provided, snapshot) => (
+                    <tbody ref={provided.innerRef} {...provided.droppableProps}>
+                      {rows.map((row, i) => {
+                        prepareRow(row);
 
-                      if (isDraggable)
-                        return (
-                          <Draggable
-                            draggableId={row.id}
-                            key={row.id}
-                            index={i}
-                          >
-                            {(provided, snapshot) => {
-                              return (
-                                <DnDRow
-                                  provided={provided}
-                                  row={row}
-                                  snapshot={snapshot}
-                                />
-                              );
-                            }}
-                          </Draggable>
-                        );
-                      else return <Row row={row} />;
-                    })}
-                    {provided.placeholder}
-                  </tbody>
-                )}
-              </Droppable>
-            </DragDropContext>
-            {/* {rows.length === 0 ?
+                        if (isDraggable)
+                          return (
+                            <Draggable
+                              draggableId={row.id}
+                              key={row.id}
+                              index={i}
+                            >
+                              {(provided, snapshot) => {
+                                return (
+                                  <DnDRow
+                                    provided={provided}
+                                    row={row}
+                                    snapshot={snapshot}
+                                  />
+                                );
+                              }}
+                            </Draggable>
+                          );
+                        else return <Row row={row} />;
+                      })}
+                      {provided.placeholder}
+                    </tbody>
+                  )}
+                </Droppable>
+              </DragDropContext>
+              {/* {rows.length === 0 ?
 <Container fluid className="d-flex justify-content-center w-100 align-item-center">
 <span className="text-primary display-3">No data found</span>
 </Container>
 : ""} */}
-          </Table>
-        </div>
-      </DndProvider>
-      {rows.length === 0 ? (
-        <Container fluid className="d-flex justify-content-center display-3">
-          <div className="d-flex flex-column align-items-center pt-3 pb-3">
-            <MdRemoveShoppingCart color="#000" size={60} />
-            <h4 className="text-black font-weight-bold mt-2">No data found</h4>
+            </Table>
           </div>
-        </Container>
-      ) : null}
+        </DndProvider>
+        {rows.length === 0 ? (
+          <Container fluid className="d-flex justify-content-center display-3">
+            <div className="d-flex flex-column align-items-center pt-3 pb-3">
+              <MdRemoveShoppingCart color="#000" size={60} />
+              <h4 className="text-black font-weight-bold mt-2">No data found</h4>
+            </div>
+          </Container>
+        ) : null}
       </div>
       {/* pagination  */}
 
-      
+
     </div>
   );
 }
@@ -488,8 +497,8 @@ const Row = ({ row }: any) => (
       return (
         <td {...cell.getCellProps()} style={{ verticalAlign: "middle" }}>
           {cell.value ||
-          cell.column.id === "selection" ||
-          cell.column.id === "Actions" ? (
+            cell.column.id === "selection" ||
+            cell.column.id === "Actions" ? (
             cell.render("Cell")
           ) : (
             <span className="text-muted">NA</span>
