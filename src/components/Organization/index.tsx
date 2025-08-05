@@ -7,10 +7,12 @@ import WebsiteTab from "./WebsiteTab";
 import PlatformTab from "./PlatformTab";
 import IntegrationsTab from "./IntegrationTab";
 import CustomConfigTab from "./CustomConfigTab";
+import DomainTab from "./DomainTab";
 
 const tabs = [
   { key: "profile", label: "Profile" },
   { key: "organization", label: "Organization" },
+  { key: "domains", label: "Domains" },
   { key: "appearance", label: "Appearance" },
   { key: "website", label: "Website Details" },
   { key: "platform", label: "Platform Configurations" },
@@ -67,6 +69,13 @@ const Organization: React.FC = () => {
             }`}
           >
             {activeTab === "organization" && <OrganizationTab />}
+          </div>
+          <div
+            className={`tab-pane fade${
+              activeTab === "domains" ? " show active" : ""
+            }`}
+          >
+            {activeTab === "domains" && <DomainTab />}
           </div>
           <div
             className={`tab-pane fade${
