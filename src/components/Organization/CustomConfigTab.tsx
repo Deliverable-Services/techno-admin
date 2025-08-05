@@ -1,6 +1,6 @@
 import { AxiosError } from "axios";
 import React, { useMemo, useState } from "react";
-import { Button, Container } from "react-bootstrap";
+import { Modal, Button, Container } from "react-bootstrap";
 import { BiSad } from "react-icons/bi";
 import { useMutation, useQuery } from "react-query";
 import { useHistory } from "react-router-dom";
@@ -16,7 +16,6 @@ import { primaryColor } from "../../utils/constants";
 import { queryClient } from "../../utils/queryClient";
 import { showMsgToast } from "../../utils/showMsgToast";
 import { AiFillDelete, AiOutlinePlus } from "react-icons/ai";
-import { Modal } from "react-bootstrap";
 import Restricted from "../../shared-components/Restricted";
 import ConfigCreateUpdateForm from "./ConfigCreateUpdate";
 

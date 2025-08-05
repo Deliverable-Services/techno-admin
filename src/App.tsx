@@ -453,12 +453,6 @@ const App = () => {
                 permissionReq="read_subscription"
               />
               <PrivateRoute
-                path="/website-pages/static/create-edit"
-                exact
-                component={StaticPageCreateForm}
-                permissionReq="read_staticpage"
-              />
-              <PrivateRoute
                 path="/website-pages/dynamic/create-edit"
                 exact
                 component={DynamicPageCreateUpdateForm}

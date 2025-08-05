@@ -34,7 +34,7 @@ const createUpdataStaticPages = ({
   });
 };
 
-const StaticPageCreateForm = () => {
+const StaticPageCreateForm = ({ onHideModal }) => {
   const history = useHistory();
   const { state } = useLocation();
   const id = state ? (state as any).id : null;
@@ -47,7 +47,7 @@ const StaticPageCreateForm = () => {
     {
       onSuccess: () => {
         setTimeout(() => queryClient.invalidateQueries(key), 500);
-        history.replace("/static-pages");
+        onHideModal();
         if (id) return showMsgToast("Page updated successfully");
         showMsgToast("Page created successfully");
       },
@@ -65,7 +65,7 @@ const StaticPageCreateForm = () => {
 
   return (
     <>
-      <BackButton title="Static Page" />
+      {/* <BackButton title="Static Page" /> */}
       <Row className="rounded">
         <Col className="mx-auto">
           <Formik
