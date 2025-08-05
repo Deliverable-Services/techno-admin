@@ -240,27 +240,11 @@ const hiddenRoutesForEcommerce = [
 
 const NavBar = ({ isNavOpen, setIsNavOpen }: INavBar) => {
   const isDesktop = useContext(IsDesktopContext);
-  const loggedInUser = useUserProfileStore((state) => state.user);
   const { setOrganisations, selectedOrg, setSelectedOrg } = useOrganisation();
   const {
     isConnected: isGoogleBusinessConnected,
     isLoading: isCheckingConnection,
   } = useGoogleBusinessConnection();
-
-  useEffect(() => {
-    const handleSetOrganisations = (orgs: any) => {
-      setOrganisations(orgs);
-
-      // set default org if not selected
-      if (!selectedOrg && orgs.length) {
-        const stored = localStorage.getItem("selectedOrganisation");
-        if (!stored) {
-          setSelectedOrg(orgs[0]);
-        }
-      }
-    };
-    if (loggedInUser) handleSetOrganisations(loggedInUser.organisations);
-  }, []);
 
   const closeNavBar = () => {
     if (isDesktop) return;
@@ -268,8 +252,6 @@ const NavBar = ({ isNavOpen, setIsNavOpen }: INavBar) => {
       setIsNavOpen(false);
     }
   };
-  // if (selectedOrg && !selectedOrg?.hasOwnProperty("store_type"))
-  //   selectedOrg.store_type = "crm"; // setting default to CRM if no organisation found
 
   // Google Business link - only show when connected
   const googleBusinessLink: INavLink = {
