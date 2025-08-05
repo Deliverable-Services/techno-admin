@@ -134,18 +134,6 @@ const websiteLinks: Array<INavLink> = [
     icon: <AiFillIdcard />,
     permissionReq: "read_testimonial",
   },
-  // {
-  //   title: "Static Pages",
-  //   path: "/static-pages",
-  //   icon: <RiPagesLine />,
-  //   permissionReq: "read_staticpage",
-  // },
-  // {
-  //   title: "Website",
-  //   path: "/website",
-  //   icon: <RiGlobalLine />,
-  //   permissionReq: "read_staticpage",
-  // },
   {
     title: "Website Pages",
     path: "/website-pages",
@@ -219,13 +207,6 @@ const organisationLinks: Array<INavLink> = [
     permissionReq: "read_permission",
   },
   {
-    title: "Configurations",
-    path: "/configurations",
-    icon: <AiFillSetting />,
-    permissionReq: "read_config",
-  },
-
-  {
     title: "Organization",
     path: "/organization",
     icon: <GrOrganization />,
@@ -252,7 +233,6 @@ const hiddenRoutesForCRM = [
   "/coupons",
   "/agent",
   "/agent-targets",
-  "/cities",
   "/product-variants",
 ];
 const hiddenRoutesForEcommerce = [

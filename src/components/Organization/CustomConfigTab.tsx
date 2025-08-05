@@ -9,15 +9,16 @@ import { handleApiError } from "../../hooks/handleApiErrors";
 import CreatedUpdatedAt from "../../shared-components/CreatedUpdatedAt";
 import EditButton from "../../shared-components/EditButton";
 import IsLoading from "../../shared-components/isLoading";
-import PageHeading from "../../shared-components/PageHeading";
 import TablePagination from "../../shared-components/Pagination";
 import ReactTable from "../../shared-components/ReactTable";
 import API from "../../utils/API";
 import { primaryColor } from "../../utils/constants";
 import { queryClient } from "../../utils/queryClient";
 import { showMsgToast } from "../../utils/showMsgToast";
-import { AiFillDelete } from "react-icons/ai";
+import { AiFillDelete, AiOutlinePlus } from "react-icons/ai";
 import { Modal } from "react-bootstrap";
+import Restricted from "../../shared-components/Restricted";
+import ConfigCreateUpdateForm from "./ConfigCreateUpdate";
 
 const key = "configuration";
 
@@ -33,11 +34,13 @@ const intitialFilter = {
   perPage: 25,
 };
 
-const Configurations = () => {
+const CustomConfigTab = () => {
   const history = useHistory();
   const [selectedRows, setSelectedRows] = useState([]);
-  console.log(selectedRows.map((item) => item.id));
   const [filter, setFilter] = useState(intitialFilter);
+  const [selectedConfigId, setSelectedConfigId] = useState<String>();
+  const [modalShow, setModalShow] = useState(false);
+
   const { data, isLoading, isFetching, error } = useQuery<any>(
     [key, , filter],
     {
@@ -57,11 +60,14 @@ const Configurations = () => {
     },
   });
 
-  const _onCreateClick = () => {
-    history.push("/configurations/create-edit");
+  const _onModalHideClick = () => {
+    setSelectedConfigId(null);
+    setModalShow(false);
   };
+
   const _onEditClick = (id: string) => {
-    history.push("/configurations/create-edit", { id });
+    setSelectedConfigId(id);
+    setModalShow(true);
   };
 
   const _onFilterChange = (idx: string, value: any) => {
@@ -149,50 +155,83 @@ const Configurations = () => {
 
   return (
     <>
-      <Container fluid className=" component-wrapper view-padding">
-        <PageHeading
-          title="Configurations"
-          onClick={_onCreateClick}
-          totalRecords={data?.total}
-          permissionReq="create_config"
-        />
+      <div className="tab-header align-items-start d-flex justify-content-between tab-header">
+        <div>
+          <h4>Configurations</h4>
+          <p>Create custom configurations for your app.</p>
+        </div>
+        <Restricted to={"create_config"}>
+          <Button
+            variant="primary"
+            onClick={() => setModalShow(true)}
+            size={"sm"}
+            style={{ background: "#303030", borderColor: "#303030" }}
+          >
+            <div className="text-white d-flex align-items-center">
+              <AiOutlinePlus size={18} />
+              <p className="mb-0 ml-1">Create</p>
+            </div>
+          </Button>
+        </Restricted>
+      </div>
 
-        <Container fluid className="h-100 p-0">
-          {isLoading ? (
-            <IsLoading />
-          ) : (
-            <>
-              {!error && (
-                <ReactTable
-                  data={data?.data}
-                  columns={columns}
-                  setSelectedRows={setSelectedRows}
-                  filter={filter}
-                  onFilterChange={_onFilterChange}
-                  isDataLoading={isFetching}
-                  searchPlaceHolder="Search using title"
-                  deletePermissionReq="delete_config"
-                />
-              )}
-              {!error && data?.data?.length > 0 ? (
-                <TablePagination
-                  currentPage={data?.current_page}
-                  lastPage={data?.last_page}
-                  setPage={_onFilterChange}
-                  hasNextPage={!!data?.next_page_url}
-                  hasPrevPage={!!data?.prev_page_url}
-                />
-              ) : null}{" "}
-            </>
-          )}
-        </Container>
+      <Container fluid className="h-100 p-0">
+        {isLoading ? (
+          <IsLoading />
+        ) : (
+          <>
+            {!error && (
+              <ReactTable
+                data={data?.data}
+                columns={columns}
+                setSelectedRows={setSelectedRows}
+                filter={filter}
+                onFilterChange={_onFilterChange}
+                isDataLoading={isFetching}
+                searchPlaceHolder="Search using title"
+                deletePermissionReq="delete_config"
+              />
+            )}
+            {!error && data?.data?.length > 0 ? (
+              <TablePagination
+                currentPage={data?.current_page}
+                lastPage={data?.last_page}
+                setPage={_onFilterChange}
+                hasNextPage={!!data?.next_page_url}
+                hasPrevPage={!!data?.prev_page_url}
+              />
+            ) : null}{" "}
+          </>
+        )}
       </Container>
+
+      <Modal
+        show={modalShow}
+        onHide={_onModalHideClick}
+        size="lg"
+        aria-labelledby="contained-modal-title-vcenter"
+        centered
+      >
+        <Modal.Header closeButton>
+          <Modal.Title id="contained-modal-title-vcenter">
+            Custom Configurations
+          </Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <ConfigCreateUpdateForm
+            id={selectedConfigId}
+            onHideModal={_onModalHideClick}
+          />
+        </Modal.Body>
+      </Modal>
+
       <Modal show={deletePopup} onHide={() => setDeletePopup(false)}>
         <Modal.Header closeButton>
           <Modal.Title>Are you sure?</Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          Do you really want to delete this configuration? This process cannot be undone.
+          Do you really want to delete this configuration? This process cannot
+          be undone.
         </Modal.Body>
         <Modal.Footer>
           <Button variant="bg-light" onClick={() => setDeletePopup(false)}>
@@ -232,4 +271,4 @@ const Configurations = () => {
   );
 };
 
-export default Configurations;
+export default CustomConfigTab;
