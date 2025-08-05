@@ -100,7 +100,8 @@ const CRMBoard: React.FC = () => {
               {membersList?.data.slice(0, 3).map((member, index) => (
                 <img
                   key={index}
-                  src={member?.profile_pic || `https://ui-avatars.com/api/?name=${member.name}`}
+                  // src={member?.profile_pic || `https://ui-avatars.com/api/?name=${member.name}`}
+                  src={`https://ui-avatars.com/api/?name=${member.name}`}
                   alt=""
                   className="crm-avatar"
                 />

@@ -72,9 +72,16 @@ const OrganizationTab = () => {
     },
   });
 
-  const handleSetSelectedOrg = (option) => {
+  const handleSetSelectedOrg = async (option) => {
     const org = organisations.find((o) => o.id === option.value);
-    if (org) setSelectedOrg(org);
+    if (org) {
+      try {
+        await API.post(`${key}/${org.id}/switch`);
+      } catch (error) {
+        handleApiError(error, history);
+      }
+      setSelectedOrg(org);
+    }
   };
 
   const organisationOptions = organisations.map((org) => ({

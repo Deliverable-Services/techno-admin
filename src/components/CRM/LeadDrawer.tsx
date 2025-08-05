@@ -1,5 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import { Comment, Lead } from "./types";
+import Select from "react-select";
 import { FcProcess } from "react-icons/fc";
 import { MdCreate } from "react-icons/md";
 import "./lead-drawer.css";
@@ -30,6 +31,7 @@ import { BsEnvelope, BsBellFill } from "react-icons/bs";
 import { BiDotsHorizontalRounded } from "react-icons/bi";
 import { queryClient } from "../../utils/queryClient";
 import moment from "moment";
+import { User } from "../../types/interface";
 
 const key = "leads";
 
@@ -51,6 +53,7 @@ const LeadDrawer: React.FC<Props> = ({ lead, onClose }) => {
   const loggedInUser = useUserProfileStore((state) => state.user);
   const [imageData, setImageData] = useState<string | null>(null);
   const [comments, setComments] = useState<Comment[] | null>(null);
+  const [selectedAssignee, setSelectedAssignee] = useState<User>();
   const [editText, setEditText] = useState<string>("");
 
   const [details, setDetails] = useState({
@@ -67,6 +70,15 @@ const LeadDrawer: React.FC<Props> = ({ lead, onClose }) => {
   });
 
   const [editing, setEditing] = useState<{ [key: string]: boolean }>({});
+
+  const { data: membersList } = useQuery<any>(
+    [`users?role=admin&perPage=1000`, ,],
+    {
+      onError: (error: AxiosError) => {
+        handleApiError(error, history);
+      },
+    }
+  );
 
   const handleChange = (field: string, value: string) => {
     setDetails((prev) => ({ ...prev, [field]: value }));
@@ -212,6 +224,25 @@ const LeadDrawer: React.FC<Props> = ({ lead, onClose }) => {
     );
   };
 
+  // console.log({ membersList });
+  const assigneeOptions = membersList?.data?.map((member) => ({
+    value: member.id,
+    label: member.name,
+    ...member,
+  }));
+
+  const handleSetSelectedAssignee = async (option) => {
+    const assignee = assigneeOptions.find((o) => o.id === option.value);
+    if (assignee) {
+      try {
+        await API.post(`${key}/${lead.id}/assign-member`);
+      } catch (error) {
+        handleApiError(error, history);
+      }
+      setSelectedAssignee(assignee);
+    }
+  };
+
   return (
     <>
       <div className="task-drawer-overlay" onClick={onClose} />
@@ -225,7 +256,7 @@ const LeadDrawer: React.FC<Props> = ({ lead, onClose }) => {
 
         <div className="lead-details">
           <div className="d-flex align-items-center p-3 border-bottom ">
-            <div className="d-flex align-items-center">
+            <div className="d-flex align-items-center w-100">
               <div className="company-logo global-card mr-3">
                 <img
                   src="https://static.vecteezy.com/system/resources/previews/008/214/517/non_2x/abstract-geometric-logo-or-infinity-line-logo-for-your-company-free-vector.jpg"
@@ -234,7 +265,7 @@ const LeadDrawer: React.FC<Props> = ({ lead, onClose }) => {
                   style={{ width: 75, height: 75 }}
                 />
               </div>
-              <div>
+              <div className="w-100">
                 <div className="d-flex gap-3 align-items-center gap-5">
                   <h5 className="mb-2 font-weight-bold text-capitalize text-30px">
                     {lead.name}
@@ -258,14 +289,32 @@ const LeadDrawer: React.FC<Props> = ({ lead, onClose }) => {
                       borderRadius: "12px",
                     }}
                   >
+                    <span className="text-green">Page: </span>
                     {lead.page || "Lead"}
                   </span>
                 </div>
-                <div className="d-flex gap-5 align-items-center w-600px">
-                  <Action icon={<BsEnvelope />} label="Send Email" />
-                  <Action icon={<FaComments />} label="Send SMS" />
-                  <Action icon={<BsBellFill />} label="Create Reminder" />
-                  <Action icon={<FaStickyNote />} label="Add Note" />
+                <div className="d-flex justify-content-between align-items-center">
+                  <div className="d-flex gap-5 align-items-center w-600px">
+                    <Action icon={<BsEnvelope />} label="Send Email" />
+                    <Action icon={<FaComments />} label="Send SMS" />
+                    <Action icon={<BsBellFill />} label="Create Reminder" />
+                    <Action icon={<FaStickyNote />} label="Add Note" />
+                  </div>
+                  <Select
+                    options={assigneeOptions}
+                    value={
+                      selectedAssignee
+                        ? {
+                            value: selectedAssignee.id,
+                            label: selectedAssignee.name,
+                          }
+                        : null
+                    }
+                    onChange={handleSetSelectedAssignee}
+                    placeholder="Select Assignee"
+                    isClearable={false}
+                    className="input-div"
+                  />
                 </div>
               </div>
             </div>

@@ -9,6 +9,7 @@ import {
   FaPaperclip,
   FaCalendarAlt,
   FaRedoAlt,
+  FaEnvelopeOpenText,
 } from "react-icons/fa";
 import moment from "moment";
 
@@ -43,7 +44,7 @@ const LeadCard: React.FC<Props> = ({ lead }) => {
   return (
     <div
       ref={drag}
-      className="card shadow-sm mb-3 border-0"
+      className="card shadow-sm mb-3 border-0 pointer lead-card"
       style={{
         opacity: isDragging ? 0.5 : 1,
         borderLeft: "4px solid #eb5757",
@@ -62,6 +63,7 @@ const LeadCard: React.FC<Props> = ({ lead }) => {
               borderRadius: "12px",
             }}
           >
+            <span className="text-green">Page: </span>
             {lead.page || "Source"}
           </span>
 
@@ -90,12 +92,12 @@ const LeadCard: React.FC<Props> = ({ lead }) => {
             minHeight: "2.8em", // reserve height for 2 lines
           }}
         >
-          <FaRedoAlt className="mr-2 text-secondary" />
+          <FaEnvelopeOpenText className="mr-2 " />
           {lead.message || "Landing page for microdose campaign and lead gen."}
         </p>
 
         {/* Date and Time */}
-        <div className="d-inline-flex align-items-center mb-3">
+        <div className="d-inline-flex align-items-center mb-1">
           <span
             className="small px-2 py-1"
             style={{
@@ -108,6 +110,23 @@ const LeadCard: React.FC<Props> = ({ lead }) => {
             Created At:{" "}
             <strong className="text-dark">
               {formattedDate(lead.created_at) || "July 29, ‘24 3:00 PM"}
+            </strong>
+          </span>
+        </div>
+
+        <div className="d-inline-flex align-items-center mb-2">
+          <span
+            className="small px-2 py-1"
+            style={{
+              backgroundColor: "#f0f0f0",
+              borderRadius: "12px",
+              fontSize: "11px",
+            }}
+          >
+            <FaCalendarAlt className="mr-1 text-muted" />
+            Last Updated At:{" "}
+            <strong className="text-dark">
+              {formattedDate(lead.updated_at) || "July 29, ‘24 3:00 PM"}
             </strong>
           </span>
         </div>
