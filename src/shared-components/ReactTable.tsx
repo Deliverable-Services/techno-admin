@@ -328,38 +328,13 @@ function ReactTable({
               </Dropdown.Menu>
             </Dropdown>
           </div>
-
-          {/* <div className="d-flex align-items-center justify-content-center">
-            <span className="text-muted" style={{ fontSize: '14px' }}>Records </span>
-            <select
-              className="text-primary font-weight-bold"
-              style={{
-                border: "none",
-                marginRight: 5,
-              }}
-              value={pageSize}
-              onChange={(e) => {
-                const value = e.target.value;
-                setPageSize(parseInt(value));
-                onFilterChange("perPage", value);
-              }}
-            >
-              {RowsPerPage.map((item) => (
-                <option key={item.id} value={item.id}>
-                  {item.name}
-                </option>
-              ))}
-            </select>
-          </div> */}
-
-
         </div>
       </Container>
 
       {/*-------------------- table---------------------  */}
       <div className="">
         <DndProvider backend={HTML5Backend}>
-          <div className="tableFixed">
+          <div className="tableFixed position-relative">
             <Table
               className="table-fixed"
               {...getTableProps()}
@@ -452,6 +427,30 @@ function ReactTable({
 </Container>
 : ""} */}
             </Table>
+            {rows.length === 0 ? '' :
+              <div className="d-flex align-items-center justify-content-center" style={{ position: 'absolute', left: 10, bottom: '-40px' }}>
+                <span className="text-muted" style={{ fontSize: '14px' }}>Records </span>
+                <select
+                  className="text-primary font-weight-bold"
+                  style={{
+                    border: "none",
+                    marginRight: 5,
+                  }}
+                  value={pageSize}
+                  onChange={(e) => {
+                    const value = e.target.value;
+                    setPageSize(parseInt(value));
+                    onFilterChange("perPage", value);
+                  }}
+                >
+                  {RowsPerPage.map((item) => (
+                    <option key={item.id} value={item.id}>
+                      {item.name}
+                    </option>
+                  ))}
+                </select>
+              </div>
+            }
           </div>
         </DndProvider>
         {rows.length === 0 ? (
