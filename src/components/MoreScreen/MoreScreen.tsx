@@ -198,9 +198,6 @@ export const MoreScreen = () => {
               <BiLogOut className="mr-2" />
               <p className="item-title">Log Out</p>
             </div>
-            {/* <div>
-            <MdKeyboardArrowRight />
-          </div> */}
           </div>
         </div>
       </div>
