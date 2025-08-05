@@ -23,7 +23,6 @@
 }
 
 .country-card {
-  font-family: "Segoe UI", sans-serif;
   border-radius: 12px;
   background: #fff;
   position: relative;
@@ -65,4 +64,8 @@
 }
 .rounded-8px {
   border-radius: 8px;
+}
+
+g#AF, g#SA, g#AS {
+    fill: #7e56da;
 }
