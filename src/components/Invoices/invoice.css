@@ -301,10 +301,17 @@ p {
   overflow-y: auto;
 }
 .wrapperAddTaxForm {
-  width: 30%;
+  width: 100%;
 }
 .container-invoice {
   flex: 1 1 350px;
   min-width: 340px;
   max-width: 600px;
+}
+
+.container-wrapper {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  gap: 20px;
 }

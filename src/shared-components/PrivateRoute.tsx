@@ -40,7 +40,7 @@ export const PrivateRoute = ({
   const hasPermission = skipPermission || isAllowed(permissionReq);
   
   // Check storeType restrictions
-  if (loggedInUser.organisations && !loggedInUser.organisations[0].hasOwnProperty("store_type")) loggedInUser.organisations[0].store_type = "crm"; // setting default to CRM if no organisation found
+  if (loggedInUser && loggedInUser?.organisations && !loggedInUser?.organisations[0].hasOwnProperty("store_type")) loggedInUser.organisations[0].store_type = "crm"; // setting default to CRM if no organisation found
 
   const restrictedRoutes = restrictedRoutesForStoreType[loggedInUser?.organisations[0].store_type.toLowerCase()] || [];
   const isStoreTypeBlocked = restrictedRoutes.includes(path);

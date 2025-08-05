@@ -1,5 +1,6 @@
 import { useState, useCallback } from "react";
 import { useQuery, useMutation, useQueryClient } from "react-query";
+import { useHistory } from "react-router-dom";
 import { AxiosError } from "axios";
 import fivetranService, {
   FivetranConnectorStatus,
@@ -7,14 +8,15 @@ import fivetranService, {
 import { showMsgToast } from "../utils/showMsgToast";
 import { showErrorToast } from "../utils/showErrorToast";
 import { handleApiError } from "./handleApiErrors";
-import { useHistory } from "react-router-dom";
 
 interface UseGoogleBusinessIntegrationProps {
   organisationId?: number;
+  onConnectionChange?: () => void;
 }
 
 export const useGoogleBusinessIntegration = ({
   organisationId,
+  onConnectionChange,
 }: UseGoogleBusinessIntegrationProps) => {
   const [isConnecting, setIsConnecting] = useState(false);
   const queryClient = useQueryClient();
@@ -60,6 +62,11 @@ export const useGoogleBusinessIntegration = ({
             await new Promise((resolve) => setTimeout(resolve, 2000)); // Wait a bit for backend processing
             await refetchStatus();
             showMsgToast("Google Business Profile connected successfully!");
+
+            // Call the connection change callback if provided
+            if (onConnectionChange) {
+              onConnectionChange();
+            }
           } else {
             showErrorToast(result.error || "Failed to complete OAuth flow");
           }

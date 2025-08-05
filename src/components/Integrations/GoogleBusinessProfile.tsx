@@ -1,13 +1,5 @@
 import React from "react";
-import {
-  Card,
-  Button,
-  Badge,
-  Spinner,
-  Alert,
-  Row,
-  Col,
-} from "react-bootstrap";
+import { Card, Button, Badge, Spinner, Alert, Row, Col } from "react-bootstrap";
 import { useGoogleBusinessIntegration } from "../../hooks/useGoogleBusinessIntegration";
 import moment from "moment";
 import IsLoading from "../../shared-components/isLoading";
@@ -21,11 +13,13 @@ interface ExtendedStatus {
 interface GoogleBusinessProfileProps {
   organisationId?: number;
   className?: string;
+  onConnectionChange?: () => void;
 }
 
 const GoogleBusinessProfile: React.FC<GoogleBusinessProfileProps> = ({
   organisationId,
   className = "",
+  onConnectionChange,
 }) => {
   const {
     isConnected,
@@ -42,7 +36,10 @@ const GoogleBusinessProfile: React.FC<GoogleBusinessProfileProps> = ({
     isDisconnecting,
     error,
     status,
-  } = useGoogleBusinessIntegration({ organisationId });
+  } = useGoogleBusinessIntegration({
+    organisationId,
+    onConnectionChange,
+  });
 
   const getStatusBadge = () => {
     const variantMap: Record<string, string> = {
@@ -53,9 +50,15 @@ const GoogleBusinessProfile: React.FC<GoogleBusinessProfileProps> = ({
     };
 
     const variant = variantMap[connectionStatus] || "secondary";
-    const label = connectionStatus ? connectionStatus.charAt(0).toUpperCase() + connectionStatus.slice(1) : "Not Connected";
+    const label = connectionStatus
+      ? connectionStatus.charAt(0).toUpperCase() + connectionStatus.slice(1)
+      : "Not Connected";
 
-    return <Badge bg={variant} className="me-2">{label}</Badge>;
+    return (
+      <Badge bg={variant} className="me-2">
+        {label}
+      </Badge>
+    );
   };
 
   const getSyncBadge = () => {
@@ -132,7 +135,8 @@ const GoogleBusinessProfile: React.FC<GoogleBusinessProfileProps> = ({
     if (extStatus?.fivetran_error) {
       infoItems.push(
         <li key="fivetran" className="text-warning">
-          <i className="fas fa-exclamation-triangle me-1"></i> Fivetran setup pending
+          <i className="fas fa-exclamation-triangle me-1"></i> Fivetran setup
+          pending
         </li>
       );
     }
@@ -236,12 +240,16 @@ const GoogleBusinessProfile: React.FC<GoogleBusinessProfileProps> = ({
         )}
 
         {isConnected && !hasValidToken && (
-        <Alert variant="danger" className="mt-3 p-3 alert-new rounded-3 shadow-sm d-flex align-items-center">
-        <i className="fas fa-exclamation-circle me-3 text-danger fs-5" />
-        <div className="flex-grow-1">
-          <strong>Token Expired:</strong> Please reconnect your Google account to resume syncing.
-        </div>
-      </Alert>
+          <Alert
+            variant="danger"
+            className="mt-3 p-3 alert-new rounded-3 shadow-sm d-flex align-items-center"
+          >
+            <i className="fas fa-exclamation-circle me-3 text-danger fs-5" />
+            <div className="flex-grow-1">
+              <strong>Token Expired:</strong> Please reconnect your Google
+              account to resume syncing.
+            </div>
+          </Alert>
         )}
 
         {error && (error as any)?.response?.status !== 404 && (

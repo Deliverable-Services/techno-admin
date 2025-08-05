@@ -1,26 +1,21 @@
-import { useContext, useEffect } from "react";
+import React, { useContext, useEffect } from "react";
 import {
   FaAddressCard,
   FaBoxes,
   FaDiceFour,
   FaQuestionCircle,
   FaRegLightbulb,
-  FaUsers,
   FaMoneyCheck,
   FaUserSecret,
-  FaArrowAltCircleLeft,
-  FaArrowLeft,
-  FaUsersCog,
   FaEnvelope,
   FaPhone,
   FaMap,
   FaClock,
+  FaGoogle,
 } from "react-icons/fa";
 import { GoIssueOpened } from "react-icons/go";
 import { IoLogoModelS } from "react-icons/io";
 import { GiModernCity, GiOnTarget } from "react-icons/gi";
-import { FaUserCog } from "react-icons/fa";
-import { BiLogOut } from "react-icons/bi";
 
 import {
   RiAdminFill,
@@ -29,7 +24,6 @@ import {
   RiDashboardFill,
   RiGlobalLine,
   RiNotification2Line,
-  RiPagesLine,
   RiServiceFill,
 } from "react-icons/ri";
 import { SiBrandfolder } from "react-icons/si";
@@ -44,15 +38,10 @@ import { AiFillIdcard, AiFillSetting } from "react-icons/ai";
 import { BsClock, BsShieldLock } from "react-icons/bs";
 import { SiCivicrm } from "react-icons/si";
 import { GrOrganization } from "react-icons/gr";
-import profile from "../assets/profile.svg";
 
-import { GrDocumentConfig } from "react-icons/gr";
-import { primaryColor } from "../utils/constants";
 import useUserProfileStore from "../hooks/useUserProfileStore";
+import { useGoogleBusinessConnection } from "../hooks/useGoogleBusinessConnection";
 import { Dropdown } from "react-bootstrap";
-import { useMutation } from "react-query";
-import useTokenStore from "../hooks/useTokenStore";
-import API from "../utils/API";
 import { useOrganisation } from "../context/OrganisationContext";
 import { formatTimestamp } from "../utils/utitlity";
 
@@ -87,6 +76,7 @@ const mainLinks: Array<INavLink> = [
     icon: <SiCivicrm />,
     permissionReq: "read_city",
   },
+
   {
     title: "Customers",
     path: "/users",
@@ -267,18 +257,15 @@ const hiddenRoutesForEcommerce = [
   "/product-brands",
   "/categories",
 ];
-const logout = () => {
-  return API.post("/auth/logout");
-};
 
 const NavBar = ({ isNavOpen, setIsNavOpen }: INavBar) => {
   const isDesktop = useContext(IsDesktopContext);
   const loggedInUser = useUserProfileStore((state) => state.user);
-  const removeToken = useTokenStore((state) => state.removeToken);
-  const removeUser = useUserProfileStore((state) => state.removeUser);
-  const user = useUserProfileStore((state) => state.user);
-  const { organisations, setOrganisations, selectedOrg, setSelectedOrg } =
-    useOrganisation();
+  const { setOrganisations, selectedOrg, setSelectedOrg } = useOrganisation();
+  const {
+    isConnected: isGoogleBusinessConnected,
+    isLoading: isCheckingConnection,
+  } = useGoogleBusinessConnection();
 
   useEffect(() => {
     const handleSetOrganisations = (orgs: any) => {
@@ -301,22 +288,30 @@ const NavBar = ({ isNavOpen, setIsNavOpen }: INavBar) => {
       setIsNavOpen(false);
     }
   };
-  const desktopNavClose = () => {
-    if (setIsNavOpen) {
-      setIsNavOpen(!isNavOpen);
-    }
-  };
   // if (selectedOrg && !selectedOrg?.hasOwnProperty("store_type"))
   //   selectedOrg.store_type = "crm"; // setting default to CRM if no organisation found
 
+  // Google Business link - only show when connected
+  const googleBusinessLink: INavLink = {
+    title: "Google Business",
+    path: "/google-business",
+    icon: <FaGoogle />,
+    permissionReq: "read_dashboard",
+  };
+
   // Filtered links for sidebar
-  const filteredMainLinks = mainLinks.filter((link) => {
+  let filteredMainLinks = mainLinks.filter((link) => {
     if (selectedOrg?.store_type.toLowerCase() === "ecommerce") {
       return hiddenRoutesForEcommerce.includes(link.path) ? false : true;
     } else if (selectedOrg?.store_type.toLowerCase() === "crm") {
       return hiddenRoutesForCRM.includes(link.path) ? false : true;
     }
   });
+
+  // Add Google Business link if connected
+  if (isGoogleBusinessConnected) {
+    filteredMainLinks = [...filteredMainLinks, googleBusinessLink];
+  }
 
   const filteredWebsiteinks = websiteLinks.filter((link) => {
     if (selectedOrg?.store_type.toLowerCase() === "ecommerce") {
@@ -342,54 +337,18 @@ const NavBar = ({ isNavOpen, setIsNavOpen }: INavBar) => {
     }
   });
 
-  const { mutate, isLoading } = useMutation(logout, {
-    onSuccess: () => {
-      removeUser();
-      removeToken();
-      window.location.href = "/login";
-    },
-    onError: () => {
-      removeUser();
-      removeToken();
-      window.location.href = "/login";
-    },
-  });
-
   return (
     <>
       <nav className={isNavOpen ? "active pb-0" : ""}>
         {isDesktop && (
           <div className="d-flex  justify-content-between align-items-center">
             <Logo />
-            <div className="collapse-svg">
-              <svg
-                className="mr-3 w-20 bi bi-arrow-bar-left"
-                style={{
-                  cursor: "pointer",
-                  color: "#181d27",
-                  width: "25px",
-                  height: "25px",
-                  marginRight: "5px",
-                }}
-                onClick={desktopNavClose}
-                xmlns="http://www.w3.org/2000/svg"
-                width="16"
-                height="16"
-                fill="currentColor"
-                viewBox="0 0 16 16"
-              >
-                <path
-                  fillRule="evenodd"
-                  d="M12.5 15a.5.5 0 0 1-.5-.5v-13a.5.5 0 0 1 1 0v13a.5.5 0 0 1-.5.5M10 8a.5.5 0 0 1-.5.5H3.707l2.147 2.146a.5.5 0 0 1-.708.708l-3-3a.5.5 0 0 1 0-.708l3-3a.5.5 0 1 1 .708.708L3.707 7.5H9.5a.5.5 0 0 1 .5.5"
-                />
-              </svg>
-            </div>
           </div>
         )}
 
         <div className="all-links">
           <div className="d-flex align-items-center justify-content-center">
-            <Dropdown className="w-100 pt-3" style={{ position: 'unset' }}>
+            <Dropdown className="w-100 pt-3" style={{ position: "unset" }}>
               <section
                 style={{
                   fontSize: "11px",
@@ -404,9 +363,17 @@ const NavBar = ({ isNavOpen, setIsNavOpen }: INavBar) => {
               <Dropdown.Toggle
                 id="dropdown-basic"
                 className="bg-white w-100 border px-3 py-1 shadow-sm d-flex align-items-center btn-focus-none"
-                style={{ color: "#000", fontWeight: "500", fontSize: "14px", borderRadius: '6px' }}
+                style={{
+                  color: "#000",
+                  fontWeight: "500",
+                  fontSize: "14px",
+                  borderRadius: "6px",
+                }}
               >
-                <span className="text-truncate" style={{ width: '100%', textAlign: 'left' }}>
+                <span
+                  className="text-truncate"
+                  style={{ width: "100%", textAlign: "left" }}
+                >
                   {selectedOrg?.name}
                 </span>
               </Dropdown.Toggle>

@@ -1,4 +1,3 @@
-// LeadDrawer with tick icon editing
 import React, { useEffect, useRef, useState } from "react";
 import { Comment, Lead } from "./types";
 import { FcProcess } from "react-icons/fc";
@@ -7,7 +6,7 @@ import "./lead-drawer.css";
 import { formatTimestamp } from "../../utils/utitlity";
 import useUserProfileStore from "../../hooks/useUserProfileStore";
 import API from "../../utils/API";
-import { useQuery } from "react-query";
+import { useMutation, useQuery } from "react-query";
 import { AxiosError } from "axios";
 import { handleApiError } from "../../hooks/handleApiErrors";
 import { useHistory } from "react-router-dom";
@@ -17,9 +16,6 @@ import { RiChatFollowUpFill } from "react-icons/ri";
 import { GoPencil } from "react-icons/go";
 import { FaTrash, FaFlag } from "react-icons/fa"; // Add at the top with other imports
 import { IoIosArrowRoundBack } from "react-icons/io";
-
-
-
 
 import { Button } from "react-bootstrap";
 import {
@@ -32,8 +28,16 @@ import {
 } from "react-icons/fa";
 import { BsEnvelope, BsBellFill } from "react-icons/bs";
 import { BiDotsHorizontalRounded } from "react-icons/bi";
+import { queryClient } from "../../utils/queryClient";
+import moment from "moment";
 
 const key = "leads";
+
+const updateLeadData = ({ id, data }: any) => {
+  return API.put(`${key}/${id}`, data, {
+    headers: { "Content-Type": "application/json" },
+  });
+};
 
 interface Props {
   lead: Lead;
@@ -47,17 +51,16 @@ const LeadDrawer: React.FC<Props> = ({ lead, onClose }) => {
   const loggedInUser = useUserProfileStore((state) => state.user);
   const [imageData, setImageData] = useState<string | null>(null);
   const [comments, setComments] = useState<Comment[] | null>(null);
-  const [editingCommentId, setEditingCommentId] = useState<string | null>(null);
   const [editText, setEditText] = useState<string>("");
 
   const [details, setDetails] = useState({
-    name: lead?.company_name || "Balkan Brothers",
+    name: lead?.name || "Balkan Brothers",
     city: lead?.city || "Paris",
     zipcode: lead?.zipcode || "75010",
     country: lead?.country || "France",
     address: lead?.address || "174 Quai de Jemmas",
     website: lead?.website || "bb.agency",
-    contactName: lead?.contact_name || "John Doe",
+    contactName: lead?.name || "John Doe",
     gender: lead?.gender || "Male",
     email: lead?.email || "john@example.com",
     phone: lead?.phone || "+1234567890",
@@ -75,18 +78,25 @@ const LeadDrawer: React.FC<Props> = ({ lead, onClose }) => {
 
   const saveField = (field: string) => {
     toggleEdit(field);
-    // Place for API call to save field update
     console.log("Saved", field, details[field]);
+    const data = { [field]: details[field] };
+    mutate({ id: lead.id, data });
   };
 
-  const { data } = useQuery<any>(
-    [`${key}/${lead.id}`],
-    {
-      onError: (error: AxiosError) => {
-        handleApiError(error, history);
-      },
-    }
-  );
+  const { mutate } = useMutation(updateLeadData, {
+    onSuccess: (data) => {
+      queryClient.invalidateQueries(key);
+    },
+    onError: (error: AxiosError) => {
+      handleApiError(error, history);
+    },
+  });
+
+  const { data } = useQuery<any>([`${key}/${lead.id}`], {
+    onError: (error: AxiosError) => {
+      handleApiError(error, history);
+    },
+  });
 
   useEffect(() => {
     if (data) setComments(data.comments);
@@ -109,9 +119,8 @@ const LeadDrawer: React.FC<Props> = ({ lead, onClose }) => {
   };
 
   const handleCommentSubmit = async () => {
-    const text = editorRef.current?.innerText.trim() || "";
+    const text = editText.trim() || "";
     if (!text && !imageData) return;
-    const username = loggedInUser?.name || "User Name";
     const avatar =
       localStorage.getItem("avatar") || "https://i.pravatar.cc/40?u=default";
 
@@ -126,14 +135,14 @@ const LeadDrawer: React.FC<Props> = ({ lead, onClose }) => {
       id: Date.now().toString(),
       comment: text,
       image: imageData || undefined,
-      username,
+      username: loggedInUser?.name || "User Name",
       avatar,
       user_id: loggedInUser.id,
       lead_id: lead.id,
     };
     setComments((prev) => [...prev, newComment]);
 
-    editorRef.current!.innerText = "";
+    setEditText("");
     setImageData(null);
     localStorage.removeItem(localStorageKey);
   };
@@ -188,17 +197,30 @@ const LeadDrawer: React.FC<Props> = ({ lead, onClose }) => {
     setNotes((prev) => prev.filter((_, i) => i !== index));
   };
 
+  const formattedDate = (date) => {
+    return (
+      <>
+        {date ? (
+          <>
+            <span>{date ? moment(date).format("DD/MM/YY") : "NA"}</span>
+            &nbsp;<span>({date ? moment(date).format("hh:mm a") : "NA"})</span>
+          </>
+        ) : (
+          <span>NA</span>
+        )}
+      </>
+    );
+  };
 
   return (
     <>
       <div className="task-drawer-overlay" onClick={onClose} />
       <div className="task-drawer slide-in">
         <div className="drawer-header d-flex justify-content-between align-items-center mb-0 pb-0">
-       
-        <div className="close-drawer ">
-        <IoIosArrowRoundBack />
-        <button  onClick={onClose}>Back</button>
-        </div>
+          <div className="close-drawer ">
+            <IoIosArrowRoundBack />
+            <button onClick={onClose}>Back</button>
+          </div>
         </div>
 
         <div className="lead-details">
@@ -214,14 +236,19 @@ const LeadDrawer: React.FC<Props> = ({ lead, onClose }) => {
               </div>
               <div>
                 <div className="d-flex gap-3 align-items-center gap-5">
-                  <h5 className="mb-2 font-weight-bold text-30px">Balkan Brothers</h5>
-                  <span className="text-danger small d-flex align-items-center">
+                  <h5 className="mb-2 font-weight-bold text-capitalize text-30px">
+                    {lead.name}
+                  </h5>
+                  {/* <span className="text-danger small d-flex align-items-center">
                     <FaFlag className="mr-1" style={{ fontSize: 17 }} />
                     {lead.priority || "Urgent"}
-                  </span>
+                  </span> */}
                 </div>
                 <div className="d-flex gap-3 align-items-center mb-2">
-                  <span className="text-muted small"> 🔗  {lead.name} #{lead.id}</span>
+                  <span className="text-muted small">
+                    {" "}
+                    🔗 {lead.name} #{lead.id}
+                  </span>
 
                   <span
                     className="badge badge-light px-2 py-1 text-dark shadow-sm"
@@ -231,10 +258,8 @@ const LeadDrawer: React.FC<Props> = ({ lead, onClose }) => {
                       borderRadius: "12px",
                     }}
                   >
-                    {lead.source || "Lead"}
+                    {lead.page || "Lead"}
                   </span>
-
-
                 </div>
                 <div className="d-flex gap-5 align-items-center w-600px">
                   <Action icon={<BsEnvelope />} label="Send Email" />
@@ -245,52 +270,75 @@ const LeadDrawer: React.FC<Props> = ({ lead, onClose }) => {
               </div>
             </div>
           </div>
-          <div className="d-flex justify-content-between">
-            <div>
-              <div className="card m-3 p-3 card" style={{ maxWidth: "500px" }}>
-                <h6 className="mb-3 d-flex align-items-center border-bottom p-3">Company details</h6>
+          <div className="d-flex">
+            <div className="flex-1">
+              <div className="card m-3 p-3 card">
+                <h6 className="mb-3 d-flex align-items-center border-bottom p-3">
+                  Company details
+                </h6>
                 <div className="pb-3">
-                  {["name", "city", "zipcode", "country", "address", "website"].map(
-                    (field) => (
-                      <div key={field} className="d-flex justify-content-between align-items-center px-3 py-1">
-                        <div className="text-muted text-capitalize text-14px">
-                          {field === "address" ? "Full Address" : field}
-                        </div>
-                        <div className="d-flex align-items-center">
-                          {editing[field] ? (
-                            <>
-                              <input
-                                className="form-control form-control-sm"
-                                style={{ maxWidth: "200px" }}
-                                value={details[field]}
-                                onChange={(e) => handleChange(field, e.target.value)}
-                              />
-                              <FaCheck
-                                onClick={() => saveField(field)}
-                                style={{ cursor: "pointer", marginLeft: 8, fontSize: 14 }}
-                              />
-                            </>
-                          ) : (
-                            <>
-                              <span className="mr-2 font-500  pl-5 text-14px">{details[field]}</span>
-                              <GoPencil
-                                onClick={() => toggleEdit(field)}
-                                style={{ cursor: "pointer", fontSize: "14px" }}
-                              />
-                            </>
-                          )}
-                        </div>
+                  {[
+                    "name",
+                    "city",
+                    "zipcode",
+                    "country",
+                    "address",
+                    "website",
+                  ].map((field) => (
+                    <div
+                      key={field}
+                      className="d-flex justify-content-between align-items-center px-3 py-1"
+                    >
+                      <div className="text-muted text-capitalize text-14px">
+                        {field === "address" ? "Full Address" : field}
                       </div>
-                    )
-                  )}
+                      <div className="d-flex align-items-center">
+                        {editing[field] ? (
+                          <>
+                            <input
+                              className="form-control form-control-sm"
+                              style={{ maxWidth: "200px" }}
+                              value={details[field]}
+                              onChange={(e) =>
+                                handleChange(field, e.target.value)
+                              }
+                            />
+                            <FaCheck
+                              onClick={() => saveField(field)}
+                              style={{
+                                cursor: "pointer",
+                                marginLeft: 8,
+                                fontSize: 14,
+                              }}
+                            />
+                          </>
+                        ) : (
+                          <>
+                            <span className="mr-2 font-500  pl-5 text-14px">
+                              {details[field]}
+                            </span>
+                            <GoPencil
+                              onClick={() => toggleEdit(field)}
+                              style={{ cursor: "pointer", fontSize: "14px" }}
+                            />
+                          </>
+                        )}
+                      </div>
+                    </div>
+                  ))}
                 </div>
               </div>
 
-              <div className="card m-3 p-3 card" style={{ maxWidth: "500px" }}>
-                <h6 className="mb-3 d-flex align-items-center p-3 border-bottom">Contact details</h6>
+              <div className="card m-3 p-3 card">
+                <h6 className="mb-3 d-flex align-items-center p-3 border-bottom">
+                  Contact details
+                </h6>
                 <div className="pb-3">
                   {["contactName", "gender", "email", "phone"].map((field) => (
-                    <div key={field} className="d-flex justify-content-between align-items-center px-3 py-1">
+                    <div
+                      key={field}
+                      className="d-flex justify-content-between align-items-center px-3 py-1"
+                    >
                       <div className="text-muted text-capitalize text-14px">
                         {field === "contactName"
                           ? "Name"
@@ -303,16 +351,24 @@ const LeadDrawer: React.FC<Props> = ({ lead, onClose }) => {
                               className="form-control form-control-sm"
                               style={{ maxWidth: "200px" }}
                               value={details[field]}
-                              onChange={(e) => handleChange(field, e.target.value)}
+                              onChange={(e) =>
+                                handleChange(field, e.target.value)
+                              }
                             />
                             <FaCheck
                               onClick={() => saveField(field)}
-                              style={{ cursor: "pointer", marginLeft: 8, fontSize: 14 }}
+                              style={{
+                                cursor: "pointer",
+                                marginLeft: 8,
+                                fontSize: 14,
+                              }}
                             />
                           </>
                         ) : (
                           <>
-                            <span className="mr-2 font-500  pl-5 text-14px">{details[field]}</span>
+                            <span className="mr-2 font-500  pl-5 text-14px">
+                              {details[field]}
+                            </span>
                             <GoPencil
                               onClick={() => toggleEdit(field)}
                               style={{ cursor: "pointer", fontSize: "14px" }}
@@ -325,7 +381,7 @@ const LeadDrawer: React.FC<Props> = ({ lead, onClose }) => {
                 </div>
               </div>
             </div>
-            <div style={{ minWidth: "650px", maxWidth: "650px" }}>
+            <div className="flex-1">
               <div className="history-leads pl-4">
                 <h6 className="mb-3 d-flex align-items-center py-3">History</h6>
                 <div className="timeline">
@@ -344,10 +400,16 @@ const LeadDrawer: React.FC<Props> = ({ lead, onClose }) => {
                             height="30"
                           />
                           <strong>Cameron McLawrence</strong> started a chat on
-                          <span className="badge bg-success ml-3">WhatsApp</span>
-                          <div className="text-muted small mt-1">👤 Operator: Andrew Vance</div>
+                          <span className="badge bg-success ml-3">
+                            WhatsApp
+                          </span>
+                          <div className="text-muted small mt-1">
+                            👤 Operator: Andrew Vance
+                          </div>
                         </div>
-                        <div className="text-muted small">Active 12 min ago</div>
+                        <div className="text-muted small">
+                          Active 12 min ago
+                        </div>
                       </div>
                     </div>
                   </div>
@@ -360,9 +422,13 @@ const LeadDrawer: React.FC<Props> = ({ lead, onClose }) => {
                       <div className="d-flex justify-content-between">
                         <div>
                           File has been uploaded
-                          <a href="#" className="ml-1 text-info" target="">my-cool-file.jpg</a>
+                          <a href="#" className="ml-1 text-info" target="">
+                            my-cool-file.jpg
+                          </a>
                           <BiDotsHorizontalRounded className="ml-1 text-muted" />
-                          <div className="text-muted small mt-1">👤 Added by: Lora Adams</div>
+                          <div className="text-muted small mt-1">
+                            👤 Added by: Lora Adams
+                          </div>
                         </div>
                         <div className="text-muted small">2 hours ago</div>
                       </div>
@@ -376,43 +442,69 @@ const LeadDrawer: React.FC<Props> = ({ lead, onClose }) => {
                     <div className="timeline-content global-card p-3 flex-grow-1">
                       <div className="d-flex justify-content-between">
                         <div>
-                          Triggered an event <span className="text-warning font-weight-bold">webinar-email-follow-up</span>
-                          <div className="text-muted small mt-1">👤 Triggered by: John Lock</div>
+                          Triggered an event{" "}
+                          <span className="text-warning font-weight-bold">
+                            webinar-email-follow-up
+                          </span>
+                          <div className="text-muted small mt-1">
+                            👤 Triggered by: John Lock
+                          </div>
                           <div className="text-muted small mt-2">
-                            <span className="text-muted font-weight-bold">source:</span>
-                            <span className="ml-1">Christmas Promotion Website</span>
+                            <span className="text-muted font-weight-bold">
+                              source:
+                            </span>
+                            <span className="ml-1">
+                              Christmas Promotion Website
+                            </span>
                           </div>
                         </div>
-                        <div className="text-muted small">December 14, 2023 at 3:31 PM</div>
+                        <div className="text-muted small">
+                          December 14, 2023 at 3:31 PM
+                        </div>
                       </div>
                     </div>
                   </div>
                 </div>
               </div>
             </div>
-            <div>
+            <div className="flex-1">
               <div className="global-card m-3 p-3 notes-wrapper">
                 <h6 className="mb-3 d-flex align-items-center border-bottom pb-2">
-                  <FaStickyNote className="mr-2" /> Notes
+                  <FaStickyNote className="mr-2" /> Comments
                 </h6>
 
-                     {/* Notes List */}
-                     <div className="mt-4">
-                  {notes.length > 0 ? (
-                    notes.map((note, index) => (
+                {/* Notes List */}
+                <div className="mt-4">
+                  {comments?.length > 0 ? (
+                    comments?.map((comment, index) => (
                       <div
                         key={index}
                         className="global-card p-3 mb-3 bg-global  position-relative "
                       >
-                        <div className="text-muted small mb-2">
-                          📝 {note.timestamp}
+                        <div className="text-muted d-flex justify-content-between small mb-2">
+                          <div className="d-flex">
+                            <img
+                              src={`https://ui-avatars.com/api/?name=${comment?.user?.name}`}
+                              alt="avatar"
+                              className="rounded-circle mr-2 "
+                              style={{ width: "30px", height: "30px" }}
+                              width="20"
+                              height="20"
+                            />
+                            <div className="">
+                              {comment?.user?.name}
+                              <div>{formattedDate(comment?.updated_at)}</div>
+                            </div>
+                          </div>
+
+                          <FaTrash
+                            className="text-danger pointer-cursor"
+                            onClick={() =>
+                              handleCommentDelete(lead.id, comment?.id)
+                            }
+                          />
                         </div>
-                        <div>{note.text}</div>
-                        <FaTrash
-                          className="position-absolute text-danger"
-                          style={{ top: 8, right: 8, cursor: "pointer" }}
-                          onClick={() => handleDeleteNote(index)}
-                        />
+                        <div>{comment?.comment}</div>
                       </div>
                     ))
                   ) : (
@@ -425,27 +517,22 @@ const LeadDrawer: React.FC<Props> = ({ lead, onClose }) => {
                   <textarea
                     className="form-control"
                     rows={3}
-                    placeholder="Write a note..."
-                    value={newNote}
-                    onChange={(e) => setNewNote(e.target.value)}
+                    placeholder="Write a comment..."
+                    value={editText}
+                    onChange={(e) => setEditText(e.target.value)}
                   />
                   <Button
                     variant="primary"
                     size="sm"
                     className="mt-2"
-                    onClick={handleAddNote}
-                    disabled={!newNote.trim()}
+                    onClick={handleCommentSubmit}
+                    disabled={!editText.trim()}
                   >
-                    Add Note
+                    Comment
                   </Button>
                 </div>
-
-           
               </div>
-              <div className="blank-div global-card m-3 p-3 ">
-
-              </div>
-
+              {/* <div className="blank-div global-card m-3 p-3 "></div> */}
             </div>
           </div>
         </div>
@@ -455,7 +542,10 @@ const LeadDrawer: React.FC<Props> = ({ lead, onClose }) => {
 };
 
 const Action = ({ icon, label }: { icon: JSX.Element; label: string }) => (
-  <div className="d-flex align-items-center action-link mr-3" style={{ cursor: "pointer" }}>
+  <div
+    className="d-flex align-items-center action-link mr-3"
+    style={{ cursor: "pointer" }}
+  >
     {icon}
     <span className="ml-1 medium">{label}</span>
   </div>
