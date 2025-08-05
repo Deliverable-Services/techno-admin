@@ -79,6 +79,7 @@ import DynamicPageCreateUpdateForm from "./components/DynamicPages/DynamicPageCr
 import ViewWebsite from "./components/DynamicPages/ViewWebsite";
 import WebsitePages from "./components/WebsitePages";
 import { BottomNavigation } from "./components/BottomNavigation/BottomNavigation";
+import { MoreScreen } from "./components/MoreScreen/MoreScreen";
 
 const App = () => {
   const [isDesktop, setIsDesktop] = useState<boolean>(false);
@@ -486,6 +487,12 @@ const App = () => {
                   permissionReq="read_staticpage"
                 />
                 <PrivateRoute
+                  path="/more"
+                  exact
+                  component={MoreScreen}
+                  permissionReq="read_staticpage"
+                />
+                <PrivateRoute
                   path="/subscriptions/:id"
                   exact
                   component={SingleSubscriptions}
@@ -521,10 +528,12 @@ const App = () => {
                   component={InvoicePage}
                   permissionReq="read_city"
                 />
-                <PrivateRoute path="/google-business"
+                <PrivateRoute
+                  path="/google-business"
                   exact
                   component={GoogleBusinessDashboard}
-                  permissionReq="read_dashboard" />
+                  permissionReq="read_dashboard"
+                />
                 <PrivateRoute
                   path="/website"
                   exact
@@ -544,7 +553,7 @@ const App = () => {
               <ErrorToast />
               <MsgToast />
             </Container>
-            {!isDesktop && <BottomNavigation />}
+            {!isDesktop && showNavTopBar() && <BottomNavigation />}
           </div>
         </div>
       </OrganisationProvider>
