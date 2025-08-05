@@ -5335,6 +5335,27 @@ input[type="button"].btn-block {
 .profile-dropdown-menu {
   top: 100px !important;
 }
+.filter-dropdown{
+  line-height: 0;
+}
+.filter-dropdown button{
+  padding: 0;
+  width: auto;
+  background-color: transparent !important;
+  color: #000 !important;
+  border: 0;
+  line-height: 1;
+}
+.search-filters-div{
+    display: flex;
+    align-items: center;
+    background-color: #fff;
+    box-shadow: var(--shadow-main);
+    border-radius: 4px !important;
+    padding: 0 9px;
+    gap: 10px;
+    height: 28px !important;
+}
 @media (max-width: 575.98px) {
   .navbar-expand-sm > .container,
   .navbar-expand-sm > .container-fluid,
@@ -6037,13 +6058,18 @@ input[type="button"].btn-block {
 
 .page-link {
   position: relative;
-  display: block;
   padding: 0.5rem 0.75rem;
   margin-left: -1px;
   line-height: 1.25;
-  color: #0b64fe;
   background-color: #fff;
   border: 1px solid #dee2e6;
+  border-radius: 4px !important;
+  color: black;
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .page-link:hover {
@@ -6075,8 +6101,8 @@ input[type="button"].btn-block {
 .page-item.active .page-link {
   z-index: 3;
   color: #fff;
-  background-color: #0b64fe;
-  border-color: #0b64fe;
+  background-color: #000000;
+  border-color: #000000;
 }
 
 .page-item.disabled .page-link {
@@ -12032,7 +12058,15 @@ th {
   background-color: #fff;
   border-bottom: 1px solid #e7eaf3;
 }
-
+.search-input.global-card{
+  width: 100%;
+  padding: 0 10px !important;
+  min-height: 28px !important;
+  border-radius: 6px !important;
+}
+.search-input.global-card input, .search-input.global-card input::placeholder{
+  font-size: 12px;
+}
 @media (min-width: 800px) {
   .search-input {
     width: 40%;
@@ -12197,22 +12231,22 @@ th {
   padding-left: 0;
   list-style: none;
   border-radius: 0.25rem;
-  margin: 0 auto;
+  margin-left: auto;
   padding: 20px;
 }
 
 .pagination .page-item:first-child {
-  margin-right: 20px;
+  margin-right: 10px;
 }
 
 .pagination .page-item:last-child {
-  margin-left: 20px;
+  margin-left: 10px;
 }
 
 .page-item.active .page-link {
   z-index: 3;
-  color: #000 !important;
-  border-bottom: 1px solid #0b64fe !important;
+  color: #ffffff !important;
+  border-bottom: 1px solid #000000 !important;
 }
 .organize-switch {
   cursor: pointer;
@@ -12459,6 +12493,16 @@ th {
 }
 .ellipsis-dropdown button::after{
   display: none;
+}
+.menu-dropdown.dropdown-menu{
+  box-shadow: var(--shadow-main);
+  border-radius: 12px;
+  padding: 10px;
+}
+.menu-dropdown.dropdown-menu .dropdown-item{
+  border-radius: 6px;
+  font-size: 13px;
+  font-weight: 500;
 }
 .table thead th {
   padding: 0.55rem;
