@@ -1,4 +1,4 @@
-import React, { useContext, useEffect } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import {
   FaAddressCard,
   FaBoxes,
@@ -12,6 +12,7 @@ import {
   FaMap,
   FaClock,
   FaGoogle,
+  FaRegMoneyBillAlt,
 } from "react-icons/fa";
 import { GoIssueOpened } from "react-icons/go";
 import { IoLogoModelS } from "react-icons/io";
@@ -61,20 +62,24 @@ const mainLinks: Array<INavLink> = [
   {
     title: "Bookings",
     path: "/crm-bookings",
+    permissionReq: "read_booking",
     icon: <BsClock />,
+  },
+  {
+    title: "Billings",
+    icon: <FaRegMoneyBillAlt />,
     permissionReq: "read_bookingslot",
+    children: [
+      { title: "Subscriptions", path: "/subscriptions", permissionReq: "read_subscription", icon: <FaAddressCard />, },
+      { title: "Transaction", path: "/transactions", permissionReq: "read_transaction", icon: <FaMoneyCheck />, },
+      { title: "Invoices", path: "/invoices", icon: <SiCivicrm />, permissionReq: "read_city", },
+    ],
   },
   {
     title: "Cart",
     path: "/cart",
     icon: <MdShoppingCart />,
     permissionReq: "read_booking",
-  },
-  {
-    title: "Invoices",
-    path: "/invoices",
-    icon: <SiCivicrm />,
-    permissionReq: "read_city",
   },
 
   {
@@ -88,18 +93,6 @@ const mainLinks: Array<INavLink> = [
     path: "/users",
     icon: <ImUsers />,
     permissionReq: "read_user",
-  },
-  {
-    title: "Subscriptions",
-    path: "/subscriptions",
-    icon: <FaAddressCard />,
-    permissionReq: "read_subscription",
-  },
-  {
-    title: "Transactions",
-    path: "/transactions",
-    icon: <FaMoneyCheck />,
-    permissionReq: "read_transaction",
   },
   {
     title: "Help Center",
@@ -246,6 +239,9 @@ const hiddenRoutesForEcommerce = [
 
 const NavBar = ({ isNavOpen, setIsNavOpen }: INavBar) => {
   const isDesktop = useContext(IsDesktopContext);
+  const [activeMenu, setActiveMenu] = useState<string | null>(null);
+
+  const loggedInUser = useUserProfileStore((state) => state.user);
   const { setOrganisations, selectedOrg, setSelectedOrg } = useOrganisation();
   const {
     isConnected: isGoogleBusinessConnected,
@@ -379,64 +375,62 @@ const NavBar = ({ isNavOpen, setIsNavOpen }: INavBar) => {
               icon={<RiDashboardFill />}
               isNavOpen={isNavOpen}
               permissionReq="read_dashboard"
+              activeMenu={activeMenu}
+              setActiveMenu={setActiveMenu}
             />
           </ul>
           <p className="text-muted mb-2">Leads & Customers</p>
           <ul>
-            {filteredMainLinks.map(({ title, path, icon, permissionReq }) => (
+            {filteredMainLinks.map((link) => (
               <Navlink
-                path={path}
-                title={title}
-                key={title}
+                key={link.title}
+                {...link}
                 onClick={closeNavBar}
-                icon={icon}
                 isNavOpen={isNavOpen}
-                permissionReq={permissionReq}
+                activeMenu={activeMenu}
+                setActiveMenu={setActiveMenu}
               />
             ))}
           </ul>
           <p className="text-muted mb-2">Products & Services</p>
           <ul>
             {filterinventoryLinks.map(
-              ({ title, path, icon, permissionReq }) => (
+              (link) => (
                 <Navlink
-                  path={path}
-                  title={title}
-                  key={title}
+                  key={link.title}
+                  {...link}
                   onClick={closeNavBar}
-                  icon={icon}
                   isNavOpen={isNavOpen}
-                  permissionReq={permissionReq}
+                  activeMenu={activeMenu}
+                  setActiveMenu={setActiveMenu}
                 />
               )
             )}
           </ul>
           <p className="text-muted mb-2">Website & Pages</p>
           <ul>
-            {filteredWebsiteinks.map(({ title, path, icon, permissionReq }) => (
+            {filteredWebsiteinks.map((link) => (
               <Navlink
-                path={path}
-                title={title}
-                key={title}
+                key={link.title}
+                {...link}
                 onClick={closeNavBar}
-                icon={icon}
                 isNavOpen={isNavOpen}
-                permissionReq={permissionReq}
+                activeMenu={activeMenu}
+                setActiveMenu={setActiveMenu}
               />
             ))}
           </ul>
           <p className="text-muted mb-2">Organization & Settings</p>
           <ul>
             {filterOrganisationLinks.map(
-              ({ title, path, icon, permissionReq }) => (
+              (link) => (
                 <Navlink
-                  path={path}
-                  title={title}
-                  key={title}
+                  key={link.title}
+                  {...link}
                   onClick={closeNavBar}
-                  icon={icon}
                   isNavOpen={isNavOpen}
-                  permissionReq={permissionReq}
+                  activeMenu={activeMenu}
+                  setActiveMenu={setActiveMenu}
                 />
               )
             )}
