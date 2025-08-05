@@ -19,8 +19,6 @@ import Categories from "./components/Categories";
 import CategoriesCreateUpdateForm from "./components/Categories/CategoriesCreateUpdateForm";
 import Cities from "./components/Cities";
 import CitiesCreateUpdateForm from "./components/Cities/CitiesCreateUpdateForm";
-import Configurations from "./components/Configuration";
-import ConfigCreateUpdateForm from "./components/Configuration/ConfigCreateUpdate";
 import Coupons from "./components/Coupons";
 import CouponCreateUpdateForm from "./components/Coupons/CouponsCreateUpdateForm";
 import Dashboard from "./components/Dashboard";
@@ -247,12 +245,6 @@ const App = () => {
                   permissionReq="read_agenttarget"
                 />
                 <PrivateRoute
-                  path="/configurations"
-                  exact
-                  component={Configurations}
-                  permissionReq="read_config"
-                />
-                <PrivateRoute
                   path="/organization"
                   exact
                   component={organization}
@@ -293,12 +285,6 @@ const App = () => {
                   exact
                   component={TargetCreateUpdateForm}
                   permissionReq="read_agenttarget"
-                />
-                <PrivateRoute
-                  path="/configurations/create-edit"
-                  exact
-                  component={ConfigCreateUpdateForm}
-                  permissionReq="read_config"
                 />
                 <PrivateRoute
                   path="/users/create-edit"
@@ -450,24 +436,12 @@ const App = () => {
                   component={Subscriptions}
                   permissionReq="read_subscription"
                 />
-                {/* <PrivateRoute
-                  path="/website-pages/static"
-                  exact
-                  component={StaticPages}
-                  permissionReq="read_staticpage"
-                /> */}
                 <PrivateRoute
                   path="/website-pages/static/create-edit"
                   exact
                   component={StaticPageCreateForm}
                   permissionReq="read_staticpage"
                 />
-                {/* <PrivateRoute
-                  path="/website"
-                  exact
-                  component={Website}
-                  permissionReq="read_staticpage"
-                /> */}
                 <PrivateRoute
                   path="/website-pages/dynamic/create-edit"
                   exact

@@ -6,6 +6,7 @@ import AppearanceTab from "./AppearanceTab";
 import WebsiteTab from "./WebsiteTab";
 import PlatformTab from "./PlatformTab";
 import IntegrationsTab from "./IntegrationTab";
+import CustomConfigTab from "./CustomConfigTab";
 
 const tabs = [
   { key: "profile", label: "Profile" },
@@ -13,6 +14,7 @@ const tabs = [
   { key: "appearance", label: "Appearance" },
   { key: "website", label: "Website Details" },
   { key: "platform", label: "Platform Configurations" },
+  { key: "configurations", label: "Temp: Custom Config" },
   { key: "integrations", label: "Integrations" },
 ];
 
@@ -86,6 +88,13 @@ const Organization: React.FC = () => {
             }`}
           >
             {activeTab === "platform" && <PlatformTab />}
+          </div>
+          <div
+            className={`tab-pane fade${
+              activeTab === "configurations" ? " show active" : ""
+            }`}
+          >
+            {activeTab === "configurations" && <CustomConfigTab />}
           </div>
           <div
             className={`tab-pane fade${
