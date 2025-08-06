@@ -191,10 +191,15 @@ const Notifications = () => {
 
   return (
     <>
-      <div className="view-padding view-heading">
+      <div className="view-padding">
         <PageHeading
-          icon={<RiNotification2Line size={20} />}
-          title="Workflow Notifications"
+          icon={
+            <span className="icon-bg">
+              <RiNotification2Line size={24} className="icon-color" />
+            </span>
+          }
+          title="Notifications"
+          description="Create and manage notifications for your workflow"
           onClick={_onCreateClick}
           totalRecords={data?.total}
           permissionReq="create_notification"

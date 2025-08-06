@@ -9,6 +9,7 @@ interface Props {
   totalRecords?: number;
   permissionReq?: string;
   customButton?: React.ReactNode;
+  description?: string;
 }
 const PageHeading: React.FC<Props> = ({
   title,
@@ -17,17 +18,23 @@ const PageHeading: React.FC<Props> = ({
   totalRecords,
   permissionReq,
   customButton,
+  description,
 }) => {
   return (
     <div className="d-flex justify-content-between">
-      <p className="d-flex align-items-center gap-3">
+      <p className="d-flex align-items-center gap-12">
         {icon}
-        <span className="page-title">{title}</span>
-        {totalRecords ? (
-          <small style={{ fontSize: 14, marginLeft: 5, opacity: 0.6 }}>
-            ({totalRecords})
-          </small>
-        ) : null}
+        <div>
+          <div>
+            <span className="page-title">{title}</span>
+            {totalRecords ? (
+              <small style={{ fontSize: 14, marginLeft: 5, opacity: 0.6 }}>
+                ({totalRecords})
+              </small>
+            ) : null}
+          </div>
+          <span className="page-description">{description}</span>
+        </div>
       </p>
 
       {onClick && (
