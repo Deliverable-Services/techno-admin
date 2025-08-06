@@ -46,6 +46,7 @@ export type Organisation = {
 export type User = {
   storeType: string;
   created_at: string;
+  role: string;
   disabled: number;
   email: string | null;
   email_verified_at: string | null;

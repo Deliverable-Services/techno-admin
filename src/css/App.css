@@ -8336,6 +8336,10 @@ span.status-indicator {
   gap: 10px;
 }
 
+.gap-20 {
+  gap: 20px !important;
+}
+
 .d-inline-flex {
   display: -webkit-inline-box !important;
   display: -ms-inline-flexbox !important;
@@ -10067,6 +10071,10 @@ span.status-indicator {
 .ml-auto,
 .mx-auto {
   margin-left: auto !important;
+}
+
+.ml-unset {
+  margin-left: unset !important;
 }
 
 @media (min-width: 576px) {
@@ -12258,6 +12266,19 @@ th {
   background-color: unset !important;
 }
 
+@media screen and (max-width: 700px) {
+  .delete-button {
+
+    bottom: 10% !important;
+    right: unset !important;
+    max-width: 90% !important;
+    background-color: #FFFF !important;
+    border-radius: 14px !important;
+    padding-top: 10px !important;
+    padding-bottom: 10px !important;
+  }
+}
+
 .delete-button {
   display: -webkit-box;
   display: -ms-flexbox;
@@ -12275,7 +12296,7 @@ th {
   background-color: #eee;
   -webkit-box-shadow: 0 -4px 44px rgba(0, 0, 0, 0.2);
   box-shadow: 0 -4px 44px rgba(0, 0, 0, 0.2);
-  padding: 6px 25px !important;
+  padding: 6px 25px;
   -webkit-animation: slide 0.3s ease;
   animation: slide 0.3s ease;
   z-index: 100000000000000000;

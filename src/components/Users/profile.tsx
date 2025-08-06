@@ -16,6 +16,7 @@ import { handleApiError } from "../../hooks/handleApiErrors";
 import { queryClient } from "../../utils/queryClient";
 import { useHistory } from "react-router-dom";
 import { FormEvent } from "react";
+import BackButton from "../../shared-components/BackButton";
 
 const ValidationSchema = Yup.object().shape({
   phone: Yup.string()
@@ -72,7 +73,7 @@ const ProfilePage = () => {
 
   return (
     <Container fluid className="card component-wrapper view-padding">
-      <PageHeading title="Edit Profile" />
+      <BackButton title="Edit Profile" />
       <Container
         fluid
         className="profile-card d-flex flex-column align-items-center"

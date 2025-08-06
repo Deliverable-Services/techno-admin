@@ -14,6 +14,7 @@ import { useMutation } from "react-query";
 import API from "../../utils/API";
 import useTokenStore from "../../hooks/useTokenStore";
 import useUserProfileStore from "../../hooks/useUserProfileStore";
+import { EditAccountCard } from "./EditAccountCard";
 
 const sections = [
   {
@@ -132,7 +133,7 @@ const sections = [
       {
         icon: <RiGlobalLine />,
         name: "Organization",
-        linkTo: "/website-pages",
+        linkTo: "/organization",
       },
       {
         name: "Notification/Sms",
@@ -167,6 +168,7 @@ export const MoreScreen = () => {
     
     return (
       <div className="sections-container">
+        <EditAccountCard />
         {sections?.map((item, index) => (
           <div className="section-container" key={index + 1}>
             <p className="section-heading">{item?.title}</p>
@@ -198,9 +200,6 @@ export const MoreScreen = () => {
               <BiLogOut className="mr-2" />
               <p className="item-title">Log Out</p>
             </div>
-            {/* <div>
-            <MdKeyboardArrowRight />
-          </div> */}
           </div>
         </div>
       </div>
