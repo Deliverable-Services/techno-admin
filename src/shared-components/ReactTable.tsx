@@ -46,6 +46,7 @@ interface Props {
   searchPlaceHolder?: string;
   deletePermissionReq?: string;
   showSearch?: boolean
+  showRecords?: boolean;
 }
 interface ISearchInput {
   preGlobalFilteredRows: any;
@@ -126,12 +127,14 @@ function ReactTable({
   searchPlaceHolder,
   deletePermissionReq = "",
   showSearch = true,
+  showRecords = true,
 }: Props): ReactElement {
   const isRestricted = useUserProfileStore((state) => state.isRestricted);
   const [records, setRecords] = React.useState(data);
   const [rowIds, setSelectedRowIds] = React.useState<Record<any, any> | null>(
     null
   );
+  const [showSearchField, setShowSearchField] = useState(false);
   const [showSearchInput, setShowSearchInput] = useState(false);
   const [pageWiseRows, setPageWiseRows] = React.useState<Record<
     any,
@@ -266,7 +269,7 @@ function ReactTable({
         {tabs && tabs}
         <div className="d-flex align-items-center ml-auto">
           <div className="w-100" style={{ minWidth: 300, marginRight: 8 }}>
-            {showSearch &&
+            {showSearch && (
               <div className="search-input global-card" style={{ paddingInline: '10px' }}>
                 <AiOutlineSearch size={18} />
                 <SearchInput
@@ -279,7 +282,7 @@ function ReactTable({
                   disabled={formtatedSelectedRows.length > 0}
                 />
               </div>
-            }
+            )}
           </div>
 
           <div className="search-filters-div">
@@ -319,7 +322,9 @@ function ReactTable({
                           className="custom-control-label"
                           htmlFor={column.id}
                         >
-                          <p style={{ whiteSpace: "nowrap" }}>{column.Header}</p>
+                          <p style={{ whiteSpace: "nowrap" }}>
+                            {column.Header}
+                          </p>
                         </label>
                       </div>
                     </div>
@@ -427,9 +432,17 @@ function ReactTable({
 </Container>
 : ""} */}
             </Table>
-            {rows.length === 0 ? '' :
-              <div className="d-flex align-items-center justify-content-center" style={{ position: 'absolute', left: 10, bottom: '-40px' }}>
-                <span className="text-muted" style={{ fontSize: '14px' }}>Records </span>
+            {rows.length === 0 ? (
+              ""
+            ) : (
+                showRecords ? (
+              <div
+                className="d-flex gap-3 align-items-center justify-content-center"
+                style={{ position: "absolute", left: 10, bottom: "-40px" }}
+              >
+                <span className="text-muted" style={{ fontSize: "14px" }}>
+                  Records{" "}
+                </span>
                 <select
                   className="text-primary font-weight-bold"
                   style={{
@@ -450,21 +463,22 @@ function ReactTable({
                   ))}
                 </select>
               </div>
-            }
+                ) : null
+            )}
           </div>
         </DndProvider>
         {rows.length === 0 ? (
           <Container fluid className="d-flex justify-content-center display-3">
             <div className="d-flex flex-column align-items-center pt-3 pb-3">
               <MdRemoveShoppingCart color="#000" size={60} />
-              <h4 className="text-black font-weight-bold mt-2">No data found</h4>
+              <h4 className="text-black font-weight-bold mt-2">
+                No data found
+              </h4>
             </div>
           </Container>
         ) : null}
       </div>
       {/* pagination  */}
-
-
     </div>
   );
 }
