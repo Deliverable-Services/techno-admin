@@ -127,7 +127,7 @@ const NotificationCreateUpdateForm = () => {
       setTimeout(() => queryClient.invalidateQueries(key), 500);
       if (id) return showMsgToast("Notification updated successfully");
       showMsgToast("Notification created successfully");
-      history.replace("/push-notifications");
+      history.replace("/notifications");
     },
     onError: (error: AxiosError) => {
       handleApiError(error, history);
@@ -166,9 +166,9 @@ const NotificationCreateUpdateForm = () => {
 
                 if (is_sms === "1") {
                   formdata["is_sms"] = is_sms;
-                  formdata["channels"] = ["sms"]
+                  formdata["channels"] = ["sms"];
                 } else {
-                  formdata["channels"] = ["pushnotification"]
+                  formdata["channels"] = ["pushnotification"];
                 }
 
                 if (!values?.scheduled_at)

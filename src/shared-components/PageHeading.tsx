@@ -18,12 +18,9 @@ const PageHeading: React.FC<Props> = ({
 }) => {
   return (
     <div className="d-flex justify-content-between pb-3">
-      <p
-        className="font-weight-bolder mb-0 lead d-flex align-items-center gap-3"
-        style={{ verticalAlign: "center" }}
-      >
+      <p className="d-flex align-items-center gap-3">
         {icon}
-        {title}
+        <span className="page-title">{title}</span>
         {totalRecords ? (
           <small style={{ fontSize: 14, marginLeft: 5, opacity: 0.6 }}>
             ({totalRecords})
@@ -33,11 +30,14 @@ const PageHeading: React.FC<Props> = ({
 
       {onClick && (
         <Restricted to={permissionReq}>
-          <Button variant="primary" onClick={onClick} size={"sm"} style={{ background: '#303030', borderColor: '#303030' }}>
-            <div className="text-white d-flex align-items-center">
-              <AiOutlinePlus size={18} />
-              <p className="mb-0 ml-1">Create</p>
-            </div>
+          <Button
+            variant="primary"
+            className="d-flex align-items-center"
+            onClick={onClick}
+            size={"sm"}
+          >
+            <AiOutlinePlus size={18} />
+            <p className="mb-0 ml-1">Create</p>
           </Button>
         </Restricted>
       )}

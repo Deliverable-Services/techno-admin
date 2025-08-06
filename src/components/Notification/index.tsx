@@ -1,7 +1,15 @@
 import { AxiosError } from "axios";
 import moment from "moment";
 import React, { useMemo, useState } from "react";
-import { Button, Col, Container, Dropdown, Form, Nav, Row } from "react-bootstrap";
+import {
+  Button,
+  Col,
+  Container,
+  Dropdown,
+  Form,
+  Nav,
+  Row,
+} from "react-bootstrap";
 import { AiFillEdit } from "react-icons/ai";
 import { BiSad } from "react-icons/bi";
 import { useMutation, useQuery } from "react-query";
@@ -26,6 +34,7 @@ import { queryClient } from "../../utils/queryClient";
 import { showMsgToast } from "../../utils/showMsgToast";
 import Brands from "../Brands";
 import { BsFunnel } from "react-icons/bs";
+import { RiNotification2Line } from "react-icons/ri";
 
 const key = "fcm-notification";
 const intitialFilter = {
@@ -70,10 +79,10 @@ const Notifications = () => {
   );
 
   const _onCreateClick = () => {
-    history.push("/push-notifications/create-edit");
+    history.push("/notifications/create-edit");
   };
   const _onEditClick = (id: string) => {
-    history.push("/push-notifications/create-edit", { id });
+    history.push("/notifications/create-edit", { id });
   };
 
   const _onFilterChange = (idx: string, value: any) => {
@@ -161,65 +170,89 @@ const Notifications = () => {
     <>
       <Container fluid className="component-wrapper view-padding">
         <PageHeading
+          icon={<RiNotification2Line size={20} />}
           title="Notifications"
           onClick={_onCreateClick}
           totalRecords={data?.total}
           permissionReq="create_notification"
         />
-        <div className="d-flex justify-content-between pb-3 mt-3">
-        {!isLoading && (
-            <Nav className="global-navs" variant="tabs" activeKey={filter.sent} onSelect={(selectedKey) => _onFilterChange('sent', selectedKey)}>
-                <Nav.Item>
-                  <Nav.Link eventKey="">All ({data?.data?.length || 0})</Nav.Link>
-                </Nav.Item>
 
-                <Nav.Item>
-                  <Nav.Link eventKey="1">
-                    Sent ({data?.data?.filter(item => item.status === '1').length || 0})
-                  </Nav.Link>
-                </Nav.Item>
+        <div className="">
+          {(() => {
+            if (isLoading) return <IsLoading />;
 
-                <Nav.Item>
-                  <Nav.Link eventKey="0">
-                    Not Sent ({data?.data?.filter(item => item.status === '0').length || 0})
-                  </Nav.Link>
-                </Nav.Item>
-              </Nav>
-        )}
-         <Dropdown className="filter-dropdown">
-            <Dropdown.Toggle as={Button} variant="primary" className="global-card">
-              <BsFunnel /> Filters
-            </Dropdown.Toggle>
-            <Dropdown.Menu>
-              <div className="filter-dropdown-heading d-flex justify-content-between w-100">
-                <h4>Filter</h4>
-                <div
-                  className="d-flex align-items-center justify-md-content-center"
-                >
-                  <Button
-                    variant={
-                            areTwoObjEqual(intitialFilter, filter)
-                              ? "light"
-                              : "primary"
-                          }
-                          style={{
-                            fontSize: 14,
-                          }}
-                          onClick={() => setFilter(intitialFilter)}
+            return (
+              <div className="d-flex flex-column gap-3">
+                <div className="d-flex justify-content-between pb-3 mt-3">
+                  <Nav
+                    className="global-navs"
+                    variant="tabs"
+                    activeKey={filter.sent}
+                    onSelect={(selectedKey) =>
+                      _onFilterChange("sent", selectedKey)
+                    }
                   >
-                    Reset Filters
-                  </Button>
-                </div>
-              </div>
-             <div className="select-filter">
-              <FilterSelect
+                    <Nav.Item>
+                      <Nav.Link eventKey="">
+                        All ({data?.data?.length || 0})
+                      </Nav.Link>
+                    </Nav.Item>
+
+                    <Nav.Item>
+                      <Nav.Link eventKey="1">
+                        Sent (
+                        {data?.data?.filter((item) => item.status === "1")
+                          .length || 0}
+                        )
+                      </Nav.Link>
+                    </Nav.Item>
+
+                    <Nav.Item>
+                      <Nav.Link eventKey="0">
+                        Not Sent (
+                        {data?.data?.filter((item) => item.status === "0")
+                          .length || 0}
+                        )
+                      </Nav.Link>
+                    </Nav.Item>
+                  </Nav>
+
+                  <Dropdown className="filter-dropdown">
+                    <Dropdown.Toggle
+                      as={Button}
+                      variant="primary"
+                      className="global-card"
+                    >
+                      <BsFunnel /> Filters
+                    </Dropdown.Toggle>
+                    <Dropdown.Menu>
+                      <div className="filter-dropdown-heading d-flex justify-content-between w-100">
+                        <h4>Filter</h4>
+                        <div className="d-flex align-items-center justify-md-content-center">
+                          <Button
+                            variant={
+                              areTwoObjEqual(intitialFilter, filter)
+                                ? "light"
+                                : "primary"
+                            }
+                            style={{
+                              fontSize: 14,
+                            }}
+                            onClick={() => setFilter(intitialFilter)}
+                          >
+                            Reset Filters
+                          </Button>
+                        </div>
+                      </div>
+                      <div className="select-filter">
+                        <FilterSelect
                           currentValue={filter.send_to}
                           data={NotificationSendToCategories}
                           label="Send To"
                           idx="send_to"
                           onFilterChange={_onFilterChange}
                         />
-                         <Form.Group>
+                        <Form.Group>
                           <Form.Label className="text-muted">
                             Scheduled At
                           </Form.Label>
@@ -239,43 +272,42 @@ const Notifications = () => {
                             }}
                           />
                         </Form.Group>
-             </div>
-            </Dropdown.Menu>
-          </Dropdown>
+                      </div>
+                    </Dropdown.Menu>
+                  </Dropdown>
+                </div>
+
+                <Container fluid className="h-100 p-0">
+                  <div className="mt-3" />
+                  {!error && (
+                    <ReactTable
+                      data={data?.data}
+                      columns={columns}
+                      setSelectedRows={setSelectedRows}
+                      filter={filter}
+                      onFilterChange={_onFilterChange}
+                      isDataLoading={isFetching}
+                      searchPlaceHolder="Search using title"
+                      deletePermissionReq="delete_notification"
+                    />
+                  )}
+                  {!error && data.length > 0 ? (
+                    <TablePagination
+                      currentPage={data?.current_page}
+                      lastPage={data?.last_page}
+                      setPage={_onFilterChange}
+                      hasNextPage={!!data?.next_page_url}
+                      hasPrevPage={!!data?.prev_page_url}
+                    />
+                  ) : null}{" "}
+                </Container>
+              </div>
+            );
+          })()}
         </div>
         <hr />
-        <Container fluid className="h-100 p-0">
-          {isLoading ? (
-            <IsLoading />
-          ) : (
-            <>
-             <div className="mt-3" />
-              {!error && (
-                
-                  <ReactTable
-                    data={data?.data}
-                    columns={columns}
-                    setSelectedRows={setSelectedRows}
-                    filter={filter}
-                    onFilterChange={_onFilterChange}
-                    isDataLoading={isFetching}
-                    searchPlaceHolder="Search using title"
-                    deletePermissionReq="delete_notification"
-                  />
-              )}
-              {!error && data.length > 0 ? (
-                <TablePagination
-                  currentPage={data?.current_page}
-                  lastPage={data?.last_page}
-                  setPage={_onFilterChange}
-                  hasNextPage={!!data?.next_page_url}
-                  hasPrevPage={!!data?.prev_page_url}
-                />
-              ) : null}{" "}
-            </>
-          )}
-        </Container>
       </Container>
+
       {selectedRows.length > 0 && (
         <div className="delete-button rounded">
           <span>

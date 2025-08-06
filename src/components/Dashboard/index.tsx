@@ -43,24 +43,23 @@ const bookingFilter = {
 };
 
 const defaultData = [
-  { date: '2025-07-29', active: 120, new: 30, alltime: 500 },
-  { date: '2025-07-30', active: 150, new: 40, alltime: 540 },
-  { date: '2025-07-31', active: 200, new: 60, alltime: 600 },
-  { date: '2025-08-01', active: 180, new: 50, alltime: 650 },
-  { date: '2025-08-02', active: 220, new: 70, alltime: 720 },
-  { date: '2025-08-03', active: 250, new: 90, alltime: 800 },
-  { date: '2025-08-04', active: 300, new: 100, alltime: 900 },
+  { date: "2025-07-29", active: 120, new: 30, alltime: 500 },
+  { date: "2025-07-30", active: 150, new: 40, alltime: 540 },
+  { date: "2025-07-31", active: 200, new: 60, alltime: 600 },
+  { date: "2025-08-01", active: 180, new: 50, alltime: 650 },
+  { date: "2025-08-02", active: 220, new: 70, alltime: 720 },
+  { date: "2025-08-03", active: 250, new: 90, alltime: 800 },
+  { date: "2025-08-04", active: 300, new: 100, alltime: 900 },
 ];
 
-
 const defaultDataSingle = [
-  { date: '2025-07-29', total_amount: 1200, discount_amount: 150 },
-  { date: '2025-07-30', total_amount: 1500, discount_amount: 200 },
-  { date: '2025-07-31', total_amount: 1700, discount_amount: 180 },
-  { date: '2025-08-01', total_amount: 1600, discount_amount: 220 },
-  { date: '2025-08-02', total_amount: 1800, discount_amount: 250 },
-  { date: '2025-08-03', total_amount: 2000, discount_amount: 300 },
-  { date: '2025-08-04', total_amount: 2100, discount_amount: 320 },
+  { date: "2025-07-29", total_amount: 1200, discount_amount: 150 },
+  { date: "2025-07-30", total_amount: 1500, discount_amount: 200 },
+  { date: "2025-07-31", total_amount: 1700, discount_amount: 180 },
+  { date: "2025-08-01", total_amount: 1600, discount_amount: 220 },
+  { date: "2025-08-02", total_amount: 1800, discount_amount: 250 },
+  { date: "2025-08-03", total_amount: 2000, discount_amount: 300 },
+  { date: "2025-08-04", total_amount: 2100, discount_amount: 320 },
 ];
 
 const Dashboard = () => {
@@ -107,7 +106,7 @@ const Dashboard = () => {
     setInterval(() => _changeCurrentTime(), 1000);
   }, []);
 
-  if (isLoading) return <IsLoading />;
+  if (isLoading || isFetching) return <IsLoading />;
 
   if (!data && (!isLoading || !isFetching)) {
     return (
@@ -123,74 +122,29 @@ const Dashboard = () => {
   return (
     <>
       <Container fluid className="component-wrapper px-0 py-2">
-        <div className="page-title">
-          Dashboard
-        </div>
-        {isDesktop && (
-          <div className="">
-            <div className="card-content d-flex flex-row-reverse align-items-center justify-content-between">
-              <div
-                className="d-flex align-items-center justify-content-start"
-              >
-                <DateRangePicker
-                  customInputIcon={
-                    <BsCalendar color={primaryColor} size={19} />
-                  }
-                  startDate={moment(filter.datefrom)}
-                  startDateId={"start_date"}
-                  endDate={moment(filter.dateto)}
-                  endDateId={"end_date"}
-                  isOutsideRange={() => false}
-                  keepOpenOnDateSelect={true}
-                  onDatesChange={({ startDate, endDate }) => {
-                    if (startDate)
-                      _onFilterChange(
-                        "datefrom",
-                        startDate.format("YYYY-MM-DD")
-                      );
-                    if (endDate)
-                      _onFilterChange("dateto", endDate.format("YYYY-MM-DD"));
-                  }}
-                  focusedInput={focusedInput}
-                  onFocusChange={(focusedInput) => setFocusInput(focusedInput)}
-                />
-                <Form.Control
-                  as="select"
-                  custom
-                  onChange={(e) => {
-                    _onFilterChange("duration", e.target.value);
-                  }}
-                  className="bg-transparent m-0 ml-3"
-                  style={{ width: "100px", height: "38px", fontSize: '14px', fontWeight: '600' }}
-                  value={filter.duration}
-                >
-                  {/* <option value="year">Year</option> */}
-                  <option value="month">Month</option>
-                  <option value="week">Week</option>
-                  <option value="day">Daily</option>
-                </Form.Control>
-              </div>
-              <div className="time d-flex align-items-center text-nowrap gap-3">
-                <p className="m-0 text-right" style={{ fontSize: '14px', fontWeight: '300' }}>
-                  {moment().format("DD-MMMM")}
-                </p>
-                <p
-                  style={{ whiteSpace: "nowrap", fontSize: "14px" }}
-                  className="font-weight-bold mb-0 text-right"
-                >
-                  {currentTime}
-                </p>
-              </div>
+        <div className="">
+          <div className="card-content d-flex flex-row-reverse align-items-center justify-content-between">
+            <div className="d-flex align-items-center justify-content-start">
+              <DateRangePicker
+                customInputIcon={<BsCalendar color={primaryColor} size={19} />}
+                startDate={moment(filter.datefrom)}
+                startDateId={"start_date"}
+                endDate={moment(filter.dateto)}
+                endDateId={"end_date"}
+                isOutsideRange={() => false}
+                keepOpenOnDateSelect={true}
+                onDatesChange={({ startDate, endDate }) => {
+                  if (startDate)
+                    _onFilterChange("datefrom", startDate.format("YYYY-MM-DD"));
+                  if (endDate)
+                    _onFilterChange("dateto", endDate.format("YYYY-MM-DD"));
+                }}
+                focusedInput={focusedInput}
+                onFocusChange={(focusedInput) => setFocusInput(focusedInput)}
+              />
             </div>
           </div>
-        )}
-        <Container>
-          <h1>
-            {isFetching ? (
-              <h3 className="text-muted text-center">Fetching data....</h3>
-            ) : null}
-          </h1>
-        </Container>
+        </div>
 
         <Container fluid className="px-0">
           <div
@@ -204,10 +158,9 @@ const Dashboard = () => {
             <div className="card hoverable d-flex w-100">
               <div className="card-content">
                 <div className="card-data-box d-flex">
-
                   <div className="w-100">
                     <div className="d-flex align-items-center justify-content-between mb-4">
-                      <strong style={{ fontSize: '14px' }}>Leads</strong>
+                      <strong style={{ fontSize: "16px" }}>Leads</strong>
                       <div className="icon">
                         <svg
                           xmlns="http://www.w3.org/2000/svg"
@@ -222,22 +175,50 @@ const Dashboard = () => {
                       </div>
                     </div>
 
-                    <div className="d-flex align-items-center justify-content-between" style={{ width: '80%' }}>
+                    <div
+                      className="d-flex align-items-center justify-content-between"
+                      style={{ width: "80%" }}
+                    >
                       <div>
-                        <h3 className="text-grey" style={{ fontSize: '16px', fontWeight: '400', marginBottom: '0' }}>
+                        <h3
+                          className="text-grey"
+                          style={{
+                            fontSize: "16px",
+                            fontWeight: "400",
+                            marginBottom: "0",
+                          }}
+                        >
                           Active
                         </h3>
-                        <p className="text-black font-weight-bold" style={{ fontSize: '28px' }}>
+                        <p
+                          className="text-black font-weight-bold"
+                          style={{ fontSize: "28px" }}
+                        >
                           {data?.customer + data?.customerprev}
                         </p>
                       </div>
-                      <div style={{ borderLeft: '1px solid black', height: '60px', }} />
+                      <div
+                        style={{
+                          borderLeft: "1px solid black",
+                          height: "60px",
+                        }}
+                      />
 
                       <div>
-                        <h3 className="text-grey" style={{ fontSize: '16px', fontWeight: '400', marginBottom: '0' }}>
+                        <h3
+                          className="text-grey"
+                          style={{
+                            fontSize: "16px",
+                            fontWeight: "400",
+                            marginBottom: "0",
+                          }}
+                        >
                           New
                         </h3>
-                        <p className="text-black font-weight-bold" style={{ fontSize: '28px' }}>
+                        <p
+                          className="text-black font-weight-bold"
+                          style={{ fontSize: "28px" }}
+                        >
                           {data?.customer + data?.customerprev}
                         </p>
                       </div>
@@ -264,7 +245,7 @@ const Dashboard = () => {
                 <div className="card-data-box d-flex">
                   <div className="w-100">
                     <div className="d-flex align-items-center justify-content-between mb-4">
-                      <strong style={{ fontSize: '14px' }}>Customers</strong>
+                      <strong style={{ fontSize: "14px" }}>Customers</strong>
                       <div className="icon">
                         <svg
                           xmlns="http://www.w3.org/2000/svg"
@@ -280,27 +261,54 @@ const Dashboard = () => {
                       </div>
                     </div>
 
-                    <div className="d-flex align-items-center justify-content-between" style={{ width: '80%' }}>
+                    <div
+                      className="d-flex align-items-center justify-content-between"
+                      style={{ width: "80%" }}
+                    >
                       <div>
-                        <h3 className="text-grey" style={{ fontSize: '16px', fontWeight: '400', marginBottom: '0' }}>
+                        <h3
+                          className="text-grey"
+                          style={{
+                            fontSize: "16px",
+                            fontWeight: "400",
+                            marginBottom: "0",
+                          }}
+                        >
                           Active
                         </h3>
-                        <p className="text-black font-weight-bold" style={{ fontSize: '28px' }}>
+                        <p
+                          className="text-black font-weight-bold"
+                          style={{ fontSize: "28px" }}
+                        >
                           {data?.customer + data?.customerprev}
                         </p>
                       </div>
-                      <div style={{ borderLeft: '1px solid black', height: '60px', }} />
+                      <div
+                        style={{
+                          borderLeft: "1px solid black",
+                          height: "60px",
+                        }}
+                      />
 
                       <div>
-                        <h3 className="text-grey" style={{ fontSize: '16px', fontWeight: '400', marginBottom: '0' }}>
+                        <h3
+                          className="text-grey"
+                          style={{
+                            fontSize: "16px",
+                            fontWeight: "400",
+                            marginBottom: "0",
+                          }}
+                        >
                           New
                         </h3>
-                        <p className="text-black font-weight-bold" style={{ fontSize: '28px' }}>
+                        <p
+                          className="text-black font-weight-bold"
+                          style={{ fontSize: "28px" }}
+                        >
                           {data?.customer + data?.customerprev}
                         </p>
                       </div>
                     </div>
-
                   </div>
                 </div>
               </div>
@@ -311,7 +319,7 @@ const Dashboard = () => {
                 <div className="card-data-box d-flex">
                   <div className="w-100">
                     <div className="d-flex align-items-center justify-content-between mb-4">
-                      <strong style={{ fontSize: '14px' }}>Invoices</strong>
+                      <strong style={{ fontSize: "14px" }}>Invoices</strong>
                       <div className="icon">
                         <svg
                           xmlns="http://www.w3.org/2000/svg"
@@ -326,22 +334,50 @@ const Dashboard = () => {
                         </svg>
                       </div>
                     </div>
-                    <div className="d-flex align-items-center justify-content-between" style={{ width: '80%' }}>
+                    <div
+                      className="d-flex align-items-center justify-content-between"
+                      style={{ width: "80%" }}
+                    >
                       <div>
-                        <h3 className="text-grey" style={{ fontSize: '16px', fontWeight: '400', marginBottom: '0' }}>
+                        <h3
+                          className="text-grey"
+                          style={{
+                            fontSize: "16px",
+                            fontWeight: "400",
+                            marginBottom: "0",
+                          }}
+                        >
                           Total
                         </h3>
-                        <p className="text-black font-weight-bold" style={{ fontSize: '28px' }}>
+                        <p
+                          className="text-black font-weight-bold"
+                          style={{ fontSize: "28px" }}
+                        >
                           $ {data?.customer + data?.customerprev}
                         </p>
                       </div>
-                      <div style={{ borderLeft: '1px solid black', height: '60px', }} />
+                      <div
+                        style={{
+                          borderLeft: "1px solid black",
+                          height: "60px",
+                        }}
+                      />
 
                       <div>
-                        <h3 className="text-grey" style={{ fontSize: '16px', fontWeight: '400', marginBottom: '0' }}>
+                        <h3
+                          className="text-grey"
+                          style={{
+                            fontSize: "16px",
+                            fontWeight: "400",
+                            marginBottom: "0",
+                          }}
+                        >
                           New
                         </h3>
-                        <p className="text-black font-weight-bold" style={{ fontSize: '28px' }}>
+                        <p
+                          className="text-black font-weight-bold"
+                          style={{ fontSize: "28px" }}
+                        >
                           $ {data?.customer + data?.customerprev}
                         </p>
                       </div>
@@ -356,7 +392,7 @@ const Dashboard = () => {
                 <div className="card-data-box d-flex">
                   <div className="w-100">
                     <div className="d-flex align-items-center justify-content-between mb-4">
-                      <strong style={{ fontSize: '14px' }}>Issues</strong>
+                      <strong style={{ fontSize: "14px" }}>Issues</strong>
                       <div className="icon">
                         <svg
                           xmlns="http://www.w3.org/2000/svg"
@@ -375,27 +411,54 @@ const Dashboard = () => {
                       </div>
                     </div>
 
-                    <div className="d-flex align-items-center justify-content-between" style={{ width: '80%' }}>
+                    <div
+                      className="d-flex align-items-center justify-content-between"
+                      style={{ width: "80%" }}
+                    >
                       <div>
-                        <h3 className="text-grey" style={{ fontSize: '16px', fontWeight: '400', marginBottom: '0' }}>
+                        <h3
+                          className="text-grey"
+                          style={{
+                            fontSize: "16px",
+                            fontWeight: "400",
+                            marginBottom: "0",
+                          }}
+                        >
                           Open
                         </h3>
-                        <p className="text-black font-weight-bold" style={{ fontSize: '28px' }}>
+                        <p
+                          className="text-black font-weight-bold"
+                          style={{ fontSize: "28px" }}
+                        >
                           {data?.customer + data?.customerprev}
                         </p>
                       </div>
-                      <div style={{ borderLeft: '1px solid black', height: '60px', }} />
+                      <div
+                        style={{
+                          borderLeft: "1px solid black",
+                          height: "60px",
+                        }}
+                      />
 
                       <div>
-                        <h3 className="text-grey" style={{ fontSize: '16px', fontWeight: '400', marginBottom: '0' }}>
+                        <h3
+                          className="text-grey"
+                          style={{
+                            fontSize: "16px",
+                            fontWeight: "400",
+                            marginBottom: "0",
+                          }}
+                        >
                           Completed
                         </h3>
-                        <p className="text-black font-weight-bold" style={{ fontSize: '28px' }}>
+                        <p
+                          className="text-black font-weight-bold"
+                          style={{ fontSize: "28px" }}
+                        >
                           {data?.customer + data?.customerprev}
                         </p>
                       </div>
                     </div>
-
                   </div>
                 </div>
               </div>

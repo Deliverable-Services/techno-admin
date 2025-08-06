@@ -1,6 +1,6 @@
 .page-title {
   font-weight: 600;
-  font-size: 1.125rem;
+  font-size: 1.65rem;
   line-height: 32px;
   margin-bottom: 20px;
 }
@@ -126,16 +126,16 @@
     grid-template-columns: 1fr;
     gap: 20px;
   }
-  
+
   .metrics-row {
     gap: 12px;
   }
-  
+
   .metric-card {
     min-width: 100px;
     padding: 12px;
   }
-  
+
   .metric-value {
     font-size: 20px;
   }
@@ -145,16 +145,16 @@
   .analytics-section {
     padding: 16px;
   }
-  
+
   .metrics-row {
     flex-direction: column;
     gap: 8px;
   }
-  
+
   .metric-card {
     min-width: auto;
   }
-  
+
   .chart-wrapper {
     height: 240px;
   }

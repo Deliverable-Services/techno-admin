@@ -387,9 +387,15 @@ const App = () => {
                 permissionReq="read_role"
               />
               <PrivateRoute
-                path="/push-notifications"
+                path="/notifications"
                 exact
                 component={Notifications}
+                permissionReq="read_notification"
+              />
+              <PrivateRoute
+                path="/notifications/create-edit"
+                exact
+                component={NotificationCreateUpdateForm}
                 permissionReq="read_notification"
               />
               <PrivateRoute
@@ -409,12 +415,6 @@ const App = () => {
                 exact
                 component={SlotCreateUpdateForm}
                 permissionReq="create_bookingslot"
-              />
-              <PrivateRoute
-                path="/push-notifications/create-edit"
-                exact
-                component={NotificationCreateUpdateForm}
-                permissionReq="read_notification"
               />
               <PrivateRoute
                 path="/testimonials/create-edit"

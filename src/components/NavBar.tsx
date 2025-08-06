@@ -70,9 +70,24 @@ const mainLinks: Array<INavLink> = [
     icon: <FaRegMoneyBillAlt />,
     permissionReq: "read_bookingslot",
     children: [
-      { title: "Subscriptions", path: "/subscriptions", permissionReq: "read_subscription", icon: <FaAddressCard />, },
-      { title: "Transaction", path: "/transactions", permissionReq: "read_transaction", icon: <FaMoneyCheck />, },
-      { title: "Invoices", path: "/invoices", icon: <SiCivicrm />, permissionReq: "read_city", },
+      {
+        title: "Subscriptions",
+        path: "/subscriptions",
+        permissionReq: "read_subscription",
+        icon: <FaAddressCard />,
+      },
+      {
+        title: "Transaction",
+        path: "/transactions",
+        permissionReq: "read_transaction",
+        icon: <FaMoneyCheck />,
+      },
+      {
+        title: "Invoices",
+        path: "/invoices",
+        icon: <SiCivicrm />,
+        permissionReq: "read_city",
+      },
     ],
   },
   {
@@ -218,8 +233,8 @@ const organisationLinks: Array<INavLink> = [
     permissionReq: "read_city",
   },
   {
-    title: "Notification/Sms",
-    path: "/push-notifications",
+    title: "Workflow Notifications",
+    path: "/notifications",
     icon: <RiNotification2Line />,
     permissionReq: "read_notification",
   },
@@ -400,18 +415,16 @@ const NavBar = ({ isNavOpen, setIsNavOpen }: INavBar) => {
           </ul>
           <p className="text-muted mb-2">Products & Services</p>
           <ul>
-            {filterinventoryLinks.map(
-              (link) => (
-                <Navlink
-                  key={link.title}
-                  {...link}
-                  onClick={closeNavBar}
-                  isNavOpen={isNavOpen}
-                  activeMenu={activeMenu}
-                  setActiveMenu={setActiveMenu}
-                />
-              )
-            )}
+            {filterinventoryLinks.map((link) => (
+              <Navlink
+                key={link.title}
+                {...link}
+                onClick={closeNavBar}
+                isNavOpen={isNavOpen}
+                activeMenu={activeMenu}
+                setActiveMenu={setActiveMenu}
+              />
+            ))}
           </ul>
           <p className="text-muted mb-2">Website & Pages</p>
           <ul>
@@ -428,18 +441,16 @@ const NavBar = ({ isNavOpen, setIsNavOpen }: INavBar) => {
           </ul>
           <p className="text-muted mb-2">Organization & Settings</p>
           <ul>
-            {filterOrganisationLinks.map(
-              (link) => (
-                <Navlink
-                  key={link.title}
-                  {...link}
-                  onClick={closeNavBar}
-                  isNavOpen={isNavOpen}
-                  activeMenu={activeMenu}
-                  setActiveMenu={setActiveMenu}
-                />
-              )
-            )}
+            {filterOrganisationLinks.map((link) => (
+              <Navlink
+                key={link.title}
+                {...link}
+                onClick={closeNavBar}
+                isNavOpen={isNavOpen}
+                activeMenu={activeMenu}
+                setActiveMenu={setActiveMenu}
+              />
+            ))}
           </ul>
         </div>
       </nav>
