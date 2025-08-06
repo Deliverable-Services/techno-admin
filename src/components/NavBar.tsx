@@ -106,6 +106,19 @@ const mainLinks: Array<INavLink> = [
     permissionReq: "read_booking",
   },
   {
+    title: "Invoices",
+    path: "/invoices",
+    icon: <SiCivicrm />,
+    permissionReq: "read_city",
+  },
+  {
+    title: "Subscription",
+    path: "/subscription",
+    icon: <SiCivicrm />,
+    permissionReq: "read_city",
+  },
+
+  {
     title: "Customers",
     path: "/users",
     icon: <ImUsers />,

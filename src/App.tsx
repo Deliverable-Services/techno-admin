@@ -498,6 +498,12 @@ const App = () => {
                 permissionReq="read_city"
               />
               <PrivateRoute
+                path="/subscription"
+                exact
+                component={InvoicePage}
+                permissionReq="read_subscription"
+              />
+              <PrivateRoute
                 path="/google-business"
                 exact
                 component={GoogleBusinessDashboard}
