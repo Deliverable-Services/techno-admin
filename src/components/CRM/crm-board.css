@@ -47,7 +47,6 @@
 }
 
 .crm-board {
-  margin-top: 20px;
   padding-bottom: 20px;
   flex-wrap: nowrap !important;
 }
@@ -110,10 +109,6 @@
   background-color: #dee2e6;
   font-size: 0.8rem;
   font-weight: bold;
-}
-
-.crm-board {
-  margin-top: 20px;
 }
 
 .badge-billing {

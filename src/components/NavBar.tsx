@@ -1,16 +1,11 @@
 import { useContext, useState } from "react";
 import {
-  FaAddressCard,
   FaBoxes,
   FaDiceFour,
   FaQuestionCircle,
   FaRegLightbulb,
   FaMoneyCheck,
   FaUserSecret,
-  FaEnvelope,
-  FaPhone,
-  FaMap,
-  FaClock,
   FaGoogle,
   FaRegMoneyBillAlt,
 } from "react-icons/fa";
@@ -34,14 +29,11 @@ import { AiFillIdcard } from "react-icons/ai";
 import { BsClock, BsShieldLock } from "react-icons/bs";
 import { GrOrganization } from "react-icons/gr";
 
-import { Dropdown } from "react-bootstrap";
 import { IsDesktopContext } from "../context/IsDesktopContext";
-import useUserProfileStore from "../hooks/useUserProfileStore";
 import { useGoogleBusinessConnection } from "../hooks/useGoogleBusinessConnection";
 import { useOrganisation } from "../context/OrganisationContext";
 
 import { INavBar, INavLink } from "../types/interface";
-import { formatTimestamp } from "../utils/utitlity";
 
 import Logo from "../shared-components/Logo";
 import Navlink from "../shared-components/Navlink";
@@ -297,7 +289,6 @@ const NavBar = ({ isNavOpen, setIsNavOpen }: INavBar) => {
   const isDesktop = useContext(IsDesktopContext);
   const [activeMenu, setActiveMenu] = useState<string | null>(null);
 
-  const loggedInUser = useUserProfileStore((state) => state.user);
   const { selectedOrg, setSelectedOrg, organisations } = useOrganisation();
   const { isConnected: isGoogleBusinessConnected } =
     useGoogleBusinessConnection();

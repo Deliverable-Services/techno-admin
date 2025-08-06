@@ -15,6 +15,9 @@ import API from "../../utils/API";
 import { showMsgToast } from "../../utils/showMsgToast";
 import { showErrorToast } from "../../utils/showErrorToast";
 import { queryClient } from "../../utils/queryClient";
+import PageHeading from "../../shared-components/PageHeading";
+import { RiNotification2Line } from "react-icons/ri";
+import { SiCivicrm } from "react-icons/si";
 
 const key = "leads";
 const membersKey = "users";
@@ -88,47 +91,58 @@ const CRMBoard: React.FC = () => {
 
   const selectedLead = leads?.find((t) => t.id === selectedId);
 
+  const _onCreateClick = () => {
+    // #TODO: Create LEAD form in popup
+  };
+
   return (
     <>
+      <div className="view-padding d-flex justify-content-between align-items-center">
+        <PageHeading
+          icon={<SiCivicrm size={24} />}
+          title="CRM"
+          description="Manage all ongoing leads"
+          onClick={_onCreateClick}
+          totalRecords={data?.total}
+          permissionReq="create_lead"
+        />
+
+        <div className="crm-users">
+          {membersList?.data.slice(0, 3).map((member, index) => (
+            <img
+              key={index}
+              // src={member?.profile_pic || `https://ui-avatars.com/api/?name=${member.name}`}
+              src={`https://ui-avatars.com/api/?name=${member.name}`}
+              alt=""
+              className="crm-avatar"
+            />
+          ))}
+
+          {membersList?.data.length > 3 && (
+            <span className="crm-avatar crm-avatar-extra">
+              +{membersList.data.length - 3}
+            </span>
+          )}
+        </div>
+      </div>
+      <hr />
+
       <DndProvider backend={HTML5Backend}>
-        <div className="crm-container">
-          <div className="crm-header px-3">
-            <h2 className="crm-title">CRM</h2>
-            <div className="crm-users">
-              {membersList?.data.slice(0, 3).map((member, index) => (
-                <img
-                  key={index}
-                  // src={member?.profile_pic || `https://ui-avatars.com/api/?name=${member.name}`}
-                  src={`https://ui-avatars.com/api/?name=${member.name}`}
-                  alt=""
-                  className="crm-avatar"
+        <div className="crm-board-overflow">
+          <div className="row no-gutters crm-board">
+            {Object.keys(statusMap).map((key) => {
+              const typedKey = key as string;
+              return (
+                <Column
+                  key={typedKey}
+                  title={statusMap[typedKey]}
+                  status={typedKey}
+                  leads={leads?.filter((lead) => lead.status === typedKey)}
+                  onDrop={handleDrop}
+                  onCardClick={handleCardClick}
                 />
-              ))}
-
-              {membersList?.data.length > 3 && (
-                <span className="crm-avatar crm-avatar-extra">
-                  +{membersList.data.length - 3}
-                </span>
-              )}
-            </div>
-          </div>
-
-          <div className="crm-board-overflow">
-            <div className="row no-gutters crm-board">
-              {Object.keys(statusMap).map((key) => {
-                const typedKey = key as string;
-                return (
-                  <Column
-                    key={typedKey}
-                    title={statusMap[typedKey]}
-                    status={typedKey}
-                    leads={leads?.filter((lead) => lead.status === typedKey)}
-                    onDrop={handleDrop}
-                    onCardClick={handleCardClick}
-                  />
-                );
-              })}
-            </div>
+              );
+            })}
           </div>
         </div>
       </DndProvider>

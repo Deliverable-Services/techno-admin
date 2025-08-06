@@ -92,24 +92,18 @@ const App = () => {
   const history = useHistory();
   const loggedInUser = useUserProfileStore((state) => state.user);
   const { setOrganisations, selectedOrg, setSelectedOrg } = useOrganisation();
-  //adding token to every request
   const token = useTokenStore((state) => state.accessToken);
   if (token) API.defaults.headers.common["Authorization"] = `Bearer ${token}`;
 
-  // Check for authentication and clear cache if no token or user
   useEffect(() => {
     const isLoginPage =
       pathname.includes("login") || pathname.includes("verify-otp");
 
     if (!isLoginPage && !isVerifingLoggedInUser && (!token || !loggedInUser)) {
-      // Clear all stored data
       localStorage.clear();
       sessionStorage.clear();
 
-      // Clear token store
       useTokenStore.getState().removeToken();
-
-      // Clear cache if available
       if ("caches" in window) {
         caches.keys().then((cacheNames) => {
           cacheNames.forEach((cacheName) => {
@@ -117,8 +111,6 @@ const App = () => {
           });
         });
       }
-
-      // Redirect to login page
       history.replace("/login");
     }
   }, [token, loggedInUser, isVerifingLoggedInUser, pathname, history]);
@@ -197,6 +189,18 @@ const App = () => {
                 permissionReq="read_dashboard"
               />
               <PrivateRoute
+                path="/crm"
+                exact
+                component={CRMBoard}
+                permissionReq="read_user"
+              />
+              <PrivateRoute
+                path="/crm-bookings"
+                exact
+                component={BookingSlots}
+                permissionReq="read_bookingslot"
+              />
+              <PrivateRoute
                 path="/profile"
                 exact
                 component={ProfilePage}
@@ -269,13 +273,6 @@ const App = () => {
                 component={Orders}
                 permissionReq="read_booking"
               />
-              {/* <PrivateRoute
-                   path="/crm"
-                   exact
-                   component={Orders}
-                   permissionReq="read_booking"
-                 /> */}
-
               <PrivateRoute
                 path="/testimonials"
                 exact
@@ -421,12 +418,6 @@ const App = () => {
                 permissionReq="read_booking"
               />
               <PrivateRoute
-                path="/crm-bookings"
-                exact
-                component={BookingSlots}
-                permissionReq="read_bookingslot"
-              />
-              <PrivateRoute
                 path="/booking-slots/create-edit"
                 exact
                 component={SlotCreateUpdateForm}
@@ -515,12 +506,6 @@ const App = () => {
                 exact
                 component={AssignAgent}
                 permissionReq="assign_agent"
-              />
-              <PrivateRoute
-                path="/crm"
-                exact
-                component={CRMBoard}
-                permissionReq="read_user"
               />
               <PrivateRoute
                 path="/invoices"

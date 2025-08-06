@@ -13048,6 +13048,7 @@ li.navLink.my-1 svg path {
 .ticket-main-div {
   background: #fafafa;
   height: 100%;
+  border: 1px solid var(--border)
 }
 
 .lead-card:hover {
