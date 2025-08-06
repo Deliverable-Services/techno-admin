@@ -201,65 +201,65 @@ const Permissions = () => {
     <>
       <Roles />
 
-      <Container fluid className="card component-wrapper view-padding mb-3 mt-5">
+      <div className="view-padding mb-3 mt-5">
         <PageHeading title="Assign Permission" />
+      </div>
+      <hr />
+      <div className="h-100 p-0">
+        {isRolesPermissionLoading ? (
+          <IsLoading />
+        ) : (
+          <>
+            {!error && (
+              <ReactTable
+                data={RolesPermission?.role}
+                columns={columns}
+                filter={filter}
+                onFilterChange={_onFilterChange}
+                isDataLoading={isRolesPermissoinFetch}
+                isSelectable={false}
+              />
+            )}
+          </>
+        )}
+      </div>
 
-        <Container fluid className="h-100 p-0">
-          {isRolesPermissionLoading ? (
-            <IsLoading />
-          ) : (
-            <>
-              {!error && (
-                <ReactTable
-                  data={RolesPermission?.role}
-                  columns={columns}
-                  filter={filter}
-                  onFilterChange={_onFilterChange}
-                  isDataLoading={isRolesPermissoinFetch}
-                  isSelectable={false}
-                />
-              )}
-            </>
-          )}
-        </Container>
-      </Container>
-
-      <Container fluid className="card component-wrapper view-padding">
+      <div className="view-padding mt-3">
         <PageHeading
           title="Permissions"
           onClick={_onCreateClick}
           totalRecords={data?.total}
           permissionReq="create_permission"
         />
-
-        <Container fluid className="h-100 p-0">
-          {isLoading ? (
-            <IsLoading />
-          ) : (
-            <>
-              {!error && (
-                <ReactTable
-                  data={data}
-                  columns={permissionColumn}
-                  setSelectedRows={setSelectedRows}
-                  filter={filter}
-                  onFilterChange={_onFilterChange}
-                  isDataLoading={isFetching}
-                />
-              )}
-              {!error && data?.data?.length > 0 ? (
-                <TablePagination
-                  currentPage={data?.current_page}
-                  lastPage={data?.last_page}
-                  setPage={_onFilterChange}
-                  hasNextPage={!!data?.next_page_url}
-                  hasPrevPage={!!data?.prev_page_url}
-                />
-              ) : null}{" "}
-            </>
-          )}
-        </Container>
-      </Container>
+      </div>
+      <hr />
+      <div className="h-100 p-0">
+        {isLoading ? (
+          <IsLoading />
+        ) : (
+          <>
+            {!error && (
+              <ReactTable
+                data={data}
+                columns={permissionColumn}
+                setSelectedRows={setSelectedRows}
+                filter={filter}
+                onFilterChange={_onFilterChange}
+                isDataLoading={isFetching}
+              />
+            )}
+            {!error && data?.data?.length > 0 ? (
+              <TablePagination
+                currentPage={data?.current_page}
+                lastPage={data?.last_page}
+                setPage={_onFilterChange}
+                hasNextPage={!!data?.next_page_url}
+                hasPrevPage={!!data?.prev_page_url}
+              />
+            ) : null}{" "}
+          </>
+        )}
+      </div>
       {selectedRows.length > 0 && (
         <div className="delete-button rounded">
           <span>

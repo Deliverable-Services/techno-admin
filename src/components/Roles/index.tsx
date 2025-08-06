@@ -119,35 +119,37 @@ const Roles = () => {
 
   return (
     <>
-      <Container fluid className="card component-wrapper view-padding">
+      <div className="view-padding">
         <PageHeading
           title="Roles"
           onClick={_onCreateClick}
           totalRecords={data?.total}
           permissionReq="create_role"
         />
+      </div>
+      <hr />
 
-        <Container fluid className="h-100 p-0">
-          {isLoading ? (
-            <IsLoading />
-          ) : (
-            <>
-              {!error && (
-                <ReactTable
-                  data={data?.data}
-                  columns={columns}
-                  setSelectedRows={setSelectedRows}
-                  filter={filter}
-                  onFilterChange={_onFilterChange}
-                  isDataLoading={isFetching}
-                  deletePermissionReq="delete_role"
-                  isSelectable={false}
-                />
-              )}
-            </>
-          )}
-        </Container>
-      </Container>
+      <div className="h-100 p-0">
+        {isLoading ? (
+          <IsLoading />
+        ) : (
+          <>
+            {!error && (
+              <ReactTable
+                data={data?.data}
+                columns={columns}
+                setSelectedRows={setSelectedRows}
+                filter={filter}
+                onFilterChange={_onFilterChange}
+                isDataLoading={isFetching}
+                deletePermissionReq="delete_role"
+                isSelectable={false}
+              />
+            )}
+          </>
+        )}
+      </div>
+
       {selectedRows.length > 0 && (
         <div className="delete-button rounded">
           <span>

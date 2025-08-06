@@ -12797,7 +12797,7 @@ body {
   width: 100%;
   overflow: hidden;
   overflow-y: auto;
-  /* min-height: calc(100vh - 64px); */
+  min-height: 400px;
   background-color: #fff;
 }
 .login-wrapper {

@@ -23,11 +23,13 @@ const PageHeading: React.FC<Props> = ({
   return (
     <div className="d-flex justify-content-between align-items-center">
       <p className="d-flex align-items-center gap-12">
-        <span className="icon-bg">
-          <span className="icon-color">
-            {icon}
+        {icon &&
+          <span className="icon-bg">
+            <span className="icon-color">
+              {icon}
+            </span>
           </span>
-        </span>
+        }
         <div>
           <div>
             <span className="page-title">{title}</span>
