@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from "react";
+import { useContext, useState } from "react";
 import {
   FaAddressCard,
   FaBoxes,
@@ -15,7 +15,7 @@ import {
   FaRegMoneyBillAlt,
 } from "react-icons/fa";
 import { GoIssueOpened } from "react-icons/go";
-import { IoLogoModelS } from "react-icons/io";
+import { IoLogoModelS, IoMdAnalytics } from "react-icons/io";
 import { GiModernCity, GiOnTarget } from "react-icons/gi";
 
 import {
@@ -35,7 +35,7 @@ import Overlay from "../shared-components/Overlay";
 import { INavBar, INavLink } from "../types/interface";
 import { MdShoppingCart } from "react-icons/md";
 import { ImUsers } from "react-icons/im";
-import { AiFillIdcard, AiFillSetting } from "react-icons/ai";
+import { AiFillIdcard } from "react-icons/ai";
 import { BsClock, BsShieldLock } from "react-icons/bs";
 import { SiCivicrm } from "react-icons/si";
 import { GrOrganization } from "react-icons/gr";
@@ -196,7 +196,7 @@ const organisationLinks: Array<INavLink> = [
   {
     title: "Google Analytics",
     path: "/google-analytics",
-    icon: <DiGoogleAnalytics />,
+    icon: <IoMdAnalytics />,
     permissionReq: "read_agenttarget",
   },
   {
