@@ -23,37 +23,54 @@ const createTicket = ({ formdata }: { formdata: any }) => {
   });
 };
 
-const IssuesCreateForm = () => {
-  const { state } = useLocation();
-  console.log({ state });
+const IssuesCreateForm = ({ onHideModal }) => {
+  // const { state } = useLocation();
   const history = useHistory();
   useEffect(() => {
     bsCustomFileInput.init();
   }, []);
 
+  const { data: customersList } = useQuery<any>(
+    [`users?role=customer&perPage=1000`, ,],
+    {
+      onError: (error: AxiosError) => {
+        handleApiError(error, history);
+      },
+    }
+  );
+
   const { mutate, isLoading } = useMutation(createTicket, {
     onSuccess: () => {
       setTimeout(() => queryClient.invalidateQueries(key), 500);
-      history.replace("/issues");
+      onHideModal();
       showMsgToast("Issue created successfully");
     },
     onError: (error: AxiosError) => {
+      onHideModal();
       handleApiError(error, history);
     },
   });
 
-  if (!state) return <h1>Order Id is required</h1>;
+  const initialValues = {
+    title: "",
+    description: "",
+    status: "",
+    order_id: "",
+    ref_id: "",
+  };
+
+  // if (!state) return <h1>Order Id is required</h1>;
 
   return (
     <>
-      <BackButton
+      {/* <BackButton
         title={`Create issue for order #${(state as any)?.order_id}`}
-      />
+      /> */}
       <Row className="rounded">
         <Col className="mx-auto">
           <Formik
             enableReinitialize
-            initialValues={state}
+            initialValues={initialValues}
             onSubmit={(values) => {
               mutate({ formdata: values });
             }}
@@ -82,9 +99,21 @@ const IssuesCreateForm = () => {
                     selectData={IssueRelatedTo}
                     as="select"
                   />
+                  <InputField
+                    name="order_id"
+                    label="Order"
+                    placeholder="Order Id"
+                  />
+                  <InputField
+                    name="customer"
+                    label="Add Customer"
+                    placeholder="Select Customer"
+                    selectData={customersList?.data}
+                    as="select"
+                  />
                 </div>
                 <Row>
-                  <Col md={6}>
+                  <Col md={12}>
                     <InputField
                       name="description"
                       label="Description"
