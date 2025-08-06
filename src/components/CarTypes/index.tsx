@@ -16,6 +16,7 @@ import API from "../../utils/API";
 import { primaryColor } from "../../utils/constants";
 import { queryClient } from "../../utils/queryClient";
 import { showMsgToast } from "../../utils/showMsgToast";
+import { IoLogoModelS } from "react-icons/io";
 
 const key = "brand-model-type";
 
@@ -122,44 +123,46 @@ const CarTypes = () => {
 
   return (
     <>
-      <Container fluid className="card component-wrapper view-padding">
+      <div className="view-padding">
         <PageHeading
           title="Product variants"
+          description="Create and genrate products variants"
+          icon={<IoLogoModelS size={24} />}
           onClick={_onCreateClick}
           totalRecords={data?.total}
           permissionReq="create_brandmodelType"
         />
-
-        <Container fluid className="h-100 p-0">
-          {isLoading ? (
-            <IsLoading />
-          ) : (
-            <>
-              {!error && (
-                <ReactTable
-                  data={data?.data}
-                  columns={columns}
-                  setSelectedRows={setSelectedRows}
-                  filter={filter}
-                  onFilterChange={_onFilterChange}
-                  isDataLoading={isFetching}
-                  searchPlaceHolder="Search using name"
-                  deletePermissionReq="delete_brandmodelType"
-                />
-              )}
-              {!error && data?.data?.length > 0 ? (
-                <TablePagination
-                  currentPage={data?.current_page}
-                  lastPage={data?.last_page}
-                  setPage={_onFilterChange}
-                  hasNextPage={!!data?.next_page_url}
-                  hasPrevPage={!!data?.prev_page_url}
-                />
-              ) : null}{" "}
-            </>
-          )}
-        </Container>
-      </Container>
+      </div>
+      <hr />
+      <div className="h-100 p-0">
+        {isLoading ? (
+          <IsLoading />
+        ) : (
+          <>
+            {!error && (
+              <ReactTable
+                data={data?.data}
+                columns={columns}
+                setSelectedRows={setSelectedRows}
+                filter={filter}
+                onFilterChange={_onFilterChange}
+                isDataLoading={isFetching}
+                searchPlaceHolder="Search using name"
+                deletePermissionReq="delete_brandmodelType"
+              />
+            )}
+            {!error && data?.data?.length > 0 ? (
+              <TablePagination
+                currentPage={data?.current_page}
+                lastPage={data?.last_page}
+                setPage={_onFilterChange}
+                hasNextPage={!!data?.next_page_url}
+                hasPrevPage={!!data?.prev_page_url}
+              />
+            ) : null}{" "}
+          </>
+        )}
+      </div>
       {selectedRows.length > 0 && (
         <div className="delete-button rounded">
           <span>

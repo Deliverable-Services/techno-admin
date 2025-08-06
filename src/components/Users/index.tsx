@@ -141,37 +141,39 @@ const Users = () => {
         Header: "Actions",
         Cell: (data: Cell) => {
           return (
-            <Dropdown className="ellipsis-dropdown">
-              <Dropdown.Toggle
-                variant="light"
-                size="sm"
-                className="p-1 border-0 shadow-none"
-                id={`dropdown-${data.row.values.id}`}
-              >
-                <BsThreeDotsVertical size={18} />
-              </Dropdown.Toggle>
-
-              <Dropdown.Menu className="menu-dropdown">
-                <Dropdown.Item
-                  onClick={() => {
-                    _onEditClick(data.row.values.id, data.row.values.role);
-                  }}
+            <div className="d-flex align-items-center justify-content-end gap-3">
+              <EditButton
+                onClick={() => {
+                  _onEditClick(data.row.values.id, data.row.values.role);
+                }}
+                permissionReq="update_notification"
+              />
+              <Dropdown className="ellipsis-dropdown">
+                <Dropdown.Toggle
+                  variant="light"
+                  size="sm"
+                  className="p-1 border-0 shadow-none"
+                  id={`dropdown-${data.row.values.id}`}
                 >
-                  <BsPencil /> Edit
-                </Dropdown.Item>
+                  <BsThreeDotsVertical size={18} />
+                </Dropdown.Toggle>
 
-                <Dropdown.Item
-                  onClick={() => {
-                    setSelectedDeleteId(data.row.values.id);
-                    setDeletePopup(true);
-                  }}
-                  className="text-danger"
-                >
-                  <AiFillDelete size={16} className="me-1" />
-                  Delete
-                </Dropdown.Item>
-              </Dropdown.Menu>
-            </Dropdown>
+                <Dropdown.Menu className="menu-dropdown">
+
+
+                  <Dropdown.Item
+                    onClick={() => {
+                      setSelectedDeleteId(data.row.values.id);
+                      setDeletePopup(true);
+                    }}
+                    className="text-danger"
+                  >
+                    <AiFillDelete size={16} className="me-1" />
+                    Delete
+                  </Dropdown.Item>
+                </Dropdown.Menu>
+              </Dropdown>
+            </div>
           );
         },
       },
@@ -192,16 +194,18 @@ const Users = () => {
 
   return (
     <>
-      <Container fluid className=" component-wrapper view-padding">
+      <div className="view-padding">
         <PageHeading
-          icon={<ImUsers />}
+          icon={<ImUsers size={24} />}
+          description="Create and manage customers"
           title="Customers"
           onClick={_onCreateClick}
           totalRecords={data?.total}
           permissionReq="create_user"
         />
-
-        {/* {!isLoading && (
+      </div>
+      <hr />
+      {/* {!isLoading && (
         <Container fluid>
           <div>
             <div className="filter">
@@ -242,80 +246,80 @@ const Users = () => {
           </div>
         </Container>
       )} */}
-        {data?.data?.length > 0 ?
-          <div className="card">
-            <Container fluid className="h-100 p-0 ">
-              {isLoading ? (
-                <IsLoading />
-              ) : (
-                <>
-                  {!error && (
-                    <>
-                      <div className="mt-3" />
-                      <ReactTable
-                        data={data?.data}
-                        filters={<Dropdown className="filter-dropdown">
-                          <Dropdown.Toggle as={Button} variant="primary">
-                            <BsFunnel />
-                          </Dropdown.Toggle>
-                          <Dropdown.Menu>
-                            <div className="filter-dropdown-heading d-flex justify-content-between w-100">
-                              <h4>Filter</h4>
-                              <div
-                                className="d-flex align-items-center justify-md-content-center"
+      {data?.data?.length > 0 ?
+        <div className="">
+          <div className="h-100 p-0 ">
+            {isLoading ? (
+              <IsLoading />
+            ) : (
+              <>
+                {!error && (
+                  <>
+                    <div className="mt-3" />
+                    <ReactTable
+                      data={data?.data}
+                      filters={<Dropdown className="filter-dropdown">
+                        <Dropdown.Toggle as={Button} variant="primary">
+                          <BsFunnel />
+                        </Dropdown.Toggle>
+                        <Dropdown.Menu>
+                          <div className="filter-dropdown-heading d-flex justify-content-between w-100">
+                            <h4>Filter</h4>
+                            <div
+                              className="d-flex align-items-center justify-md-content-center"
+                            >
+                              <Button
+                                variant={
+                                  areTwoObjEqual(intitialFilter, filter)
+                                    ? "light"
+                                    : "primary"
+                                }
+                                style={{
+                                  fontSize: 14,
+                                }}
+                                onClick={() => setFilter(intitialFilter)}
                               >
-                                <Button
-                                  variant={
-                                    areTwoObjEqual(intitialFilter, filter)
-                                      ? "light"
-                                      : "primary"
-                                  }
-                                  style={{
-                                    fontSize: 14,
-                                  }}
-                                  onClick={() => setFilter(intitialFilter)}
-                                >
-                                  Reset Filters
-                                </Button>
-                              </div>
+                                Reset Filters
+                              </Button>
                             </div>
-                            <div className="select-filter">
-                              <FilterSelect
-                                currentValue={filter.disabled}
-                                data={isActiveArray}
-                                label="Disabled Users?"
-                                idx="disabled"
-                                onFilterChange={_onFilterChange}
-                                defaultSelectTitle="Show All"
-                              />
-                            </div>
-                          </Dropdown.Menu>
-                        </Dropdown>}
-                        columns={columns}
-                        setSelectedRows={setSelectedRows}
-                        filter={filter}
-                        onFilterChange={_onFilterChange}
-                        isDataLoading={isFetching}
-                        searchPlaceHolder="Search using name, phone, email"
-                        deletePermissionReq="delete_user"
-                      />
-                    </>
-                  )}
-                  {!error && data?.data?.length > 0 ? (
-                    <TablePagination
-                      currentPage={data?.current_page}
-                      lastPage={data?.last_page}
-                      setPage={_onFilterChange}
-                      hasNextPage={!!data?.next_page_url}
-                      hasPrevPage={!!data?.prev_page_url}
+                          </div>
+                          <div className="select-filter">
+                            <FilterSelect
+                              currentValue={filter.disabled}
+                              data={isActiveArray}
+                              label="Disabled Users?"
+                              idx="disabled"
+                              onFilterChange={_onFilterChange}
+                              defaultSelectTitle="Show All"
+                            />
+                          </div>
+                        </Dropdown.Menu>
+                      </Dropdown>}
+                      columns={columns}
+                      setSelectedRows={setSelectedRows}
+                      filter={filter}
+                      onFilterChange={_onFilterChange}
+                      isDataLoading={isFetching}
+                      searchPlaceHolder="Search using name, phone, email"
+                      deletePermissionReq="delete_user"
                     />
-                  ) : null}{" "}
-                </>
-              )}
-            </Container>
+                  </>
+                )}
+                {!error && data?.data?.length > 0 ? (
+                  <TablePagination
+                    currentPage={data?.current_page}
+                    lastPage={data?.last_page}
+                    setPage={_onFilterChange}
+                    hasNextPage={!!data?.next_page_url}
+                    hasPrevPage={!!data?.prev_page_url}
+                  />
+                ) : null}{" "}
+              </>
+            )}
           </div>
-          : <BillingIntegration />}
-      </Container>
+        </div>
+        : <BillingIntegration />}
+
       <Modal show={deletePopup} onHide={() => setDeletePopup(false)}>
         <Modal.Header closeButton>
           <Modal.Title>Are you sure?</Modal.Title>

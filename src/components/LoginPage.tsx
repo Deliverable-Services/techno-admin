@@ -107,7 +107,7 @@ const LoginFlow = () => {
         {/* RIGHT SIDE FORM */}
         <div className="col-md-6 d-flex align-items-center justify-content-center">
           <div className="organization-main w-100 px-5 py-5 login-wrapper" style={{ maxWidth: "500px" }}>
-            <img src="/assets/new-logo.svg" alt="Logo" style={{ width: 120, marginBottom: 30, height: 'auto' }} />
+            <img src="/assets/logo.svg" alt="Logo" style={{ width: 120, marginBottom: 30, height: 'auto' }} />
             {/* Title and description - Only in login step */}
             {step === "login" && (
               <div className="text-left mb-3">

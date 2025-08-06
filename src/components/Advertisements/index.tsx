@@ -24,6 +24,7 @@ import { primaryColor, config } from "../../utils/constants";
 import { queryClient } from "../../utils/queryClient";
 import { showMsgToast } from "../../utils/showMsgToast";
 import { BsFunnel } from "react-icons/bs";
+import { RiAdvertisementFill } from "react-icons/ri";
 const key = "banners/list";
 
 const deleteAd = (id: Array<any>) => {
@@ -216,110 +217,114 @@ const Advertisements = () => {
 
   return (
     <>
-      <Container fluid className="component-wrapper view-padding">
+      <div className="view-padding">
         <PageHeading
           title="Banners"
+          description="Create and manage banners"
+          icon={<RiAdvertisementFill size={24} />}
           onClick={() => _onCreateClick()}
           totalRecords={data?.total}
           permissionReq="create_banner"
         />
+      </div>
+      <hr />
 
-        <div className="card">
-          <Container fluid className="h-100 p-0">
-            {isLoading ? (
-              <IsLoading />
-            ) : (
-              <>
-                {!error && (
-                  <>
-                    <div className="mt-3" />
-                    <ReactTable
-                      tabs={<div className="d-flex justify-content-between">
-                        {(!isLoading || !isFetching) && (
-                          <Nav className="global-navs" variant="tabs" activeKey={filter.type} onSelect={(selectedKey) => _onFilterChange('type', selectedKey)}>
-                            <Nav.Item>
-                              <Nav.Link eventKey="offer">
-                                Offer ({data?.data?.filter(item => item.status === 'offer').length || 0})
-                              </Nav.Link>
-                            </Nav.Item>
-                            <Nav.Item>
-                              <Nav.Link eventKey="latest">
-                                Latest ({data?.data?.filter(item => item.status === 'latest').length || 0})
-                              </Nav.Link>
-                            </Nav.Item>
+      <div className="">
+        <div className="h-100 p-0">
+          {isLoading ? (
+            <IsLoading />
+          ) : (
+            <>
+              {!error && (
+                <>
+                  <div className="mt-3" />
+                  <ReactTable
+                    tabs={<div className="d-flex justify-content-between">
+                      {(!isLoading || !isFetching) && (
+                        <Nav className="global-navs" variant="tabs" activeKey={filter.type} onSelect={(selectedKey) => _onFilterChange('type', selectedKey)}>
+                          <Nav.Item>
+                            <Nav.Link eventKey="offer">
+                              Offer ({data?.data?.filter(item => item.status === 'offer').length || 0})
+                            </Nav.Link>
+                          </Nav.Item>
+                          <Nav.Item>
+                            <Nav.Link eventKey="latest">
+                              Latest ({data?.data?.filter(item => item.status === 'latest').length || 0})
+                            </Nav.Link>
+                          </Nav.Item>
 
-                            <Nav.Item>
-                              <Nav.Link eventKey="trending">
-                                Trending ({data?.data?.filter(item => item.status === 'trending').length || 0})
-                              </Nav.Link>
-                            </Nav.Item>
-                          </Nav>
-                        )}
+                          <Nav.Item>
+                            <Nav.Link eventKey="trending">
+                              Trending ({data?.data?.filter(item => item.status === 'trending').length || 0})
+                            </Nav.Link>
+                          </Nav.Item>
+                        </Nav>
+                      )}
 
-                      </div>}
-                      filters={<Dropdown className="filter-dropdown">
-                        <Dropdown.Toggle as={Button} variant="primary">
-                          <BsFunnel />
-                        </Dropdown.Toggle>
-                        <Dropdown.Menu>
-                          <div className="filter-dropdown-heading d-flex justify-content-between w-100">
-                            <h4>Filter</h4>
-                            <div
-                              className="d-flex align-items-center justify-md-content-center"
+                    </div>}
+                    filters={<Dropdown className="filter-dropdown">
+                      <Dropdown.Toggle as={Button} variant="primary">
+                        <BsFunnel />
+                      </Dropdown.Toggle>
+                      <Dropdown.Menu>
+                        <div className="filter-dropdown-heading d-flex justify-content-between w-100">
+                          <h4>Filter</h4>
+                          <div
+                            className="d-flex align-items-center justify-md-content-center"
+                          >
+                            <Button
+                              variant={
+                                areTwoObjEqual(initialFilter, filter)
+                                  ? "light"
+                                  : "primary"
+                              }
+                              style={{
+                                fontSize: 14,
+                              }}
+                              onClick={() => setFilter(initialFilter)}
                             >
-                              <Button
-                                variant={
-                                  areTwoObjEqual(initialFilter, filter)
-                                    ? "light"
-                                    : "primary"
-                                }
-                                style={{
-                                  fontSize: 14,
-                                }}
-                                onClick={() => setFilter(initialFilter)}
-                              >
-                                Reset Filters
-                              </Button>
-                            </div>
+                              Reset Filters
+                            </Button>
                           </div>
-                          <div className="select-filter">
-                            <FilterSelect
-                              currentValue={filter.active}
-                              data={isActiveArray}
-                              label="Is Active?"
-                              idx="active"
-                              onFilterChange={_onFilterChange}
-                              defaultSelectTitle="Show All"
-                            />
-                          </div>
-                        </Dropdown.Menu>
-                      </Dropdown>}
-                      data={data.data}
-                      columns={columns}
-                      setSelectedRows={setSelectedRows}
-                      onFilterChange={_onFilterChange}
-                      filter={filter}
-                      isDataLoading={isFetching}
-                      isDraggable={isDraggable}
-                      searchPlaceHolder="Search using name"
-                      deletePermissionReq="delete_banner"
-                    />
-                  </>
-                )}
-                {!error && data?.data?.length > 0 ? (
-                  <TablePagination
-                    currentPage={data?.current_page}
-                    lastPage={data?.last_page}
-                    setPage={_onFilterChange}
-                    hasNextPage={!!data?.next_page_url}
-                    hasPrevPage={!!data?.prev_page_url}
+                        </div>
+                        <div className="select-filter">
+                          <FilterSelect
+                            currentValue={filter.active}
+                            data={isActiveArray}
+                            label="Is Active?"
+                            idx="active"
+                            onFilterChange={_onFilterChange}
+                            defaultSelectTitle="Show All"
+                          />
+                        </div>
+                      </Dropdown.Menu>
+                    </Dropdown>}
+                    data={data.data}
+                    columns={columns}
+                    setSelectedRows={setSelectedRows}
+                    onFilterChange={_onFilterChange}
+                    filter={filter}
+                    isDataLoading={isFetching}
+                    isDraggable={isDraggable}
+                    searchPlaceHolder="Search using name"
+                    deletePermissionReq="delete_banner"
                   />
-                ) : null}{" "}
-              </>
-            )}
-          </Container>
+                </>
+              )}
+              {!error && data?.data?.length > 0 ? (
+                <TablePagination
+                  currentPage={data?.current_page}
+                  lastPage={data?.last_page}
+                  setPage={_onFilterChange}
+                  hasNextPage={!!data?.next_page_url}
+                  hasPrevPage={!!data?.prev_page_url}
+                />
+              ) : null}{" "}
+            </>
+          )}
         </div>
-      </Container>
+      </div>
+
       {selectedRows.length > 0 && (
         <div className="delete-button rounded">
           <span>
