@@ -22,6 +22,7 @@ import { primaryColor } from "../../utils/constants";
 import { queryClient } from "../../utils/queryClient";
 import { showErrorToast } from "../../utils/showErrorToast";
 import { BsFunnel } from "react-icons/bs";
+import { FaMoneyCheck } from "react-icons/fa";
 
 const key = "transactions";
 
@@ -99,7 +100,7 @@ const Transactions = () => {
         Cell: (data: Cell) => {
           return (
             <p
-              classname="text-darkGray m-0" 
+              classname="text-darkGray m-0"
               style={{ cursor: "pointer" }}
               onClick={() => _onUserClick((data.row.original as any).user_id)}
             >
@@ -115,7 +116,7 @@ const Transactions = () => {
           console.log({ data });
           return (
             <p
-              classname="text-darkGray m-0" 
+              classname="text-darkGray m-0"
               style={{ cursor: "pointer" }}
               onClick={() => _onOrderClick(data.row.original["order_id"])}
             >
@@ -169,90 +170,90 @@ const Transactions = () => {
   return (
     <>
       <Container fluid className="component-wrapper view-padding">
-        <PageHeading title="Transactions" totalRecords={data?.total} />
+        <PageHeading icon={<FaMoneyCheck />} title="Transactions" totalRecords={data?.total} />
 
-<div className="d-flex justify-content-between pb-3 mt-3">
-  
-        {!isLoading && (
-          <div>
-             <Nav className="global-navs" variant="tabs" activeKey={filter.status} onSelect={(selectedKey) => onFilterChange('status', selectedKey)}>
-                <Nav.Item>
-                  <Nav.Link eventKey="">All ({data?.data?.length || 0})</Nav.Link>
-                </Nav.Item>
 
-                <Nav.Item>
-                  <Nav.Link eventKey="success">
-                    Success ({data?.data?.filter(item => item.status === 'success').length || 0})
-                  </Nav.Link>
-                </Nav.Item>
-
-                <Nav.Item>
-                  <Nav.Link eventKey="failed">
-                    Failed ({data?.data?.filter(item => item.status === 'failed').length || 0})
-                  </Nav.Link>
-                </Nav.Item>
-              </Nav>
-          </div>
-        )}
-          <Dropdown className="filter-dropdown">
-            <Dropdown.Toggle as={Button} variant="primary" className="global-card">
-              <BsFunnel /> Filters
-            </Dropdown.Toggle>
-            <Dropdown.Menu>
-              <div className="filter-dropdown-heading d-flex justify-content-between w-100">
-                <h4>Filter</h4>
-                <div
-                  className="d-flex align-items-center justify-md-content-center"
-                >
-                  <Button
-                    onClick={() => resetFilter()}
-                          variant={
-                            areTwoObjEqual(
-                              { ...intitialFilter, ...INITIAL_FILTER },
-                              { ...localFilter, ...filter }
-                            )
-                              ? "light"
-                              : "primary"
-                          }
-                          style={{
-                            fontSize: 14,
-                          }}
-                  >
-                    Reset Filters
-                  </Button>
-                </div>
-              </div>
-              <div className="select-filter">
-              <FilterSelect
-                          currentValue={filter.user_id}
-                          data={!isCustomerLoading && Customers.data}
-                          label="Customers"
-                          idx="user_id"
-                          onFilterChange={onFilterChange}
-                        />
-                         <FilterSelect
-                          currentValue={filter.payment_method}
-                          data={PaymentMethods}
-                          label="Payment Method"
-                          idx="payment_method"
-                          onFilterChange={onFilterChange}
-                        />
-
-              </div>
-            </Dropdown.Menu>
-          </Dropdown>
-      </div>
-      <hr />
-
-        <Container fluid className="h-100 p-0 ">
-          {isLoading ? (
-            <IsLoading />
-          ) : (
-            <>
-            <div className="mt-3" />
-              {!error && (
+        <div className="card">
+          <Container fluid className="h-100 p-0 ">
+            {isLoading ? (
+              <IsLoading />
+            ) : (
+              <>
+                <div className="mt-3" />
+                {!error && (
                   <ReactTable
                     data={data?.data}
+                    tabs={<div className="d-flex justify-content-between">
+                      {!isLoading && (
+                        <div>
+                          <Nav className="global-navs" variant="tabs" activeKey={filter.status} onSelect={(selectedKey) => onFilterChange('status', selectedKey)}>
+                            <Nav.Item>
+                              <Nav.Link eventKey="">All ({data?.data?.length || 0})</Nav.Link>
+                            </Nav.Item>
+
+                            <Nav.Item>
+                              <Nav.Link eventKey="success">
+                                Success ({data?.data?.filter(item => item.status === 'success').length || 0})
+                              </Nav.Link>
+                            </Nav.Item>
+
+                            <Nav.Item>
+                              <Nav.Link eventKey="failed">
+                                Failed ({data?.data?.filter(item => item.status === 'failed').length || 0})
+                              </Nav.Link>
+                            </Nav.Item>
+                          </Nav>
+                        </div>
+                      )}
+
+                    </div>}
+                    filters={<Dropdown className="filter-dropdown">
+                      <Dropdown.Toggle as={Button} variant="primary">
+                        <BsFunnel />
+                      </Dropdown.Toggle>
+                      <Dropdown.Menu>
+                        <div className="filter-dropdown-heading d-flex justify-content-between w-100">
+                          <h4>Filter</h4>
+                          <div
+                            className="d-flex align-items-center justify-md-content-center"
+                          >
+                            <Button
+                              onClick={() => resetFilter()}
+                              variant={
+                                areTwoObjEqual(
+                                  { ...intitialFilter, ...INITIAL_FILTER },
+                                  { ...localFilter, ...filter }
+                                )
+                                  ? "light"
+                                  : "primary"
+                              }
+                              style={{
+                                fontSize: 14,
+                              }}
+                            >
+                              Reset Filters
+                            </Button>
+                          </div>
+                        </div>
+                        <div className="select-filter">
+                          <FilterSelect
+                            currentValue={filter.user_id}
+                            data={!isCustomerLoading && Customers.data}
+                            label="Customers"
+                            idx="user_id"
+                            onFilterChange={onFilterChange}
+                          />
+                          <FilterSelect
+                            currentValue={filter.payment_method}
+                            data={PaymentMethods}
+                            label="Payment Method"
+                            idx="payment_method"
+                            onFilterChange={onFilterChange}
+                          />
+
+                        </div>
+                      </Dropdown.Menu>
+                    </Dropdown>}
                     columns={columns}
                     setSelectedRows={setSelectedRows}
                     filter={filter}
@@ -261,19 +262,20 @@ const Transactions = () => {
                     isSelectable={false}
                     searchPlaceHolder="Search using ref id"
                   />
-              )}
-              {!error && data?.data?.length > 0 ? (
-                <TablePagination
-                  currentPage={data?.current_page}
-                  lastPage={data?.last_page}
-                  setPage={setPage}
-                  hasNextPage={!!data?.next_page_url}
-                  hasPrevPage={!!data?.prev_page_url}
-                />
-              ) : null}{" "}
-            </>
-          )}
-        </Container>
+                )}
+                {!error && data?.data?.length > 0 ? (
+                  <TablePagination
+                    currentPage={data?.current_page}
+                    lastPage={data?.last_page}
+                    setPage={setPage}
+                    hasNextPage={!!data?.next_page_url}
+                    hasPrevPage={!!data?.prev_page_url}
+                  />
+                ) : null}{" "}
+              </>
+            )}
+          </Container>
+        </div>
       </Container>
       {selectedRows.length > 0 && (
         <div className="delete-button rounded">
