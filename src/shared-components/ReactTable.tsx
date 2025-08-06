@@ -292,7 +292,7 @@ function ReactTable({
                 id="dropdown-basic"
                 className="filter-button m-0 p-0 manage-column d-flex gap-3 align-items-center bg-transparent border-0 text-primary"
               >
-                <BsLayoutTextSidebar />
+                <BsLayoutTextSidebar /> Columns
               </Dropdown.Toggle>
 
               <Dropdown.Menu className="p-2 menu-dropdown">
@@ -435,35 +435,35 @@ function ReactTable({
             {rows.length === 0 ? (
               ""
             ) : (
-                showRecords ? (
-              <div
-                className="d-flex gap-3 align-items-center justify-content-center"
-                style={{ position: "absolute", left: 10, bottom: "-40px" }}
-              >
-                <span className="text-muted" style={{ fontSize: "14px" }}>
-                  Records{" "}
-                </span>
-                <select
-                  className="text-primary font-weight-bold"
-                  style={{
-                    border: "none",
-                    marginRight: 5,
-                  }}
-                  value={pageSize}
-                  onChange={(e) => {
-                    const value = e.target.value;
-                    setPageSize(parseInt(value));
-                    onFilterChange("perPage", value);
-                  }}
+              showRecords ? (
+                <div
+                  className="d-flex gap-3 align-items-center justify-content-center"
+                  style={{ position: "absolute", left: 10, bottom: "-40px" }}
                 >
-                  {RowsPerPage.map((item) => (
-                    <option key={item.id} value={item.id}>
-                      {item.name}
-                    </option>
-                  ))}
-                </select>
-              </div>
-                ) : null
+                  <span className="text-muted" style={{ fontSize: "14px" }}>
+                    Records{" "}
+                  </span>
+                  <select
+                    className="text-primary font-weight-bold"
+                    style={{
+                      border: "none",
+                      marginRight: 5,
+                    }}
+                    value={pageSize}
+                    onChange={(e) => {
+                      const value = e.target.value;
+                      setPageSize(parseInt(value));
+                      onFilterChange("perPage", value);
+                    }}
+                  >
+                    {RowsPerPage.map((item) => (
+                      <option key={item.id} value={item.id}>
+                        {item.name}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+              ) : null
             )}
           </div>
         </DndProvider>
