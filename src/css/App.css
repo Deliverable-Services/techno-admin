@@ -1985,7 +1985,20 @@ pre code {
   vertical-align: bottom;
   border-bottom: 2px solid #dee2e6;
 }
-
+.table thead th:first-child {
+    padding-left: 25px;
+}
+.table thead th:last-child {
+  padding-right: 25px;
+  text-align: right;
+}
+.table td:first-child {
+  padding-left: 25px;
+}
+.table td:last-child {
+  padding-right: 25px;
+  text-align: right;
+}
 .table tbody + tbody {
   border-top: 2px solid #dee2e6;
 }
@@ -12509,14 +12522,18 @@ th {
 .page-item.active .page-link .text-secondary {
   color: white !important;
 }
-
-.ellipsis-dropdown button {
-  width: 24px;
-  height: 24px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: 4px;
+.ellipsis-dropdown{
+justify-content: end;
+display: flex;
+align-items: center;
+}
+.ellipsis-dropdown button{
+    width: 24px;
+    height: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 4px;
 }
 .ellipsis-dropdown button svg {
   width: 14px;
@@ -12565,6 +12582,9 @@ th {
 
 .table tbody tr:hover {
   background: rgba(231, 234, 243, 0.4);
+}
+.table tbody tr:last-child td {
+    border-bottom: 0;
 }
 
 .form-group {
@@ -12707,7 +12727,7 @@ th {
 }
 .global-navs {
   background: #fafafa;
-  padding: 4px;
+  padding: 3px 4px;
   border-radius: 6px !important;
   border: 1px solid #e9eaeb;
 }
@@ -12718,6 +12738,7 @@ th {
   color: #717680;
   font-size: 0.8em;
   font-weight: 700;
+  padding: 2px 8px;
 }
 .global-navs.nav-tabs .nav-link.active {
   cursor: pointer;
@@ -12779,7 +12800,7 @@ body {
   width: 100%;
   overflow: hidden;
   overflow-y: auto;
-  min-height: calc(100vh - 64px);
+  /* min-height: calc(100vh - 64px); */
   background-color: #fff;
 }
 .login-wrapper {

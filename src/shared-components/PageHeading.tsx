@@ -21,7 +21,7 @@ const PageHeading: React.FC<Props> = ({
   description,
 }) => {
   return (
-    <div className="d-flex justify-content-between">
+    <div className="d-flex justify-content-between align-items-center">
       <p className="d-flex align-items-center gap-12">
         {icon}
         <div>

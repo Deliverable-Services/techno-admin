@@ -178,7 +178,7 @@ export const MoreScreen = () => {
   });
 
   return (
-    <div className="sections-container">
+    <div className="sections-container m-3">
       <EditAccountCard />
       {sections?.map((item, index) => (
         <div className="section-container" key={index + 1}>
