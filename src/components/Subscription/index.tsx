@@ -91,8 +91,9 @@ const SubscriptionPage: React.FC = () => {
         <Container fluid className=" component-wrapper view-padding">
             <>
                 <PageHeading
-                    icon={<FaFileInvoiceDollar />}
+                    icon={<FaFileInvoiceDollar size={24} />}
                     title="Subscriptions"
+                    description='Create and manage subscriptions'
                     onClick={handleCreate}
                     totalRecords={invoices?.length}
                     permissionReq="create_user"

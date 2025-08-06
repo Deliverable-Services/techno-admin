@@ -13119,6 +13119,8 @@ li.navLink.my-1 svg path {
   align-items: center;
   justify-content: center;
   border-radius: 50px;
+  width: 54px;
+  height: 54px;
 }
 .icon-bg .icon-color {
   color: var(--blue);

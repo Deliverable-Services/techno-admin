@@ -1,6 +1,6 @@
 import { AxiosError } from "axios";
 import { useMemo, useState } from "react";
-import { Button, Container } from "react-bootstrap";
+import { Button, Container, Nav } from "react-bootstrap";
 import { BiCopy, BiSad } from "react-icons/bi";
 import { useMutation, useQuery } from "react-query";
 import { useHistory } from "react-router-dom";
@@ -226,70 +226,68 @@ const DynamicPages = () => {
 
   return (
     <>
-      <Container fluid className="component-wrapper view-padding">
+      <div className="view-padding">
         <PageHeading
           title="Dynamic Pages"
           onClick={_onCreateClick}
           totalRecords={pageData?.data?.length || 0}
           permissionReq="create_service"
         />
+      </div>
+      <hr />
 
-        {!isLoading && (
-          <Container fluid className="px-0">
-            <div>
-              <div className="filter">
-                <BreadCrumb
-                  onFilterChange={_onFilterChange}
-                  value="false"
-                  currentValue={filter.isArchived.toString()}
-                  dataLength={totalCount}
-                  idx="isArchived"
-                  title="Active"
-                />
-                <BreadCrumb
-                  onFilterChange={_onFilterChange}
-                  value="true"
-                  currentValue={filter.isArchived.toString()}
-                  dataLength={totalCount}
-                  idx="isArchived"
-                  title="Archived"
-                  isLast
-                />
-              </div>
-            </div>
-          </Container>
+      <div className="h-100 p-0">
+        {isLoading ? (
+          <IsLoading />
+        ) : (
+          <>
+            {!error && (
+              <ReactTable
+                data={filteredData}
+                tabs={
+                  <div className="d-flex justify-content-between">
+                    <Nav
+                      className="global-navs"
+                      variant="tabs"
+                      activeKey={filter.isArchived.toString()}
+                      onSelect={(selectedKey) =>
+                        _onFilterChange("isArchived", selectedKey)
+                      }
+                    >
+                      <Nav.Item>
+                        <Nav.Link eventKey="false">
+                          Active {totalCount}
+                        </Nav.Link>
+                      </Nav.Item>
+
+                      <Nav.Item>
+                        <Nav.Link eventKey="true">
+                          Archived {totalCount}
+                        </Nav.Link>
+                      </Nav.Item>
+                    </Nav>
+                  </div>
+                }
+                columns={columns}
+                setSelectedRows={setSelectedRows}
+                filter={filter}
+                onFilterChange={_onFilterChange}
+                isDataLoading={isFetching}
+                deletePermissionReq="delete_service"
+              />
+            )}
+            {!error && pageData?.data?.length > 0 ? (
+              <TablePagination
+                currentPage={pageData?.pagination?.current_page}
+                lastPage={pageData?.pagination?.last_page}
+                setPage={_onFilterChange}
+                hasNextPage={!!pageData?.pagination?.next_page_url}
+                hasPrevPage={!!pageData?.pagination?.prev_page_url}
+              />
+            ) : null}{" "}
+          </>
         )}
-
-        <Container fluid className="h-100 p-0">
-          {isLoading ? (
-            <IsLoading />
-          ) : (
-            <>
-              {!error && (
-                <ReactTable
-                  data={filteredData}
-                  // data={pageData?.data || []}
-                  columns={columns}
-                  setSelectedRows={setSelectedRows}
-                  filter={filter}
-                  onFilterChange={_onFilterChange}
-                  isDataLoading={isFetching}
-                  deletePermissionReq="delete_service"
-                />
-              )}
-              {!error && pageData?.data?.length > 0 ? (
-                <TablePagination
-                  currentPage={pageData?.pagination?.current_page}
-                  lastPage={pageData?.pagination?.last_page}
-                  setPage={_onFilterChange}
-                  hasNextPage={!!pageData?.pagination?.next_page_url}
-                  hasPrevPage={!!pageData?.pagination?.prev_page_url}
-                />
-              ) : null}{" "}
-            </>
-          )}
-        </Container>
-      </Container>
+      </div>
 
       {selectedRows.length > 0 && (
         <div className="delete-button rounded">

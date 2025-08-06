@@ -169,114 +169,114 @@ const Transactions = () => {
 
   return (
     <>
-      <Container fluid className="component-wrapper view-padding">
-        <PageHeading icon={<FaMoneyCheck />} title="Transactions" totalRecords={data?.total} />
+      <div className="view-padding">
+        <PageHeading icon={<FaMoneyCheck size={24} />} title="Transactions" description="Create and manage transactions" totalRecords={data?.total} />
+      </div>
+      <hr />
 
+      <div className="">
+        <div className="h-100 p-0 ">
+          {isLoading ? (
+            <IsLoading />
+          ) : (
+            <>
+              <div className="mt-3" />
+              {!error && (
+                <ReactTable
+                  data={data?.data}
+                  tabs={<div className="d-flex justify-content-between">
+                    {!isLoading && (
+                      <div>
+                        <Nav className="global-navs" variant="tabs" activeKey={filter.status} onSelect={(selectedKey) => onFilterChange('status', selectedKey)}>
+                          <Nav.Item>
+                            <Nav.Link eventKey="">All ({data?.data?.length || 0})</Nav.Link>
+                          </Nav.Item>
 
-        <div className="card">
-          <Container fluid className="h-100 p-0 ">
-            {isLoading ? (
-              <IsLoading />
-            ) : (
-              <>
-                <div className="mt-3" />
-                {!error && (
-                  <ReactTable
-                    data={data?.data}
-                    tabs={<div className="d-flex justify-content-between">
-                      {!isLoading && (
-                        <div>
-                          <Nav className="global-navs" variant="tabs" activeKey={filter.status} onSelect={(selectedKey) => onFilterChange('status', selectedKey)}>
-                            <Nav.Item>
-                              <Nav.Link eventKey="">All ({data?.data?.length || 0})</Nav.Link>
-                            </Nav.Item>
+                          <Nav.Item>
+                            <Nav.Link eventKey="success">
+                              Success ({data?.data?.filter(item => item.status === 'success').length || 0})
+                            </Nav.Link>
+                          </Nav.Item>
 
-                            <Nav.Item>
-                              <Nav.Link eventKey="success">
-                                Success ({data?.data?.filter(item => item.status === 'success').length || 0})
-                              </Nav.Link>
-                            </Nav.Item>
+                          <Nav.Item>
+                            <Nav.Link eventKey="failed">
+                              Failed ({data?.data?.filter(item => item.status === 'failed').length || 0})
+                            </Nav.Link>
+                          </Nav.Item>
+                        </Nav>
+                      </div>
+                    )}
 
-                            <Nav.Item>
-                              <Nav.Link eventKey="failed">
-                                Failed ({data?.data?.filter(item => item.status === 'failed').length || 0})
-                              </Nav.Link>
-                            </Nav.Item>
-                          </Nav>
-                        </div>
-                      )}
-
-                    </div>}
-                    filters={<Dropdown className="filter-dropdown">
-                      <Dropdown.Toggle as={Button} variant="primary">
-                        <BsFunnel />
-                      </Dropdown.Toggle>
-                      <Dropdown.Menu>
-                        <div className="filter-dropdown-heading d-flex justify-content-between w-100">
-                          <h4>Filter</h4>
-                          <div
-                            className="d-flex align-items-center justify-md-content-center"
+                  </div>}
+                  filters={<Dropdown className="filter-dropdown">
+                    <Dropdown.Toggle as={Button} variant="primary">
+                      <BsFunnel />
+                    </Dropdown.Toggle>
+                    <Dropdown.Menu>
+                      <div className="filter-dropdown-heading d-flex justify-content-between w-100">
+                        <h4>Filter</h4>
+                        <div
+                          className="d-flex align-items-center justify-md-content-center"
+                        >
+                          <Button
+                            onClick={() => resetFilter()}
+                            variant={
+                              areTwoObjEqual(
+                                { ...intitialFilter, ...INITIAL_FILTER },
+                                { ...localFilter, ...filter }
+                              )
+                                ? "light"
+                                : "primary"
+                            }
+                            style={{
+                              fontSize: 14,
+                            }}
                           >
-                            <Button
-                              onClick={() => resetFilter()}
-                              variant={
-                                areTwoObjEqual(
-                                  { ...intitialFilter, ...INITIAL_FILTER },
-                                  { ...localFilter, ...filter }
-                                )
-                                  ? "light"
-                                  : "primary"
-                              }
-                              style={{
-                                fontSize: 14,
-                              }}
-                            >
-                              Reset Filters
-                            </Button>
-                          </div>
+                            Reset Filters
+                          </Button>
                         </div>
-                        <div className="select-filter">
-                          <FilterSelect
-                            currentValue={filter.user_id}
-                            data={!isCustomerLoading && Customers.data}
-                            label="Customers"
-                            idx="user_id"
-                            onFilterChange={onFilterChange}
-                          />
-                          <FilterSelect
-                            currentValue={filter.payment_method}
-                            data={PaymentMethods}
-                            label="Payment Method"
-                            idx="payment_method"
-                            onFilterChange={onFilterChange}
-                          />
+                      </div>
+                      <div className="select-filter">
+                        <FilterSelect
+                          currentValue={filter.user_id}
+                          data={!isCustomerLoading && Customers.data}
+                          label="Customers"
+                          idx="user_id"
+                          onFilterChange={onFilterChange}
+                        />
+                        <FilterSelect
+                          currentValue={filter.payment_method}
+                          data={PaymentMethods}
+                          label="Payment Method"
+                          idx="payment_method"
+                          onFilterChange={onFilterChange}
+                        />
 
-                        </div>
-                      </Dropdown.Menu>
-                    </Dropdown>}
-                    columns={columns}
-                    setSelectedRows={setSelectedRows}
-                    filter={filter}
-                    onFilterChange={_onFilterChange}
-                    isDataLoading={isFetching}
-                    isSelectable={false}
-                    searchPlaceHolder="Search using ref id"
-                  />
-                )}
-                {!error && data?.data?.length > 0 ? (
-                  <TablePagination
-                    currentPage={data?.current_page}
-                    lastPage={data?.last_page}
-                    setPage={setPage}
-                    hasNextPage={!!data?.next_page_url}
-                    hasPrevPage={!!data?.prev_page_url}
-                  />
-                ) : null}{" "}
-              </>
-            )}
-          </Container>
+                      </div>
+                    </Dropdown.Menu>
+                  </Dropdown>}
+                  columns={columns}
+                  setSelectedRows={setSelectedRows}
+                  filter={filter}
+                  onFilterChange={_onFilterChange}
+                  isDataLoading={isFetching}
+                  isSelectable={false}
+                  searchPlaceHolder="Search using ref id"
+                />
+              )}
+              {!error && data?.data?.length > 0 ? (
+                <TablePagination
+                  currentPage={data?.current_page}
+                  lastPage={data?.last_page}
+                  setPage={setPage}
+                  hasNextPage={!!data?.next_page_url}
+                  hasPrevPage={!!data?.prev_page_url}
+                />
+              ) : null}{" "}
+            </>
+          )}
         </div>
-      </Container>
+      </div>
       {selectedRows.length > 0 && (
         <div className="delete-button rounded">
           <span>

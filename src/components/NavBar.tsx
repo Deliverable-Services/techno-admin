@@ -79,12 +79,13 @@ const mainLinks: Array<INavLink> = [
     icon: <FaRegMoneyBillAlt />,
     permissionReq: "read_bookingslot",
     children: [
-      // {
-      //   title: "Subscriptions",
-      //   path: "/subscriptions",
-      //   permissionReq: "read_subscription",
-      //   icon: <FaAddressCard />,
-      // },
+      {
+        title: "Subscriptions",
+        path: "/subscriptions",
+        permissionReq: "read_subscription",
+        icon: <FaAddressCard />,
+      },
+
       {
         title: "Transaction",
         path: "/transactions",
@@ -104,18 +105,6 @@ const mainLinks: Array<INavLink> = [
     path: "/cart",
     icon: <MdShoppingCart />,
     permissionReq: "read_booking",
-  },
-  {
-    title: "Invoices",
-    path: "/invoices",
-    icon: <SiCivicrm />,
-    permissionReq: "read_city",
-  },
-  {
-    title: "Subscriptions",
-    path: "/subscriptions",
-    icon: <SiCivicrm />,
-    permissionReq: "read_city",
   },
 
   {

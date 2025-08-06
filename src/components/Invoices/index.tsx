@@ -225,72 +225,76 @@ const InvoicePage: React.FC = () => {
   }
 
   return (
-    <Container fluid className=" component-wrapper view-padding">
-      <>
+    <>
+      <div className="view-padding">
         <PageHeading
-          icon={<FaFileInvoiceDollar />}
+          icon={<FaFileInvoiceDollar size={24} />}
           title="Invoices"
+          description="Create and manage invoices"
           onClick={handleCreate}
           totalRecords={invoices?.length}
           permissionReq="create_user"
         />
-        {!showForm ? (
-          loading ? (
-            <div className="invoice-empty">
-              <p>Loading...</p>
-            </div>
-          ) : invoices.length === 0 ? (
-            <div className="invoice-empty">
-              <h4>Send your first invoice</h4>
-              <p>
-                This is where you can see invoice and their associated status
-              </p>
-              <button className="primary-btn" onClick={handleCreate}>
-                + Create invoice
-              </button>
-            </div>
-          ) : (
-            <div className="card">
-              <Container fluid className="h-100 p-0 ">
-                <div className="mt-3" />
-                <ReactTable
-                  data={invoices}
-                  columns={columns}
-                  showSearch={false}
-                  setSelectedRows={setSelectedRows}
-                  showRecords={false}
-                  filter={{
-                    role: "customer",
-                    q: "",
-                    page: null,
-                    perPage: 25,
-                    disabled: "",
-                  }}
-                  deletePermissionReq="delete_user"
-                />
-              </Container>
-            </div>
-          )
-        ) : (
-          <div className="invoice-form">
-            <InvoicesCreateForm
-              onSuccess={() => {
-                setShowForm(false);
-                fetchInvoices();
-              }}
-            />
-            <div className="form-actions">
-              <button
-                className="secondary-btn"
-                onClick={() => setShowForm(false)}
-              >
-                Cancel
-              </button>
-            </div>
+      </div>
+      <hr />
+
+      {!showForm ? (
+        loading ? (
+          <div className="invoice-empty">
+            <p>Loading...</p>
           </div>
-        )}
-      </>
-    </Container>
+        ) : invoices.length === 0 ? (
+          <div className="invoice-empty">
+            <h4>Send your first invoice</h4>
+            <p>
+              This is where you can see invoice and their associated status
+            </p>
+            <button className="primary-btn" onClick={handleCreate}>
+              + Create invoice
+            </button>
+          </div>
+        ) : (
+          <div className="">
+            <Container fluid className="h-100 p-0 ">
+              <div className="mt-3" />
+              <ReactTable
+                data={invoices}
+                columns={columns}
+                showSearch={false}
+                setSelectedRows={setSelectedRows}
+                showRecords={false}
+                filter={{
+                  role: "customer",
+                  q: "",
+                  page: null,
+                  perPage: 25,
+                  disabled: "",
+                }}
+                deletePermissionReq="delete_user"
+              />
+            </Container>
+          </div>
+        )
+      ) : (
+        <div className="invoice-form">
+          <InvoicesCreateForm
+            onSuccess={() => {
+              setShowForm(false);
+              fetchInvoices();
+            }}
+          />
+          <div className="form-actions">
+            <button
+              className="secondary-btn"
+              onClick={() => setShowForm(false)}
+            >
+              Cancel
+            </button>
+          </div>
+        </div>
+      )}
+
+    </>
   );
 };
 
