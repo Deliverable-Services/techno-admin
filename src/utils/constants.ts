@@ -13,9 +13,9 @@ const completeConfig = {
   },
 
   development: {
-    baseUploadUrl: `http://localhost:${serverPort}/upload/`,
-    adminApiBaseUrl: `http://localhost:${serverPort}/admin/v1/`,
-    clientWebUrl: `https://carsafai.in`,
+    baseUploadUrl: process.env.REACT_APP_UPLOAD_URL,
+    adminApiBaseUrl: process.env.REACT_APP_ADMIN_API_URL,
+    clientWebUrl: process.env.REACT_APP_CLIENT_WEB_URL,
   },
 
   production: {

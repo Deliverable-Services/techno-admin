@@ -94,8 +94,6 @@ const CRMBoard: React.FC = () => {
         <div className="crm-container">
           <div className="crm-header px-3">
             <h2 className="crm-title">CRM</h2>
-            {/* <div className="crm-breadcrumb">Projects / Beyond Gravity</div> */}
-
             <div className="crm-users">
               {membersList?.data.slice(0, 3).map((member, index) => (
                 <img

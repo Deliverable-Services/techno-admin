@@ -13,6 +13,24 @@ import reportWebVitals from "./reportWebVitals";
 import { QueryClientProvider } from "react-query";
 import { queryClient } from "./utils/queryClient";
 import { OrganisationProvider } from "./context/OrganisationContext";
+if (process.env.NODE_ENV === "development") {
+  const disableOverlayIframes = () => {
+    document.querySelectorAll("iframe").forEach((iframe) => {
+      const rect = iframe.getBoundingClientRect();
+      const style = window.getComputedStyle(iframe);
+
+      if (
+        rect.width >= window.innerWidth * 0.98 &&
+        rect.height >= window.innerHeight * 0.98 &&
+        style.position === "fixed"
+      ) {
+        iframe.style.pointerEvents = "none";
+      }
+    });
+  };
+
+  setInterval(disableOverlayIframes, 1000);
+}
 
 ReactDOM.render(
   <React.StrictMode>
