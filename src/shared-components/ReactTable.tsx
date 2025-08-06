@@ -32,6 +32,7 @@ import useUserProfileStore from "../hooks/useUserProfileStore";
 interface Props {
   data: any;
   filters?: any;
+  tabs?: any;
   columns: Array<any>;
   updateOrder?: any;
   initialState?: Partial<TableState<object>>;
@@ -111,6 +112,7 @@ const IndeterminateCheckbox = React.forwardRef(
 function ReactTable({
   data,
   filters,
+  tabs,
   columns,
   updateOrder,
   initialState,
@@ -258,13 +260,11 @@ function ReactTable({
     <div className="">
       <Container
         fluid
-        className="pb-3 d-flex align-items-end position-relative px-3"
+        className="pb-3 d-flex justify-space-between align-items-center position-relative px-3"
         style={{ flexDirection: isDesktop ? "row" : "column-reverse" }}
       >
-
-
+        {tabs && tabs}
         <div className="d-flex align-items-center ml-auto">
-
           <div className="w-100" style={{ minWidth: 300, marginRight: 8 }}>
             {showSearch &&
               <div className="search-input global-card" style={{ paddingInline: '10px' }}>

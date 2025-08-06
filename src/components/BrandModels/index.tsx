@@ -25,6 +25,7 @@ import { config, primaryColor } from "../../utils/constants";
 import { queryClient } from "../../utils/queryClient";
 import { showMsgToast } from "../../utils/showMsgToast";
 import { BsFunnel } from "react-icons/bs";
+import { IoLogoModelS } from "react-icons/io";
 
 const key = "brand-models";
 
@@ -208,101 +209,103 @@ const BrandModels = () => {
     <>
       <Container fluid className="component-wrapper view-padding">
         <PageHeading
-          title="Product"
+          icon={<IoLogoModelS />}
+          title="Products"
           onClick={_onCreateClick}
           totalRecords={data?.total}
           permissionReq="create_brandmodel"
         />
 
-        <div className="d-flex justify-content-between pb-3 mt-3">
-          {!isLoading && (
-            <Nav className="global-navs" variant="tabs" activeKey={filter.active} onSelect={(selectedKey) => _onFilterChange('active', selectedKey)}>
-              <Nav.Item>
-                <Nav.Link eventKey="">All ({data?.data?.length || 0})</Nav.Link>
-              </Nav.Item>
+        <div className="card">
+          <Container fluid className="h-100 p-0">
+            {isLoading ? (
+              <IsLoading />
+            ) : (
+              <>
+                <div className="mt-3" />
+                {!error && (
+                  <ReactTable
+                    data={data?.data}
+                    tabs={<div className="d-flex justify-content-between">
+                      {!isLoading && (
+                        <Nav className="global-navs" variant="tabs" activeKey={filter.active} onSelect={(selectedKey) => _onFilterChange('active', selectedKey)}>
+                          <Nav.Item>
+                            <Nav.Link eventKey="">All ({data?.data?.length || 0})</Nav.Link>
+                          </Nav.Item>
 
-              <Nav.Item>
-                <Nav.Link eventKey="active">
-                  Active ({data?.data?.filter(item => item.status === '1').length || 0})
-                </Nav.Link>
-              </Nav.Item>
+                          <Nav.Item>
+                            <Nav.Link eventKey="active">
+                              Active ({data?.data?.filter(item => item.status === '1').length || 0})
+                            </Nav.Link>
+                          </Nav.Item>
 
-              <Nav.Item>
-                <Nav.Link eventKey="inactive">
-                  Expired ({data?.data?.filter(item => item.status === '0').length || 0})
-                </Nav.Link>
-              </Nav.Item>
-            </Nav>
-          )}
-          <Dropdown className="filter-dropdown">
-            <Dropdown.Toggle as={Button} variant="primary" className="global-card">
-              <BsFunnel /> Filters
-            </Dropdown.Toggle>
-            <Dropdown.Menu>
-              <div className="filter-dropdown-heading d-flex justify-content-between w-100">
-                <h4>Filter</h4>
-                <div
-                  className="d-flex align-items-center justify-md-content-center"
-                >
-                  <Button
-                    onClick={() => setFilter(intitialFilter)}
-                    variant={
-                      areTwoObjEqual(intitialFilter, filter)
-                        ? "light"
-                        : "primary"
-                    }
-                    style={{
-                      fontSize: 14,
-                    }}
-                  >
-                    Reset Filters
-                  </Button>
-                </div>
-              </div>
-              <div className="select-filter">
-                <FilterSelect
-                  currentValue={filter.brand_id}
-                  data={!isBrandsLoading && Brands.data}
-                  label="Brands"
-                  idx="brand_id"
-                  onFilterChange={_onFilterChange}
-                />
-              </div>
+                          <Nav.Item>
+                            <Nav.Link eventKey="inactive">
+                              Expired ({data?.data?.filter(item => item.status === '0').length || 0})
+                            </Nav.Link>
+                          </Nav.Item>
+                        </Nav>
+                      )}
+                    </div>}
+                    filters={<Dropdown className="filter-dropdown">
+                      <Dropdown.Toggle as={Button} variant="primary">
+                        <BsFunnel />
+                      </Dropdown.Toggle>
+                      <Dropdown.Menu>
+                        <div className="filter-dropdown-heading d-flex justify-content-between w-100">
+                          <h4>Filter</h4>
+                          <div
+                            className="d-flex align-items-center justify-md-content-center"
+                          >
+                            <Button
+                              onClick={() => setFilter(intitialFilter)}
+                              variant={
+                                areTwoObjEqual(intitialFilter, filter)
+                                  ? "light"
+                                  : "primary"
+                              }
+                              style={{
+                                fontSize: 14,
+                              }}
+                            >
+                              Reset Filters
+                            </Button>
+                          </div>
+                        </div>
+                        <div className="select-filter">
+                          <FilterSelect
+                            currentValue={filter.brand_id}
+                            data={!isBrandsLoading && Brands.data}
+                            label="Brands"
+                            idx="brand_id"
+                            onFilterChange={_onFilterChange}
+                          />
+                        </div>
 
-            </Dropdown.Menu>
-          </Dropdown>
+                      </Dropdown.Menu>
+                    </Dropdown>}
+                    columns={columns}
+                    setSelectedRows={setSelectedRows}
+                    filter={filter}
+                    onFilterChange={_onFilterChange}
+                    isDataLoading={isFetching}
+                    searchPlaceHolder="Search using name"
+                    deletePermissionReq="delete_brandmodel"
+                  />
+                )}
+                {!error && data?.data?.length > 0 ? (
+                  <TablePagination
+                    currentPage={data?.current_page}
+                    lastPage={data?.last_page}
+                    setPage={_onFilterChange}
+                    hasNextPage={!!data?.next_page_url}
+                    hasPrevPage={!!data?.prev_page_url}
+                  />
+                ) : null}{" "}
+              </>
+            )}
+          </Container>
         </div>
-        <hr />
-        <Container fluid className="h-100 p-0">
-          {isLoading ? (
-            <IsLoading />
-          ) : (
-            <>
-              <div className="mt-3" />
-              {!error && (
-                <ReactTable
-                  data={data?.data}
-                  columns={columns}
-                  setSelectedRows={setSelectedRows}
-                  filter={filter}
-                  onFilterChange={_onFilterChange}
-                  isDataLoading={isFetching}
-                  searchPlaceHolder="Search using name"
-                  deletePermissionReq="delete_brandmodel"
-                />
-              )}
-              {!error && data?.data?.length > 0 ? (
-                <TablePagination
-                  currentPage={data?.current_page}
-                  lastPage={data?.last_page}
-                  setPage={_onFilterChange}
-                  hasNextPage={!!data?.next_page_url}
-                  hasPrevPage={!!data?.prev_page_url}
-                />
-              ) : null}{" "}
-            </>
-          )}
-        </Container>
       </Container>
       {selectedRows.length > 0 && (
         <div className="delete-button rounded">
