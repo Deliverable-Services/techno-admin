@@ -23,6 +23,11 @@ const tabs = [
     icon: <FaFileInvoiceDollar size={20} />,
   },
   {
+    name: "Subscriptions",
+    linkTo: "/subscriptions",
+    icon: <FaFileInvoiceDollar size={20} />,
+  },
+  {
     name: "Services",
     linkTo: "/services",
     icon: <RiServiceFill />,
@@ -36,13 +41,13 @@ const tabs = [
 
 export const BottomNavigation = () => {
   return (
-      <div className="navContainer">
+    <div className="navContainer">
       <div className="navItemsCont">
         {tabs?.map((item, index) => (
           <BottomNavItem
             icon={item?.icon}
             linkTo={item?.linkTo}
-                name={item?.name}
+            name={item?.name}
           />
         ))}
       </div>
