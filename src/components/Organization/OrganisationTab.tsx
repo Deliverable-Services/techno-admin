@@ -127,7 +127,7 @@ const OrganizationTab = () => {
             >
               {({ values, errors, touched, setFieldValue }) => (
                 <Form className="w-100 mt-2">
-                  <div className="border-div form-group w-100 mt-4 d-flex align-items-center">
+                  <div className="border-div form-group w-100 mt-0 d-flex align-items-center">
                     <label htmlFor="organizationName">Organisation Name</label>
                     <div className="w-100">
                       <Field

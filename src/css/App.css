@@ -19,10 +19,10 @@
 :root {
   --primary-color: #303030;
   --black: #202020;
-  --sidebar:#ebebeb;
-  --body:#f1f1f1;
+  --sidebar: #ebebeb;
+  --body: #f1f1f1;
   --border: #eee;
-  --gray-color:#677788;
+  --gray-color: #677788;
   --blue: #007bff;
   --indigo: #6610f2;
   --purple: #6f42c1;
@@ -12535,7 +12535,7 @@ align-items: center;
     justify-content: center;
     border-radius: 4px;
 }
-.ellipsis-dropdown button svg{
+.ellipsis-dropdown button svg {
   width: 14px;
   height: 14px;
 }
@@ -12555,7 +12555,7 @@ align-items: center;
   font-size: 13px;
   font-weight: 500;
 }
-.edit-btn{
+.edit-btn {
   background-color: transparent !important;
   border: 0;
   padding: 0;
@@ -12797,7 +12797,6 @@ body {
   width: 100%;
   overflow: hidden;
   overflow-y: auto;
-  padding-top: 12px;
   min-height: calc(100vh - 64px);
   background-color: #fff;
 }
@@ -12870,7 +12869,6 @@ body {
   font-weight: 600;
   color: #6c757d;
   font-family: "Inter", sans-serif;
-  margin-bottom: 0.5rem !important;
 }
 
 .view-top-pad {
@@ -13112,4 +13110,19 @@ li.navLink.my-1 svg path {
 
 .bg-global {
   background-color: var(--body) !important;
+}
+
+.icon-bg {
+  background-color: rgba(11, 100, 254, 0.2);
+  padding: 15px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50px;
+}
+.icon-bg .icon-color {
+  color: var(--blue);
+}
+.rounded-border {
+  border-radius: 0.75rem !important;
 }

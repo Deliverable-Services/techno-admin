@@ -1,9 +1,14 @@
 .page-title {
   font-weight: 600;
-  font-size: 1.65rem;
+  font-size: 1.35rem;
   line-height: 32px;
   margin-bottom: 0px;
   color: var(--black);
+}
+.page-description {
+  font-size: 0.9rem;
+  font-weight: 400;
+  color: var(--gray-color);
 }
 .time {
   background: #fafafa;

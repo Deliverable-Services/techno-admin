@@ -20,6 +20,7 @@ import { areTwoObjEqual } from "../../utils/areTwoObjEqual";
 import { InsideCart } from "../../utils/arrays";
 import { primaryColor } from "../../utils/constants";
 import { FaAddressCard } from "react-icons/fa";
+import BillingIntegration from "../BillingIntegration";
 
 const key = "user-subscriptions";
 const intitialFilter = {
@@ -94,7 +95,7 @@ const Subscription = () => {
         Cell: (data: Cell) => {
           return (
             <p
-              classname="text-darkGray m-0"
+              className="text-darkGray m-0"
               style={{ cursor: "pointer" }}
               onClick={() => _onUserClick((data.row.original as any).user_id)}
             >
@@ -109,7 +110,7 @@ const Subscription = () => {
         Cell: (data: Cell) => {
           return (
             <p
-              classname="text-darkGray m-0"
+              className="text-darkGray m-0"
               style={{ cursor: "pointer" }}
               onClick={() => _onPlanClick((data.row.original as any).plan_id)}
             >
@@ -193,162 +194,165 @@ const Subscription = () => {
       <Container fluid className="component-wrapper view-padding">
         <PageHeading icon={<FaAddressCard />} title="Subscriptions" totalRecords={data?.total} />
 
-        <div className="card">
-          <Container fluid className="h-100 p-0">
-            {isLoading ? (
-              <IsLoading />
-            ) : (
-              <>
-                <div className="mt-3" />
-                {!error && (
-                  <ReactTable
-                    data={data?.data}
-                    tabs={<div className="d-flex justify-content-between">
-                      {(!isLoading || !isFetching) && (
-                        <Nav className="global-navs" variant="tabs" activeKey={filter.status} onSelect={(selectedKey) => _onFilterChange('status', selectedKey)}>
-                          <Nav.Item>
-                            <Nav.Link eventKey="">All ({data?.data?.length || 0})</Nav.Link>
-                          </Nav.Item>
+        {data?.data?.length > 0 ?
+          <div className="card">
+            <Container fluid className="h-100 p-0">
+              {isLoading ? (
+                <IsLoading />
+              ) : (
+                <>
+                  <div className="mt-3" />
+                  {!error && (
+                    <ReactTable
+                      data={data?.data}
+                      tabs={<div className="d-flex justify-content-between">
+                        {(!isLoading || !isFetching) && (
+                          <Nav className="global-navs" variant="tabs" activeKey={filter.status} onSelect={(selectedKey) => _onFilterChange('status', selectedKey)}>
+                            <Nav.Item>
+                              <Nav.Link eventKey="">All ({data?.data?.length || 0})</Nav.Link>
+                            </Nav.Item>
 
-                          <Nav.Item>
-                            <Nav.Link eventKey="active">
-                              Active ({data?.data?.filter(item => item.status === 'active').length || 0})
-                            </Nav.Link>
-                          </Nav.Item>
+                            <Nav.Item>
+                              <Nav.Link eventKey="active">
+                                Active ({data?.data?.filter(item => item.status === 'active').length || 0})
+                              </Nav.Link>
+                            </Nav.Item>
 
-                          <Nav.Item>
-                            <Nav.Link eventKey="expired">
-                              Expired ({data?.data?.filter(item => item.status === 'expired').length || 0})
-                            </Nav.Link>
-                          </Nav.Item>
-                        </Nav>
-                      )}
+                            <Nav.Item>
+                              <Nav.Link eventKey="expired">
+                                Expired ({data?.data?.filter(item => item.status === 'expired').length || 0})
+                              </Nav.Link>
+                            </Nav.Item>
+                          </Nav>
+                        )}
 
-                    </div>}
-                    filters={<Dropdown className="filter-dropdown">
-                      <Dropdown.Toggle as={Button} variant="primary">
-                        <BsFunnel />
-                      </Dropdown.Toggle>
-                      <Dropdown.Menu>
-                        <div className="filter-dropdown-heading d-flex justify-content-between w-100">
-                          <h4>Filter</h4>
-                          <div
-                            className="d-flex align-items-center justify-md-content-center"
-                          >
-                            <Button
-                              onClick={() => setFilter(intitialFilter)}
-                              variant={
-                                areTwoObjEqual(intitialFilter, filter)
-                                  ? "light"
-                                  : "primary"
-                              }
-                              style={{
-                                fontSize: 14,
-                              }}
+                      </div>}
+                      filters={<Dropdown className="filter-dropdown">
+                        <Dropdown.Toggle as={Button} variant="primary">
+                          <BsFunnel />
+                        </Dropdown.Toggle>
+                        <Dropdown.Menu>
+                          <div className="filter-dropdown-heading d-flex justify-content-between w-100">
+                            <h4>Filter</h4>
+                            <div
+                              className="d-flex align-items-center justify-md-content-center"
                             >
-                              Reset Filters
-                            </Button>
-                          </div>
-                        </div>
-                        <div className="select-filter">
-                          <div>
-                            <FilterSelect
-                              currentValue={filter.user_id}
-                              data={!isCustomersLoading && Customers.data}
-                              label="User"
-                              idx="user_id"
-                              onFilterChange={_onFilterChange}
-                            />
-                          </div>
-                          <div>
-                            <FilterSelect
-                              currentValue={filter.plan_id}
-                              data={!isPlansLoading && Plans.data}
-                              label="Plan"
-                              idx="plan_id"
-                              onFilterChange={_onFilterChange}
-                            />
-                          </div>
-                          <div>
-                            <FilterSelect
-                              currentValue={filter.allowed_usage}
-                              data={InsideCart}
-                              label="Allowed Usage"
-                              idx="allowed_usage"
-                              onFilterChange={_onFilterChange}
-                            />
-                          </div>
-
-                          <div>
-                            <Form.Group>
-                              <Form.Label className="text-muted">
-                                Purchased on
-                              </Form.Label>
-                              <Form.Control
-                                type="date"
-                                value={filter.created_at}
-                                onChange={(e) => {
-                                  const value = moment(e.target.value).format(
-                                    "YYYY-MM-DD"
-                                  );
-                                  _onFilterChange("created_at", value);
-                                }}
+                              <Button
+                                onClick={() => setFilter(intitialFilter)}
+                                variant={
+                                  areTwoObjEqual(intitialFilter, filter)
+                                    ? "light"
+                                    : "primary"
+                                }
                                 style={{
                                   fontSize: 14,
-                                  width: 150,
-                                  height: 35,
                                 }}
-                              />
-                            </Form.Group>
+                              >
+                                Reset Filters
+                              </Button>
+                            </div>
                           </div>
-                          <div>
-                            <Form.Group>
-                              <Form.Label className="text-muted">
-                                Last used at
-                              </Form.Label>
-                              <Form.Control
-                                type="date"
-                                value={filter.last_used_at}
-                                onChange={(e) => {
-                                  const value = moment(e.target.value).format(
-                                    "YYYY-MM-DD"
-                                  );
-                                  _onFilterChange("last_used_at", value);
-                                }}
-                                style={{
-                                  fontSize: 14,
-                                  width: 150,
-                                  height: 35,
-                                }}
+                          <div className="select-filter">
+                            <div>
+                              <FilterSelect
+                                currentValue={filter.user_id}
+                                data={!isCustomersLoading && Customers.data}
+                                label="User"
+                                idx="user_id"
+                                onFilterChange={_onFilterChange}
                               />
-                            </Form.Group>
-                          </div>
+                            </div>
+                            <div>
+                              <FilterSelect
+                                currentValue={filter.plan_id}
+                                data={!isPlansLoading && Plans.data}
+                                label="Plan"
+                                idx="plan_id"
+                                onFilterChange={_onFilterChange}
+                              />
+                            </div>
+                            <div>
+                              <FilterSelect
+                                currentValue={filter.allowed_usage}
+                                data={InsideCart}
+                                label="Allowed Usage"
+                                idx="allowed_usage"
+                                onFilterChange={_onFilterChange}
+                              />
+                            </div>
 
-                        </div>
-                      </Dropdown.Menu>
-                    </Dropdown>}
-                    columns={columns}
-                    setSelectedRows={setSelectedRows}
-                    filter={filter}
-                    onFilterChange={_onFilterChange}
-                    isDataLoading={isFetching}
-                    isSelectable={false}
-                    searchPlaceHolder="Search using rzr order id, allowed usage, transaction id"
-                  />
-                )}
-                {!error && data?.data?.length > 0 ? (
-                  <TablePagination
-                    currentPage={data?.current_page}
-                    lastPage={data?.last_page}
-                    setPage={_onFilterChange}
-                    hasNextPage={!!data?.next_page_url}
-                    hasPrevPage={!!data?.prev_page_url}
-                  />
-                ) : null}{" "}
-              </>
-            )}
-          </Container>
-        </div>
+                            <div>
+                              <Form.Group>
+                                <Form.Label className="text-muted">
+                                  Purchased on
+                                </Form.Label>
+                                <Form.Control
+                                  type="date"
+                                  value={filter.created_at}
+                                  onChange={(e) => {
+                                    const value = moment(e.target.value).format(
+                                      "YYYY-MM-DD"
+                                    );
+                                    _onFilterChange("created_at", value);
+                                  }}
+                                  style={{
+                                    fontSize: 14,
+                                    width: 150,
+                                    height: 35,
+                                  }}
+                                />
+                              </Form.Group>
+                            </div>
+                            <div>
+                              <Form.Group>
+                                <Form.Label className="text-muted">
+                                  Last used at
+                                </Form.Label>
+                                <Form.Control
+                                  type="date"
+                                  value={filter.last_used_at}
+                                  onChange={(e) => {
+                                    const value = moment(e.target.value).format(
+                                      "YYYY-MM-DD"
+                                    );
+                                    _onFilterChange("last_used_at", value);
+                                  }}
+                                  style={{
+                                    fontSize: 14,
+                                    width: 150,
+                                    height: 35,
+                                  }}
+                                />
+                              </Form.Group>
+                            </div>
+
+                          </div>
+                        </Dropdown.Menu>
+                      </Dropdown>}
+                      columns={columns}
+                      setSelectedRows={setSelectedRows}
+                      filter={filter}
+                      onFilterChange={_onFilterChange}
+                      isDataLoading={isFetching}
+                      isSelectable={false}
+                      searchPlaceHolder="Search using rzr order id, allowed usage, transaction id"
+                    />
+                  )}
+                  {!error && data?.data?.length > 0 ? (
+                    <TablePagination
+                      currentPage={data?.current_page}
+                      lastPage={data?.last_page}
+                      setPage={_onFilterChange}
+                      hasNextPage={!!data?.next_page_url}
+                      hasPrevPage={!!data?.prev_page_url}
+                    />
+                  ) : null}{" "}
+                </>
+              )}
+            </Container>
+          </div>
+          :
+          <BillingIntegration title="Easily create invoices, subscriptions for each of your customers" description="Click on the below button to create your Stripe connect account which will let you raise invoices, or subscription to receive payments with ease." buttonLink="#" buttonText="Get Started" icon="/assets/billing.png" />}
       </Container>
       {selectedRows.length > 0 && (
         <div className="delete-button rounded">

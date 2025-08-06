@@ -299,7 +299,7 @@ const BusinessProfileTab: React.FC<BusinessProfileTabProps> = ({
           </Card>
         </Col>
       )}
-    </Row>
+    </Row>   
   );
 };
 
