@@ -13126,3 +13126,36 @@ li.navLink.my-1 svg path {
 .rounded-border {
   border-radius: 0.75rem !important;
 }
+.hover-move:hover svg
+{
+  transition: 0.5s;
+  transform: translate(9px, 0px);
+}
+.hover-move svg
+{
+  transition: 0.5s;
+}
+.hover-move {
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.social-icons {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 10px 9px;
+}
+.social-icons svg {
+  width: 30px;
+  height: 26px;
+  cursor: pointer;
+}
+
+.social-icons svg {
+  background: #c2c2c242;
+  height: 36px;
+  width: 36px;
+  padding: 10px;
+  border-radius: 50%;
+}

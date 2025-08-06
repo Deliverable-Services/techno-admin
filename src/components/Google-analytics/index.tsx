@@ -201,7 +201,7 @@ const GoogleAnalytics = () => {
                                 <h6 className="font-weight-bold  mb-2 g-card-heading">{card.title}</h6>
                                 <div className="d-flex align-items-center justify-content-between mb-1">
                                     <h1 className="font-weight-bold mb-0">{card.value}</h1>
-                                    <div className="chart-wrapper">
+                                    <div className="chart-wrapper-new">
                                         <ResponsiveContainer width="100%" height="100%">
                                             <LineChart data={card.chartData}>
                                                 <Tooltip contentStyle={{ display: "none" }} cursor={false} />
