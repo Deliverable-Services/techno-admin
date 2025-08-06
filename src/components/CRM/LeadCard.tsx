@@ -146,7 +146,7 @@ const LeadCard: React.FC<Props> = ({ lead }) => {
           <div className="d-flex align-items-center text-muted small">
             <div className="d-flex align-items-center mr-3">
               <FaComment className="mr-1" />
-              {lead.comments || 0}
+              {lead?.comments?.length || 0}
             </div>
             <div className="d-flex align-items-center">
               <FaPaperclip className="mr-1" />

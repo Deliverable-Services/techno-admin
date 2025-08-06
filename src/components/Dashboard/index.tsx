@@ -17,10 +17,6 @@ import { FaFacebook } from "react-icons/fa";
 import { IoLogoInstagram } from "react-icons/io5";
 import { FaYoutube } from "react-icons/fa";
 
-
-
-
-
 import API from "../../utils/API";
 import { isDesktop, primaryColor } from "../../utils/constants";
 import {
@@ -62,8 +58,6 @@ const bookingFilter = {
   dateto: moment().endOf("month").format("YYYY-MM-DD"),
   duration: "month",
 };
-
-
 
 const defaultData = [
   { date: "2025-07-29", active: 120, new: 30, alltime: 500 },
@@ -125,7 +119,6 @@ const Dashboard = () => {
     setCurrentTime(moment().format("hh:mm a"));
   };
 
-
   const datanew = [
     { customer: 6, invoice: 4, leads: 25 },
     { customer: 6, invoice: 3, leads: 19 },
@@ -137,9 +130,6 @@ const Dashboard = () => {
     { customer: 10, invoice: 10, leads: 18 },
     { customer: 6.5, invoice: 5.2, leads: 28 },
   ];
-
-
-
 
   useEffect(() => {
     setInterval(() => _changeCurrentTime(), 1000);
@@ -161,8 +151,6 @@ const Dashboard = () => {
   return (
     <>
       <Container fluid className="component-wrapper px-0 py-2">
-
-
         <div className="">
           <div className="card-content d-flex flex-row-reverse align-items-center justify-content-between">
             <div className="d-flex align-items-center justify-content-start">
@@ -188,7 +176,6 @@ const Dashboard = () => {
         </div>
 
         <Container fluid className="px-0">
-
           <div
             className="my-4"
             style={{
@@ -197,9 +184,6 @@ const Dashboard = () => {
               gap: "20px",
             }}
           >
-
-
-
             <div className="card shadow-sm hoverable w-100 border-0">
               <div className="card-body">
                 <div className="d-flex align-items-center justify-content-between mb-3">
@@ -221,10 +205,16 @@ const Dashboard = () => {
                 <div className="d-flex justify-content-between align-items-center">
                   {/* Open */}
                   <div className="text-center flex-fill">
-                    <h6 className="text-muted mb-1" style={{ fontSize: "14px" }}>
+                    <h6
+                      className="text-muted mb-1"
+                      style={{ fontSize: "14px" }}
+                    >
                       Active
                     </h6>
-                    <div className="font-weight-bold" style={{ fontSize: "24px" }}>
+                    <div
+                      className="font-weight-bold"
+                      style={{ fontSize: "24px" }}
+                    >
                       {data?.customer + data?.customerprev}
                     </div>
                   </div>
@@ -232,15 +222,25 @@ const Dashboard = () => {
                   {/* Divider */}
                   <div
                     className="mx-3"
-                    style={{ width: "1px", backgroundColor: "#dee2e6", height: "48px" }}
+                    style={{
+                      width: "1px",
+                      backgroundColor: "#dee2e6",
+                      height: "48px",
+                    }}
                   ></div>
 
                   {/* Close */}
                   <div className="text-center flex-fill">
-                    <h6 className="text-muted mb-1" style={{ fontSize: "14px" }}>
+                    <h6
+                      className="text-muted mb-1"
+                      style={{ fontSize: "14px" }}
+                    >
                       New
                     </h6>
-                    <div className="font-weight-bold" style={{ fontSize: "24px" }}>
+                    <div
+                      className="font-weight-bold"
+                      style={{ fontSize: "24px" }}
+                    >
                       {data?.customer + data?.customerprev}
                     </div>
                   </div>
@@ -248,15 +248,25 @@ const Dashboard = () => {
                   {/* Divider */}
                   <div
                     className="mx-3"
-                    style={{ width: "1px", backgroundColor: "#dee2e6", height: "48px" }}
+                    style={{
+                      width: "1px",
+                      backgroundColor: "#dee2e6",
+                      height: "48px",
+                    }}
                   ></div>
 
                   {/* Total */}
                   <div className="text-center flex-fill">
-                    <h6 className="text-muted mb-1" style={{ fontSize: "14px" }}>
+                    <h6
+                      className="text-muted mb-1"
+                      style={{ fontSize: "14px" }}
+                    >
                       Success
                     </h6>
-                    <div className="font-weight-bold" style={{ fontSize: "24px" }}>
+                    <div
+                      className="font-weight-bold"
+                      style={{ fontSize: "24px" }}
+                    >
                       {data?.customer + data?.customerprev}
                     </div>
                   </div>
@@ -292,10 +302,16 @@ const Dashboard = () => {
                 <div className="d-flex justify-content-between align-items-center">
                   {/* Open */}
                   <div className="text-center flex-fill">
-                    <h6 className="text-muted mb-1" style={{ fontSize: "14px" }}>
+                    <h6
+                      className="text-muted mb-1"
+                      style={{ fontSize: "14px" }}
+                    >
                       Active
                     </h6>
-                    <div className="font-weight-bold" style={{ fontSize: "24px" }}>
+                    <div
+                      className="font-weight-bold"
+                      style={{ fontSize: "24px" }}
+                    >
                       {data?.customer + data?.customerprev}
                     </div>
                   </div>
@@ -303,15 +319,25 @@ const Dashboard = () => {
                   {/* Divider */}
                   <div
                     className="mx-3"
-                    style={{ width: "1px", backgroundColor: "#dee2e6", height: "48px" }}
+                    style={{
+                      width: "1px",
+                      backgroundColor: "#dee2e6",
+                      height: "48px",
+                    }}
                   ></div>
 
                   {/* Close */}
                   <div className="text-center flex-fill">
-                    <h6 className="text-muted mb-1" style={{ fontSize: "14px" }}>
+                    <h6
+                      className="text-muted mb-1"
+                      style={{ fontSize: "14px" }}
+                    >
                       New
                     </h6>
-                    <div className="font-weight-bold" style={{ fontSize: "24px" }}>
+                    <div
+                      className="font-weight-bold"
+                      style={{ fontSize: "24px" }}
+                    >
                       {data?.customer + data?.customerprev}
                     </div>
                   </div>
@@ -319,15 +345,25 @@ const Dashboard = () => {
                   {/* Divider */}
                   <div
                     className="mx-3"
-                    style={{ width: "1px", backgroundColor: "#dee2e6", height: "48px" }}
+                    style={{
+                      width: "1px",
+                      backgroundColor: "#dee2e6",
+                      height: "48px",
+                    }}
                   ></div>
 
                   {/* Total */}
                   <div className="text-center flex-fill">
-                    <h6 className="text-muted mb-1" style={{ fontSize: "14px" }}>
+                    <h6
+                      className="text-muted mb-1"
+                      style={{ fontSize: "14px" }}
+                    >
                       Overall
                     </h6>
-                    <div className="font-weight-bold" style={{ fontSize: "24px" }}>
+                    <div
+                      className="font-weight-bold"
+                      style={{ fontSize: "24px" }}
+                    >
                       {data?.customer + data?.customerprev}
                     </div>
                   </div>
@@ -340,7 +376,6 @@ const Dashboard = () => {
                 </div>
               </div>
             </div>
-
 
             <div className="card shadow-sm hoverable w-100 border-0">
               <div className="card-body">
@@ -364,10 +399,16 @@ const Dashboard = () => {
                 <div className="d-flex justify-content-between align-items-center">
                   {/* Open */}
                   <div className="text-center flex-fill">
-                    <h6 className="text-muted mb-1" style={{ fontSize: "14px" }}>
+                    <h6
+                      className="text-muted mb-1"
+                      style={{ fontSize: "14px" }}
+                    >
                       Pending
                     </h6>
-                    <div className="font-weight-bold" style={{ fontSize: "24px" }}>
+                    <div
+                      className="font-weight-bold"
+                      style={{ fontSize: "24px" }}
+                    >
                       {data?.customer + data?.customerprev}
                     </div>
                   </div>
@@ -375,15 +416,25 @@ const Dashboard = () => {
                   {/* Divider */}
                   <div
                     className="mx-3"
-                    style={{ width: "1px", backgroundColor: "#dee2e6", height: "48px" }}
+                    style={{
+                      width: "1px",
+                      backgroundColor: "#dee2e6",
+                      height: "48px",
+                    }}
                   ></div>
 
                   {/* Close */}
                   <div className="text-center flex-fill">
-                    <h6 className="text-muted mb-1" style={{ fontSize: "14px" }}>
+                    <h6
+                      className="text-muted mb-1"
+                      style={{ fontSize: "14px" }}
+                    >
                       Completed
                     </h6>
-                    <div className="font-weight-bold" style={{ fontSize: "24px" }}>
+                    <div
+                      className="font-weight-bold"
+                      style={{ fontSize: "24px" }}
+                    >
                       {data?.customer + data?.customerprev}
                     </div>
                   </div>
@@ -391,15 +442,25 @@ const Dashboard = () => {
                   {/* Divider */}
                   <div
                     className="mx-3"
-                    style={{ width: "1px", backgroundColor: "#dee2e6", height: "48px" }}
+                    style={{
+                      width: "1px",
+                      backgroundColor: "#dee2e6",
+                      height: "48px",
+                    }}
                   ></div>
 
                   {/* Total */}
                   <div className="text-center flex-fill">
-                    <h6 className="text-muted mb-1" style={{ fontSize: "14px" }}>
+                    <h6
+                      className="text-muted mb-1"
+                      style={{ fontSize: "14px" }}
+                    >
                       Total
                     </h6>
-                    <div className="font-weight-bold" style={{ fontSize: "24px" }}>
+                    <div
+                      className="font-weight-bold"
+                      style={{ fontSize: "24px" }}
+                    >
                       {data?.customer + data?.customerprev}
                     </div>
                   </div>
@@ -438,10 +499,16 @@ const Dashboard = () => {
                 <div className="d-flex justify-content-between align-items-center">
                   {/* Open */}
                   <div className="text-center flex-fill">
-                    <h6 className="text-muted mb-1" style={{ fontSize: "14px" }}>
+                    <h6
+                      className="text-muted mb-1"
+                      style={{ fontSize: "14px" }}
+                    >
                       Open
                     </h6>
-                    <div className="font-weight-bold" style={{ fontSize: "24px" }}>
+                    <div
+                      className="font-weight-bold"
+                      style={{ fontSize: "24px" }}
+                    >
                       {data?.customer + data?.customerprev}
                     </div>
                   </div>
@@ -449,15 +516,25 @@ const Dashboard = () => {
                   {/* Divider */}
                   <div
                     className="mx-3"
-                    style={{ width: "1px", backgroundColor: "#dee2e6", height: "48px" }}
+                    style={{
+                      width: "1px",
+                      backgroundColor: "#dee2e6",
+                      height: "48px",
+                    }}
                   ></div>
 
                   {/* Close */}
                   <div className="text-center flex-fill">
-                    <h6 className="text-muted mb-1" style={{ fontSize: "14px" }}>
+                    <h6
+                      className="text-muted mb-1"
+                      style={{ fontSize: "14px" }}
+                    >
                       Close
                     </h6>
-                    <div className="font-weight-bold" style={{ fontSize: "24px" }}>
+                    <div
+                      className="font-weight-bold"
+                      style={{ fontSize: "24px" }}
+                    >
                       {data?.customer + data?.customerprev}
                     </div>
                   </div>
@@ -465,15 +542,25 @@ const Dashboard = () => {
                   {/* Divider */}
                   <div
                     className="mx-3"
-                    style={{ width: "1px", backgroundColor: "#dee2e6", height: "48px" }}
+                    style={{
+                      width: "1px",
+                      backgroundColor: "#dee2e6",
+                      height: "48px",
+                    }}
                   ></div>
 
                   {/* Total */}
                   <div className="text-center flex-fill">
-                    <h6 className="text-muted mb-1" style={{ fontSize: "14px" }}>
+                    <h6
+                      className="text-muted mb-1"
+                      style={{ fontSize: "14px" }}
+                    >
                       Total
                     </h6>
-                    <div className="font-weight-bold" style={{ fontSize: "24px" }}>
+                    <div
+                      className="font-weight-bold"
+                      style={{ fontSize: "24px" }}
+                    >
                       {data?.customer + data?.customerprev}
                     </div>
                   </div>
@@ -491,10 +578,16 @@ const Dashboard = () => {
 
         {/* leads, customer and invoices  */}
 
-        <div style={{ width: "100%", height: 400 }} className="bg-white global-card ">
+        <div
+          style={{ width: "100%", height: 400 }}
+          className="bg-white global-card "
+        >
           <h3 className="g-card-heading">Prformance</h3>
           <ResponsiveContainer>
-            <ComposedChart data={datanew} margin={{ top: 20, right: 20, bottom: 20, left: 20 }}>
+            <ComposedChart
+              data={datanew}
+              margin={{ top: 20, right: 20, bottom: 20, left: 20 }}
+            >
               <CartesianGrid stroke="#f5f5f5" />
               <XAxis dataKey="name" />
               <YAxis />
@@ -502,18 +595,34 @@ const Dashboard = () => {
               <Legend />
 
               {/* Bar for Leads */}
-              <Bar dataKey="leads" fill="#7e56da" name="Leads" barSize={30} radius={[4, 4, 0, 0]} />
+              <Bar
+                dataKey="leads"
+                fill="#7e56da"
+                name="Leads"
+                barSize={30}
+                radius={[4, 4, 0, 0]}
+              />
 
               {/* Line for Customers */}
-              <Line type="monotone" dataKey="customer" stroke="#7e56da" strokeWidth={2} dot={{ r: 3 }} />
+              <Line
+                type="monotone"
+                dataKey="customer"
+                stroke="#7e56da"
+                strokeWidth={2}
+                dot={{ r: 3 }}
+              />
 
               {/* Line for Invoices */}
-              <Line type="monotone" dataKey="invoice" stroke="#000" strokeWidth={2} dot={{ r: 3 }} />
+              <Line
+                type="monotone"
+                dataKey="invoice"
+                stroke="#000"
+                strokeWidth={2}
+                dot={{ r: 3 }}
+              />
             </ComposedChart>
           </ResponsiveContainer>
         </div>
-
-
 
         <div className="dashboard-page w-100 mt-4">
           <Container fluid className=" mt-0 pl-2 pr-0">
@@ -589,9 +698,6 @@ const Dashboard = () => {
                   <FaFacebook />
                   <IoLogoInstagram />
                   <FaYoutube />
-
-
-
                 </div>
               </div>
             </div>
