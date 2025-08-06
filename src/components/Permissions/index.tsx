@@ -20,6 +20,8 @@ import { primaryColor } from "../../utils/constants";
 import { queryClient } from "../../utils/queryClient";
 import { showMsgToast } from "../../utils/showMsgToast";
 import Roles from "../Roles";
+import { CommonModal } from "../CommonPopup/CommonModal";
+import PermissionsCreateUpdateForm from "./PermissoinsCreateUpdateForm";
 
 const key = "get-all-permission";
 
@@ -39,6 +41,7 @@ const intitialFilter = {
 const Permissions = () => {
   const history = useHistory();
   const [selectedRows, setSelectedRows] = useState([]);
+  const [modalShow, setModalShow] = useState(false);
   console.log(selectedRows.map((item) => item.id));
   const [filter, setFilter] = useState(intitialFilter);
   console.log({ filter });
@@ -72,7 +75,7 @@ const Permissions = () => {
   });
 
   const _onCreateClick = () => {
-    history.push("/permissions/create-edit");
+    setModalShow(true);
   };
   const _onRolesCreateClick = () => {
     history.push("/assign-permission/create-edit");
@@ -197,8 +200,15 @@ const Permissions = () => {
     );
   }
 
+  const _toggleModal = () => {
+    setModalShow(!modalShow);
+  }
+
   return (
     <>
+    <CommonModal title="Create New Permission" modalShow={modalShow} onModalHideClick={_toggleModal}>
+      <PermissionsCreateUpdateForm setShowModal={_toggleModal} />
+    </CommonModal>
       <Roles />
 
       <div className="view-padding mb-3 mt-5">
