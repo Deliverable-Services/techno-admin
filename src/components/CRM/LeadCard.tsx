@@ -44,41 +44,42 @@ const LeadCard: React.FC<Props> = ({ lead }) => {
   return (
     <div
       ref={drag}
-      className="card shadow-sm mb-3 border-0 pointer lead-card"
+      className="card shadow-sm mb-3 pointer lead-card"
       style={{
         opacity: isDragging ? 0.5 : 1,
-        borderLeft: "4px solid #eb5757",
+        border: "4px solid #eb5757",
       }}
     >
       <div className="card-body p-3">
-        {/* Top row: Order ID, Lead Source, Priority */}
         <div className="d-flex justify-content-between align-items-center mb-2">
-          <span className="text-muted small"> 🔗 #{lead.id || "ORD-456"}</span>
+          <span className="text-muted small">
+            {formattedDate(lead.created_at) || "July 29, ‘24 3:00 PM"}
+          </span>
 
           <span
             className="badge badge-light px-2 py-1 text-dark"
             style={{
-              backgroundColor: "#e6f4ea", // light green bg
+              backgroundColor: "#e6f4ea",
               fontSize: "12px",
               borderRadius: "12px",
             }}
           >
-            <span className="text-green">Page: </span>
-            {lead.page || "Source"}
+            <span
+              className="text-green"
+              style={{
+                fontSize: "10px",
+              }}
+            >
+              Page:{" "}
+            </span>
+            {lead.page || "N/A"}
           </span>
-
-          {/* <span className="text-danger small d-flex align-items-center">
-            <FaFlag className="mr-1" style={{ fontSize: 12 }} />
-            {lead.priority || "Urgent"}
-          </span> */}
         </div>
 
-        {/* Title */}
         <h6 className="font-weight-bold mb-1 text-dark">
-          {lead.name || "New microdose website"}
+          {lead.name || "N/A"}
         </h6>
 
-        {/* Message with bone/rotation icon */}
         <p
           className="text-muted small mb-2 d-flex align-items-center"
           style={{
@@ -89,31 +90,11 @@ const LeadCard: React.FC<Props> = ({ lead }) => {
             textOverflow: "ellipsis",
             maxWidth: "100%",
             lineHeight: "1.4",
-            minHeight: "2.8em", // reserve height for 2 lines
+            minHeight: "2.8em",
           }}
         >
-          <FaEnvelopeOpenText className="mr-2 " />
           {lead.message || "Landing page for microdose campaign and lead gen."}
         </p>
-
-        {/* Date and Time */}
-        <div className="d-inline-flex align-items-center mb-1">
-          <span
-            className="small px-2 py-1"
-            style={{
-              backgroundColor: "#f0f0f0",
-              borderRadius: "12px",
-              fontSize: "11px",
-            }}
-          >
-            <FaCalendarAlt className="mr-1 text-muted" />
-            Created At:{" "}
-            <strong className="text-dark">
-              {formattedDate(lead.created_at) || "July 29, ‘24 3:00 PM"}
-            </strong>
-          </span>
-        </div>
-
         <div className="d-inline-flex align-items-center mb-2">
           <span
             className="small px-2 py-1"

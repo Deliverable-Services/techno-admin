@@ -43,7 +43,7 @@ import API from "../utils/API";
 import { useHistory } from "react-router-dom";
 
 // === Main Navigation Sections ===
-
+// # TODO: Fix all the permissions and introduce the list in the permissions table
 const mainLinks: Array<INavLink> = [
   {
     title: "Orders",
@@ -75,23 +75,23 @@ const mainLinks: Array<INavLink> = [
     icon: <FaRegMoneyBillAlt />,
     permissionReq: "read_bookingslot",
     children: [
-      // {
-      //   title: "Subscriptions",
-      //   path: "/subscriptions",
-      //   permissionReq: "read_subscription",
-      //   icon: <FaAddressCard />,
-      // },
-      {
-        title: "Transaction",
-        path: "/transactions",
-        permissionReq: "read_transaction",
-        icon: <FaMoneyCheck />,
-      },
       {
         title: "Invoices",
         path: "/invoices",
         icon: <SiCivicrm />,
         permissionReq: "read_city",
+      },
+      {
+        title: "Subscriptions",
+        path: "/subscriptions",
+        icon: <SiCivicrm />,
+        permissionReq: "read_subscription",
+      },
+      {
+        title: "Transactions",
+        path: "/transactions",
+        permissionReq: "read_transaction",
+        icon: <FaMoneyCheck />,
       },
     ],
   },
@@ -101,19 +101,6 @@ const mainLinks: Array<INavLink> = [
     icon: <MdShoppingCart />,
     permissionReq: "read_booking",
   },
-  {
-    title: "Invoices",
-    path: "/invoices",
-    icon: <SiCivicrm />,
-    permissionReq: "read_city",
-  },
-  {
-    title: "Subscriptions",
-    path: "/subscriptions",
-    icon: <SiCivicrm />,
-    permissionReq: "read_city",
-  },
-
   {
     title: "Customers",
     path: "/users",

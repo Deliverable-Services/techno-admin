@@ -1986,7 +1986,7 @@ pre code {
   border-bottom: 2px solid #dee2e6;
 }
 .table thead th:first-child {
-    padding-left: 25px;
+  padding-left: 25px;
 }
 .table thead th:last-child {
   padding-right: 25px;
@@ -12522,18 +12522,18 @@ th {
 .page-item.active .page-link .text-secondary {
   color: white !important;
 }
-.ellipsis-dropdown{
-justify-content: end;
-display: flex;
-align-items: center;
+.ellipsis-dropdown {
+  justify-content: end;
+  display: flex;
+  align-items: center;
 }
-.ellipsis-dropdown button{
-    width: 24px;
-    height: 24px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    border-radius: 4px;
+.ellipsis-dropdown button {
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 4px;
 }
 .ellipsis-dropdown button svg {
   width: 14px;
@@ -13048,13 +13048,18 @@ li.navLink.my-1 svg path {
 .ticket-main-div {
   background: #fafafa;
   height: 100%;
-  border: 1px solid var(--border)
+  border: 1px solid var(--border) !important;
+}
+
+.lead-card {
+  border: 1px solid var(--border) !important;
 }
 
 .lead-card:hover {
   transform: translateY(-2px);
   transition: 0.2s ease-in-out;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  border: 1px solid var(--blue);
 }
 
 .font-weight-semibold {
@@ -13127,13 +13132,11 @@ li.navLink.my-1 svg path {
 .rounded-border {
   border-radius: 0.75rem !important;
 }
-.hover-move:hover svg
-{
+.hover-move:hover svg {
   transition: 0.5s;
   transform: translate(9px, 0px);
 }
-.hover-move svg
-{
+.hover-move svg {
   transition: 0.5s;
 }
 .hover-move {

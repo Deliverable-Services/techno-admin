@@ -2,39 +2,20 @@ import { AxiosError } from "axios";
 import API from "../utils/API";
 import useTokenStore from "../hooks/useTokenStore";
 
-export const handleApiError = async (error: AxiosError, history: any) => {
+export const handleApiError = async (error: AxiosError, history?: any) => {
   if (!error) return;
-  console.log("error", error);
-  const is401Error = error?.response?.status === 401;
-  console.log("is401Error", is401Error);
-  if (!is401Error) {
-    localStorage.clear();
-    sessionStorage.clear();
-    if ("caches" in window) {
-      caches.keys().then((cacheNames) => {
-        cacheNames.forEach((cacheName) => {
-          caches.delete(cacheName);
-        });
-      });
-    }
+
+  // Log error for debugging
+  console.error("API Error:", error.response?.status, error.message);
+
+  // For non-401 errors, just log and return
+  // The useAuthManager hook will handle 401 errors via interceptors
+  if (error?.response?.status !== 401) {
+    console.error("Non-auth error:", error.message);
     return;
   }
 
-  try {
-    const { data } = await API.post("/auth/refresh");
-    if (data) useTokenStore.getState().setToken(data.access_token);
-  } catch (error) {
-    console.log("error", error);
-    localStorage.clear();
-    sessionStorage.clear();
-    useTokenStore.getState().removeToken();
-    if ("caches" in window) {
-      caches.keys().then((cacheNames) => {
-        cacheNames.forEach((cacheName) => {
-          caches.delete(cacheName);
-        });
-      });
-    }
-    history.push("/login");
-  }
+  // 401 errors are now handled by the API interceptor in useAuthManager
+  // This function is kept for backward compatibility but logic is simplified
+  console.log("401 error detected - should be handled by auth manager");
 };

@@ -47,8 +47,7 @@ const LoginFlow = () => {
   const setUserPermissions = useUserProfileStore(
     (state) => state.setUserPermssions
   );
-  const { setOrganisations, selectedOrg, setSelectedOrg } =
-    useOrganisation();
+  const { setOrganisations, selectedOrg, setSelectedOrg } = useOrganisation();
 
   const { mutate: sendOtpMutate, isLoading: isSendingOtp } = useMutation(
     sendOtp,
@@ -102,28 +101,45 @@ const LoginFlow = () => {
   };
 
   return (
-    <div className="vh-100 px-0 login-main m-0 p-0" style={{ background: 'linear-gradient(to right, #004e92, #000428)' }}>
+    <div
+      className="vh-100 px-0 login-main m-0 p-0"
+      style={{ background: "linear-gradient(to right, #004e92, #000428)" }}
+    >
       <div className="row h-100 no-gutters align-items-center justify-content-center">
         {/* RIGHT SIDE FORM */}
         <div className="col-md-6 d-flex align-items-center justify-content-center">
-          <div className="organization-main w-100 px-5 py-5 login-wrapper" style={{ maxWidth: "500px" }}>
-            <img src="/assets/logo.svg" alt="Logo" style={{ width: 120, marginBottom: 30, height: 'auto' }} />
+          <div
+            className="organization-main w-100 px-5 py-5 login-wrapper"
+            style={{ maxWidth: "500px" }}
+          >
+            <img
+              src="/assets/logo.svg"
+              alt="Logo"
+              style={{ width: 120, marginBottom: 30, height: "auto" }}
+            />
             {/* Title and description - Only in login step */}
             {step === "login" && (
               <div className="text-left mb-3">
-                <h4 className="mb-1 font-weight-bold">Log in to your account</h4>
+                <h4 className="mb-1 font-weight-bold">
+                  Log in to your account
+                </h4>
                 <small className="text-muted">
-                  Welcome back! Please enter your registered phone number to receive the login OTP.
+                  Welcome back! Please enter your registered phone number to
+                  receive the login OTP.
                 </small>
               </div>
             )}
             {/* Tabs - Only in login step */}
             {step === "login" && (
-              <ul className="nav nav-tabs mb-4" style={{ width: 'fit-content' }}>
+              <ul
+                className="nav nav-tabs mb-4"
+                style={{ width: "fit-content" }}
+              >
                 <li className="nav-item">
                   <a
-                    className={`nav-link btn ${activeTab === "login" ? "active" : ""
-                      }`}
+                    className={`nav-link btn ${
+                      activeTab === "login" ? "active" : ""
+                    }`}
                     href="#"
                     onClick={() => {
                       setActiveTab("login");
@@ -135,8 +151,9 @@ const LoginFlow = () => {
                 </li>
                 <li className="nav-item">
                   <a
-                    className={`nav-link btn ${activeTab === "signup" ? "active" : ""
-                      }`}
+                    className={`nav-link btn ${
+                      activeTab === "signup" ? "active" : ""
+                    }`}
                     href="#"
                     onClick={() => setActiveTab("signup")}
                   >
@@ -149,11 +166,14 @@ const LoginFlow = () => {
             {/* === LOGIN FORM === */}
             {activeTab === "login" && step === "login" && (
               <Formik
-                initialValues={{ phone: "" }}
+                initialValues={{ phone: "7018064278" }}
                 onSubmit={(values) => {
                   const formData = new FormData();
                   formData.append("phone", `${countryCode}${values.phone}`);
-                  formData.append("organisation_id", `${countryCode}${values.phone}`);
+                  formData.append(
+                    "organisation_id",
+                    `${countryCode}${values.phone}`
+                  );
                   setPhone(`${countryCode}${values.phone}`);
                   sendOtpMutate(formData);
                 }}
@@ -165,7 +185,13 @@ const LoginFlow = () => {
                     <div className="d-flex">
                       <select
                         className="form-select"
-                        style={{ maxWidth: 100, marginRight: 8, height: 40, border: '1px solid #d2ddec', borderRadius: '0.25rem' }}
+                        style={{
+                          maxWidth: 100,
+                          marginRight: 8,
+                          height: 40,
+                          border: "1px solid #d2ddec",
+                          borderRadius: "0.25rem",
+                        }}
                         value={countryCode}
                         onChange={(e) => setCountryCode(e.target.value)}
                       >
@@ -178,13 +204,13 @@ const LoginFlow = () => {
                         type="text"
                       />
                     </div>
-                    {errors.phone &&
+                    {errors.phone && (
                       <small className="text-danger">{errors.phone}</small>
-                    }
+                    )}
                     <Button
                       type="submit"
                       className="btn btn-primary btn-block mt-3"
-                      style={{ height: '52px' }}
+                      style={{ height: "52px" }}
                       disabled={isSendingOtp}
                     >
                       {isSendingOtp ? (
@@ -227,14 +253,12 @@ const LoginFlow = () => {
                       error={errors.otp}
                     />
 
-
-
                     {/* Resend OTP */}
                     <div className="text-right">
                       <Button
                         variant="link"
                         className="px-0 py-0"
-                        style={{ cursor: "pointer", fontSize: '14px' }}
+                        style={{ cursor: "pointer", fontSize: "14px" }}
                         onClick={() => {
                           const formData = new FormData();
                           formData.append("phone", phone);
@@ -248,7 +272,7 @@ const LoginFlow = () => {
                     <Button
                       type="submit"
                       className="btn btn-primary btn-block mt-3"
-                      style={{ height: '52px' }}
+                      style={{ height: "52px" }}
                       disabled={isVerifyingOtp}
                     >
                       {isVerifyingOtp ? (

@@ -1,11 +1,6 @@
 import { useEffect, useState } from "react";
-import {
-  Redirect,
-  Route,
-  Switch,
-  useLocation,
-  useHistory,
-} from "react-router-dom";
+import { Redirect, Route, Switch, useLocation } from "react-router-dom";
+import useAuthManager from "./hooks/useAuthManager";
 import Advertisements from "./components/Advertisements";
 import AdvertisementCreateUpdateForm from "./components/Advertisements/AdvertisementUpdateCreateForm";
 import AgentTargets from "./components/AgentTargets";
@@ -61,13 +56,10 @@ import ProfilePage from "./components/Users/profile";
 import UserCreateUpdateForm from "./components/Users/UsersCreateUpdateForm";
 import VerifyOtp from "./components/VerifyOtp";
 import { IsDesktopContext } from "./context/IsDesktopContext";
-import useMeQuery from "./hooks/useMeQuery";
-import useTokenStore from "./hooks/useTokenStore";
 import ErrorToast from "./shared-components/ErrorToast/ErrorToast";
 import MsgToast from "./shared-components/MsgToast/MsgToast";
 import { PrivateRoute } from "./shared-components/PrivateRoute";
 import VerifingUserLoader from "./shared-components/VerifingUserLoader";
-import API from "./utils/API";
 import CMS from "./components/CMS";
 
 import CRMBoard from "./components/CRM/CRMBoard";
@@ -86,34 +78,13 @@ import SubscriptionPage from "./components/Subscription";
 
 const App = () => {
   const [isDesktop, setIsDesktop] = useState<boolean>(false);
-  const { isLoading: isVerifingLoggedInUser } = useMeQuery();
   const [isNavOpen, setIsNavOpen] = useState<boolean>(false);
   const { pathname } = useLocation();
-  const history = useHistory();
   const loggedInUser = useUserProfileStore((state) => state.user);
   const { setOrganisations, selectedOrg, setSelectedOrg } = useOrganisation();
-  const token = useTokenStore((state) => state.accessToken);
-  if (token) API.defaults.headers.common["Authorization"] = `Bearer ${token}`;
 
-  useEffect(() => {
-    const isLoginPage =
-      pathname.includes("login") || pathname.includes("verify-otp");
-
-    if (!isLoginPage && !isVerifingLoggedInUser && (!token || !loggedInUser)) {
-      localStorage.clear();
-      sessionStorage.clear();
-
-      useTokenStore.getState().removeToken();
-      if ("caches" in window) {
-        caches.keys().then((cacheNames) => {
-          cacheNames.forEach((cacheName) => {
-            caches.delete(cacheName);
-          });
-        });
-      }
-      history.replace("/login");
-    }
-  }, [token, loggedInUser, isVerifingLoggedInUser, pathname, history]);
+  // Use the new authentication manager
+  const { isLoading: isAuthLoading, isInitialized } = useAuthManager();
 
   useEffect(() => {
     updateDimensions();
@@ -154,7 +125,8 @@ const App = () => {
     else return true;
   }
 
-  if (isVerifingLoggedInUser) return <VerifingUserLoader />;
+  // Show loading while authentication is being checked
+  if (!isInitialized || isAuthLoading) return <VerifingUserLoader />;
 
   return (
     <IsDesktopContext.Provider value={isDesktop}>
