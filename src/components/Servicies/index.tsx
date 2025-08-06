@@ -18,6 +18,7 @@ import API from "../../utils/API";
 import { primaryColor } from "../../utils/constants";
 import { queryClient } from "../../utils/queryClient";
 import { showMsgToast } from "../../utils/showMsgToast";
+import { RiServiceFill } from "react-icons/ri";
 
 const key = "services";
 
@@ -147,40 +148,42 @@ const Services = () => {
     <>
       <Container fluid className=" component-wrapper view-padding">
         <PageHeading
+          icon={<RiServiceFill />}
           title="Services"
           onClick={_onCreateClick}
           totalRecords={50}
           permissionReq="create_service"
         />
-
-        <Container fluid className="h-100 p-0">
-          {isLoading ? (
-            <IsLoading />
-          ) : (
-            <>
-              {!error && (
-                <ReactTable
-                  data={data?.data}
-                  columns={columns}
-                  setSelectedRows={setSelectedRows}
-                  filter={filter}
-                  onFilterChange={_onFilterChange}
-                  isDataLoading={isFetching}
-                  deletePermissionReq="delete_service"
-                />
-              )}
-              {!error && data?.data?.length > 0 ? (
-                <TablePagination
-                  currentPage={data?.current_page}
-                  lastPage={data?.last_page}
-                  setPage={_onFilterChange}
-                  hasNextPage={!!data?.next_page_url}
-                  hasPrevPage={!!data?.prev_page_url}
-                />
-              ) : null}{" "}
-            </>
-          )}
-        </Container>
+        <div className="card">
+          <Container fluid className="h-100 p-0 pt-3">
+            {isLoading ? (
+              <IsLoading />
+            ) : (
+              <>
+                {!error && (
+                  <ReactTable
+                    data={data?.data}
+                    columns={columns}
+                    setSelectedRows={setSelectedRows}
+                    filter={filter}
+                    onFilterChange={_onFilterChange}
+                    isDataLoading={isFetching}
+                    deletePermissionReq="delete_service"
+                  />
+                )}
+                {!error && data?.data?.length > 0 ? (
+                  <TablePagination
+                    currentPage={data?.current_page}
+                    lastPage={data?.last_page}
+                    setPage={_onFilterChange}
+                    hasNextPage={!!data?.next_page_url}
+                    hasPrevPage={!!data?.prev_page_url}
+                  />
+                ) : null}{" "}
+              </>
+            )}
+          </Container>
+        </div>
       </Container>
 
       {selectedRows.length > 0 && (
