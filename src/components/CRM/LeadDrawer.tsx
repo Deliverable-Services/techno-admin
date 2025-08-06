@@ -313,7 +313,7 @@ const LeadDrawer: React.FC<Props> = ({ lead, onClose }) => {
                     onChange={handleSetSelectedAssignee}
                     placeholder="Select Assignee"
                     isClearable={false}
-                    className="input-div"
+                    className="input-div w-25"
                   />
                 </div>
               </div>

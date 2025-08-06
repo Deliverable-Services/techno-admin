@@ -48,6 +48,7 @@ import Navlink from "../shared-components/Navlink";
 import Overlay from "../shared-components/Overlay";
 import { handleApiError } from "../hooks/handleApiErrors";
 import API from "../utils/API";
+import { useHistory } from "react-router-dom";
 
 // === Main Navigation Sections ===
 
@@ -292,6 +293,7 @@ const hiddenRoutesForEcommerce = ["/crm", "/crm-bookings", "/services"];
 const key = "organisations";
 
 const NavBar = ({ isNavOpen, setIsNavOpen }: INavBar) => {
+  const history = useHistory();
   const isDesktop = useContext(IsDesktopContext);
   const [activeMenu, setActiveMenu] = useState<string | null>(null);
 
