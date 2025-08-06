@@ -26,6 +26,7 @@ import {
   RiNotification2Line,
   RiServiceFill,
 } from "react-icons/ri";
+import Select from "react-select";
 import { SiBrandfolder, SiCivicrm } from "react-icons/si";
 import { MdShoppingCart } from "react-icons/md";
 import { ImUsers } from "react-icons/im";
@@ -45,6 +46,8 @@ import { formatTimestamp } from "../utils/utitlity";
 import Logo from "../shared-components/Logo";
 import Navlink from "../shared-components/Navlink";
 import Overlay from "../shared-components/Overlay";
+import { handleApiError } from "../hooks/handleApiErrors";
+import API from "../utils/API";
 
 // === Main Navigation Sections ===
 
@@ -71,7 +74,7 @@ const mainLinks: Array<INavLink> = [
         path: "/crm-bookings",
         permissionReq: "read_booking",
         icon: <BsClock />,
-      }
+      },
     ],
   },
   {
@@ -250,9 +253,6 @@ const organisationLinks: Array<INavLink> = [
 ];
 
 const googleLinks: Array<INavLink> = [
-
-
-
   {
     title: "Google Analytics",
     icon: <FaGoogle />,
@@ -277,22 +277,28 @@ const googleLinks: Array<INavLink> = [
 // === Hidden Routes Logic ===
 
 const hiddenRoutesForCRM = [
-  "/orders", "/cart", "/plans", "/coupons", "/agent", "/agent-targets",
-  "/products", "/product-brands", "/product-variants",
+  "/orders",
+  "/cart",
+  "/plans",
+  "/coupons",
+  "/agent",
+  "/agent-targets",
+  "/products",
+  "/product-brands",
+  "/product-variants",
 ];
-const hiddenRoutesForEcommerce = [
-  "/crm", "/crm-bookings", "/services",
-];
+const hiddenRoutesForEcommerce = ["/crm", "/crm-bookings", "/services"];
+
+const key = "organisations";
 
 const NavBar = ({ isNavOpen, setIsNavOpen }: INavBar) => {
   const isDesktop = useContext(IsDesktopContext);
   const [activeMenu, setActiveMenu] = useState<string | null>(null);
 
   const loggedInUser = useUserProfileStore((state) => state.user);
-  const { selectedOrg } = useOrganisation();
-  const {
-    isConnected: isGoogleBusinessConnected,
-  } = useGoogleBusinessConnection();
+  const { selectedOrg, setSelectedOrg, organisations } = useOrganisation();
+  const { isConnected: isGoogleBusinessConnected } =
+    useGoogleBusinessConnection();
 
   const closeNavBar = () => {
     if (!isDesktop && setIsNavOpen) setIsNavOpen(false);
@@ -313,11 +319,45 @@ const NavBar = ({ isNavOpen, setIsNavOpen }: INavBar) => {
   const filteredOrganisationLinks = filterLinks(organisationLinks);
 
   const filteredGoogleLinks = googleLinks.filter((link) => {
-    if (link.path === "/google-business" && !isGoogleBusinessConnected) return false;
+    if (link.path === "/google-business" && !isGoogleBusinessConnected)
+      return false;
     return storeType === "ecommerce"
       ? !hiddenRoutesForEcommerce.includes(link.path!)
       : !hiddenRoutesForCRM.includes(link.path!);
   });
+
+  const handleSetSelectedOrg = async (option) => {
+    const org = organisations.find((o) => o.id === option.value);
+    if (org) {
+      try {
+        await API.post(`${key}/${org.id}/switch`);
+      } catch (error) {
+        handleApiError(error, history);
+      }
+      setSelectedOrg(org);
+    }
+  };
+
+  const organisationOptions = organisations.map((org) => ({
+    value: org.id,
+    label: org.name,
+    ...org,
+  }));
+
+  const customStyles = {
+    control: (provided, state) => ({
+      ...provided,
+      border: "none",
+      fontSize: "14px",
+      fontWeight: "500",
+      boxShadow: "0 0.125rem 0.25rem rgba(0, 0, 0, 0.075) !important",
+    }),
+    option: (provided, state) => ({
+      ...provided,
+      padding: "8px 12px",
+      fontSize: "14px",
+    }),
+  };
 
   return (
     <>
@@ -330,58 +370,34 @@ const NavBar = ({ isNavOpen, setIsNavOpen }: INavBar) => {
 
         <div className="all-links">
           {/* Organisation Dropdown */}
-          <div className="d-flex align-items-center justify-content-center">
-            <Dropdown className="w-100 pt-3" style={{ position: "unset" }}>
-              <section
-                style={{
-                  fontSize: "11px",
-                  fontWeight: "bold",
-                  color: "#667085",
-                  marginBottom: "4px",
-                }}
-              >
-                Organisation
-              </section>
-
-              <Dropdown.Toggle
-                id="dropdown-basic"
-                className="bg-white w-100 border px-3 py-1 shadow-sm d-flex align-items-center btn-focus-none"
-                style={{
-                  color: "#000",
-                  fontWeight: "500",
-                  fontSize: "14px",
-                  borderRadius: "6px",
-                }}
-              >
-                <span
-                  className="text-truncate"
-                  style={{ width: "100%", textAlign: "left" }}
-                >
-                  {selectedOrg?.name}
-                </span>
-              </Dropdown.Toggle>
-
-              <Dropdown.Menu className="rounded border-0 mt-2 global-card" style={{ minWidth: "260px" }}>
-                <div className="d-flex flex-column gap-2">
-                  <section className="d-flex align-items-center py-2 px-4 border-bottom">
-                    <FaEnvelope className="text-primary mr-2" size={14} />
-                    <span>{selectedOrg?.email}</span>
-                  </section>
-                  <section className="d-flex align-items-center py-2 px-4 border-bottom">
-                    <FaPhone className="text-primary mr-2" size={14} />
-                    <span>{selectedOrg?.phone}</span>
-                  </section>
-                  <section className="d-flex align-items-center py-2 px-4 border-bottom">
-                    <FaMap className="text-primary mr-2" size={14} />
-                    <span>{selectedOrg?.address}</span>
-                  </section>
-                  <section className="d-flex align-items-center py-2 px-4">
-                    <FaClock className="text-primary mr-2" size={14} />
-                    <span>{formatTimestamp(selectedOrg?.created_at)}</span>
-                  </section>
-                </div>
-              </Dropdown.Menu>
-            </Dropdown>
+          <div>
+            <section
+              style={{
+                fontSize: "11px",
+                fontWeight: "bold",
+                color: "#667085",
+                marginBottom: "4px",
+              }}
+              className="pt-3"
+            >
+              Organisation
+            </section>
+            <Select
+              options={organisationOptions}
+              value={
+                selectedOrg
+                  ? {
+                      value: selectedOrg.id,
+                      label: selectedOrg.name,
+                    }
+                  : null
+              }
+              onChange={handleSetSelectedOrg}
+              placeholder="Select Organisation"
+              isClearable={false}
+              styles={customStyles}
+              className="input-div"
+            />
           </div>
 
           {/* Dashboard */}
@@ -402,28 +418,56 @@ const NavBar = ({ isNavOpen, setIsNavOpen }: INavBar) => {
           <p className="text-muted mb-2">Leads & Customers</p>
           <ul>
             {filteredMainLinks.map((link) => (
-              <Navlink key={link.title} {...link} onClick={closeNavBar} isNavOpen={isNavOpen} activeMenu={activeMenu} setActiveMenu={setActiveMenu} />
+              <Navlink
+                key={link.title}
+                {...link}
+                onClick={closeNavBar}
+                isNavOpen={isNavOpen}
+                activeMenu={activeMenu}
+                setActiveMenu={setActiveMenu}
+              />
             ))}
           </ul>
 
           <p className="text-muted mb-2">Products & Services</p>
           <ul>
             {filteredInventoryLinks.map((link) => (
-              <Navlink key={link.title} {...link} onClick={closeNavBar} isNavOpen={isNavOpen} activeMenu={activeMenu} setActiveMenu={setActiveMenu} />
+              <Navlink
+                key={link.title}
+                {...link}
+                onClick={closeNavBar}
+                isNavOpen={isNavOpen}
+                activeMenu={activeMenu}
+                setActiveMenu={setActiveMenu}
+              />
             ))}
           </ul>
 
           <p className="text-muted mb-2">Website & Pages</p>
           <ul>
             {filteredWebsiteLinks.map((link) => (
-              <Navlink key={link.title} {...link} onClick={closeNavBar} isNavOpen={isNavOpen} activeMenu={activeMenu} setActiveMenu={setActiveMenu} />
+              <Navlink
+                key={link.title}
+                {...link}
+                onClick={closeNavBar}
+                isNavOpen={isNavOpen}
+                activeMenu={activeMenu}
+                setActiveMenu={setActiveMenu}
+              />
             ))}
           </ul>
 
           <p className="text-muted mb-2">Organization & Settings</p>
           <ul>
             {filteredOrganisationLinks.map((link) => (
-              <Navlink key={link.title} {...link} onClick={closeNavBar} isNavOpen={isNavOpen} activeMenu={activeMenu} setActiveMenu={setActiveMenu} />
+              <Navlink
+                key={link.title}
+                {...link}
+                onClick={closeNavBar}
+                isNavOpen={isNavOpen}
+                activeMenu={activeMenu}
+                setActiveMenu={setActiveMenu}
+              />
             ))}
           </ul>
 
@@ -432,7 +476,14 @@ const NavBar = ({ isNavOpen, setIsNavOpen }: INavBar) => {
               <p className="text-muted mb-2">Intigrations</p>
               <ul>
                 {filteredGoogleLinks.map((link) => (
-                  <Navlink key={link.title} {...link} onClick={closeNavBar} isNavOpen={isNavOpen} activeMenu={activeMenu} setActiveMenu={setActiveMenu} />
+                  <Navlink
+                    key={link.title}
+                    {...link}
+                    onClick={closeNavBar}
+                    isNavOpen={isNavOpen}
+                    activeMenu={activeMenu}
+                    setActiveMenu={setActiveMenu}
+                  />
                 ))}
               </ul>
             </>

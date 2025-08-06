@@ -72,51 +72,14 @@ const OrganizationTab = () => {
     },
   });
 
-  const handleSetSelectedOrg = async (option) => {
-    const org = organisations.find((o) => o.id === option.value);
-    if (org) {
-      try {
-        await API.post(`${key}/${org.id}/switch`);
-      } catch (error) {
-        handleApiError(error, history);
-      }
-      setSelectedOrg(org);
-    }
-  };
-
-  const organisationOptions = organisations.map((org) => ({
-    value: org.id,
-    label: org.name,
-    ...org,
-  }));
-
   return (
     <>
-      <div className="tab-header">
+      <div className="tab-header mt-3">
         <h4>Update Your Organization</h4>
       </div>
       <div>
         <div className="right-content">
           <div className="profile-card d-flex flex-column align-items-center">
-            <div className="border-div form-group w-100 mt-4 d-flex align-items-center">
-              <label htmlFor="organizationName">Select Organisation</label>
-              <Select
-                options={organisationOptions}
-                value={
-                  selectedOrg
-                    ? {
-                        value: selectedOrg.id,
-                        label: selectedOrg.name,
-                      }
-                    : null
-                }
-                onChange={handleSetSelectedOrg}
-                placeholder="Select Organisation"
-                isClearable={false}
-                className="input-div"
-              />
-            </div>
-
             <Formik
               enableReinitialize
               initialValues={initialValues}

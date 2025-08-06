@@ -1,4 +1,4 @@
-import { Container } from "react-bootstrap";
+import { Container, Spinner } from "react-bootstrap";
 import { FaBan } from "react-icons/fa";
 import { Route } from "react-router-dom";
 import useUserProfileStore from "../hooks/useUserProfileStore";
@@ -58,8 +58,9 @@ export const PrivateRoute = ({
       >
         <Container fluid className="d-flex justify-content-center display-3">
           <div className="d-flex flex-column align-items-center">
-            <FaBan color="red" />
-            <span className="text-danger display-3">Unauthorised</span>
+            <Spinner animation="border" size="sm" className="mt-5" />
+            {/* <FaBan color="red" />
+            <span className="text-danger display-3">Unauthorised</span> */}
           </div>
         </Container>
       </Container>

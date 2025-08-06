@@ -16,7 +16,7 @@ const VerifingUserLoader = () => {
     >
       <div className="d-flex align-items-center justify-content-center flex-column ">
         <IsLoading />
-        <p className="text-center text-primary font-weight-bold">Verifing...</p>
+        <p className="text-center text-primary font-weight-bold">Verifying...</p>
       </div>
     </Container>
   );
