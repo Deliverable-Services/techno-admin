@@ -56,9 +56,9 @@
     "zustand": "3.4.1"
   },
   "scripts": {
-    "start": "REACT_ERROR_OVERLAY=false NODE_OPTIONS=--openssl-legacy-provider react-scripts start",
-    "dev": "REACT_ERROR_OVERLAY=false NODE_OPTIONS=--openssl-legacy-provider react-scripts start",
-    "build": "NODE_OPTIONS=--openssl-legacy-provider react-scripts build",
+    "start": "REACT_ERROR_OVERLAY=false react-scripts start",
+    "dev": "REACT_ERROR_OVERLAY=false react-scripts start",
+    "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   },
