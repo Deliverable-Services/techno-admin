@@ -201,7 +201,7 @@ const Permissions = () => {
     <>
       <Roles />
 
-      <Container fluid className=" component-wrapper view-padding mb-3 mt-3">
+      <Container fluid className="card component-wrapper view-padding mb-3 mt-5">
         <PageHeading title="Assign Permission" />
 
         <Container fluid className="h-100 p-0">
@@ -224,7 +224,7 @@ const Permissions = () => {
         </Container>
       </Container>
 
-      <Container fluid className=" component-wrapper view-padding">
+      <Container fluid className="card component-wrapper view-padding">
         <PageHeading
           title="Permissions"
           onClick={_onCreateClick}

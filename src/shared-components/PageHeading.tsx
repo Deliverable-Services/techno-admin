@@ -30,14 +30,11 @@ const PageHeading: React.FC<Props> = ({
 
       {onClick && (
         <Restricted to={permissionReq}>
-          <Button
-            variant="primary"
-            className="d-flex align-items-center"
-            onClick={onClick}
-            size={"sm"}
-          >
-            <AiOutlinePlus size={18} />
-            <p className="mb-0 ml-1">Create</p>
+          <Button variant="primary" onClick={onClick} size={"sm"} style={{ background: 'var(--primary-color)', borderColor: 'var(--primary-color)' }}>
+            <div className="text-white d-flex align-items-center">
+              <AiOutlinePlus size={18} />
+              <p className="mb-0 ml-1">Create</p>
+            </div>
           </Button>
         </Restricted>
       )}

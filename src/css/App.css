@@ -17,6 +17,10 @@
  * Licensed under MIT (https://github.com/twbs/bootstrap/blob/main/LICENSE)
  */
 :root {
+  --primary-color:#303030;
+  --black: #202020;
+  --sidebar:#ebebeb;
+  --body:#f1f1f1;
   --blue: #007bff;
   --indigo: #6610f2;
   --purple: #6f42c1;
@@ -6064,7 +6068,7 @@ input[type="button"].btn-block {
   background-color: #fff;
   border: 1px solid #dee2e6;
   border-radius: 4px !important;
-  color: black;
+  color: var(--primary-color);
   width: 36px;
   height: 36px;
   display: flex;
@@ -6101,8 +6105,8 @@ input[type="button"].btn-block {
 .page-item.active .page-link {
   z-index: 3;
   color: #fff;
-  background-color: #000000;
-  border-color: #000000;
+  background-color: var(--primary-color);
+  border-color: var(--primary-color);
 }
 
 .page-item.disabled .page-link {
@@ -7684,7 +7688,7 @@ a.close.disabled {
   margin-bottom: 0;
   font-size: 1rem;
   background-color: #f7f7f7;
-  border-bottom: 1px solid #ebebeb;
+  border-bottom: 1px solid var(--sidebar);
   border-top-left-radius: calc(0.3rem - 1px);
   border-top-right-radius: calc(0.3rem - 1px);
 }
@@ -11811,7 +11815,7 @@ a.text-text-muted:focus {
 }
 
 nav {
-  background-color: #ebebeb;
+  background-color: var(--sidebar);
   min-width: 300px;
   /* width: 25vh; */
   height: 100vh;
@@ -12016,7 +12020,7 @@ th {
   width: 100%;
   height: 65px;
   max-height: 65px;
-  background-color: #f1f1f1;
+  background-color: var(--body);
   border-bottom: 1px solid #ccc;
 }
 
@@ -12717,14 +12721,14 @@ th {
 }
 body {
   font-family: "Inter", sans-serif;
-  background-color: #f1f1f1;
+  background-color: var(--body);
   overflow-x: hidden;
 }
 
 .App {
   display: -ms-flex;
   display: flex;
-  background-color: #f1f1f1;
+  background-color: var(--body);
   color: #1e2022;
 }
 
@@ -13065,5 +13069,5 @@ li.navLink.my-1 svg path {
 }
 
 .bg-global {
-  background-color: #f1f1f1 !important;
+  background-color: var(--body) !important;
 }

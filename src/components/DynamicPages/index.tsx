@@ -226,7 +226,7 @@ const DynamicPages = () => {
 
   return (
     <>
-      <Container fluid className="card component-wrapper view-padding">
+      <Container fluid className="component-wrapper view-padding">
         <PageHeading
           title="Dynamic Pages"
           onClick={_onCreateClick}
