@@ -1,10 +1,9 @@
 import { AxiosError } from "axios";
-import moment, { Moment } from "moment";
-import React, { useEffect, useState } from "react";
-import { Container, Form } from "react-bootstrap";
+import moment from "moment";
+import React, { useState } from "react";
+import { Container } from "react-bootstrap";
 import { DateRangePicker, FocusedInputShape } from "react-dates";
 import "react-dates/initialize";
-import { AiOutlineArrowUp } from "react-icons/ai";
 import { BiSad } from "react-icons/bi";
 import { BsCalendar, BsArrowRight } from "react-icons/bs";
 
@@ -12,13 +11,11 @@ import { useQuery } from "react-query";
 import { useHistory } from "react-router-dom";
 import { handleApiError } from "../../hooks/handleApiErrors";
 import IsLoading from "../../shared-components/isLoading";
-import { MdArrowRightAlt } from "react-icons/md";
 import { FaFacebook } from "react-icons/fa";
 import { IoLogoInstagram } from "react-icons/io5";
 import { FaYoutube } from "react-icons/fa";
 
-import API from "../../utils/API";
-import { isDesktop, primaryColor } from "../../utils/constants";
+import { primaryColor } from "../../utils/constants";
 import {
   ResponsiveContainer,
   ComposedChart,
@@ -30,28 +27,8 @@ import {
   Tooltip,
   Legend,
 } from "recharts";
-import {
-  BookingLineChart,
-  ChartArea,
-  ChartBar,
-  ChartLine,
-  RevenueLineChart,
-  WebsiteAnalyticsChart,
-  BrandGMBChart,
-} from "./Chart";
-import useUserProfileStore from "../../hooks/useUserProfileStore";
+import { WebsiteAnalyticsChart, BrandGMBChart } from "./Chart";
 import "./dashboard.css";
-
-interface IDates {
-  start_date: Moment;
-  end_date: Moment;
-  focusedInput: FocusedInputShape | null;
-}
-
-const returnPercentage = (newData: number, lastTotal: number) => {
-  const p = newData / (lastTotal || 1);
-  return (p * 100).toFixed(1);
-};
 
 const bookingFilter = {
   datefrom: moment().startOf("month").format("YYYY-MM-DD"),
@@ -85,38 +62,33 @@ const Dashboard = () => {
   const [focusedInput, setFocusInput] = useState<FocusedInputShape | null>(
     null
   );
-  const [currentTime, setCurrentTime] = useState(moment().format("hh:mm a"));
-  const { data, isLoading, isFetching } = useQuery<any>(
-    ["analytics", , filter],
+  const { data, isLoading, isFetching } = useQuery<any>(["analytics", filter], {
+    onError: (error: AxiosError) => {
+      handleApiError(error, history);
+    },
+  });
+  const { isLoading: isBookingAnalyticsLoading } = useQuery<any>(
+    ["bookingAnalytics", filter],
     {
       onError: (error: AxiosError) => {
         handleApiError(error, history);
       },
     }
   );
-  const { data: BookingAnalytics, isLoading: isBookingAnalyticsLoading } =
-    useQuery<any>(["bookingAnalytics", , filter], {
+  const { isLoading: isRevenueAnalyticsLoading } = useQuery<any>(
+    ["revenueAnalytic", filter],
+    {
       onError: (error: AxiosError) => {
         handleApiError(error, history);
       },
-    });
-  const { data: RevenueAnalytics, isLoading: isRevenueAnalyticsLoading } =
-    useQuery<any>(["revenueAnalytic", , filter], {
-      onError: (error: AxiosError) => {
-        handleApiError(error, history);
-      },
-    });
-  const loggedInUser = useUserProfileStore((state) => state.user);
+    }
+  );
 
   const _onFilterChange = (idx: any, value: any) => {
     setFilter((prev) => ({
       ...prev,
       [idx]: value,
     }));
-  };
-
-  const _changeCurrentTime = () => {
-    setCurrentTime(moment().format("hh:mm a"));
   };
 
   const datanew = [
@@ -130,10 +102,6 @@ const Dashboard = () => {
     { customer: 10, invoice: 10, leads: 18 },
     { customer: 6.5, invoice: 5.2, leads: 28 },
   ];
-
-  useEffect(() => {
-    setInterval(() => _changeCurrentTime(), 1000);
-  }, []);
 
   if (isLoading || isFetching) return <IsLoading />;
 

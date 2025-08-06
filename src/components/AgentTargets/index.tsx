@@ -1,7 +1,7 @@
 import { AxiosError } from "axios";
 import moment from "moment";
 import React, { useMemo, useState } from "react";
-import { Button, Col, Container, Dropdown, Form, Row } from "react-bootstrap";
+import { Button, Container, Dropdown, Form } from "react-bootstrap";
 import { BiSad } from "react-icons/bi";
 import { useQuery } from "react-query";
 import { useHistory } from "react-router-dom";
@@ -33,20 +33,16 @@ const intitialFilter = {
 
 const AgentTargets = () => {
   const history = useHistory();
-  const [selectedRows, setSelectedRows] = useState([]);
+
   const [filter, setFilter] = useState(intitialFilter);
-  const { data, isLoading, isFetching, error } = useQuery<any>(
-    [key, , filter],
-    {
-      onError: (error: AxiosError) => {
-        handleApiError(error, history);
-      },
-    }
-  );
+  const { data, isLoading, isFetching, error } = useQuery<any>([key, filter], {
+    onError: (error: AxiosError) => {
+      handleApiError(error, history);
+    },
+  });
 
   const { data: Agents, isLoading: isAgentLoading } = useQuery<any>([
     "users",
-    ,
     {
       role: "agent",
     },
@@ -129,7 +125,7 @@ const AgentTargets = () => {
         },
       },
     ],
-    []
+    [_onEditClick, _onUserClick]
   );
 
   if (!data && (!isLoading || !isFetching)) {
@@ -199,7 +195,9 @@ const AgentTargets = () => {
                             onFilterChange={_onFilterChange}
                           />
                           <Form.Group>
-                            <Form.Label className="text-muted">Month</Form.Label>
+                            <Form.Label className="text-muted">
+                              Month
+                            </Form.Label>
                             <Form.Control
                               type="month"
                               value={moment(filter.month).format("YYYY-MM")}
@@ -241,7 +239,6 @@ const AgentTargets = () => {
           </>
         )}
       </div>
-
     </>
   );
 };

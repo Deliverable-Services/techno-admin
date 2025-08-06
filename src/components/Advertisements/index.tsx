@@ -1,14 +1,14 @@
 import { AxiosError } from "axios";
 import { useMemo, useState } from "react";
-import { Button, Col, Container, Dropdown, Nav, Row } from "react-bootstrap";
+import { Button, Container, Dropdown, Nav } from "react-bootstrap";
 import { BiSad } from "react-icons/bi";
 import LightBox from "react-lightbox-component";
 import { QueryFunction, useMutation, useQuery } from "react-query";
 import { useHistory } from "react-router-dom";
-import Switch from "react-switch";
+
 import { Cell } from "react-table";
 import { handleApiError } from "../../hooks/handleApiErrors";
-import BreadCrumb from "../../shared-components/BreadCrumb";
+
 import CreatedUpdatedAt from "../../shared-components/CreatedUpdatedAt";
 import EditButton from "../../shared-components/EditButton";
 import FilterSelect from "../../shared-components/FilterSelect";
@@ -57,16 +57,10 @@ const getBanners: QueryFunction = async ({ queryKey }) => {
 
 const Advertisements = () => {
   const history = useHistory();
-  const [selectedRowId, setSelectedRowId] = useState<string>("");
   const [selectedRows, setSelectedRows] = useState([]);
   console.log(selectedRows.map((item) => item.id));
-  const [page, setPage] = useState<number>(1);
-  const [deletePopup, setDeletePopup] = useState(false);
 
   const [isDraggable, setIsDraggable] = useState(false);
-  const handleChange = (nextChecked) => {
-    setIsDraggable(nextChecked);
-  };
   const [filter, setFilter] = useState(initialFilter);
 
   const { data, isLoading, isFetching, error } = useQuery<any>(
@@ -201,7 +195,7 @@ const Advertisements = () => {
         },
       },
     ],
-    []
+    [_onEditClick]
   );
 
   if (!data && (!isLoading || !isFetching)) {
@@ -239,66 +233,86 @@ const Advertisements = () => {
                 <>
                   <div className="mt-3" />
                   <ReactTable
-                    tabs={<div className="d-flex justify-content-between">
-                      {(!isLoading || !isFetching) && (
-                        <Nav className="global-navs" variant="tabs" activeKey={filter.type} onSelect={(selectedKey) => _onFilterChange('type', selectedKey)}>
-                          <Nav.Item>
-                            <Nav.Link eventKey="offer">
-                              Offer ({data?.data?.filter(item => item.status === 'offer').length || 0})
-                            </Nav.Link>
-                          </Nav.Item>
-                          <Nav.Item>
-                            <Nav.Link eventKey="latest">
-                              Latest ({data?.data?.filter(item => item.status === 'latest').length || 0})
-                            </Nav.Link>
-                          </Nav.Item>
-
-                          <Nav.Item>
-                            <Nav.Link eventKey="trending">
-                              Trending ({data?.data?.filter(item => item.status === 'trending').length || 0})
-                            </Nav.Link>
-                          </Nav.Item>
-                        </Nav>
-                      )}
-
-                    </div>}
-                    filters={<Dropdown className="filter-dropdown">
-                      <Dropdown.Toggle as={Button} variant="primary">
-                        <BsFunnel />
-                      </Dropdown.Toggle>
-                      <Dropdown.Menu>
-                        <div className="filter-dropdown-heading d-flex justify-content-between w-100">
-                          <h4>Filter</h4>
-                          <div
-                            className="d-flex align-items-center justify-md-content-center"
+                    tabs={
+                      <div className="d-flex justify-content-between">
+                        {(!isLoading || !isFetching) && (
+                          <Nav
+                            className="global-navs"
+                            variant="tabs"
+                            activeKey={filter.type}
+                            onSelect={(selectedKey) =>
+                              _onFilterChange("type", selectedKey)
+                            }
                           >
-                            <Button
-                              variant={
-                                areTwoObjEqual(initialFilter, filter)
-                                  ? "light"
-                                  : "primary"
-                              }
-                              style={{
-                                fontSize: 14,
-                              }}
-                              onClick={() => setFilter(initialFilter)}
-                            >
-                              Reset Filters
-                            </Button>
+                            <Nav.Item>
+                              <Nav.Link eventKey="offer">
+                                Offer (
+                                {data?.data?.filter(
+                                  (item) => item.status === "offer"
+                                ).length || 0}
+                                )
+                              </Nav.Link>
+                            </Nav.Item>
+                            <Nav.Item>
+                              <Nav.Link eventKey="latest">
+                                Latest (
+                                {data?.data?.filter(
+                                  (item) => item.status === "latest"
+                                ).length || 0}
+                                )
+                              </Nav.Link>
+                            </Nav.Item>
+
+                            <Nav.Item>
+                              <Nav.Link eventKey="trending">
+                                Trending (
+                                {data?.data?.filter(
+                                  (item) => item.status === "trending"
+                                ).length || 0}
+                                )
+                              </Nav.Link>
+                            </Nav.Item>
+                          </Nav>
+                        )}
+                      </div>
+                    }
+                    filters={
+                      <Dropdown className="filter-dropdown">
+                        <Dropdown.Toggle as={Button} variant="primary">
+                          <BsFunnel />
+                        </Dropdown.Toggle>
+                        <Dropdown.Menu>
+                          <div className="filter-dropdown-heading d-flex justify-content-between w-100">
+                            <h4>Filter</h4>
+                            <div className="d-flex align-items-center justify-md-content-center">
+                              <Button
+                                variant={
+                                  areTwoObjEqual(initialFilter, filter)
+                                    ? "light"
+                                    : "primary"
+                                }
+                                style={{
+                                  fontSize: 14,
+                                }}
+                                onClick={() => setFilter(initialFilter)}
+                              >
+                                Reset Filters
+                              </Button>
+                            </div>
                           </div>
-                        </div>
-                        <div className="select-filter">
-                          <FilterSelect
-                            currentValue={filter.active}
-                            data={isActiveArray}
-                            label="Is Active?"
-                            idx="active"
-                            onFilterChange={_onFilterChange}
-                            defaultSelectTitle="Show All"
-                          />
-                        </div>
-                      </Dropdown.Menu>
-                    </Dropdown>}
+                          <div className="select-filter">
+                            <FilterSelect
+                              currentValue={filter.active}
+                              data={isActiveArray}
+                              label="Is Active?"
+                              idx="active"
+                              onFilterChange={_onFilterChange}
+                              defaultSelectTitle="Show All"
+                            />
+                          </div>
+                        </Dropdown.Menu>
+                      </Dropdown>
+                    }
                     data={data.data}
                     columns={columns}
                     setSelectedRows={setSelectedRows}

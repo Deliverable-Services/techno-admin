@@ -60,7 +60,7 @@ const mainLinks: Array<INavLink> = [
     permissionReq: "read_booking",
   },
   {
-    title: "CRM",
+    title: "Leads",
     icon: <SiCivicrm />,
     permissionReq: "read_bookingslot",
     children: [

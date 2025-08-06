@@ -1,6 +1,11 @@
 import { useEffect, useState } from "react";
-import { Container } from "react-bootstrap";
-import { Redirect, Route, Switch, useLocation } from "react-router-dom";
+import {
+  Redirect,
+  Route,
+  Switch,
+  useLocation,
+  useHistory,
+} from "react-router-dom";
 import Advertisements from "./components/Advertisements";
 import AdvertisementCreateUpdateForm from "./components/Advertisements/AdvertisementUpdateCreateForm";
 import AgentTargets from "./components/AgentTargets";
@@ -44,8 +49,7 @@ import Roles from "./components/Roles";
 import RolesCreateUpdateForm from "./components/Roles/RolesCreateUpdateForm";
 import Services from "./components/Servicies";
 import ServicesCreateUpdateForm from "./components/Servicies/ServiciesCreateUpdateForm";
-import StaticPages from "./components/StaticPages";
-import StaticPageCreateForm from "./components/StaticPages/StaticPageCreateUpdateForm";
+
 import Testimonial from "./components/Testimonials";
 import TestimonialCreateUpdateForm from "./components/Testimonials/TestimonialCreateUpdateForm";
 import TopBar from "./components/TopBar";
@@ -65,7 +69,7 @@ import { PrivateRoute } from "./shared-components/PrivateRoute";
 import VerifingUserLoader from "./shared-components/VerifingUserLoader";
 import API from "./utils/API";
 import CMS from "./components/CMS";
-import CRM from "./components/CRM";
+
 import CRMBoard from "./components/CRM/CRMBoard";
 import organization from "./components/Organization";
 import InvoicePage from "./components/Invoices";
@@ -85,11 +89,39 @@ const App = () => {
   const { isLoading: isVerifingLoggedInUser } = useMeQuery();
   const [isNavOpen, setIsNavOpen] = useState<boolean>(false);
   const { pathname } = useLocation();
+  const history = useHistory();
   const loggedInUser = useUserProfileStore((state) => state.user);
   const { setOrganisations, selectedOrg, setSelectedOrg } = useOrganisation();
   //adding token to every request
   const token = useTokenStore((state) => state.accessToken);
   if (token) API.defaults.headers.common["Authorization"] = `Bearer ${token}`;
+
+  // Check for authentication and clear cache if no token or user
+  useEffect(() => {
+    const isLoginPage =
+      pathname.includes("login") || pathname.includes("verify-otp");
+
+    if (!isLoginPage && !isVerifingLoggedInUser && (!token || !loggedInUser)) {
+      // Clear all stored data
+      localStorage.clear();
+      sessionStorage.clear();
+
+      // Clear token store
+      useTokenStore.getState().removeToken();
+
+      // Clear cache if available
+      if ("caches" in window) {
+        caches.keys().then((cacheNames) => {
+          cacheNames.forEach((cacheName) => {
+            caches.delete(cacheName);
+          });
+        });
+      }
+
+      // Redirect to login page
+      history.replace("/login");
+    }
+  }, [token, loggedInUser, isVerifingLoggedInUser, pathname, history]);
 
   useEffect(() => {
     updateDimensions();
@@ -116,7 +148,7 @@ const App = () => {
       }
     };
     if (loggedInUser) handleSetOrganisations(loggedInUser?.organisations);
-  }, [loggedInUser]);
+  }, [loggedInUser, selectedOrg, setOrganisations, setSelectedOrg]);
 
   const updateDimensions = () => {
     const width = window.innerWidth;
