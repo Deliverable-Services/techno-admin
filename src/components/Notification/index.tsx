@@ -194,9 +194,7 @@ const Notifications = () => {
       <div className="view-padding">
         <PageHeading
           icon={
-            <span className="icon-bg">
-              <RiNotification2Line size={24} className="icon-color" />
-            </span>
+            <RiNotification2Line size={24} />
           }
           title="Notifications"
           description="Create and manage notifications for your workflow"

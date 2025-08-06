@@ -109,12 +109,14 @@ const Cities = () => {
         Header: "Actions",
         Cell: (data: Cell) => {
           return (
-            <EditButton
-              onClick={() => {
-                _onEditClick(data.row.values.id);
-              }}
-              permissionReq="update_city"
-            />
+            <div className="justify-content-end d-flex">
+              <EditButton
+                onClick={() => {
+                  _onEditClick(data.row.values.id);
+                }}
+                permissionReq="update_city"
+              />
+            </div>
           );
         },
       },
@@ -135,46 +137,46 @@ const Cities = () => {
 
   return (
     <>
-      <Container fluid className=" component-wrapper view-padding">
+      <div className="view-padding">
         <PageHeading
-          icon={<GiModernCity />}
+          icon={<GiModernCity size={24} />}
           title="Serviceable Cities"
+          description="Create and manage cities for your workflow"
           onClick={_onCreateClick}
           totalRecords={data?.total}
           permissionReq="create_city"
         />
-        <div className="card">
-          <Container fluid className="h-100 p-0 pt-3">
-            {isLoading ? (
-              <IsLoading />
-            ) : (
-              <>
-                {!error && (
-                  <ReactTable
-                    data={data?.data}
-                    columns={columns}
-                    setSelectedRows={setSelectedRows}
-                    filter={filter}
-                    onFilterChange={_onFilterChange}
-                    isDataLoading={isFetching}
-                    searchPlaceHolder="Search using city, state"
-                    deletePermissionReq="delete_city"
-                  />
-                )}
-                {!error && data?.data?.length > 0 ? (
-                  <TablePagination
-                    currentPage={data?.current_page}
-                    lastPage={data?.last_page}
-                    setPage={_onFilterChange}
-                    hasNextPage={!!data?.next_page_url}
-                    hasPrevPage={!!data?.prev_page_url}
-                  />
-                ) : null}{" "}
-              </>
+      </div>
+      <hr />
+      <div className="">
+        {isLoading ? (
+          <IsLoading />
+        ) : (
+          <>
+            {!error && (
+              <ReactTable
+                data={data?.data}
+                columns={columns}
+                setSelectedRows={setSelectedRows}
+                filter={filter}
+                onFilterChange={_onFilterChange}
+                isDataLoading={isFetching}
+                searchPlaceHolder="Search using city, state"
+                deletePermissionReq="delete_city"
+              />
             )}
-          </Container>
-        </div>
-      </Container>
+            {!error && data?.data?.length > 0 ? (
+              <TablePagination
+                currentPage={data?.current_page}
+                lastPage={data?.last_page}
+                setPage={_onFilterChange}
+                hasNextPage={!!data?.next_page_url}
+                hasPrevPage={!!data?.prev_page_url}
+              />
+            ) : null}{" "}
+          </>
+        )}
+      </div>
       {selectedRows.length > 0 && (
         <div className="delete-button rounded">
           <span>

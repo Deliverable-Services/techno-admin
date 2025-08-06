@@ -12583,9 +12583,6 @@ align-items: center;
 .table tbody tr:hover {
   background: rgba(231, 234, 243, 0.4);
 }
-.table tbody tr:last-child td {
-    border-bottom: 0;
-}
 
 .form-group {
   text-align: left !important;

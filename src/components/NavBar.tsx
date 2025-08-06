@@ -241,15 +241,15 @@ const hiddenRoutesForCRM = [
   "/coupons",
   "/agent",
   "/agent-targets",
+  "/products",
+  "/product-brands",
   "/product-variants",
 ];
 const hiddenRoutesForEcommerce = [
   "/crm",
   "/crm-bookings",
   "/services",
-  "/products",
-  "/product-brands",
-  "/categories",
+
 ];
 
 const NavBar = ({ isNavOpen, setIsNavOpen }: INavBar) => {
