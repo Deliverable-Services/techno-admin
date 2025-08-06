@@ -346,7 +346,7 @@ function ReactTable({
         <DndProvider backend={HTML5Backend}>
           <div className="tableFixed position-relative">
             <Table
-              className="table-fixed"
+              className="table-fixed" style={{ borderTop: '1px solid var(--border)' }}
               {...getTableProps()}
               responsive
               hover
@@ -513,8 +513,8 @@ const Row = ({ row }: any) => (
       return (
         <td {...cell.getCellProps()} style={{ verticalAlign: "middle" }}>
           {cell.value ||
-          cell.column.id === "selection" ||
-          cell.column.id === "Actions" ? (
+            cell.column.id === "selection" ||
+            cell.column.id === "Actions" ? (
             cell.render("Cell")
           ) : (
             <span className="text-muted">NA</span>

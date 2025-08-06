@@ -142,7 +142,7 @@ const Notifications = () => {
         Header: "Actions",
         Cell: (data: Cell) => {
           return (
-            <div className="d-flex align-items-center gap-3">
+            <div className="d-flex align-items-center justify-content-end gap-3">
               <EditButton
                 onClick={() => {
                   _onEditClick(data.row.values.id);

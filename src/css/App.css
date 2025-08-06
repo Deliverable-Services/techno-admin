@@ -1985,7 +1985,20 @@ pre code {
   vertical-align: bottom;
   border-bottom: 2px solid #dee2e6;
 }
-
+.table thead th:first-child {
+    padding-left: 25px;
+}
+.table thead th:last-child {
+  padding-right: 25px;
+  text-align: right;
+}
+.table td:first-child {
+  padding-left: 25px;
+}
+.table td:last-child {
+  padding-right: 25px;
+  text-align: right;
+}
 .table tbody + tbody {
   border-top: 2px solid #dee2e6;
 }
@@ -12509,7 +12522,11 @@ th {
 .page-item.active .page-link .text-secondary {
   color: white !important;
 }
-
+.ellipsis-dropdown{
+justify-content: end;
+display: flex;
+align-items: center;
+}
 .ellipsis-dropdown button{
     width: 24px;
     height: 24px;
@@ -12707,7 +12724,7 @@ th {
 }
 .global-navs {
   background: #fafafa;
-  padding: 4px;
+  padding: 3px 4px;
   border-radius: 6px !important;
   border: 1px solid #e9eaeb;
 }
@@ -12718,6 +12735,7 @@ th {
   color: #717680;
   font-size: 0.8em;
   font-weight: 700;
+  padding: 2px 8px;
 }
 .global-navs.nav-tabs .nav-link.active {
   cursor: pointer;
