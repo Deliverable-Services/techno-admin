@@ -79,6 +79,7 @@ import WebsitePages from "./components/WebsitePages";
 import { BottomNavigation } from "./components/BottomNavigation/BottomNavigation";
 import { MoreScreen } from "./components/MoreScreen/MoreScreen";
 import useUserProfileStore from "./hooks/useUserProfileStore";
+import GoogleAnalytics from "./components/Google-analytics";
 
 const App = () => {
   const [isDesktop, setIsDesktop] = useState<boolean>(false);
@@ -528,6 +529,12 @@ const App = () => {
                 path="/website/:id"
                 exact
                 component={ViewWebsite}
+                permissionReq="read_staticpage"
+              />
+              <PrivateRoute
+                path="/google-analytics"
+                exact
+                component={GoogleAnalytics}
                 permissionReq="read_staticpage"
               />
 
