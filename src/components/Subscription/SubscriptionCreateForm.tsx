@@ -1,5 +1,5 @@
 import { Formik, Form, Field, FieldArray } from "formik";
-import { Button, Modal } from "react-bootstrap";
+import { Button } from "react-bootstrap";
 import API from "../../utils/API";
 import { showMsgToast } from "../../utils/showMsgToast";
 import { showErrorToast } from "../../utils/showErrorToast";
@@ -46,107 +46,13 @@ const validationSchema = Yup.object().shape({
     ),
 });
 
-const InvoicesCreateForm = ({ onSuccess }: { onSuccess?: () => void }) => {
+const SubscriptionCreateForm = ({ onSuccess }: { onSuccess?: () => void }) => {
     const [selectedUser, setSelectedUser] = useState<{ label: string; value: string } | null>(null);
-    const [showPreview, setShowPreview] = useState(false);
-    // const [isDownloading, setIsDownloading] = useState(false);
 
     const generateInvoiceNumber = () => {
         return Math.floor(100000 + Math.random() * 900000).toString();
     };
 
-    // Function to generate and download PDF
-    // const downloadInvoicePDF = (values: any) => {
-    //     setIsDownloading(true);
-    //     try {
-    //         const doc = new jsPDF();
-    //         const invoiceNumber = generateInvoiceNumber();
-    //         const today = new Date();
-    //         const invoiceDate = today.toLocaleDateString('en-GB');
-
-    //         // Calculate totals
-    //         const items = values.items.map((item: any) => ({
-    //             ...item,
-    //             total: Number(item.quantity) * Number(item.unit_price),
-    //         }));
-    //         const subtotal = items.reduce((sum: number, item: any) => sum + item.total, 0);
-    //         const tax = values.tax ? Number(values.tax) : 0;
-    //         const total = subtotal + tax;
-
-    //         // Header
-    //         doc.setFontSize(24);
-    //         doc.text('INVOICE', 20, 30);
-
-    //         // Invoice details
-    //         doc.setFontSize(12);
-    //         doc.text(`Invoice Number: ${invoiceNumber}`, 20, 50);
-    //         doc.text(`Date: ${invoiceDate}`, 20, 60);
-    //         doc.text(`Due Date: ${values.due_date || 'N/A'}`, 20, 70);
-
-    //         // Company logo placeholder
-    //         doc.setFillColor(255, 224, 102);
-    //         doc.rect(150, 20, 40, 40, 'F');
-    //         doc.setFontSize(20);
-    //         doc.text('🧾', 165, 45);
-
-    //         // Bill to section
-    //         doc.setFontSize(14);
-    //         doc.text('Bill To:', 20, 90);
-    //         doc.setFontSize(12);
-    //         doc.text(selectedUser?.label || 'N/A', 20, 100);
-
-    //         // Items table
-    //         const tableData = items.map((item: any) => [
-    //             item.item_name || 'N/A',
-    //             item.quantity.toString(),
-    //             `$${item.unit_price || 0}`,
-    //             `$${item.total.toFixed(2)}`
-    //         ]);
-
-    //         autoTable(doc, {
-    //             head: [['Description', 'Qty', 'Unit Price', 'Amount']],
-    //             body: tableData,
-    //             startY: 120,
-    //             styles: {
-    //                 fontSize: 10,
-    //                 cellPadding: 5,
-    //             },
-    //             headStyles: {
-    //                 fillColor: [66, 66, 66],
-    //                 textColor: 255,
-    //                 fontStyle: 'bold',
-    //             },
-    //         });
-
-    //         // Totals section
-    //         const finalY = (doc as any).lastAutoTable.finalY + 10;
-    //         doc.setFontSize(12);
-    //         doc.text(`Subtotal: $${subtotal.toFixed(2)}`, 140, finalY);
-    //         doc.text(`Tax: $${tax.toFixed(2)}`, 140, finalY + 10);
-    //         doc.setFontSize(14);
-    //         doc.setFont(undefined, 'bold');
-    //         doc.text(`Total: $${total.toFixed(2)}`, 140, finalY + 20);
-
-    //         // Description
-    //         if (values.description) {
-    //             doc.setFontSize(12);
-    //             doc.setFont(undefined, 'normal');
-    //             doc.text('Description:', 20, finalY + 40);
-    //             doc.setFontSize(10);
-    //             const splitDescription = doc.splitTextToSize(values.description, 170);
-    //             doc.text(splitDescription, 20, finalY + 50);
-    //         }
-
-    //         // Download the PDF
-    //         doc.save(`invoice-${invoiceNumber}.pdf`);
-    //         showMsgToast("Invoice PDF downloaded successfully");
-    //     } catch (error) {
-    //         showErrorToast("Failed to generate PDF");
-    //         console.error('PDF generation error:', error);
-    //     } finally {
-    //         setIsDownloading(false);
-    //     }
-    // };
 
     // Async load options for user search
     const loadUserOptions = async (inputValue: string) => {
@@ -161,94 +67,6 @@ const InvoicesCreateForm = ({ onSuccess }: { onSuccess?: () => void }) => {
 
     return (
         <>
-
-            {/* Invoice Preview Modal */}
-            <Modal
-                show={showPreview}
-                onHide={() => setShowPreview(false)}
-                style={{
-                    margin: '0 auto',
-
-                }}
-                centered
-            >
-                <Modal.Header closeButton>
-                    <Modal.Title>Invoice Preview</Modal.Title>
-                </Modal.Header>
-                <Modal.Body>
-                    <div
-                        className="invoice-preview">
-                        <div className="invoice-header">
-                            <div>
-                                <h2>Invoice</h2>
-                                <div className="invoice-header-details">
-                                    <div>Invoice number <span>{generateInvoiceNumber()}</span></div>
-                                    <div>Issue date <span>{new Date().toLocaleDateString('en-GB')}</span></div>
-                                    <div>Due date <span>{'-'}</span></div>
-                                </div>
-                            </div>
-                            <div>
-                                {/* Placeholder for logo */}
-                                <div className="invoice-logo">
-                                    <span role="img" aria-label="logo">🧾</span>
-                                </div>
-                            </div>
-                        </div>
-                        <div className="invoice-billed-to">
-                            <div>
-                                <div className="invoice-billed-to-label">Billed to</div>
-                                <div className="invoice-billed-to-name">{selectedUser?.label || '-'}</div>
-                                <div className="invoice-billed-to-email">{selectedUser ? '' : '-'}</div>
-                            </div>
-                        </div>
-                        <div className="invoice-total">
-                            ${0} due {new Date().toLocaleDateString('en-GB')}
-                        </div>
-                        <table className="invoice-table">
-                            <thead>
-                                <tr className="invoice-table-header" >
-                                    <th className="invoice-table-header-cell-left">Description</th>
-                                    <th className="invoice-table-header-cell">Qty</th>
-                                    <th className="invoice-table-header-cell">Unit price</th>
-                                    <th className="invoice-table-header-cell">Amount</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td className="invoice-table-cell-left">-</td>
-                                    <td className="invoice-table-cell">-</td>
-                                    <td className="invoice-table-cell">-</td>
-                                    <td className="invoice-table-cell">-</td>
-                                </tr>
-                            </tbody>
-                        </table>
-                        <div className="invoice-summary-download">
-                            <div className="invoice-summary-item-download">
-                                <span>Subtotal</span>
-                                <span>${0}</span>
-                            </div>
-                            <div className="invoice-summary-item-download">
-                                <span>Tax</span>
-                                <span>${0}</span>
-                            </div>
-                            <div className="invoice-summary-item-download">
-                                <span>Total</span>
-                                <span>${0}</span>
-                            </div>
-                            <div className="invoice-summary-item-download">
-                                <span>Amount due</span>
-                                <span>${0}</span>
-                            </div>
-                        </div>
-                    </div>
-                </Modal.Body>
-                <Modal.Footer>
-                    <Button variant="secondary" onClick={() => setShowPreview(false)}>
-                        Close
-                    </Button>
-                </Modal.Footer>
-            </Modal>
-
             <Formik
                 initialValues={initialValues}
                 validationSchema={validationSchema}
@@ -297,13 +115,6 @@ const InvoicesCreateForm = ({ onSuccess }: { onSuccess?: () => void }) => {
                             {/* Update the download button to use current form values */}
                             <div className="recipient-header">
                                 <h2 className="recipient-heading">Recipient</h2>
-                                <div className="recipient-actions">
-                                    <Button className="primary-btn"
-                                        onClick={() => setShowPreview(true)}
-                                    >
-                                        Preview Invoice
-                                    </Button>
-                                </div>
                             </div>
 
                             <div className="form-group">
@@ -475,7 +286,7 @@ const InvoicesCreateForm = ({ onSuccess }: { onSuccess?: () => void }) => {
                                 <Field name="description" as="textarea" className="form-control" />
                             </div>
                             <Button type="submit" disabled={isSubmitting} className="primary-btn">
-                                {isSubmitting ? "Saving..." : "Save Invoice"}
+                                {isSubmitting ? "Saving..." : "Save Subscription"}
                             </Button>
                         </Form>
                     </div>
@@ -485,4 +296,4 @@ const InvoicesCreateForm = ({ onSuccess }: { onSuccess?: () => void }) => {
     );
 };
 
-export default InvoicesCreateForm; 
+export default SubscriptionCreateForm; 

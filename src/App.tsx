@@ -46,8 +46,6 @@ import Services from "./components/Servicies";
 import ServicesCreateUpdateForm from "./components/Servicies/ServiciesCreateUpdateForm";
 import StaticPages from "./components/StaticPages";
 import StaticPageCreateForm from "./components/StaticPages/StaticPageCreateUpdateForm";
-import Subscriptions from "./components/Subscriptions";
-import SingleSubscriptions from "./components/Subscriptions/single";
 import Testimonial from "./components/Testimonials";
 import TestimonialCreateUpdateForm from "./components/Testimonials/TestimonialCreateUpdateForm";
 import TopBar from "./components/TopBar";
@@ -80,6 +78,7 @@ import { BottomNavigation } from "./components/BottomNavigation/BottomNavigation
 import { MoreScreen } from "./components/MoreScreen/MoreScreen";
 import useUserProfileStore from "./hooks/useUserProfileStore";
 import GoogleAnalytics from "./components/Google-analytics";
+import SubscriptionPage from "./components/Subscription";
 
 const App = () => {
   const [isDesktop, setIsDesktop] = useState<boolean>(false);
@@ -431,12 +430,12 @@ const App = () => {
                 component={RolesCreateUpdateForm}
                 permissionReq="read_role"
               />
-              <PrivateRoute
+              {/* <PrivateRoute
                 path="/subscriptions"
                 exact
                 component={Subscriptions}
                 permissionReq="read_subscription"
-              />
+              /> */}
               <PrivateRoute
                 path="/website-pages/dynamic/create-edit"
                 exact
@@ -461,12 +460,12 @@ const App = () => {
                 component={MoreScreen}
                 permissionReq="read_staticpage"
               />
-              <PrivateRoute
+              {/* <PrivateRoute
                 path="/subscriptions/:id"
                 exact
                 component={SingleSubscriptions}
                 permissionReq="read_subscription"
-              />
+              /> */}
               <PrivateRoute
                 path="/orders/:id"
                 exact
@@ -498,9 +497,9 @@ const App = () => {
                 permissionReq="read_city"
               />
               <PrivateRoute
-                path="/subscription"
+                path="/subscriptions"
                 exact
-                component={InvoicePage}
+                component={SubscriptionPage}
                 permissionReq="read_subscription"
               />
               <PrivateRoute

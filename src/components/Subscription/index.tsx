@@ -1,15 +1,12 @@
 import React, { useState, useEffect } from 'react';
-import './invoice.css';
-import InvoicesCreateForm from "./InvoicesCreateForm";
+import './subscription.css';
 import API from '../../utils/API';
-import StripeContent from './StripeContent';
 import VerifingUserLoader from '../../shared-components/VerifingUserLoader';
 import useUserProfileStore from '../../hooks/useUserProfileStore';
-import jsPDF from 'jspdf';
-import autoTable from 'jspdf-autotable';
-import { showMsgToast } from '../../utils/showMsgToast';
-import { showErrorToast } from '../../utils/showErrorToast';
-
+import SubscriptionCreateForm from './SubscriptionCreateForm';
+import PageHeading from '../../shared-components/PageHeading';
+import { FaFileInvoiceDollar } from 'react-icons/fa';
+import { Container } from 'react-bootstrap';
 interface Invoice {
     id: string;
     recipient: string;
@@ -23,14 +20,12 @@ interface Invoice {
     invoice_number: string;
 }
 
-const InvoicePage: React.FC = () => {
+const SubscriptionPage: React.FC = () => {
     const [invoices, setInvoices] = useState<Invoice[]>([]);
     const setUser = useUserProfileStore((state) => state.setUser);
-    const loggedInUser = useUserProfileStore((state) => state.user);
     const [loading, setLoading] = useState(true);
     const [showForm, setShowForm] = useState(false);
     const [isProcessingCode, setIsProcessingCode] = useState(false);
-    const [downloadingInvoices, setDownloadingInvoices] = useState<{ [key: string]: boolean }>({});
 
     const handleCreate = () => {
         setShowForm(true);
@@ -86,93 +81,22 @@ const InvoicePage: React.FC = () => {
     }, []);
 
     // Function to download invoice as PDF
-    const downloadInvoicePDF = async (invoice: Invoice) => {
-        setDownloadingInvoices(prev => ({ ...prev, [invoice.id]: true }));
-        try {
-            const doc = new jsPDF();
-
-            // Header
-            doc.setFontSize(24);
-            doc.text('INVOICE', 20, 30);
-
-            // Invoice details
-            doc.setFontSize(12);
-            doc.text(`Invoice Number: ${invoice.invoice_number}`, 20, 50);
-            doc.text(`Status: ${invoice.status}`, 20, 60);
-            doc.text(`Currency: ${invoice.currency}`, 20, 70);
-
-            // Company logo placeholder
-            doc.setFillColor(255, 224, 102);
-            doc.rect(150, 20, 40, 40, 'F');
-            doc.setFontSize(20);
-            doc.text('🧾', 165, 45);
-
-            // Bill to section
-            doc.setFontSize(14);
-            doc.text('Bill To:', 20, 90);
-            doc.setFontSize(12);
-            doc.text(invoice.recipient || 'N/A', 20, 100);
-
-            // Summary table
-            autoTable(doc, {
-                head: [['Description', 'Amount']],
-                body: [
-                    ['Subtotal', `$${invoice.subtotal}`],
-                    ['Tax', `$${invoice.tax}`],
-                    ['Total', `$${invoice.total}`],
-                ],
-                startY: 120,
-                styles: {
-                    fontSize: 10,
-                    cellPadding: 5,
-                },
-                headStyles: {
-                    fillColor: [66, 66, 66],
-                    textColor: 255,
-                    fontStyle: 'bold',
-                },
-            });
-
-            // Payment info
-            const finalY = (doc as any).lastAutoTable.finalY + 10;
-            if (invoice.paid_at) {
-                doc.setFontSize(12);
-                doc.text(`Paid At: ${invoice.paid_at}`, 20, finalY);
-            }
-
-            // Download the PDF
-            doc.save(`invoice-${invoice.invoice_number}.pdf`);
-            showMsgToast("Invoice PDF downloaded successfully");
-        } catch (error) {
-            showErrorToast("Failed to generate PDF");
-            console.error('PDF generation error:', error);
-        } finally {
-            setDownloadingInvoices(prev => ({ ...prev, [invoice.id]: false }));
-        }
-    };
 
     if (isProcessingCode) {
         return <div style={{ display: 'flex', justifyContent: 'center' }}> <VerifingUserLoader /> </div>;
     }
 
-    // Only show invoice UI if Stripe account is connected
-    if (!loggedInUser?.stripe_account_id) {
-        return (
-            <div style={{ marginTop: '30px' }}>
-                <StripeContent />
-            </div>
-        );
-    }
 
     return (
-        <div className="invoice-container">
+        <Container fluid className=" component-wrapper view-padding">
             <>
-                {invoices.length > 0 && !showForm && <div className="invoice-header">
-                    <h2>Invoices</h2>
-                    {!showForm &&
-                        <button className="primary-btn" onClick={handleCreate}>+ Create Invoice</button>}
-                </div>
-                }
+                <PageHeading
+                    icon={<FaFileInvoiceDollar />}
+                    title="Subscriptions"
+                    onClick={handleCreate}
+                    totalRecords={invoices?.length}
+                    permissionReq="create_user"
+                />
                 {!showForm ? (
                     loading ? (
                         <div className="invoice-empty"><p>Loading...</p></div>
@@ -186,7 +110,7 @@ const InvoicePage: React.FC = () => {
                         <table className="invoice-table">
                             <thead>
                                 <tr>
-                                    <th>Invoice Number</th>
+                                    <th>Subscription Number</th>
                                     <th>Status</th>
                                     <th>Currency</th>
                                     <th>Total</th>
@@ -206,16 +130,6 @@ const InvoicePage: React.FC = () => {
                                         <td>${inv.subtotal}</td>
                                         <td>{inv.tax}</td>
                                         <td>{inv.paid_at}</td>
-                                        <td>
-                                            <button
-                                                className="secondary-btn"
-                                                onClick={() => downloadInvoicePDF(inv)}
-                                                disabled={downloadingInvoices[inv.id]}
-                                                style={{ fontSize: '12px', padding: '4px 8px' }}
-                                            >
-                                                {downloadingInvoices[inv.id] ? "Generating..." : "Download PDF"}
-                                            </button>
-                                        </td>
                                     </tr>
                                 ))}
                             </tbody>
@@ -223,7 +137,7 @@ const InvoicePage: React.FC = () => {
                     )
                 ) : (
                     <div className="invoice-form">
-                        <InvoicesCreateForm onSuccess={() => {
+                        <SubscriptionCreateForm onSuccess={() => {
                             setShowForm(false);
                             fetchInvoices();
                         }} />
@@ -233,8 +147,8 @@ const InvoicePage: React.FC = () => {
                     </div>
                 )}
             </>
-        </div>
+        </Container>
     );
 };
 
-export default InvoicePage; 
+export default SubscriptionPage; 
