@@ -52,28 +52,28 @@ const WebsitePages = () => {
 
   return (
     <>
-      <Container fluid className="component-wrapper view-padding">
-        <PageHeading icon={<RiGlobalLine />} title="Website Pages" />
-
-        <Container fluid className="card h-100 mt-2">
-          <div className="d-flex justify-content-between pl-3 pb-3 mt-3">
-            <Nav
-              className="global-navs"
-              variant="tabs"
-              activeKey={filter.active}
-              onSelect={(selectedKey) => _onFilterChange("active", selectedKey)}
-            >
-              <Nav.Item>
-                <Nav.Link eventKey="static">Static</Nav.Link>
-              </Nav.Item>
-              <Nav.Item>
-                <Nav.Link eventKey="dynamic">Dynamic</Nav.Link>
-              </Nav.Item>
-            </Nav>
-          </div>
-          {filter.active === "static" ? <StaticPages /> : <DynamicPages />}
-        </Container>
-      </Container>
+      <div className="view-padding">
+        <PageHeading icon={<RiGlobalLine size={24} />} title="Website Pages" description="Create and manage website pages" />
+      </div>
+      <hr />
+      <div className="h-100 mt-2">
+        <div className="d-flex justify-content-between pl-3 pb-3 mt-3">
+          <Nav
+            className="global-navs"
+            variant="tabs"
+            activeKey={filter.active}
+            onSelect={(selectedKey) => _onFilterChange("active", selectedKey)}
+          >
+            <Nav.Item>
+              <Nav.Link eventKey="static">Static</Nav.Link>
+            </Nav.Item>
+            <Nav.Item>
+              <Nav.Link eventKey="dynamic">Dynamic</Nav.Link>
+            </Nav.Item>
+          </Nav>
+        </div>
+        {filter.active === "static" ? <StaticPages /> : <DynamicPages />}
+      </div>
     </>
   );
 };

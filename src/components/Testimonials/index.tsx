@@ -1,6 +1,6 @@
 import { AxiosError } from "axios";
 import React, { useMemo, useState } from "react";
-import { Button, Container, Modal } from "react-bootstrap";
+import { Button, Container, Dropdown, Modal } from "react-bootstrap";
 import { BiSad } from "react-icons/bi";
 import { useMutation, useQuery } from "react-query";
 import { useHistory } from "react-router-dom";
@@ -18,6 +18,7 @@ import { primaryColor } from "../../utils/constants";
 import { showMsgToast } from "../../utils/showMsgToast";
 import { AiFillDelete, AiFillIdcard } from "react-icons/ai";
 import { queryClient } from "../../utils/queryClient";
+import { BsThreeDotsVertical } from "react-icons/bs";
 
 const key = "testimonial";
 
@@ -116,24 +117,36 @@ const Testimonial = () => {
         Header: "Actions",
         Cell: (data: Cell) => {
           return (
-            <div className="d-flex align-items-center gap-2">
+            <div className="d-flex align-items-center justify-content-end gap-3">
               <EditButton
                 onClick={() => {
                   _onEditClick(data.row.values.id);
                 }}
                 permissionReq="update_testimonial"
               />
-              <Button
-                variant="outline-danger"
-                className="d-flex align-items-center ml-2"
-                onClick={() => {
-                  setSelectedDeleteId(data.row.values.id);
-                  setDeletePopup(true);
-                }}
-                style={{ padding: "0.25rem 0.5rem" }}
-              >
-                <AiFillDelete size={16} className="mr-1" /> Delete
-              </Button>
+
+              <Dropdown className="ellipsis-dropdown">
+                <Dropdown.Toggle
+                  variant="light"
+                  size="sm"
+                  className="p-1 border-0 shadow-none"
+                  id={`dropdown-${data.row.values.id}`}
+                >
+                  <BsThreeDotsVertical size={18} />
+                </Dropdown.Toggle>
+                <Dropdown.Menu className="menu-dropdown">
+                  <Dropdown.Item
+                    className="text-danger"
+                    onClick={() => {
+                      setSelectedDeleteId(data.row.values.id);
+                      setDeletePopup(true);
+                    }}
+                  >
+                    <AiFillDelete size={16} className="me-1" />
+                    Delete
+                  </Dropdown.Item>
+                </Dropdown.Menu>
+              </Dropdown>
             </div>
           );
         },
@@ -155,47 +168,50 @@ const Testimonial = () => {
 
   return (
     <>
-      <Container fluid className=" component-wrapper view-padding">
+      <div className="view-padding">
         <PageHeading
-          icon={<AiFillIdcard />}
+          icon={<AiFillIdcard size={24} />}
           title="Testimonials"
+          description="Create and manage testimonials for your workflow"
           onClick={_onCreateClick}
           totalRecords={data?.total}
           permissionReq="create_testimonial"
         />
+      </div>
+      <hr />
 
-        <div className="card">
-          <Container fluid className="h-100 p-0 pt-3">
-            {isLoading ? (
-              <IsLoading />
-            ) : (
-              <>
-                {!error && (
-                  <ReactTable
-                    data={data?.data}
-                    columns={columns}
-                    setSelectedRows={setSelectedRows}
-                    filter={filter}
-                    onFilterChange={_onFilterChange}
-                    isDataLoading={isFetching}
-                    searchPlaceHolder="Search using name, link"
-                    deletePermissionReq="delete_testimonial"
-                  />
-                )}
-                {!error && data?.data?.length > 0 ? (
-                  <TablePagination
-                    currentPage={data?.current_page}
-                    lastPage={data?.last_page}
-                    setPage={_onFilterChange}
-                    hasNextPage={!!data?.next_page_url}
-                    hasPrevPage={!!data?.prev_page_url}
-                  />
-                ) : null}{" "}
-              </>
-            )}
-          </Container>
+      <div className="">
+        <div className="h-100 p-0 pt-3">
+          {isLoading ? (
+            <IsLoading />
+          ) : (
+            <>
+              {!error && (
+                <ReactTable
+                  data={data?.data}
+                  columns={columns}
+                  setSelectedRows={setSelectedRows}
+                  filter={filter}
+                  onFilterChange={_onFilterChange}
+                  isDataLoading={isFetching}
+                  searchPlaceHolder="Search using name, link"
+                  deletePermissionReq="delete_testimonial"
+                />
+              )}
+              {!error && data?.data?.length > 0 ? (
+                <TablePagination
+                  currentPage={data?.current_page}
+                  lastPage={data?.last_page}
+                  setPage={_onFilterChange}
+                  hasNextPage={!!data?.next_page_url}
+                  hasPrevPage={!!data?.prev_page_url}
+                />
+              ) : null}{" "}
+            </>
+          )}
         </div>
-      </Container>
+      </div>
+
       <Modal show={deletePopup} onHide={() => setDeletePopup(false)}>
         <Modal.Header closeButton>
           <Modal.Title>Are you sure?</Modal.Title>

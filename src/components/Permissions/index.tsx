@@ -202,7 +202,7 @@ const Permissions = () => {
       <Roles />
 
       <div className="view-padding mb-3 mt-5">
-        <PageHeading title="Assign Permission" />
+        <PageHeading title="Assign Permission" description="Assign permission for your workflow" />
       </div>
       <hr />
       <div className="h-100 p-0">

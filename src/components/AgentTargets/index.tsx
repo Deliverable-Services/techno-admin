@@ -148,6 +148,7 @@ const AgentTargets = () => {
       <div className="view-padding">
         <PageHeading
           title="Agent Targets"
+          description="Create and manage targets for your agents"
           icon={<GiOnTarget size={24} />}
           onClick={_onCreateClick}
           totalRecords={data?.total}
