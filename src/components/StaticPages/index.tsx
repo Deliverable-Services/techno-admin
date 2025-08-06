@@ -79,12 +79,11 @@ const StaticPages = () => {
             Press "Ctrl+S" inside editor to save content
           </p>
         )}
-        <Container fluid className="px-0 my-3">
+        <Container fluid className="px-0 my-3 d-flex gap-10 flex-wrap">
           {titles?.map((title) => (
             <Button
               size="sm"
               variant={selectedTitle === title ? "primary" : "outline-primary"}
-              className="mr-2"
               onClick={() => setSelectedTitle(title)}
             >
               {title}

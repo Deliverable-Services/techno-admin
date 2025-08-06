@@ -15,9 +15,9 @@ import ReactTable from "../../shared-components/ReactTable";
 import TableImage from "../../shared-components/TableImage";
 import API from "../../utils/API";
 import { primaryColor } from "../../utils/constants";
-import { queryClient } from "../../utils/queryClient";
 import { showMsgToast } from "../../utils/showMsgToast";
 import { AiFillDelete, AiFillIdcard } from "react-icons/ai";
+import { queryClient } from "../../utils/queryClient";
 
 const key = "testimonial";
 
@@ -201,7 +201,8 @@ const Testimonial = () => {
           <Modal.Title>Are you sure?</Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          Do you really want to delete this testimonial? This process cannot be undone.
+          Do you really want to delete this testimonial? This process cannot be
+          undone.
         </Modal.Body>
         <Modal.Footer>
           <Button variant="bg-light" onClick={() => setDeletePopup(false)}>
