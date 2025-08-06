@@ -21,6 +21,7 @@ import { IssueRelatedTo, OrderType } from "../../utils/arrays";
 import { primaryColor } from "../../utils/constants";
 import { showErrorToast } from "../../utils/showErrorToast";
 import { BsFunnel } from "react-icons/bs";
+import { GoIssueOpened } from "react-icons/go";
 
 const key = "tickets";
 const intitialFilter = {
@@ -115,7 +116,7 @@ const Issues = () => {
           if ((data.row.original as any).user_id)
             return (
               <p
-                classname="text-darkGray m-0" 
+                classname="text-darkGray m-0"
                 style={{ cursor: "pointer" }}
                 onClick={() => _onUserClick((data.row.original as any).user_id)}
               >
@@ -132,7 +133,7 @@ const Issues = () => {
           if ((data.row.original as any).order_id)
             return (
               <p
-                classname="text-darkGray m-0" 
+                className="text-darkGray m-0"
                 style={{ cursor: "pointer" }}
                 onClick={() =>
                   _onOrderClick((data.row.original as any).order_id)
@@ -190,103 +191,105 @@ const Issues = () => {
   return (
     <>
       <Container fluid className="component-wrapper view-padding">
-        <PageHeading title="Issues" totalRecords={data?.total} />
-        <div className="d-flex justify-content-between pb-3 mt-3">
-        {!isLoading && (
-             <Nav className="global-navs" variant="tabs" activeKey={filter.status} onSelect={(selectedKey) => _onFilterChange('status', selectedKey)}>
-                <Nav.Item>
-                  <Nav.Link eventKey="">All ({data?.data?.length || 0})</Nav.Link>
-                </Nav.Item>
+        <PageHeading icon={<GoIssueOpened />} title="Issues" totalRecords={data?.total} />
 
-                <Nav.Item>
-                  <Nav.Link eventKey="active">
-                    Active ({data?.data?.filter(item => item.status === 'active').length || 0})
-                  </Nav.Link>
-                </Nav.Item>
-
-                <Nav.Item>
-                  <Nav.Link eventKey="closed">
-                    Closed ({data?.data?.filter(item => item.status === 'closed').length || 0})
-                  </Nav.Link>
-                </Nav.Item>
-              </Nav>
-        )}
-         <Dropdown className="filter-dropdown">
-            <Dropdown.Toggle as={Button} variant="primary" className="global-card">
-              <BsFunnel /> Filters
-            </Dropdown.Toggle>
-            <Dropdown.Menu>
-              <div className="filter-dropdown-heading d-flex justify-content-between w-100">
-                <h4>Filter</h4>
-                <div
-                  className="d-flex align-items-center justify-md-content-center"
-                >
-                  <Button
-                    onClick={() => setFilter(intitialFilter)}
-                    variant={
-                      areTwoObjEqual(intitialFilter, filter)
-                        ? "light"
-                        : "primary"
-                    }
-                    style={{
-                      fontSize: 14,
-                    }}
-                  >
-                    Reset Filters
-                  </Button>
-                </div>
-              </div>
-                <div className="select-filter">
-                 <FilterSelect
-                          currentValue={filter.user_id}
-                          data={!isCustomerLoading && Customers.data}
-                          label="Customer"
-                          idx="user_id"
-                          onFilterChange={_onFilterChange}
-                        />
-                         <FilterSelect
-                          currentValue={filter.related_to}
-                          data={IssueRelatedTo}
-                          label="Related to"
-                          idx="related_to"
-                          onFilterChange={_onFilterChange}
-                        />
-                        <Form.Group>
-                          <Form.Label className="text-muted">
-                            Raised At
-                          </Form.Label>
-                          <Form.Control
-                            type="date"
-                            value={filter.created_at}
-                            onChange={(e) => {
-                              const value = moment(e.target.value).format(
-                                "YYYY-MM-DD"
-                              );
-                              _onFilterChange("created_at", value);
-                            }}
-                            style={{
-                              fontSize: 14,
-                              width: 150,
-                              height: 35,
-                            }}
-                          />
-                        </Form.Group>
-              </div>
-            </Dropdown.Menu>
-           
-           
-          </Dropdown>
-        </div>
-        <hr />
-        <Container fluid className="h-100 p-0">
-          {isLoading ? (
-            <IsLoading />
-          ) : (
-            <>
-            <div className="mt-2" />
-              {!error && (
+        <div className="card">
+          <Container fluid className="h-100 p-0">
+            {isLoading ? (
+              <IsLoading />
+            ) : (
+              <>
+                <div className="mt-2" />
+                {!error && (
                   <ReactTable
                     data={data?.data}
+                    tabs={<div className="d-flex justify-content-between">
+                      {!isLoading && (
+                        <Nav className="global-navs" variant="tabs" activeKey={filter.status} onSelect={(selectedKey) => _onFilterChange('status', selectedKey)}>
+                          <Nav.Item>
+                            <Nav.Link eventKey="">All ({data?.data?.length || 0})</Nav.Link>
+                          </Nav.Item>
+
+                          <Nav.Item>
+                            <Nav.Link eventKey="active">
+                              Active ({data?.data?.filter(item => item.status === 'active').length || 0})
+                            </Nav.Link>
+                          </Nav.Item>
+
+                          <Nav.Item>
+                            <Nav.Link eventKey="closed">
+                              Closed ({data?.data?.filter(item => item.status === 'closed').length || 0})
+                            </Nav.Link>
+                          </Nav.Item>
+                        </Nav>
+                      )}
+
+                    </div>}
+                    filters={<Dropdown className="filter-dropdown">
+                      <Dropdown.Toggle as={Button} variant="primary">
+                        <BsFunnel />
+                      </Dropdown.Toggle>
+                      <Dropdown.Menu>
+                        <div className="filter-dropdown-heading d-flex justify-content-between w-100">
+                          <h4>Filter</h4>
+                          <div
+                            className="d-flex align-items-center justify-md-content-center"
+                          >
+                            <Button
+                              onClick={() => setFilter(intitialFilter)}
+                              variant={
+                                areTwoObjEqual(intitialFilter, filter)
+                                  ? "light"
+                                  : "primary"
+                              }
+                              style={{
+                                fontSize: 14,
+                              }}
+                            >
+                              Reset Filters
+                            </Button>
+                          </div>
+                        </div>
+                        <div className="select-filter">
+                          <FilterSelect
+                            currentValue={filter.user_id}
+                            data={!isCustomerLoading && Customers.data}
+                            label="Customer"
+                            idx="user_id"
+                            onFilterChange={_onFilterChange}
+                          />
+                          <FilterSelect
+                            currentValue={filter.related_to}
+                            data={IssueRelatedTo}
+                            label="Related to"
+                            idx="related_to"
+                            onFilterChange={_onFilterChange}
+                          />
+                          <Form.Group>
+                            <Form.Label className="text-muted">
+                              Raised At
+                            </Form.Label>
+                            <Form.Control
+                              type="date"
+                              value={filter.created_at}
+                              onChange={(e) => {
+                                const value = moment(e.target.value).format(
+                                  "YYYY-MM-DD"
+                                );
+                                _onFilterChange("created_at", value);
+                              }}
+                              style={{
+                                fontSize: 14,
+                                width: 150,
+                                height: 35,
+                              }}
+                            />
+                          </Form.Group>
+                        </div>
+                      </Dropdown.Menu>
+
+
+                    </Dropdown>}
                     columns={columns}
                     setSelectedRows={setSelectedRows}
                     filter={filter}
@@ -295,19 +298,20 @@ const Issues = () => {
                     isSelectable={false}
                     searchPlaceHolder="Search using title,ref_id"
                   />
-              )}
-              {!error && data.length > 0 ? (
-                <TablePagination
-                  currentPage={data?.current_page}
-                  lastPage={data?.last_page}
-                  setPage={_onFilterChange}
-                  hasNextPage={!!data?.next_page_url}
-                  hasPrevPage={!!data?.prev_page_url}
-                />
-              ) : null}{" "}
-            </>
-          )}
-        </Container>
+                )}
+                {!error && data.length > 0 ? (
+                  <TablePagination
+                    currentPage={data?.current_page}
+                    lastPage={data?.last_page}
+                    setPage={_onFilterChange}
+                    hasNextPage={!!data?.next_page_url}
+                    hasPrevPage={!!data?.prev_page_url}
+                  />
+                ) : null}{" "}
+              </>
+            )}
+          </Container>
+        </div>
       </Container>
       {selectedRows.length > 0 && (
         <div className="delete-button rounded">
