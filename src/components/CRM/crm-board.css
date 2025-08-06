@@ -141,12 +141,8 @@
 .pointer {
   cursor: pointer;
 }
-.ellipsis{
+.ellipsis {
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-}
-.crm-board .lead-card:hover{
-  /* box-shadow: 0 0.125rem 0.25rem 4px rgb(0 0 0 / 46%) !important; */
-  box-shadow: 0 1rem 3rem rgba(0, 0, 0, 0.175) !important;
 }
