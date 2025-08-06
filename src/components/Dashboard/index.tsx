@@ -222,6 +222,16 @@ const Dashboard = () => {
                           {data?.customer + data?.customerprev}
                         </p>
                       </div>
+                      <div style={{ borderLeft: '1px solid black', height: '60px', }} />
+
+                      <div>
+                        <h3 className="text-grey" style={{ fontSize: '16px', fontWeight: '400', marginBottom: '0' }}>
+                          S
+                        </h3>
+                        <p className="text-black font-weight-bold" style={{ fontSize: '28px' }}>
+                          {data?.customer + data?.customerprev}
+                        </p>
+                      </div>
                     </div>
                     {/* <div className="d-flex align-items-center justify-content-start">
                       <span className="tag  per-tag d-flex align-items-center">

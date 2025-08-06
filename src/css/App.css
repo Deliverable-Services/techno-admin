@@ -13105,3 +13105,6 @@ li.navLink.my-1 svg path {
 .icon-bg .icon-color {
   color: var(--blue);
 }
+.rounded-border {
+  border-radius: 0.75rem !important;
+}

@@ -146,7 +146,7 @@ const App = () => {
             width: showNavTopBar() && isNavOpen ? "calc(100% - 250px" : "100%",
             minWidth: !isNavOpen && "100vw",
             marginLeft: showNavTopBar() && isNavOpen ? "250px" : "0",
-            transition: '0.3s all ease-in-out'
+            transition: "0.3s all ease-in-out",
           }}
         >
           {showNavTopBar() ? (
@@ -244,12 +244,7 @@ const App = () => {
                    component={Orders}
                    permissionReq="read_booking"
                  /> */}
-              <PrivateRoute
-                path="/cities"
-                exact
-                component={Cities}
-                permissionReq="read_city"
-              />
+
               <PrivateRoute
                 path="/testimonials"
                 exact
@@ -389,18 +384,6 @@ const App = () => {
                 permissionReq="read_role"
               />
               <PrivateRoute
-                path="/notifications"
-                exact
-                component={Notifications}
-                permissionReq="read_notification"
-              />
-              <PrivateRoute
-                path="/notifications/create-edit"
-                exact
-                component={NotificationCreateUpdateForm}
-                permissionReq="read_notification"
-              />
-              <PrivateRoute
                 path="/cart"
                 exact
                 component={Cart}
@@ -538,9 +521,28 @@ const App = () => {
                 component={GoogleAnalytics}
                 permissionReq="read_staticpage"
               />
-
               <Route path="/login" exact component={LoginPage} />
               <Route path="/verify-otp" exact component={VerifyOtp} />
+
+              {/* // -- BELOW ROUTES DONE */}
+              <PrivateRoute
+                path="/notifications"
+                exact
+                component={Notifications}
+                permissionReq="read_notification"
+              />
+              <PrivateRoute
+                path="/notifications/create-edit"
+                exact
+                component={NotificationCreateUpdateForm}
+                permissionReq="read_notification"
+              />
+              <PrivateRoute
+                path="/cities"
+                exact
+                component={Cities}
+                permissionReq="read_city"
+              />
             </Switch>
             <ErrorToast />
             <MsgToast />
