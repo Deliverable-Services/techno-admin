@@ -11847,6 +11847,7 @@ nav {
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
+  overflow: auto;
 }
 
 @media (min-width: 800px) {
