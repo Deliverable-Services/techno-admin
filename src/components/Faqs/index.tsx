@@ -18,6 +18,7 @@ import API from "../../utils/API";
 import { primaryColor } from "../../utils/constants";
 import { queryClient } from "../../utils/queryClient";
 import { showMsgToast } from "../../utils/showMsgToast";
+import { FaQuestionCircle } from "react-icons/fa";
 
 const key = "faqs";
 
@@ -131,63 +132,66 @@ const Faqs = () => {
     <>
       <Container fluid className=" component-wrapper view-padding">
         <PageHeading
+          icon={<FaQuestionCircle />}
           title="Faqs"
           onClick={_onCreateClick}
           totalRecords={data?.total}
           permissionReq="create_faq"
         />
-        <div className="d-flex justify-content-between pb-3 mt-3">
-          {!isLoading && (
-            <Nav className="global-navs" variant="tabs" activeKey={filter.active} onSelect={(selectedKey) => _onFilterChange('active', selectedKey)}>
-              <Nav.Item>
-                <Nav.Link eventKey="">All ({data?.data?.length || 0})</Nav.Link>
-              </Nav.Item>
 
-              <Nav.Item>
-                <Nav.Link eventKey="active">
-                  Active ({data?.data?.filter(item => item.status === '1').length || 0})
-                </Nav.Link>
-              </Nav.Item>
 
-              <Nav.Item>
-                <Nav.Link eventKey="notActive">
-                  Not Active ({data?.data?.filter(item => item.status === '0').length || 0})
-                </Nav.Link>
-              </Nav.Item>
-            </Nav>
-          )}
+        <div className="card">
+          <Container fluid className="h-100 p-0 pt-3">
+            {isLoading ? (
+              <IsLoading />
+            ) : (
+              <>
+                {!error && (
+                  <ReactTable
+                    tabs={<div className="d-flex justify-content-between">
+                      {!isLoading && (
+                        <Nav className="global-navs" variant="tabs" activeKey={filter.active} onSelect={(selectedKey) => _onFilterChange('active', selectedKey)}>
+                          <Nav.Item>
+                            <Nav.Link eventKey="">All ({data?.data?.length || 0})</Nav.Link>
+                          </Nav.Item>
+
+                          <Nav.Item>
+                            <Nav.Link eventKey="active">
+                              Active ({data?.data?.filter(item => item.status === '1').length || 0})
+                            </Nav.Link>
+                          </Nav.Item>
+
+                          <Nav.Item>
+                            <Nav.Link eventKey="notActive">
+                              Not Active ({data?.data?.filter(item => item.status === '0').length || 0})
+                            </Nav.Link>
+                          </Nav.Item>
+                        </Nav>
+                      )}
+                    </div>}
+                    data={data?.data}
+                    columns={columns}
+                    setSelectedRows={setSelectedRows}
+                    filter={filter}
+                    onFilterChange={_onFilterChange}
+                    isDataLoading={isFetching}
+                    searchPlaceHolder="Search using title"
+                    deletePermissionReq="delete_faq"
+                  />
+                )}
+                {!error && data?.data?.length > 0 ? (
+                  <TablePagination
+                    currentPage={data?.current_page}
+                    lastPage={data?.last_page}
+                    setPage={_onFilterChange}
+                    hasNextPage={!!data?.next_page_url}
+                    hasPrevPage={!!data?.prev_page_url}
+                  />
+                ) : null}{" "}
+              </>
+            )}
+          </Container>
         </div>
-
-        <hr className="mt-2" />
-        <Container fluid className="h-100 p-0">
-          {isLoading ? (
-            <IsLoading />
-          ) : (
-            <>
-              {!error && (
-                <ReactTable
-                  data={data?.data}
-                  columns={columns}
-                  setSelectedRows={setSelectedRows}
-                  filter={filter}
-                  onFilterChange={_onFilterChange}
-                  isDataLoading={isFetching}
-                  searchPlaceHolder="Search using title"
-                  deletePermissionReq="delete_faq"
-                />
-              )}
-              {!error && data?.data?.length > 0 ? (
-                <TablePagination
-                  currentPage={data?.current_page}
-                  lastPage={data?.last_page}
-                  setPage={_onFilterChange}
-                  hasNextPage={!!data?.next_page_url}
-                  hasPrevPage={!!data?.prev_page_url}
-                />
-              ) : null}{" "}
-            </>
-          )}
-        </Container>
       </Container>
 
       {selectedRows.length > 0 && (

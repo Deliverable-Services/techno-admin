@@ -21,6 +21,7 @@ import API from "../../utils/API";
 import { config, primaryColor } from "../../utils/constants";
 import { queryClient } from "../../utils/queryClient";
 import { showMsgToast } from "../../utils/showMsgToast";
+import { SiBrandfolder } from "react-icons/si";
 
 const key = "brands";
 
@@ -161,66 +162,68 @@ const Brands = () => {
     <>
       <Container fluid className="component-wrapper view-padding">
         <PageHeading
+          icon={<SiBrandfolder />}
           title="Brands"
           onClick={_onCreateClick}
           totalRecords={data?.total}
           permissionReq="create_brand"
         />
 
-        <div className="d-flex justify-content-between pb-3 mt-3">
-          {!isLoading && (
-            <div>
-              <Nav className="global-navs" variant="tabs" activeKey={filter.active} onSelect={(selectedKey) => _onFilterChange('active', selectedKey)}>
-                <Nav.Item>
-                  <Nav.Link eventKey="">All ({data?.data?.length || 0})</Nav.Link>
-                </Nav.Item>
+        <div className="card">
+          <Container fluid className="h-100 p-0">
+            {isLoading ? (
+              <IsLoading />
+            ) : (
+              <>
+                <div className="mt-3" />
+                {!error && (
+                  <ReactTable
+                    data={data?.data}
+                    tabs={<div className="d-flex justify-content-between">
+                      {!isLoading && (
+                        <div>
+                          <Nav className="global-navs" variant="tabs" activeKey={filter.active} onSelect={(selectedKey) => _onFilterChange('active', selectedKey)}>
+                            <Nav.Item>
+                              <Nav.Link eventKey="">All ({data?.data?.length || 0})</Nav.Link>
+                            </Nav.Item>
 
-                <Nav.Item>
-                  <Nav.Link eventKey="active">
-                    Active ({data?.data?.filter(item => item.status === '1').length || 0})
-                  </Nav.Link>
-                </Nav.Item>
+                            <Nav.Item>
+                              <Nav.Link eventKey="active">
+                                Active ({data?.data?.filter(item => item.status === '1').length || 0})
+                              </Nav.Link>
+                            </Nav.Item>
 
-                <Nav.Item>
-                  <Nav.Link eventKey="notActive">
-                    Not Active ({data?.data?.filter(item => item.status === '0').length || 0})
-                  </Nav.Link>
-                </Nav.Item>
-              </Nav>
-            </div>
-          )}
+                            <Nav.Item>
+                              <Nav.Link eventKey="notActive">
+                                Not Active ({data?.data?.filter(item => item.status === '0').length || 0})
+                              </Nav.Link>
+                            </Nav.Item>
+                          </Nav>
+                        </div>
+                      )}
+                    </div>}
+                    columns={columns}
+                    setSelectedRows={setSelectedRows}
+                    filter={filter}
+                    onFilterChange={_onFilterChange}
+                    isDataLoading={isFetching}
+                    searchPlaceHolder="Search using brand name"
+                    deletePermissionReq="delete_brand"
+                  />
+                )}
+                {!error && data?.data?.length > 0 ? (
+                  <TablePagination
+                    currentPage={data?.current_page}
+                    lastPage={data?.last_page}
+                    setPage={_onFilterChange}
+                    hasNextPage={!!data?.next_page_url}
+                    hasPrevPage={!!data?.prev_page_url}
+                  />
+                ) : null}{" "}
+              </>
+            )}
+          </Container>
         </div>
-        <hr />
-        <Container fluid className="h-100 p-0">
-          {isLoading ? (
-            <IsLoading />
-          ) : (
-            <>
-              <div className="mt-3" />
-              {!error && (
-                <ReactTable
-                  data={data?.data}
-                  columns={columns}
-                  setSelectedRows={setSelectedRows}
-                  filter={filter}
-                  onFilterChange={_onFilterChange}
-                  isDataLoading={isFetching}
-                  searchPlaceHolder="Search using brand name"
-                  deletePermissionReq="delete_brand"
-                />
-              )}
-              {!error && data?.data?.length > 0 ? (
-                <TablePagination
-                  currentPage={data?.current_page}
-                  lastPage={data?.last_page}
-                  setPage={_onFilterChange}
-                  hasNextPage={!!data?.next_page_url}
-                  hasPrevPage={!!data?.prev_page_url}
-                />
-              ) : null}{" "}
-            </>
-          )}
-        </Container>
       </Container>
       {selectedRows.length > 0 && (
         <div className="delete-button rounded">
