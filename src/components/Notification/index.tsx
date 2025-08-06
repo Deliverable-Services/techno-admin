@@ -329,7 +329,6 @@ const Notifications = () => {
           );
         })()}
       </div>
-      <hr />
 
       {selectedRows.length > 0 && (
         <div className="delete-button rounded">

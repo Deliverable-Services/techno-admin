@@ -269,7 +269,7 @@ function ReactTable({
         }}
       >
         {tabs && tabs}
-        <div className={`d-flex align-items-center ${isDesktop ? "ml-auto" : 'ml-unset'} w-100`}>
+        <div className={`d-flex align-items-center ${isDesktop ? "ml-auto" : 'ml-unset'}`}>
           <div className="w-100" style={{ minWidth: isDesktop ? 300 : 'auto', marginRight: 8 }}>
             {showSearch && (
               <div
@@ -346,7 +346,7 @@ function ReactTable({
         <DndProvider backend={HTML5Backend}>
           <div className="tableFixed position-relative">
             <Table
-              className="table-fixed" style={{ borderTop: '1px solid var(--border)' }}
+              className="table-fixed mb-0" style={{ borderTop: '1px solid var(--border)' }}
               {...getTableProps()}
               responsive
               hover
@@ -437,7 +437,7 @@ function ReactTable({
 </Container>
 : ""} */}
             </Table>
-            {rows.length === 0 ? (
+            {/* {rows.length === 0 ? (
               ""
             ) : showRecords ? (
               <div
@@ -467,7 +467,7 @@ function ReactTable({
                   ))}
                 </select>
               </div>
-            ) : null}
+            ) : null} */}
           </div>
         </DndProvider>
         {rows.length === 0 ? (
