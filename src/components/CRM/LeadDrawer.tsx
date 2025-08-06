@@ -1,10 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import { Comment, Lead } from "./types";
 import Select, { components } from "react-select";
-import { FcProcess } from "react-icons/fc";
-import { MdCreate } from "react-icons/md";
 import "./lead-drawer.css";
-import { formatTimestamp } from "../../utils/utitlity";
 import useUserProfileStore from "../../hooks/useUserProfileStore";
 import API from "../../utils/API";
 import { useMutation, useQuery } from "react-query";
@@ -15,24 +12,16 @@ import { showMsgToast } from "../../utils/showMsgToast";
 import { showErrorToast } from "../../utils/showErrorToast";
 import { RiChatFollowUpFill } from "react-icons/ri";
 import { GoPencil } from "react-icons/go";
-import { FaTrash, FaFlag } from "react-icons/fa"; // Add at the top with other imports
+import { FaTrash } from "react-icons/fa"; // Add at the top with other imports
 import { IoIosArrowRoundBack } from "react-icons/io";
 
 import { Button } from "react-bootstrap";
-import {
-  FaComments,
-  FaBell,
-  FaStickyNote,
-  FaPhone,
-  FaPencilAlt,
-  FaCheck,
-} from "react-icons/fa";
+import { FaComments, FaBell, FaStickyNote, FaCheck } from "react-icons/fa";
 import { BsEnvelope, BsBellFill } from "react-icons/bs";
 import { BiDotsHorizontalRounded } from "react-icons/bi";
 import { queryClient } from "../../utils/queryClient";
 import moment from "moment";
 import { User } from "../../types/interface";
-import { Email } from "@material-ui/icons";
 
 const key = "leads";
 

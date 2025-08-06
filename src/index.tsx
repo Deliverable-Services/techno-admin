@@ -13,7 +13,8 @@ import reportWebVitals from "./reportWebVitals";
 import { QueryClientProvider } from "react-query";
 import { queryClient } from "./utils/queryClient";
 import { OrganisationProvider } from "./context/OrganisationContext";
-if (process.env.NODE_ENV === "development") {
+
+if (process?.env?.NODE_ENV === "development") {
   const disableOverlayIframes = () => {
     document.querySelectorAll("iframe").forEach((iframe) => {
       const rect = iframe.getBoundingClientRect();

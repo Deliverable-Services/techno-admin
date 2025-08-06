@@ -167,7 +167,7 @@ const App = () => {
                 permissionReq="read_user"
               />
               <PrivateRoute
-                path="/crm-bookings"
+                path="/meetings"
                 exact
                 component={BookingSlots}
                 permissionReq="read_bookingslot"

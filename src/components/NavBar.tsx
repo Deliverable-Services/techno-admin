@@ -63,8 +63,8 @@ const mainLinks: Array<INavLink> = [
         icon: <SiCivicrm />,
       },
       {
-        title: "Bookings",
-        path: "/crm-bookings",
+        title: "Meetings",
+        path: "/meetings",
         permissionReq: "read_booking",
         icon: <BsClock />,
       },

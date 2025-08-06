@@ -10,6 +10,7 @@ interface Props {
   permissionReq?: string;
   customButton?: React.ReactNode;
   description?: string;
+  btnText?: string;
 }
 const PageHeading: React.FC<Props> = ({
   title,
@@ -19,6 +20,7 @@ const PageHeading: React.FC<Props> = ({
   permissionReq,
   customButton,
   description,
+  btnText,
 }) => {
   return (
     <div className="d-flex justify-content-between align-items-center">
@@ -54,7 +56,7 @@ const PageHeading: React.FC<Props> = ({
           >
             <div className="text-white d-flex align-items-center">
               <AiOutlinePlus size={18} />
-              <p className="mb-0 ml-1">Create</p>
+              <p className="mb-0 ml-1">{btnText || "Create"}</p>
             </div>
           </Button>
         </Restricted>

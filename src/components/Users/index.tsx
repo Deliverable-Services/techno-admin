@@ -1,6 +1,6 @@
 import { AxiosError } from "axios";
 import { useMemo, useState } from "react";
-import { Button, Col, Container, Dropdown, Modal, Row, Spinner } from "react-bootstrap";
+import { Button, Container, Dropdown, Modal } from "react-bootstrap";
 import { BiSad } from "react-icons/bi";
 import { useMutation, useQuery } from "react-query";
 import { useHistory } from "react-router-dom";
@@ -23,12 +23,10 @@ import { primaryColor } from "../../utils/constants";
 import { queryClient } from "../../utils/queryClient";
 import { showMsgToast } from "../../utils/showMsgToast";
 import { AiFillDelete } from "react-icons/ai";
-import { BsFunnel, BsPencil, BsThreeDotsVertical } from "react-icons/bs";
+import { BsFunnel, BsThreeDotsVertical } from "react-icons/bs";
 import { ImUsers } from "react-icons/im";
 import BillingIntegration from "../BillingIntegration";
-interface IFilter {
-  role: string | null;
-}
+
 const key = "users";
 
 const deleteUsers = (id: Array<any>) => {
@@ -159,8 +157,6 @@ const Users = () => {
                 </Dropdown.Toggle>
 
                 <Dropdown.Menu className="menu-dropdown">
-
-
                   <Dropdown.Item
                     onClick={() => {
                       setSelectedDeleteId(data.row.values.id);
@@ -246,7 +242,7 @@ const Users = () => {
           </div>
         </Container>
       )} */}
-      {data?.data?.length > 0 ?
+      {data?.data?.length > 0 ? (
         <div className="">
           <div className="h-100 p-0 ">
             {isLoading ? (
@@ -258,43 +254,43 @@ const Users = () => {
                     <div className="mt-3" />
                     <ReactTable
                       data={data?.data}
-                      filters={<Dropdown className="filter-dropdown">
-                        <Dropdown.Toggle as={Button} variant="primary">
-                          <BsFunnel />
-                        </Dropdown.Toggle>
-                        <Dropdown.Menu>
-                          <div className="filter-dropdown-heading d-flex justify-content-between w-100">
-                            <h4>Filter</h4>
-                            <div
-                              className="d-flex align-items-center justify-md-content-center"
-                            >
-                              <Button
-                                variant={
-                                  areTwoObjEqual(intitialFilter, filter)
-                                    ? "light"
-                                    : "primary"
-                                }
-                                style={{
-                                  fontSize: 14,
-                                }}
-                                onClick={() => setFilter(intitialFilter)}
-                              >
-                                Reset Filters
-                              </Button>
+                      filters={
+                        <Dropdown className="filter-dropdown">
+                          <Dropdown.Toggle as={Button} variant="primary">
+                            <BsFunnel />
+                          </Dropdown.Toggle>
+                          <Dropdown.Menu>
+                            <div className="filter-dropdown-heading d-flex justify-content-between w-100">
+                              <h4>Filter</h4>
+                              <div className="d-flex align-items-center justify-md-content-center">
+                                <Button
+                                  variant={
+                                    areTwoObjEqual(intitialFilter, filter)
+                                      ? "light"
+                                      : "primary"
+                                  }
+                                  style={{
+                                    fontSize: 14,
+                                  }}
+                                  onClick={() => setFilter(intitialFilter)}
+                                >
+                                  Reset Filters
+                                </Button>
+                              </div>
                             </div>
-                          </div>
-                          <div className="select-filter">
-                            <FilterSelect
-                              currentValue={filter.disabled}
-                              data={isActiveArray}
-                              label="Disabled Users?"
-                              idx="disabled"
-                              onFilterChange={_onFilterChange}
-                              defaultSelectTitle="Show All"
-                            />
-                          </div>
-                        </Dropdown.Menu>
-                      </Dropdown>}
+                            <div className="select-filter">
+                              <FilterSelect
+                                currentValue={filter.disabled}
+                                data={isActiveArray}
+                                label="Disabled Users?"
+                                idx="disabled"
+                                onFilterChange={_onFilterChange}
+                                defaultSelectTitle="Show All"
+                              />
+                            </div>
+                          </Dropdown.Menu>
+                        </Dropdown>
+                      }
                       columns={columns}
                       setSelectedRows={setSelectedRows}
                       filter={filter}
@@ -318,7 +314,9 @@ const Users = () => {
             )}
           </div>
         </div>
-        : <BillingIntegration />}
+      ) : (
+        <BillingIntegration />
+      )}
 
       <Modal show={deletePopup} onHide={() => setDeletePopup(false)}>
         <Modal.Header closeButton>
