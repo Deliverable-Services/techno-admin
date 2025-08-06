@@ -153,7 +153,7 @@ const App = () => {
           ) : (
             ""
           )}
-          <Container fluid className="main-layout w-100">
+          <div className="main-layout">
             <Switch>
               <Route exact path="/">
                 <Redirect to="/dashboard" />
@@ -543,7 +543,7 @@ const App = () => {
             </Switch>
             <ErrorToast />
             <MsgToast />
-          </Container>
+          </div>
           {!isDesktop && showNavTopBar() && <BottomNavigation />}
         </div>
       </div>

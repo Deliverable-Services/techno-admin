@@ -12822,7 +12822,11 @@ body {
 }
 
 .view-padding {
-  padding: 15px 15px !important;
+  padding: 15px 25px !important;
+}
+
+.view-heading {
+  padding: 10px 25px !important;
 }
 
 .view-heading,

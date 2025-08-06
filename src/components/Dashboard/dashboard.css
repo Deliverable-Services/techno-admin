@@ -2,7 +2,8 @@
   font-weight: 600;
   font-size: 1.65rem;
   line-height: 32px;
-  margin-bottom: 20px;
+  margin-bottom: 0px;
+  color: var(--black);
 }
 .time {
   background: #fafafa;

@@ -8,6 +8,7 @@ interface Props {
   onClick?: () => void;
   totalRecords?: number;
   permissionReq?: string;
+  customButton?: React.ReactNode;
 }
 const PageHeading: React.FC<Props> = ({
   title,
@@ -15,9 +16,10 @@ const PageHeading: React.FC<Props> = ({
   onClick,
   totalRecords,
   permissionReq,
+  customButton,
 }) => {
   return (
-    <div className="d-flex justify-content-between pb-3">
+    <div className="d-flex justify-content-between">
       <p className="d-flex align-items-center gap-3">
         {icon}
         <span className="page-title">{title}</span>
@@ -30,7 +32,15 @@ const PageHeading: React.FC<Props> = ({
 
       {onClick && (
         <Restricted to={permissionReq}>
-          <Button variant="primary" onClick={onClick} size={"sm"} style={{ background: 'var(--primary-color)', borderColor: 'var(--primary-color)' }}>
+          <Button
+            variant="primary"
+            onClick={onClick}
+            size={"sm"}
+            style={{
+              background: "var(--primary-color)",
+              borderColor: "var(--primary-color)",
+            }}
+          >
             <div className="text-white d-flex align-items-center">
               <AiOutlinePlus size={18} />
               <p className="mb-0 ml-1">Create</p>
@@ -38,6 +48,8 @@ const PageHeading: React.FC<Props> = ({
           </Button>
         </Restricted>
       )}
+
+      {customButton}
     </div>
   );
 };
