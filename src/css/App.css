@@ -13071,3 +13071,7 @@ li.navLink.my-1 svg path {
 .bg-global {
   background-color: var(--body) !important;
 }
+.rounded-border
+{
+  border-radius: 0.75rem !important;
+}
