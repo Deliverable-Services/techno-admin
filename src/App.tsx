@@ -160,6 +160,7 @@ const App = () => {
                 component={Dashboard}
                 permissionReq="read_dashboard"
               />
+              {/* CRM Links */}
               <PrivateRoute
                 path="/crm"
                 exact
@@ -172,6 +173,14 @@ const App = () => {
                 component={BookingSlots}
                 permissionReq="read_bookingslot"
               />
+              {/* Billing Links */}
+              <PrivateRoute
+                path="/invoices"
+                exact
+                component={InvoicePage}
+                permissionReq="read_city"
+              />
+              {/* Others */}
               <PrivateRoute
                 path="/profile"
                 exact
@@ -479,12 +488,7 @@ const App = () => {
                 component={AssignAgent}
                 permissionReq="assign_agent"
               />
-              <PrivateRoute
-                path="/invoices"
-                exact
-                component={InvoicePage}
-                permissionReq="read_city"
-              />
+
               <PrivateRoute
                 path="/subscriptions"
                 exact

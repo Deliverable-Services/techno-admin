@@ -73,6 +73,7 @@ const mainLinks: Array<INavLink> = [
   {
     title: "Billings",
     icon: <FaRegMoneyBillAlt />,
+    path: "/invoices",
     permissionReq: "read_bookingslot",
     children: [
       {
@@ -113,6 +114,58 @@ const mainLinks: Array<INavLink> = [
     icon: <GoIssueOpened />,
     permissionReq: "read_ticket",
   },
+  {
+    title: "Services",
+    path: "/services",
+    icon: <RiServiceFill />,
+    permissionReq: "read_bookingslot",
+    children: [
+      {
+        title: "Services",
+        path: "/services",
+        icon: <RiServiceFill />,
+        permissionReq: "read_service",
+      },
+      {
+        title: "Service Categories",
+        path: "/categories",
+        icon: <FaDiceFour />,
+        permissionReq: "read_category",
+      },
+    ],
+  },
+  {
+    title: "Products",
+    path: "/products",
+    icon: <RiServiceFill />,
+    permissionReq: "read_bookingslot",
+    children: [
+      {
+        title: "Products",
+        path: "/products",
+        icon: <IoLogoModelS />,
+        permissionReq: "read_brandmodel",
+      },
+      {
+        title: "Brands",
+        path: "/product-brands",
+        icon: <SiBrandfolder />,
+        permissionReq: "read_brand",
+      },
+      {
+        title: "Variants",
+        path: "/product-variants",
+        icon: <IoLogoModelS />,
+        permissionReq: "read_brandmodel",
+      },
+    ],
+  },
+  {
+    title: "Plans",
+    path: "/plans",
+    icon: <FaRegLightbulb />,
+    permissionReq: "read_plan",
+  },
 ];
 
 const websiteLinks: Array<INavLink> = [
@@ -145,45 +198,6 @@ const websiteLinks: Array<INavLink> = [
     path: "/website-pages",
     icon: <RiGlobalLine />,
     permissionReq: "read_staticpage",
-  },
-];
-
-const inventoryLinks: Array<INavLink> = [
-  {
-    title: "Products",
-    path: "/products",
-    icon: <IoLogoModelS />,
-    permissionReq: "read_brandmodel",
-  },
-  {
-    title: "Product Brands",
-    path: "/product-brands",
-    icon: <SiBrandfolder />,
-    permissionReq: "read_brand",
-  },
-  {
-    title: "Product Variants",
-    path: "/product-variants",
-    icon: <IoLogoModelS />,
-    permissionReq: "read_brandmodel",
-  },
-  {
-    title: "Categories",
-    path: "/categories",
-    icon: <FaDiceFour />,
-    permissionReq: "read_category",
-  },
-  {
-    title: "Services",
-    path: "/services",
-    icon: <RiServiceFill />,
-    permissionReq: "read_service",
-  },
-  {
-    title: "Plans",
-    path: "/plans",
-    icon: <FaRegLightbulb />,
-    permissionReq: "read_plan",
   },
 ];
 
@@ -235,22 +249,15 @@ const organisationLinks: Array<INavLink> = [
 const googleLinks: Array<INavLink> = [
   {
     title: "Google Analytics",
-    icon: <FaGoogle />,
+    path: "/google-analytics",
     permissionReq: "read_agenttarget",
-    children: [
-      {
-        title: "Google Analytics",
-        path: "/google-analytics",
-        permissionReq: "read_agenttarget",
-        icon: <IoMdAnalytics />,
-      },
-      {
-        title: "Google Business",
-        path: "/google-business",
-        icon: <FaGoogle />,
-        permissionReq: "read_dashboard",
-      },
-    ],
+    icon: <IoMdAnalytics />,
+  },
+  {
+    title: "Google Business",
+    path: "/google-business",
+    icon: <FaGoogle />,
+    permissionReq: "read_dashboard",
   },
 ];
 
@@ -295,7 +302,6 @@ const NavBar = ({ isNavOpen, setIsNavOpen }: INavBar) => {
 
   const filteredMainLinks = filterLinks(mainLinks);
   const filteredWebsiteLinks = filterLinks(websiteLinks);
-  const filteredInventoryLinks = filterLinks(inventoryLinks);
   const filteredOrganisationLinks = filterLinks(organisationLinks);
 
   const filteredGoogleLinks = googleLinks.filter((link) => {
@@ -395,7 +401,7 @@ const NavBar = ({ isNavOpen, setIsNavOpen }: INavBar) => {
           </ul>
 
           {/* Sections */}
-          <p className="text-muted mb-2">Leads & Customers</p>
+          <p className="text-muted mb-2">MAIN</p>
           <ul>
             {filteredMainLinks.map((link) => (
               <Navlink
@@ -408,22 +414,7 @@ const NavBar = ({ isNavOpen, setIsNavOpen }: INavBar) => {
               />
             ))}
           </ul>
-
-          <p className="text-muted mb-2">Products & Services</p>
-          <ul>
-            {filteredInventoryLinks.map((link) => (
-              <Navlink
-                key={link.title}
-                {...link}
-                onClick={closeNavBar}
-                isNavOpen={isNavOpen}
-                activeMenu={activeMenu}
-                setActiveMenu={setActiveMenu}
-              />
-            ))}
-          </ul>
-
-          <p className="text-muted mb-2">Website & Pages</p>
+          <p className="text-muted mb-2">WEBSITE</p>
           <ul>
             {filteredWebsiteLinks.map((link) => (
               <Navlink
@@ -437,7 +428,7 @@ const NavBar = ({ isNavOpen, setIsNavOpen }: INavBar) => {
             ))}
           </ul>
 
-          <p className="text-muted mb-2">Organization & Settings</p>
+          <p className="text-muted mb-2">CONFIGURATIONS</p>
           <ul>
             {filteredOrganisationLinks.map((link) => (
               <Navlink
