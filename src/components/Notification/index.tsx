@@ -200,7 +200,7 @@ const Notifications = () => {
           permissionReq="create_notification"
         />
 
-        <div className="">
+        <div className="mt-3">
           {(() => {
             if (isLoading) return <IsLoading />;
 
@@ -328,7 +328,6 @@ const Notifications = () => {
             );
           })()}
         </div>
-        <hr />
       </Container>
 
       {selectedRows.length > 0 && (

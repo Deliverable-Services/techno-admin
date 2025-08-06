@@ -146,6 +146,7 @@ const App = () => {
             width: showNavTopBar() && isNavOpen ? "calc(100% - 250px" : "100%",
             minWidth: !isNavOpen && "100vw",
             marginLeft: showNavTopBar() && isNavOpen ? "250px" : "0",
+            transition: '0.3s all ease-in-out'
           }}
         >
           {showNavTopBar() ? (
