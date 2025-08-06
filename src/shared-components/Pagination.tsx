@@ -17,7 +17,7 @@ const TablePagination = ({
   lastPage,
 }: Props) => {
   return (
-    <Container fluid className="d-flex justify-content-end">
+    <Container fluid className="d-flex justify-content-end align-items-center">
       <Pagination>
         <Pagination.First onClick={() => setPage("page", 1)} />
         {hasPrevPage && (

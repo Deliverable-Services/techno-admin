@@ -269,8 +269,8 @@ function ReactTable({
         }}
       >
         {tabs && tabs}
-        <div className="d-flex align-items-center ml-auto">
-          <div className="w-100" style={{ minWidth: 300, marginRight: 8 }}>
+        <div className={`d-flex align-items-center ${isDesktop ? "ml-auto" : 'ml-unset'} w-100`}>
+          <div className="w-100" style={{ minWidth: isDesktop ? 300 : 'auto', marginRight: 8 }}>
             {showSearch && (
               <div
                 className="search-input global-card"

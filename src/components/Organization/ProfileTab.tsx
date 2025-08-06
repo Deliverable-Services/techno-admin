@@ -72,7 +72,7 @@ const ProfileTab = () => {
   return (
     <div className="mt-5">
       <div>
-        <div className="tab-header">
+        <div className="tab-header pb-3">
           <h4>Personal Info</h4>
           <p>Update your photo and personal details here.</p>
         </div>
@@ -93,7 +93,7 @@ const ProfileTab = () => {
             >
               {({ errors }) => (
                 <Form className="w-100 mt-2">
-                  <div className="border-div form-group w-100 mt-4 d-flex align-items-center">
+                  <div className="border-div pb-0 form-group w-100 mt-4 d-flex align-items-center">
                     <label htmlFor="fname">Name</label>
                     <div className="input-div w-100 d-flex align-items-center gap-3">
                       <InputField
@@ -103,7 +103,7 @@ const ProfileTab = () => {
                       />
                     </div>
                   </div>
-                  <div className="border-div form-group w-100 mt-3 d-flex align-items-center">
+                  <div className="border-div pb-0 form-group w-100 mt-3 d-flex align-items-center">
                     <label htmlFor="email">Email</label>
                     <InputField
                       name="email"
@@ -112,7 +112,7 @@ const ProfileTab = () => {
                       error={errors.email}
                     />
                   </div>
-                  <div className="border-div form-group w-100 mt-3 d-flex align-items-center">
+                  <div className="border-div pb-0 form-group w-100 mt-3 d-flex align-items-center">
                     <label htmlFor="phone">Phone</label>
                     <InputField
                       name="phone"

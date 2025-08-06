@@ -24,7 +24,7 @@ const PageHeading: React.FC<Props> = ({
         {icon}
         <span className="page-title">{title}</span>
         {totalRecords ? (
-          <small style={{ fontSize: 14, marginLeft: 5, opacity: 0.6 }}>
+          <small style={{ fontSize: 14, opacity: 0.6 }}>
             ({totalRecords})
           </small>
         ) : null}
