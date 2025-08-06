@@ -49,7 +49,7 @@ const TopBar = ({ isNavOpen, setIsNavOpen }: INavBar) => {
       className="top-bar d-flex align-items-center justify-content-between"
       style={{ width: !isNavOpen ? "98vw" : "100%" }}
     >
-      {/* {!isDesktop ? ( */}
+      {isDesktop ? (
 
       <div className="menu-hamburger" style={{ cursor: "pointer" }}>
         <GiHamburgerMenu
@@ -59,7 +59,7 @@ const TopBar = ({ isNavOpen, setIsNavOpen }: INavBar) => {
         />
       </div>
 
-      {/* ) : null} */}
+      ) : null} 
 
       {isDesktop && !isNavOpen && <Logo />}
       {!isDesktop && <Logo />}

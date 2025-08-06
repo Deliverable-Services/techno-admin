@@ -137,9 +137,8 @@ const BusinessProfileTab: React.FC<BusinessProfileTabProps> = ({
                       {[...Array(5)].map((_, i) => (
                         <i
                           key={i}
-                          className={`fas fa-star ${
-                            i < Math.floor(profile.rating) ? "" : "text-muted"
-                          }`}
+                          className={`fas fa-star ${i < Math.floor(profile.rating) ? "" : "text-muted"
+                            }`}
                         ></i>
                       ))}
                     </span>

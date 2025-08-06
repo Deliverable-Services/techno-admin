@@ -1,0 +1,81 @@
+.card-container {
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+    border-radius: 14px;
+    background-color: white;
+    border: 1px solid #E9E7EA;
+    box-shadow: 0px 1px 2px 0px #0000000D;
+    box-shadow: 0px 1px 2px 0px #A4ACB933;
+    display: flex;
+    gap: 15px;
+}
+
+.details-main-container {
+    display: flex;
+    flex-direction: row;
+    gap: 20px;
+    align-items: center;
+}
+
+.detail-main-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    gap: 10px;
+}
+
+.profile {
+    width: 102px;
+    height: 102px;
+}
+
+.user-name {
+    font-size: 22px;
+    color: #26262A;
+    font-weight: 600;
+}
+
+.text {
+    font-size: 14px;
+}
+
+.c-gray {
+    color: #767676;
+}
+
+.c-black {
+    color: #26262A;
+}
+
+.contact-info-cont {
+    display: flex;
+    flex-direction: row;
+    gap: 10px;
+    align-items: center;
+}
+
+.capitalize {
+    text-transform: capitalize;
+}
+
+.avatarContainer {}
+
+.details-container {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.edit-account-btn {
+    width: 100%;
+    align-items: center;
+    background-color: #F6F6F6;
+    border: 1px solid #E9E7EA;
+    color: #26262A;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    padding: 9px 0;
+}

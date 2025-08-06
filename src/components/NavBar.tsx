@@ -1,4 +1,4 @@
-import React, { useContext, useEffect } from "react";
+import { useContext, useState } from "react";
 import {
   FaAddressCard,
   FaBoxes,
@@ -12,9 +12,10 @@ import {
   FaMap,
   FaClock,
   FaGoogle,
+  FaRegMoneyBillAlt,
 } from "react-icons/fa";
 import { GoIssueOpened } from "react-icons/go";
-import { IoLogoModelS } from "react-icons/io";
+import { IoLogoModelS, IoMdAnalytics } from "react-icons/io";
 import { GiModernCity, GiOnTarget } from "react-icons/gi";
 
 import {
@@ -34,7 +35,7 @@ import Overlay from "../shared-components/Overlay";
 import { INavBar, INavLink } from "../types/interface";
 import { MdShoppingCart } from "react-icons/md";
 import { ImUsers } from "react-icons/im";
-import { AiFillIdcard, AiFillSetting } from "react-icons/ai";
+import { AiFillIdcard } from "react-icons/ai";
 import { BsClock, BsShieldLock } from "react-icons/bs";
 import { SiCivicrm } from "react-icons/si";
 import { GrOrganization } from "react-icons/gr";
@@ -61,8 +62,18 @@ const mainLinks: Array<INavLink> = [
   {
     title: "Bookings",
     path: "/crm-bookings",
+    permissionReq: "read_booking",
     icon: <BsClock />,
+  },
+  {
+    title: "Billings",
+    icon: <FaRegMoneyBillAlt />,
     permissionReq: "read_bookingslot",
+    children: [
+      { title: "Subscriptions", path: "/subscriptions", permissionReq: "read_subscription", icon: <FaAddressCard />, },
+      { title: "Transaction", path: "/transactions", permissionReq: "read_transaction", icon: <FaMoneyCheck />, },
+      { title: "Invoices", path: "/invoices", icon: <SiCivicrm />, permissionReq: "read_city", },
+    ],
   },
   {
     title: "Cart",
@@ -70,30 +81,18 @@ const mainLinks: Array<INavLink> = [
     icon: <MdShoppingCart />,
     permissionReq: "read_booking",
   },
-  {
-    title: "Invoices",
-    path: "/invoices",
-    icon: <SiCivicrm />,
-    permissionReq: "read_city",
-  },
 
+  {
+    title: "Google Business",
+    path: "/google-business",
+    icon: <FaGoogle />,
+    permissionReq: "read_dashboard",
+  },
   {
     title: "Customers",
     path: "/users",
     icon: <ImUsers />,
     permissionReq: "read_user",
-  },
-  {
-    title: "Subscriptions",
-    path: "/subscriptions",
-    icon: <FaAddressCard />,
-    permissionReq: "read_subscription",
-  },
-  {
-    title: "Transactions",
-    path: "/transactions",
-    icon: <FaMoneyCheck />,
-    permissionReq: "read_transaction",
   },
   {
     title: "Help Center",
@@ -128,18 +127,6 @@ const websiteLinks: Array<INavLink> = [
     icon: <AiFillIdcard />,
     permissionReq: "read_testimonial",
   },
-  // {
-  //   title: "Static Pages",
-  //   path: "/static-pages",
-  //   icon: <RiPagesLine />,
-  //   permissionReq: "read_staticpage",
-  // },
-  // {
-  //   title: "Website",
-  //   path: "/website",
-  //   icon: <RiGlobalLine />,
-  //   permissionReq: "read_staticpage",
-  // },
   {
     title: "Website Pages",
     path: "/website-pages",
@@ -207,18 +194,17 @@ const organisationLinks: Array<INavLink> = [
     permissionReq: "read_agenttarget",
   },
   {
+    title: "Google Analytics",
+    path: "/google-analytics",
+    icon: <IoMdAnalytics />,
+    permissionReq: "read_agenttarget",
+  },
+  {
     title: "Roles & Permissions",
     path: "/permissions",
     icon: <BsShieldLock />,
     permissionReq: "read_permission",
   },
-  {
-    title: "Configurations",
-    path: "/configurations",
-    icon: <AiFillSetting />,
-    permissionReq: "read_config",
-  },
-
   {
     title: "Organization",
     path: "/organization",
@@ -246,7 +232,6 @@ const hiddenRoutesForCRM = [
   "/coupons",
   "/agent",
   "/agent-targets",
-  "/cities",
   "/product-variants",
 ];
 const hiddenRoutesForEcommerce = [
@@ -260,6 +245,8 @@ const hiddenRoutesForEcommerce = [
 
 const NavBar = ({ isNavOpen, setIsNavOpen }: INavBar) => {
   const isDesktop = useContext(IsDesktopContext);
+  const [activeMenu, setActiveMenu] = useState<string | null>(null);
+
   const loggedInUser = useUserProfileStore((state) => state.user);
   const { setOrganisations, selectedOrg, setSelectedOrg } = useOrganisation();
   const {
@@ -267,29 +254,12 @@ const NavBar = ({ isNavOpen, setIsNavOpen }: INavBar) => {
     isLoading: isCheckingConnection,
   } = useGoogleBusinessConnection();
 
-  useEffect(() => {
-    const handleSetOrganisations = (orgs: any) => {
-      setOrganisations(orgs);
-
-      // set default org if not selected
-      if (!selectedOrg && orgs.length) {
-        const stored = localStorage.getItem("selectedOrganisation");
-        if (!stored) {
-          setSelectedOrg(orgs[0]);
-        }
-      }
-    };
-    if (loggedInUser) handleSetOrganisations(loggedInUser.organisations);
-  }, []);
-
   const closeNavBar = () => {
     if (isDesktop) return;
     if (setIsNavOpen) {
       setIsNavOpen(false);
     }
   };
-  // if (selectedOrg && !selectedOrg?.hasOwnProperty("store_type"))
-  //   selectedOrg.store_type = "crm"; // setting default to CRM if no organisation found
 
   // Google Business link - only show when connected
   const googleBusinessLink: INavLink = {
@@ -411,64 +381,62 @@ const NavBar = ({ isNavOpen, setIsNavOpen }: INavBar) => {
               icon={<RiDashboardFill />}
               isNavOpen={isNavOpen}
               permissionReq="read_dashboard"
+              activeMenu={activeMenu}
+              setActiveMenu={setActiveMenu}
             />
           </ul>
           <p className="text-muted mb-2">Leads & Customers</p>
           <ul>
-            {filteredMainLinks.map(({ title, path, icon, permissionReq }) => (
+            {filteredMainLinks.map((link) => (
               <Navlink
-                path={path}
-                title={title}
-                key={title}
+                key={link.title}
+                {...link}
                 onClick={closeNavBar}
-                icon={icon}
                 isNavOpen={isNavOpen}
-                permissionReq={permissionReq}
+                activeMenu={activeMenu}
+                setActiveMenu={setActiveMenu}
               />
             ))}
           </ul>
           <p className="text-muted mb-2">Products & Services</p>
           <ul>
             {filterinventoryLinks.map(
-              ({ title, path, icon, permissionReq }) => (
+              (link) => (
                 <Navlink
-                  path={path}
-                  title={title}
-                  key={title}
+                  key={link.title}
+                  {...link}
                   onClick={closeNavBar}
-                  icon={icon}
                   isNavOpen={isNavOpen}
-                  permissionReq={permissionReq}
+                  activeMenu={activeMenu}
+                  setActiveMenu={setActiveMenu}
                 />
               )
             )}
           </ul>
           <p className="text-muted mb-2">Website & Pages</p>
           <ul>
-            {filteredWebsiteinks.map(({ title, path, icon, permissionReq }) => (
+            {filteredWebsiteinks.map((link) => (
               <Navlink
-                path={path}
-                title={title}
-                key={title}
+                key={link.title}
+                {...link}
                 onClick={closeNavBar}
-                icon={icon}
                 isNavOpen={isNavOpen}
-                permissionReq={permissionReq}
+                activeMenu={activeMenu}
+                setActiveMenu={setActiveMenu}
               />
             ))}
           </ul>
           <p className="text-muted mb-2">Organization & Settings</p>
           <ul>
             {filterOrganisationLinks.map(
-              ({ title, path, icon, permissionReq }) => (
+              (link) => (
                 <Navlink
-                  path={path}
-                  title={title}
-                  key={title}
+                  key={link.title}
+                  {...link}
                   onClick={closeNavBar}
-                  icon={icon}
                   isNavOpen={isNavOpen}
-                  permissionReq={permissionReq}
+                  activeMenu={activeMenu}
+                  setActiveMenu={setActiveMenu}
                 />
               )
             )}

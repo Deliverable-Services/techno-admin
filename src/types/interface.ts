@@ -3,11 +3,12 @@ import { TableState } from "react-table";
 
 export interface INavLink {
   title: string;
-  path: string;
+  path?: string;
   onClick?: () => void;
   icon?: IconBaseProps;
   isNavOpen?: boolean;
   permissionReq?: string;
+  children?: INavLink[];
 }
 export interface INavBar {
   isNavOpen: boolean;
@@ -45,6 +46,7 @@ export type Organisation = {
 export type User = {
   storeType: string;
   created_at: string;
+  role: string;
   disabled: number;
   email: string | null;
   email_verified_at: string | null;

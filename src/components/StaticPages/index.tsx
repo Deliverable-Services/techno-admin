@@ -3,7 +3,7 @@ import BraftEditor, { EditorState } from "braft-editor";
 import { title } from "process";
 import React, { useState } from "react";
 import { useEffect } from "react";
-import { Button, Container } from "react-bootstrap";
+import { Modal, Button, Container } from "react-bootstrap";
 import { BiSad } from "react-icons/bi";
 import { useMutation, useQuery } from "react-query";
 import { useHistory } from "react-router-dom";
@@ -17,6 +17,7 @@ import API from "../../utils/API";
 import { primaryColor } from "../../utils/constants";
 import { queryClient } from "../../utils/queryClient";
 import { showMsgToast } from "../../utils/showMsgToast";
+import StaticPageCreateForm from "./StaticPageCreateUpdateForm";
 
 const key = "staticPages";
 
@@ -26,6 +27,7 @@ const updatePageData = ({ formdata, id }: { formdata: any; id: string }) => {
 const deletePage = (id: any) => {
   return API.post(`${key}/delete`, { id });
 };
+
 const StaticPages = () => {
   const history = useHistory();
   const isRestricted = useUserProfileStore((state) => state.isRestricted);
@@ -33,6 +35,7 @@ const StaticPages = () => {
   const { data, isLoading, isFetching } = useQuery<any>([key]);
   const [titles, setTitles] = useState([]);
   const [selectedTitle, setSelectedTitle] = useState(titles[0]);
+  const [modalShow, setModalShow] = useState(false);
 
   useEffect(() => {
     if (isLoading || isFetching) return;
@@ -46,8 +49,8 @@ const StaticPages = () => {
     }
   }, [titles.length]);
 
-  const _onCreateClick = () => {
-    history.push("website-pages/static/create-edit");
+  const _onModalHideClick = () => {
+    setModalShow(false);
   };
 
   if (!data && (!isLoading || !isFetching)) {
@@ -68,7 +71,7 @@ const StaticPages = () => {
       <Container fluid className="card component-wrapper view-padding">
         <PageHeading
           title="Static Pages"
-          onClick={_onCreateClick}
+          onClick={() => setModalShow(true)}
           permissionReq="create_staticpage"
         />
         {!isRestricted("update_staticpage") && (
@@ -93,6 +96,23 @@ const StaticPages = () => {
           <PageContainer page={page} selectedTitle={selectedTitle} />
         ))}
       </Container>
+
+      <Modal
+        show={modalShow}
+        onHide={_onModalHideClick}
+        size="lg"
+        aria-labelledby="contained-modal-title-vcenter"
+        centered
+      >
+        <Modal.Header closeButton>
+          <Modal.Title id="contained-modal-title-vcenter">
+            Create Static Page
+          </Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <StaticPageCreateForm onHideModal={_onModalHideClick} />
+        </Modal.Body>
+      </Modal>
     </>
   );
 };
@@ -108,7 +128,7 @@ const PageContainer = ({ page, selectedTitle }) => {
 
   const { mutate, isLoading: isUpdatedLoading } = useMutation(updatePageData, {
     onSuccess: () => {
-      showMsgToast("Page  saved successfully");
+      showMsgToast("Page saved successfully");
       setTimeout(() => queryClient.invalidateQueries(key), 500);
     },
     onError: (error: AxiosError) => {
