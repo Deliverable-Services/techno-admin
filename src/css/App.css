@@ -17,10 +17,11 @@
  * Licensed under MIT (https://github.com/twbs/bootstrap/blob/main/LICENSE)
  */
 :root {
-  --primary-color:#303030;
+  --primary-color: #303030;
   --black: #202020;
-  --sidebar:#ebebeb;
-  --body:#f1f1f1;
+  --sidebar: #ebebeb;
+  --border: #eee;
+  --body: #f9f9f9;
   --blue: #007bff;
   --indigo: #6610f2;
   --purple: #6f42c1;
@@ -5339,10 +5340,10 @@ input[type="button"].btn-block {
 .profile-dropdown-menu {
   top: 100px !important;
 }
-.filter-dropdown{
+.filter-dropdown {
   line-height: 0;
 }
-.filter-dropdown button{
+.filter-dropdown button {
   padding: 0;
   width: auto;
   background-color: transparent !important;
@@ -5350,15 +5351,15 @@ input[type="button"].btn-block {
   border: 0;
   line-height: 1;
 }
-.search-filters-div{
-    display: flex;
-    align-items: center;
-    background-color: #fff;
-    box-shadow: var(--shadow-main);
-    border-radius: 4px !important;
-    padding: 0 9px;
-    gap: 10px;
-    height: 28px !important;
+.search-filters-div {
+  display: flex;
+  align-items: center;
+  background-color: #fff;
+  box-shadow: var(--shadow-main);
+  border-radius: 4px !important;
+  padding: 0 9px;
+  gap: 10px;
+  height: 28px !important;
 }
 @media (max-width: 575.98px) {
   .navbar-expand-sm > .container,
@@ -12013,15 +12014,14 @@ th {
 }
 
 .top-bar {
-  position: -webkit-sticky;
-  position: sticky;
+  position: fixed;
   top: 0;
   z-index: 49;
   width: 100%;
-  height: 65px;
-  max-height: 65px;
-  background-color: var(--body);
-  border-bottom: 1px solid #ccc;
+  height: 64px;
+  max-height: 64px;
+  background-color: var(--sidebar);
+  border-bottom: 1px solid var(--border);
 }
 
 .top-bar .profile {
@@ -12070,13 +12070,14 @@ th {
   background-color: #fff;
   border-bottom: 1px solid #e7eaf3;
 }
-.search-input.global-card{
+.search-input.global-card {
   width: 100%;
   padding: 0 10px !important;
   min-height: 28px !important;
   border-radius: 6px !important;
 }
-.search-input.global-card input, .search-input.global-card input::placeholder{
+.search-input.global-card input,
+.search-input.global-card input::placeholder {
   font-size: 12px;
 }
 @media (min-width: 800px) {
@@ -12272,11 +12273,10 @@ th {
 
 @media screen and (max-width: 700px) {
   .delete-button {
-
     bottom: 10% !important;
     right: unset !important;
     max-width: 90% !important;
-    background-color: #FFFF !important;
+    background-color: #ffff !important;
     border-radius: 14px !important;
     padding-top: 10px !important;
     padding-bottom: 10px !important;
@@ -12509,22 +12509,22 @@ th {
   color: white !important;
 }
 
-.ellipsis-dropdown button{
+.ellipsis-dropdown button {
   padding: 0 !important;
   background-color: transparent !important;
 }
-.ellipsis-dropdown button:active{
+.ellipsis-dropdown button:active {
   background-color: transparent !important;
 }
-.ellipsis-dropdown button::after{
+.ellipsis-dropdown button::after {
   display: none;
 }
-.menu-dropdown.dropdown-menu{
+.menu-dropdown.dropdown-menu {
   box-shadow: var(--shadow-main);
   border-radius: 12px;
   padding: 10px;
 }
-.menu-dropdown.dropdown-menu .dropdown-item{
+.menu-dropdown.dropdown-menu .dropdown-item {
   border-radius: 6px;
   font-size: 13px;
   font-weight: 500;
@@ -12721,14 +12721,14 @@ th {
 }
 body {
   font-family: "Inter", sans-serif;
-  background-color: var(--body);
+  background-color: var(--sidebar);
   overflow-x: hidden;
 }
 
 .App {
   display: -ms-flex;
   display: flex;
-  background-color: var(--body);
+  background-color: var(--sidebar);
   color: #1e2022;
 }
 
@@ -12759,9 +12759,13 @@ body {
   border-top-right-radius: 0;
   border-bottom-right-radius: 0;
   margin-bottom: 50px;
-  margin-top: 1rem;
+  margin-top: 64px;
   width: 100%;
-  max-width: 100vw;
+  overflow: hidden;
+  overflow-y: auto;
+  padding-top: 12px;
+  min-height: calc(100vh - 64px);
+  background-color: #f9f9f9;
 }
 .login-wrapper {
   box-shadow: 0px 15px 32px 0px #0000000d, 0px 59px 59px 0px #0000000a,

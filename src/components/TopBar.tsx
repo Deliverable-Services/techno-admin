@@ -47,19 +47,16 @@ const TopBar = ({ isNavOpen, setIsNavOpen }: INavBar) => {
     <Container
       fluid
       className="top-bar d-flex align-items-center justify-content-between"
-      style={{ width: !isNavOpen ? "98vw" : "100%" }}
     >
       {isDesktop ? (
-
-      <div className="menu-hamburger" style={{ cursor: "pointer" }}>
-        <GiHamburgerMenu
-          size={28}
-          onClick={openNavBar}
-        // color={primaryColor}
-        />
-      </div>
-
-      ) : null} 
+        <div className="menu-hamburger" style={{ cursor: "pointer" }}>
+          <GiHamburgerMenu
+            size={28}
+            onClick={openNavBar}
+            // color={primaryColor}
+          />
+        </div>
+      ) : null}
 
       {isDesktop && !isNavOpen && <Logo />}
       {!isDesktop && <Logo />}
@@ -83,12 +80,8 @@ const TopBar = ({ isNavOpen, setIsNavOpen }: INavBar) => {
 
         {isDesktop && (
           <>
-            <div
-              className="d-flex align-items-center user-dd"
-            >
-              <Dropdown
-                className="w-100"
-              >
+            <div className="d-flex align-items-center user-dd">
+              <Dropdown className="w-100">
                 <Dropdown.Toggle
                   id="dropdown-basic"
                   className="d-flex align-items-center text-left gap-3 filter-button bg-transparent border-0 p-0"
@@ -99,20 +92,32 @@ const TopBar = ({ isNavOpen, setIsNavOpen }: INavBar) => {
                   ) : (
                     <img src={profile} alt="profile" className="profile" />
                   )}
-                  {user && <div>
-                    <p className="text-muted small mb-0">{user?.name}</p>
-                  </div>}
+                  {user && (
+                    <div>
+                      <p className="text-muted small mb-0">{user?.name}</p>
+                    </div>
+                  )}
                 </Dropdown.Toggle>
 
                 <Dropdown.Menu className="global-card profile-dropdown-menu">
-                  <Dropdown.Item href="/profile" className="border-bottom d-flex align-items-center">
+                  <Dropdown.Item
+                    href="/profile"
+                    className="border-bottom d-flex align-items-center"
+                  >
                     {" "}
                     <GoMail className="mr-2" />
-                    <p className="text-muted small mb-0">{selectedOrg?.email}</p>
+                    <p className="text-muted small mb-0">
+                      {selectedOrg?.email}
+                    </p>
                   </Dropdown.Item>
-                  <Dropdown.Item onClick={() => mutate()} className="d-flex align-items-center">
+                  <Dropdown.Item
+                    onClick={() => mutate()}
+                    className="d-flex align-items-center"
+                  >
                     <BiLogOut className="mr-2" />
-                    <p className="text-muted small mb-0">{isLoading ? "Loading" : "Log out"}</p>
+                    <p className="text-muted small mb-0">
+                      {isLoading ? "Loading" : "Log out"}
+                    </p>
                   </Dropdown.Item>
                 </Dropdown.Menu>
               </Dropdown>
