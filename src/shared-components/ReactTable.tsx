@@ -45,7 +45,7 @@ interface Props {
   isSelectable?: boolean;
   searchPlaceHolder?: string;
   deletePermissionReq?: string;
-  showSearch?: boolean
+  showSearch?: boolean;
   showRecords?: boolean;
 }
 interface ISearchInput {
@@ -261,16 +261,21 @@ function ReactTable({
 
   return (
     <div className="">
-      <Container
-        fluid
-        className="pb-3 d-flex justify-space-between align-items-center position-relative px-3"
-        style={{ flexDirection: isDesktop ? "row" : "column-reverse" }}
+      <div
+        className="d-flex justify-space-between align-items-center position-relative view-padding view-heading"
+        style={{
+          flexDirection: isDesktop ? "row" : "column-reverse",
+          marginBottom: "0 !important",
+        }}
       >
         {tabs && tabs}
         <div className="d-flex align-items-center ml-auto">
           <div className="w-100" style={{ minWidth: 300, marginRight: 8 }}>
             {showSearch && (
-              <div className="search-input global-card" style={{ paddingInline: '10px' }}>
+              <div
+                className="search-input global-card"
+                style={{ paddingInline: "10px" }}
+              >
                 <AiOutlineSearch size={18} />
                 <SearchInput
                   preGlobalFilteredRows={preGlobalFilteredRows}
@@ -334,7 +339,7 @@ function ReactTable({
             </Dropdown>
           </div>
         </div>
-      </Container>
+      </div>
 
       {/*-------------------- table---------------------  */}
       <div className="">
@@ -434,37 +439,35 @@ function ReactTable({
             </Table>
             {rows.length === 0 ? (
               ""
-            ) : (
-              showRecords ? (
-                <div
-                  className="d-flex gap-3 align-items-center justify-content-center"
-                  style={{ position: "absolute", left: 10, bottom: "-40px" }}
+            ) : showRecords ? (
+              <div
+                className="d-flex gap-3 align-items-center justify-content-center"
+                style={{ position: "absolute", left: 10, bottom: "-40px" }}
+              >
+                <span className="text-muted" style={{ fontSize: "14px" }}>
+                  Records{" "}
+                </span>
+                <select
+                  className="text-primary font-weight-bold"
+                  style={{
+                    border: "none",
+                    marginRight: 5,
+                  }}
+                  value={pageSize}
+                  onChange={(e) => {
+                    const value = e.target.value;
+                    setPageSize(parseInt(value));
+                    onFilterChange("perPage", value);
+                  }}
                 >
-                  <span className="text-muted" style={{ fontSize: "14px" }}>
-                    Records{" "}
-                  </span>
-                  <select
-                    className="text-primary font-weight-bold"
-                    style={{
-                      border: "none",
-                      marginRight: 5,
-                    }}
-                    value={pageSize}
-                    onChange={(e) => {
-                      const value = e.target.value;
-                      setPageSize(parseInt(value));
-                      onFilterChange("perPage", value);
-                    }}
-                  >
-                    {RowsPerPage.map((item) => (
-                      <option key={item.id} value={item.id}>
-                        {item.name}
-                      </option>
-                    ))}
-                  </select>
-                </div>
-              ) : null
-            )}
+                  {RowsPerPage.map((item) => (
+                    <option key={item.id} value={item.id}>
+                      {item.name}
+                    </option>
+                  ))}
+                </select>
+              </div>
+            ) : null}
           </div>
         </DndProvider>
         {rows.length === 0 ? (
@@ -510,8 +513,8 @@ const Row = ({ row }: any) => (
       return (
         <td {...cell.getCellProps()} style={{ verticalAlign: "middle" }}>
           {cell.value ||
-            cell.column.id === "selection" ||
-            cell.column.id === "Actions" ? (
+          cell.column.id === "selection" ||
+          cell.column.id === "Actions" ? (
             cell.render("Cell")
           ) : (
             <span className="text-muted">NA</span>
