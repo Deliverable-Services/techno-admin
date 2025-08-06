@@ -191,144 +191,140 @@ const Notifications = () => {
 
   return (
     <>
-      <Container fluid className="component-wrapper view-padding">
+      <div className="view-padding view-heading">
         <PageHeading
           icon={<RiNotification2Line size={20} />}
-          title="Notifications"
+          title="Workflow Notifications"
           onClick={_onCreateClick}
           totalRecords={data?.total}
           permissionReq="create_notification"
         />
+      </div>
+      <hr />
+      <div className="">
+        {(() => {
+          if (isLoading) return <IsLoading />;
 
-        <div className="mt-3">
-          {(() => {
-            if (isLoading) return <IsLoading />;
+          return (
+            <>
+              {!error && (
+                <ReactTable
+                  data={data?.data}
+                  tabs={
+                    <div className="d-flex justify-content-between">
+                      <Nav
+                        className="global-navs"
+                        variant="tabs"
+                        activeKey={filter.sent}
+                        onSelect={(selectedKey) =>
+                          _onFilterChange("sent", selectedKey)
+                        }
+                      >
+                        <Nav.Item>
+                          <Nav.Link eventKey="">
+                            All ({data?.data?.length || 0})
+                          </Nav.Link>
+                        </Nav.Item>
 
-            return (
-              <div className="d-flex flex-column gap-3">
+                        <Nav.Item>
+                          <Nav.Link eventKey="1">
+                            Sent (
+                            {data?.data?.filter((item) => item.status === "1")
+                              .length || 0}
+                            )
+                          </Nav.Link>
+                        </Nav.Item>
 
-                <div className="card">
-                  <Container fluid className="h-100 p-0">
-                    <div className="mt-3" />
-                    {!error && (
-                      <ReactTable
-                        data={data?.data}
-                        tabs={<div className="d-flex justify-content-between">
-                          <Nav
-                            className="global-navs"
-                            variant="tabs"
-                            activeKey={filter.sent}
-                            onSelect={(selectedKey) =>
-                              _onFilterChange("sent", selectedKey)
-                            }
-                          >
-                            <Nav.Item>
-                              <Nav.Link eventKey="">
-                                All ({data?.data?.length || 0})
-                              </Nav.Link>
-                            </Nav.Item>
-
-                            <Nav.Item>
-                              <Nav.Link eventKey="1">
-                                Sent (
-                                {data?.data?.filter((item) => item.status === "1")
-                                  .length || 0}
-                                )
-                              </Nav.Link>
-                            </Nav.Item>
-
-                            <Nav.Item>
-                              <Nav.Link eventKey="0">
-                                Not Sent (
-                                {data?.data?.filter((item) => item.status === "0")
-                                  .length || 0}
-                                )
-                              </Nav.Link>
-                            </Nav.Item>
-                          </Nav>
-                        </div>}
-                        filters={<Dropdown className="filter-dropdown">
-                          <Dropdown.Toggle
-                            as={Button}
-                            variant="primary"
-                          >
-                            <BsFunnel /> Filters
-                          </Dropdown.Toggle>
-                          <Dropdown.Menu>
-                            <div className="filter-dropdown-heading d-flex justify-content-between w-100">
-                              <h4>Filter</h4>
-                              <div className="d-flex align-items-center justify-md-content-center">
-                                <Button
-                                  variant={
-                                    areTwoObjEqual(intitialFilter, filter)
-                                      ? "light"
-                                      : "primary"
-                                  }
-                                  style={{
-                                    fontSize: 14,
-                                  }}
-                                  onClick={() => setFilter(intitialFilter)}
-                                >
-                                  Reset Filters
-                                </Button>
-                              </div>
-                            </div>
-                            <div className="select-filter">
-                              <FilterSelect
-                                currentValue={filter.send_to}
-                                data={NotificationSendToCategories}
-                                label="Send To"
-                                idx="send_to"
-                                onFilterChange={_onFilterChange}
-                              />
-                              <Form.Group>
-                                <Form.Label className="text-muted">
-                                  Scheduled At
-                                </Form.Label>
-                                <Form.Control
-                                  type="date"
-                                  value={filter.scheduled_at}
-                                  onChange={(e) => {
-                                    const value = moment(e.target.value).format(
-                                      "YYYY-MM-DD"
-                                    );
-                                    _onFilterChange("scheduled_at", value);
-                                  }}
-                                  style={{
-                                    fontSize: 14,
-                                    width: 150,
-                                    height: 35,
-                                  }}
-                                />
-                              </Form.Group>
-                            </div>
-                          </Dropdown.Menu>
-                        </Dropdown>}
-                        columns={columns}
-                        setSelectedRows={setSelectedRows}
-                        filter={filter}
-                        onFilterChange={_onFilterChange}
-                        isDataLoading={isFetching}
-                        searchPlaceHolder="Search using title"
-                        deletePermissionReq="delete_notification"
-                      />
-                    )}
-                    {!error && data.length > 0 ? (
-                      <TablePagination
-                        currentPage={data?.current_page}
-                        lastPage={data?.last_page}
-                        setPage={_onFilterChange}
-                        hasNextPage={!!data?.next_page_url}
-                        hasPrevPage={!!data?.prev_page_url}
-                      />
-                    ) : null}{" "}
-                  </Container>
-                </div>
-              </div>
-            );
-          })()}
-        </div>
-      </Container>
+                        <Nav.Item>
+                          <Nav.Link eventKey="0">
+                            Not Sent (
+                            {data?.data?.filter((item) => item.status === "0")
+                              .length || 0}
+                            )
+                          </Nav.Link>
+                        </Nav.Item>
+                      </Nav>
+                    </div>
+                  }
+                  filters={
+                    <Dropdown className="filter-dropdown">
+                      <Dropdown.Toggle as={Button} variant="primary">
+                        <BsFunnel /> Filters
+                      </Dropdown.Toggle>
+                      <Dropdown.Menu>
+                        <div className="filter-dropdown-heading d-flex justify-content-between w-100">
+                          <h4>Filter</h4>
+                          <div className="d-flex align-items-center justify-md-content-center">
+                            <Button
+                              variant={
+                                areTwoObjEqual(intitialFilter, filter)
+                                  ? "light"
+                                  : "primary"
+                              }
+                              style={{
+                                fontSize: 14,
+                              }}
+                              onClick={() => setFilter(intitialFilter)}
+                            >
+                              Reset Filters
+                            </Button>
+                          </div>
+                        </div>
+                        <div className="select-filter">
+                          <FilterSelect
+                            currentValue={filter.send_to}
+                            data={NotificationSendToCategories}
+                            label="Send To"
+                            idx="send_to"
+                            onFilterChange={_onFilterChange}
+                          />
+                          <Form.Group>
+                            <Form.Label className="text-muted">
+                              Scheduled At
+                            </Form.Label>
+                            <Form.Control
+                              type="date"
+                              value={filter.scheduled_at}
+                              onChange={(e) => {
+                                const value = moment(e.target.value).format(
+                                  "YYYY-MM-DD"
+                                );
+                                _onFilterChange("scheduled_at", value);
+                              }}
+                              style={{
+                                fontSize: 14,
+                                width: 150,
+                                height: 35,
+                              }}
+                            />
+                          </Form.Group>
+                        </div>
+                      </Dropdown.Menu>
+                    </Dropdown>
+                  }
+                  columns={columns}
+                  setSelectedRows={setSelectedRows}
+                  filter={filter}
+                  onFilterChange={_onFilterChange}
+                  isDataLoading={isFetching}
+                  searchPlaceHolder="Search using title"
+                  deletePermissionReq="delete_notification"
+                />
+              )}
+              {!error && data.length > 0 ? (
+                <TablePagination
+                  currentPage={data?.current_page}
+                  lastPage={data?.last_page}
+                  setPage={_onFilterChange}
+                  hasNextPage={!!data?.next_page_url}
+                  hasPrevPage={!!data?.prev_page_url}
+                />
+              ) : null}{" "}
+            </>
+          );
+        })()}
+      </div>
+      <hr />
 
       {selectedRows.length > 0 && (
         <div className="delete-button rounded">
