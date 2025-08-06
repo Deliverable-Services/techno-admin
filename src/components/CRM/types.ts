@@ -60,11 +60,15 @@ export interface Lead {
   assignee: number;
   created_at: string;
   updated_at: string;
+  city: string,
+  country: string,
+  full_address: string,
+  website: string,
+  gender: string,
   user: User;
   service: any;
   comments: Comment[];
 }
-
 
 
 
