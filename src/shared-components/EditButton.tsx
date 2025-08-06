@@ -18,7 +18,7 @@ const EditButton = (props: Props) => {
         <Button
           variant="outline-primary"
           onClick={props.onClick}
-          className="d-flex align-items-center"
+          className="d-flex align-items-center edit-btn"
         >
           <AiFillEdit size={16} className="mr-1" />
           Edit
