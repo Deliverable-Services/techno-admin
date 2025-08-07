@@ -42,7 +42,10 @@ const updatePage = async (data, id) => {
   });
 };
 
-const DynamicPageCreateUpdateForm = () => {
+interface DynamicPageCreateUpdateFormProps {
+  toggleModal: () => void;
+}
+const DynamicPageCreateUpdateForm = ({toggleModal}: DynamicPageCreateUpdateFormProps) => {
   const { state } = useLocation();
   const history = useHistory();
   const id = state ? (state as any).id : null;
@@ -54,7 +57,7 @@ const DynamicPageCreateUpdateForm = () => {
       setTimeout(() => queryClient.invalidateQueries(key), 500);
       if (id) return showMsgToast("Page updated successfully");
       showMsgToast("Page created successfully");
-      history.replace("/website-pages?tab=dynamic");
+      toggleModal();
     },
     onError: (error: AxiosError) => {
       handleApiError(error, history);
@@ -83,8 +86,6 @@ const DynamicPageCreateUpdateForm = () => {
 
   return (
     <>
-      <div className="card view-padding p-2 d-flex mt-3">
-        <BackButton title={id ? "Update Page" : "Create a dynamic Page"} />
 
         {/* <div className="text-primary">
           <div className="d-flex justify-content-between">
@@ -263,7 +264,6 @@ const DynamicPageCreateUpdateForm = () => {
             </Formik>
           </Col>
         </Row>
-      </div>
     </>
   );
 };

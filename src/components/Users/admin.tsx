@@ -25,6 +25,8 @@ import { showMsgToast } from "../../utils/showMsgToast";
 import { AiFillDelete } from "react-icons/ai";
 import { BsFunnel, BsThreeDotsVertical } from "react-icons/bs";
 import { RiAdminFill } from "react-icons/ri";
+import { CommonModal } from "../CommonPopup/CommonModal";
+import UserCreateUpdateForm from "./UsersCreateUpdateForm";
 interface IFilter {
   role: string | null;
 }
@@ -49,6 +51,7 @@ const Admins = () => {
   const [selectedRows, setSelectedRows] = useState([]);
   const [filter, setFilter] = useState(intitialFilter);
   console.log(selectedRows.map((item) => item.id));
+  const [modalShow, setModalShow] = useState(false);
   const [page, setPage] = useState<number>(1);
   const [role, setRole] = useState("");
 
@@ -184,14 +187,21 @@ const Admins = () => {
     );
   }
 
+  const _toggleModal = () => {
+    setModalShow(!modalShow);
+  }
+
   return (
     <>
+    <CommonModal modalShow={modalShow} onModalHideClick={_toggleModal} title="Create New Team Member">
+      <UserCreateUpdateForm toggleModal={_toggleModal} />
+    </CommonModal>
       <div className="view-padding">
         <PageHeading
           icon={<RiAdminFill size={24} />}
           title="Team Members"
           description="Create and manage team members for your workflow"
-          onClick={_onCreateClick}
+          onClick={_toggleModal}
           totalRecords={data?.total}
           permissionReq="create_user"
         />

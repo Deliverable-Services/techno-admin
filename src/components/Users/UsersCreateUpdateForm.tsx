@@ -3,13 +3,17 @@ import AgentTargets from "./AgentTarget";
 import UserAddress from "./UserAddresses";
 import UserBasics from "./UserBasics";
 
-const UserCreateUpdateForm = () => {
+interface UserCreateUpdateFormProps {
+  toggleModal: () => void;
+}
+
+const UserCreateUpdateForm = ({toggleModal}: UserCreateUpdateFormProps) => {
   const { state } = useLocation();
   const id = state ? (state as any).id : null;
   const role = state ? (state as any)?.role : null;
   return (
     <>
-      <UserBasics />
+      <UserBasics toggleModal={toggleModal} />
       <br />
       {id && (
         <>
