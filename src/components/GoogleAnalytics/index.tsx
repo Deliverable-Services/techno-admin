@@ -34,7 +34,7 @@ import { FaExternalLinkAlt, FaSync } from "react-icons/fa";
 import { AiOutlineDisconnect } from "react-icons/ai";
 
 const GoogleAnalytics = () => {
-  const { organisation } = useOrganisation();
+  const { selectedOrg: organisation } = useOrganisation();
   const [status, setStatus] = useState<GoogleAnalyticsConnectorStatus | null>(
     null
   );
