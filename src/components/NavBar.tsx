@@ -127,10 +127,16 @@ const mainLinks: Array<INavLink> = [
         permissionReq: "read_service",
       },
       {
-        title: "Service Categories",
+        title: "Categories",
         path: "/categories",
         icon: <FaDiceFour />,
         permissionReq: "read_category",
+      },
+      {
+        title: "Servicable Cities",
+        path: "/cities",
+        icon: <GiModernCity />,
+        permissionReq: "read_city",
       },
     ],
   },
@@ -166,38 +172,43 @@ const mainLinks: Array<INavLink> = [
     icon: <FaRegLightbulb />,
     permissionReq: "read_plan",
   },
-];
-
-const websiteLinks: Array<INavLink> = [
   {
-    title: "Faqs",
-    path: "/faqs",
-    icon: <FaQuestionCircle />,
-    permissionReq: "read_faq",
-  },
-  {
-    title: "Coupons",
-    path: "/coupons",
-    icon: <RiCoupon3Line />,
-    permissionReq: "read_coupon",
-  },
-  {
-    title: "Banners",
-    path: "/advertisements",
-    icon: <RiAdvertisementFill />,
-    permissionReq: "read_banner",
-  },
-  {
-    title: "Testimonials",
-    path: "/testimonials",
-    icon: <AiFillIdcard />,
-    permissionReq: "read_testimonial",
-  },
-  {
-    title: "Website Pages",
+    title: "Website",
     path: "/website-pages",
     icon: <RiGlobalLine />,
-    permissionReq: "read_staticpage",
+    permissionReq: "read_bookingslot",
+    children: [
+      {
+        title: "Pages",
+        path: "/website-pages",
+        icon: <RiGlobalLine />,
+        permissionReq: "read_staticpage",
+      },
+      {
+        title: "Faqs",
+        path: "/faqs",
+        icon: <FaQuestionCircle />,
+        permissionReq: "read_faq",
+      },
+      {
+        title: "Coupons",
+        path: "/coupons",
+        icon: <RiCoupon3Line />,
+        permissionReq: "read_coupon",
+      },
+      {
+        title: "Banners",
+        path: "/advertisements",
+        icon: <RiAdvertisementFill />,
+        permissionReq: "read_banner",
+      },
+      {
+        title: "Testimonials",
+        path: "/testimonials",
+        icon: <AiFillIdcard />,
+        permissionReq: "read_testimonial",
+      },
+    ],
   },
 ];
 
@@ -230,12 +241,6 @@ const organisationLinks: Array<INavLink> = [
     title: "Organization",
     path: "/organization",
     icon: <GrOrganization />,
-    permissionReq: "read_city",
-  },
-  {
-    title: "Cities",
-    path: "/cities",
-    icon: <GiModernCity />,
     permissionReq: "read_city",
   },
   {
@@ -301,7 +306,6 @@ const NavBar = ({ isNavOpen, setIsNavOpen }: INavBar) => {
     );
 
   const filteredMainLinks = filterLinks(mainLinks);
-  const filteredWebsiteLinks = filterLinks(websiteLinks);
   const filteredOrganisationLinks = filterLinks(organisationLinks);
 
   const filteredGoogleLinks = googleLinks.filter((link) => {
@@ -414,20 +418,6 @@ const NavBar = ({ isNavOpen, setIsNavOpen }: INavBar) => {
               />
             ))}
           </ul>
-          <p className="text-muted mb-2">WEBSITE</p>
-          <ul>
-            {filteredWebsiteLinks.map((link) => (
-              <Navlink
-                key={link.title}
-                {...link}
-                onClick={closeNavBar}
-                isNavOpen={isNavOpen}
-                activeMenu={activeMenu}
-                setActiveMenu={setActiveMenu}
-              />
-            ))}
-          </ul>
-
           <p className="text-muted mb-2">CONFIGURATIONS</p>
           <ul>
             {filteredOrganisationLinks.map((link) => (
@@ -444,7 +434,7 @@ const NavBar = ({ isNavOpen, setIsNavOpen }: INavBar) => {
 
           {filteredGoogleLinks.length > 0 && (
             <>
-              <p className="text-muted mb-2">Intigrations</p>
+              <p className="text-muted mb-2">Integrations</p>
               <ul>
                 {filteredGoogleLinks.map((link) => (
                   <Navlink
