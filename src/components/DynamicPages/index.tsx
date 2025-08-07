@@ -240,12 +240,14 @@ const DynamicPages = () => {
       >
         <DynamicPageCreateUpdateForm toggleModal={_toggleModal} />
       </CommonModal>
-      <PageHeading
-        title="Dynamic Pages"
-        onClick={_toggleModal}
-        totalRecords={pageData?.data?.length || 0}
-        permissionReq="create_service"
-      />
+      <div className="view-padding">
+        <PageHeading
+          title="Dynamic Pages"
+          onClick={_toggleModal}
+          totalRecords={pageData?.data?.length || 0}
+          permissionReq="create_service"
+        />
+      </div>
 
       <div className="h-100 p-0">
         {isLoading ? (
