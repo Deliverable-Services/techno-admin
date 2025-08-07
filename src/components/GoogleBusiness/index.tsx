@@ -81,19 +81,20 @@ const GoogleBusinessDashboard: React.FC = () => {
 
   return (
     <Container fluid className="py-4">
-      <div className="d-flex align-items-center justify-content-between mb-4">
-        <div className="d-flex align-items-center">
+      <div className=" mb-4">
+        <div className="d-flex align-items-center justify-content-between py-3">
           <BackButton title="Back" />
           <h1 className="ml-3 mb-0">Google Business Profile Dashboard</h1>
-        </div>
-
-        <div className="d-flex align-items-center">
-          <div className="text-muted small">
-            <i className="fas fa-check-circle text-success me-2"></i>
-            Connected to Google Business Profile
-            <span className="ms-2 badge bg-secondary">{connectionStatus}</span>
+          <div className="d-flex align-items-center">
+            <div className="text-muted small g-badage">
+              <i className="fas fa-check-circle text-success me-2"></i>
+              Connected to Google Business Profile
+              <span className="ms-2 badge bg-secondary">{connectionStatus}</span>
+            </div>
           </div>
         </div>
+
+
       </div>
 
       {/* Demo Data Notice */}
@@ -125,7 +126,7 @@ const GoogleBusinessDashboard: React.FC = () => {
                 </span>
               }
             >
-              <div className="p-4">
+              <div className="px-4 pt-0 mt-0">
                 <BusinessProfileTab organisationId={organisationId} />
               </div>
             </Tab>
