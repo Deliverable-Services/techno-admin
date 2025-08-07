@@ -81,6 +81,7 @@ const ViewWebsite = () => {
   const { id } = useParams<{ id: string }>();
   const [activeTab, setActiveTab] = useState("MAIN");
   const [currentPageSectionsData, setCurrentPageSectionData] = useState([]);
+  const [pendingImageSave, setPendingImageSave] = useState(false);
 
   const { mutate: mutateDelete, isLoading: isDeleteLoading } = useMutation(
     deleteSection,
@@ -142,7 +143,6 @@ const ViewWebsite = () => {
       },
     }
   );
-  // console.log("pageSectionsData", pageSectionsData);
 
   useEffect(() => {
     if (pageSectionsData?.data && sectionsData?.data) {
@@ -173,6 +173,13 @@ const ViewWebsite = () => {
       setCurrentPageSectionData(mergedSections);
     }
   }, [pageSectionsData, sectionsData]);
+
+  useEffect(() => {
+    if (pendingImageSave) {
+      _onSavePageSection(currentPageSectionsData);
+      setPendingImageSave(false);
+    }
+  }, [pendingImageSave, currentPageSectionsData]);
 
   const addSection = (section) => {
     const uniqueId = `${section.id}-${Date.now()}`;
@@ -278,6 +285,10 @@ const ViewWebsite = () => {
       id,
       sectionData: filteredSections,
     });
+  };
+
+  const triggerSave = () => {
+    setPendingImageSave(true);
   };
 
   const onMoveUp = (idx) => {
@@ -422,6 +433,7 @@ const ViewWebsite = () => {
                     })
                   );
                 }}
+                triggerSave={triggerSave}
               />
             </Col>
           </Row>

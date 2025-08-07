@@ -14,7 +14,7 @@ const SectionItem = ({ section }) => {
 
   return (
     <>
-      <div ref={drag} className="mb-2" key={section?.id}>
+      <div ref={drag} className="mb-2 grab" key={section?.id}>
         <div className="d-flex align-items-center">
           <img
             src={section?.featured_image_url || "https://picsum.photos/300/200"}

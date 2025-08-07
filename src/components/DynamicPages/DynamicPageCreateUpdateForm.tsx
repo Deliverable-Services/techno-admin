@@ -1,7 +1,7 @@
 import { AxiosError } from "axios";
 import bsCustomFileInput from "bs-custom-file-input";
 import { Form, Formik } from "formik";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { Button, Col, Row, Spinner } from "react-bootstrap";
 import { useMutation } from "react-query";
 import { useHistory, useLocation } from "react-router-dom";
@@ -45,12 +45,15 @@ const updatePage = async (data, id) => {
 interface DynamicPageCreateUpdateFormProps {
   toggleModal: () => void;
 }
-const DynamicPageCreateUpdateForm = ({toggleModal}: DynamicPageCreateUpdateFormProps) => {
+const DynamicPageCreateUpdateForm = ({
+  toggleModal,
+}: DynamicPageCreateUpdateFormProps) => {
   const { state } = useLocation();
   const history = useHistory();
   const id = state ? (state as any).id : null;
-  
+
   const { data, isLoading: dataLoading } = useGetSingleQuery({ id, key });
+  const [uploadedOgImage, setUploadedOgImage] = useState<string>("");
 
   const { mutate, isLoading } = useMutation(createUpdataPage, {
     onSuccess: () => {
@@ -70,6 +73,29 @@ const DynamicPageCreateUpdateForm = ({toggleModal}: DynamicPageCreateUpdateFormP
 
   const apiData = data?.data as any;
 
+  const handleUploadImage = async (e) => {
+    const file = e.currentTarget.files?.[0];
+    if (!file) return;
+
+    try {
+      const formData = new FormData();
+      formData.append("image", file);
+
+      const response = await API.post(`upload-image`, formData, {
+        headers: { "Content-Type": "multipart/form-data" },
+      });
+
+      if (response.status === 201) {
+        const imageUrl = response.data?.data?.full_url;
+        setUploadedOgImage(imageUrl); // ✅ store locally
+        showMsgToast("Image uploaded successfully");
+      }
+    } catch (err) {
+      console.error("Image upload failed", err);
+      showMsgToast("Failed to upload image");
+    }
+  };
+
   const initialValues = {
     name: apiData?.name || "",
     slug: apiData?.slug || "",
@@ -86,184 +112,171 @@ const DynamicPageCreateUpdateForm = ({toggleModal}: DynamicPageCreateUpdateFormP
 
   return (
     <>
+      <Row className="rounded">
+        <Col className="mx-auto">
+          <Formik
+            enableReinitialize
+            initialValues={initialValues}
+            onSubmit={(values) => {
+              const editedData: any = {};
+              if (uploadedOgImage) {
+                values.og_image = uploadedOgImage;
+              }
 
-        {/* <div className="text-primary">
-          <div className="d-flex justify-content-between">
-            <div
-              className="text-black pb-3"
-              style={{ cursor: "pointer", fontWeight: 600 }}
-            >
-              Basic Information
-            </div>
-          </div>
-        </div>
+              const { ...rest } = values;
 
-        <hr className="mb-3" /> */}
+              const seoKeys = [
+                "title",
+                "description",
+                "keywords",
+                "og_title",
+                "og_description",
+                "og_image",
+              ];
 
-        <Row className="rounded">
-          <Col className="mx-auto">
-            <Formik
-              enableReinitialize
-              initialValues={initialValues}
-              onSubmit={(values) => {
-                const editedData: any = {};
-                const { ...rest } = values;
+              const formdata = new FormData();
 
-                const seoKeys = [
-                  "title",
-                  "description",
-                  "keywords",
-                  "og_title",
-                  "og_description",
-                  "og_image",
-                ];
+              if (id) {
+                // Extract and group seo_details
+                seoKeys.forEach((key) => {
+                  editedData.seo_details = editedData.seo_details || {};
+                  editedData.seo_details[key] = values[key];
+                });
 
-                const formdata = new FormData();
+                // Other top-level fields
+                Object.keys(values).forEach((key) => {
+                  if (
+                    !seoKeys.includes(key) &&
+                    values[key] !== initialValues[key]
+                  ) {
+                    editedData[key] = values[key];
+                  }
+                });
 
-                if (id) {
-                  // Extract and group seo_details
-                  seoKeys.forEach((key) => {
-                    editedData.seo_details = editedData.seo_details || {};
-                    editedData.seo_details[key] = values[key];
-                  });
+                updatePage(editedData, id);
+              } else {
+                Object.entries(rest).forEach(([key, value]) => {
+                  if (value !== undefined && value !== null) {
+                    formdata.append(key, String(value));
+                  }
+                });
 
-                  // Other top-level fields
-                  Object.keys(values).forEach((key) => {
-                    if (
-                      !seoKeys.includes(key) &&
-                      values[key] !== initialValues[key]
-                    ) {
-                      editedData[key] = values[key];
-                    }
-                  });
+                seoKeys.forEach((key) => {
+                  formdata.append(`seo_details[${key}]`, rest[key]);
+                });
+              }
+              mutate({ formdata, id });
+            }}
+          >
+            {({ setFieldValue }) => (
+              <Form>
+                <div className="form-container ">
+                  <InputField
+                    name="name"
+                    placeholder="Name"
+                    label="Name"
+                    required
+                  />
 
-                  updatePage(editedData, id);
-                } else {
-                  Object.entries(rest).forEach(([key, value]) => {
-                    if (
-                      value !== undefined &&
-                      value !== null &&
-                      value !== "" &&
-                      !(
-                        typeof value === "object" &&
-                        Object.keys(value).length === 0
-                      )
-                    ) {
-                      if (value instanceof Blob) {
-                        formdata.append(key, value);
-                      } else {
-                        formdata.append(key, String(value));
-                      }
-                    }
-                  });
+                  <InputField
+                    name="slug"
+                    placeholder="Slug"
+                    label="Slug"
+                    required
+                  />
 
-                  seoKeys.forEach((key) => {
-                    formdata.append(`seo_details[${key}]`, rest[key]);
-                  });
-                }
-                mutate({ formdata, id });
-              }}
-            >
-              {({ setFieldValue }) => (
-                <Form>
-                  <div className="form-container ">
-                    <InputField
-                      name="name"
-                      placeholder="Name"
-                      label="Name"
-                      required
-                    />
+                  <InputField
+                    name="title"
+                    placeholder="Meta Title"
+                    label="Meta Title"
+                    // required
+                  />
+                  <InputField
+                    name="description"
+                    placeholder="Meta Description"
+                    label="Meta Description"
+                    // required
+                  />
+                  <InputField
+                    name="keywords"
+                    placeholder="Meta Keywords"
+                    label="Meta Keywords"
+                    // required
+                  />
 
-                    <InputField
-                      name="slug"
-                      placeholder="Slug"
-                      label="Slug"
-                      required
-                    />
+                  <div className="d-flex flex-column gap-3">
+                    <div>
+                      <label htmlFor="">OG Image</label>
+                      <input
+                        name="og_image"
+                        accept="image/*"
+                        placeholder="OG Image"
+                        className="form-control input-div"
+                        type="file"
+                        onChange={(e) => handleUploadImage(e)}
+                      />
+                    </div>
 
-                    <InputField
-                      name="title"
-                      placeholder="Meta Title"
-                      label="Meta Title"
-                      // required
-                    />
-                    <InputField
-                      name="description"
-                      placeholder="Meta Description"
-                      label="Meta Description"
-                      // required
-                    />
-                    <InputField
-                      name="keywords"
-                      placeholder="Meta Keywords"
-                      label="Meta Keywords"
-                      // required
-                    />
+                    {initialValues.og_image && (
+                      <img
+                        src={uploadedOgImage || initialValues.og_image}
+                        alt="og-image"
+                        className="rounded w-25"
+                      />
+                    )}
+                  </div>
 
-                    <InputField
-                      name="og_image"
-                      folder="brands"
-                      placeholder="OG Image"
-                      label="OG Image"
-                      isFile
-                      // setFieldValue={setFieldValue}
-                      // onChange={(e) => {
-                      //   console.log("e.target.files", e.target);
-                      //   setFieldValue("og_image", Object.values(e.target.files));
-                      // }}
-                      // required
-                    />
-                    <InputField
-                      name="og_title"
-                      placeholder="OG Title"
-                      label="OG Title"
-                      // required
-                    />
-                    <InputField
-                      name="og_description"
-                      placeholder="OG Description"
-                      label="OG Description"
-                      // required
-                    />
+                  <InputField
+                    name="og_title"
+                    placeholder="OG Title"
+                    label="OG Title"
+                    // required
+                  />
+                  <InputField
+                    name="og_description"
+                    placeholder="OG Description"
+                    label="OG Description"
+                    // required
+                  />
 
-                    <InputField
-                      as="select"
-                      selectData={isPublishedArray}
-                      name="is_published"
-                      label="Publish"
-                      placeholder="Choose is active"
-                    />
-                    {/* <InputField
+                  <InputField
+                    as="select"
+                    selectData={isPublishedArray}
+                    name="is_published"
+                    label="Publish"
+                    placeholder="Choose is active"
+                  />
+                  {/* <InputField
                       as="select"
                       selectData={isActiveArray}
                       name="isArchived"
                       label="Archived"
                       placeholder="Choose is active"
                     /> */}
-                  </div>
+                </div>
 
-                  <Row className="d-flex justify-content-start">
-                    <Col md="2">
-                      <Restricted to={id ? "update_brand" : "create_brand"}>
-                        <Button
-                          type="submit"
-                          disabled={isLoading}
-                          className="w-100"
-                        >
-                          {isLoading ? (
-                            <Spinner animation="border" size="sm" />
-                          ) : (
-                            "Submit"
-                          )}
-                        </Button>
-                      </Restricted>
-                    </Col>
-                  </Row>
-                </Form>
-              )}
-            </Formik>
-          </Col>
-        </Row>
+                <Row className="d-flex justify-content-start">
+                  <Col md="2">
+                    <Restricted to={id ? "update_brand" : "create_brand"}>
+                      <Button
+                        type="submit"
+                        disabled={isLoading}
+                        className="w-100"
+                      >
+                        {isLoading ? (
+                          <Spinner animation="border" size="sm" />
+                        ) : (
+                          "Submit"
+                        )}
+                      </Button>
+                    </Restricted>
+                  </Col>
+                </Row>
+              </Form>
+            )}
+          </Formik>
+        </Col>
+      </Row>
     </>
   );
 };

@@ -75,3 +75,6 @@ code {
 .cursor-na {
   cursor: not-allowed;
 }
+.grab {
+  cursor: grab;
+}
