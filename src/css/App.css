@@ -11829,6 +11829,34 @@ a.text-text-muted:focus {
   }
 }
 
+.flyout-panel{
+  z-index: 9999;
+  right: 0px;
+  top: 0;
+  transform: translateX(0px);
+  transition: transform 0.3s ease-in-out;
+}
+.flyout-form{
+  background: white;
+  padding: 14px;
+  border-radius: 6px;
+}
+.flyout-header{
+  padding: 8px 16px;
+}
+.flyout-header h5{
+  font-size: 18px;
+  font-weight: 600;
+}
+.flyout-header button{
+  border: none;
+  font-size: 1.5rem;
+  line-height: 1;
+  color: var(--black);
+}
+.flyout-content{
+  background-color: #F3F3F3;
+}
 nav {
   background-color: var(--sidebar);
   min-width: 300px;

@@ -5,12 +5,11 @@ import UserBasics from "./UserBasics";
 
 interface UserCreateUpdateFormProps {
   toggleModal: () => void;
+  id?: string | null;
+  role?: string;
 }
 
-const UserCreateUpdateForm = ({toggleModal}: UserCreateUpdateFormProps) => {
-  const { state } = useLocation();
-  const id = state ? (state as any).id : null;
-  const role = state ? (state as any)?.role : null;
+const UserCreateUpdateForm = ({ toggleModal, id, role }: UserCreateUpdateFormProps) => {
   return (
     <>
       <UserBasics toggleModal={toggleModal} />
