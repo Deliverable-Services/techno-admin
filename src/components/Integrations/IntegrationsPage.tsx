@@ -32,7 +32,7 @@ const IntegrationsPage: React.FC = () => {
 
           {/* Google Business Profile Integration */}
           <GoogleBusinessProfile
-            organisationId={loggedInUser?.organisation?.id}
+            organisationId={loggedInUser?.organisations?.[0]?.id}
             className="mb-4"
           />
 

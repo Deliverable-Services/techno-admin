@@ -19,21 +19,6 @@ import { GiShadowFollower } from "react-icons/gi";
 import { RiUserFollowFill } from "react-icons/ri";
 import { IoStatsChart } from "react-icons/io5";
 import { MdAllInclusive } from "react-icons/md";
-import {
-  Activity,
-  Users,
-  Eye,
-  TrendingUp,
-  Globe,
-  Monitor,
-  Smartphone,
-  ExternalLink,
-  RefreshCw,
-  Disconnect,
-  CheckCircle,
-  AlertCircle,
-  Clock,
-} from "lucide-react";
 import googleAnalyticsService, {
   GoogleAnalyticsConnectorStatus,
   GoogleAnalyticsAccount,
@@ -45,9 +30,11 @@ import googleAnalyticsService, {
 import { useOrganisation } from "../../context/OrganisationContext";
 import { showMsgToast } from "../../utils/showMsgToast";
 import "./google-analytics.css";
+import { FaExternalLinkAlt, FaSync } from "react-icons/fa";
+import { AiOutlineDisconnect } from "react-icons/ai";
 
 const GoogleAnalytics = () => {
-  const { organisation } = useOrganisation();
+  const { selectedOrg: organisation } = useOrganisation();
   const [status, setStatus] = useState<GoogleAnalyticsConnectorStatus | null>(
     null
   );
@@ -516,7 +503,7 @@ const GoogleAnalytics = () => {
       .map((item, index) => ({
         name:
           ["18-24", "25-34", "35-44", "45-54", "55-64", "65+", "13-17"][
-            index
+          index
           ] || `Group ${index + 1}`,
         value: item.value,
       }));
@@ -609,7 +596,7 @@ const GoogleAnalytics = () => {
             {loading ? (
               <i className="fas fa-spinner fa-spin me-2"></i>
             ) : (
-              <ExternalLink className="h-4 w-4 me-2" />
+              <FaExternalLinkAlt className="h-4 w-4 me-2" />
             )}
             Connect Google Analytics
           </button>
@@ -648,14 +635,14 @@ const GoogleAnalytics = () => {
             disabled={loading}
             title="Refresh Data"
           >
-            <RefreshCw className={`h-4 w-4 ${loading ? "animate-spin" : ""}`} />
+            <FaSync className={`h-4 w-4 ${loading ? "animate-spin" : ""}`} />
           </button>
           <button
             className="btn btn-outline-danger btn-sm"
             onClick={handleDisconnect}
             disabled={loading}
           >
-            <Disconnect className="h-4 w-4 me-1" />
+            <AiOutlineDisconnect className="h-4 w-4 me-1" />
             Disconnect
           </button>
         </div>
@@ -743,9 +730,8 @@ const GoogleAnalytics = () => {
                   {item.label}
                 </small>
                 <div
-                  className={`mt-2 weight-600 small ${
-                    item.change.includes("-") ? "text-danger" : "text-green"
-                  }`}
+                  className={`mt-2 weight-600 small ${item.change.includes("-") ? "text-danger" : "text-green"
+                    }`}
                 >
                   {item.change}
                 </div>

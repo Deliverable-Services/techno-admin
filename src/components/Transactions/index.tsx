@@ -97,7 +97,7 @@ const Transactions = () => {
         Cell: (data: Cell) => {
           return (
             <p
-              classname="text-darkGray m-0"
+              className="text-darkGray m-0"
               style={{ cursor: "pointer" }}
               onClick={() => _onUserClick((data.row.original as any).user_id)}
             >
@@ -113,7 +113,7 @@ const Transactions = () => {
           console.log({ data });
           return (
             <p
-              classname="text-darkGray m-0"
+              className="text-darkGray m-0"
               style={{ cursor: "pointer" }}
               onClick={() => _onOrderClick(data.row.original["order_id"])}
             >

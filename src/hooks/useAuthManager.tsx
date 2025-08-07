@@ -235,8 +235,8 @@ export const useAuthManager = (): AuthState => {
           return Promise.reject(error);
         }
 
-        if (error.response?.status === 401 && !originalRequest._retry) {
-          originalRequest._retry = true;
+        if (error.response?.status === 401 && !(originalRequest as any)._retry) {
+          (originalRequest as any)._retry = true;
 
           const isLoginPage =
             pathname.includes("login") || pathname.includes("verify-otp");

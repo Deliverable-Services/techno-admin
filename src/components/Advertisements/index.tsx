@@ -76,7 +76,6 @@ const Advertisements = () => {
   const { mutate, isLoading: isDeleteLoading } = useMutation(deleteAd, {
     onSuccess: () => {
       queryClient.invalidateQueries(key);
-      setDeletePopup(false);
       showMsgToast("Banner(s) deleted successfully");
     },
     onError: (error: AxiosError) => {
