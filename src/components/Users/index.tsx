@@ -1,6 +1,9 @@
 import { AxiosError } from "axios";
 import { useMemo, useState } from "react";
 import { Button, Container, Dropdown, Modal } from "react-bootstrap";
+import UserCreateUpdateForm from "./UsersCreateUpdateForm";
+import Flyout from "../../shared-components/Flyout";
+import { useFlyout } from "../../hooks/useFlyout";
 import { BiSad } from "react-icons/bi";
 import { useMutation, useQuery } from "react-query";
 import { useHistory } from "react-router-dom";
@@ -49,6 +52,9 @@ const Users = () => {
   console.log(selectedRows.map((item) => item.id));
   const [page, setPage] = useState<number>(1);
   const [role, setRole] = useState("");
+  const { isOpen: showFlyout, openFlyout, closeFlyout } = useFlyout();
+  const [selectedUserId, setSelectedUserId] = useState<string | null>(null);
+  const [selectedUserRole, setSelectedUserRole] = useState<string>("customer");
 
   const { data, isLoading, isFetching, error } = useQuery<any>(
     [key, , filter],
@@ -78,11 +84,15 @@ const Users = () => {
   };
 
   const _onCreateClick = () => {
-    history.push("/users/create-edit", { role: "customer" });
+    setSelectedUserId(null);
+    setSelectedUserRole("customer");
+    openFlyout();
   };
+
   const _onEditClick = (id: string, role: string) => {
     history.push("/users/create-edit", { id, role });
   };
+
 
   const columns = useMemo(
     () => [
@@ -316,6 +326,19 @@ const Users = () => {
           </Button>
         </div>
       )}
+
+      <Flyout
+        isOpen={showFlyout}
+        onClose={closeFlyout}
+        title={selectedUserId ? 'Edit User' : 'Create User'}
+        cancelText="Cancel"
+      >
+        <UserCreateUpdateForm
+          toggleModal={closeFlyout}
+          id={selectedUserId}
+          role={selectedUserRole}
+        />
+      </Flyout>
     </>
   );
 };
