@@ -111,8 +111,7 @@ const SubscriptionPage: React.FC = () => {
   if (isProcessingCode) {
     return (
       <div style={{ display: "flex", justifyContent: "center" }}>
-        {" "}
-        <VerifingUserLoader />{" "}
+        <VerifingUserLoader />
       </div>
     );
   }
