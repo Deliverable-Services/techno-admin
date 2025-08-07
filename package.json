@@ -58,7 +58,6 @@
     "zustand": "3.4.1"
   },
   "scripts": {
-    "preinstall": "node scripts/check-node-version.js",
     "start": "REACT_ERROR_OVERLAY=false react-scripts start",
     "dev": "REACT_ERROR_OVERLAY=false react-scripts start",
     "build": "react-scripts build",
