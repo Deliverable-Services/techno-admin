@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { useHistory, useLocation } from "react-router-dom";
 import useTokenStore from "./useTokenStore";
 import useUserProfileStore from "./useUserProfileStore";
@@ -28,6 +28,9 @@ export const useAuthManager = (): AuthState => {
   const setUserPermissions = useUserProfileStore(
     (state) => state.setUserPermssions
   );
+
+  const isRefreshing = useRef(false);
+  const refreshPromise = useRef<Promise<string | null> | null>(null);
 
   // Clear all authentication data
   const clearAuthData = () => {
@@ -91,19 +94,53 @@ export const useAuthManager = (): AuthState => {
     }
   };
 
-  // Try to refresh the token
-  const refreshToken = async (): Promise<string | null> => {
-    try {
-      const response = await API.post("/auth/refresh");
-      if (response.data?.access_token) {
-        const newToken = response.data.access_token;
-        setToken(newToken);
-        return newToken;
-      }
-    } catch (error) {
-      console.error("Token refresh failed:", error);
+  const refreshToken = async (currentToken: string): Promise<string | null> => {
+    if (isRefreshing.current && refreshPromise.current) {
+      return refreshPromise.current;
     }
-    return null;
+
+    if (!currentToken) {
+      return null;
+    }
+
+    const refreshPromiseInstance = (async () => {
+      isRefreshing.current = true;
+
+      try {
+        const response = await API.post(
+          "/auth/refresh",
+          {},
+          {
+            headers: {
+              Authorization: `Bearer ${currentToken}`,
+            },
+          }
+        );
+
+        if (response.data?.access_token) {
+          const newToken = response.data.access_token;
+          setToken(newToken);
+          API.defaults.headers.common["Authorization"] = `Bearer ${newToken}`;
+          return newToken;
+        }
+        return null;
+      } catch (error) {
+        console.error("Token refresh failed:", error);
+        if (error && typeof error === "object" && "response" in error) {
+          const status = (error as any).response?.status;
+          if (status === 401 || status === 403) {
+            clearAuthData();
+            history.replace("/login");
+          }
+        }
+        return null;
+      } finally {
+        isRefreshing.current = false;
+        refreshPromise.current = null;
+      }
+    })();
+    refreshPromise.current = refreshPromiseInstance;
+    return refreshPromiseInstance;
   };
 
   // Main authentication check
@@ -151,7 +188,7 @@ export const useAuthManager = (): AuthState => {
 
     // Token is invalid, try to refresh
     console.log("Token invalid, attempting refresh...");
-    const newToken = await refreshToken();
+    const newToken = await refreshToken(currentToken);
 
     if (newToken) {
       // Refresh successful, validate new token
@@ -194,21 +231,35 @@ export const useAuthManager = (): AuthState => {
       (response) => response,
       async (error: AxiosError) => {
         const originalRequest = error.config;
+        if (originalRequest.url?.includes("/auth/refresh")) {
+          return Promise.reject(error);
+        }
 
         if (error.response?.status === 401 && !(originalRequest as any)._retry) {
           (originalRequest as any)._retry = true;
 
-          const newToken = await refreshToken();
-          if (newToken) {
-            // Update the authorization header and retry the request
-            originalRequest.headers.Authorization = `Bearer ${newToken}`;
-            API.defaults.headers.common["Authorization"] = `Bearer ${newToken}`;
-            return API(originalRequest);
-          } else {
-            // Refresh failed, logout
-            clearAuthData();
-            history.replace("/login");
+          const isLoginPage =
+            pathname.includes("login") || pathname.includes("verify-otp");
+          if (isLoginPage) {
+            return Promise.reject(error);
           }
+
+          const currentToken = token || getStoredToken();
+
+          if (currentToken) {
+            const newToken = await refreshToken(currentToken);
+            if (newToken) {
+              originalRequest.headers.Authorization = `Bearer ${newToken}`;
+              return API(originalRequest);
+            }
+          }
+          clearAuthData();
+          history.replace("/login");
+          return Promise.reject(error);
+        }
+        if (error.response?.status === 403) {
+          clearAuthData();
+          history.replace("/login");
         }
 
         return Promise.reject(error);
@@ -218,7 +269,7 @@ export const useAuthManager = (): AuthState => {
     return () => {
       API.interceptors.response.eject(interceptor);
     };
-  }, []);
+  }, [token]);
 
   // Update API headers when token changes
   useEffect(() => {
