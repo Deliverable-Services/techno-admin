@@ -180,6 +180,25 @@ const App = () => {
                 component={InvoicePage}
                 permissionReq="read_city"
               />
+              <PrivateRoute
+                path="/subscriptions"
+                exact
+                component={SubscriptionPage}
+                permissionReq="read_subscription"
+              />
+              <PrivateRoute
+                path="/transactions"
+                exact
+                component={Transactions}
+                permissionReq="read_transaction"
+              />
+              {/* Customers  */}
+              <PrivateRoute
+                path="/users"
+                exact
+                component={Users}
+                permissionReq="read_user"
+              />
               {/* Others */}
               <PrivateRoute
                 path="/profile"
@@ -212,12 +231,7 @@ const App = () => {
                 component={Categories}
                 permissionReq="read_category"
               />
-              <PrivateRoute
-                path="/users"
-                exact
-                component={Users}
-                permissionReq="read_user"
-              />
+
               <PrivateRoute
                 path="/team-members"
                 exact
@@ -362,12 +376,7 @@ const App = () => {
                 component={AdvertisementCreateUpdateForm}
                 permissionReq="read_banner"
               />
-              <PrivateRoute
-                path="/transactions"
-                exact
-                component={Transactions}
-                permissionReq="read_transaction"
-              />
+
               <PrivateRoute
                 path="/issues"
                 exact
@@ -489,12 +498,6 @@ const App = () => {
                 permissionReq="assign_agent"
               />
 
-              <PrivateRoute
-                path="/subscriptions"
-                exact
-                component={SubscriptionPage}
-                permissionReq="read_subscription"
-              />
               <PrivateRoute
                 path="/google-business"
                 exact

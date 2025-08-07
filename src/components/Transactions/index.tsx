@@ -1,13 +1,11 @@
 import { useMemo, useState } from "react";
-import { Button, Container, Modal, Spinner, Col, Row, Nav, Dropdown } from "react-bootstrap";
+import { Button, Container, Nav, Dropdown } from "react-bootstrap";
 import { BiSad } from "react-icons/bi";
-import { useMutation, useQuery } from "react-query";
 import { useHistory } from "react-router-dom";
 import { Cell } from "react-table";
 import useTransactionStoreFilter, {
   INITIAL_FILTER,
 } from "../../hooks/useTranscationFilterStore";
-import BreadCrumb from "../../shared-components/BreadCrumb";
 import CreatedUpdatedAt from "../../shared-components/CreatedUpdatedAt";
 import CustomBadge from "../../shared-components/CustomBadge";
 import FilterSelect from "../../shared-components/FilterSelect";
@@ -15,14 +13,13 @@ import IsLoading from "../../shared-components/isLoading";
 import PageHeading from "../../shared-components/PageHeading";
 import TablePagination from "../../shared-components/Pagination";
 import ReactTable from "../../shared-components/ReactTable";
-import API from "../../utils/API";
 import { areTwoObjEqual } from "../../utils/areTwoObjEqual";
 import { PaymentMethods } from "../../utils/arrays";
 import { primaryColor } from "../../utils/constants";
-import { queryClient } from "../../utils/queryClient";
 import { showErrorToast } from "../../utils/showErrorToast";
 import { BsFunnel } from "react-icons/bs";
 import { FaMoneyCheck } from "react-icons/fa";
+import { useQuery } from "react-query";
 
 const key = "transactions";
 
@@ -156,127 +153,156 @@ const Transactions = () => {
     []
   );
 
-  if (!data && (!isLoading || !isFetching)) {
-    return (
-      <Container fluid className="d-flex justify-content-center display-3">
-        <div className="d-flex flex-column align-items-center">
-          <BiSad color={primaryColor} />
-          <span className="text-primary display-3">Something went wrong</span>
-        </div>
-      </Container>
-    );
-  }
-
   return (
     <>
-      <Container fluid className="component-wrapper view-padding">
-        <PageHeading icon={<FaMoneyCheck />} title="Transactions" totalRecords={data?.total} />
+      <div className="view-padding">
+        <PageHeading
+          icon={<FaMoneyCheck size={24} />}
+          title="Transactions"
+          description="Track all your payments at once glance"
+        />
+      </div>
+      <hr />
+      <>
+        {(() => {
+          if (isLoading || isFetching) {
+            return <IsLoading />;
+          }
 
+          if (!data || error) {
+            return (
+              <Container
+                fluid
+                className="d-flex justify-content-center display-3"
+              >
+                <div className="d-flex flex-column align-items-center">
+                  <BiSad color={primaryColor} />
+                  <span className="text-primary display-3">
+                    Something went wrong
+                  </span>
+                </div>
+              </Container>
+            );
+          }
 
-        <div className="card">
-          <Container fluid className="h-100 p-0 ">
-            {isLoading ? (
-              <IsLoading />
-            ) : (
-              <>
-                <div className="mt-3" />
-                {!error && (
-                  <ReactTable
-                    data={data?.data}
-                    tabs={<div className="d-flex justify-content-between">
-                      {!isLoading && (
-                        <div>
-                          <Nav className="global-navs" variant="tabs" activeKey={filter.status} onSelect={(selectedKey) => onFilterChange('status', selectedKey)}>
-                            <Nav.Item>
-                              <Nav.Link eventKey="">All ({data?.data?.length || 0})</Nav.Link>
-                            </Nav.Item>
+          return (
+            <>
+              <ReactTable
+                data={data?.data}
+                tabs={
+                  <div className="d-flex justify-content-between">
+                    {!isLoading && (
+                      <div>
+                        <Nav
+                          className="global-navs"
+                          variant="tabs"
+                          activeKey={filter.status}
+                          onSelect={(selectedKey) =>
+                            onFilterChange("status", selectedKey)
+                          }
+                        >
+                          <Nav.Item>
+                            <Nav.Link eventKey="">
+                              All ({data?.data?.length || 0})
+                            </Nav.Link>
+                          </Nav.Item>
 
-                            <Nav.Item>
-                              <Nav.Link eventKey="success">
-                                Success ({data?.data?.filter(item => item.status === 'success').length || 0})
-                              </Nav.Link>
-                            </Nav.Item>
+                          <Nav.Item>
+                            <Nav.Link eventKey="success">
+                              Success (
+                              {data?.data?.filter(
+                                (item) => item.status === "success"
+                              ).length || 0}
+                              )
+                            </Nav.Link>
+                          </Nav.Item>
 
-                            <Nav.Item>
-                              <Nav.Link eventKey="failed">
-                                Failed ({data?.data?.filter(item => item.status === 'failed').length || 0})
-                              </Nav.Link>
-                            </Nav.Item>
-                          </Nav>
-                        </div>
-                      )}
-
-                    </div>}
-                    filters={<Dropdown className="filter-dropdown">
-                      <Dropdown.Toggle as={Button} variant="primary">
-                        <BsFunnel />
-                      </Dropdown.Toggle>
-                      <Dropdown.Menu>
-                        <div className="filter-dropdown-heading d-flex justify-content-between w-100">
-                          <h4>Filter</h4>
-                          <div
-                            className="d-flex align-items-center justify-md-content-center"
+                          <Nav.Item>
+                            <Nav.Link eventKey="failed">
+                              Failed (
+                              {data?.data?.filter(
+                                (item) => item.status === "failed"
+                              ).length || 0}
+                              )
+                            </Nav.Link>
+                          </Nav.Item>
+                        </Nav>
+                      </div>
+                    )}
+                  </div>
+                }
+                filters={
+                  <Dropdown className="search-filters-div filter-dropdown mr-2">
+                    <Dropdown.Toggle as={Button} variant="primary">
+                      <BsFunnel className="mr-2" />
+                      Filters
+                    </Dropdown.Toggle>
+                    <Dropdown.Menu>
+                      <div className="filter-dropdown-heading d-flex justify-content-between w-100">
+                        <h4>Filter</h4>
+                        <div className="d-flex align-items-center justify-md-content-center">
+                          <Button
+                            onClick={() => resetFilter()}
+                            variant={
+                              areTwoObjEqual(
+                                {
+                                  ...intitialFilter,
+                                  ...INITIAL_FILTER,
+                                },
+                                { ...localFilter, ...filter }
+                              )
+                                ? "light"
+                                : "primary"
+                            }
+                            style={{
+                              fontSize: 14,
+                            }}
                           >
-                            <Button
-                              onClick={() => resetFilter()}
-                              variant={
-                                areTwoObjEqual(
-                                  { ...intitialFilter, ...INITIAL_FILTER },
-                                  { ...localFilter, ...filter }
-                                )
-                                  ? "light"
-                                  : "primary"
-                              }
-                              style={{
-                                fontSize: 14,
-                              }}
-                            >
-                              Reset Filters
-                            </Button>
-                          </div>
+                            Reset Filters
+                          </Button>
                         </div>
-                        <div className="select-filter">
-                          <FilterSelect
-                            currentValue={filter.user_id}
-                            data={!isCustomerLoading && Customers.data}
-                            label="Customers"
-                            idx="user_id"
-                            onFilterChange={onFilterChange}
-                          />
-                          <FilterSelect
-                            currentValue={filter.payment_method}
-                            data={PaymentMethods}
-                            label="Payment Method"
-                            idx="payment_method"
-                            onFilterChange={onFilterChange}
-                          />
+                      </div>
+                      <div className="select-filter">
+                        <FilterSelect
+                          currentValue={filter.user_id}
+                          data={!isCustomerLoading && Customers.data}
+                          label="Customers"
+                          idx="user_id"
+                          onFilterChange={onFilterChange}
+                        />
+                        <FilterSelect
+                          currentValue={filter.payment_method}
+                          data={PaymentMethods}
+                          label="Payment Method"
+                          idx="payment_method"
+                          onFilterChange={onFilterChange}
+                        />
+                      </div>
+                    </Dropdown.Menu>
+                  </Dropdown>
+                }
+                columns={columns}
+                setSelectedRows={setSelectedRows}
+                filter={filter}
+                onFilterChange={_onFilterChange}
+                isDataLoading={isFetching}
+                isSelectable={false}
+                searchPlaceHolder="Search using ref id"
+              />
 
-                        </div>
-                      </Dropdown.Menu>
-                    </Dropdown>}
-                    columns={columns}
-                    setSelectedRows={setSelectedRows}
-                    filter={filter}
-                    onFilterChange={_onFilterChange}
-                    isDataLoading={isFetching}
-                    isSelectable={false}
-                    searchPlaceHolder="Search using ref id"
-                  />
-                )}
-                {!error && data?.data?.length > 0 ? (
-                  <TablePagination
-                    currentPage={data?.current_page}
-                    lastPage={data?.last_page}
-                    setPage={setPage}
-                    hasNextPage={!!data?.next_page_url}
-                    hasPrevPage={!!data?.prev_page_url}
-                  />
-                ) : null}{" "}
-              </>
-            )}
-          </Container>
-        </div>
-      </Container>
+              {error && data?.data?.length > 0 ? (
+                <TablePagination
+                  currentPage={data?.current_page}
+                  lastPage={data?.last_page}
+                  setPage={setPage}
+                  hasNextPage={!!data?.next_page_url}
+                  hasPrevPage={!!data?.prev_page_url}
+                />
+              ) : null}
+            </>
+          );
+        })()}
+      </>
       {selectedRows.length > 0 && (
         <div className="delete-button rounded">
           <span>

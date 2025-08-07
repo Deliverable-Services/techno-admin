@@ -5,8 +5,9 @@ import { Container, Dropdown, Spinner, Table } from "react-bootstrap";
 import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
 import { AiOutlineSearch } from "react-icons/ai";
-import { MdRemoveShoppingCart } from "react-icons/md";
+import { MdRemoveShoppingCart, MdFilterList, MdRefresh } from "react-icons/md";
 import { GoSettings } from "react-icons/go";
+import { FaDatabase, FaSearch } from "react-icons/fa";
 import { IoMdArrowDropdown, IoMdArrowDropup, IoMdClose } from "react-icons/io";
 import { BsLayoutTextSidebar } from "react-icons/bs";
 // import Checkbox from 'react-checkbox-component'
@@ -262,7 +263,7 @@ function ReactTable({
   return (
     <div className="">
       <div
-        className="d-flex justify-space-between align-items-center position-relative view-padding view-heading"
+        className="d-flex justify-space-between align-items-center position-relative view-padding view-heading bg-grey-primary"
         style={{
           flexDirection: isDesktop ? "row" : "column-reverse",
           marginBottom: "0 !important",
@@ -283,7 +284,7 @@ function ReactTable({
                 className="search-input global-card"
                 style={{ paddingInline: "10px" }}
               >
-                <AiOutlineSearch size={18} />
+                <AiOutlineSearch size={22} />
                 <SearchInput
                   preGlobalFilteredRows={preGlobalFilteredRows}
                   globalFilter={state.globalFilter}
@@ -296,15 +297,14 @@ function ReactTable({
               </div>
             )}
           </div>
-
+          {filters && filters}
           <div className="search-filters-div">
-            {filters && filters}
             <Dropdown>
               <Dropdown.Toggle
                 id="dropdown-basic"
-                className="filter-button m-0 p-0 manage-column d-flex gap-3 align-items-center bg-transparent border-0 text-primary"
+                className="filter-button m-0 p-0 manage-column d-flex align-items-center bg-transparent border-0 text-primary"
               >
-                <BsLayoutTextSidebar /> Columns
+                <BsLayoutTextSidebar className="mr-2" /> Columns
               </Dropdown.Toggle>
 
               <Dropdown.Menu className="p-2 menu-dropdown">
@@ -479,12 +479,103 @@ function ReactTable({
           </div>
         </DndProvider>
         {rows.length === 0 ? (
-          <Container fluid className="d-flex justify-content-center display-3">
-            <div className="d-flex flex-column align-items-center pt-3 pb-3">
-              <MdRemoveShoppingCart color="#000" size={60} />
-              <h4 className="text-black font-weight-bold mt-2">
+          <Container
+            fluid
+            className="d-flex justify-content-center"
+            style={{ marginTop: "60px", marginBottom: "60px" }}
+          >
+            <div
+              className="d-flex flex-column align-items-center text-center"
+              style={{ maxWidth: "450px" }}
+            >
+              <div className="position-relative mb-4">
+                <div
+                  className="d-flex align-items-center justify-content-center"
+                  style={{
+                    width: "100px",
+                    height: "100px",
+                    backgroundColor: "#f8f9fa",
+                    borderRadius: "50%",
+                    border: `3px solid ${primaryColor}20`,
+                  }}
+                >
+                  <FaDatabase size={40} color={primaryColor} />
+                </div>
+                <div
+                  className="position-absolute d-flex align-items-center justify-content-center"
+                  style={{
+                    width: "30px",
+                    height: "30px",
+                    backgroundColor: "#6c757d",
+                    borderRadius: "50%",
+                    bottom: "-2px",
+                    right: "-2px",
+                    border: "2px solid white",
+                  }}
+                >
+                  <FaSearch size={14} color="white" />
+                </div>
+              </div>
+
+              <h4
+                className="mb-3"
+                style={{
+                  fontWeight: "600",
+                  color: "#2c3e50",
+                  fontSize: "20px",
+                }}
+              >
                 No data found
               </h4>
+
+              <p
+                className="text-muted mb-4"
+                style={{
+                  fontSize: "15px",
+                  lineHeight: "1.5",
+                  maxWidth: "380px",
+                }}
+              >
+                {state.globalFilter
+                  ? "No results match your current search criteria. Try adjusting your filters or search terms."
+                  : "There are no records to display at the moment. Data will appear here once it's added to the system."}
+              </p>
+
+              {state.globalFilter ? (
+                <div
+                  className="d-flex flex-column align-items-center mb-3"
+                  style={{ fontSize: "13px" }}
+                >
+                  <div className="d-flex align-items-center mb-2 text-muted">
+                    <MdRefresh
+                      size={14}
+                      color={primaryColor}
+                      className="mr-2"
+                    />
+                    <span>Clear search and filters</span>
+                  </div>
+                  <div className="d-flex align-items-center mb-2 text-muted">
+                    <FaSearch size={12} color={primaryColor} className="mr-2" />
+                    <span>Try different search terms</span>
+                  </div>
+                  <div className="d-flex align-items-center text-muted">
+                    <MdFilterList
+                      size={14}
+                      color={primaryColor}
+                      className="mr-2"
+                    />
+                    <span>Adjust filter criteria</span>
+                  </div>
+                </div>
+              ) : null}
+
+              <div className="mt-2">
+                <small className="text-muted" style={{ opacity: 0.8 }}>
+                  {state.globalFilter
+                    ? `Searching for "${state.globalFilter}"`
+                    : `Need help? Contact support`}
+                </small>
+              </div>
             </div>
           </Container>
         ) : null}

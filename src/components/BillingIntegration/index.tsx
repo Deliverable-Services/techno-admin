@@ -9,7 +9,11 @@ interface IBillingTypes {
 }
 
 const BillingIntegration = ({
-  icon = "/assets/billing.png", title = "Easily create invoices, subscriptions for each of your customers", description = "Click on the below button to create your Stripe connect account which will let you raise invoices, or subscription to receive payments with ease.", buttonText = "Get Started", buttonLink = "/"
+  icon = "/assets/billing.png",
+  title = "Easily create invoices, subscriptions for each of your customers",
+  description = "Click on the below button to create your Stripe connect account which will let you raise invoices, or subscription to receive payments with ease.",
+  buttonText = "Get Started",
+  buttonLink = "/",
 }: IBillingTypes) => {
   return (
     <div className="container text-center py-5">
@@ -23,9 +27,7 @@ const BillingIntegration = ({
         />
 
         {/* Title */}
-        <h4 className="font-weight-bold mb-3">
-          {title}
-        </h4>
+        <h4 className="font-weight-bold mb-3">{title}</h4>
 
         {/* Description */}
         <p className="text-muted mb-4" style={{ maxWidth: 600 }}>
@@ -34,9 +36,7 @@ const BillingIntegration = ({
 
         {/* Get Started button */}
         <a href={buttonLink}>
-          <button className="btn btn-primary px-4 py-2">
-            {buttonText}
-          </button>
+          <button className="btn btn-primary px-4 py-2">{buttonText}</button>
         </a>
       </div>
     </div>

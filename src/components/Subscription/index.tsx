@@ -1,27 +1,36 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import "./subscription.css";
 import API from "../../utils/API";
 import VerifingUserLoader from "../../shared-components/VerifingUserLoader";
 import useUserProfileStore from "../../hooks/useUserProfileStore";
 import SubscriptionCreateForm from "./SubscriptionCreateForm";
 import PageHeading from "../../shared-components/PageHeading";
-import { FaFileInvoiceDollar } from "react-icons/fa";
-import { Container } from "react-bootstrap";
-interface Invoice {
+import {
+  FaStripe,
+  FaRegMoneyBillAlt,
+  FaCalendarAlt,
+  FaPlus,
+} from "react-icons/fa";
+import { Container, Button } from "react-bootstrap";
+import { SiCivicrm } from "react-icons/si";
+import { MdSubscriptions, MdAutorenew } from "react-icons/md";
+import { showErrorToast } from "../../utils/showErrorToast";
+import { primaryColor } from "../../utils/constants";
+interface Subscription {
   id: string;
-  recipient: string;
-  price: number;
+  customer_name: string;
+  plan_name: string;
   status: string;
-  subtotal: string;
+  amount: string;
   currency: string;
-  tax: string;
-  total: string;
-  paid_at: string;
-  invoice_number: string;
+  interval: string;
+  next_billing_date: string;
+  subscription_number: string;
 }
 
 const SubscriptionPage: React.FC = () => {
-  const [invoices, setInvoices] = useState<Invoice[]>([]);
+  const [subscriptions, setSubscriptions] = useState<Subscription[]>([]);
+  const loggedInUser = useUserProfileStore((state) => state.user);
   const setUser = useUserProfileStore((state) => state.setUser);
   const [loading, setLoading] = useState(true);
   const [showForm, setShowForm] = useState(false);
@@ -31,41 +40,44 @@ const SubscriptionPage: React.FC = () => {
     setShowForm(true);
   };
 
-  const fetchInvoices = async () => {
+  const fetchSubscriptions = useCallback(async () => {
     setLoading(true);
     try {
-      const res = await API.get("/invoices");
-      setInvoices(res.data || []);
+      const res = await API.get("/subscriptions");
+      setSubscriptions(res.data || []);
     } catch (err) {
-      setInvoices([]);
+      setSubscriptions([]);
     } finally {
       setLoading(false);
     }
-  };
+  }, []);
 
-  const handleCode = async (code: string) => {
-    setIsProcessingCode(true);
-    try {
-      const response = await API.post("stripe/callback", { code });
+  const handleCode = useCallback(
+    async (code: string) => {
+      setIsProcessingCode(true);
+      try {
+        const response = await API.post("stripe/callback", { code });
 
-      if (response.status === 200) {
-        const currentUser = useUserProfileStore.getState().user;
-        setUser({
-          ...currentUser,
-          stripe_account_id: response.data.stripe_account_id,
-        });
+        if (response.status === 200) {
+          const currentUser = useUserProfileStore.getState().user;
+          setUser({
+            ...currentUser,
+            stripe_account_id: response.data.stripe_account_id,
+          });
 
-        const url = new URL(window.location.href);
-        url.searchParams.delete("code");
-        window.history.replaceState({}, document.title, url.pathname);
-        fetchInvoices();
+          const url = new URL(window.location.href);
+          url.searchParams.delete("code");
+          window.history.replaceState({}, document.title, url.pathname);
+          fetchSubscriptions();
+        }
+      } catch (error) {
+        console.error(error);
+      } finally {
+        setIsProcessingCode(false);
       }
-    } catch (error) {
-      console.error(error);
-    } finally {
-      setIsProcessingCode(false);
-    }
-  };
+    },
+    [fetchSubscriptions, setUser]
+  );
 
   useEffect(() => {
     const urlParams = new URLSearchParams(window.location.search);
@@ -73,13 +85,28 @@ const SubscriptionPage: React.FC = () => {
     if (code) {
       handleCode(code);
     }
-  }, []);
+  }, [handleCode]);
 
   useEffect(() => {
-    fetchInvoices();
-  }, []);
+    fetchSubscriptions();
+  }, [fetchSubscriptions]);
 
-  // Function to download invoice as PDF
+  // Create Stripe account handler
+  const handleCreateStripeAccount = async () => {
+    try {
+      const response = await API.get("/stripe/connect");
+      if (response?.data?.url) {
+        window.location.href = response.data.url;
+      }
+    } catch (error) {
+      console.error("Error creating Stripe account:", error);
+      showErrorToast("Failed to create Stripe account. Please try again.");
+    }
+  };
+
+  const _onCreateClick = () => {
+    setShowForm(true);
+  };
 
   if (isProcessingCode) {
     return (
@@ -91,81 +118,280 @@ const SubscriptionPage: React.FC = () => {
   }
 
   return (
-    <Container fluid className=" component-wrapper view-padding">
-      <>
+    <>
+      <div className="view-padding">
         <PageHeading
-          icon={<FaFileInvoiceDollar />}
+          icon={<SiCivicrm size={24} />}
           title="Subscriptions"
-          onClick={handleCreate}
-          totalRecords={invoices?.length}
-          permissionReq="create_user"
+          description="Raise recurring invoices to your customers with one click"
+          onClick={_onCreateClick}
+          btnText="Create Subscription"
+          permissionReq="create_bookingslot"
         />
-        {!showForm ? (
-          loading ? (
-            <div className="invoice-empty">
-              <p>Loading...</p>
+      </div>
+      <hr />
+      {(() => {
+        if (!loggedInUser?.stripe_account_id) {
+          return (
+            <div className="view-padding">
+              <div className="d-flex flex-column align-items-center text-center">
+                <FaStripe size={80} color={primaryColor} className="mb-4" />
+                <h3 className="mb-3">Get started with Subscriptions</h3>
+                <p className="text-muted mb-4" style={{ maxWidth: "400px" }}>
+                  To start using subscriptions you need to create your Stripe
+                  account by clicking on Create Stripe button below
+                </p>
+                <Button
+                  variant="primary"
+                  onClick={handleCreateStripeAccount}
+                  size="lg"
+                  className="primary-btn"
+                  style={{
+                    backgroundColor: primaryColor,
+                    borderColor: primaryColor,
+                    padding: "12px 30px",
+                    fontSize: "16px",
+                    fontWeight: "600",
+                  }}
+                >
+                  <div className="text-white d-flex align-items-center">
+                    <FaStripe className="mr-2" />
+                    Create Stripe Account
+                  </div>
+                </Button>
+              </div>
             </div>
-          ) : invoices.length === 0 ? (
-            <div className="invoice-empty">
-              <h4>Send your first invoice</h4>
-              <p>
-                This is where you can see invoice and their associated status
-              </p>
-              <button className="primary-btn" onClick={handleCreate}>
-                + Create invoice
-              </button>
-            </div>
-          ) : (
-            <table className="invoice-table">
-              <thead>
-                <tr>
-                  <th>Subscription Number</th>
-                  <th>Status</th>
-                  <th>Currency</th>
-                  <th>Total</th>
-                  <th>Subtotal</th>
-                  <th>Tax</th>
-                  <th>Paid At</th>
-                  <th>Actions</th>
-                </tr>
-              </thead>
-              <tbody>
-                {invoices.map((inv) => (
-                  <tr key={inv.id}>
-                    <td>{inv.invoice_number}</td>
-                    <td>
-                      <span className="status-open">{inv.status}</span>
-                    </td>
-                    <td>{inv.currency}</td>
-                    <td>${inv.total}</td>
-                    <td>${inv.subtotal}</td>
-                    <td>{inv.tax}</td>
-                    <td>{inv.paid_at}</td>
+          );
+        }
+        if (loading) {
+          return (
+            <Container
+              fluid
+              className="d-flex justify-content-center"
+              style={{ marginTop: "100px", marginBottom: "100px" }}
+            >
+              <div className="d-flex flex-column align-items-center text-center">
+                <div
+                  className="d-flex align-items-center justify-content-center mb-3"
+                  style={{
+                    width: "80px",
+                    height: "80px",
+                    backgroundColor: "#f8f9fa",
+                    borderRadius: "50%",
+                    border: `2px solid ${primaryColor}20`,
+                  }}
+                >
+                  <MdSubscriptions size={35} color={primaryColor} />
+                </div>
+                <h5 className="text-muted mb-2" style={{ fontWeight: "500" }}>
+                  Loading subscriptions...
+                </h5>
+                <div
+                  className="spinner-border text-primary"
+                  role="status"
+                  style={{ color: primaryColor + " !important" }}
+                >
+                  <span className="sr-only">Loading...</span>
+                </div>
+              </div>
+            </Container>
+          );
+        }
+
+        if (!subscriptions.length) {
+          return (
+            <Container
+              fluid
+              className="d-flex justify-content-center"
+              style={{ marginTop: "60px", marginBottom: "60px" }}
+            >
+              <div
+                className="d-flex flex-column align-items-center text-center"
+                style={{ maxWidth: "500px" }}
+              >
+                {/* Icon Stack */}
+                <div className="position-relative mb-4">
+                  <div
+                    className="d-flex align-items-center justify-content-center"
+                    style={{
+                      width: "120px",
+                      height: "120px",
+                      backgroundColor: "#f8f9fa",
+                      borderRadius: "50%",
+                      border: `3px solid ${primaryColor}20`,
+                    }}
+                  >
+                    <MdSubscriptions size={50} color={primaryColor} />
+                  </div>
+                  <div
+                    className="position-absolute d-flex align-items-center justify-content-center"
+                    style={{
+                      width: "35px",
+                      height: "35px",
+                      backgroundColor: primaryColor,
+                      borderRadius: "50%",
+                      bottom: "-5px",
+                      right: "-5px",
+                      border: "3px solid white",
+                    }}
+                  >
+                    <MdAutorenew size={18} color="white" />
+                  </div>
+                </div>
+
+                {/* Title */}
+                <h3
+                  className="mb-3"
+                  style={{
+                    fontWeight: "600",
+                    color: "#2c3e50",
+                    fontSize: "24px",
+                  }}
+                >
+                  No subscriptions yet
+                </h3>
+
+                {/* Description */}
+                <p
+                  className="text-muted mb-4"
+                  style={{
+                    fontSize: "16px",
+                    lineHeight: "1.6",
+                    maxWidth: "400px",
+                  }}
+                >
+                  Create recurring billing plans for your customers. Set up
+                  automatic payments and manage subscription lifecycles with
+                  ease.
+                </p>
+
+                {/* Features List */}
+                <div
+                  className="d-flex flex-column align-items-start mb-4"
+                  style={{ fontSize: "14px" }}
+                >
+                  <div className="d-flex align-items-center mb-2 text-muted">
+                    <FaCalendarAlt
+                      size={14}
+                      color={primaryColor}
+                      className="mr-2"
+                    />
+                    <span>Automated recurring billing</span>
+                  </div>
+                  <div className="d-flex align-items-center mb-2 text-muted">
+                    <FaRegMoneyBillAlt
+                      size={14}
+                      color={primaryColor}
+                      className="mr-2"
+                    />
+                    <span>Flexible pricing plans</span>
+                  </div>
+                  <div className="d-flex align-items-center mb-2 text-muted">
+                    <MdAutorenew
+                      size={14}
+                      color={primaryColor}
+                      className="mr-2"
+                    />
+                    <span>Easy subscription management</span>
+                  </div>
+                </div>
+
+                {/* CTA Button */}
+                <Button
+                  variant="primary"
+                  onClick={handleCreate}
+                  size="lg"
+                  className="primary-btn"
+                  style={{
+                    backgroundColor: primaryColor,
+                    borderColor: primaryColor,
+                    padding: "12px 32px",
+                    fontSize: "16px",
+                    fontWeight: "600",
+                    borderRadius: "8px",
+                    boxShadow: `0 4px 12px ${primaryColor}25`,
+                  }}
+                >
+                  <div className="text-white d-flex align-items-center">
+                    <FaPlus className="mr-2" size={14} />
+                    Create your first subscription
+                  </div>
+                </Button>
+
+                {/* Secondary action */}
+                <div className="mt-3">
+                  <small className="text-muted">
+                    Need help?{" "}
+                    <button
+                      className="btn btn-link p-0"
+                      style={{
+                        color: primaryColor,
+                        textDecoration: "none",
+                        fontSize: "inherit",
+                        fontWeight: "inherit",
+                      }}
+                      onClick={() => console.log("Open documentation")}
+                    >
+                      View documentation
+                    </button>
+                  </small>
+                </div>
+              </div>
+            </Container>
+          );
+        }
+
+        if (!showForm) {
+          return (
+            <Container fluid className="h-100 p-0">
+              <table className="invoice-table">
+                <thead>
+                  <tr>
+                    <th>Subscription Number</th>
+                    <th>Customer</th>
+                    <th>Plan</th>
+                    <th>Status</th>
+                    <th>Amount</th>
+                    <th>Currency</th>
+                    <th>Interval</th>
+                    <th>Next Billing</th>
+                    <th>Actions</th>
                   </tr>
-                ))}
-              </tbody>
-            </table>
-          )
-        ) : (
+                </thead>
+                <tbody>
+                  {subscriptions.map((sub) => (
+                    <tr key={sub.id}>
+                      <td>{sub.subscription_number}</td>
+                      <td>{sub.customer_name}</td>
+                      <td>{sub.plan_name}</td>
+                      <td>
+                        <span className="status-open">{sub.status}</span>
+                      </td>
+                      <td>${sub.amount}</td>
+                      <td>{sub.currency}</td>
+                      <td>{sub.interval}</td>
+                      <td>{sub.next_billing_date}</td>
+                      <td>{/* Add action buttons here if needed */}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </Container>
+          );
+        }
+
+        return (
           <div className="invoice-form">
             <SubscriptionCreateForm
               onSuccess={() => {
                 setShowForm(false);
-                fetchInvoices();
+                fetchSubscriptions();
               }}
             />
-            <div className="form-actions">
-              <button
-                className="secondary-btn"
-                onClick={() => setShowForm(false)}
-              >
-                Cancel
-              </button>
-            </div>
           </div>
-        )}
-      </>
-    </Container>
+        );
+      })()}
+    </>
   );
 };
 
