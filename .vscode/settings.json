@@ -1,1 +1,21 @@
-{}
+{
+  "terminal.integrated.env.osx": {
+    "NVM_DIR": "$HOME/.nvm"
+  },
+  "terminal.integrated.env.linux": {
+    "NVM_DIR": "$HOME/.nvm"
+  },
+  "terminal.integrated.shellArgs.osx": [
+    "-c",
+    "source ~/.nvm/nvm.sh && nvm use 16.1.0 && exec $SHELL"
+  ],
+  "terminal.integrated.shellArgs.linux": [
+    "-c",
+    "source ~/.nvm/nvm.sh && nvm use 16.1.0 && exec $SHELL"
+  ],
+  "typescript.preferences.includePackageJsonAutoImports": "on",
+  "editor.formatOnSave": true,
+  "editor.codeActionsOnSave": {
+    "source.fixAll.eslint": true
+  }
+}
