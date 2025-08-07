@@ -1,305 +1,264 @@
-import React from "react";
-import { Row, Col, Card, Badge, Alert } from "react-bootstrap";
-import { useQuery } from "react-query";
-import googleBusinessService, {
-  BusinessProfile,
-} from "../../services/googleBusinessService";
-import IsLoading from "../../shared-components/isLoading";
-import moment from "moment";
+import React, { useState } from "react";
+import {
+  Row,
+  Col,
+  Card,
+  Badge,
+  Modal,
+  Image,
+  Button,
+} from "react-bootstrap";
+import {
+  FaStar,
+  FaFacebook,
+  FaInstagram,
+  FaTwitter,
+  FaYoutube,
+} from "react-icons/fa";
 
-interface BusinessProfileTabProps {
-  organisationId?: number;
-}
+const dummyPhotos = [
+  "https://www.shutterstock.com/image-photo/happy-mid-aged-business-woman-600nw-2353012835.jpg",
+  "https://img.freepik.com/free-photo/happy-african-american-bank-manager-shaking-hands-with-client-after-successful-agreement-office_637285-1150.jpg?semt=ais_hybrid&w=740",
+  "https://img.freepik.com/premium-photo/group-business-people-are-sitting-circle-with-documents-hands_151013-21563.jpg",
+  "https://thumbs.dreamstime.com/b/business-consulting-meeting-working-brainstorming-new-project-finance-investment-concept-148096487.jpg",
+  "https://www.theforage.com/blog/wp-content/uploads/2022/09/management-consultant-1024x682.jpg",
+  "https://businessconsultingagency.com/wp-content/uploads/2024/09/Benefits-of-US-Market-Services-by-Localized-Professionals.jpg",
+];
 
-const BusinessProfileTab: React.FC<BusinessProfileTabProps> = ({
-  organisationId,
-}) => {
-  const {
-    data: profile,
-    isLoading,
-    error,
-  } = useQuery<BusinessProfile>(
-    ["google-business-profile", organisationId],
-    () => googleBusinessService.getBusinessProfile(organisationId!),
-    {
-      enabled: !!organisationId,
-      retry: false,
-    }
-  );
+const dummyReviews = [
+  {
+    name: "Ajay Kumar",
+    rating: 5,
+    comment: "Excellent service! Highly recommended.",
+    photo: "https://randomuser.me/api/portraits/men/32.jpg",
+  },
+  {
+    name: "Priya Singh",
+    rating: 4,
+    comment: "Good experience overall, will visit again.",
+    photo: "https://randomuser.me/api/portraits/women/44.jpg",
+  },
+];
 
-  if (isLoading) {
-    return <IsLoading />;
-  }
-
-  if (error) {
-    console.error("Profile error details:", error);
-    return (
-      <Alert variant="danger">
-        <i className="fas fa-exclamation-circle me-2"></i>
-        Failed to load business profile. Please try again later.
-        <details className="mt-2">
-          <summary>Error Details</summary>
-          <pre className="small">{JSON.stringify(error, null, 2)}</pre>
-        </details>
-      </Alert>
-    );
-  }
-
-  if (!profile) {
-    return (
-      <Alert variant="info">
-        <i className="fas fa-info-circle me-2"></i>
-        No business profile data available.
-        <div className="mt-2 small">
-          <strong>Debug Info:</strong>
-          <br />
-          Organisation ID: {organisationId}
-          <br />
-          Loading: {isLoading ? "Yes" : "No"}
-          <br />
-          Error: {error ? "Yes" : "No"}
-        </div>
-      </Alert>
-    );
-  }
-
-  const formatAddress = (address: any) => {
-    if (address?.formatted_address) {
-      return address.formatted_address;
-    }
-    return "No address available";
-  };
-
-  const formatHours = (hours: any) => {
-    if (!hours) return [];
-
-    const daysOrder = [
-      "monday",
-      "tuesday",
-      "wednesday",
-      "thursday",
-      "friday",
-      "saturday",
-      "sunday",
-    ];
-    return daysOrder.map((day) => ({
-      day: day.charAt(0).toUpperCase() + day.slice(1),
-      hours: hours[day] ? `${hours[day].open} - ${hours[day].close}` : "Closed",
-    }));
-  };
+const GoogleBusinessProfile: React.FC = () => {
+  const [selectedPhoto, setSelectedPhoto] = useState<string | null>(null);
 
   return (
-    <Row>
-      {/* Profile Header */}
-      <Col md={12} className="mb-4">
-        <Card>
-          <Card.Body>
-            <Row className="align-items-center">
-              <Col md={3} className="text-center">
-                {profile.profile_photo?.url ? (
-                  <img
-                    src={profile.profile_photo.url}
-                    alt={profile.name}
-                    className="rounded-circle"
-                    style={{
-                      width: "120px",
-                      height: "120px",
-                      objectFit: "cover",
-                    }}
-                  />
-                ) : (
-                  <div
-                    className="rounded-circle bg-light d-flex align-items-center justify-content-center text-muted"
-                    style={{ width: "120px", height: "120px" }}
-                  >
-                    <i className="fas fa-store fa-3x"></i>
-                  </div>
-                )}
-              </Col>
-              <Col md={9}>
-                <h2 className="mb-2">{profile.name}</h2>
-                {profile.title && (
-                  <h5 className="text-muted mb-3">{profile.title}</h5>
-                )}
+    <div className="my-4 google-buisness">
+      {/* Cover Photo */}
+      <Image
+        src="https://businessconsultingagency.com/wp-content/uploads/2024/09/Benefits-of-US-Market-Services-by-Localized-Professionals.jpg"
+        alt="Cover"
+        fluid
+        rounded
+        className="mb-4 g-cover"
+      />
 
-                <div className="mb-3">
-                  {profile.categories?.map((category, index) => (
-                    <Badge key={index} variant="primary" className="me-2 mb-1">
-                      {category.display_name || category.name}
-                    </Badge>
+      {/* Profile and Info */}
+      <Card className="mb-4">
+        <Card.Body className="d-flex align-items-center g-user-profile">
+          <Image
+            src="https://randomuser.me/api/portraits/men/1.jpg"
+            roundedCircle
+            width="100"
+            height="100"
+            className="me-3"
+          />
+          <div>
+            <h4 className="mb-0">My Business Name</h4>
+            <Badge variant="success" className="mt-1">
+              Open Now
+            </Badge>
+          </div>
+        </Card.Body>
+      </Card>
+
+      <Row>
+        {/* Contact Info */}
+        <Col md={6} className="mb-4">
+          <Card>
+            <Card.Header className="g-card-heading">Contact Information</Card.Header>
+            <Card.Body className="g-contact_information">
+              <p><strong>Phone:</strong> +91 9876543210</p>
+              <p><strong>Email:</strong> info@example.com</p>
+              <p><strong>Address:</strong> 123 Street, New Delhi, India</p>
+              <p><strong>Website:</strong>{" "}
+                <a href="https://example.com" target="_blank" rel="noreferrer">
+                  www.example.com
+                </a>
+              </p>
+            </Card.Body>
+          </Card>
+        </Col>
+
+        {/* Business Hours */}
+        <Col md={6} className="mb-4">
+          <Card>
+            <Card.Header className="g-card-heading">Business Hours</Card.Header>
+            <Card.Body>
+              {[
+                { day: "Monday", hours: "9 AM – 6 PM" },
+                { day: "Tuesday", hours: "9 AM – 6 PM" },
+                { day: "Wednesday", hours: "9 AM – 6 PM" },
+                { day: "Thursday", hours: "9 AM – 6 PM" },
+                { day: "Friday", hours: "9 AM – 6 PM" },
+                { day: "Saturday", hours: "10 AM – 4 PM" },
+                { day: "Sunday", hours: "Closed" },
+              ].map((item, index) => (
+                <div key={index} className="d-flex justify-content-between border-bottom py-1">
+                  <strong>{item.day}</strong>
+                  <span>{item.hours}</span>
+                </div>
+              ))}
+            </Card.Body>
+          </Card>
+        </Col>
+      </Row>
+
+      {/* Review Summary */}
+      <Card className="mb-4">
+        <Card.Header className="g-card-heading">Review Summary</Card.Header>
+        <Card.Body>
+          <Row>
+            <Col md={4} className="text-center mb-3">
+              <h1 className="display-4 mb-0">4.9</h1>
+              <div className="text-warning mb-2">
+                {[...Array(5)].map((_, i) => (
+                  <FaStar key={i} color="#f4c150" />
+                ))}
+              </div>
+              <div className="text-info">63 reviews</div>
+            </Col>
+
+            <Col md={8}>
+              {[5, 4, 3, 2, 1].map((star, idx) => {
+                const percentage = star === 5 ? 90 : star === 4 ? 5 : 1;
+                return (
+                  <div key={idx} className="d-flex align-items-center mb-2">
+                    <strong className="me-2" style={{ width: "20px" }}>{star}</strong>
+                    <div className="flex-grow-1 bg-light rounded-pill overflow-hidden me-2" style={{ height: "8px" }}>
+                      <div style={{
+                        width: `${percentage}%`,
+                        height: "100%",
+                        backgroundColor: "#f4c150"
+                      }} />
+                    </div>
+                  </div>
+                );
+              })}
+            </Col>
+          </Row>
+
+          <div className="mt-4">
+            <div className="d-flex align-items-start mb-3">
+              <Image src="https://randomuser.me/api/portraits/women/65.jpg" roundedCircle width={40} height={40} className="me-3" />
+              <p className="mb-0">"Nice company with nice <strong>environment</strong> and nice <strong>people</strong> 😊"</p>
+            </div>
+            <div className="d-flex align-items-start mb-3">
+              <Image src="https://randomuser.me/api/portraits/men/52.jpg" roundedCircle width={40} height={40} className="me-3" />
+              <p className="mb-0">"It's a great <strong>place</strong> to work, and I highly recommend it."</p>
+            </div>
+            <div className="d-flex align-items-start mb-3">
+              <Image src="https://randomuser.me/api/portraits/men/60.jpg" roundedCircle width={40} height={40} className="me-3" />
+              <p className="mb-0">"The work <strong>environment</strong> is positive, and the <strong>management</strong> truly values <strong>employees</strong>."</p>
+            </div>
+          </div>
+
+          <div className="text-center mt-4">
+            <Button variant="info" className="px-4">📝 Write a review</Button>
+          </div>
+        </Card.Body>
+      </Card>
+
+      {/* Customer Reviews */}
+      <Card className="mb-4">
+        <Card.Header className="g-card-heading">Customer Reviews</Card.Header>
+        <Card.Body>
+          {dummyReviews.map((review, index) => (
+            <div className="d-flex mb-4 g-reviews" key={index}>
+              <Image
+                src={review.photo}
+                roundedCircle
+                width="50"
+                height="50"
+                className="me-3"
+              />
+              <div>
+                <h6 className="mb-1">{review.name}</h6>
+                <div className="text-warning mb-1">
+                  {[...Array(5)].map((_, i) => (
+                    <FaStar key={i} color={i < review.rating ? "#f4c150" : "#ccc"} />
                   ))}
                 </div>
-
-                {profile.rating && (
-                  <div className="mb-2">
-                    <span className="h5 me-2">{profile.rating.toFixed(1)}</span>
-                    <span className="text-warning me-2">
-                      {[...Array(5)].map((_, i) => (
-                        <i
-                          key={i}
-                          className={`fas fa-star ${i < Math.floor(profile.rating) ? "" : "text-muted"
-                            }`}
-                        ></i>
-                      ))}
-                    </span>
-                    {profile.review_count && (
-                      <span className="text-muted">
-                        ({profile.review_count} reviews)
-                      </span>
-                    )}
-                  </div>
-                )}
-              </Col>
-            </Row>
-          </Card.Body>
-        </Card>
-      </Col>
-
-      {/* Contact Information */}
-      <Col md={6} className="mb-4">
-        <Card className="h-100">
-          <Card.Header>
-            <h5 className="mb-0 pb-3">
-              <i className="fas fa-address-book me-2"></i>
-              Contact Information
-            </h5>
-          </Card.Header>
-          <Card.Body>
-            <div className="mb-3">
-              <strong className="d-block text-muted small mb-1">ADDRESS</strong>
-              <p className="mb-0">
-                <i className="fas fa-map-marker-alt me-2 text-primary"></i>
-                {formatAddress(profile.address)}
-              </p>
+                <p className="mb-0">{review.comment}</p>
+              </div>
             </div>
+          ))}
+        </Card.Body>
+      </Card>
 
-            {profile.phone && (
-              <div className="mb-3">
-                <strong className="d-block text-muted small mb-1">PHONE</strong>
-                <p className="mb-0">
-                  <i className="fas fa-phone me-2 text-primary"></i>
-                  <a
-                    href={`tel:${profile.phone}`}
-                    className="text-decoration-none"
-                  >
-                    {profile.phone}
-                  </a>
-                </p>
-              </div>
-            )}
-
-            {profile.website && (
-              <div className="mb-3">
-                <strong className="d-block text-muted small mb-1">
-                  WEBSITE
-                </strong>
-                <p className="mb-0">
-                  <i className="fas fa-globe me-2 text-primary"></i>
-                  <a
-                    href={profile.website}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="text-decoration-none"
-                  >
-                    {profile.website}
-                  </a>
-                </p>
-              </div>
-            )}
-          </Card.Body>
-        </Card>
-      </Col>
-
-      {/* Business Hours */}
-      <Col md={6} className="mb-4">
-        <Card className="h-100">
-          <Card.Header>
-            <h5 className="mb-0 pb-3">
-              <i className="fas fa-clock me-2"></i>
-              Business Hours
-            </h5>
-          </Card.Header>
-          <Card.Body>
-            {formatHours(profile.hours).map((day, index) => (
-              <div key={index} className="d-flex justify-content-between mb-2">
-                <span className="fw-bold">{day.day}</span>
-                <span className={day.hours === "Closed" ? "text-muted" : ""}>
-                  {day.hours}
-                </span>
-              </div>
+      {/* Photo Gallery */}
+      <Card className="mb-4">
+        <Card.Header className="g-card-heading">Photo Gallery</Card.Header>
+        <Card.Body>
+          <Row>
+            {dummyPhotos.map((url, index) => (
+              <Col md={4} sm={6} xs={6} key={index} className="mb-3">
+                <Image
+                  src={url}
+                  thumbnail
+                  style={{ cursor: "pointer" }}
+                  onClick={() => setSelectedPhoto(url)}
+                />
+              </Col>
             ))}
-          </Card.Body>
-        </Card>
-      </Col>
+          </Row>
+        </Card.Body>
+      </Card>
 
-      {/* Cover Photo */}
-      {profile.cover_photo?.url && (
-        <Col md={12} className="mb-4">
-          <Card>
-            <Card.Header>
-              <h5 className="mb-0 pb-3">
-                <i className="fas fa-image me-2"></i>
-                Cover Photo
-              </h5>
-            </Card.Header>
-            <Card.Body className="p-0">
-              <img
-                src={profile.cover_photo.url}
-                alt="Business Cover"
-                className="w-100"
-                style={{ maxHeight: "300px", objectFit: "cover" }}
-              />
-            </Card.Body>
-          </Card>
-        </Col>
-      )}
+      {/* Photo Modal */}
+      <Modal show={!!selectedPhoto} onHide={() => setSelectedPhoto(null)} centered size="lg">
+        <Modal.Body className="text-center">
+          <Image src={selectedPhoto!} fluid />
+        </Modal.Body>
+      </Modal>
 
-      {/* Business Description */}
-      {profile.description && (
-        <Col md={12} className="mb-4">
-          <Card>
-            <Card.Body>
-              <h5 className="mb-3">
-                <i className="fas fa-info-circle me-2 text-info"></i>
-                About Our Business
-              </h5>
-              <p className="text-muted mb-0">{profile.description}</p>
-            </Card.Body>
-          </Card>
-        </Col>
-      )}
+      {/* About */}
+      <Card className="mb-4">
+        <Card.Header className="g-card-heading">About</Card.Header>
+        <Card.Body>
+          <p>
+            We are a dedicated business offering top-tier services in New Delhi.
+            Our aim is customer satisfaction and long-term relationships.
+          </p>
+        </Card.Body>
+      </Card>
 
-      {/* Business Attributes */}
-      {profile.attributes && profile.attributes.length > 0 && (
-        <Col md={12} className="mb-4">
-          <Card>
-            <Card.Body>
-              <h5 className="mb-3">
-                <i className="fas fa-tags me-2 text-secondary"></i>
-                Business Features
-              </h5>
-              <Row>
-                {profile.attributes.map((attr, index) => (
-                  <Col md={6} key={index} className="mb-2">
-                    <div className="d-flex align-items-center">
-                      {attr.value ? (
-                        <i className="fas fa-check-circle text-success me-2"></i>
-                      ) : (
-                        <i className="fas fa-times-circle text-danger me-2"></i>
-                      )}
-                      <span className="text-capitalize">
-                        {attr.name.replace(/_/g, " ")}
-                      </span>
-                    </div>
-                  </Col>
-                ))}
-              </Row>
-            </Card.Body>
-          </Card>
-        </Col>
-      )}
-    </Row>
+      {/* Features */}
+      <Card className="mb-4">
+        <Card.Header className="g-card-heading">Business Features</Card.Header>
+        <Card.Body>
+          <ul className="g-b-features">
+            <li>24/7 Support</li>
+            <li>Online Payments</li>
+            <li>Parking Available</li>
+            <li>Wheelchair Accessible</li>
+          </ul>
+        </Card.Body>
+      </Card>
+
+      {/* Social Links */}
+      <Card>
+        <Card.Header className="g-card-heading">Connect with Us</Card.Header>
+        <Card.Body className="d-flex gap-3 g-social">
+          <a href="#"><FaFacebook size={24} /></a>
+          <a href="#"><FaInstagram size={24} /></a>
+          <a href="#"><FaTwitter size={24} /></a>
+          <a href="#"><FaYoutube size={24} /></a>
+        </Card.Body>
+      </Card>
+    </div>
   );
 };
 
-export default BusinessProfileTab;
+export default GoogleBusinessProfile;

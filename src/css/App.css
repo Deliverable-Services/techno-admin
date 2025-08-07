@@ -13265,3 +13265,65 @@ li.navLink.my-1 svg path {
     transform: rotate(360deg);
   }
 }
+
+
+
+
+.g-user-profile img {
+  width: 130px;
+  height: 130px;
+  margin-right: 17px;
+  object-fit: cover;
+}
+
+.g-reviews img {
+  width: 45px;
+  height: 45px;
+  object-fit: cover;
+  margin-right: 13px;
+}
+.google-buisness .card-header {
+  padding: 10px 20px;
+}
+.google-buisness .img-thumbnail {
+  height: 207px;
+  object-fit: cover;
+}
+.g-cover {
+  height: 180px;
+  object-fit: cover;
+}
+.g-social a {
+  background: #c2c2c242;
+  height: 36px;
+  width: 36px;
+  padding: 10px;
+  border-radius: 50%;
+  color: black;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.g-contact_information p {
+  padding-bottom: 8px;
+}
+.g-contact_information a {
+  color: black;
+  text-decoration: underline;
+}
+
+.g-badage span {
+  color: white;
+  padding: 5px 10px;
+  margin: 0 0 0 10px;
+}
+.g-b-features li {
+  padding-bottom: 8px;
+}
+
+.review-summery img {
+  width: 37px;
+  height: 37px;
+  object-fit: cover;
+  margin-right: 11px;
+}
