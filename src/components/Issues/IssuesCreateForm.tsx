@@ -77,21 +77,24 @@ const IssuesCreateForm = ({ onHideModal }) => {
           >
             {({ setFieldValue }) => (
               <Form>
+                <Row>
+                  <Col md={12}>
+                    <InputField
+                      name="title"
+                      placeholder="Title"
+                      label="Title"
+                      required
+                    />
+                  </Col>
+                </Row>
                 <div className={`form-container  py-2 `}>
-                  <InputField
-                    name="title"
-                    placeholder="Title"
-                    label="Title"
-                    required
-                  />
-
-                  <InputField
+                  {/* <InputField
                     as="select"
                     selectData={IssueStatus}
                     name="status"
                     label="Status"
                     placeholder="Choose Status"
-                  />
+                  /> */}
                   <InputField
                     name="related_to"
                     label="Related To"
@@ -99,13 +102,13 @@ const IssuesCreateForm = ({ onHideModal }) => {
                     selectData={IssueRelatedTo}
                     as="select"
                   />
-                  <InputField
+                  {/* <InputField
                     name="order_id"
                     label="Order"
                     placeholder="Order Id"
-                  />
+                  /> */}
                   <InputField
-                    name="customer"
+                    name="user_id"
                     label="Add Customer"
                     placeholder="Select Customer"
                     selectData={customersList?.data}
