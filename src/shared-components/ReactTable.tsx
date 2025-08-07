@@ -363,8 +363,64 @@ function ReactTable({
               <thead className="bg-grey-primary">
                 {isDataLoading ? (
                   <tr>
-                    <td className="text-muted font-weight-bold w-100">
-                      Loading <Spinner size="sm" animation="border" />
+                    <td
+                      colSpan={
+                        headerGroups[0]?.headers?.length || columns.length
+                      }
+                      className="text-center p-4"
+                      style={{
+                        backgroundColor: "#f8f9fa",
+                        border: "none",
+                        position: "relative",
+                      }}
+                    >
+                      <div className="d-flex flex-column align-items-center justify-content-center">
+                        <div
+                          style={{
+                            width: "200px",
+                            height: "2px",
+                            backgroundColor: "#e9ecef",
+                            borderRadius: "1px",
+                            overflow: "hidden",
+                            marginBottom: "10px",
+                          }}
+                        >
+                          <div
+                            style={{
+                              width: "100%",
+                              height: "100%",
+                              background: `linear-gradient(90deg, ${primaryColor}40, ${primaryColor}, ${primaryColor}40)`,
+                              animation:
+                                "loading-bar 1.5s ease-in-out infinite",
+                            }}
+                          />
+                        </div>
+
+                        <div className="d-flex align-items-center justify-content-center">
+                          <div
+                            className="d-flex align-items-center justify-content-center mr-2"
+                            style={{
+                              width: "20px",
+                              height: "20px",
+                              backgroundColor: "white",
+                              borderRadius: "50%",
+                              border: `2px solid ${primaryColor}20`,
+                              boxShadow: "0 2px 8px rgba(0,0,0,0.1)",
+                            }}
+                          >
+                            <FaDatabase size={12} color={primaryColor} />
+                          </div>
+
+                          <div className="d-flex align-items-center">
+                            <span
+                              className="text-muted font-weight-500"
+                              style={{ fontSize: "15px" }}
+                            >
+                              Refreshing table data...
+                            </span>
+                          </div>
+                        </div>
+                      </div>
                     </td>
                   </tr>
                 ) : null}
