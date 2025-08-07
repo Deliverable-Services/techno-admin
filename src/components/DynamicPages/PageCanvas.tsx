@@ -6,6 +6,10 @@ import {
   BiCopy,
   BiTrash,
 } from "react-icons/bi";
+import API from "../../utils/API";
+import { showMsgToast } from "../../utils/showMsgToast";
+import { handleApiError } from "../../hooks/handleApiErrors";
+import { useHistory } from "react-router-dom";
 
 const PageCanvas = ({
   sections,
@@ -15,7 +19,9 @@ const PageCanvas = ({
   onMoveDown,
   onMoveUp,
   updateSectionField,
+  triggerSave,
 }) => {
+  const history = useHistory();
   const [{ isOver }, drop] = useDrop(
     () => ({
       accept: "SECTION",
@@ -27,7 +33,34 @@ const PageCanvas = ({
     [onDrop]
   );
 
-  // console.log("page- sections", sections);
+  const handleUploadImage = async (e, sectionKey, field) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    try {
+      const formData = new FormData();
+      formData.append("image", file);
+
+      const response = await API.post(`upload-image`, formData, {
+        headers: { "Content-Type": "multipart/form-data" },
+      });
+
+      if (response.status === 201) {
+        updateSectionField(
+          sectionKey,
+          field.name,
+          response?.data?.data?.full_url
+        );
+        showMsgToast(response?.data?.message);
+        if (typeof triggerSave === "function") {
+          triggerSave();
+        }
+      }
+    } catch (error) {
+      console.error("Upload error:", error);
+      handleApiError(error, history);
+    }
+  };
 
   return (
     <div
@@ -92,7 +125,7 @@ const PageCanvas = ({
                   </div>
                 </div>
                 <div className="d-flex gap-10 p-2 mt-1 rounded-bottom bg-white">
-                  <div>
+                  {/* <div>
                     {(() => {
                       const imageField =
                         section.configuration?.editable_fields?.find(
@@ -120,17 +153,7 @@ const PageCanvas = ({
                         />
                       ) : null;
                     })()}
-                    {/* <img
-                      src="https://picsum.photos/300/200"
-                      alt="Preview"
-                      className="w-32"
-                      style={{
-                        maxHeight: "100px",
-                        maxWidth: "150px",
-                        borderRadius: "8px",
-                      }}
-                    /> */}
-                  </div>
+                  </div> */}
                   <div className="w-100">
                     {section.configuration?.editable_fields?.map((field) => (
                       <div
@@ -144,18 +167,21 @@ const PageCanvas = ({
                               field.name.slice(1)}
                         </label>
                         {field.type === "image" ? (
-                          <input
-                            type="file"
-                            accept="image/*"
-                            onChange={(e) =>
-                              updateSectionField(
-                                sectionKey,
-                                field.name,
-                                e.target.files?.[0]
-                              )
-                            }
-                            placeholder={field.placeholder}
-                          />
+                          <div className="align-items-start d-flex gap-3">
+                            <input
+                              type="file"
+                              accept="image/*"
+                              onChange={(e) =>
+                                handleUploadImage(e, sectionKey, field)
+                              }
+                              placeholder={field.placeholder}
+                            />
+                            <img
+                              src={section.variables?.[field.name]}
+                              alt={field.label}
+                              className="rounded w-25"
+                            />
+                          </div>
                         ) : (
                           <input
                             type={field.type}

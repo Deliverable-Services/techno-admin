@@ -10,21 +10,9 @@ import { useHistory, useParams } from "react-router-dom";
 import { handleApiError } from "../../hooks/handleApiErrors";
 import { AxiosError } from "axios";
 import API from "../../utils/API";
+import { useState } from "react";
 
 const key = "pages";
-
-const createUpdataSEO = ({
-  formdata,
-  id,
-}: {
-  formdata: FormData;
-  id: string;
-}) => {
-  if (id)
-    return API.put(`${key}/${id}`, formdata, {
-      headers: { "Content-Type": "multipart/form-data" },
-    });
-};
 
 interface SeoDetails {
   title?: string;
@@ -40,23 +28,23 @@ interface UpdatePageData {
   [key: string]: any;
 }
 
-const updatePage = async (data: UpdatePageData, id: string): Promise<void> => {
-  try {
-    const res = await API.put(`${key}/${id}`, data, {
+const createUpdataSEO = ({
+  editedData,
+  id,
+}: {
+  editedData: UpdatePageData;
+  id: string;
+}) => {
+  if (id)
+    return API.put(`${key}/${id}`, editedData, {
       headers: { "Content-Type": "application/json" },
     });
-
-    if (res) showMsgToast("SEO details updated successfully");
-    else {
-    }
-  } catch (error: any) {
-    throw error;
-  }
 };
 
 const SeoForm = ({ seoDetails }) => {
   const history = useHistory();
   const { id } = useParams<{ id: string }>();
+  const [uploadedOgImage, setUploadedOgImage] = useState<string>("");
 
   const { mutate, isLoading } = useMutation(createUpdataSEO, {
     onSuccess: () => {
@@ -68,6 +56,29 @@ const SeoForm = ({ seoDetails }) => {
     },
   });
 
+  const handleUploadImage = async (e) => {
+    const file = e.currentTarget.files?.[0];
+    if (!file || !id) return;
+
+    try {
+      const formData = new FormData();
+      formData.append("image", file);
+
+      const response = await API.post(`upload-image`, formData, {
+        headers: { "Content-Type": "multipart/form-data" },
+      });
+
+      if (response.status === 201) {
+        const imageUrl = response.data?.data?.full_url;
+        setUploadedOgImage(imageUrl); // ✅ store locally
+        showMsgToast("Image uploaded successfully");
+      }
+    } catch (err) {
+      console.error("Image upload failed", err);
+      showMsgToast("Failed to upload image");
+    }
+  };
+
   const initialValues = {
     title: seoDetails?.title || "",
     description: seoDetails?.description || "",
@@ -77,7 +88,6 @@ const SeoForm = ({ seoDetails }) => {
     og_image: seoDetails?.og_image || "",
   };
 
-  console.log(seoDetails, "seoDetails");
   return (
     <Container fluid className="card component-wrapper view-padding mb-3 mt-3">
       <PageHeading title="SEO Details" />
@@ -90,10 +100,6 @@ const SeoForm = ({ seoDetails }) => {
             initialValues={initialValues}
             onSubmit={(values) => {
               const editedData: any = {};
-              const { og_image, ...rest } = values;
-
-              console.log("ogimage", og_image);
-
               const seoKeys = [
                 "title",
                 "description",
@@ -103,33 +109,19 @@ const SeoForm = ({ seoDetails }) => {
                 "og_image",
               ];
 
-              if (id) {
-                const formdata = new FormData();
-                seoKeys.forEach((key) => {
-                  editedData.seo_details = editedData.seo_details || {};
-                  editedData.seo_details[key] = values[key];
-                  formdata.append(key, values[key]);
-                  // formdata.append(`seo_details[${key}]`, values[key]);
-                });
-
-                // formdata.append("name", "Page Name");
-                // formdata.append("slug", "page-name");
-
-                // updatePage(formdata, id); // sends json, yet working (for field value only)
-                createUpdataSEO({ formdata, id }); // formdata, not wokring
+              if (uploadedOgImage) {
+                values.og_image = uploadedOgImage;
               }
-              // mutate({ formdata, id });
+
+              if (id) {
+                let seo_details = {};
+                seoKeys.forEach((key) => {
+                  seo_details[key] = values[key];
+                });
+                editedData["seo_details"] = seo_details;
+                mutate({ editedData, id });
+              }
             }}
-            // onSubmit={(values) => {
-            //   console.log(values);
-            //   const { ...rest } = values;
-            //   const formdata = new FormData();
-            //   for (let k in rest) formdata.append(k, rest[k]);
-
-            //   // if (og_image) formdata.append("og_image", og_image);
-
-            //   mutate({ formdata, id });
-            // }}
           >
             {({ setFieldValue }) => (
               <Form>
@@ -138,45 +130,49 @@ const SeoForm = ({ seoDetails }) => {
                     name="title"
                     placeholder="Meta Title"
                     label="Meta Title"
-                    // required
                   />
                   <InputField
                     name="description"
                     placeholder="Meta Description"
                     label="Meta Description"
-                    // required
                   />
                   <InputField
                     name="keywords"
                     placeholder="Meta Keywords"
                     label="Meta Keywords"
-                    // required
                   />
 
-                  <InputField
-                    name="og_image"
-                    folder="website"
-                    placeholder="OG Image"
-                    label="OG Image"
-                    isFile
-                    setFieldValue={setFieldValue}
-                    // onChange={(e) => {
-                    //   console.log("e.target.files", e.target);
-                    //   setFieldValue("og_image", Object.values(e.target.files));
-                    // }}
-                    // required
-                  />
+                  <div className="d-flex flex-column gap-3">
+                    <div>
+                      <label htmlFor="">OG Image</label>
+                      <input
+                        name="og_image"
+                        accept="image/*"
+                        placeholder="OG Image"
+                        className="form-control input-div"
+                        type="file"
+                        onChange={(e) => handleUploadImage(e)}
+                      />
+                    </div>
+
+                    {initialValues.og_image && (
+                      <img
+                        src={uploadedOgImage || initialValues.og_image}
+                        alt="og-image"
+                        className="rounded w-25"
+                      />
+                    )}
+                  </div>
+
                   <InputField
                     name="og_title"
                     placeholder="OG Title"
                     label="OG Title"
-                    // required
                   />
                   <InputField
                     name="og_description"
                     placeholder="OG Description"
                     label="OG Description"
-                    // required
                   />
                 </div>
 

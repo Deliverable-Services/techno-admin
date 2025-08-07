@@ -46,7 +46,7 @@ const createUpdateUser = ({
 interface UserBasicsProps {
   toggleModal: () => void;
 }
-const UserBasics = ({toggleModal}: UserBasicsProps) => {
+const UserBasics = ({ toggleModal }: UserBasicsProps) => {
   const { state } = useLocation();
   const history = useHistory();
   const id = state ? (state as any).id : null;
@@ -95,83 +95,83 @@ const UserBasics = ({toggleModal}: UserBasicsProps) => {
 
   return (
     <>
-        <Row className="rounded">
-          <Col className="mx-auto">
-            <Formik
-              enableReinitialize
-              initialValues={apiData || { role }}
-              onSubmit={(values) => {
-                console.log(values);
-                const { profile_pic, ...rest } = values;
-                const formdata = new FormData();
-                for (let k in rest) formdata.append(k, rest[k]);
+      <Row className="rounded">
+        <Col className="mx-auto">
+          <Formik
+            enableReinitialize
+            initialValues={apiData || { role }}
+            onSubmit={(values) => {
+              console.log(values);
+              const { profile_pic, ...rest } = values;
+              const formdata = new FormData();
+              for (let k in rest) formdata.append(k, rest[k]);
 
-                if (profile_pic) formdata.append("profile_pic", profile_pic);
+              if (profile_pic) formdata.append("profile_pic", profile_pic);
 
-                mutate({ formdata, id });
-              }}
-              validationSchema={ValidationSchema}
-            >
-              {({ setFieldValue, errors }) => (
-                <Form className="w-100">
-                  <div className="form-container py-2">
-                    <InputField
-                      name="name"
-                      placeholder="Name"
-                      label="Name"
-                      required
-                    />
-                    <InputField
-                      name="phone"
-                      placeholder="phone"
-                      label="Phone"
-                      error={errors.phone as string}
-                      required
-                    />
-                    <InputField
-                      name="email"
-                      placeholder="Email"
-                      label="Email"
-                      required
-                    />
-                    <InputField
-                      as="select"
-                      selectData={allRoles}
-                      name="role"
-                      label="Role"
-                      placeholder="Role"
-                    />
-                    <InputField
-                      name="profile_pic"
-                      placeholder="Profile Pic"
-                      label="Choose Profile Pic"
-                      folder="profile_pic"
-                      isFile
-                      setFieldValue={setFieldValue}
-                    />
-                  </div>
-                  <Row className="d-flex justify-content-start">
-                    <Col md="2">
-                      <Restricted to={id ? "update_user" : "create_user"}>
-                        <Button
-                          type="submit"
-                          disabled={isLoading}
-                          className="w-100"
-                        >
-                          {isLoading ? (
-                            <Spinner animation="border" size="sm" />
-                          ) : (
-                            "Submit"
-                          )}
-                        </Button>
-                      </Restricted>
-                    </Col>
-                  </Row>
-                </Form>
-              )}
-            </Formik>
-          </Col>
-        </Row>
+              mutate({ formdata, id });
+            }}
+            validationSchema={ValidationSchema}
+          >
+            {({ setFieldValue, errors }) => (
+              <Form className="w-100 flyout-form">
+                <div className="form-container py-2">
+                  <InputField
+                    name="name"
+                    placeholder="Name"
+                    label="Name"
+                    required
+                  />
+                  <InputField
+                    name="phone"
+                    placeholder="phone"
+                    label="Phone"
+                    error={errors.phone as string}
+                    required
+                  />
+                  <InputField
+                    name="email"
+                    placeholder="Email"
+                    label="Email"
+                    required
+                  />
+                  <InputField
+                    as="select"
+                    selectData={allRoles}
+                    name="role"
+                    label="Role"
+                    placeholder="Role"
+                  />
+                  <InputField
+                    name="profile_pic"
+                    placeholder="Profile Pic"
+                    label="Choose Profile Pic"
+                    folder="profile_pic"
+                    isFile
+                    setFieldValue={setFieldValue}
+                  />
+                </div>
+                <Row className="d-flex justify-content-start">
+                  <Col md="12">
+                    <Restricted to={id ? "update_user" : "create_user"}>
+                      <Button
+                        type="submit"
+                        disabled={isLoading}
+                        className="w-100"
+                      >
+                        {isLoading ? (
+                          <Spinner animation="border" size="sm" />
+                        ) : (
+                          "Submit"
+                        )}
+                      </Button>
+                    </Restricted>
+                  </Col>
+                </Row>
+              </Form>
+            )}
+          </Formik>
+        </Col>
+      </Row>
     </>
   );
 };
