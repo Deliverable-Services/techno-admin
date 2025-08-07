@@ -149,16 +149,16 @@ const GoogleBusinessProfile: React.FC = () => {
             </Col>
           </Row>
 
-          <div className="mt-4">
-            <div className="d-flex align-items-start mb-3">
+          <div className="mt-4 review-summery">
+            <div className="d-flex align-items-center mb-3">
               <Image src="https://randomuser.me/api/portraits/women/65.jpg" roundedCircle width={40} height={40} className="me-3" />
               <p className="mb-0">"Nice company with nice <strong>environment</strong> and nice <strong>people</strong> 😊"</p>
             </div>
-            <div className="d-flex align-items-start mb-3">
+            <div className="d-flex align-items-center mb-3">
               <Image src="https://randomuser.me/api/portraits/men/52.jpg" roundedCircle width={40} height={40} className="me-3" />
               <p className="mb-0">"It's a great <strong>place</strong> to work, and I highly recommend it."</p>
             </div>
-            <div className="d-flex align-items-start mb-3">
+            <div className="d-flex align-items-center mb-3">
               <Image src="https://randomuser.me/api/portraits/men/60.jpg" roundedCircle width={40} height={40} className="me-3" />
               <p className="mb-0">"The work <strong>environment</strong> is positive, and the <strong>management</strong> truly values <strong>employees</strong>."</p>
             </div>
