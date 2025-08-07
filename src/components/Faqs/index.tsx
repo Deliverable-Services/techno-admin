@@ -6,7 +6,6 @@ import { useMutation, useQuery } from "react-query";
 import { useHistory } from "react-router-dom";
 import { Cell } from "react-table";
 import { handleApiError } from "../../hooks/handleApiErrors";
-import BreadCrumb from "../../shared-components/BreadCrumb";
 import CreatedUpdatedAt from "../../shared-components/CreatedUpdatedAt";
 import EditButton from "../../shared-components/EditButton";
 import IsActiveBadge from "../../shared-components/IsActiveBadge";
@@ -158,68 +157,98 @@ const Faqs = () => {
       <div className=" view-padding">
         <PageHeading
           icon={<FaQuestionCircle size={24} />}
-          description="Create and manage faqs"
-          title="Faqs"
+          description="This will be show on your website & support center"
+          title="Frequently Asked Questions"
           onClick={_onCreateClick}
           totalRecords={data?.total}
           permissionReq="create_faq"
         />
       </div>
       <hr />
+      {(() => {
+        if (isLoading) {
+          return <IsLoading />;
+        }
 
-      <div className="">
-        <Container fluid className="h-100 p-0 pt-3">
-          {isLoading ? (
-            <IsLoading />
-          ) : (
-            <>
-              {!error && (
-                <ReactTable
-                  tabs={<div className="d-flex justify-content-between">
-                    {!isLoading && (
-                      <Nav className="global-navs" variant="tabs" activeKey={filter.active} onSelect={(selectedKey) => _onFilterChange('active', selectedKey)}>
-                        <Nav.Item>
-                          <Nav.Link eventKey="">All ({data?.data?.length || 0})</Nav.Link>
-                        </Nav.Item>
+        if (error) {
+          return (
+            <Container
+              fluid
+              className="d-flex justify-content-center display-3"
+            >
+              <div className="d-flex flex-column align-items-center">
+                <BiSad color={primaryColor} />
+                <span className="text-primary display-3">
+                  Something went wrong
+                </span>
+              </div>
+            </Container>
+          );
+        }
 
-                        <Nav.Item>
-                          <Nav.Link eventKey="active">
-                            Active ({data?.data?.filter(item => item.status === '1').length || 0})
-                          </Nav.Link>
-                        </Nav.Item>
+        return (
+          <>
+            <ReactTable
+              tabs={
+                <div className="d-flex justify-content-between">
+                  {!isLoading && (
+                    <Nav
+                      className="global-navs"
+                      variant="tabs"
+                      activeKey={filter.active}
+                      onSelect={(selectedKey) =>
+                        _onFilterChange("active", selectedKey)
+                      }
+                    >
+                      <Nav.Item>
+                        <Nav.Link eventKey="">
+                          All ({data?.data?.length || 0})
+                        </Nav.Link>
+                      </Nav.Item>
 
-                        <Nav.Item>
-                          <Nav.Link eventKey="notActive">
-                            Not Active ({data?.data?.filter(item => item.status === '0').length || 0})
-                          </Nav.Link>
-                        </Nav.Item>
-                      </Nav>
-                    )}
-                  </div>}
-                  data={data?.data}
-                  columns={columns}
-                  setSelectedRows={setSelectedRows}
-                  filter={filter}
-                  onFilterChange={_onFilterChange}
-                  isDataLoading={isFetching}
-                  searchPlaceHolder="Search using title"
-                  deletePermissionReq="delete_faq"
-                />
-              )}
-              {!error && data?.data?.length > 0 ? (
-                <TablePagination
-                  currentPage={data?.current_page}
-                  lastPage={data?.last_page}
-                  setPage={_onFilterChange}
-                  hasNextPage={!!data?.next_page_url}
-                  hasPrevPage={!!data?.prev_page_url}
-                />
-              ) : null}{" "}
-            </>
-          )}
-        </Container>
-      </div>
+                      <Nav.Item>
+                        <Nav.Link eventKey="active">
+                          Active (
+                          {data?.data?.filter((item) => item.status === "1")
+                            .length || 0}
+                          )
+                        </Nav.Link>
+                      </Nav.Item>
 
+                      <Nav.Item>
+                        <Nav.Link eventKey="notActive">
+                          Not Active (
+                          {data?.data?.filter((item) => item.status === "0")
+                            .length || 0}
+                          )
+                        </Nav.Link>
+                      </Nav.Item>
+                    </Nav>
+                  )}
+                </div>
+              }
+              data={data?.data}
+              columns={columns}
+              setSelectedRows={setSelectedRows}
+              filter={filter}
+              onFilterChange={_onFilterChange}
+              isDataLoading={isFetching}
+              searchPlaceHolder="Search using title"
+              deletePermissionReq="delete_faq"
+            />
+
+            {data?.data?.length > 0 ? (
+              <TablePagination
+                currentPage={data?.current_page}
+                lastPage={data?.last_page}
+                setPage={_onFilterChange}
+                hasNextPage={!!data?.next_page_url}
+                hasPrevPage={!!data?.prev_page_url}
+              />
+            ) : null}
+          </>
+        );
+      })()}
 
       {selectedRows.length > 0 && (
         <div className="delete-button rounded">

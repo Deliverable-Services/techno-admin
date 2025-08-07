@@ -269,8 +269,15 @@ function ReactTable({
         }}
       >
         {tabs && tabs}
-        <div className={`d-flex align-items-center ${isDesktop ? "ml-auto" : 'ml-unset'}`}>
-          <div className="w-100" style={{ minWidth: isDesktop ? 300 : 'auto', marginRight: 8 }}>
+        <div
+          className={`d-flex align-items-center ${
+            isDesktop ? "ml-auto" : "ml-unset"
+          }`}
+        >
+          <div
+            className="w-100"
+            style={{ minWidth: isDesktop ? 300 : "auto", marginRight: 8 }}
+          >
             {showSearch && (
               <div
                 className="search-input global-card"
@@ -346,7 +353,8 @@ function ReactTable({
         <DndProvider backend={HTML5Backend}>
           <div className="tableFixed position-relative">
             <Table
-              className="table-fixed mb-0" style={{ borderTop: '1px solid var(--border)' }}
+              className="table-fixed mb-0"
+              style={{ borderTop: "1px solid var(--border)" }}
               {...getTableProps()}
               responsive
               hover
@@ -513,8 +521,8 @@ const Row = ({ row }: any) => (
       return (
         <td {...cell.getCellProps()} style={{ verticalAlign: "middle" }}>
           {cell.value ||
-            cell.column.id === "selection" ||
-            cell.column.id === "Actions" ? (
+          cell.column.id === "selection" ||
+          cell.column.id === "Actions" ? (
             cell.render("Cell")
           ) : (
             <span className="text-muted">NA</span>
