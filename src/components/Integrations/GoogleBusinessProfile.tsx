@@ -55,7 +55,7 @@ const GoogleBusinessProfile: React.FC<GoogleBusinessProfileProps> = ({
       : "Not Connected";
 
     return (
-      <Badge bg={variant} className="me-2">
+      <Badge variant={variant} className="me-2">
         {label}
       </Badge>
     );
@@ -75,12 +75,12 @@ const GoogleBusinessProfile: React.FC<GoogleBusinessProfileProps> = ({
       latestSync.status === "completed"
         ? "Sync: Success"
         : latestSync.status === "failed"
-        ? "Sync: Failed"
-        : latestSync.status === "running"
-        ? "Syncing..."
-        : `Sync: ${latestSync.status}`;
+          ? "Sync: Failed"
+          : latestSync.status === "running"
+            ? "Syncing..."
+            : `Sync: ${latestSync.status}`;
 
-    return <Badge bg={variant}>{label}</Badge>;
+    return <Badge variant={variant}>{label}</Badge>;
   };
 
   const renderInfoList = () => {

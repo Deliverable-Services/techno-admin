@@ -3,6 +3,7 @@ import API from "../utils/API";
 export interface FivetranConnectorStatus {
   connected: boolean;
   status: string;
+  oauth_completed?: boolean;
   connector_name?: string;
   connected_at?: string;
   last_sync_at?: string;
