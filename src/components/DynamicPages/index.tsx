@@ -19,6 +19,8 @@ import { showMsgToast } from "../../utils/showMsgToast";
 import ViewButton from "../../shared-components/ViewButton";
 import BreadCrumb from "../../shared-components/BreadCrumb";
 import { AiFillDelete } from "react-icons/ai";
+import { CommonModal } from "../CommonPopup/CommonModal";
+import DynamicPageCreateUpdateForm from "./DynamicPageCreateUpdateForm";
 
 const key = "pages";
 
@@ -40,6 +42,7 @@ const DynamicPages = () => {
   const history = useHistory();
 
   const [selectedRows, setSelectedRows] = useState([]);
+  const [modalShow, setModalShow] = useState(false);
   console.log(selectedRows.map((item) => item.id));
   const [filter, setFilter] = useState(intitialFilter);
 
@@ -205,6 +208,10 @@ const DynamicPages = () => {
     [history]
   );
 
+  const _toggleModal = () => {
+    setModalShow(!modalShow);
+  };
+
   const filteredData = pageData?.data?.filter(
     (item) => item.isArchived === filter.isArchived
   );
@@ -226,15 +233,19 @@ const DynamicPages = () => {
 
   return (
     <>
-      <div className="view-padding">
-        <PageHeading
-          title="Dynamic Pages"
-          onClick={_onCreateClick}
-          totalRecords={pageData?.data?.length || 0}
-          permissionReq="create_service"
-        />
-      </div>
-      <hr />
+      <CommonModal
+        modalShow={modalShow}
+        onModalHideClick={_toggleModal}
+        title="Create New Page"
+      >
+        <DynamicPageCreateUpdateForm toggleModal={_toggleModal} />
+      </CommonModal>
+      <PageHeading
+        title="Dynamic Pages"
+        onClick={_toggleModal}
+        totalRecords={pageData?.data?.length || 0}
+        permissionReq="create_service"
+      />
 
       <div className="h-100 p-0">
         {isLoading ? (
