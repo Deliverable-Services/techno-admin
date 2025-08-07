@@ -138,7 +138,11 @@ const OtpInput: React.FC<OtpInputProps> = ({
             value={digit}
             onChange={(e) => handleChange(index, e.target.value)}
             onKeyDown={(e) => handleKeyDown(index, e)}
-            onFocus={() => handleFocus(index)}
+            onFocus={(e) => {
+              e.target.style.borderColor = primaryColor;
+              e.target.style.boxShadow = `0 0 0 3px ${primaryColor}20`;
+              handleFocus(index);
+            }}
             onPaste={handlePaste}
             disabled={disabled}
             className="form-control text-center"
@@ -151,24 +155,19 @@ const OtpInput: React.FC<OtpInputProps> = ({
               border: error
                 ? "2px solid #dc3545"
                 : digit
-                ? `2px solid ${primaryColor}`
-                : "2px solid #e9ecef",
+                  ? `2px solid ${primaryColor}`
+                  : "2px solid #e9ecef",
               backgroundColor: digit ? "#f8f9fa" : "white",
               transition: "all 0.3s ease",
               outline: "none",
               boxShadow: digit ? `0 2px 8px ${primaryColor}20` : "none",
             }}
-            onFocus={(e) => {
-              e.target.style.borderColor = primaryColor;
-              e.target.style.boxShadow = `0 0 0 3px ${primaryColor}20`;
-              handleFocus(index);
-            }}
             onBlur={(e) => {
               e.target.style.borderColor = error
                 ? "#dc3545"
                 : digit
-                ? primaryColor
-                : "#e9ecef";
+                  ? primaryColor
+                  : "#e9ecef";
               e.target.style.boxShadow = digit
                 ? `0 2px 8px ${primaryColor}20`
                 : "none";
