@@ -104,7 +104,7 @@ const GoogleAnalytics = () => {
                 { label: "Engagement", value: "82.6%", change: "+8.64%", icon: <IoStatsChart /> }
                 ].map((item, i) => (
                     <div className="col-6 col-md-3 mb-3 g-card" key={i}>
-                        <div className="card  border-0">
+                        <div className="card card-g  border-0">
                             <div className="global-card">
                                 <span className="pb-2 d-block ">{item.icon}</span>
                                 <h1 className="mb-0 font-weight-bold pb-2">{item.value}</h1>
@@ -153,7 +153,7 @@ const GoogleAnalytics = () => {
                 </div>
 
                 <div className="col-md-4 mb-4">
-                    <div className="card  mb-3 border-0">
+                    <div className="card card-g mb-3 border-0">
                         <div className="global-card">
                             <h6 className="font-weight-bold pb-3 g-card-heading">Audience Online Activity</h6>
                             <div className="d-flex flex-wrap" style={{ gap: 4 }}>
@@ -169,7 +169,7 @@ const GoogleAnalytics = () => {
                         </div>
                     </div>
 
-                    <div className="card  border-0">
+                    <div className="card card-g border-0">
                         <div className="global-card">
                             <h6 className="font-weight-bold pb-3 g-card-heading">Statistic By Gender</h6>
                             <ResponsiveContainer width="100%" height={150}>
@@ -196,7 +196,7 @@ const GoogleAnalytics = () => {
             <div className="row mb-4">
                 {cards.map((card, idx) => (
                     <div className="col-md-4 mb-3" key={idx}>
-                        <div className="card h-100 border-0 shadow-sm">
+                        <div className="card card-g h-100 border-0 shadow-sm">
                             <div className="country-card p-3">
                                 <h6 className="font-weight-bold  mb-2 g-card-heading">{card.title}</h6>
                                 <div className="d-flex align-items-center justify-content-between mb-1">
@@ -238,7 +238,7 @@ const GoogleAnalytics = () => {
                 ))}
             </div>
 
-            <div className="card  border-0">
+            <div className="card card-g border-0">
                 <div className="global-card">
                     <h6 className="font-weight-bold">Audience by Age</h6>
                     <ResponsiveContainer width="100%" height={200}>

@@ -160,7 +160,7 @@ const BusinessProfileTab: React.FC<BusinessProfileTabProps> = ({
       <Col md={6} className="mb-4">
         <Card className="h-100">
           <Card.Header>
-            <h5 className="mb-0">
+            <h5 className="mb-0 pb-3">
               <i className="fas fa-address-book me-2"></i>
               Contact Information
             </h5>
@@ -215,7 +215,7 @@ const BusinessProfileTab: React.FC<BusinessProfileTabProps> = ({
       <Col md={6} className="mb-4">
         <Card className="h-100">
           <Card.Header>
-            <h5 className="mb-0">
+            <h5 className="mb-0 pb-3">
               <i className="fas fa-clock me-2"></i>
               Business Hours
             </h5>
@@ -238,7 +238,7 @@ const BusinessProfileTab: React.FC<BusinessProfileTabProps> = ({
         <Col md={12} className="mb-4">
           <Card>
             <Card.Header>
-              <h5 className="mb-0">
+              <h5 className="mb-0 pb-3">
                 <i className="fas fa-image me-2"></i>
                 Cover Photo
               </h5>
