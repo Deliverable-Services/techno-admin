@@ -40,7 +40,11 @@ const dummyReviews = [
   },
 ];
 
-const GoogleBusinessProfile: React.FC = () => {
+interface BusinessProfileTabProps {
+  organisationId?: number;
+}
+
+const GoogleBusinessProfile: React.FC<BusinessProfileTabProps> = ({ organisationId }) => {
   const [selectedPhoto, setSelectedPhoto] = useState<string | null>(null);
 
   return (
