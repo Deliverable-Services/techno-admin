@@ -31,6 +31,7 @@ import { GrOrganization } from "react-icons/gr";
 
 import { IsDesktopContext } from "../context/IsDesktopContext";
 import { useGoogleBusinessConnection } from "../hooks/useGoogleBusinessConnection";
+import { useGoogleAnalyticsConnection } from "../hooks/useGoogleAnalyticsConnection";
 import { useOrganisation } from "../context/OrganisationContext";
 
 import { INavBar, INavLink } from "../types/interface";
@@ -291,6 +292,8 @@ const NavBar = ({ isNavOpen, setIsNavOpen }: INavBar) => {
   const { selectedOrg, setSelectedOrg, organisations } = useOrganisation();
   const { isConnected: isGoogleBusinessConnected } =
     useGoogleBusinessConnection();
+  const { isConnected: isGoogleAnalyticsConnected } =
+    useGoogleAnalyticsConnection();
 
   const closeNavBar = () => {
     if (!isDesktop && setIsNavOpen) setIsNavOpen(false);
@@ -310,6 +313,8 @@ const NavBar = ({ isNavOpen, setIsNavOpen }: INavBar) => {
 
   const filteredGoogleLinks = googleLinks.filter((link) => {
     if (link.path === "/google-business" && !isGoogleBusinessConnected)
+      return false;
+    if (link.path === "/google-analytics" && !isGoogleAnalyticsConnected)
       return false;
     return storeType === "ecommerce"
       ? !hiddenRoutesForEcommerce.includes(link.path!)
