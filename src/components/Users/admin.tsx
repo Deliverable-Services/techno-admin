@@ -193,9 +193,9 @@ const Admins = () => {
 
   return (
     <>
-    <CommonModal modalShow={modalShow} onModalHideClick={_toggleModal} title="Create New Team Member">
-      <UserCreateUpdateForm toggleModal={_toggleModal} />
-    </CommonModal>
+      <CommonModal modalShow={modalShow} onModalHideClick={_toggleModal} title="Create New Team Member">
+        <UserCreateUpdateForm toggleModal={_toggleModal} />
+      </CommonModal>
       <div className="view-padding">
         <PageHeading
           icon={<RiAdminFill size={24} />}
@@ -217,7 +217,7 @@ const Admins = () => {
                 <>
                   <ReactTable
                     data={data?.data}
-                    filters={<Dropdown className="filter-dropdown">
+                    filters={<Dropdown className="search-filters-div filter-dropdown mr-2">
                       <Dropdown.Toggle as={Button} variant="primary">
                         <BsFunnel /> Filters
                       </Dropdown.Toggle>

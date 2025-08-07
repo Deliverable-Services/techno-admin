@@ -5,7 +5,6 @@ import { Button, Col, Container, Form, Row } from "react-bootstrap";
 import { BiArrowFromRight, BiSad } from "react-icons/bi";
 import { useMutation, useQuery } from "react-query";
 import { useHistory, useParams } from "react-router-dom";
-import "react-step-progress-bar/styles.css";
 import { handleApiError } from "../../hooks/handleApiErrors";
 import useGetSingleQuery from "../../hooks/useGetSingleQuery";
 import BackButton from "../../shared-components/BackButton";
