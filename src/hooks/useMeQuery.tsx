@@ -18,7 +18,6 @@ const getProfile: QueryFunction = async ({ queryKey }) => {
 };
 
 const useMeQuery = () => {
-  const history = useHistory();
   const token = useTokenStore((state) => state.accessToken);
   const setUser = useUserProfileStore((state) => state.setUser);
   const setUserPermissions = useUserProfileStore(
@@ -28,13 +27,14 @@ const useMeQuery = () => {
   const me = useQuery(["profile", token], getProfile, {
     refetchOnMount: false,
     refetchOnWindowFocus: false,
+    enabled: !!token, // Only run if token exists
     onSuccess: (data: any) => {
       setUser(data?.user);
       setUserPermissions(data?.permissions);
     },
     onError: (error: AxiosError) => {
-      if (!token) history.push("/login");
-      handleApiError(error, history);
+      console.error("Profile fetch error:", error);
+      // Error handling is now managed by useAuthManager interceptors
     },
   });
 

@@ -3,7 +3,7 @@ import bsCustomFileInput from "bs-custom-file-input";
 import { Form, Formik } from "formik";
 import moment from "moment";
 import { useEffect } from "react";
-import { Alert, Button, Col, Container, Row, Spinner } from "react-bootstrap";
+import { Button, Col, Container, Row, Spinner } from "react-bootstrap";
 import { useMutation } from "react-query";
 import { useHistory, useLocation } from "react-router-dom";
 import { handleApiError } from "../../hooks/handleApiErrors";
@@ -13,10 +13,10 @@ import DatePicker from "../../shared-components/DatePicker";
 import { InputField } from "../../shared-components/InputFeild";
 import IsLoading from "../../shared-components/isLoading";
 import API from "../../utils/API";
-import { isActiveArray } from "../../utils/arrays";
+
 import { primaryColor } from "../../utils/constants";
 import { queryClient } from "../../utils/queryClient";
-import { showErrorToast } from "../../utils/showErrorToast";
+
 import { showMsgToast } from "../../utils/showMsgToast";
 
 const key = "disabled-slots";
@@ -70,8 +70,6 @@ const SlotCreateUpdateForm = () => {
       handleApiError(error, history);
     },
   });
-
-  const apiData = data as any;
 
   if (dataLoading) return <IsLoading />;
 

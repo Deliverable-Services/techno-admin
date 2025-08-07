@@ -23,7 +23,10 @@ import { primaryColor } from "../../utils/constants";
 import { queryClient } from "../../utils/queryClient";
 import { showMsgToast } from "../../utils/showMsgToast";
 import { AiFillDelete } from "react-icons/ai";
-import { BsFunnel } from "react-icons/bs";
+import { BsFunnel, BsThreeDotsVertical } from "react-icons/bs";
+import { RiAdminFill } from "react-icons/ri";
+import { CommonModal } from "../CommonPopup/CommonModal";
+import UserCreateUpdateForm from "./UsersCreateUpdateForm";
 interface IFilter {
   role: string | null;
 }
@@ -48,6 +51,7 @@ const Admins = () => {
   const [selectedRows, setSelectedRows] = useState([]);
   const [filter, setFilter] = useState(intitialFilter);
   console.log(selectedRows.map((item) => item.id));
+  const [modalShow, setModalShow] = useState(false);
   const [page, setPage] = useState<number>(1);
   const [role, setRole] = useState("");
 
@@ -135,24 +139,35 @@ const Admins = () => {
         Header: "Actions",
         Cell: (data: Cell) => {
           return (
-            <div className="d-flex align-items-center gap-2">
+            <div className="d-flex align-items-center justify-content-end gap-3">
               <EditButton
                 onClick={() => {
                   _onEditClick(data.row.values.id, data.row.values.role);
                 }}
                 permissionReq="update_user"
               />
-              <Button
-                variant="outline-danger"
-                className="d-flex align-items-center ml-2"
-                onClick={() => {
-                  setSelectedDeleteId(data.row.values.id);
-                  setDeletePopup(true);
-                }}
-                style={{ padding: "0.25rem 0.5rem" }}
-              >
-                <AiFillDelete size={16} className="mr-1" /> Delete
-              </Button>
+              <Dropdown className="ellipsis-dropdown">
+                <Dropdown.Toggle
+                  variant="light"
+                  size="sm"
+                  className="p-1 border-0 shadow-none"
+                  id={`dropdown-${data.row.values.id}`}
+                >
+                  <BsThreeDotsVertical size={18} />
+                </Dropdown.Toggle>
+                <Dropdown.Menu className="menu-dropdown">
+                  <Dropdown.Item
+                    className="text-danger"
+                    onClick={() => {
+                      setSelectedDeleteId(data.row.values.id);
+                      setDeletePopup(true);
+                    }}
+                  >
+                    <AiFillDelete size={16} className="ml-1" />
+                    Delete
+                  </Dropdown.Item>
+                </Dropdown.Menu>
+              </Dropdown>
             </div>
           );
         },
@@ -172,67 +187,73 @@ const Admins = () => {
     );
   }
 
+  const _toggleModal = () => {
+    setModalShow(!modalShow);
+  }
+
   return (
     <>
-      <Container fluid className=" component-wrapper view-padding">
+    <CommonModal modalShow={modalShow} onModalHideClick={_toggleModal} title="Create New Team Member">
+      <UserCreateUpdateForm toggleModal={_toggleModal} />
+    </CommonModal>
+      <div className="view-padding">
         <PageHeading
+          icon={<RiAdminFill size={24} />}
           title="Team Members"
-          onClick={_onCreateClick}
+          description="Create and manage team members for your workflow"
+          onClick={_toggleModal}
           totalRecords={data?.total}
           permissionReq="create_user"
         />
-
-        <Container fluid className="h-100 p-0">
+      </div>
+      <hr />
+      <div className="">
+        <div className="h-100 p-0 pt-3">
           {isLoading ? (
             <IsLoading />
           ) : (
             <>
               {!error && (
                 <>
-                <div className="d-flex justify-content-end pb-3 mt-3">
-                <Dropdown className="filter-dropdown">
-            <Dropdown.Toggle as={Button} variant="primary" className="global-card">
-              <BsFunnel /> Filters
-            </Dropdown.Toggle>
-            <Dropdown.Menu>
-              <div className="filter-dropdown-heading d-flex justify-content-between w-100">
-                <h4>Filter</h4>
-                <div
-                  className="d-flex align-items-center justify-md-content-center"
-                >
-                  <Button
-                   variant={
-                    areTwoObjEqual(intitialFilter, filter)
-                      ? "light"
-                      : "primary"
-                  }
-                  style={{
-                    fontSize: 14,
-                  }}
-                  onClick={() => setFilter(intitialFilter)}
-                >
-                    Reset Filters
-                  </Button>
-                </div>
-              </div>
-              <div className="select-filter">
-              <FilterSelect
-                          currentValue={filter.disabled}
-                          data={isActiveArray}
-                          label="Disabled Users?"
-                          idx="disabled"
-                          onFilterChange={_onFilterChange}
-                          defaultSelectTitle="Show All"
-                        />
-              </div>
-            </Dropdown.Menu>
-          </Dropdown>
-                </div>
-
-
-                  <hr className="mt-2" />
                   <ReactTable
                     data={data?.data}
+                    filters={<Dropdown className="filter-dropdown">
+                      <Dropdown.Toggle as={Button} variant="primary">
+                        <BsFunnel /> Filters
+                      </Dropdown.Toggle>
+                      <Dropdown.Menu>
+                        <div className="filter-dropdown-heading d-flex justify-content-between w-100">
+                          <h4>Filter</h4>
+                          <div
+                            className="d-flex align-items-center justify-md-content-center"
+                          >
+                            <Button
+                              variant={
+                                areTwoObjEqual(intitialFilter, filter)
+                                  ? "light"
+                                  : "primary"
+                              }
+                              style={{
+                                fontSize: 14,
+                              }}
+                              onClick={() => setFilter(intitialFilter)}
+                            >
+                              Reset Filters
+                            </Button>
+                          </div>
+                        </div>
+                        <div className="select-filter">
+                          <FilterSelect
+                            currentValue={filter.disabled}
+                            data={isActiveArray}
+                            label="Disabled Users?"
+                            idx="disabled"
+                            onFilterChange={_onFilterChange}
+                            defaultSelectTitle="Show All"
+                          />
+                        </div>
+                      </Dropdown.Menu>
+                    </Dropdown>}
                     columns={columns}
                     setSelectedRows={setSelectedRows}
                     filter={filter}
@@ -254,8 +275,9 @@ const Admins = () => {
               ) : null}{" "}
             </>
           )}
-        </Container>
-      </Container>
+        </div>
+      </div>
+
       <Modal show={deletePopup} onHide={() => setDeletePopup(false)}>
         <Modal.Header closeButton>
           <Modal.Title>Are you sure?</Modal.Title>

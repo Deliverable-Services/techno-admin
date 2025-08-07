@@ -8,6 +8,9 @@ interface Props {
   onClick?: () => void;
   totalRecords?: number;
   permissionReq?: string;
+  customButton?: React.ReactNode;
+  description?: string;
+  btnText?: string;
 }
 const PageHeading: React.FC<Props> = ({
   title,
@@ -15,32 +18,51 @@ const PageHeading: React.FC<Props> = ({
   onClick,
   totalRecords,
   permissionReq,
+  customButton,
+  description,
+  btnText,
 }) => {
   return (
-    <div className="d-flex justify-content-between pb-3">
-      <p
-        className="font-weight-bolder mb-0 lead d-flex align-items-center gap-3"
-        style={{ verticalAlign: "center" }}
-      >
-        {icon}
-        {title}
-        {totalRecords ? (
-          <small style={{ fontSize: 14, marginLeft: 5, opacity: 0.6 }}>
-            ({totalRecords})
-          </small>
-        ) : null}
+    <div className="d-flex justify-content-between align-items-center">
+      <p className="d-flex align-items-center gap-12">
+        {icon && (
+          <span className="icon-bg">
+            <span className="icon-color">{icon}</span>
+          </span>
+        )}
+        <div>
+          <div>
+            <span className="page-title">{title}</span>
+            {totalRecords ? (
+              <small style={{ fontSize: 14, marginLeft: 5 }}>
+                ({totalRecords})
+              </small>
+            ) : null}
+          </div>
+          <span className="page-description">{description}</span>
+        </div>
       </p>
 
       {onClick && (
         <Restricted to={permissionReq}>
-          <Button variant="primary" onClick={onClick} size={"sm"} style={{ background: '#303030', borderColor: '#303030' }}>
+          <Button
+            variant="primary"
+            onClick={onClick}
+            size={"sm"}
+            style={{
+              background: "var(--primary-color)",
+              borderColor: "var(--primary-color)",
+            }}
+          >
             <div className="text-white d-flex align-items-center">
               <AiOutlinePlus size={18} />
-              <p className="mb-0 ml-1">Create</p>
+              <p className="mb-0 ml-1">{btnText || "Create"}</p>
             </div>
           </Button>
         </Restricted>
       )}
+
+      {customButton}
     </div>
   );
 };

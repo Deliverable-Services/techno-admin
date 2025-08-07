@@ -1,14 +1,14 @@
 import { AxiosError } from "axios";
 import { useMemo, useState } from "react";
-import { Button, Col, Container, Dropdown, Nav, Row } from "react-bootstrap";
+import { Button, Container, Dropdown, Nav } from "react-bootstrap";
 import { BiSad } from "react-icons/bi";
 import LightBox from "react-lightbox-component";
 import { QueryFunction, useMutation, useQuery } from "react-query";
 import { useHistory } from "react-router-dom";
-import Switch from "react-switch";
+
 import { Cell } from "react-table";
 import { handleApiError } from "../../hooks/handleApiErrors";
-import BreadCrumb from "../../shared-components/BreadCrumb";
+
 import CreatedUpdatedAt from "../../shared-components/CreatedUpdatedAt";
 import EditButton from "../../shared-components/EditButton";
 import FilterSelect from "../../shared-components/FilterSelect";
@@ -24,6 +24,7 @@ import { primaryColor, config } from "../../utils/constants";
 import { queryClient } from "../../utils/queryClient";
 import { showMsgToast } from "../../utils/showMsgToast";
 import { BsFunnel } from "react-icons/bs";
+import { RiAdvertisementFill } from "react-icons/ri";
 const key = "banners/list";
 
 const deleteAd = (id: Array<any>) => {
@@ -56,16 +57,10 @@ const getBanners: QueryFunction = async ({ queryKey }) => {
 
 const Advertisements = () => {
   const history = useHistory();
-  const [selectedRowId, setSelectedRowId] = useState<string>("");
   const [selectedRows, setSelectedRows] = useState([]);
   console.log(selectedRows.map((item) => item.id));
-  const [page, setPage] = useState<number>(1);
-  const [deletePopup, setDeletePopup] = useState(false);
 
   const [isDraggable, setIsDraggable] = useState(false);
-  const handleChange = (nextChecked) => {
-    setIsDraggable(nextChecked);
-  };
   const [filter, setFilter] = useState(initialFilter);
 
   const { data, isLoading, isFetching, error } = useQuery<any>(
@@ -200,7 +195,7 @@ const Advertisements = () => {
         },
       },
     ],
-    []
+    [_onEditClick]
   );
 
   if (!data && (!isLoading || !isFetching)) {
@@ -216,57 +211,80 @@ const Advertisements = () => {
 
   return (
     <>
-      <Container fluid className="component-wrapper view-padding">
+      <div className="view-padding">
         <PageHeading
           title="Banners"
+          description="Create and manage banners"
+          icon={<RiAdvertisementFill size={24} />}
           onClick={() => _onCreateClick()}
           totalRecords={data?.total}
           permissionReq="create_banner"
         />
+      </div>
+      <hr />
 
-        <div className="card">
-          <Container fluid className="h-100 p-0">
-            {isLoading ? (
-              <IsLoading />
-            ) : (
-              <>
-                {!error && (
-                  <>
-                    <div className="mt-3" />
-                    <ReactTable
-                      tabs={<div className="d-flex justify-content-between">
+      <div className="">
+        <div className="h-100 p-0">
+          {isLoading ? (
+            <IsLoading />
+          ) : (
+            <>
+              {!error && (
+                <>
+                  <div className="mt-3" />
+                  <ReactTable
+                    tabs={
+                      <div className="d-flex justify-content-between">
                         {(!isLoading || !isFetching) && (
-                          <Nav className="global-navs" variant="tabs" activeKey={filter.type} onSelect={(selectedKey) => _onFilterChange('type', selectedKey)}>
+                          <Nav
+                            className="global-navs"
+                            variant="tabs"
+                            activeKey={filter.type}
+                            onSelect={(selectedKey) =>
+                              _onFilterChange("type", selectedKey)
+                            }
+                          >
                             <Nav.Item>
                               <Nav.Link eventKey="offer">
-                                Offer ({data?.data?.filter(item => item.status === 'offer').length || 0})
+                                Offer (
+                                {data?.data?.filter(
+                                  (item) => item.status === "offer"
+                                ).length || 0}
+                                )
                               </Nav.Link>
                             </Nav.Item>
                             <Nav.Item>
                               <Nav.Link eventKey="latest">
-                                Latest ({data?.data?.filter(item => item.status === 'latest').length || 0})
+                                Latest (
+                                {data?.data?.filter(
+                                  (item) => item.status === "latest"
+                                ).length || 0}
+                                )
                               </Nav.Link>
                             </Nav.Item>
 
                             <Nav.Item>
                               <Nav.Link eventKey="trending">
-                                Trending ({data?.data?.filter(item => item.status === 'trending').length || 0})
+                                Trending (
+                                {data?.data?.filter(
+                                  (item) => item.status === "trending"
+                                ).length || 0}
+                                )
                               </Nav.Link>
                             </Nav.Item>
                           </Nav>
                         )}
-
-                      </div>}
-                      filters={<Dropdown className="filter-dropdown">
+                      </div>
+                    }
+                    filters={
+                      <Dropdown className="filter-dropdown">
                         <Dropdown.Toggle as={Button} variant="primary">
                           <BsFunnel />
                         </Dropdown.Toggle>
                         <Dropdown.Menu>
                           <div className="filter-dropdown-heading d-flex justify-content-between w-100">
                             <h4>Filter</h4>
-                            <div
-                              className="d-flex align-items-center justify-md-content-center"
-                            >
+                            <div className="d-flex align-items-center justify-md-content-center">
                               <Button
                                 variant={
                                   areTwoObjEqual(initialFilter, filter)
@@ -293,33 +311,34 @@ const Advertisements = () => {
                             />
                           </div>
                         </Dropdown.Menu>
-                      </Dropdown>}
-                      data={data.data}
-                      columns={columns}
-                      setSelectedRows={setSelectedRows}
-                      onFilterChange={_onFilterChange}
-                      filter={filter}
-                      isDataLoading={isFetching}
-                      isDraggable={isDraggable}
-                      searchPlaceHolder="Search using name"
-                      deletePermissionReq="delete_banner"
-                    />
-                  </>
-                )}
-                {!error && data?.data?.length > 0 ? (
-                  <TablePagination
-                    currentPage={data?.current_page}
-                    lastPage={data?.last_page}
-                    setPage={_onFilterChange}
-                    hasNextPage={!!data?.next_page_url}
-                    hasPrevPage={!!data?.prev_page_url}
+                      </Dropdown>
+                    }
+                    data={data.data}
+                    columns={columns}
+                    setSelectedRows={setSelectedRows}
+                    onFilterChange={_onFilterChange}
+                    filter={filter}
+                    isDataLoading={isFetching}
+                    isDraggable={isDraggable}
+                    searchPlaceHolder="Search using name"
+                    deletePermissionReq="delete_banner"
                   />
-                ) : null}{" "}
-              </>
-            )}
-          </Container>
+                </>
+              )}
+              {!error && data?.data?.length > 0 ? (
+                <TablePagination
+                  currentPage={data?.current_page}
+                  lastPage={data?.last_page}
+                  setPage={_onFilterChange}
+                  hasNextPage={!!data?.next_page_url}
+                  hasPrevPage={!!data?.prev_page_url}
+                />
+              ) : null}{" "}
+            </>
+          )}
         </div>
-      </Container>
+      </div>
+
       {selectedRows.length > 0 && (
         <div className="delete-button rounded">
           <span>

@@ -14,8 +14,10 @@ import PageHeading from "../../shared-components/PageHeading";
 import ReactTable from "../../shared-components/ReactTable";
 import API from "../../utils/API";
 import { primaryColor } from "../../utils/constants";
-import { queryClient } from "../../utils/queryClient";
 import { showMsgToast } from "../../utils/showMsgToast";
+import { CommonModal } from "../CommonPopup/CommonModal";
+import RolesCreateUpdateForm from "./RolesCreateUpdateForm";
+import { queryClient } from "../../utils/queryClient";
 
 const key = "get-all-roles";
 
@@ -33,6 +35,7 @@ const Roles = () => {
   const history = useHistory();
   const [selectedRows, setSelectedRows] = useState([]);
   const [filter, setFilter] = useState(intitialFilter);
+  const [modalShow, setModalShow] = useState(false);
   const { data, isLoading, isFetching, error } = useQuery<any>(
     [key, , filter],
     {
@@ -53,7 +56,7 @@ const Roles = () => {
   });
 
   const _onCreateClick = () => {
-    history.push("/roles/create-edit");
+    setModalShow(true);
   };
   const _onEditClick = (id: string) => {
     history.push("/roles/create-edit", { id });
@@ -106,6 +109,10 @@ const Roles = () => {
     []
   );
 
+  const _toggleModal = () => {
+    setModalShow(!modalShow);
+  }
+
   if (!data && (!isLoading || !isFetching)) {
     return (
       <Container fluid className="d-flex justify-content-center display-3">
@@ -119,35 +126,40 @@ const Roles = () => {
 
   return (
     <>
-      <Container fluid className=" component-wrapper view-padding">
+    <CommonModal title="Create New Role" modalShow={modalShow} onModalHideClick={_toggleModal}>
+      <RolesCreateUpdateForm setShowModal={_toggleModal} />
+    </CommonModal>
+      <Container fluid className="card component-wrapper view-padding">
         <PageHeading
           title="Roles"
           onClick={_onCreateClick}
           totalRecords={data?.total}
           permissionReq="create_role"
         />
-
-        <Container fluid className="h-100 p-0">
-          {isLoading ? (
-            <IsLoading />
-          ) : (
-            <>
-              {!error && (
-                <ReactTable
-                  data={data?.data}
-                  columns={columns}
-                  setSelectedRows={setSelectedRows}
-                  filter={filter}
-                  onFilterChange={_onFilterChange}
-                  isDataLoading={isFetching}
-                  deletePermissionReq="delete_role"
-                  isSelectable={false}
-                />
-              )}
-            </>
-          )}
-        </Container>
       </Container>
+      <hr />
+
+      <div className="h-100 p-0">
+        {isLoading ? (
+          <IsLoading />
+        ) : (
+          <>
+            {!error && (
+              <ReactTable
+                data={data?.data}
+                columns={columns}
+                setSelectedRows={setSelectedRows}
+                filter={filter}
+                onFilterChange={_onFilterChange}
+                isDataLoading={isFetching}
+                deletePermissionReq="delete_role"
+                isSelectable={false}
+              />
+            )}
+          </>
+        )}
+      </div>
+
       {selectedRows.length > 0 && (
         <div className="delete-button rounded">
           <span>

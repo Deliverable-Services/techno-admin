@@ -13,7 +13,7 @@ import { InputField } from "../../shared-components/InputFeild";
 import IsLoading from "../../shared-components/isLoading";
 import Restricted from "../../shared-components/Restricted";
 import API from "../../utils/API";
-import { isActiveArray } from "../../utils/arrays";
+
 import { queryClient } from "../../utils/queryClient";
 import { showMsgToast } from "../../utils/showMsgToast";
 
@@ -41,11 +41,7 @@ const TargetCreateUpdateForm = () => {
   useEffect(() => {
     bsCustomFileInput.init();
   }, []);
-  const {
-    data,
-    isLoading: dataLoading,
-    isFetching,
-  } = useGetSingleQuery({ id, key });
+  const { data, isLoading: dataLoading } = useGetSingleQuery({ id, key });
   const { mutate, isLoading } = useMutation(createUpdataTarget, {
     onSuccess: () => {
       setTimeout(() => queryClient.invalidateQueries(key), 500);
@@ -65,7 +61,6 @@ const TargetCreateUpdateForm = () => {
 
   const { data: Agents, isLoading: isAgentLoading } = useQuery<any>([
     "users",
-    ,
     {
       role: "agent",
     },

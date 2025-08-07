@@ -1,7 +1,7 @@
 export const isDesktop = window.innerHeight <= 800;
 export const primaryColor = "#0B64FE";
 export const secondaryColor = "#ECB054";
-export const LocalStorageKey = "carsafai_admin_";
+export const LocalStorageKey = "tradeo_admin_";
 export const DefaultInputHeight = 40;
 
 const serverPort = process.env.REACT_APP_SERVER_PORT || 4000;
@@ -13,9 +13,9 @@ const completeConfig = {
   },
 
   development: {
-    baseUploadUrl: `http://localhost:${serverPort}/upload/`,
-    adminApiBaseUrl: `http://localhost:${serverPort}/admin/v1/`,
-    clientWebUrl: `https://carsafai.in`,
+    baseUploadUrl: process.env.REACT_APP_UPLOAD_URL,
+    adminApiBaseUrl: process.env.REACT_APP_ADMIN_API_URL,
+    clientWebUrl: process.env.REACT_APP_CLIENT_WEB_URL,
   },
 
   production: {

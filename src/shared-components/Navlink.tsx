@@ -1,8 +1,8 @@
-import { useRef, useState, useContext } from "react";
+import { useRef } from "react";
 import { Link, useLocation, useHistory } from "react-router-dom";
 import { INavLink } from "../types/interface";
-import { IsDesktopContext } from "../context/IsDesktopContext";
 import Restricted from "./Restricted";
+import { IoChevronDown } from "react-icons/io5";
 
 interface SidebarMenuItemProps extends INavLink {
   onClick: () => void;
@@ -25,7 +25,6 @@ const NavLink = ({
   const menuRef = useRef<HTMLLIElement>(null);
   const { pathname } = useLocation();
   const history = useHistory();
-  const isDesktop = useContext(IsDesktopContext);
 
   const hasChildren = children && children.length > 0;
 
@@ -56,13 +55,34 @@ const NavLink = ({
     <Restricted to={permissionReq}>
       <li className="navLinkGroup" ref={menuRef}>
         {hasChildren ? (
-          <div className="navLink parent" onClick={handleParentClick} style={{ cursor: "pointer" }}>
-            {icon} {title}
+          <div
+            className="navLink parent"
+            onClick={handleParentClick}
+            style={{
+              cursor: "pointer",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "space-between",
+            }}
+          >
+            <div style={{ display: "flex", alignItems: "center" }}>
+              {icon} {title}
+            </div>
+            <IoChevronDown
+              style={{
+                transition: "transform 0.3s ease",
+                transform: isOpen ? "rotate(180deg)" : "rotate(0deg)",
+                marginLeft: "8px",
+                fontSize: "14px",
+              }}
+            />
           </div>
         ) : (
           <Link to={path || "#"}>
             <li
-              className={pathname.includes(path || "") ? "navLink active" : "navLink"}
+              className={
+                pathname.includes(path || "") ? "navLink active" : "navLink"
+              }
               onClick={onClick}
             >
               {icon} {title}
@@ -71,7 +91,7 @@ const NavLink = ({
         )}
 
         {hasChildren && isOpen && (
-          <ul className="submenu" style={{ marginLeft: '24px' }}>
+          <ul className="submenu" style={{ marginLeft: "24px" }}>
             {children.map((child) => (
               <Restricted to={child.permissionReq} key={child.title}>
                 <Link to={child.path || "#"}>
@@ -83,7 +103,7 @@ const NavLink = ({
                     }
                     onClick={onClick}
                   >
-                    {child.icon}  {child.title}
+                    {child.icon} {child.title}
                   </li>
                 </Link>
               </Restricted>

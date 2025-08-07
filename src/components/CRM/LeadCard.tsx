@@ -1,17 +1,110 @@
 // leadcard.tsx
 
-import React from "react";
+import React, { useEffect, useState, useMemo } from "react";
 import { useDrag } from "react-dnd";
 import { Lead } from "./types";
-import {
-  FaFlag,
-  FaComment,
-  FaPaperclip,
-  FaCalendarAlt,
-  FaRedoAlt,
-  FaEnvelopeOpenText,
-} from "react-icons/fa";
+import { FaComment, FaPaperclip, FaCalendarAlt } from "react-icons/fa";
 import moment from "moment";
+
+interface UserAvatarProps {
+  profilePic?: string;
+  name?: string;
+  className?: string;
+  size?: number;
+}
+
+const UserAvatar: React.FC<UserAvatarProps> = ({
+  profilePic,
+  name,
+  className,
+  size = 24,
+}) => {
+  const [showFallback, setShowFallback] = useState<boolean>(!profilePic);
+
+  const handleImageError = () => {
+    setShowFallback(true);
+  };
+
+  const initials = useMemo(() => {
+    if (!name) return "U";
+
+    const names = name.trim().split(" ");
+    if (names.length === 1) {
+      return names[0].charAt(0).toUpperCase();
+    }
+
+    return (
+      names[0].charAt(0) + names[names.length - 1].charAt(0)
+    ).toUpperCase();
+  }, [name]);
+
+  const backgroundColor = useMemo(() => {
+    const colors = [
+      "#7e56da",
+      "#ffd76a",
+      "#7bbfff",
+      "#ff6b6b",
+      "#51cf66",
+      "#ffa726",
+      "#42a5f5",
+      "#ab47bc",
+      "#26c6da",
+      "#ffca28",
+    ];
+
+    if (!name) return colors[0];
+
+    const hash = name.split("").reduce((acc, char) => {
+      return char.charCodeAt(0) + ((acc << 5) - acc);
+    }, 0);
+
+    return colors[Math.abs(hash) % colors.length];
+  }, [name]);
+
+  // Reset fallback state when profilePic changes
+  useEffect(() => {
+    if (profilePic) {
+      setShowFallback(false);
+    } else {
+      setShowFallback(true);
+    }
+  }, [profilePic]);
+
+  if (!profilePic || showFallback) {
+    return (
+      <div
+        className={`d-flex align-items-center justify-content-center text-white ${
+          className || ""
+        }`}
+        style={{
+          backgroundColor,
+          borderRadius: "50%",
+          fontSize: `${size * 0.4}px`,
+          fontWeight: "bold",
+          width: `${size}px`,
+          height: `${size}px`,
+        }}
+      >
+        {initials}
+      </div>
+    );
+  }
+
+  return (
+    <img
+      src={profilePic}
+      alt={name || "User"}
+      className={className}
+      onError={handleImageError}
+      style={{
+        borderRadius: "50%",
+        width: `${size}px`,
+        height: `${size}px`,
+        objectFit: "cover",
+      }}
+    />
+  );
+};
 
 interface Props {
   lead: Lead;
@@ -26,17 +119,13 @@ const LeadCard: React.FC<Props> = ({ lead }) => {
     }),
   }));
 
-  const formattedDate = (date) => {
+  const formattedDate = (date: string) => {
+    if (!date) return <span>NA</span>;
+
     return (
       <>
-        {date ? (
-          <>
-            <span>{date ? moment(date).format("DD MMMM YY") : "NA"}</span>
-            &nbsp;<span>({date ? moment(date).format("hh:mm a") : "NA"})</span>
-          </>
-        ) : (
-          <span>NA</span>
-        )}
+        <span>{moment(date).format("DD MMMM YY")}</span>
+        &nbsp;<span>({moment(date).format("hh:mm a")})</span>
       </>
     );
   };
@@ -44,41 +133,40 @@ const LeadCard: React.FC<Props> = ({ lead }) => {
   return (
     <div
       ref={drag}
-      className="card shadow-sm mb-3 border-0 pointer lead-card"
+      className="card shadow-sm mb-3 pointer lead-card"
       style={{
         opacity: isDragging ? 0.5 : 1,
-        borderLeft: "4px solid #eb5757",
+        border: "4px solid #eb5757",
       }}
     >
       <div className="card-body p-3">
-        {/* Top row: Order ID, Lead Source, Priority */}
         <div className="d-flex justify-content-between align-items-center mb-2">
-          <span className="text-muted small"> 🔗 #{lead.id || "ORD-456"}</span>
+          <span className="text-muted small">
+            {formattedDate(lead.created_at)}
+          </span>
 
           <span
             className="badge badge-light px-2 py-1 text-dark"
             style={{
-              backgroundColor: "#e6f4ea", // light green bg
+              backgroundColor: "#e6f4ea",
               fontSize: "12px",
               borderRadius: "12px",
             }}
           >
-            <span className="text-green">Page: </span>
-            {lead.page || "Source"}
+            <span
+              className="text-green"
+              style={{
+                fontSize: "10px",
+              }}
+            >
+              Page:{" "}
+            </span>
+            {lead.page || "N/A"}
           </span>
-
-          {/* <span className="text-danger small d-flex align-items-center">
-            <FaFlag className="mr-1" style={{ fontSize: 12 }} />
-            {lead.priority || "Urgent"}
-          </span> */}
         </div>
 
-        {/* Title */}
-        <h6 className="font-weight-bold mb-1 text-dark">
-          {lead.name || "New microdose website"}
-        </h6>
+        <h6 className="font-weight-bold mb-1 text-dark">{lead.name}</h6>
 
-        {/* Message with bone/rotation icon */}
         <p
           className="text-muted small mb-2 d-flex align-items-center"
           style={{
@@ -89,31 +177,11 @@ const LeadCard: React.FC<Props> = ({ lead }) => {
             textOverflow: "ellipsis",
             maxWidth: "100%",
             lineHeight: "1.4",
-            minHeight: "2.8em", // reserve height for 2 lines
+            minHeight: "2.8em",
           }}
         >
-          <FaEnvelopeOpenText className="mr-2 " />
-          {lead.message || "Landing page for microdose campaign and lead gen."}
+          {lead.message}
         </p>
-
-        {/* Date and Time */}
-        <div className="d-inline-flex align-items-center mb-1">
-          <span
-            className="small px-2 py-1"
-            style={{
-              backgroundColor: "#f0f0f0",
-              borderRadius: "12px",
-              fontSize: "11px",
-            }}
-          >
-            <FaCalendarAlt className="mr-1 text-muted" />
-            Created At:{" "}
-            <strong className="text-dark">
-              {formattedDate(lead.created_at) || "July 29, ‘24 3:00 PM"}
-            </strong>
-          </span>
-        </div>
-
         <div className="d-inline-flex align-items-center mb-2">
           <span
             className="small px-2 py-1"
@@ -126,7 +194,7 @@ const LeadCard: React.FC<Props> = ({ lead }) => {
             <FaCalendarAlt className="mr-1 text-muted" />
             Last Updated At:{" "}
             <strong className="text-dark">
-              {formattedDate(lead.updated_at) || "July 29, ‘24 3:00 PM"}
+              {formattedDate(lead.updated_at)}
             </strong>
           </span>
         </div>
@@ -134,23 +202,22 @@ const LeadCard: React.FC<Props> = ({ lead }) => {
         {/* Bottom Row: Avatar · Comment Count · Attachment Count */}
         <div className="d-flex justify-content-between align-items-center border-top pt-2 mt-2">
           {/* Assignee Image */}
-          <img
-            src={lead.assignee || `https://i.pravatar.cc/24?u=${lead.id}`}
-            alt="user"
+          <UserAvatar
+            profilePic={lead.user?.profile_pic}
+            name={lead.user?.name}
             className="rounded-circle crm-user-img"
-            width={24}
-            height={24}
+            size={24}
           />
 
           {/* Comment & Attachments */}
           <div className="d-flex align-items-center text-muted small">
             <div className="d-flex align-items-center mr-3">
               <FaComment className="mr-1" />
-              {lead.comments || 0}
+              {lead?.comments?.length || 0}
             </div>
             <div className="d-flex align-items-center">
               <FaPaperclip className="mr-1" />
-              {lead.attachments || 0}
+              {lead?.extra?.attachments || 0}
             </div>
           </div>
         </div>

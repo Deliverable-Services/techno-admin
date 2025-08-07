@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
-import { Container } from "react-bootstrap";
 import { Redirect, Route, Switch, useLocation } from "react-router-dom";
+import useAuthManager from "./hooks/useAuthManager";
 import Advertisements from "./components/Advertisements";
 import AdvertisementCreateUpdateForm from "./components/Advertisements/AdvertisementUpdateCreateForm";
 import AgentTargets from "./components/AgentTargets";
@@ -44,10 +44,7 @@ import Roles from "./components/Roles";
 import RolesCreateUpdateForm from "./components/Roles/RolesCreateUpdateForm";
 import Services from "./components/Servicies";
 import ServicesCreateUpdateForm from "./components/Servicies/ServiciesCreateUpdateForm";
-import StaticPages from "./components/StaticPages";
-import StaticPageCreateForm from "./components/StaticPages/StaticPageCreateUpdateForm";
-import Subscriptions from "./components/Subscriptions";
-import SingleSubscriptions from "./components/Subscriptions/single";
+
 import Testimonial from "./components/Testimonials";
 import TestimonialCreateUpdateForm from "./components/Testimonials/TestimonialCreateUpdateForm";
 import TopBar from "./components/TopBar";
@@ -59,15 +56,12 @@ import ProfilePage from "./components/Users/profile";
 import UserCreateUpdateForm from "./components/Users/UsersCreateUpdateForm";
 import VerifyOtp from "./components/VerifyOtp";
 import { IsDesktopContext } from "./context/IsDesktopContext";
-import useMeQuery from "./hooks/useMeQuery";
-import useTokenStore from "./hooks/useTokenStore";
 import ErrorToast from "./shared-components/ErrorToast/ErrorToast";
 import MsgToast from "./shared-components/MsgToast/MsgToast";
 import { PrivateRoute } from "./shared-components/PrivateRoute";
 import VerifingUserLoader from "./shared-components/VerifingUserLoader";
-import API from "./utils/API";
 import CMS from "./components/CMS";
-import CRM from "./components/CRM";
+
 import CRMBoard from "./components/CRM/CRMBoard";
 import organization from "./components/Organization";
 import InvoicePage from "./components/Invoices";
@@ -79,17 +73,18 @@ import WebsitePages from "./components/WebsitePages";
 import { BottomNavigation } from "./components/BottomNavigation/BottomNavigation";
 import { MoreScreen } from "./components/MoreScreen/MoreScreen";
 import useUserProfileStore from "./hooks/useUserProfileStore";
+import GoogleAnalytics from "./components/Google-analytics";
+import SubscriptionPage from "./components/Subscription";
 
 const App = () => {
   const [isDesktop, setIsDesktop] = useState<boolean>(false);
-  const { isLoading: isVerifingLoggedInUser } = useMeQuery();
   const [isNavOpen, setIsNavOpen] = useState<boolean>(false);
   const { pathname } = useLocation();
   const loggedInUser = useUserProfileStore((state) => state.user);
   const { setOrganisations, selectedOrg, setSelectedOrg } = useOrganisation();
-  //adding token to every request
-  const token = useTokenStore((state) => state.accessToken);
-  if (token) API.defaults.headers.common["Authorization"] = `Bearer ${token}`;
+
+  // Use the new authentication manager
+  const { isLoading: isAuthLoading, isInitialized } = useAuthManager();
 
   useEffect(() => {
     updateDimensions();
@@ -116,7 +111,7 @@ const App = () => {
       }
     };
     if (loggedInUser) handleSetOrganisations(loggedInUser?.organisations);
-  }, [loggedInUser]);
+  }, [loggedInUser, selectedOrg, setOrganisations, setSelectedOrg]);
 
   const updateDimensions = () => {
     const width = window.innerWidth;
@@ -130,7 +125,8 @@ const App = () => {
     else return true;
   }
 
-  if (isVerifingLoggedInUser) return <VerifingUserLoader />;
+  // Show loading while authentication is being checked
+  if (!isInitialized || isAuthLoading) return <VerifingUserLoader />;
 
   return (
     <IsDesktopContext.Provider value={isDesktop}>
@@ -145,6 +141,7 @@ const App = () => {
             width: showNavTopBar() && isNavOpen ? "calc(100% - 250px" : "100%",
             minWidth: !isNavOpen && "100vw",
             marginLeft: showNavTopBar() && isNavOpen ? "250px" : "0",
+            transition: "0.3s all ease-in-out",
           }}
         >
           {showNavTopBar() ? (
@@ -152,7 +149,7 @@ const App = () => {
           ) : (
             ""
           )}
-          <Container fluid className="main-layout w-100">
+          <div className="main-layout">
             <Switch>
               <Route exact path="/">
                 <Redirect to="/dashboard" />
@@ -163,6 +160,46 @@ const App = () => {
                 component={Dashboard}
                 permissionReq="read_dashboard"
               />
+              {/* CRM Links */}
+              <PrivateRoute
+                path="/crm"
+                exact
+                component={CRMBoard}
+                permissionReq="read_user"
+              />
+              <PrivateRoute
+                path="/meetings"
+                exact
+                component={BookingSlots}
+                permissionReq="read_bookingslot"
+              />
+              {/* Billing Links */}
+              <PrivateRoute
+                path="/invoices"
+                exact
+                component={InvoicePage}
+                permissionReq="read_city"
+              />
+              <PrivateRoute
+                path="/subscriptions"
+                exact
+                component={SubscriptionPage}
+                permissionReq="read_subscription"
+              />
+              <PrivateRoute
+                path="/transactions"
+                exact
+                component={Transactions}
+                permissionReq="read_transaction"
+              />
+              {/* Customers  */}
+              <PrivateRoute
+                path="/users"
+                exact
+                component={Users}
+                permissionReq="read_user"
+              />
+              {/* Others */}
               <PrivateRoute
                 path="/profile"
                 exact
@@ -194,12 +231,7 @@ const App = () => {
                 component={Categories}
                 permissionReq="read_category"
               />
-              <PrivateRoute
-                path="/users"
-                exact
-                component={Users}
-                permissionReq="read_user"
-              />
+
               <PrivateRoute
                 path="/team-members"
                 exact
@@ -235,18 +267,6 @@ const App = () => {
                 exact
                 component={Orders}
                 permissionReq="read_booking"
-              />
-              {/* <PrivateRoute
-                   path="/crm"
-                   exact
-                   component={Orders}
-                   permissionReq="read_booking"
-                 /> */}
-              <PrivateRoute
-                path="/cities"
-                exact
-                component={Cities}
-                permissionReq="read_city"
               />
               <PrivateRoute
                 path="/testimonials"
@@ -356,12 +376,7 @@ const App = () => {
                 component={AdvertisementCreateUpdateForm}
                 permissionReq="read_banner"
               />
-              <PrivateRoute
-                path="/transactions"
-                exact
-                component={Transactions}
-                permissionReq="read_transaction"
-              />
+
               <PrivateRoute
                 path="/issues"
                 exact
@@ -387,34 +402,16 @@ const App = () => {
                 permissionReq="read_role"
               />
               <PrivateRoute
-                path="/push-notifications"
-                exact
-                component={Notifications}
-                permissionReq="read_notification"
-              />
-              <PrivateRoute
                 path="/cart"
                 exact
                 component={Cart}
                 permissionReq="read_booking"
               />
               <PrivateRoute
-                path="/crm-bookings"
-                exact
-                component={BookingSlots}
-                permissionReq="read_bookingslot"
-              />
-              <PrivateRoute
                 path="/booking-slots/create-edit"
                 exact
                 component={SlotCreateUpdateForm}
                 permissionReq="create_bookingslot"
-              />
-              <PrivateRoute
-                path="/push-notifications/create-edit"
-                exact
-                component={NotificationCreateUpdateForm}
-                permissionReq="read_notification"
               />
               <PrivateRoute
                 path="/testimonials/create-edit"
@@ -446,12 +443,12 @@ const App = () => {
                 component={RolesCreateUpdateForm}
                 permissionReq="read_role"
               />
-              <PrivateRoute
+              {/* <PrivateRoute
                 path="/subscriptions"
                 exact
                 component={Subscriptions}
                 permissionReq="read_subscription"
-              />
+              /> */}
               <PrivateRoute
                 path="/website-pages/dynamic/create-edit"
                 exact
@@ -476,12 +473,12 @@ const App = () => {
                 component={MoreScreen}
                 permissionReq="read_staticpage"
               />
-              <PrivateRoute
+              {/* <PrivateRoute
                 path="/subscriptions/:id"
                 exact
                 component={SingleSubscriptions}
                 permissionReq="read_subscription"
-              />
+              /> */}
               <PrivateRoute
                 path="/orders/:id"
                 exact
@@ -500,18 +497,7 @@ const App = () => {
                 component={AssignAgent}
                 permissionReq="assign_agent"
               />
-              <PrivateRoute
-                path="/crm"
-                exact
-                component={CRMBoard}
-                permissionReq="read_user"
-              />
-              <PrivateRoute
-                path="/invoices"
-                exact
-                component={InvoicePage}
-                permissionReq="read_city"
-              />
+
               <PrivateRoute
                 path="/google-business"
                 exact
@@ -530,13 +516,38 @@ const App = () => {
                 component={ViewWebsite}
                 permissionReq="read_staticpage"
               />
-
+              <PrivateRoute
+                path="/google-analytics"
+                exact
+                component={GoogleAnalytics}
+                permissionReq="read_staticpage"
+              />
               <Route path="/login" exact component={LoginPage} />
               <Route path="/verify-otp" exact component={VerifyOtp} />
+
+              {/* // -- BELOW ROUTES DONE */}
+              <PrivateRoute
+                path="/notifications"
+                exact
+                component={Notifications}
+                permissionReq="read_notification"
+              />
+              <PrivateRoute
+                path="/notifications/create-edit"
+                exact
+                component={NotificationCreateUpdateForm}
+                permissionReq="read_notification"
+              />
+              <PrivateRoute
+                path="/cities"
+                exact
+                component={Cities}
+                permissionReq="read_city"
+              />
             </Switch>
             <ErrorToast />
             <MsgToast />
-          </Container>
+          </div>
           {!isDesktop && showNavTopBar() && <BottomNavigation />}
         </div>
       </div>

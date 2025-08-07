@@ -1,7 +1,16 @@
 import { AxiosError } from "axios";
 import moment from "moment";
 import { useMemo, useState } from "react";
-import { Button, Col, Container, Dropdown, Form, Nav, Row } from "react-bootstrap";
+import {
+  Button,
+  Col,
+  Container,
+  Dropdown,
+  Form,
+  Nav,
+  Row,
+  Modal,
+} from "react-bootstrap";
 import { BiSad } from "react-icons/bi";
 import { useQuery } from "react-query";
 import { useHistory } from "react-router-dom";
@@ -20,8 +29,9 @@ import { areTwoObjEqual } from "../../utils/areTwoObjEqual";
 import { IssueRelatedTo, OrderType } from "../../utils/arrays";
 import { primaryColor } from "../../utils/constants";
 import { showErrorToast } from "../../utils/showErrorToast";
-import { BsFunnel } from "react-icons/bs";
+import { BsEye, BsFunnel } from "react-icons/bs";
 import { GoIssueOpened } from "react-icons/go";
+import IssuesCreateForm from "./IssuesCreateForm";
 
 const key = "tickets";
 const intitialFilter = {
@@ -38,6 +48,7 @@ const Issues = () => {
   const history = useHistory();
   const [selectedRows, setSelectedRows] = useState([]);
   const [filter, setFilter] = useState(intitialFilter);
+  const [modalShow, setModalShow] = useState(false);
   const { data, isLoading, isFetching, error } = useQuery<any>(
     [key, , filter],
     {
@@ -70,6 +81,9 @@ const Issues = () => {
   const _onOrderClick = (id: string) => {
     if (!id) return;
     history.push(`/orders/${id}`);
+  };
+  const _onModalHideClick = () => {
+    setModalShow(false);
   };
   const Status = ({ status }: { status: string }) => {
     const setVairant = () => {
@@ -163,12 +177,8 @@ const Issues = () => {
         Header: "Actions",
         Cell: (data: Cell) => {
           return (
-            <div className="d-flex">
-              <Button
-                onClick={() => history.push(`/issues/${data.row.values.id}`)}
-              >
-                View
-              </Button>
+            <div className="d-flex align-items-center justify-content-end">
+              <BsEye className="cursor-pointer" onClick={() => history.push(`/issues/${data.row.values.id}`)} />
             </div>
           );
         },
@@ -190,51 +200,76 @@ const Issues = () => {
 
   return (
     <>
-      <Container fluid className="component-wrapper view-padding">
-        <PageHeading icon={<GoIssueOpened />} title="Issues" totalRecords={data?.total} />
-
-        <div className="card">
-          <Container fluid className="h-100 p-0">
-            {isLoading ? (
-              <IsLoading />
-            ) : (
-              <>
-                <div className="mt-2" />
-                {!error && (
-                  <ReactTable
-                    data={data?.data}
-                    tabs={<div className="d-flex justify-content-between">
+      <div className="view-padding">
+        <PageHeading
+          icon={<GoIssueOpened size={24} />}
+          description="Create and manage issues"
+          title="Issues"
+          totalRecords={data?.total}
+          onClick={() => setModalShow(true)}
+          permissionReq="create_issue"
+        />
+      </div>
+      <hr />
+      <div className="">
+        <div className="h-100 p-0">
+          {isLoading ? (
+            <IsLoading />
+          ) : (
+            <>
+              <div className="mt-2" />
+              {!error && (
+                <ReactTable
+                  data={data?.data}
+                  tabs={
+                    <div className="d-flex justify-content-between">
                       {!isLoading && (
-                        <Nav className="global-navs" variant="tabs" activeKey={filter.status} onSelect={(selectedKey) => _onFilterChange('status', selectedKey)}>
+                        <Nav
+                          className="global-navs"
+                          variant="tabs"
+                          activeKey={filter.status}
+                          onSelect={(selectedKey) =>
+                            _onFilterChange("status", selectedKey)
+                          }
+                        >
                           <Nav.Item>
-                            <Nav.Link eventKey="">All ({data?.data?.length || 0})</Nav.Link>
+                            <Nav.Link eventKey="">
+                              All ({data?.data?.length || 0})
+                            </Nav.Link>
                           </Nav.Item>
 
                           <Nav.Item>
                             <Nav.Link eventKey="active">
-                              Active ({data?.data?.filter(item => item.status === 'active').length || 0})
+                              Active (
+                              {data?.data?.filter(
+                                (item) => item.status === "active"
+                              ).length || 0}
+                              )
                             </Nav.Link>
                           </Nav.Item>
 
                           <Nav.Item>
                             <Nav.Link eventKey="closed">
-                              Closed ({data?.data?.filter(item => item.status === 'closed').length || 0})
+                              Closed (
+                              {data?.data?.filter(
+                                (item) => item.status === "closed"
+                              ).length || 0}
+                              )
                             </Nav.Link>
                           </Nav.Item>
                         </Nav>
                       )}
-
-                    </div>}
-                    filters={<Dropdown className="filter-dropdown">
+                    </div>
+                  }
+                  filters={
+                    <Dropdown className="filter-dropdown">
                       <Dropdown.Toggle as={Button} variant="primary">
                         <BsFunnel />
                       </Dropdown.Toggle>
                       <Dropdown.Menu>
                         <div className="filter-dropdown-heading d-flex justify-content-between w-100">
                           <h4>Filter</h4>
-                          <div
-                            className="d-flex align-items-center justify-md-content-center"
-                          >
+                          <div className="d-flex align-items-center justify-md-content-center">
                             <Button
                               onClick={() => setFilter(intitialFilter)}
                               variant={
@@ -287,32 +322,49 @@ const Issues = () => {
                           </Form.Group>
                         </div>
                       </Dropdown.Menu>
-
-
-                    </Dropdown>}
-                    columns={columns}
-                    setSelectedRows={setSelectedRows}
-                    filter={filter}
-                    onFilterChange={_onFilterChange}
-                    isDataLoading={isFetching}
-                    isSelectable={false}
-                    searchPlaceHolder="Search using title,ref_id"
-                  />
-                )}
-                {!error && data.length > 0 ? (
-                  <TablePagination
-                    currentPage={data?.current_page}
-                    lastPage={data?.last_page}
-                    setPage={_onFilterChange}
-                    hasNextPage={!!data?.next_page_url}
-                    hasPrevPage={!!data?.prev_page_url}
-                  />
-                ) : null}{" "}
-              </>
-            )}
-          </Container>
+                    </Dropdown>
+                  }
+                  columns={columns}
+                  setSelectedRows={setSelectedRows}
+                  filter={filter}
+                  onFilterChange={_onFilterChange}
+                  isDataLoading={isFetching}
+                  isSelectable={false}
+                  searchPlaceHolder="Search using title,ref_id"
+                />
+              )}
+              {!error && data.length > 0 ? (
+                <TablePagination
+                  currentPage={data?.current_page}
+                  lastPage={data?.last_page}
+                  setPage={_onFilterChange}
+                  hasNextPage={!!data?.next_page_url}
+                  hasPrevPage={!!data?.prev_page_url}
+                />
+              ) : null}{" "}
+            </>
+          )}
         </div>
-      </Container>
+      </div>
+
+
+      <Modal
+        show={modalShow}
+        onHide={_onModalHideClick}
+        size="lg"
+        aria-labelledby="contained-modal-title-vcenter"
+        centered
+      >
+        <Modal.Header closeButton>
+          <Modal.Title id="contained-modal-title-vcenter">
+            Raise A Ticket
+          </Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <IssuesCreateForm onHideModal={_onModalHideClick} />
+        </Modal.Body>
+      </Modal>
+
       {selectedRows.length > 0 && (
         <div className="delete-button rounded">
           <span>

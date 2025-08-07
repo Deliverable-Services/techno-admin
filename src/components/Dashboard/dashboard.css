@@ -1,8 +1,14 @@
 .page-title {
   font-weight: 600;
-  font-size: 1.125rem;
+  font-size: 1.35rem;
   line-height: 32px;
-  margin-bottom: 20px;
+  margin-bottom: 0px;
+  color: var(--black);
+}
+.page-description {
+  font-size: 0.9rem;
+  font-weight: 400;
+  color: var(--gray-color);
 }
 .time {
   background: #fafafa;
@@ -11,9 +17,6 @@
 }
 
 .stats-card {
-  box-shadow: 0px 15px 32px 0px #0000000d, 0px 59px 59px 0px #0000000a,
-    0px 132px 79px 0px #00000008, 0px 234px 94px 0px #00000003,
-    0px 366px 103px 0px #00000000;
   border: 0 !important;
   border-radius: 24px !important;
 }
@@ -59,8 +62,7 @@
   background: #ffffff;
   border-radius: 16px;
   padding: 24px;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
-  border: 1px solid #f0f0f0;
+  border: 1px solid var(--border);
 }
 
 .analytics-header {
@@ -126,16 +128,16 @@
     grid-template-columns: 1fr;
     gap: 20px;
   }
-  
+
   .metrics-row {
     gap: 12px;
   }
-  
+
   .metric-card {
     min-width: 100px;
     padding: 12px;
   }
-  
+
   .metric-value {
     font-size: 20px;
   }
@@ -145,16 +147,16 @@
   .analytics-section {
     padding: 16px;
   }
-  
+
   .metrics-row {
     flex-direction: column;
     gap: 8px;
   }
-  
+
   .metric-card {
     min-width: auto;
   }
-  
+
   .chart-wrapper {
     height: 240px;
   }

@@ -4,7 +4,7 @@ import { Field, Form, Formik } from "formik";
 import moment from "moment";
 import { useEffect, useMemo, useState } from "react";
 import { Button, Col, Row, Spinner } from "react-bootstrap";
-import { MdNotificationsActive, MdTextsms } from "react-icons/md";
+import { MdEmail, MdNotificationsActive, MdTextsms } from "react-icons/md";
 import { RiTimerFill } from "react-icons/ri";
 import { useMutation, useQuery } from "react-query";
 import { useHistory, useLocation } from "react-router-dom";
@@ -26,6 +26,8 @@ import { NotificationSendToCategories } from "../../utils/arrays";
 import { primaryColor } from "../../utils/constants";
 import { queryClient } from "../../utils/queryClient";
 import { showMsgToast } from "../../utils/showMsgToast";
+import PageHeading from "../../shared-components/PageHeading";
+import { AiOutlinePlus } from "react-icons/ai";
 
 const key = "fcm-notification";
 
@@ -127,7 +129,7 @@ const NotificationCreateUpdateForm = () => {
       setTimeout(() => queryClient.invalidateQueries(key), 500);
       if (id) return showMsgToast("Notification updated successfully");
       showMsgToast("Notification created successfully");
-      history.replace("/push-notifications");
+      history.replace("/notifications");
     },
     onError: (error: AxiosError) => {
       handleApiError(error, history);
@@ -143,9 +145,27 @@ const NotificationCreateUpdateForm = () => {
 
   return (
     <>
-      <BackButton title="Notification" />
-
-      <div className="card view-padding p-2 d-flex mt-3">
+      <div className="view-padding view-heading">
+        <PageHeading
+          title="Create New Notification"
+          customButton={
+            <Restricted to={id ? "update_notification" : "create_notification"}>
+              <Button type="submit" disabled={isLoading}>
+                {isLoading ? (
+                  <Spinner animation="border" size="sm" />
+                ) : (
+                  <div className="text-white d-flex align-items-center">
+                    <AiOutlinePlus size={18} />
+                    <span className="mb-0 ml-1">Create</span>
+                  </div>
+                )}
+              </Button>
+            </Restricted>
+          }
+        />
+      </div>
+      <hr />
+      <div className="view-padding">
         <Row className="rounded">
           <Col className="mx-auto">
             <Formik
@@ -166,9 +186,9 @@ const NotificationCreateUpdateForm = () => {
 
                 if (is_sms === "1") {
                   formdata["is_sms"] = is_sms;
-                  formdata["channels"] = ["sms"]
+                  formdata["channels"] = ["sms"];
                 } else {
-                  formdata["channels"] = ["pushnotification"]
+                  formdata["channels"] = ["pushnotification"];
                 }
 
                 if (!values?.scheduled_at)
@@ -184,23 +204,33 @@ const NotificationCreateUpdateForm = () => {
                     <label className="d-flex align-items-center">
                       <Field type="radio" name="is_sms" value="1" />
                       <p className="m-0 mx-2 lead">
-                        SMS
                         <span className="mx-1">
                           <MdTextsms />
                         </span>
+                        SMS
                       </p>
                     </label>
                     <label className="d-flex align-items-center ml-4">
                       <Field type="radio" name="is_sms" value="0" />
                       <p className="m-0 mx-2 lead">
-                        Notification
                         <span className="mx-1">
                           <MdNotificationsActive />
                         </span>
+                        Notification
+                      </p>
+                    </label>
+                    <label className="d-flex align-items-center ml-4">
+                      <Field type="radio" name="is_sms" value="0" />
+                      <p className="m-0 mx-2 lead">
+                        <span className="mx-1">
+                          <MdEmail />
+                        </span>
+                        Email
                       </p>
                     </label>
                   </div>
-                  <div className="form-container ">
+
+                  <div className="form-container">
                     <InputField
                       name="title"
                       placeholder="Title"
@@ -314,26 +344,6 @@ const NotificationCreateUpdateForm = () => {
                         )}
                       </Col>
                     )}
-                  </Row>
-
-                  <Row className="d-flex justify-content-start">
-                    <Col md="2">
-                      <Restricted
-                        to={id ? "update_notification" : "create_notification"}
-                      >
-                        <Button
-                          type="submit"
-                          disabled={isLoading}
-                          className="w-100"
-                        >
-                          {isLoading ? (
-                            <Spinner animation="border" size="sm" />
-                          ) : (
-                            "Submit"
-                          )}
-                        </Button>
-                      </Restricted>
-                    </Col>
                   </Row>
                 </Form>
               )}

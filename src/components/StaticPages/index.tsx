@@ -14,7 +14,7 @@ import IsLoading from "../../shared-components/isLoading";
 import PageHeading from "../../shared-components/PageHeading";
 import Restricted from "../../shared-components/Restricted";
 import API from "../../utils/API";
-import { primaryColor } from "../../utils/constants";
+import { isDesktop, primaryColor } from "../../utils/constants";
 import { queryClient } from "../../utils/queryClient";
 import { showMsgToast } from "../../utils/showMsgToast";
 import StaticPageCreateForm from "./StaticPageCreateUpdateForm";
@@ -68,7 +68,7 @@ const StaticPages = () => {
 
   return (
     <>
-      <Container fluid className="card component-wrapper view-padding">
+      <Container fluid className="component-wrapper view-padding">
         <PageHeading
           title="Static Pages"
           onClick={() => setModalShow(true)}
@@ -79,12 +79,11 @@ const StaticPages = () => {
             Press "Ctrl+S" inside editor to save content
           </p>
         )}
-        <Container fluid className="px-0 my-3">
+        <Container fluid className="px-0 my-3 d-flex gap-10 flex-wrap">
           {titles?.map((title) => (
             <Button
               size="sm"
               variant={selectedTitle === title ? "primary" : "outline-primary"}
-              className="mr-2"
               onClick={() => setSelectedTitle(title)}
             >
               {title}
@@ -169,7 +168,7 @@ const PageContainer = ({ page, selectedTitle }) => {
       style={{ display: selectedTitle === page.title ? "block" : "none" }}
     >
       <div className="">
-        <div className="card-title d-flex align-items-center justify-content-between">
+        <div className={`card-title d-flex justify-content-between ${!isDesktop ? 'flex-column align-items-start gap-10' : 'align-items-center'}`}>
           <p className="text-black px-2 lead font-weight-bold">{page.title}</p>
           <div className="d-flex align-items-center">
             <Restricted to="update_staticpage">

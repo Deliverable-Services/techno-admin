@@ -1,6 +1,5 @@
 // Permissions/PermissoinsCreateUpdateForm.tsx
 
-
 import { AxiosError } from "axios";
 import bsCustomFileInput from "bs-custom-file-input";
 import { Form, Formik } from "formik";
@@ -38,7 +37,11 @@ const createUpdataBrand = ({
   });
 };
 
-const PermissionsCreateUpdateForm = () => {
+interface PermissionsCreateUpdateForm {
+  setShowModal: () => void;
+}
+
+const PermissionsCreateUpdateForm = ({setShowModal}: PermissionsCreateUpdateForm) => {
   const { state } = useLocation();
   const history = useHistory();
   const id = state ? (state as any).id : null;
@@ -70,21 +73,6 @@ const PermissionsCreateUpdateForm = () => {
 
   return (
     <>
-      <div className="card view-padding p-2 d-flex mt-3">
-        <BackButton title={id ? "Update Permission" : "Add Permission"} />
-        {/* <div className="text-primary">
-          <div className="d-flex justify-content-between">
-            <div
-              className="text-black pb-3"
-              style={{ cursor: "pointer", fontWeight: 600 }}
-            >
-              Basic Information
-            </div>
-          </div>
-        </div> */}
-
-        <hr className="mb-3" />
-
         <Row className="rounded">
           <Col className="mx-auto">
             <Formik
@@ -92,6 +80,7 @@ const PermissionsCreateUpdateForm = () => {
               initialValues={apiData || {}}
               onSubmit={(values) => {
                 mutate({ formdata: values, id });
+                setShowModal()
               }}
             >
               {({ setFieldValue }) => (
@@ -125,7 +114,6 @@ const PermissionsCreateUpdateForm = () => {
             </Formik>
           </Col>
         </Row>
-      </div>
     </>
   );
 };

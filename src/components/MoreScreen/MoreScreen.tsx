@@ -1,13 +1,24 @@
 import { BsClock, BsShieldLock } from "react-icons/bs";
-import { FaAddressCard, FaDiceFour, FaMoneyCheck, FaQuestionCircle } from "react-icons/fa";
+import {
+  FaAddressCard,
+  FaDiceFour,
+  FaMoneyCheck,
+  FaQuestionCircle,
+} from "react-icons/fa";
 import { ImUsers } from "react-icons/im";
 import { MdKeyboardArrowRight } from "react-icons/md";
-import './index.css';
+import "./index.css";
 import { useHistory } from "react-router-dom";
 import { GoIssueOpened } from "react-icons/go";
 import { IoLogoModelS } from "react-icons/io";
 import { SiBrandfolder } from "react-icons/si";
-import { RiAdminFill, RiAdvertisementFill, RiGlobalLine, RiNotification2Line, RiServiceFill } from "react-icons/ri";
+import {
+  RiAdminFill,
+  RiAdvertisementFill,
+  RiGlobalLine,
+  RiNotification2Line,
+  RiServiceFill,
+} from "react-icons/ri";
 import { AiFillIdcard, AiFillSetting } from "react-icons/ai";
 import { BiLogOut } from "react-icons/bi";
 import { useMutation } from "react-query";
@@ -137,7 +148,7 @@ const sections = [
       },
       {
         name: "Notification/Sms",
-        linkTo: "/push-notifications",
+        linkTo: "/notifications",
         icon: <RiNotification2Line />,
       },
     ],
@@ -145,63 +156,60 @@ const sections = [
 ];
 
 export const MoreScreen = () => {
-    const history = useHistory();
-     const removeToken = useTokenStore((state) => state.removeToken);
-     const removeUser = useUserProfileStore((state) => state.removeUser);
+  const history = useHistory();
+  const removeToken = useTokenStore((state) => state.removeToken);
+  const removeUser = useUserProfileStore((state) => state.removeUser);
 
-    const logout = () => {
-      return API.post("/auth/logout");
-    };
+  const logout = () => {
+    return API.post("/auth/logout");
+  };
 
-    const { mutate } = useMutation(logout, {
-        onSuccess: () => {
-          removeUser();
-          removeToken();
-          window.location.href = "/login";
-        },
-        onError: () => {
-          removeUser();
-          removeToken();
-          window.location.href = "/login";
-        },
-    });
-    
-    return (
-      <div className="sections-container">
-        <EditAccountCard />
-        {sections?.map((item, index) => (
-          <div className="section-container" key={index + 1}>
-            <p className="section-heading">{item?.title}</p>
-            <div className="items-container">
-              {item?.items?.map((item, index) => (
-                <div
-                  className="item-container"
-                  key={index + 1}
-                  onClick={() => history.push(item?.linkTo)}
-                >
-                  <div className="item-left-container">
-                    {item?.icon}
-                    <p className="item-title">{item?.name}</p>
-                  </div>
-                  <div>
-                    <MdKeyboardArrowRight />
-                  </div>
+  const { mutate } = useMutation(logout, {
+    onSuccess: () => {
+      removeUser();
+      removeToken();
+      window.location.href = "/login";
+    },
+    onError: () => {
+      removeUser();
+      removeToken();
+      window.location.href = "/login";
+    },
+  });
+
+  return (
+    <div className="sections-container m-3">
+      <EditAccountCard />
+      {sections?.map((item, index) => (
+        <div className="section-container" key={index + 1}>
+          <p className="section-heading">{item?.title}</p>
+          <div className="items-container">
+            {item?.items?.map((item, index) => (
+              <div
+                className="item-container"
+                key={index + 1}
+                onClick={() => history.push(item?.linkTo)}
+              >
+                <div className="item-left-container">
+                  {item?.icon}
+                  <p className="item-title">{item?.name}</p>
                 </div>
-              ))}
-            </div>
+                <div>
+                  <MdKeyboardArrowRight />
+                </div>
+              </div>
+            ))}
           </div>
-        ))}
-        <div className="items-container">
-          <div
-            className="item-container"
-              onClick={() => mutate()}
-          >
-            <div className="item-left-container">
-              <BiLogOut className="mr-2" />
-              <p className="item-title">Log Out</p>
-            </div>
+        </div>
+      ))}
+      <div className="items-container">
+        <div className="item-container" onClick={() => mutate()}>
+          <div className="item-left-container">
+            <BiLogOut className="mr-2" />
+            <p className="item-title">Log Out</p>
           </div>
         </div>
       </div>
-    );
-}
+    </div>
+  );
+};

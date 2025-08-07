@@ -1,6 +1,6 @@
 import { AxiosError } from "axios";
 import { useMemo, useState } from "react";
-import { Button, Col, Container, Dropdown, Modal, Row, Spinner } from "react-bootstrap";
+import { Button, Container, Dropdown, Modal } from "react-bootstrap";
 import { BiSad } from "react-icons/bi";
 import { useMutation, useQuery } from "react-query";
 import { useHistory } from "react-router-dom";
@@ -23,11 +23,9 @@ import { primaryColor } from "../../utils/constants";
 import { queryClient } from "../../utils/queryClient";
 import { showMsgToast } from "../../utils/showMsgToast";
 import { AiFillDelete } from "react-icons/ai";
-import { BsFunnel, BsPencil, BsThreeDotsVertical } from "react-icons/bs";
+import { BsFunnel, BsThreeDotsVertical } from "react-icons/bs";
 import { ImUsers } from "react-icons/im";
-interface IFilter {
-  role: string | null;
-}
+
 const key = "users";
 
 const deleteUsers = (id: Array<any>) => {
@@ -140,37 +138,37 @@ const Users = () => {
         Header: "Actions",
         Cell: (data: Cell) => {
           return (
-            <Dropdown className="ellipsis-dropdown">
-              <Dropdown.Toggle
-                variant="light"
-                size="sm"
-                className="p-1 border-0 shadow-none"
-                id={`dropdown-${data.row.values.id}`}
-              >
-                <BsThreeDotsVertical size={18} />
-              </Dropdown.Toggle>
-
-              <Dropdown.Menu className="menu-dropdown">
-                <Dropdown.Item
-                  onClick={() => {
-                    _onEditClick(data.row.values.id, data.row.values.role);
-                  }}
+            <div className="d-flex align-items-center justify-content-end gap-3">
+              <EditButton
+                onClick={() => {
+                  _onEditClick(data.row.values.id, data.row.values.role);
+                }}
+                permissionReq="update_notification"
+              />
+              <Dropdown className="ellipsis-dropdown">
+                <Dropdown.Toggle
+                  variant="light"
+                  size="sm"
+                  className="p-1 border-0 shadow-none"
+                  id={`dropdown-${data.row.values.id}`}
                 >
-                  <BsPencil /> Edit
-                </Dropdown.Item>
+                  <BsThreeDotsVertical size={18} />
+                </Dropdown.Toggle>
 
-                <Dropdown.Item
-                  onClick={() => {
-                    setSelectedDeleteId(data.row.values.id);
-                    setDeletePopup(true);
-                  }}
-                  className="text-danger"
-                >
-                  <AiFillDelete size={16} className="me-1" />
-                  Delete
-                </Dropdown.Item>
-              </Dropdown.Menu>
-            </Dropdown>
+                <Dropdown.Menu className="menu-dropdown">
+                  <Dropdown.Item
+                    onClick={() => {
+                      setSelectedDeleteId(data.row.values.id);
+                      setDeletePopup(true);
+                    }}
+                    className="text-danger"
+                  >
+                    <AiFillDelete size={16} className="me-1" />
+                    Delete
+                  </Dropdown.Item>
+                </Dropdown.Menu>
+              </Dropdown>
+            </div>
           );
         },
       },
@@ -178,141 +176,104 @@ const Users = () => {
     []
   );
 
-  if (!data && (!isLoading || !isFetching)) {
-    return (
-      <Container fluid className="d-flex justify-content-center display-3">
-        <div className="d-flex flex-column align-items-center">
-          <BiSad color={primaryColor} />
-          <span className="text-primary display-3">Something went wrong</span>
-        </div>
-      </Container>
-    );
-  }
-
   return (
     <>
-      <Container fluid className=" component-wrapper view-padding">
+      <div className="view-padding">
         <PageHeading
-          icon={<ImUsers />}
+          icon={<ImUsers size={24} />}
+          description="Create and manage customers"
           title="Customers"
           onClick={_onCreateClick}
           totalRecords={data?.total}
+          btnText="Create Customer"
           permissionReq="create_user"
         />
+      </div>
+      <hr />
 
-        {/* {!isLoading && (
-        <Container fluid>
-          <div>
-            <div className="filter">
-              <BreadCrumb
-                onFilterChange={_onFilterChange}
-                value=""
-                currentValue={filter.role}
-                dataLength={data?.data?.length}
-                idx="role"
-                title="All"
+      {(() => {
+        if (isLoading || isFetching) {
+          return <IsLoading />;
+        }
+
+        if (error || (!data && (!isLoading || !isFetching))) {
+          return (
+            <Container
+              fluid
+              className="d-flex justify-content-center display-3"
+            >
+              <div className="d-flex flex-column align-items-center">
+                <BiSad color={primaryColor} />
+                <span className="text-primary display-3">
+                  Something went wrong
+                </span>
+              </div>
+            </Container>
+          );
+        }
+
+        return (
+          <>
+            <ReactTable
+              data={data?.data}
+              filters={
+                <Dropdown className="filter-dropdown search-filters-div mr-2">
+                  <Dropdown.Toggle as={Button} variant="primary">
+                    <BsFunnel /> Filters
+                  </Dropdown.Toggle>
+                  <Dropdown.Menu>
+                    <div className="filter-dropdown-heading d-flex justify-content-between w-100">
+                      <h4>Filter</h4>
+                      <div className="d-flex align-items-center justify-md-content-center">
+                        <Button
+                          variant={
+                            areTwoObjEqual(intitialFilter, filter)
+                              ? "light"
+                              : "primary"
+                          }
+                          style={{
+                            fontSize: 14,
+                          }}
+                          onClick={() => setFilter(intitialFilter)}
+                        >
+                          Reset Filters
+                        </Button>
+                      </div>
+                    </div>
+                    <div className="select-filter">
+                      <FilterSelect
+                        currentValue={filter.disabled}
+                        data={isActiveArray}
+                        label="Disabled Users?"
+                        idx="disabled"
+                        onFilterChange={_onFilterChange}
+                        defaultSelectTitle="Show All"
+                      />
+                    </div>
+                  </Dropdown.Menu>
+                </Dropdown>
+              }
+              columns={columns}
+              setSelectedRows={setSelectedRows}
+              filter={filter}
+              onFilterChange={_onFilterChange}
+              isDataLoading={isFetching}
+              searchPlaceHolder="Search using name, phone, email"
+              deletePermissionReq="delete_user"
+            />
+            {data?.data?.length > 0 ? (
+              <TablePagination
+                currentPage={data?.current_page}
+                lastPage={data?.last_page}
+                setPage={_onFilterChange}
+                hasNextPage={!!data?.next_page_url}
+                hasPrevPage={!!data?.prev_page_url}
               />
-              <BreadCrumb
-                onFilterChange={_onFilterChange}
-                value="admin"
-                currentValue={filter.role}
-                dataLength={data?.data?.length}
-                idx="role"
-                title="Admin"
-              />
-              <BreadCrumb
-                onFilterChange={_onFilterChange}
-                value="customer"
-                currentValue={filter.role}
-                dataLength={data?.data?.length}
-                idx="role"
-                title="Customer"
-              />
-              <BreadCrumb
-                onFilterChange={_onFilterChange}
-                value="agent"
-                currentValue={filter.role}
-                dataLength={data?.data?.length}
-                idx="role"
-                title="Agent"
-                isLast
-              />
-            </div>
-          </div>
-        </Container>
-      )} */}
-        <div className="card">
-          <Container fluid className="h-100 p-0 ">
-            {isLoading ? (
-              <IsLoading />
-            ) : (
-              <>
-                {!error && (
-                  <>
-                    <div className="mt-3" />
-                    <ReactTable
-                      data={data?.data}
-                      filters={<Dropdown className="filter-dropdown">
-                        <Dropdown.Toggle as={Button} variant="primary">
-                          <BsFunnel />
-                        </Dropdown.Toggle>
-                        <Dropdown.Menu>
-                          <div className="filter-dropdown-heading d-flex justify-content-between w-100">
-                            <h4>Filter</h4>
-                            <div
-                              className="d-flex align-items-center justify-md-content-center"
-                            >
-                              <Button
-                                variant={
-                                  areTwoObjEqual(intitialFilter, filter)
-                                    ? "light"
-                                    : "primary"
-                                }
-                                style={{
-                                  fontSize: 14,
-                                }}
-                                onClick={() => setFilter(intitialFilter)}
-                              >
-                                Reset Filters
-                              </Button>
-                            </div>
-                          </div>
-                          <div className="select-filter">
-                            <FilterSelect
-                              currentValue={filter.disabled}
-                              data={isActiveArray}
-                              label="Disabled Users?"
-                              idx="disabled"
-                              onFilterChange={_onFilterChange}
-                              defaultSelectTitle="Show All"
-                            />
-                          </div>
-                        </Dropdown.Menu>
-                      </Dropdown>}
-                      columns={columns}
-                      setSelectedRows={setSelectedRows}
-                      filter={filter}
-                      onFilterChange={_onFilterChange}
-                      isDataLoading={isFetching}
-                      searchPlaceHolder="Search using name, phone, email"
-                      deletePermissionReq="delete_user"
-                    />
-                  </>
-                )}
-                {!error && data?.data?.length > 0 ? (
-                  <TablePagination
-                    currentPage={data?.current_page}
-                    lastPage={data?.last_page}
-                    setPage={_onFilterChange}
-                    hasNextPage={!!data?.next_page_url}
-                    hasPrevPage={!!data?.prev_page_url}
-                  />
-                ) : null}{" "}
-              </>
-            )}
-          </Container>
-        </div>
-      </Container>
+            ) : null}
+          </>
+        );
+      })()}
+
       <Modal show={deletePopup} onHide={() => setDeletePopup(false)}>
         <Modal.Header closeButton>
           <Modal.Title>Are you sure?</Modal.Title>
@@ -339,6 +300,7 @@ const Users = () => {
           </Button>
         </Modal.Footer>
       </Modal>
+
       {selectedRows.length > 0 && (
         <div className="delete-button rounded">
           <span>

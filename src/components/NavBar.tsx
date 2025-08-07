@@ -1,23 +1,17 @@
 import { useContext, useState } from "react";
 import {
-  FaAddressCard,
   FaBoxes,
   FaDiceFour,
   FaQuestionCircle,
   FaRegLightbulb,
   FaMoneyCheck,
   FaUserSecret,
-  FaEnvelope,
-  FaPhone,
-  FaMap,
-  FaClock,
   FaGoogle,
   FaRegMoneyBillAlt,
 } from "react-icons/fa";
 import { GoIssueOpened } from "react-icons/go";
 import { IoLogoModelS, IoMdAnalytics } from "react-icons/io";
 import { GiModernCity, GiOnTarget } from "react-icons/gi";
-
 import {
   RiAdminFill,
   RiAdvertisementFill,
@@ -27,25 +21,29 @@ import {
   RiNotification2Line,
   RiServiceFill,
 } from "react-icons/ri";
-import { SiBrandfolder } from "react-icons/si";
-import { IsDesktopContext } from "../context/IsDesktopContext";
-import Logo from "../shared-components/Logo";
-import Navlink from "../shared-components/Navlink";
-import Overlay from "../shared-components/Overlay";
-import { INavBar, INavLink } from "../types/interface";
+import Select from "react-select";
+import { SiBrandfolder, SiCivicrm } from "react-icons/si";
 import { MdShoppingCart } from "react-icons/md";
 import { ImUsers } from "react-icons/im";
 import { AiFillIdcard } from "react-icons/ai";
 import { BsClock, BsShieldLock } from "react-icons/bs";
-import { SiCivicrm } from "react-icons/si";
 import { GrOrganization } from "react-icons/gr";
 
-import useUserProfileStore from "../hooks/useUserProfileStore";
+import { IsDesktopContext } from "../context/IsDesktopContext";
 import { useGoogleBusinessConnection } from "../hooks/useGoogleBusinessConnection";
-import { Dropdown } from "react-bootstrap";
 import { useOrganisation } from "../context/OrganisationContext";
-import { formatTimestamp } from "../utils/utitlity";
 
+import { INavBar, INavLink } from "../types/interface";
+
+import Logo from "../shared-components/Logo";
+import Navlink from "../shared-components/Navlink";
+import Overlay from "../shared-components/Overlay";
+import { handleApiError } from "../hooks/handleApiErrors";
+import API from "../utils/API";
+import { useHistory } from "react-router-dom";
+
+// === Main Navigation Sections ===
+// # TODO: Fix all the permissions and introduce the list in the permissions table
 const mainLinks: Array<INavLink> = [
   {
     title: "Orders",
@@ -54,25 +52,48 @@ const mainLinks: Array<INavLink> = [
     permissionReq: "read_booking",
   },
   {
-    title: "CRM",
-    path: "/crm",
+    title: "Leads",
     icon: <SiCivicrm />,
-    permissionReq: "read_city",
-  },
-  {
-    title: "Bookings",
-    path: "/crm-bookings",
-    permissionReq: "read_booking",
-    icon: <BsClock />,
+    permissionReq: "read_bookingslot",
+    children: [
+      {
+        title: "CRM",
+        path: "/crm",
+        permissionReq: "read_subscription",
+        icon: <SiCivicrm />,
+      },
+      {
+        title: "Meetings",
+        path: "/meetings",
+        permissionReq: "read_booking",
+        icon: <BsClock />,
+      },
+    ],
   },
   {
     title: "Billings",
     icon: <FaRegMoneyBillAlt />,
+    path: "/invoices",
     permissionReq: "read_bookingslot",
     children: [
-      { title: "Subscriptions", path: "/subscriptions", permissionReq: "read_subscription", icon: <FaAddressCard />, },
-      { title: "Transaction", path: "/transactions", permissionReq: "read_transaction", icon: <FaMoneyCheck />, },
-      { title: "Invoices", path: "/invoices", icon: <SiCivicrm />, permissionReq: "read_city", },
+      {
+        title: "Invoices",
+        path: "/invoices",
+        icon: <SiCivicrm />,
+        permissionReq: "read_city",
+      },
+      {
+        title: "Subscriptions",
+        path: "/subscriptions",
+        icon: <SiCivicrm />,
+        permissionReq: "read_subscription",
+      },
+      {
+        title: "Transactions",
+        path: "/transactions",
+        permissionReq: "read_transaction",
+        icon: <FaMoneyCheck />,
+      },
     ],
   },
   {
@@ -81,13 +102,6 @@ const mainLinks: Array<INavLink> = [
     icon: <MdShoppingCart />,
     permissionReq: "read_booking",
   },
-
-  {
-    title: "Google Business",
-    path: "/google-business",
-    icon: <FaGoogle />,
-    permissionReq: "read_dashboard",
-  },
   {
     title: "Customers",
     path: "/users",
@@ -95,10 +109,62 @@ const mainLinks: Array<INavLink> = [
     permissionReq: "read_user",
   },
   {
-    title: "Help Center",
+    title: "Support Tickets",
     path: "/issues",
     icon: <GoIssueOpened />,
     permissionReq: "read_ticket",
+  },
+  {
+    title: "Services",
+    path: "/services",
+    icon: <RiServiceFill />,
+    permissionReq: "read_bookingslot",
+    children: [
+      {
+        title: "Services",
+        path: "/services",
+        icon: <RiServiceFill />,
+        permissionReq: "read_service",
+      },
+      {
+        title: "Service Categories",
+        path: "/categories",
+        icon: <FaDiceFour />,
+        permissionReq: "read_category",
+      },
+    ],
+  },
+  {
+    title: "Products",
+    path: "/products",
+    icon: <RiServiceFill />,
+    permissionReq: "read_bookingslot",
+    children: [
+      {
+        title: "Products",
+        path: "/products",
+        icon: <IoLogoModelS />,
+        permissionReq: "read_brandmodel",
+      },
+      {
+        title: "Brands",
+        path: "/product-brands",
+        icon: <SiBrandfolder />,
+        permissionReq: "read_brand",
+      },
+      {
+        title: "Variants",
+        path: "/product-variants",
+        icon: <IoLogoModelS />,
+        permissionReq: "read_brandmodel",
+      },
+    ],
+  },
+  {
+    title: "Plans",
+    path: "/plans",
+    icon: <FaRegLightbulb />,
+    permissionReq: "read_plan",
   },
 ];
 
@@ -135,45 +201,6 @@ const websiteLinks: Array<INavLink> = [
   },
 ];
 
-const inventoryLinks: Array<INavLink> = [
-  {
-    title: "Products",
-    path: "/products",
-    icon: <IoLogoModelS />,
-    permissionReq: "read_brandmodel",
-  },
-  {
-    title: "Product Brands",
-    path: "/product-brands",
-    icon: <SiBrandfolder />,
-    permissionReq: "read_brand",
-  },
-  {
-    title: "Product Variants",
-    path: "/product-variants",
-    icon: <IoLogoModelS />,
-    permissionReq: "read_brandmodel",
-  },
-  {
-    title: "Categories",
-    path: "/categories",
-    icon: <FaDiceFour />,
-    permissionReq: "read_category",
-  },
-  {
-    title: "Services",
-    path: "/services",
-    icon: <RiServiceFill />,
-    permissionReq: "read_service",
-  },
-  {
-    title: "Plans",
-    path: "/plans",
-    icon: <FaRegLightbulb />,
-    permissionReq: "read_plan",
-  },
-];
-
 const organisationLinks: Array<INavLink> = [
   {
     title: "Team Members",
@@ -191,12 +218,6 @@ const organisationLinks: Array<INavLink> = [
     title: "Agent Targets",
     path: "/agent-targets",
     icon: <GiOnTarget />,
-    permissionReq: "read_agenttarget",
-  },
-  {
-    title: "Google Analytics",
-    path: "/google-analytics",
-    icon: <IoMdAnalytics />,
     permissionReq: "read_agenttarget",
   },
   {
@@ -218,12 +239,29 @@ const organisationLinks: Array<INavLink> = [
     permissionReq: "read_city",
   },
   {
-    title: "Notification/Sms",
-    path: "/push-notifications",
+    title: "Workflow Notifications",
+    path: "/notifications",
     icon: <RiNotification2Line />,
     permissionReq: "read_notification",
   },
 ];
+
+const googleLinks: Array<INavLink> = [
+  {
+    title: "Google Analytics",
+    path: "/google-analytics",
+    permissionReq: "read_agenttarget",
+    icon: <IoMdAnalytics />,
+  },
+  {
+    title: "Google Business",
+    path: "/google-business",
+    icon: <FaGoogle />,
+    permissionReq: "read_dashboard",
+  },
+];
+
+// === Hidden Routes Logic ===
 
 const hiddenRoutesForCRM = [
   "/orders",
@@ -232,147 +270,123 @@ const hiddenRoutesForCRM = [
   "/coupons",
   "/agent",
   "/agent-targets",
-  "/product-variants",
-];
-const hiddenRoutesForEcommerce = [
-  "/crm",
-  "/crm-bookings",
-  "/services",
   "/products",
   "/product-brands",
-  "/categories",
+  "/product-variants",
 ];
+const hiddenRoutesForEcommerce = ["/crm", "/crm-bookings", "/services"];
+
+const key = "organisations";
 
 const NavBar = ({ isNavOpen, setIsNavOpen }: INavBar) => {
+  const history = useHistory();
   const isDesktop = useContext(IsDesktopContext);
   const [activeMenu, setActiveMenu] = useState<string | null>(null);
 
-  const loggedInUser = useUserProfileStore((state) => state.user);
-  const { setOrganisations, selectedOrg, setSelectedOrg } = useOrganisation();
-  const {
-    isConnected: isGoogleBusinessConnected,
-    isLoading: isCheckingConnection,
-  } = useGoogleBusinessConnection();
+  const { selectedOrg, setSelectedOrg, organisations } = useOrganisation();
+  const { isConnected: isGoogleBusinessConnected } =
+    useGoogleBusinessConnection();
 
   const closeNavBar = () => {
-    if (isDesktop) return;
-    if (setIsNavOpen) {
-      setIsNavOpen(false);
+    if (!isDesktop && setIsNavOpen) setIsNavOpen(false);
+  };
+
+  const storeType = selectedOrg?.store_type.toLowerCase();
+
+  const filterLinks = (links: INavLink[]) =>
+    links.filter((link) =>
+      storeType === "ecommerce"
+        ? !hiddenRoutesForEcommerce.includes(link.path!)
+        : !hiddenRoutesForCRM.includes(link.path!)
+    );
+
+  const filteredMainLinks = filterLinks(mainLinks);
+  const filteredWebsiteLinks = filterLinks(websiteLinks);
+  const filteredOrganisationLinks = filterLinks(organisationLinks);
+
+  const filteredGoogleLinks = googleLinks.filter((link) => {
+    if (link.path === "/google-business" && !isGoogleBusinessConnected)
+      return false;
+    return storeType === "ecommerce"
+      ? !hiddenRoutesForEcommerce.includes(link.path!)
+      : !hiddenRoutesForCRM.includes(link.path!);
+  });
+
+  const handleSetSelectedOrg = async (option) => {
+    const org = organisations.find((o) => o.id === option.value);
+    if (org) {
+      try {
+        await API.post(`${key}/${org.id}/switch`);
+      } catch (error) {
+        handleApiError(error, history);
+      }
+      setSelectedOrg(org);
     }
   };
 
-  // Google Business link - only show when connected
-  const googleBusinessLink: INavLink = {
-    title: "Google Business",
-    path: "/google-business",
-    icon: <FaGoogle />,
-    permissionReq: "read_dashboard",
+  const organisationOptions = organisations.map((org) => ({
+    value: org.id,
+    label: org.name,
+    ...org,
+  }));
+
+  const customStyles = {
+    control: (provided, state) => ({
+      ...provided,
+      border: "none",
+      fontSize: "14px",
+      fontWeight: "500",
+      boxShadow: "0 0.125rem 0.25rem rgba(0, 0, 0, 0.075) !important",
+    }),
+    option: (provided, state) => ({
+      ...provided,
+      padding: "8px 12px",
+      fontSize: "14px",
+    }),
   };
-
-  // Filtered links for sidebar
-  let filteredMainLinks = mainLinks.filter((link) => {
-    if (selectedOrg?.store_type.toLowerCase() === "ecommerce") {
-      return hiddenRoutesForEcommerce.includes(link.path) ? false : true;
-    } else if (selectedOrg?.store_type.toLowerCase() === "crm") {
-      return hiddenRoutesForCRM.includes(link.path) ? false : true;
-    }
-  });
-
-  // Add Google Business link if connected
-  if (isGoogleBusinessConnected) {
-    filteredMainLinks = [...filteredMainLinks, googleBusinessLink];
-  }
-
-  const filteredWebsiteinks = websiteLinks.filter((link) => {
-    if (selectedOrg?.store_type.toLowerCase() === "ecommerce") {
-      return hiddenRoutesForEcommerce.includes(link.path) ? false : true;
-    } else if (selectedOrg?.store_type.toLowerCase() === "crm") {
-      return hiddenRoutesForCRM.includes(link.path) ? false : true;
-    }
-  });
-
-  const filterinventoryLinks = inventoryLinks.filter((link) => {
-    if (selectedOrg?.store_type.toLowerCase() === "ecommerce") {
-      return hiddenRoutesForEcommerce.includes(link.path) ? false : true;
-    } else if (selectedOrg?.store_type.toLowerCase() === "crm") {
-      return hiddenRoutesForCRM.includes(link.path) ? false : true;
-    }
-  });
-
-  const filterOrganisationLinks = organisationLinks.filter((link) => {
-    if (selectedOrg?.store_type.toLowerCase() === "ecommerce") {
-      return hiddenRoutesForEcommerce.includes(link.path) ? false : true;
-    } else if (selectedOrg?.store_type.toLowerCase() === "crm") {
-      return hiddenRoutesForCRM.includes(link.path) ? false : true;
-    }
-  });
 
   return (
     <>
       <nav className={isNavOpen ? "active pb-0" : ""}>
         {isDesktop && (
-          <div className="d-flex  justify-content-between align-items-center">
+          <div className="d-flex justify-content-between align-items-center">
             <Logo />
           </div>
         )}
 
         <div className="all-links">
-          <div className="d-flex align-items-center justify-content-center">
-            <Dropdown className="w-100 pt-3" style={{ position: "unset" }}>
-              <section
-                style={{
-                  fontSize: "11px",
-                  fontWeight: "bold",
-                  color: "#667085",
-                  marginBottom: "4px",
-                }}
-              >
-                Organisation
-              </section>
-
-              <Dropdown.Toggle
-                id="dropdown-basic"
-                className="bg-white w-100 border px-3 py-1 shadow-sm d-flex align-items-center btn-focus-none"
-                style={{
-                  color: "#000",
-                  fontWeight: "500",
-                  fontSize: "14px",
-                  borderRadius: "6px",
-                }}
-              >
-                <span
-                  className="text-truncate"
-                  style={{ width: "100%", textAlign: "left" }}
-                >
-                  {selectedOrg?.name}
-                </span>
-              </Dropdown.Toggle>
-
-              <Dropdown.Menu
-                className=" rounded border-0 mt-2  global-card"
-                style={{ minWidth: "260px" }}
-              >
-                <div className="d-flex flex-column gap-2">
-                  <section className="d-flex align-items-center py-2 px-4 border-bottom">
-                    <FaEnvelope className="text-primary mr-2" size={14} />
-                    <span>{selectedOrg?.email}</span>
-                  </section>
-                  <section className="d-flex align-items-center py-2 px-4 border-bottom">
-                    <FaPhone className="text-primary mr-2" size={14} />
-                    <span>{selectedOrg?.phone}</span>
-                  </section>
-                  <section className="d-flex align-items-center py-2 px-4 border-bottom">
-                    <FaMap className="text-primary mr-2" size={14} />
-                    <span>{selectedOrg?.address}</span>
-                  </section>
-                  <section className="d-flex align-items-center py-2 px-4 ">
-                    <FaClock className="text-primary mr-2" size={14} />
-                    <span>{formatTimestamp(selectedOrg?.created_at)}</span>
-                  </section>
-                </div>
-              </Dropdown.Menu>
-            </Dropdown>
+          {/* Organisation Dropdown */}
+          <div>
+            <section
+              style={{
+                fontSize: "11px",
+                fontWeight: "bold",
+                color: "#667085",
+                marginBottom: "4px",
+              }}
+              className="pt-3"
+            >
+              Organisation
+            </section>
+            <Select
+              options={organisationOptions}
+              value={
+                selectedOrg
+                  ? {
+                      value: selectedOrg.id,
+                      label: selectedOrg.name,
+                    }
+                  : null
+              }
+              onChange={handleSetSelectedOrg}
+              placeholder="Select Organisation"
+              isClearable={false}
+              styles={customStyles}
+              className="input-div"
+            />
           </div>
+
+          {/* Dashboard */}
           <ul className="pt-3">
             <Navlink
               title="Dashboard"
@@ -385,7 +399,9 @@ const NavBar = ({ isNavOpen, setIsNavOpen }: INavBar) => {
               setActiveMenu={setActiveMenu}
             />
           </ul>
-          <p className="text-muted mb-2">Leads & Customers</p>
+
+          {/* Sections */}
+          <p className="text-muted mb-2">MAIN</p>
           <ul>
             {filteredMainLinks.map((link) => (
               <Navlink
@@ -398,24 +414,9 @@ const NavBar = ({ isNavOpen, setIsNavOpen }: INavBar) => {
               />
             ))}
           </ul>
-          <p className="text-muted mb-2">Products & Services</p>
+          <p className="text-muted mb-2">WEBSITE</p>
           <ul>
-            {filterinventoryLinks.map(
-              (link) => (
-                <Navlink
-                  key={link.title}
-                  {...link}
-                  onClick={closeNavBar}
-                  isNavOpen={isNavOpen}
-                  activeMenu={activeMenu}
-                  setActiveMenu={setActiveMenu}
-                />
-              )
-            )}
-          </ul>
-          <p className="text-muted mb-2">Website & Pages</p>
-          <ul>
-            {filteredWebsiteinks.map((link) => (
+            {filteredWebsiteLinks.map((link) => (
               <Navlink
                 key={link.title}
                 {...link}
@@ -426,21 +427,38 @@ const NavBar = ({ isNavOpen, setIsNavOpen }: INavBar) => {
               />
             ))}
           </ul>
-          <p className="text-muted mb-2">Organization & Settings</p>
+
+          <p className="text-muted mb-2">CONFIGURATIONS</p>
           <ul>
-            {filterOrganisationLinks.map(
-              (link) => (
-                <Navlink
-                  key={link.title}
-                  {...link}
-                  onClick={closeNavBar}
-                  isNavOpen={isNavOpen}
-                  activeMenu={activeMenu}
-                  setActiveMenu={setActiveMenu}
-                />
-              )
-            )}
+            {filteredOrganisationLinks.map((link) => (
+              <Navlink
+                key={link.title}
+                {...link}
+                onClick={closeNavBar}
+                isNavOpen={isNavOpen}
+                activeMenu={activeMenu}
+                setActiveMenu={setActiveMenu}
+              />
+            ))}
           </ul>
+
+          {filteredGoogleLinks.length > 0 && (
+            <>
+              <p className="text-muted mb-2">Intigrations</p>
+              <ul>
+                {filteredGoogleLinks.map((link) => (
+                  <Navlink
+                    key={link.title}
+                    {...link}
+                    onClick={closeNavBar}
+                    isNavOpen={isNavOpen}
+                    activeMenu={activeMenu}
+                    setActiveMenu={setActiveMenu}
+                  />
+                ))}
+              </ul>
+            </>
+          )}
         </div>
       </nav>
       {isNavOpen && !isDesktop && <Overlay onClick={closeNavBar} />}

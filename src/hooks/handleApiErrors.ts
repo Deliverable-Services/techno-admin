@@ -1,25 +1,21 @@
 import { AxiosError } from "axios";
 import API from "../utils/API";
 import useTokenStore from "../hooks/useTokenStore";
-import { showErrorToast } from "../utils/showErrorToast";
 
-export const handleApiError = async (error: AxiosError, history: any) => {
+export const handleApiError = async (error: AxiosError, history?: any) => {
   if (!error) return;
 
-  const is401Error = error?.response?.status == 401;
+  // Log error for debugging
+  console.error("API Error:", error.response?.status, error.message);
 
-  if (!is401Error) {
-    showErrorToast("Please login to continue.");
+  // For non-401 errors, just log and return
+  // The useAuthManager hook will handle 401 errors via interceptors
+  if (error?.response?.status !== 401) {
+    console.error("Non-auth error:", error.message);
     return;
   }
 
-  try {
-    const { data } = await API.post("/auth/refresh");
-    console.log("refresh-data", data);
-
-    if (data) useTokenStore.getState().setToken(data.access_token);
-  } catch (error) {
-    history.push("/login");
-    showErrorToast("Please login to continue");
-  }
+  // 401 errors are now handled by the API interceptor in useAuthManager
+  // This function is kept for backward compatibility but logic is simplified
+  console.log("401 error detected - should be handled by auth manager");
 };

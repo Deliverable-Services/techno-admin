@@ -15,9 +15,111 @@ import API from "../../utils/API";
 import { showMsgToast } from "../../utils/showMsgToast";
 import { showErrorToast } from "../../utils/showErrorToast";
 import { queryClient } from "../../utils/queryClient";
+import PageHeading from "../../shared-components/PageHeading";
+
+import { SiCivicrm } from "react-icons/si";
 
 const key = "leads";
 const membersKey = "users";
+
+interface UserAvatarProps {
+  profilePic?: string;
+  name?: string;
+  className?: string;
+}
+
+const UserAvatar: React.FC<UserAvatarProps> = ({
+  profilePic,
+  name,
+  className,
+}) => {
+  const [showFallback, setShowFallback] = useState<boolean>(!profilePic);
+
+  const handleImageError = () => {
+    setShowFallback(true);
+  };
+
+  const getInitials = (fullName: string) => {
+    if (!fullName) return "U";
+
+    const names = fullName.trim().split(" ");
+    if (names.length === 1) {
+      return names[0].charAt(0).toUpperCase();
+    }
+
+    return (
+      names[0].charAt(0) + names[names.length - 1].charAt(0)
+    ).toUpperCase();
+  };
+
+  const getBackgroundColor = (name: string) => {
+    // Generate a consistent color based on the name
+    const colors = [
+      "#7e56da",
+      "#ffd76a",
+      "#7bbfff",
+      "#ff6b6b",
+      "#51cf66",
+      "#ffa726",
+      "#42a5f5",
+      "#ab47bc",
+      "#26c6da",
+      "#ffca28",
+    ];
+
+    if (!name) return colors[0];
+
+    const hash = name.split("").reduce((acc, char) => {
+      return char.charCodeAt(0) + ((acc << 5) - acc);
+    }, 0);
+
+    return colors[Math.abs(hash) % colors.length];
+  };
+
+  // Reset fallback state when profilePic changes
+  useEffect(() => {
+    if (profilePic) {
+      setShowFallback(false);
+    } else {
+      setShowFallback(true);
+    }
+  }, [profilePic]);
+
+  if (!profilePic || showFallback) {
+    return (
+      <div
+        className={`d-flex align-items-center justify-content-center text-white ${
+          className || ""
+        }`}
+        style={{
+          backgroundColor: getBackgroundColor(name || "User"),
+          borderRadius: "50%",
+          fontSize: "12px",
+          fontWeight: "bold",
+          width: "30px",
+          height: "30px",
+        }}
+      >
+        {getInitials(name || "User")}
+      </div>
+    );
+  }
+
+  return (
+    <img
+      src={profilePic}
+      alt={name || "User"}
+      className={className}
+      onError={handleImageError}
+      style={{
+        borderRadius: "50%",
+        width: "30px",
+        height: "30px",
+        objectFit: "cover",
+      }}
+    />
+  );
+};
 
 const statusMap: { [key in string]: string } = {
   NEW: "New",
@@ -25,7 +127,7 @@ const statusMap: { [key in string]: string } = {
   EN_ROUTE: "En-Route",
   IN_PROGRESS: "In Progress",
   COMPLETED: "Completed",
-  PAID: "PAID",
+  PAID: "Paid",
 };
 
 const changeStatus = ({ id, newStatus }: { id: number; newStatus: any }) => {
@@ -39,13 +141,13 @@ const CRMBoard: React.FC = () => {
   const [leads, setLeads] = useState<Lead[]>(null);
   const [selectedId, setSelectedId] = useState<number | null>(null);
 
-  const { data, isLoading, isFetching, error } = useQuery<any>([key, ,], {
+  const { data } = useQuery<any>([key], {
     onError: (error: AxiosError) => {
       handleApiError(error, history);
     },
   });
 
-  const { data: membersList } = useQuery<any>([`${membersKey}?role=admin`, ,], {
+  const { data: membersList } = useQuery<any>([`${membersKey}?role=admin`], {
     onError: (error: AxiosError) => {
       handleApiError(error, history);
     },
@@ -53,7 +155,7 @@ const CRMBoard: React.FC = () => {
 
   useEffect(() => {
     if (data) {
-      data.map((lead: any) => {
+      data.forEach((lead: any) => {
         if (lead?.hasOwnProperty("status")) {
           lead.status = lead.status.toUpperCase();
         }
@@ -88,49 +190,57 @@ const CRMBoard: React.FC = () => {
 
   const selectedLead = leads?.find((t) => t.id === selectedId);
 
+  const _onCreateClick = () => {
+    // #TODO: Create LEAD form in popup
+  };
+
   return (
     <>
+      <div className="view-padding d-flex justify-content-between align-items-center">
+        <PageHeading
+          icon={<SiCivicrm size={24} />}
+          title="CRM"
+          description="Manage all ongoing leads"
+          onClick={_onCreateClick}
+          totalRecords={data?.total}
+          permissionReq="create_lead"
+        />
+
+        <div className="crm-users">
+          {membersList?.data.slice(0, 3).map((member, index) => (
+            <UserAvatar
+              key={index}
+              profilePic={member?.user?.profile_pic}
+              name={member?.name}
+              className="crm-avatar"
+            />
+          ))}
+
+          {membersList?.data.length > 3 && (
+            <span className="crm-avatar crm-avatar-extra">
+              +{membersList.data.length - 3}
+            </span>
+          )}
+        </div>
+      </div>
+      <hr />
+
       <DndProvider backend={HTML5Backend}>
-        <div className="crm-container">
-          <div className="crm-header px-3">
-            <h2 className="crm-title">CRM</h2>
-            {/* <div className="crm-breadcrumb">Projects / Beyond Gravity</div> */}
-
-            <div className="crm-users">
-              {membersList?.data.slice(0, 3).map((member, index) => (
-                <img
-                  key={index}
-                  // src={member?.profile_pic || `https://ui-avatars.com/api/?name=${member.name}`}
-                  src={`https://ui-avatars.com/api/?name=${member.name}`}
-                  alt=""
-                  className="crm-avatar"
+        <div className="crm-board-overflow">
+          <div className="row no-gutters crm-board">
+            {Object.keys(statusMap).map((key) => {
+              const typedKey = key as string;
+              return (
+                <Column
+                  key={typedKey}
+                  title={statusMap[typedKey]}
+                  status={typedKey}
+                  leads={leads?.filter((lead) => lead.status === typedKey)}
+                  onDrop={handleDrop}
+                  onCardClick={handleCardClick}
                 />
-              ))}
-
-              {membersList?.data.length > 3 && (
-                <span className="crm-avatar crm-avatar-extra">
-                  +{membersList.data.length - 3}
-                </span>
-              )}
-            </div>
-          </div>
-
-          <div className="crm-board-overflow">
-            <div className="row no-gutters crm-board">
-              {Object.keys(statusMap).map((key) => {
-                const typedKey = key as string;
-                return (
-                  <Column
-                    key={typedKey}
-                    title={statusMap[typedKey]}
-                    status={typedKey}
-                    leads={leads?.filter((lead) => lead.status === typedKey)}
-                    onDrop={handleDrop}
-                    onCardClick={handleCardClick}
-                  />
-                );
-              })}
-            </div>
+              );
+            })}
           </div>
         </div>
       </DndProvider>

@@ -1,8 +1,16 @@
 import { AxiosError } from "axios";
 import moment from "moment";
 import React, { useMemo, useState } from "react";
-import { Button, Col, Container, Dropdown, Form, Nav, Row } from "react-bootstrap";
-import { AiFillEdit } from "react-icons/ai";
+import {
+  Button,
+  Col,
+  Container,
+  Dropdown,
+  Form,
+  Nav,
+  Row,
+} from "react-bootstrap";
+import { AiFillDelete, AiFillEdit } from "react-icons/ai";
 import { BiSad } from "react-icons/bi";
 import { useMutation, useQuery } from "react-query";
 import { useHistory } from "react-router-dom";
@@ -25,7 +33,8 @@ import { primaryColor, secondaryColor } from "../../utils/constants";
 import { queryClient } from "../../utils/queryClient";
 import { showMsgToast } from "../../utils/showMsgToast";
 import Brands from "../Brands";
-import { BsFunnel } from "react-icons/bs";
+import { BsFunnel, BsThreeDotsVertical } from "react-icons/bs";
+import { RiNotification2Line } from "react-icons/ri";
 
 const key = "fcm-notification";
 const intitialFilter = {
@@ -70,10 +79,10 @@ const Notifications = () => {
   );
 
   const _onCreateClick = () => {
-    history.push("/push-notifications/create-edit");
+    history.push("/notifications/create-edit");
   };
   const _onEditClick = (id: string) => {
-    history.push("/push-notifications/create-edit", { id });
+    history.push("/notifications/create-edit", { id });
   };
 
   const _onFilterChange = (idx: string, value: any) => {
@@ -133,12 +142,35 @@ const Notifications = () => {
         Header: "Actions",
         Cell: (data: Cell) => {
           return (
-            <EditButton
-              onClick={() => {
-                _onEditClick(data.row.values.id);
-              }}
-              permissionReq="update_notification"
-            />
+            <div className="d-flex align-items-center justify-content-end gap-3">
+              <EditButton
+                onClick={() => {
+                  _onEditClick(data.row.values.id);
+                }}
+                permissionReq="update_notification"
+              />
+              <Dropdown className="ellipsis-dropdown">
+                <Dropdown.Toggle
+                  variant="light"
+                  size="sm"
+                  className="p-1 border-0 shadow-none"
+                  id={`dropdown-${data.row.values.id}`}
+                >
+                  <BsThreeDotsVertical size={18} />
+                </Dropdown.Toggle>
+                <Dropdown.Menu className="menu-dropdown">
+                  <Dropdown.Item
+                    className="text-danger"
+                    onClick={() => {
+                      mutate(selectedRows.map((i) => i.id));
+                    }}
+                  >
+                    <AiFillDelete size={16} className="me-1" />
+                    Delete
+                  </Dropdown.Item>
+                </Dropdown.Menu>
+              </Dropdown>
+            </div>
           );
         },
       },
@@ -159,109 +191,128 @@ const Notifications = () => {
 
   return (
     <>
-      <Container fluid className="component-wrapper view-padding">
+      <div className="view-padding">
         <PageHeading
+          icon={
+            <RiNotification2Line size={24} />
+          }
           title="Notifications"
+          description="Create and manage notifications for your workflow"
           onClick={_onCreateClick}
           totalRecords={data?.total}
           permissionReq="create_notification"
         />
-        <div className="d-flex justify-content-between pb-3 mt-3">
-        {!isLoading && (
-            <Nav className="global-navs" variant="tabs" activeKey={filter.sent} onSelect={(selectedKey) => _onFilterChange('sent', selectedKey)}>
-                <Nav.Item>
-                  <Nav.Link eventKey="">All ({data?.data?.length || 0})</Nav.Link>
-                </Nav.Item>
+      </div>
+      <hr />
+      <div className="">
+        {(() => {
+          if (isLoading) return <IsLoading />;
 
-                <Nav.Item>
-                  <Nav.Link eventKey="1">
-                    Sent ({data?.data?.filter(item => item.status === '1').length || 0})
-                  </Nav.Link>
-                </Nav.Item>
-
-                <Nav.Item>
-                  <Nav.Link eventKey="0">
-                    Not Sent ({data?.data?.filter(item => item.status === '0').length || 0})
-                  </Nav.Link>
-                </Nav.Item>
-              </Nav>
-        )}
-         <Dropdown className="filter-dropdown">
-            <Dropdown.Toggle as={Button} variant="primary" className="global-card">
-              <BsFunnel /> Filters
-            </Dropdown.Toggle>
-            <Dropdown.Menu>
-              <div className="filter-dropdown-heading d-flex justify-content-between w-100">
-                <h4>Filter</h4>
-                <div
-                  className="d-flex align-items-center justify-md-content-center"
-                >
-                  <Button
-                    variant={
-                            areTwoObjEqual(intitialFilter, filter)
-                              ? "light"
-                              : "primary"
-                          }
-                          style={{
-                            fontSize: 14,
-                          }}
-                          onClick={() => setFilter(intitialFilter)}
-                  >
-                    Reset Filters
-                  </Button>
-                </div>
-              </div>
-             <div className="select-filter">
-              <FilterSelect
-                          currentValue={filter.send_to}
-                          data={NotificationSendToCategories}
-                          label="Send To"
-                          idx="send_to"
-                          onFilterChange={_onFilterChange}
-                        />
-                         <Form.Group>
-                          <Form.Label className="text-muted">
-                            Scheduled At
-                          </Form.Label>
-                          <Form.Control
-                            type="date"
-                            value={filter.scheduled_at}
-                            onChange={(e) => {
-                              const value = moment(e.target.value).format(
-                                "YYYY-MM-DD"
-                              );
-                              _onFilterChange("scheduled_at", value);
-                            }}
-                            style={{
-                              fontSize: 14,
-                              width: 150,
-                              height: 35,
-                            }}
-                          />
-                        </Form.Group>
-             </div>
-            </Dropdown.Menu>
-          </Dropdown>
-        </div>
-        <hr />
-        <Container fluid className="h-100 p-0">
-          {isLoading ? (
-            <IsLoading />
-          ) : (
+          return (
             <>
-             <div className="mt-3" />
               {!error && (
-                
-                  <ReactTable
-                    data={data?.data}
-                    columns={columns}
-                    setSelectedRows={setSelectedRows}
-                    filter={filter}
-                    onFilterChange={_onFilterChange}
-                    isDataLoading={isFetching}
-                    searchPlaceHolder="Search using title"
-                    deletePermissionReq="delete_notification"
-                  />
+                <ReactTable
+                  data={data?.data}
+                  tabs={
+                    <div className="d-flex justify-content-between">
+                      <Nav
+                        className="global-navs"
+                        variant="tabs"
+                        activeKey={filter.sent}
+                        onSelect={(selectedKey) =>
+                          _onFilterChange("sent", selectedKey)
+                        }
+                      >
+                        <Nav.Item>
+                          <Nav.Link eventKey="">
+                            All ({data?.data?.length || 0})
+                          </Nav.Link>
+                        </Nav.Item>
+
+                        <Nav.Item>
+                          <Nav.Link eventKey="1">
+                            Sent (
+                            {data?.data?.filter((item) => item.status === "1")
+                              .length || 0}
+                            )
+                          </Nav.Link>
+                        </Nav.Item>
+
+                        <Nav.Item>
+                          <Nav.Link eventKey="0">
+                            Not Sent (
+                            {data?.data?.filter((item) => item.status === "0")
+                              .length || 0}
+                            )
+                          </Nav.Link>
+                        </Nav.Item>
+                      </Nav>
+                    </div>
+                  }
+                  filters={
+                    <Dropdown className="filter-dropdown">
+                      <Dropdown.Toggle as={Button} variant="primary">
+                        <BsFunnel /> Filters
+                      </Dropdown.Toggle>
+                      <Dropdown.Menu>
+                        <div className="filter-dropdown-heading d-flex justify-content-between w-100">
+                          <h4>Filter</h4>
+                          <div className="d-flex align-items-center justify-md-content-center">
+                            <Button
+                              variant={
+                                areTwoObjEqual(intitialFilter, filter)
+                                  ? "light"
+                                  : "primary"
+                              }
+                              style={{
+                                fontSize: 14,
+                              }}
+                              onClick={() => setFilter(intitialFilter)}
+                            >
+                              Reset Filters
+                            </Button>
+                          </div>
+                        </div>
+                        <div className="select-filter">
+                          <FilterSelect
+                            currentValue={filter.send_to}
+                            data={NotificationSendToCategories}
+                            label="Send To"
+                            idx="send_to"
+                            onFilterChange={_onFilterChange}
+                          />
+                          <Form.Group>
+                            <Form.Label className="text-muted">
+                              Scheduled At
+                            </Form.Label>
+                            <Form.Control
+                              type="date"
+                              value={filter.scheduled_at}
+                              onChange={(e) => {
+                                const value = moment(e.target.value).format(
+                                  "YYYY-MM-DD"
+                                );
+                                _onFilterChange("scheduled_at", value);
+                              }}
+                              style={{
+                                fontSize: 14,
+                                width: 150,
+                                height: 35,
+                              }}
+                            />
+                          </Form.Group>
+                        </div>
+                      </Dropdown.Menu>
+                    </Dropdown>
+                  }
+                  columns={columns}
+                  setSelectedRows={setSelectedRows}
+                  filter={filter}
+                  onFilterChange={_onFilterChange}
+                  isDataLoading={isFetching}
+                  searchPlaceHolder="Search using title"
+                  deletePermissionReq="delete_notification"
+                />
               )}
               {!error && data.length > 0 ? (
                 <TablePagination
@@ -273,9 +324,10 @@ const Notifications = () => {
                 />
               ) : null}{" "}
             </>
-          )}
-        </Container>
-      </Container>
+          );
+        })()}
+      </div>
+
       {selectedRows.length > 0 && (
         <div className="delete-button rounded">
           <span>

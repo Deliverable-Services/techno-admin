@@ -27,6 +27,7 @@ import API from "../../utils/API";
 import { queryClient } from "../../utils/queryClient";
 import { showMsgToast } from "../../utils/showMsgToast";
 import useUserProfileStore from "../../hooks/useUserProfileStore";
+import { BsClock } from "react-icons/bs";
 // dummy event data
 
 const key = "disabled-slots";
@@ -127,17 +128,20 @@ const BookingSlots = () => {
 
   return (
     <>
-    <div className="">
-      <div></div>
-      <div></div>
-    </div>
-      <Container fluid className="card component-wrapper view-padding">
+      <div className="view-padding">
         <PageHeading
-          title="CRM Bookings"
+          icon={<BsClock size={24} />}
+          title="Meetings"
+          description="Manage all booked meetings from here"
           onClick={_onCreateClick}
+          btnText="Create Meeting"
           totalRecords={data?.total}
           permissionReq="create_bookingslot"
         />
+      </div>
+      <hr />
+
+      <Container fluid className="card component-wrapper view-padding">
         <Container fluid className="h-100 p-0">
           {isLoading ? (
             <IsLoading />

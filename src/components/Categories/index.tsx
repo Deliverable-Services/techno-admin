@@ -186,25 +186,28 @@ const Categories = () => {
 
   return (
     <>
-      <Container fluid className="component-wrapper view-padding">
+      <div className="view-padding">
         <PageHeading
-          icon={<FaDiceFour />}
+          icon={<FaDiceFour size={24} />}
+          description="Create and manage categories"
           title="Categories"
           onClick={_onCreateClick}
           totalRecords={data?.total}
           permissionReq="create_category"
         />
-        <div className="card">
-          <Container fluid className="h-100 p-0">
-            {isLoading ? (
-              <IsLoading />
-            ) : (
-              <>
-                {!error && (
-                  <>
-                    <Container className="pt-3">
-                      <Row className="select-filter d-flex ">
-                        {/* <Col md="auto">
+      </div>
+      <hr />
+      <div className="">
+        <div className="h-100 p-0">
+          {isLoading ? (
+            <IsLoading />
+          ) : (
+            <>
+              {!error && (
+                <>
+                  <Container className="pt-3">
+                    <Row className="select-filter d-flex ">
+                      {/* <Col md="auto">
                         <div className=" d-flex align-items-center "
                           style={{
                             height: 30
@@ -223,7 +226,7 @@ const Categories = () => {
 
                         </div>
                       </Col> */}
-                        {/* <Col
+                      {/* <Col
                         md="auto"
                         className="d-flex align-items-center  justify-content-center"
                       >
@@ -240,59 +243,59 @@ const Categories = () => {
                           Reset Filters
                         </Button>
                       </Col> */}
-                      </Row>
-                    </Container>
+                    </Row>
+                  </Container>
 
-                    <ReactTable
-                      data={data?.data}
-                      tabs={<div className="d-flex justify-content-between">
-                        {!isLoading && (
-                          <Nav className="global-navs" variant="tabs" activeKey={filter.active} onSelect={(selectedKey) => _onFilterChange('active', selectedKey)}>
-                            <Nav.Item>
-                              <Nav.Link eventKey="">All ({data?.data?.length || 0})</Nav.Link>
-                            </Nav.Item>
+                  <ReactTable
+                    data={data?.data}
+                    tabs={<div className="d-flex justify-content-between">
+                      {!isLoading && (
+                        <Nav className="global-navs" variant="tabs" activeKey={filter.active} onSelect={(selectedKey) => _onFilterChange('active', selectedKey)}>
+                          <Nav.Item>
+                            <Nav.Link eventKey="">All ({data?.data?.length || 0})</Nav.Link>
+                          </Nav.Item>
 
-                            <Nav.Item>
-                              <Nav.Link eventKey="active">
-                                Active ({data?.data?.filter(item => item.status === '1').length || 0})
-                              </Nav.Link>
-                            </Nav.Item>
+                          <Nav.Item>
+                            <Nav.Link eventKey="active">
+                              Active ({data?.data?.filter(item => item.status === '1').length || 0})
+                            </Nav.Link>
+                          </Nav.Item>
 
-                            <Nav.Item>
-                              <Nav.Link eventKey="notActive">
-                                Not Active ({data?.data?.filter(item => item.status === '0').length || 0})
-                              </Nav.Link>
-                            </Nav.Item>
-                          </Nav>
+                          <Nav.Item>
+                            <Nav.Link eventKey="notActive">
+                              Not Active ({data?.data?.filter(item => item.status === '0').length || 0})
+                            </Nav.Link>
+                          </Nav.Item>
+                        </Nav>
 
-                        )}
-                      </div>}
-                      columns={columns}
-                      setSelectedRows={setSelectedRows}
-                      filter={filter}
-                      onFilterChange={_onFilterChange}
-                      isDataLoading={isFetching}
-                      isDraggable={isDraggable}
-                      updateOrder={updateOrder}
-                      searchPlaceHolder="Search using name, url"
-                      deletePermissionReq="delete_category"
-                    />
-                  </>
-                )}
-                {!error && data?.data?.length > 0 ? (
-                  <TablePagination
-                    currentPage={data?.current_page}
-                    lastPage={data?.last_page}
-                    setPage={_onFilterChange}
-                    hasNextPage={!!data?.next_page_url}
-                    hasPrevPage={!!data?.prev_page_url}
+                      )}
+                    </div>}
+                    columns={columns}
+                    setSelectedRows={setSelectedRows}
+                    filter={filter}
+                    onFilterChange={_onFilterChange}
+                    isDataLoading={isFetching}
+                    isDraggable={isDraggable}
+                    updateOrder={updateOrder}
+                    searchPlaceHolder="Search using name, url"
+                    deletePermissionReq="delete_category"
                   />
-                ) : null}{" "}
-              </>
-            )}
-          </Container>
+                </>
+              )}
+              {!error && data?.data?.length > 0 ? (
+                <TablePagination
+                  currentPage={data?.current_page}
+                  lastPage={data?.last_page}
+                  setPage={_onFilterChange}
+                  hasNextPage={!!data?.next_page_url}
+                  hasPrevPage={!!data?.prev_page_url}
+                />
+              ) : null}{" "}
+            </>
+          )}
         </div>
-      </Container>
+      </div>
+
       {selectedRows.length > 0 && (
         <div className="delete-button rounded">
           <span>

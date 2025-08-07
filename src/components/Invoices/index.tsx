@@ -1,8 +1,7 @@
-import React, { useState, useEffect, useMemo } from "react";
+import React, { useState, useEffect, useMemo, useCallback } from "react";
 import "./invoice.css";
 import InvoicesCreateForm from "./InvoicesCreateForm";
 import API from "../../utils/API";
-import StripeContent from "./StripeContent";
 import VerifingUserLoader from "../../shared-components/VerifingUserLoader";
 import useUserProfileStore from "../../hooks/useUserProfileStore";
 import jsPDF from "jspdf";
@@ -10,10 +9,13 @@ import autoTable from "jspdf-autotable";
 import { showMsgToast } from "../../utils/showMsgToast";
 import { showErrorToast } from "../../utils/showErrorToast";
 import PageHeading from "../../shared-components/PageHeading";
-import { FaFileInvoiceDollar } from "react-icons/fa";
-import { Container } from "react-bootstrap";
+import { FaStripe } from "react-icons/fa";
+import { Container, Button } from "react-bootstrap";
 import ReactTable from "../../shared-components/ReactTable";
 import { Cell } from "react-table";
+
+import { primaryColor } from "../../utils/constants";
+import { SiCivicrm } from "react-icons/si";
 
 interface Invoice {
   id: string;
@@ -35,7 +37,7 @@ const InvoicePage: React.FC = () => {
   const [loading, setLoading] = useState(true);
   const [showForm, setShowForm] = useState(false);
   const [isProcessingCode, setIsProcessingCode] = useState(false);
-  const [selectedRows, setSelectedRows] = useState([]);
+
   const [downloadingInvoices, setDownloadingInvoices] = useState<{
     [key: string]: boolean;
   }>({});
@@ -44,7 +46,7 @@ const InvoicePage: React.FC = () => {
     setShowForm(true);
   };
 
-  const fetchInvoices = async () => {
+  const fetchInvoices = useCallback(async () => {
     setLoading(true);
     try {
       const res = await API.get("/invoices");
@@ -54,7 +56,7 @@ const InvoicePage: React.FC = () => {
     } finally {
       setLoading(false);
     }
-  };
+  }, []);
 
   const columns = useMemo(
     () => [
@@ -101,32 +103,35 @@ const InvoicePage: React.FC = () => {
         },
       },
     ],
-    []
+    [downloadingInvoices]
   );
 
-  const handleCode = async (code: string) => {
-    setIsProcessingCode(true);
-    try {
-      const response = await API.post("stripe/callback", { code });
+  const handleCode = useCallback(
+    async (code: string) => {
+      setIsProcessingCode(true);
+      try {
+        const response = await API.post("stripe/callback", { code });
 
-      if (response.status === 200) {
-        const currentUser = useUserProfileStore.getState().user;
-        setUser({
-          ...currentUser,
-          stripe_account_id: response.data.stripe_account_id,
-        });
+        if (response.status === 200) {
+          const currentUser = useUserProfileStore.getState().user;
+          setUser({
+            ...currentUser,
+            stripe_account_id: response.data.stripe_account_id,
+          });
 
-        const url = new URL(window.location.href);
-        url.searchParams.delete("code");
-        window.history.replaceState({}, document.title, url.pathname);
-        fetchInvoices();
+          const url = new URL(window.location.href);
+          url.searchParams.delete("code");
+          window.history.replaceState({}, document.title, url.pathname);
+          fetchInvoices();
+        }
+      } catch (error) {
+        console.error(error);
+      } finally {
+        setIsProcessingCode(false);
       }
-    } catch (error) {
-      console.error(error);
-    } finally {
-      setIsProcessingCode(false);
-    }
-  };
+    },
+    [fetchInvoices, setUser]
+  );
 
   useEffect(() => {
     const urlParams = new URLSearchParams(window.location.search);
@@ -134,11 +139,11 @@ const InvoicePage: React.FC = () => {
     if (code) {
       handleCode(code);
     }
-  }, []);
+  }, [handleCode]);
 
   useEffect(() => {
     fetchInvoices();
-  }, []);
+  }, [fetchInvoices]);
 
   // Function to download invoice as PDF
   const downloadInvoicePDF = async (invoice: Invoice) => {
@@ -215,31 +220,79 @@ const InvoicePage: React.FC = () => {
     );
   }
 
-  // Only show invoice UI if Stripe account is connected
-  if (!loggedInUser?.stripe_account_id) {
-    return (
-      <div style={{ marginTop: "30px" }}>
-        <StripeContent />
-      </div>
-    );
-  }
+  // Create Stripe account handler
+  const handleCreateStripeAccount = async () => {
+    try {
+      const response = await API.get("/stripe/connect");
+      if (response?.data?.url) {
+        window.location.href = response.data.url;
+      }
+    } catch (error) {
+      console.error("Error creating Stripe account:", error);
+      showErrorToast("Failed to create Stripe account. Please try again.");
+    }
+  };
+
+  const _onCreateClick = () => {
+    setShowForm(true);
+  };
 
   return (
-    <Container fluid className=" component-wrapper view-padding">
-      <>
+    <>
+      <div className="view-padding">
         <PageHeading
-          icon={<FaFileInvoiceDollar />}
+          icon={<SiCivicrm size={24} />}
           title="Invoices"
-          onClick={handleCreate}
-          totalRecords={invoices?.length}
-          permissionReq="create_user"
+          description="Raise invoices to your customers with one click"
+          onClick={_onCreateClick}
+          btnText="Create Invoice"
+          permissionReq="create_bookingslot"
         />
-        {!showForm ? (
-          loading ? (
+      </div>
+      <hr />
+      {(() => {
+        if (!loggedInUser?.stripe_account_id) {
+          return (
+            <div className="view-padding">
+              <div className="d-flex flex-column align-items-center text-center">
+                <FaStripe size={80} color={primaryColor} className="mb-4" />
+                <h3 className="mb-3">Get started with Billings</h3>
+                <p className="text-muted mb-4" style={{ maxWidth: "400px" }}>
+                  To start using billing you need to create your Stripe account
+                  by clicking on Create Stripe button below
+                </p>
+                <Button
+                  variant="primary"
+                  onClick={handleCreateStripeAccount}
+                  size="lg"
+                  className="primary-btn"
+                  style={{
+                    backgroundColor: primaryColor,
+                    borderColor: primaryColor,
+                    padding: "12px 30px",
+                    fontSize: "16px",
+                    fontWeight: "600",
+                  }}
+                >
+                  <div className="text-white d-flex align-items-center">
+                    <FaStripe className="mr-2" />
+                    Create Stripe Account
+                  </div>
+                </Button>
+              </div>
+            </div>
+          );
+        }
+        if (loading) {
+          return (
             <div className="invoice-empty">
               <p>Loading...</p>
             </div>
-          ) : invoices.length === 0 ? (
+          );
+        }
+
+        if (!invoices.length) {
+          return (
             <div className="invoice-empty">
               <h4>Send your first invoice</h4>
               <p>
@@ -249,7 +302,11 @@ const InvoicePage: React.FC = () => {
                 + Create invoice
               </button>
             </div>
-          ) : (
+          );
+        }
+
+        if (!showForm) {
+          return (
             <div className="card">
               <Container fluid className="h-100 p-0 ">
                 <div className="mt-3" />
@@ -257,7 +314,6 @@ const InvoicePage: React.FC = () => {
                   data={invoices}
                   columns={columns}
                   showSearch={false}
-                  setSelectedRows={setSelectedRows}
                   showRecords={false}
                   filter={{
                     role: "customer",
@@ -270,8 +326,10 @@ const InvoicePage: React.FC = () => {
                 />
               </Container>
             </div>
-          )
-        ) : (
+          );
+        }
+
+        return (
           <div className="invoice-form">
             <InvoicesCreateForm
               onSuccess={() => {
@@ -279,18 +337,10 @@ const InvoicePage: React.FC = () => {
                 fetchInvoices();
               }}
             />
-            <div className="form-actions">
-              <button
-                className="secondary-btn"
-                onClick={() => setShowForm(false)}
-              >
-                Cancel
-              </button>
-            </div>
           </div>
-        )}
-      </>
-    </Container>
+        );
+      })()}
+    </>
   );
 };
 

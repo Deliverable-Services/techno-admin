@@ -1,6 +1,6 @@
 import { AxiosError } from "axios";
 import { useMemo, useState } from "react";
-import { Button, Col, Container, Row } from "react-bootstrap";
+import { Button, Col, Container, Dropdown, Nav, Row } from "react-bootstrap";
 import { BiSad } from "react-icons/bi";
 import { useMutation, useQuery } from "react-query";
 import { useHistory } from "react-router-dom";
@@ -22,6 +22,8 @@ import { InsideCart, isActiveArray } from "../../utils/arrays";
 import { primaryColor } from "../../utils/constants";
 import { queryClient } from "../../utils/queryClient";
 import { showMsgToast } from "../../utils/showMsgToast";
+import { FaRegLightbulb } from "react-icons/fa";
+import { BsFunnel } from "react-icons/bs";
 
 const key = "plans";
 
@@ -166,132 +168,136 @@ const Plans = () => {
 
   return (
     <>
-      <Container fluid className="card component-wrapper view-padding">
+      <div className="view-padding">
         <PageHeading
           title="Plans"
+          description="Create and manage plan"
+          icon={<FaRegLightbulb size={24} />}
           onClick={_onCreateClick}
           totalRecords={data?.total}
           permissionReq="create_plan"
         />
-
-        {!isLoading && (
-          <Container fluid className="px-0">
-            <div>
-              <div className="filter">
-                <BreadCrumb
-                  onFilterChange={_onFilterChange}
-                  value=""
-                  currentValue={filter.active}
-                  dataLength={data?.data?.length}
-                  idx="active"
-                  title="All"
-                />
-                <BreadCrumb
-                  onFilterChange={_onFilterChange}
-                  value="1"
-                  currentValue={filter.active}
-                  dataLength={data?.data?.length}
-                  idx="active"
-                  title="Active"
-                />
-                <BreadCrumb
-                  onFilterChange={_onFilterChange}
-                  value="0"
-                  currentValue={filter.active}
-                  dataLength={data?.data?.length}
-                  idx="active"
-                  title="Not Active"
-                  isLast
-                />
-              </div>
-            </div>
-          </Container>
-        )}
-        <hr className="mt-2" />
-        <Container fluid className="h-100 p-0">
-          {isLoading ? (
-            <IsLoading />
-          ) : (
-            <>
-              {!error && (
-                <>
-                  <Container fluid className="pt-3 px-0">
-                    <Row className="select-filter d-flex ">
-                      <Col md="auto">
-                        <FilterSelect
-                          currentValue={filter.category_id}
-                          data={!isCategoresLoading && Categories.data}
-                          label="Categories"
-                          idx="category_id"
-                          onFilterChange={_onFilterChange}
-                        />
-                      </Col>
-                      <Col md="auto">
-                        <FilterSelect
-                          currentValue={filter.allowed_usage}
-                          data={InsideCart}
-                          label="Allowed Usage"
-                          idx="allowed_usage"
-                          width="80px"
-                          onFilterChange={_onFilterChange}
-                        />
-                      </Col>
-                      <Col md="auto">
-                        <FilterSelect
-                          currentValue={filter.is_popular}
-                          data={isActiveArray}
-                          label="Is Popular?"
-                          idx="is_popular"
-                          onFilterChange={_onFilterChange}
-                          defaultSelectTitle="Show All"
-                        />
-                      </Col>
-                      <Col
-                        md="auto"
-                        className="d-flex align-items-end justify-md-content-center"
+      </div>
+      <hr />
+      <div className="h-100 p-0">
+        {isLoading ? (
+          <IsLoading />
+        ) : (
+          <>
+            {!error && (
+              <>
+                <ReactTable
+                  data={data?.data}
+                  tabs={
+                    <div className="d-flex justify-content-between">
+                      <Nav
+                        className="global-navs"
+                        variant="tabs"
+                        activeKey={filter.active}
+                        onSelect={(selectedKey) =>
+                          _onFilterChange("active", selectedKey)
+                        }
                       >
-                        <Button
-                          variant={
-                            areTwoObjEqual(intitialFilter, filter)
-                              ? "light"
-                              : "primary"
-                          }
-                          style={{
-                            fontSize: 14,
-                          }}
-                          onClick={() => setFilter(intitialFilter)}
-                        >
-                          Reset Filters
-                        </Button>
-                      </Col>
-                    </Row>
-                  </Container>
-                  <hr className="mt-2" />
-                  <ReactTable
-                    data={data?.data}
-                    columns={columns}
-                    setSelectedRows={setSelectedRows}
-                    filter={filter}
-                    onFilterChange={_onFilterChange}
-                    isDataLoading={isFetching}
-                    searchPlaceHolder="Search using name"
-                    deletePermissionReq="delete_plan"
-                  />
-                </>
-              )}
-              {!error && data?.data?.length > 0 ? (
-                <TablePagination
-                  currentPage={data?.current_page}
-                  lastPage={data?.last_page}
-                  setPage={_onFilterChange}
-                  hasNextPage={!!data?.next_page_url}
-                  hasPrevPage={!!data?.prev_page_url}
+                        <Nav.Item>
+                          <Nav.Link eventKey="">
+                            All ({data?.data?.length || 0})
+                          </Nav.Link>
+                        </Nav.Item>
+
+                        <Nav.Item>
+                          <Nav.Link eventKey="1">
+                            Active (
+                            {data?.data?.filter((item) => item.status === "1")
+                              .length || 0}
+                            )
+                          </Nav.Link>
+                        </Nav.Item>
+
+                        <Nav.Item>
+                          <Nav.Link eventKey="0">
+                            Not Active (
+                            {data?.data?.filter((item) => item.status === "0")
+                              .length || 0}
+                            )
+                          </Nav.Link>
+                        </Nav.Item>
+                      </Nav>
+                    </div>
+                  }
+                  filters={
+                    <Dropdown className="filter-dropdown">
+                      <Dropdown.Toggle as={Button} variant="primary">
+                        <BsFunnel /> Filters
+                      </Dropdown.Toggle>
+                      <Dropdown.Menu>
+                        <div className="filter-dropdown-heading d-flex justify-content-between w-100">
+                          <h4>Filter</h4>
+                          <div className="d-flex align-items-center justify-md-content-center">
+                            <Button
+                              variant={
+                                areTwoObjEqual(intitialFilter, filter)
+                                  ? "light"
+                                  : "primary"
+                              }
+                              style={{
+                                fontSize: 14,
+                              }}
+                              onClick={() => setFilter(intitialFilter)}
+                            >
+                              Reset Filters
+                            </Button>
+                          </div>
+                        </div>
+                        <div className="select-filter">
+                          <FilterSelect
+                            currentValue={filter.category_id}
+                            data={!isCategoresLoading && Categories.data}
+                            label="Categories"
+                            idx="category_id"
+                            onFilterChange={_onFilterChange}
+                          />
+                          <FilterSelect
+                            currentValue={filter.allowed_usage}
+                            data={InsideCart}
+                            label="Allowed Usage"
+                            idx="allowed_usage"
+                            width="80px"
+                            onFilterChange={_onFilterChange}
+                          />
+                          <FilterSelect
+                            currentValue={filter.is_popular}
+                            data={isActiveArray}
+                            label="Is Popular?"
+                            idx="is_popular"
+                            onFilterChange={_onFilterChange}
+                            defaultSelectTitle="Show All"
+                          />
+                        </div>
+                      </Dropdown.Menu>
+                    </Dropdown>
+                  }
+                  columns={columns}
+                  setSelectedRows={setSelectedRows}
+                  filter={filter}
+                  onFilterChange={_onFilterChange}
+                  isDataLoading={isFetching}
+                  searchPlaceHolder="Search using name"
+                  deletePermissionReq="delete_plan"
                 />
-              ) : null}{" "}
-            </>
-          )}
-        </Container>
-      </Container>
+              </>
+            )}
+            {!error && data?.data?.length > 0 ? (
+              <TablePagination
+                currentPage={data?.current_page}
+                lastPage={data?.last_page}
+                setPage={_onFilterChange}
+                hasNextPage={!!data?.next_page_url}
+                hasPrevPage={!!data?.prev_page_url}
+              />
+            ) : null}{" "}
+          </>
+        )}
+      </div>
 
       {selectedRows.length > 0 && (
         <div className="delete-button rounded">

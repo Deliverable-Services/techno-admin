@@ -43,7 +43,10 @@ const createUpdateUser = ({
   });
 };
 
-const UserBasics = () => {
+interface UserBasicsProps {
+  toggleModal: () => void;
+}
+const UserBasics = ({toggleModal}: UserBasicsProps) => {
   const { state } = useLocation();
   const history = useHistory();
   const id = state ? (state as any).id : null;
@@ -79,7 +82,7 @@ const UserBasics = () => {
       setTimeout(() => queryClient.invalidateQueries(key), 500);
       if (id) return showMsgToast("User updated successfully");
       showMsgToast("User created successfully");
-      history.goBack();
+      toggleModal();
     },
     onError: (error: AxiosError) => {
       handleApiError(error, history);
@@ -92,8 +95,6 @@ const UserBasics = () => {
 
   return (
     <>
-      <div className="card view-padding p-2 d-flex mt-3">
-        <BackButton title={role || "User"} />
         <Row className="rounded">
           <Col className="mx-auto">
             <Formik
@@ -135,13 +136,6 @@ const UserBasics = () => {
                     />
                     <InputField
                       as="select"
-                      selectData={isActiveArray}
-                      name="disabled"
-                      label="Disabled?"
-                      placeholder="Is User Disabled?"
-                    />
-                    <InputField
-                      as="select"
                       selectData={allRoles}
                       name="role"
                       label="Role"
@@ -178,7 +172,6 @@ const UserBasics = () => {
             </Formik>
           </Col>
         </Row>
-      </div>
     </>
   );
 };

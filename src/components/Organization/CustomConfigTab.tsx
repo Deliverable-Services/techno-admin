@@ -164,7 +164,7 @@ const CustomConfigTab = () => {
             variant="primary"
             onClick={() => setModalShow(true)}
             size={"sm"}
-            style={{ background: "#303030", borderColor: "#303030" }}
+            style={{ background: "var(--primary-color)", borderColor: "var(--primary-color)" }}
           >
             <div className="text-white d-flex align-items-center">
               <AiOutlinePlus size={18} />

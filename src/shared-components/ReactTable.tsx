@@ -5,8 +5,9 @@ import { Container, Dropdown, Spinner, Table } from "react-bootstrap";
 import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
 import { AiOutlineSearch } from "react-icons/ai";
-import { MdRemoveShoppingCart } from "react-icons/md";
+import { MdRemoveShoppingCart, MdFilterList, MdRefresh } from "react-icons/md";
 import { GoSettings } from "react-icons/go";
+import { FaDatabase, FaSearch } from "react-icons/fa";
 import { IoMdArrowDropdown, IoMdArrowDropup, IoMdClose } from "react-icons/io";
 import { BsLayoutTextSidebar } from "react-icons/bs";
 // import Checkbox from 'react-checkbox-component'
@@ -45,7 +46,7 @@ interface Props {
   isSelectable?: boolean;
   searchPlaceHolder?: string;
   deletePermissionReq?: string;
-  showSearch?: boolean
+  showSearch?: boolean;
   showRecords?: boolean;
 }
 interface ISearchInput {
@@ -261,17 +262,29 @@ function ReactTable({
 
   return (
     <div className="">
-      <Container
-        fluid
-        className="pb-3 d-flex justify-space-between align-items-center position-relative px-3"
-        style={{ flexDirection: isDesktop ? "row" : "column-reverse" }}
+      <div
+        className="d-flex justify-space-between align-items-center position-relative view-padding view-heading bg-grey-primary"
+        style={{
+          flexDirection: isDesktop ? "row" : "column-reverse",
+          marginBottom: "0 !important",
+        }}
       >
         {tabs && tabs}
-        <div className="d-flex align-items-center ml-auto">
-          <div className="w-100" style={{ minWidth: 300, marginRight: 8 }}>
+        <div
+          className={`d-flex align-items-center ${
+            isDesktop ? "ml-auto" : "ml-unset"
+          }`}
+        >
+          <div
+            className="w-100"
+            style={{ minWidth: isDesktop ? 300 : "auto", marginRight: 8 }}
+          >
             {showSearch && (
-              <div className="search-input global-card" style={{ paddingInline: '10px' }}>
-                <AiOutlineSearch size={18} />
+              <div
+                className="search-input global-card"
+                style={{ paddingInline: "10px" }}
+              >
+                <AiOutlineSearch size={22} />
                 <SearchInput
                   preGlobalFilteredRows={preGlobalFilteredRows}
                   globalFilter={state.globalFilter}
@@ -284,15 +297,14 @@ function ReactTable({
               </div>
             )}
           </div>
-
+          {filters && filters}
           <div className="search-filters-div">
-            {filters && filters}
             <Dropdown>
               <Dropdown.Toggle
                 id="dropdown-basic"
-                className="filter-button m-0 p-0 manage-column d-flex gap-3 align-items-center bg-transparent border-0 text-primary"
+                className="filter-button m-0 p-0 manage-column d-flex align-items-center bg-transparent border-0 text-primary"
               >
-                <BsLayoutTextSidebar />
+                <BsLayoutTextSidebar className="mr-2" /> Columns
               </Dropdown.Toggle>
 
               <Dropdown.Menu className="p-2 menu-dropdown">
@@ -334,14 +346,15 @@ function ReactTable({
             </Dropdown>
           </div>
         </div>
-      </Container>
+      </div>
 
       {/*-------------------- table---------------------  */}
       <div className="">
         <DndProvider backend={HTML5Backend}>
           <div className="tableFixed position-relative">
             <Table
-              className="table-fixed"
+              className="table-fixed mb-0"
+              style={{ borderTop: "1px solid var(--border)" }}
               {...getTableProps()}
               responsive
               hover
@@ -350,8 +363,64 @@ function ReactTable({
               <thead className="bg-grey-primary">
                 {isDataLoading ? (
                   <tr>
-                    <td className="text-muted font-weight-bold w-100">
-                      Loading <Spinner size="sm" animation="border" />
+                    <td
+                      colSpan={
+                        headerGroups[0]?.headers?.length || columns.length
+                      }
+                      className="text-center p-4"
+                      style={{
+                        backgroundColor: "#f8f9fa",
+                        border: "none",
+                        position: "relative",
+                      }}
+                    >
+                      <div className="d-flex flex-column align-items-center justify-content-center">
+                        <div
+                          style={{
+                            width: "200px",
+                            height: "2px",
+                            backgroundColor: "#e9ecef",
+                            borderRadius: "1px",
+                            overflow: "hidden",
+                            marginBottom: "10px",
+                          }}
+                        >
+                          <div
+                            style={{
+                              width: "100%",
+                              height: "100%",
+                              background: `linear-gradient(90deg, ${primaryColor}40, ${primaryColor}, ${primaryColor}40)`,
+                              animation:
+                                "loading-bar 1.5s ease-in-out infinite",
+                            }}
+                          />
+                        </div>
+
+                        <div className="d-flex align-items-center justify-content-center">
+                          <div
+                            className="d-flex align-items-center justify-content-center mr-2"
+                            style={{
+                              width: "20px",
+                              height: "20px",
+                              backgroundColor: "white",
+                              borderRadius: "50%",
+                              border: `2px solid ${primaryColor}20`,
+                              boxShadow: "0 2px 8px rgba(0,0,0,0.1)",
+                            }}
+                          >
+                            <FaDatabase size={12} color={primaryColor} />
+                          </div>
+
+                          <div className="d-flex align-items-center">
+                            <span
+                              className="text-muted font-weight-500"
+                              style={{ fontSize: "15px" }}
+                            >
+                              Refreshing table data...
+                            </span>
+                          </div>
+                        </div>
+                      </div>
                     </td>
                   </tr>
                 ) : null}
@@ -432,10 +501,9 @@ function ReactTable({
 </Container>
 : ""} */}
             </Table>
-            {rows.length === 0 ? (
+            {/* {rows.length === 0 ? (
               ""
-            ) : (
-                showRecords ? (
+            ) : showRecords ? (
               <div
                 className="d-flex gap-3 align-items-center justify-content-center"
                 style={{ position: "absolute", left: 10, bottom: "-40px" }}
@@ -463,17 +531,107 @@ function ReactTable({
                   ))}
                 </select>
               </div>
-                ) : null
-            )}
+            ) : null} */}
           </div>
         </DndProvider>
         {rows.length === 0 ? (
-          <Container fluid className="d-flex justify-content-center display-3">
-            <div className="d-flex flex-column align-items-center pt-3 pb-3">
-              <MdRemoveShoppingCart color="#000" size={60} />
-              <h4 className="text-black font-weight-bold mt-2">
+          <Container
+            fluid
+            className="d-flex justify-content-center"
+            style={{ marginTop: "60px", marginBottom: "60px" }}
+          >
+            <div
+              className="d-flex flex-column align-items-center text-center"
+              style={{ maxWidth: "450px" }}
+            >
+              <div className="position-relative mb-4">
+                <div
+                  className="d-flex align-items-center justify-content-center"
+                  style={{
+                    width: "100px",
+                    height: "100px",
+                    backgroundColor: "#f8f9fa",
+                    borderRadius: "50%",
+                    border: `3px solid ${primaryColor}20`,
+                  }}
+                >
+                  <FaDatabase size={40} color={primaryColor} />
+                </div>
+                <div
+                  className="position-absolute d-flex align-items-center justify-content-center"
+                  style={{
+                    width: "30px",
+                    height: "30px",
+                    backgroundColor: "#6c757d",
+                    borderRadius: "50%",
+                    bottom: "-2px",
+                    right: "-2px",
+                    border: "2px solid white",
+                  }}
+                >
+                  <FaSearch size={14} color="white" />
+                </div>
+              </div>
+
+              <h4
+                className="mb-3"
+                style={{
+                  fontWeight: "600",
+                  color: "#2c3e50",
+                  fontSize: "20px",
+                }}
+              >
                 No data found
               </h4>
+
+              <p
+                className="text-muted mb-4"
+                style={{
+                  fontSize: "15px",
+                  lineHeight: "1.5",
+                  maxWidth: "380px",
+                }}
+              >
+                {state.globalFilter
+                  ? "No results match your current search criteria. Try adjusting your filters or search terms."
+                  : "There are no records to display at the moment. Data will appear here once it's added to the system."}
+              </p>
+
+              {state.globalFilter ? (
+                <div
+                  className="d-flex flex-column align-items-center mb-3"
+                  style={{ fontSize: "13px" }}
+                >
+                  <div className="d-flex align-items-center mb-2 text-muted">
+                    <MdRefresh
+                      size={14}
+                      color={primaryColor}
+                      className="mr-2"
+                    />
+                    <span>Clear search and filters</span>
+                  </div>
+                  <div className="d-flex align-items-center mb-2 text-muted">
+                    <FaSearch size={12} color={primaryColor} className="mr-2" />
+                    <span>Try different search terms</span>
+                  </div>
+                  <div className="d-flex align-items-center text-muted">
+                    <MdFilterList
+                      size={14}
+                      color={primaryColor}
+                      className="mr-2"
+                    />
+                    <span>Adjust filter criteria</span>
+                  </div>
+                </div>
+              ) : null}
+
+              <div className="mt-2">
+                <small className="text-muted" style={{ opacity: 0.8 }}>
+                  {state.globalFilter
+                    ? `Searching for "${state.globalFilter}"`
+                    : `Need help? Contact support`}
+                </small>
+              </div>
             </div>
           </Container>
         ) : null}
@@ -510,8 +668,8 @@ const Row = ({ row }: any) => (
       return (
         <td {...cell.getCellProps()} style={{ verticalAlign: "middle" }}>
           {cell.value ||
-            cell.column.id === "selection" ||
-            cell.column.id === "Actions" ? (
+          cell.column.id === "selection" ||
+          cell.column.id === "Actions" ? (
             cell.render("Cell")
           ) : (
             <span className="text-muted">NA</span>

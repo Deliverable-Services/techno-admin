@@ -1,10 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import { Comment, Lead } from "./types";
-import Select from "react-select";
-import { FcProcess } from "react-icons/fc";
-import { MdCreate } from "react-icons/md";
+import Select, { components } from "react-select";
 import "./lead-drawer.css";
-import { formatTimestamp } from "../../utils/utitlity";
 import useUserProfileStore from "../../hooks/useUserProfileStore";
 import API from "../../utils/API";
 import { useMutation, useQuery } from "react-query";
@@ -15,18 +12,11 @@ import { showMsgToast } from "../../utils/showMsgToast";
 import { showErrorToast } from "../../utils/showErrorToast";
 import { RiChatFollowUpFill } from "react-icons/ri";
 import { GoPencil } from "react-icons/go";
-import { FaTrash, FaFlag } from "react-icons/fa"; // Add at the top with other imports
+import { FaTrash } from "react-icons/fa"; // Add at the top with other imports
 import { IoIosArrowRoundBack } from "react-icons/io";
 
 import { Button } from "react-bootstrap";
-import {
-  FaComments,
-  FaBell,
-  FaStickyNote,
-  FaPhone,
-  FaPencilAlt,
-  FaCheck,
-} from "react-icons/fa";
+import { FaComments, FaBell, FaStickyNote, FaCheck } from "react-icons/fa";
 import { BsEnvelope, BsBellFill } from "react-icons/bs";
 import { BiDotsHorizontalRounded } from "react-icons/bi";
 import { queryClient } from "../../utils/queryClient";
@@ -40,7 +30,6 @@ const updateLeadData = ({ id, data }: any) => {
     headers: { "Content-Type": "application/json" },
   });
 };
-
 interface Props {
   lead: Lead;
   onClose: () => void;
@@ -61,7 +50,7 @@ const LeadDrawer: React.FC<Props> = ({ lead, onClose }) => {
     city: lead?.city || "Paris",
     zipcode: lead?.zipcode || "75010",
     country: lead?.country || "France",
-    address: lead?.address || "174 Quai de Jemmas",
+    full_address: lead?.full_address || "174 Quai de Jemmas",
     website: lead?.website || "bb.agency",
     contactName: lead?.name || "John Doe",
     gender: lead?.gender || "Male",
@@ -90,8 +79,14 @@ const LeadDrawer: React.FC<Props> = ({ lead, onClose }) => {
 
   const saveField = (field: string) => {
     toggleEdit(field);
-    console.log("Saved", field, details[field]);
-    const data = { [field]: details[field] };
+    const primaryKeys = ["name", "email", "phone"];
+
+    const data = {
+      name: details.name,
+      email: details.email,
+      phone: details.phone,
+      ...(primaryKeys.includes(field) ? {} : { [field]: details[field] }),
+    };
     mutate({ id: lead.id, data });
   };
 
@@ -224,7 +219,22 @@ const LeadDrawer: React.FC<Props> = ({ lead, onClose }) => {
     );
   };
 
-  // console.log({ membersList });
+  const customStyles = {
+    option: (provided) => ({
+      ...provided,
+      display: "flex",
+      alignItems: "center",
+      gap: 8,
+      padding: 10,
+    }),
+    singleValue: (provided) => ({
+      ...provided,
+      display: "flex",
+      alignItems: "center",
+      gap: 4,
+    }),
+  };
+
   const assigneeOptions = membersList?.data?.map((member) => ({
     value: member.id,
     label: member.name,
@@ -235,7 +245,11 @@ const LeadDrawer: React.FC<Props> = ({ lead, onClose }) => {
     const assignee = assigneeOptions.find((o) => o.id === option.value);
     if (assignee) {
       try {
-        await API.post(`${key}/${lead.id}/assign-member`);
+        await API.post(
+          `${key}/${lead.id}/assign-member`,
+          { member_id: assignee.id },
+          { headers: { "Content-Type": "application/json" } }
+        );
       } catch (error) {
         handleApiError(error, history);
       }
@@ -248,7 +262,7 @@ const LeadDrawer: React.FC<Props> = ({ lead, onClose }) => {
       <div className="task-drawer-overlay" onClick={onClose} />
       <div className="task-drawer slide-in">
         <div className="drawer-header d-flex justify-content-between align-items-center mb-0 pb-0">
-          <div className="close-drawer ">
+          <div className="close-drawer pointer">
             <IoIosArrowRoundBack />
             <button onClick={onClose}>Back</button>
           </div>
@@ -313,7 +327,9 @@ const LeadDrawer: React.FC<Props> = ({ lead, onClose }) => {
                     onChange={handleSetSelectedAssignee}
                     placeholder="Select Assignee"
                     isClearable={false}
-                    className="input-div"
+                    className="input-div w-25"
+                    styles={customStyles}
+                    components={{ Option, SingleValue }}
                   />
                 </div>
               </div>
@@ -331,7 +347,7 @@ const LeadDrawer: React.FC<Props> = ({ lead, onClose }) => {
                     "city",
                     "zipcode",
                     "country",
-                    "address",
+                    "full_address",
                     "website",
                   ].map((field) => (
                     <div
@@ -339,7 +355,7 @@ const LeadDrawer: React.FC<Props> = ({ lead, onClose }) => {
                       className="d-flex justify-content-between align-items-center px-3 py-1"
                     >
                       <div className="text-muted text-capitalize text-14px">
-                        {field === "address" ? "Full Address" : field}
+                        {field === "full_address" ? "Full Address" : field}
                       </div>
                       <div className="d-flex align-items-center">
                         {editing[field] ? (
@@ -599,5 +615,56 @@ const Action = ({ icon, label }: { icon: JSX.Element; label: string }) => (
     <span className="ml-1 medium">{label}</span>
   </div>
 );
+
+const SingleValue = (props) => {
+  const { data } = props;
+  console.log("data", data);
+  return (
+    <components.SingleValue {...props}>
+      <img
+        src={
+          data.profile_pic || `https://ui-avatars.com/api/?name=${data.label}`
+        }
+        alt={data.label}
+        style={{
+          width: 24,
+          height: 24,
+          borderRadius: "50%",
+          objectFit: "cover",
+          marginRight: 8,
+        }}
+      />
+      {data.label}
+    </components.SingleValue>
+  );
+};
+
+const Option = (props) => {
+  const { data, innerRef, innerProps } = props;
+
+  return (
+    <div
+      ref={innerRef}
+      {...innerProps}
+      className="custom-option p-2"
+      key={data.value}
+    >
+      <img
+        src={
+          data.profile_pic || `https://ui-avatars.com/api/?name=${data.name}`
+        }
+        alt={data.label}
+        style={{
+          width: 24,
+          height: 24,
+          borderRadius: "50%",
+          objectFit: "cover",
+          marginRight: "6px",
+        }}
+      />
+      <span>{data.label}</span>
+    </div>
+  );
+};
 
 export default LeadDrawer;
