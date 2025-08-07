@@ -99,7 +99,7 @@ const ImagesTab: React.FC<ImagesTabProps> = ({ organisationId }) => {
               <i className="fas fa-images me-2 text-primary"></i>
               Business Images
               {imagesData?.total && (
-                <Badge bg="secondary" className="ms-2">
+                <Badge variant="secondary" className="ms-2">
                   {imagesData.total} total
                 </Badge>
               )}
@@ -182,7 +182,7 @@ const ImagesTab: React.FC<ImagesTabProps> = ({ organisationId }) => {
 
                   {/* Image Type Badge */}
                   <Badge
-                    bg={getImageTypeBadge(image.image_type)}
+                    variant={getImageTypeBadge(image.image_type)}
                     className="position-absolute top-0 start-0 m-2"
                   >
                     <i
@@ -328,7 +328,7 @@ const ImagesTab: React.FC<ImagesTabProps> = ({ organisationId }) => {
                     <strong className="d-block text-muted small mb-1">
                       IMAGE TYPE
                     </strong>
-                    <Badge bg={getImageTypeBadge(selectedImage.image_type)}>
+                    <Badge variant={getImageTypeBadge(selectedImage.image_type)}>
                       {selectedImage.image_type}
                     </Badge>
                   </div>

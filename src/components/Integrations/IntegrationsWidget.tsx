@@ -13,7 +13,7 @@ const IntegrationsWidget: React.FC = () => {
     connectionStatus: googleStatus,
     isLoading: isGoogleLoading,
   } = useGoogleBusinessIntegration({
-    organisationId: loggedInUser?.organisation?.id,
+    organisationId: loggedInUser?.organisations?.[0]?.id,
   });
 
   const getStatusBadge = (status: string, isConnected: boolean) => {

@@ -5,6 +5,7 @@ export interface BusinessProfile {
   name: string;
   title: string;
   phone: string;
+  description?: string;
   address: {
     formatted_address: string;
     address_components: Array<{
@@ -34,6 +35,9 @@ export interface BusinessProfile {
   };
   rating: number;
   review_count: number;
+  attributes?: {
+    [key: string]: any;
+  };
 }
 
 export interface BusinessReview {

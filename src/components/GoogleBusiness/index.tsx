@@ -15,9 +15,7 @@ const GoogleBusinessDashboard: React.FC = () => {
 
   // Use same organization ID logic as sidebar
   const organisationId =
-    loggedInUser?.organisation?.id ||
-    loggedInUser?.organisations?.[0]?.id ||
-    loggedInUser?.primaryOrganisation?.id;
+    loggedInUser?.organisations?.[0]?.id;
 
   const { isConnected, isLoading, connectionStatus } =
     useGoogleBusinessIntegration({
