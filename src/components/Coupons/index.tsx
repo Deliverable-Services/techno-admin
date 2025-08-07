@@ -231,7 +231,7 @@ const Coupons = () => {
                   }
                   columns={columns}
                   filters={
-                    <Dropdown className="filter-dropdown">
+                    <Dropdown className="search-filters-div filter-dropdown mr-2">
                       <Dropdown.Toggle as={Button} variant="primary">
                         <BsFunnel /> Filters
                       </Dropdown.Toggle>

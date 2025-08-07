@@ -2,10 +2,6 @@
   "name": "tradeo_admin",
   "version": "0.1.0",
   "private": true,
-  "engines": {
-    "node": "16.1.0",
-    "npm": ">=8.0.0"
-  },
   "dependencies": {
     "@material-ui/core": "4.11.4",
     "@material-ui/icons": "4.11.2",
@@ -44,13 +40,10 @@
     "react-scripts": "4.0.3",
     "react-select": "^5.10.2",
     "react-select-search": "3.0.7",
-    "react-step-progress": "1.0.3",
-    "react-step-progress-bar": "1.0.3",
     "react-switch": "6.0.0",
     "react-table": "7.6.3",
     "react-world-map": "^2.4.0",
     "recharts": "^2.0.9",
-    "semver": "^7.7.2",
     "typescript": "4.1.2",
     "uuid": "8.3.2",
     "web-vitals": "1.0.1",

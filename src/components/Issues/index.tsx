@@ -203,8 +203,8 @@ const Issues = () => {
       <div className="view-padding">
         <PageHeading
           icon={<GoIssueOpened size={24} />}
-          description="Create and manage issues"
-          title="Issues"
+          description="Create and manage tickets"
+          title="Support Tickets"
           totalRecords={data?.total}
           onClick={() => setModalShow(true)}
           permissionReq="create_issue"
