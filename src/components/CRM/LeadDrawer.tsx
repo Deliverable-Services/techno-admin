@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Comment, Lead } from "./types";
 import Select, { components } from "react-select";
 import "./lead-drawer.css";
@@ -10,15 +10,34 @@ import { handleApiError } from "../../hooks/handleApiErrors";
 import { useHistory } from "react-router-dom";
 import { showMsgToast } from "../../utils/showMsgToast";
 import { showErrorToast } from "../../utils/showErrorToast";
-import { RiChatFollowUpFill } from "react-icons/ri";
-import { GoPencil } from "react-icons/go";
-import { FaTrash } from "react-icons/fa"; // Add at the top with other imports
-import { IoIosArrowRoundBack } from "react-icons/io";
+import {
+  FaTrash,
+  FaUser,
+  FaBuilding,
+  FaFileInvoiceDollar,
+  FaCalendarAlt,
+  FaUserTie,
+  FaExchangeAlt,
+  FaArchive,
+} from "react-icons/fa";
+import { IoMdClose } from "react-icons/io";
+import {
+  MdEmail,
+  MdSms,
+  MdNotifications,
+  MdPerson,
+  MdBusiness,
+  MdLocationOn,
+  MdPhone,
+  MdWeb,
+} from "react-icons/md";
+import { AiOutlineUser, AiFillEdit } from "react-icons/ai";
+import { BiTime, BiUser } from "react-icons/bi";
 
-import { Button } from "react-bootstrap";
-import { FaComments, FaBell, FaStickyNote, FaCheck } from "react-icons/fa";
-import { BsEnvelope, BsBellFill } from "react-icons/bs";
-import { BiDotsHorizontalRounded } from "react-icons/bi";
+import { Dropdown, Row, Col } from "react-bootstrap";
+import { FaComments, FaStickyNote, FaCheck } from "react-icons/fa";
+import { BsEnvelope, BsBellFill, BsThreeDotsVertical } from "react-icons/bs";
+
 import { queryClient } from "../../utils/queryClient";
 import moment from "moment";
 import { User } from "../../types/interface";
@@ -37,10 +56,8 @@ interface Props {
 
 const LeadDrawer: React.FC<Props> = ({ lead, onClose }) => {
   const history = useHistory();
-  const editorRef = useRef<HTMLDivElement>(null);
-  const localStorageKey = `draft-comment-${lead.id}`;
+
   const loggedInUser = useUserProfileStore((state) => state.user);
-  const [imageData, setImageData] = useState<string | null>(null);
   const [comments, setComments] = useState<Comment[] | null>(null);
   const [selectedAssignee, setSelectedAssignee] = useState<User>();
   const [editText, setEditText] = useState<string>("");
@@ -58,10 +75,12 @@ const LeadDrawer: React.FC<Props> = ({ lead, onClose }) => {
     phone: lead?.phone || "+1234567890",
   });
 
+  const [leadStatus, setLeadStatus] = useState(lead?.status || "NEW");
+
   const [editing, setEditing] = useState<{ [key: string]: boolean }>({});
 
   const { data: membersList } = useQuery<any>(
-    [`users?role=admin&perPage=1000`, ,],
+    [`users?role=admin&perPage=1000`],
     {
       onError: (error: AxiosError) => {
         handleApiError(error, history);
@@ -109,25 +128,9 @@ const LeadDrawer: React.FC<Props> = ({ lead, onClose }) => {
     if (data) setComments(data.comments);
   }, [data]);
 
-  const handleInput = () => {
-    const content = editorRef.current?.innerText || "";
-    localStorage.setItem(localStorageKey, content);
-  };
-
-  const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
-
-    const reader = new FileReader();
-    reader.onload = () => {
-      setImageData(reader.result as string);
-    };
-    reader.readAsDataURL(file);
-  };
-
   const handleCommentSubmit = async () => {
     const text = editText.trim() || "";
-    if (!text && !imageData) return;
+    if (!text) return;
     const avatar =
       localStorage.getItem("avatar") || "https://i.pravatar.cc/40?u=default";
 
@@ -141,7 +144,6 @@ const LeadDrawer: React.FC<Props> = ({ lead, onClose }) => {
     const newComment = {
       id: Date.now().toString(),
       comment: text,
-      image: imageData || undefined,
       username: loggedInUser?.name || "User Name",
       avatar,
       user_id: loggedInUser.id,
@@ -150,32 +152,6 @@ const LeadDrawer: React.FC<Props> = ({ lead, onClose }) => {
     setComments((prev) => [...prev, newComment]);
 
     setEditText("");
-    setImageData(null);
-    localStorage.removeItem(localStorageKey);
-  };
-
-  const handleCommentUpdate = async (
-    leadId: number,
-    commentId: string,
-    editText: string,
-    comment: Comment
-  ) => {
-    if (!editText && !imageData) return;
-
-    const response = await API.put(`${key}/${leadId}/comment/${commentId}`, {
-      comment: editText,
-    });
-    if (response.status === 200) {
-      showMsgToast("Comment updated successfully");
-      comment.comment = editText;
-      setComments((prev) =>
-        prev.map((t) => (t.id === commentId ? comment : t))
-      );
-    } else {
-      showErrorToast("Error updating comment");
-    }
-
-    setImageData(null);
   };
 
   const handleCommentDelete = async (leadId: number, commentId: string) => {
@@ -188,20 +164,6 @@ const LeadDrawer: React.FC<Props> = ({ lead, onClose }) => {
     } else {
       showErrorToast("Error deleting comment");
     }
-  };
-
-  const [notes, setNotes] = useState<{ text: string; timestamp: string }[]>([]);
-  const [newNote, setNewNote] = useState("");
-
-  const handleAddNote = () => {
-    if (!newNote.trim()) return;
-    const timestamp = new Date().toLocaleString();
-    setNotes((prev) => [...prev, { text: newNote.trim(), timestamp }]);
-    setNewNote("");
-  };
-
-  const handleDeleteNote = (index: number) => {
-    setNotes((prev) => prev.filter((_, i) => i !== index));
   };
 
   const formattedDate = (date) => {
@@ -257,14 +219,222 @@ const LeadDrawer: React.FC<Props> = ({ lead, onClose }) => {
     }
   };
 
+  const statusOptions = [
+    { value: "NEW", label: "New", color: "#28a745" },
+    { value: "CONTACTED", label: "Contacted", color: "#17a2b8" },
+    { value: "QUALIFIED", label: "Qualified", color: "#ffc107" },
+    { value: "PROPOSAL", label: "Proposal", color: "#fd7e14" },
+    { value: "NEGOTIATION", label: "Negotiation", color: "#6f42c1" },
+    { value: "CLOSED_WON", label: "Closed Won", color: "#28a745" },
+    { value: "CLOSED_LOST", label: "Closed Lost", color: "#dc3545" },
+    { value: "CUSTOMER", label: "Customer", color: "#20c997" },
+  ];
+
+  const currentStatus =
+    statusOptions.find((s) => s.value === leadStatus) || statusOptions[0];
+
+  const timelineEvents = [
+    {
+      id: 1,
+      type: "customer_created",
+      title: "Customer Created",
+      description: "Lead was created in the system",
+      user: "System",
+      timestamp: lead.created_at,
+      icon: <FaUser />,
+      color: "#28a745",
+    },
+    {
+      id: 2,
+      type: "comment",
+      title: "Comment Added",
+      description: "Initial contact made via website form",
+      user: "John Smith",
+      timestamp: moment().subtract(2, "hours").toISOString(),
+      icon: <FaComments />,
+      color: "#17a2b8",
+    },
+    {
+      id: 3,
+      type: "email_sent",
+      title: "Email Sent",
+      description: "Welcome email sent to customer",
+      user: "Sarah Johnson",
+      timestamp: moment().subtract(1, "hours").toISOString(),
+      icon: <MdEmail />,
+      color: "#fd7e14",
+    },
+    {
+      id: 4,
+      type: "invoice_raised",
+      title: "Invoice Created",
+      description: "Invoice #INV-001 created for $1,500",
+      user: "Michael Brown",
+      timestamp: moment().subtract(30, "minutes").toISOString(),
+      icon: <FaFileInvoiceDollar />,
+      color: "#ffc107",
+    },
+    {
+      id: 5,
+      type: "meeting_scheduled",
+      title: "Meeting Scheduled",
+      description: "Demo meeting scheduled for tomorrow 2:00 PM",
+      user: "Lisa Davis",
+      timestamp: moment().subtract(15, "minutes").toISOString(),
+      icon: <FaCalendarAlt />,
+      color: "#6f42c1",
+    },
+  ];
+
   return (
     <>
-      <div className="task-drawer-overlay" onClick={onClose} />
-      <div className="task-drawer slide-in">
-        <div className="drawer-header d-flex justify-content-between align-items-center mb-0 pb-0">
-          <div className="close-drawer pointer">
-            <IoIosArrowRoundBack />
-            <button onClick={onClose}>Back</button>
+      <div className="crm-drawer-overlay" onClick={onClose} />
+      <div className="crm-drawer slide-in">
+        {/* Modern Enhanced Header */}
+        <div className="crm-drawer-header">
+          <div className="header-glass-panel">
+            <div className="d-flex justify-content-between align-items-start">
+              {/* Close Button */}
+              <button className="modern-close-btn" onClick={onClose}>
+                <IoMdClose size={20} />
+              </button>
+
+              {/* Customer Profile Section */}
+              <div className="customer-profile-section flex-grow-1 mx-4">
+                <div className="d-flex align-items-center">
+                  <div className="modern-avatar-container">
+                    <div className="avatar-ring">
+                      <img
+                        src={`https://ui-avatars.com/api/?name=${lead.name}&size=80&background=667eea&color=fff&font-size=0.4&bold=true`}
+                        alt={lead.name}
+                        className="modern-avatar"
+                      />
+                    </div>
+                    <div
+                      className="status-indicator"
+                      style={{ backgroundColor: currentStatus.color }}
+                    ></div>
+                  </div>
+
+                  <div className="customer-info ml-4">
+                    <h3 className="customer-name">{lead.name}</h3>
+                    <div className="customer-meta">
+                      <div
+                        className="modern-status-badge"
+                        style={{
+                          background: `linear-gradient(135deg, ${currentStatus.color}15, ${currentStatus.color}25)`,
+                          border: `1px solid ${currentStatus.color}30`,
+                        }}
+                      >
+                        <div
+                          className="status-dot"
+                          style={{ backgroundColor: currentStatus.color }}
+                        ></div>
+                        <span style={{ color: currentStatus.color }}>
+                          {currentStatus.label}
+                        </span>
+                      </div>
+                      <span className="meta-item">ID #{lead.id}</span>
+                      <span className="meta-item">
+                        {moment(lead.created_at).format("MMM DD, YYYY")}
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Action Buttons */}
+              <div className="header-actions">
+                <Dropdown>
+                  <Dropdown.Toggle
+                    as="div"
+                    className="modern-action-btn status-btn"
+                  >
+                    <FaExchangeAlt className="btn-icon" />
+                    <span>Status</span>
+                  </Dropdown.Toggle>
+                  <Dropdown.Menu className="modern-dropdown">
+                    {statusOptions.map((status) => (
+                      <Dropdown.Item
+                        key={status.value}
+                        onClick={() => setLeadStatus(status.value)}
+                        className={`modern-dropdown-item ${
+                          leadStatus === status.value ? "active" : ""
+                        }`}
+                      >
+                        <div className="status-option">
+                          <div
+                            className="status-color"
+                            style={{ backgroundColor: status.color }}
+                          ></div>
+                          <span>{status.label}</span>
+                        </div>
+                      </Dropdown.Item>
+                    ))}
+                  </Dropdown.Menu>
+                </Dropdown>
+
+                <Dropdown>
+                  <Dropdown.Toggle
+                    as="div"
+                    className="modern-action-btn menu-btn"
+                  >
+                    <BsThreeDotsVertical className="btn-icon" />
+                  </Dropdown.Toggle>
+                  <Dropdown.Menu className="modern-dropdown">
+                    <Dropdown.Item className="modern-dropdown-item">
+                      <FaUserTie className="item-icon" />
+                      <span>Convert to Customer</span>
+                    </Dropdown.Item>
+                    <Dropdown.Item className="modern-dropdown-item">
+                      <FaArchive className="item-icon" />
+                      <span>Archive Lead</span>
+                    </Dropdown.Item>
+                    <Dropdown.Divider />
+                    <Dropdown.Item className="modern-dropdown-item danger">
+                      <FaTrash className="item-icon" />
+                      <span>Delete Lead</span>
+                    </Dropdown.Item>
+                  </Dropdown.Menu>
+                </Dropdown>
+              </div>
+            </div>
+          </div>
+
+          {/* Modern Quick Actions */}
+          <div className="modern-quick-actions">
+            <div className="actions-grid">
+              <button className="modern-quick-btn primary">
+                <div className="btn-icon-wrapper">
+                  <MdEmail className="btn-icon" />
+                </div>
+                <span>Email</span>
+              </button>
+              <button className="modern-quick-btn success">
+                <div className="btn-icon-wrapper">
+                  <MdSms className="btn-icon" />
+                </div>
+                <span>SMS</span>
+              </button>
+              <button className="modern-quick-btn warning">
+                <div className="btn-icon-wrapper">
+                  <MdNotifications className="btn-icon" />
+                </div>
+                <span>Reminder</span>
+              </button>
+              <button className="modern-quick-btn info">
+                <div className="btn-icon-wrapper">
+                  <FaCalendarAlt className="btn-icon" />
+                </div>
+                <span>Meeting</span>
+              </button>
+              <button className="modern-quick-btn secondary">
+                <div className="btn-icon-wrapper">
+                  <FaFileInvoiceDollar className="btn-icon" />
+                </div>
+                <span>Invoice</span>
+              </button>
+            </div>
           </div>
         </div>
 
@@ -335,271 +505,312 @@ const LeadDrawer: React.FC<Props> = ({ lead, onClose }) => {
               </div>
             </div>
           </div>
-          <div className="d-flex">
-            <div className="flex-1">
-              <div className="card m-3 p-3 card">
-                <h6 className="mb-3 d-flex align-items-center border-bottom p-3">
-                  Company details
-                </h6>
-                <div className="pb-3">
-                  {[
-                    "name",
-                    "city",
-                    "zipcode",
-                    "country",
-                    "full_address",
-                    "website",
-                  ].map((field) => (
-                    <div
-                      key={field}
-                      className="d-flex justify-content-between align-items-center px-3 py-1"
-                    >
-                      <div className="text-muted text-capitalize text-14px">
-                        {field === "full_address" ? "Full Address" : field}
-                      </div>
-                      <div className="d-flex align-items-center">
-                        {editing[field] ? (
-                          <>
-                            <input
-                              className="form-control form-control-sm"
-                              style={{ maxWidth: "200px" }}
-                              value={details[field]}
-                              onChange={(e) =>
-                                handleChange(field, e.target.value)
-                              }
-                            />
-                            <FaCheck
-                              onClick={() => saveField(field)}
-                              style={{
-                                cursor: "pointer",
-                                marginLeft: 8,
-                                fontSize: 14,
-                              }}
-                            />
-                          </>
-                        ) : (
-                          <>
-                            <span className="mr-2 font-500  pl-5 text-14px">
-                              {details[field]}
-                            </span>
-                            <GoPencil
-                              onClick={() => toggleEdit(field)}
-                              style={{ cursor: "pointer", fontSize: "14px" }}
-                            />
-                          </>
-                        )}
-                      </div>
+          <Row className="h-100 no-gutters">
+            {/* Left Sidebar - Customer Information */}
+            <Col lg={4} className="crm-left-panel">
+              <div className="panel-content h-100">
+                {/* Modern Personal Information */}
+                <div className="modern-card mb-4">
+                  <div className="modern-card-header">
+                    <div className="card-icon-wrapper personal">
+                      <MdPerson className="card-icon" />
                     </div>
-                  ))}
-                </div>
-              </div>
-
-              <div className="card m-3 p-3 card">
-                <h6 className="mb-3 d-flex align-items-center p-3 border-bottom">
-                  Contact details
-                </h6>
-                <div className="pb-3">
-                  {["contactName", "gender", "email", "phone"].map((field) => (
-                    <div
-                      key={field}
-                      className="d-flex justify-content-between align-items-center px-3 py-1"
-                    >
-                      <div className="text-muted text-capitalize text-14px">
-                        {field === "contactName"
-                          ? "Name"
-                          : field.charAt(0).toUpperCase() + field.slice(1)}
-                      </div>
-                      <div className="d-flex align-items-center">
-                        {editing[field] ? (
-                          <>
-                            <input
-                              className="form-control form-control-sm"
-                              style={{ maxWidth: "200px" }}
-                              value={details[field]}
-                              onChange={(e) =>
-                                handleChange(field, e.target.value)
-                              }
-                            />
-                            <FaCheck
-                              onClick={() => saveField(field)}
-                              style={{
-                                cursor: "pointer",
-                                marginLeft: 8,
-                                fontSize: 14,
-                              }}
-                            />
-                          </>
-                        ) : (
-                          <>
-                            <span className="mr-2 font-500  pl-5 text-14px">
-                              {details[field]}
-                            </span>
-                            <GoPencil
-                              onClick={() => toggleEdit(field)}
-                              style={{ cursor: "pointer", fontSize: "14px" }}
-                            />
-                          </>
-                        )}
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            </div>
-            <div className="flex-1">
-              <div className="history-leads pl-4">
-                <h6 className="mb-3 d-flex align-items-center py-3">History</h6>
-                <div className="timeline">
-                  <div className="timeline-item mb-4 d-flex">
-                    <div className="timeline-icon mr-3">
-                      <FaComments className="text-muted" size={20} />
-                    </div>
-                    <div className="timeline-content global-card  p-3 rounded  flex-grow-1">
-                      <div className="d-flex justify-content-between">
-                        <div>
-                          <img
-                            src="https://i.pravatar.cc/40?u=user1"
-                            alt="avatar"
-                            className="rounded-circle mr-2 "
-                            width="30"
-                            height="30"
-                          />
-                          <strong>Cameron McLawrence</strong> started a chat on
-                          <span className="badge bg-success ml-3">
-                            WhatsApp
-                          </span>
-                          <div className="text-muted small mt-1">
-                            👤 Operator: Andrew Vance
+                    <h6 className="card-title">Personal Information</h6>
+                  </div>
+                  <div className="modern-card-body">
+                    <div className="compact-info-list">
+                      {["contactName", "gender", "email", "phone"].map(
+                        (field) => (
+                          <div key={field} className="compact-info-row">
+                            <div className="info-left">
+                              <div className="info-icon-small">
+                                {field === "email" && <MdEmail />}
+                                {field === "phone" && <MdPhone />}
+                                {field === "contactName" && <BiUser />}
+                                {field === "gender" && <AiOutlineUser />}
+                              </div>
+                              <span className="info-label-compact">
+                                {field === "contactName"
+                                  ? "Name"
+                                  : field.charAt(0).toUpperCase() +
+                                    field.slice(1)}
+                              </span>
+                            </div>
+                            <div className="info-right">
+                              {editing[field] ? (
+                                <div className="edit-mode-compact">
+                                  <input
+                                    className="compact-input"
+                                    value={details[field]}
+                                    onChange={(e) =>
+                                      handleChange(field, e.target.value)
+                                    }
+                                    autoFocus
+                                  />
+                                  <button
+                                    className="save-btn-compact"
+                                    onClick={() => saveField(field)}
+                                  >
+                                    <FaCheck />
+                                  </button>
+                                </div>
+                              ) : (
+                                <div
+                                  className="view-mode-compact"
+                                  onClick={() => toggleEdit(field)}
+                                >
+                                  <span className="info-value-compact">
+                                    {details[field]}
+                                  </span>
+                                  <AiFillEdit className="edit-icon-compact" />
+                                </div>
+                              )}
+                            </div>
                           </div>
-                        </div>
-                        <div className="text-muted small">
-                          Active 12 min ago
-                        </div>
-                      </div>
+                        )
+                      )}
                     </div>
                   </div>
+                </div>
 
-                  <div className="timeline-item mb-4 d-flex">
-                    <div className="timeline-icon mr-3">
-                      <FaBell className="text-muted" size={20} />
+                {/* Modern Company Information */}
+                <div className="modern-card">
+                  <div className="modern-card-header">
+                    <div className="card-icon-wrapper company">
+                      <MdBusiness className="card-icon" />
                     </div>
-                    <div className="timeline-content global-card p-3  flex-grow-1">
-                      <div className="d-flex justify-content-between">
-                        <div>
-                          File has been uploaded
-                          <a href="#" className="ml-1 text-info" target="">
-                            my-cool-file.jpg
-                          </a>
-                          <BiDotsHorizontalRounded className="ml-1 text-muted" />
-                          <div className="text-muted small mt-1">
-                            👤 Added by: Lora Adams
-                          </div>
-                        </div>
-                        <div className="text-muted small">2 hours ago</div>
-                      </div>
-                    </div>
+                    <h6 className="card-title">Company Information</h6>
                   </div>
-
-                  <div className="timeline-item mb-4 d-flex">
-                    <div className="timeline-icon  mr-3">
-                      <RiChatFollowUpFill className="text-muted" size={20} />
-                    </div>
-                    <div className="timeline-content global-card p-3 flex-grow-1">
-                      <div className="d-flex justify-content-between">
-                        <div>
-                          Triggered an event{" "}
-                          <span className="text-warning font-weight-bold">
-                            webinar-email-follow-up
-                          </span>
-                          <div className="text-muted small mt-1">
-                            👤 Triggered by: John Lock
+                  <div className="modern-card-body">
+                    <div className="compact-info-list">
+                      {[
+                        "name",
+                        "website",
+                        "city",
+                        "country",
+                        "zipcode",
+                        "full_address",
+                      ].map((field) => (
+                        <div key={field} className="compact-info-row">
+                          <div className="info-left">
+                            <div className="info-icon-small">
+                              {field === "name" && <FaBuilding />}
+                              {field === "website" && <MdWeb />}
+                              {(field === "city" ||
+                                field === "country" ||
+                                field === "full_address") && <MdLocationOn />}
+                            </div>
+                            <span className="info-label-compact">
+                              {field === "full_address"
+                                ? "Address"
+                                : field.charAt(0).toUpperCase() +
+                                  field.slice(1)}
+                            </span>
                           </div>
-                          <div className="text-muted small mt-2">
-                            <span className="text-muted font-weight-bold">
-                              source:
-                            </span>
-                            <span className="ml-1">
-                              Christmas Promotion Website
-                            </span>
+                          <div className="info-right">
+                            {editing[field] ? (
+                              <div className="edit-mode-compact">
+                                <input
+                                  className="compact-input"
+                                  value={details[field]}
+                                  onChange={(e) =>
+                                    handleChange(field, e.target.value)
+                                  }
+                                  autoFocus
+                                />
+                                <button
+                                  className="save-btn-compact"
+                                  onClick={() => saveField(field)}
+                                >
+                                  <FaCheck />
+                                </button>
+                              </div>
+                            ) : (
+                              <div
+                                className="view-mode-compact"
+                                onClick={() => toggleEdit(field)}
+                              >
+                                <span
+                                  className="info-value-compact"
+                                  title={details[field]}
+                                >
+                                  {details[field]}
+                                </span>
+                                <AiFillEdit className="edit-icon-compact" />
+                              </div>
+                            )}
                           </div>
                         </div>
-                        <div className="text-muted small">
-                          December 14, 2023 at 3:31 PM
-                        </div>
-                      </div>
+                      ))}
                     </div>
                   </div>
                 </div>
               </div>
-            </div>
-            <div className="flex-1">
-              <div className="global-card m-3 p-3 notes-wrapper">
-                <h6 className="mb-3 d-flex align-items-center border-bottom pb-2">
-                  <FaStickyNote className="mr-2" /> Comments
-                </h6>
+            </Col>
+            {/* Center Panel - Modern Timeline */}
+            <Col lg={5} className="crm-center-panel">
+              <div className="panel-content h-100">
+                <div className="modern-timeline-header">
+                  <div className="timeline-title-wrapper">
+                    <div className="timeline-icon-bg">
+                      <BiTime className="timeline-title-icon" />
+                    </div>
+                    <h5 className="timeline-title">Customer Journey</h5>
+                  </div>
+                  <div className="timeline-stats">
+                    <span className="stat-item">
+                      {timelineEvents.length} Events
+                    </span>
+                  </div>
+                </div>
 
-                {/* Notes List */}
-                <div className="mt-4">
-                  {comments?.length > 0 ? (
-                    comments?.map((comment, index) => (
-                      <div
-                        key={index}
-                        className="global-card p-3 mb-3 bg-global  position-relative "
-                      >
-                        <div className="text-muted d-flex justify-content-between small mb-2">
-                          <div className="d-flex">
-                            <img
-                              src={`https://ui-avatars.com/api/?name=${comment?.user?.name}`}
-                              alt="avatar"
-                              className="rounded-circle mr-2 "
-                              style={{ width: "30px", height: "30px" }}
-                              width="20"
-                              height="20"
-                            />
-                            <div className="">
-                              {comment?.user?.name}
-                              <div>{formattedDate(comment?.updated_at)}</div>
+                <div className="modern-timeline-container">
+                  <div className="timeline-track">
+                    {timelineEvents.map((event, index) => (
+                      <div key={event.id} className="modern-timeline-item">
+                        <div className="timeline-marker-wrapper">
+                          <div
+                            className="timeline-marker"
+                            style={{ backgroundColor: event.color }}
+                          >
+                            <div className="marker-icon">{event.icon}</div>
+                          </div>
+                          {index < timelineEvents.length - 1 && (
+                            <div className="timeline-connector"></div>
+                          )}
+                        </div>
+
+                        <div className="timeline-event-card">
+                          <div className="event-header">
+                            <div
+                              className="event-type"
+                              style={{ color: event.color }}
+                            >
+                              {event.title}
+                            </div>
+                            <div className="event-time">
+                              {moment(event.timestamp).format(
+                                "MMM DD, hh:mm A"
+                              )}
                             </div>
                           </div>
 
-                          <FaTrash
-                            className="text-danger pointer-cursor"
-                            onClick={() =>
-                              handleCommentDelete(lead.id, comment?.id)
-                            }
-                          />
-                        </div>
-                        <div>{comment?.comment}</div>
-                      </div>
-                    ))
-                  ) : (
-                    <div className="text-muted small">No notes yet.</div>
-                  )}
-                </div>
+                          <div className="event-description">
+                            {event.description}
+                          </div>
 
-                {/* Add New Note */}
-                <div className="form-group">
-                  <textarea
-                    className="form-control"
-                    rows={3}
-                    placeholder="Write a comment..."
-                    value={editText}
-                    onChange={(e) => setEditText(e.target.value)}
-                  />
-                  <Button
-                    variant="primary"
-                    size="sm"
-                    className="mt-2"
-                    onClick={handleCommentSubmit}
-                    disabled={!editText.trim()}
-                  >
-                    Comment
-                  </Button>
+                          <div className="event-footer">
+                            <div className="event-user">
+                              <img
+                                src={`https://ui-avatars.com/api/?name=${event.user}&size=28&background=667eea&color=fff`}
+                                alt={event.user}
+                                className="user-avatar"
+                              />
+                              <span className="user-name">{event.user}</span>
+                            </div>
+                            <div className="event-actions">
+                              <button className="action-btn">
+                                <span>•••</span>
+                              </button>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
                 </div>
               </div>
-              {/* <div className="blank-div global-card m-3 p-3 "></div> */}
-            </div>
-          </div>
+            </Col>
+            {/* Right Panel - Notes Only */}
+            <Col lg={3} className="crm-right-panel">
+              <div className="panel-content h-100">
+                {/* Modern Notes Section */}
+                <div className="modern-card notes-card">
+                  <div className="modern-card-header">
+                    <div className="card-icon-wrapper notes">
+                      <FaStickyNote className="card-icon" />
+                    </div>
+                    <h6 className="card-title">Notes & Comments</h6>
+                    <span className="notes-count">{comments?.length || 0}</span>
+                  </div>
+                  <div className="modern-card-body notes-body">
+                    {/* Modern Notes List */}
+                    <div className="modern-notes-list">
+                      {comments?.length > 0 ? (
+                        comments?.map((comment, index) => (
+                          <div key={index} className="modern-comment-item">
+                            <div className="comment-header">
+                              <div className="comment-user">
+                                <img
+                                  src={`https://ui-avatars.com/api/?name=${comment?.user?.name}&size=32&background=667eea&color=fff`}
+                                  alt="avatar"
+                                  className="comment-avatar"
+                                />
+                                <div className="user-details">
+                                  <div className="user-name">
+                                    {comment?.user?.name}
+                                  </div>
+                                  <div className="comment-time">
+                                    {formattedDate(comment?.updated_at)}
+                                  </div>
+                                </div>
+                              </div>
+                              <button
+                                className="delete-comment-btn"
+                                onClick={() =>
+                                  handleCommentDelete(lead.id, comment?.id)
+                                }
+                              >
+                                <FaTrash />
+                              </button>
+                            </div>
+                            <div className="comment-content">
+                              {comment?.comment}
+                            </div>
+                          </div>
+                        ))
+                      ) : (
+                        <div className="empty-notes-state">
+                          <div className="empty-icon">
+                            <FaStickyNote />
+                          </div>
+                          <div className="empty-text">No notes yet</div>
+                          <div className="empty-subtext">
+                            Start by adding your first note below
+                          </div>
+                        </div>
+                      )}
+                    </div>
+
+                    {/* Modern Add Note */}
+                    <div className="modern-add-note">
+                      <div className="note-input-wrapper">
+                        <textarea
+                          className="modern-note-input"
+                          rows={3}
+                          placeholder="Write a note..."
+                          value={editText}
+                          onChange={(e) => setEditText(e.target.value)}
+                        />
+                      </div>
+                      <button
+                        className={`modern-add-btn ${
+                          !editText.trim() ? "disabled" : ""
+                        }`}
+                        onClick={handleCommentSubmit}
+                        disabled={!editText.trim()}
+                      >
+                        <span className="btn-text">Add Note</span>
+                        <div className="btn-icon">
+                          <span>→</span>
+                        </div>
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </Col>
+          </Row>
         </div>
       </div>
     </>
