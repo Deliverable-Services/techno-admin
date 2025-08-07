@@ -7,7 +7,6 @@ import { BiArrowFromRight, BiDownload, BiSad } from "react-icons/bi";
 import { GoArrowLeft } from "react-icons/go";
 import { useMutation, useQuery } from "react-query";
 import { useHistory, useParams } from "react-router-dom";
-import "react-step-progress-bar/styles.css";
 import Map from "../../components/Map";
 import { handleApiError } from "../../hooks/handleApiErrors";
 import useGetSingleQuery from "../../hooks/useGetSingleQuery";
@@ -29,7 +28,7 @@ const dateFormat = "DD MMMM YY (hh:mm a)";
 
 
 function saveAsFile(blog, filename = "jobcard.pdf") {
-  const url = window.URL.createObjectURL(new Blob([blog],{type: "octet/stream"}));
+  const url = window.URL.createObjectURL(new Blob([blog], { type: "octet/stream" }));
   const link = document.createElement("a");
   link.href = url;
   link.setAttribute("download", filename);
@@ -208,16 +207,16 @@ const SingleOrder = () => {
   // console.log(data);
   return (
     <Container fluid className="component-wrapper px-0 py-2">
-       <Button className="ml-2 back-btn" onClick={() => history.goBack()} size="sm">
-            <div className="d-flex align-items-center">
-              <GoArrowLeft/> <p className="ml-1 mb-0">Back</p>
-            </div>
-          </Button>
+      <Button className="ml-2 back-btn" onClick={() => history.goBack()} size="sm">
+        <div className="d-flex align-items-center">
+          <GoArrowLeft /> <p className="ml-1 mb-0">Back</p>
+        </div>
+      </Button>
       <Container
         fluid
         className="d-flex justify-content-between py-2 flex-column flex-md-row"
       >
-        
+
         <div className="d-flex align-md-items-center flex-column flex-md-row">
           <div className="d-flex align-items-center mb-1 mb-md-0">
             <p className=" mb-0">Order</p>
@@ -245,7 +244,7 @@ const SingleOrder = () => {
               <div className=" d-flex align-items-center text-white gap-3">
                 <BiDownload size={18} />
 
-                <a target="_blank" href={ config.adminApiBaseUrl + "job-card-pdf/" + id }>Job Card</a>
+                <a target="_blank" href={config.adminApiBaseUrl + "job-card-pdf/" + id} rel="noreferrer">Job Card</a>
               </div>
             )}
           </Button>
@@ -280,7 +279,7 @@ const SingleOrder = () => {
             </Button>
           </Restricted>
 
-         
+
         </div>
       </Container>
 

@@ -277,9 +277,9 @@ const Advertisements = () => {
                       </div>
                     }
                     filters={
-                      <Dropdown className="filter-dropdown">
+                      <Dropdown className="search-filters-div filter-dropdown mr-2">
                         <Dropdown.Toggle as={Button} variant="primary">
-                          <BsFunnel />
+                          <BsFunnel /> Filters
                         </Dropdown.Toggle>
                         <Dropdown.Menu>
                           <div className="filter-dropdown-heading d-flex justify-content-between w-100">

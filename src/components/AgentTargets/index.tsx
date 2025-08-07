@@ -163,7 +163,7 @@ const AgentTargets = () => {
                 <ReactTable
                   data={data?.data}
                   filters={
-                    <Dropdown className="filter-dropdown">
+                    <Dropdown className="search-filters-div filter-dropdown mr-2">
                       <Dropdown.Toggle as={Button} variant="primary">
                         <BsFunnel /> Filters
                       </Dropdown.Toggle>
@@ -218,7 +218,6 @@ const AgentTargets = () => {
                     </Dropdown>
                   }
                   columns={columns}
-                  setSelectedRows={setSelectedRows}
                   filter={filter}
                   onFilterChange={_onFilterChange}
                   isDataLoading={isFetching}

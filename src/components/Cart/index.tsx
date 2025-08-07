@@ -1,7 +1,7 @@
 import { AxiosError } from "axios";
 import moment from "moment";
 import { useMemo, useState } from "react";
-import { Button, Col, Container, Form, Row } from "react-bootstrap";
+import { Button, Col, Container, Dropdown, Form, Nav, Row } from "react-bootstrap";
 import { BiSad } from "react-icons/bi";
 import { useQuery } from "react-query";
 import { useHistory } from "react-router-dom";
@@ -22,6 +22,7 @@ import TableLink from "../../shared-components/TableLink";
 import { areTwoObjEqual } from "../../utils/areTwoObjEqual";
 import { OrderType } from "../../utils/arrays";
 import { primaryColor } from "../../utils/constants";
+import { BsEye, BsFunnel } from "react-icons/bs";
 // import UpdateCreateForm from "./FaqsCreateUpdateForm"
 
 const key = "bookings";
@@ -164,12 +165,8 @@ const InsideCart = () => {
         Header: "Actions",
         Cell: (data: Cell) => {
           return (
-            <div className="d-flex">
-              <Button
-                onClick={() => history.push(`/orders/${data.row.values.id}`)}
-              >
-                View
-              </Button>
+            <div className="d-flex justify-content-end">
+              <BsEye style={{ cursor: "pointer" }} onClick={() => history.push(`/orders/${data.row.values.id}`)} />
             </div>
           );
         },
@@ -191,161 +188,155 @@ const InsideCart = () => {
 
   return (
     <>
-      <Container fluid className="card component-wrapper view-padding">
-        <PageHeading title="Inside Cart" totalRecords={data?.total} />
+      <div className="view-padding">
+        <PageHeading title="Inside Cart" description="Track all your payments at once glance" totalRecords={data?.total} />
+      </div>
+      <hr />
 
-        {/* {(!isLoading || !isFetching) && (
-        <div className="filter mb-4">
-          <BreadCrumb
-            onFilterChange={onFilterChange}
-            value=""
-            currentValue={filter.status}
-            dataLength={data?.data?.length}
-            idx="status"
-            title="All"
-          />
-          <BreadCrumb
-            onFilterChange={onFilterChange}
-            value="success"
-            currentValue={filter.status}
-            dataLength={data?.data?.length}
-            idx="status"
-            title="Success"
-          />
-          <BreadCrumb
-            onFilterChange={onFilterChange}
-            value="pending"
-            currentValue={filter.status}
-            dataLength={data?.data?.length}
-            idx="status"
-            title="Pending"
-          />
-          <BreadCrumb
-            onFilterChange={onFilterChange}
-            value="error_payment"
-            currentValue={filter.status}
-            dataLength={data?.data?.length}
-            idx="status"
-            title="Payment Errors"
-          />
-          <BreadCrumb
-            onFilterChange={onFilterChange}
-            value="failed"
-            currentValue={filter.status}
-            dataLength={data?.data?.length}
-            idx="status"
-            title="Failed"
-            isLast
-          />
-        </div>
-      )} */}
+      <div className="h-100 p-0">
+        <>
+          {isLoading ? (
+            <IsLoading />
+          ) : (
+            <>
+              {!error && (
+                <>
+                  <ReactTable
+                    data={data.data}
+                    tabs={
+                      <div className="d-flex justify-content-between">
+                        {!isLoading && (
+                          <div>
+                            <Nav
+                              className="global-navs"
+                              variant="tabs"
+                              activeKey={filter.status}
+                              onSelect={(selectedKey) =>
+                                onFilterChange("status", selectedKey)
+                              }
+                            >
+                              <Nav.Item>
+                                <Nav.Link eventKey="">
+                                  All ({data?.data?.length || 0})
+                                </Nav.Link>
+                              </Nav.Item>
 
-        <Container fluid className="h-100 p-0">
-          <>
-            {isLoading ? (
-              <IsLoading />
-            ) : (
-              <>
-                {!error && (
-                  <>
-                    <Container fluid className="pt-2 px-0">
-                      <Row className="select-filter d-flex align-items-end">
-                        <Col md="auto">
-                          <FilterSelect
-                            currentValue={filter.user_id}
-                            data={!isCustomerLoading && Customers.data}
-                            label="Customer"
-                            idx="user_id"
-                            onFilterChange={onFilterChange}
-                          />
-                        </Col>
-                        <Col md="auto">
-                          <FilterSelect
-                            currentValue={filter.order_type}
-                            data={OrderType}
-                            label="Order Type"
-                            idx="order_type"
-                            onFilterChange={onFilterChange}
-                          />
-                        </Col>
-                        {/* <Col md="auto">
-                          <Form.Group>
-                            <Form.Label className="text-muted">
-                              Ordered At
-                            </Form.Label>
-                            <Form.Control
-                              type="date"
-                              value={localFilter.created_at}
-                              onChange={(e) => {
-                                const value = moment(e.target.value).format(
-                                  "YYYY-MM-DD"
-                                );
-                                _onFilterChange("created_at", value);
-                              }}
-                              style={{
-                                fontSize: 14,
-                                width: 150,
-                                height: 35,
-                              }}
+                              <Nav.Item>
+                                <Nav.Link eventKey="success">
+                                  Success (
+                                  {data?.data?.filter(
+                                    (item) => item.status === "success"
+                                  ).length || 0}
+                                  )
+                                </Nav.Link>
+                              </Nav.Item>
+                              <Nav.Item>
+                                <Nav.Link eventKey="pending">
+                                  Pending (
+                                  {data?.data?.filter(
+                                    (item) => item.status === "pending"
+                                  ).length || 0}
+                                  )
+                                </Nav.Link>
+                              </Nav.Item>
+                              <Nav.Item>
+                                <Nav.Link eventKey="error_payment">
+                                  Payment Errors (
+                                  {data?.data?.filter(
+                                    (item) => item.status === "error_payment"
+                                  ).length || 0}
+                                  )
+                                </Nav.Link>
+                              </Nav.Item>
+
+                              <Nav.Item>
+                                <Nav.Link eventKey="failed">
+                                  Failed (
+                                  {data?.data?.filter(
+                                    (item) => item.status === "failed"
+                                  ).length || 0}
+                                  )
+                                </Nav.Link>
+                              </Nav.Item>
+                            </Nav>
+                          </div>
+                        )}
+                      </div>
+                    }
+                    columns={columns}
+                    filters={
+                      <Dropdown className="search-filters-div filter-dropdown mr-2">
+                        <Dropdown.Toggle as={Button} variant="primary">
+                          <BsFunnel className="mr-2" />
+                          Filters
+                        </Dropdown.Toggle>
+                        <Dropdown.Menu>
+                          <div className="filter-dropdown-heading d-flex justify-content-between w-100">
+                            <h4>Filter</h4>
+                            <div className="d-flex align-items-center justify-md-content-center">
+                              <Button
+                                onClick={() => resetFilter()}
+                                variant={
+                                  areTwoObjEqual(
+                                    {
+                                      ...intitialFilter,
+                                      ...INITIAL_FILTER,
+                                    },
+                                    { ...localFilter, ...filter }
+                                  )
+                                    ? "light"
+                                    : "primary"
+                                }
+                                style={{
+                                  fontSize: 14,
+                                }}
+                              >
+                                Reset Filters
+                              </Button>
+                            </div>
+                          </div>
+                          <div className="select-filter">
+                            <FilterSelect
+                              currentValue={filter.user_id}
+                              data={!isCustomerLoading && Customers.data}
+                              label="Customer"
+                              idx="user_id"
+                              onFilterChange={onFilterChange}
                             />
-                          </Form.Group>
-                        </Col> */}
-
-                        <Col
-                          md="auto"
-                          className="d-flex align-items-end justify-md-content-center"
-                        >
-                          <Button
-                            onClick={() => {
-                              resetFilter();
-
-                              setFilter(intitialFilter);
-                            }}
-                            variant={
-                              areTwoObjEqual(
-                                { ...intitialFilter, ...INITIAL_FILTER },
-                                { ...localFilter, ...filter }
-                              )
-                                ? "light"
-                                : "primary"
-                            }
-                            style={{
-                              // backgroundColor: "#eee",
-                              fontSize: 14,
-                            }}
-                          >
-                            Reset Filters
-                          </Button>
-                        </Col>
-                      </Row>
-                    </Container>
-                    <hr className="mt-2" />
-                    <ReactTable
-                      data={data.data}
-                      columns={columns}
-                      setSelectedRows={setSelectedRows}
-                      filter={filter}
-                      onFilterChange={_onFilterChange}
-                      isDataLoading={isFetching}
-                      isSelectable={false}
-                      searchPlaceHolder="Search using ref_id"
-                    />
-                  </>
-                )}
-                {!error && data?.data?.length > 0 ? (
-                  <TablePagination
-                    currentPage={data?.current_page}
-                    lastPage={data?.last_page}
-                    setPage={_onFilterChange}
-                    hasNextPage={!!data?.next_page_url}
-                    hasPrevPage={!!data?.prev_page_url}
+                            <FilterSelect
+                              currentValue={filter.order_type}
+                              data={OrderType}
+                              label="Order Type"
+                              idx="order_type"
+                              onFilterChange={onFilterChange}
+                            />
+                          </div>
+                        </Dropdown.Menu>
+                      </Dropdown>
+                    }
+                    setSelectedRows={setSelectedRows}
+                    filter={filter}
+                    onFilterChange={_onFilterChange}
+                    isDataLoading={isFetching}
+                    isSelectable={false}
+                    searchPlaceHolder="Search using ref_id"
                   />
-                ) : null}{" "}
-              </>
-            )}
-          </>
-        </Container>
-      </Container>
+                </>
+              )}
+              {!error && data?.data?.length > 0 ? (
+                <TablePagination
+                  currentPage={data?.current_page}
+                  lastPage={data?.last_page}
+                  setPage={_onFilterChange}
+                  hasNextPage={!!data?.next_page_url}
+                  hasPrevPage={!!data?.prev_page_url}
+                />
+              ) : null}{" "}
+            </>
+          )}
+        </>
+      </div>
+
       {/* {selectedRows.length > 0 && (
         <div className="delete-button ">
           <span>
