@@ -8,9 +8,7 @@ export const useGoogleBusinessConnection = () => {
 
   // Try multiple ways to get organisation ID for compatibility
   const organisationId =
-    loggedInUser?.organisation?.id ||
-    loggedInUser?.organisations?.[0]?.id ||
-    loggedInUser?.primaryOrganisation?.id;
+    loggedInUser?.organisations?.[0]?.id;
 
   const {
     data: status,
