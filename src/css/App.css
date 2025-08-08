@@ -5788,7 +5788,7 @@ input[type="button"].btn-block {
   word-wrap: break-word;
   background-color: #fff;
   background-clip: border-box;
-  border: 1px solid var(--border);
+  border: 1.4px solid var(--border);
   border-radius: 0.25rem;
 }
 
@@ -11829,33 +11829,33 @@ a.text-text-muted:focus {
   }
 }
 
-.flyout-panel{
+.flyout-panel {
   z-index: 9999;
   right: 0px;
   top: 0;
   transform: translateX(0px);
   transition: transform 0.3s ease-in-out;
 }
-.flyout-form{
+.flyout-form {
   background: white;
   padding: 14px;
   border-radius: 6px;
 }
-.flyout-header{
+.flyout-header {
   padding: 8px 16px;
 }
-.flyout-header h5{
+.flyout-header h5 {
   font-size: 18px;
   font-weight: 600;
 }
-.flyout-header button{
+.flyout-header button {
   border: none;
   font-size: 1.5rem;
   line-height: 1;
   color: var(--black);
 }
-.flyout-content{
-  background-color: #F3F3F3;
+.flyout-content {
+  background-color: #f3f3f3;
 }
 nav {
   background-color: var(--sidebar);
@@ -13293,9 +13293,6 @@ li.navLink.my-1 svg path {
     transform: rotate(360deg);
   }
 }
-
-
-
 
 .g-user-profile img {
   width: 130px;
