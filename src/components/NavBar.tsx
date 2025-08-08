@@ -363,7 +363,7 @@ const NavBar = ({ isNavOpen, setIsNavOpen }: INavBar) => {
           </div>
         )}
 
-        <div className="all-links">
+        <div className="all-links scrollbarCustom">
           {/* Organisation Dropdown */}
           <div>
             <section
@@ -382,9 +382,9 @@ const NavBar = ({ isNavOpen, setIsNavOpen }: INavBar) => {
               value={
                 selectedOrg
                   ? {
-                      value: selectedOrg.id,
-                      label: selectedOrg.name,
-                    }
+                    value: selectedOrg.id,
+                    label: selectedOrg.name,
+                  }
                   : null
               }
               onChange={handleSetSelectedOrg}

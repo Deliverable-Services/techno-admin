@@ -13356,3 +13356,6 @@ li.navLink.my-1 svg path {
   object-fit: cover;
   margin-right: 11px;
 }
+.scrollbarCustom::-webkit-scrollbar {
+  width: 0;
+}

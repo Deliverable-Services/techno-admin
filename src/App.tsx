@@ -75,6 +75,7 @@ import { MoreScreen } from "./components/MoreScreen/MoreScreen";
 import useUserProfileStore from "./hooks/useUserProfileStore";
 import GoogleAnalytics from "./components/Google-analytics";
 import SubscriptionPage from "./components/Subscription";
+import UsersCreateEdit from "./components/Users/UsersCreateEdit";
 
 const App = () => {
   const [isDesktop, setIsDesktop] = useState<boolean>(false);
@@ -325,7 +326,7 @@ const App = () => {
               <PrivateRoute
                 path="/users/create-edit"
                 exact
-                component={UserCreateUpdateForm}
+                component={UsersCreateEdit}
                 permissionReq="read_user"
               />
               <PrivateRoute
