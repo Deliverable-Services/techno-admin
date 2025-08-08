@@ -47,13 +47,13 @@ const Column: React.FC<Props> = ({
 
   return (
     <div className="col-md-3 p-2 col-sm-2 ticket-width" ref={drop}>
-      <div className="rounded shadow-sm ticket-main-div">
+      <div className="rounded shadow-sm ticket-main-div postiion-relative">
         <div
           className="d-flex align-items-center p-3 gap-3"
           style={{
             position: "sticky",
             top: "0px",
-            zIndex: 99,
+            zIndex: 5,
             backgroundColor: "#fafafa",
           }}
         >
@@ -63,7 +63,7 @@ const Column: React.FC<Props> = ({
           <span className="badge badge-light">{leads?.length} Leads</span>
         </div>
 
-        <div className="p-3">
+        <div className="p-3" style={{ maxHeight: '600px', overflow: 'auto' }}>
           {leads?.map((lead) => (
             <div key={lead.id} onClick={() => onCardClick(lead.id)}>
               <LeadCard lead={lead} />
