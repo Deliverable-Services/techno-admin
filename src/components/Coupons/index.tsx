@@ -25,6 +25,9 @@ import { queryClient } from "../../utils/queryClient";
 import { showMsgToast } from "../../utils/showMsgToast";
 import { RiCoupon3Line } from "react-icons/ri";
 import { BsFunnel } from "react-icons/bs";
+import { useFlyout } from "../../hooks/useFlyout";
+import Flyout from "../../shared-components/Flyout";
+import CouponCreateUpdateForm from "./CouponsCreateUpdateForm";
 
 const key = "coupons";
 
@@ -44,6 +47,7 @@ const Coupons = () => {
   const [selectedRows, setSelectedRows] = useState([]);
   console.log(selectedRows.map((item) => item.id));
   const [filter, setFilter] = useState(intitialFilter);
+  const { isOpen: showFlyout, openFlyout, closeFlyout } = useFlyout();
   console.log({ filter });
   const { data, isLoading, isFetching, error } = useQuery<any>(
     [key, , filter],
@@ -65,7 +69,8 @@ const Coupons = () => {
   });
 
   const _onCreateClick = () => {
-    history.push("/coupons/create-edit");
+    // history.push("/coupons/create-edit");
+    openFlyout();
   };
   const _onEditClick = (id: string) => {
     history.push("/coupons/create-edit", { id });
@@ -302,6 +307,17 @@ const Coupons = () => {
           </Button>
         </div>
       )}
+
+      <Flyout
+        isOpen={showFlyout}
+        onClose={closeFlyout}
+        title={'Create Coupons'}
+        cancelText="Cancel"
+        width="800px"
+      >
+        <CouponCreateUpdateForm
+        />
+      </Flyout>
     </>
   );
 };

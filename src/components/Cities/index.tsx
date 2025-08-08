@@ -17,6 +17,9 @@ import { primaryColor } from "../../utils/constants";
 import { queryClient } from "../../utils/queryClient";
 import { showMsgToast } from "../../utils/showMsgToast";
 import { GiModernCity } from "react-icons/gi";
+import { useFlyout } from "../../hooks/useFlyout";
+import Flyout from "../../shared-components/Flyout";
+import CitiesCreateUpdateForm from "./CitiesCreateUpdateForm";
 
 const key = "cities";
 
@@ -36,6 +39,7 @@ const Cities = () => {
   const history = useHistory();
   const [selectedRows, setSelectedRows] = useState([]);
   const [filter, setFilter] = useState(intitialFilter);
+  const { isOpen: showFlyout, openFlyout, closeFlyout } = useFlyout();
   const { data, isLoading, isFetching, error } = useQuery<any>(
     [key, , filter],
     {
@@ -56,7 +60,8 @@ const Cities = () => {
   });
 
   const _onCreateClick = () => {
-    history.push("/cities/create-edit");
+    // history.push("/cities/create-edit");
+    openFlyout();
   };
   const _onEditClick = (id: string) => {
     history.push("/cities/create-edit", { id });
@@ -192,6 +197,15 @@ const Cities = () => {
           </Button>
         </div>
       )}
+       <Flyout
+        isOpen={showFlyout}
+        onClose={closeFlyout}
+        title={'Create Cities'}
+        cancelText="Cancel"
+      >
+        <CitiesCreateUpdateForm
+        />
+      </Flyout>
     </>
   );
 };

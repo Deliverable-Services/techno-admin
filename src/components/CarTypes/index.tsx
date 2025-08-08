@@ -1,5 +1,3 @@
-// index 
-
 import { AxiosError } from "axios";
 import React, { useMemo, useState } from "react";
 import { Button, Container, Dropdown } from "react-bootstrap";
@@ -21,6 +19,9 @@ import { showMsgToast } from "../../utils/showMsgToast";
 import { IoLogoModelS } from "react-icons/io";
 import { BsThreeDotsVertical } from "react-icons/bs";
 import { AiFillDelete } from "react-icons/ai";
+import { useFlyout } from "../../hooks/useFlyout";
+import Flyout from "../../shared-components/Flyout";
+import CarTypesCreateUpdateForm from "./CarTypesCreateUpdateForm";
 
 const key = "brand-model-type";
 
@@ -40,6 +41,7 @@ const CarTypes = () => {
   const history = useHistory();
   const [selectedRows, setSelectedRows] = useState([]);
   const [filter, setFilter] = useState(intitialFilter);
+  const { isOpen: showFlyout, openFlyout, closeFlyout } = useFlyout();
   const { data, isLoading, isFetching, error } = useQuery<any>(
     [key, , filter],
     {
@@ -60,7 +62,8 @@ const CarTypes = () => {
   });
 
   const _onCreateClick = () => {
-    history.push("/car-types/create-edit");
+    // history.push("/car-types/create-edit");
+    openFlyout();
   };
   const _onEditClick = (id: string) => {
     history.push("/car-types/create-edit", { id });
@@ -207,6 +210,17 @@ const CarTypes = () => {
           </Button>
         </div>
       )}
+
+      <Flyout
+        isOpen={showFlyout}
+        onClose={closeFlyout}
+        title={'Create Variants'}
+        cancelText="Cancel"
+
+      >
+        <CarTypesCreateUpdateForm
+        />
+      </Flyout>
     </>
   );
 };

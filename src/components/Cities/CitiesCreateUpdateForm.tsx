@@ -65,7 +65,7 @@ const CitiesCreateUpdateForm = () => {
   return (
     <>
       <div className="card view-padding p-2 d-flex mt-3">
-        <BackButton title={title} />
+        {/* <BackButton title={title} /> */}
 
         {/* <div className="text-primary">
           <div className="d-flex justify-content-between">
@@ -127,7 +127,7 @@ const CitiesCreateUpdateForm = () => {
                   </div>
 
                   <Row className="d-flex justify-content-start">
-                    <Col md="2">
+                    <Col md="12">
                       <Restricted to={id ? "update_city" : "create_city"}>
                         <Button
                           type="submit"

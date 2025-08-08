@@ -90,7 +90,8 @@ const Users = () => {
   };
 
   const _onEditClick = (id: string, role: string) => {
-    history.push("/users/create-edit", { id, role });
+    // history.push("/users/create-edit", { id, role });
+    openFlyout();
   };
 
 

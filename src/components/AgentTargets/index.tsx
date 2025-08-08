@@ -19,6 +19,9 @@ import { areTwoObjEqual } from "../../utils/areTwoObjEqual";
 import { primaryColor } from "../../utils/constants";
 import { BsFunnel } from "react-icons/bs";
 import { GiOnTarget } from "react-icons/gi";
+import { useFlyout } from "../../hooks/useFlyout";
+import Flyout from "../../shared-components/Flyout";
+import TargetCreateUpdateForm from "./AgentCreateUpdateForm";
 
 const key = "create-target";
 
@@ -35,6 +38,7 @@ const AgentTargets = () => {
   const history = useHistory();
 
   const [filter, setFilter] = useState(intitialFilter);
+  const { isOpen: showFlyout, openFlyout, closeFlyout } = useFlyout();
   const { data, isLoading, isFetching, error } = useQuery<any>([key, filter], {
     onError: (error: AxiosError) => {
       handleApiError(error, history);
@@ -48,7 +52,9 @@ const AgentTargets = () => {
     },
   ]);
   const _onCreateClick = () => {
-    history.push("/agent-targets/create-edit");
+    // history.push("/agent-targets/create-edit");
+    openFlyout();
+
   };
   const _onEditClick = (id: string) => {
     history.push("/agent-targets/create-edit", { id });
@@ -238,6 +244,17 @@ const AgentTargets = () => {
           </>
         )}
       </div>
+
+      <Flyout
+        isOpen={showFlyout}
+        onClose={closeFlyout}
+        title={'Create and manage targets for your agents'}
+        cancelText="Cancel"
+        width="800px"
+      >
+        <TargetCreateUpdateForm
+        />
+      </Flyout>
     </>
   );
 };

@@ -75,8 +75,8 @@ const SlotCreateUpdateForm = () => {
 
   return (
     <>
-      <BackButton title="Booking Slots" />
-      <Row className="rounded">
+      {/* <BackButton title="Booking Slots" /> */}
+      <Row className="rounded card p-5 view-padding m-2">
         <Col className="mx-auto">
           <Formik
             enableReinitialize
@@ -116,7 +116,7 @@ const SlotCreateUpdateForm = () => {
                 </div>
                 <Container fluid className="px-0 ">
                   <div
-                    className="card mx-auto w-50 view-padding"
+                    className="card mx-auto view-padding"
                     style={{ width: "" }}
                   >
                     <p className="text-center text-muted">
@@ -152,7 +152,7 @@ const SlotCreateUpdateForm = () => {
                   </div>
                 </Container>
                 <Row className="d-flex justify-content-start mt-2">
-                  <Col md="2">
+                  <Col md="12">
                     <Button
                       type="submit"
                       disabled={isLoading}

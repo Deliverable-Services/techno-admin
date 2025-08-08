@@ -66,7 +66,7 @@ const CategoriesCreateUpdateForm = () => {
   return (
     <>
       <div className="card view-padding p-2 d-flex mt-3">
-        <BackButton title="Categories" />
+        {/* <BackButton title="Categories" /> */}
         <Row className="rounded">
           <Col className="mx-auto">
             <Formik
@@ -115,7 +115,7 @@ const CategoriesCreateUpdateForm = () => {
                     />
                   </div>
                   <Row className="d-flex justify-content-start">
-                    <Col md="2">
+                    <Col md="12">
                       <Restricted
                         to={id ? "update_category" : "create_category"}
                       >

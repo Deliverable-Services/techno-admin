@@ -28,6 +28,9 @@ import { queryClient } from "../../utils/queryClient";
 import { showMsgToast } from "../../utils/showMsgToast";
 import useUserProfileStore from "../../hooks/useUserProfileStore";
 import { BsClock } from "react-icons/bs";
+import { useFlyout } from "../../hooks/useFlyout";
+import Flyout from "../../shared-components/Flyout";
+import SlotCreateUpdateForm from "./BookingSlotsCreateUpdateForm";
 // dummy event data
 
 const key = "disabled-slots";
@@ -45,6 +48,7 @@ const BookingSlots = () => {
   const history = useHistory();
   const [selectedRows, setSelectedRows] = useState([]);
   const [deletePopup, setDeletePopup] = useState(false);
+  const { isOpen: showFlyout, openFlyout, closeFlyout } = useFlyout();
   const [selectedRowId, setSelectedRowId] = useState<string>("");
   const [formattedDataForCalendar, setFormattedDataForCalendar] =
     useState(null);
@@ -88,9 +92,9 @@ const BookingSlots = () => {
             title: `${item.reason} ${moment
               .utc(item.datetime)
               .format("HH")}-${moment
-              .utc(item.datetime)
-              .add(1, "hour")
-              .format("HH")} `,
+                .utc(item.datetime)
+                .add(1, "hour")
+                .format("HH")} `,
             color: primaryColor,
           };
 
@@ -105,7 +109,8 @@ const BookingSlots = () => {
   }, [data, isLoading]);
 
   const _onCreateClick = () => {
-    history.push("/booking-slots/create-edit");
+    // history.push("/booking-slots/create-edit");
+    openFlyout();
   };
 
   const _onFilterChange = (idx: string, value: any) => {
@@ -201,6 +206,16 @@ const BookingSlots = () => {
           </Button>
         </Modal.Footer>
       </Modal>
+      <Flyout
+        isOpen={showFlyout}
+        onClose={closeFlyout}
+        title={'Create Meetings'}
+        cancelText="Cancel"
+        width="800px"
+      >
+        <SlotCreateUpdateForm
+        />
+      </Flyout>
     </>
   );
 };

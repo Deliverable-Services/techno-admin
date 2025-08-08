@@ -65,7 +65,7 @@ const FaqCreateUpdateForm = () => {
   return (
     <>
       <div className="card view-padding p-2 d-flex mt-3">
-        <BackButton title="Faqs" />
+        {/* <BackButton title="Faqs" /> */}
         <Row className="rounded">
           <Col className="mx-auto">
             <Formik
@@ -110,7 +110,7 @@ const FaqCreateUpdateForm = () => {
                   {/* <InputField name="is_active" placeholder="isActive" label="Is Active?" /> */}
 
                   <Row className="d-flex justify-content-start">
-                    <Col md="2">
+                    <Col md="12">
                       <Restricted to={id ? "update_faq" : "create_faq"}>
                         <Button
                           type="submit"
