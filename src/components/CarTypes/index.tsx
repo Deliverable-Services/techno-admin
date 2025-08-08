@@ -1,8 +1,8 @@
 // index 
- 
+
 import { AxiosError } from "axios";
 import React, { useMemo, useState } from "react";
-import { Button, Container } from "react-bootstrap";
+import { Button, Container, Dropdown } from "react-bootstrap";
 import { BiSad } from "react-icons/bi";
 import { useMutation, useQuery } from "react-query";
 import { useHistory } from "react-router-dom";
@@ -19,6 +19,8 @@ import { primaryColor } from "../../utils/constants";
 import { queryClient } from "../../utils/queryClient";
 import { showMsgToast } from "../../utils/showMsgToast";
 import { IoLogoModelS } from "react-icons/io";
+import { BsThreeDotsVertical } from "react-icons/bs";
+import { AiFillDelete } from "react-icons/ai";
 
 const key = "brand-model-type";
 
@@ -99,12 +101,37 @@ const CarTypes = () => {
         Header: "Actions",
         Cell: (data: Cell) => {
           return (
-            <EditButton
-              onClick={() => {
-                _onEditClick(data.row.values.id);
-              }}
-              permissionReq="update_brandmodelType"
-            />
+            <div className="d-flex align-items-center justify-content-end gap-3">
+              <EditButton
+                onClick={() => {
+                  _onEditClick(data.row.values.id);
+                }}
+                permissionReq="update_brandmodelType"
+              />
+              <Dropdown className="ellipsis-dropdown">
+                <Dropdown.Toggle
+                  variant="light"
+                  size="sm"
+                  className="p-1 border-0 shadow-none"
+                  id={`dropdown-${data.row.values.id}`}
+                >
+                  <BsThreeDotsVertical size={18} />
+                </Dropdown.Toggle>
+
+                <Dropdown.Menu className="menu-dropdown">
+
+                  <Dropdown.Item
+                    onClick={() => {
+                      mutate(selectedRows.map((i) => i.id));
+                    }}
+                    className="text-danger"
+                  >
+                    <AiFillDelete size={16} className="me-1" />
+                    Delete
+                  </Dropdown.Item>
+                </Dropdown.Menu>
+              </Dropdown>
+            </div>
           );
         },
       },
