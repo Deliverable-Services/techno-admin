@@ -25,6 +25,9 @@ import { queryClient } from "../../utils/queryClient";
 import { showMsgToast } from "../../utils/showMsgToast";
 import { BsFunnel } from "react-icons/bs";
 import { RiAdvertisementFill } from "react-icons/ri";
+import { useFlyout } from "../../hooks/useFlyout";
+import Flyout from "../../shared-components/Flyout";
+import AdvertisementCreateUpdateForm from "./AdvertisementUpdateCreateForm";
 const key = "banners/list";
 
 const deleteAd = (id: Array<any>) => {
@@ -62,6 +65,7 @@ const Advertisements = () => {
 
   const [isDraggable, setIsDraggable] = useState(false);
   const [filter, setFilter] = useState(initialFilter);
+  const { isOpen: showFlyout, openFlyout, closeFlyout } = useFlyout();
 
   const { data, isLoading, isFetching, error } = useQuery<any>(
     [key, filter.type, filter],
@@ -92,7 +96,8 @@ const Advertisements = () => {
   };
 
   const _onCreateClick = () => {
-    history.push("/advertisements/create-edit");
+    // history.push("/advertisements/create-edit");
+     openFlyout();
   };
   const _onEditClick = (id: string) => {
     history.push("/advertisements/create-edit", { id });
@@ -353,6 +358,16 @@ const Advertisements = () => {
           </Button>
         </div>
       )}
+       <Flyout
+        isOpen={showFlyout}
+        onClose={closeFlyout}
+        title={'Create Services'}
+        cancelText="Cancel"
+        width="800px"
+      >
+        <AdvertisementCreateUpdateForm
+        />
+      </Flyout>
     </>
   );
 };

@@ -73,7 +73,7 @@ const TargetCreateUpdateForm = () => {
   return (
     <>
       <div className="card view-padding p-2 d-flex mt-3">
-        <BackButton title={title} />
+        {/* <BackButton title={title} /> */}
         <Row className="rounded">
           <Col className="mx-auto">
             <Formik
@@ -126,7 +126,7 @@ const TargetCreateUpdateForm = () => {
                   </div>
 
                   <Row className="d-flex justify-content-start">
-                    <Col md="2">
+                    <Col md="12">
                       <Restricted
                         to={id ? "update_agenttarget" : "create_agenttarget"}
                       >

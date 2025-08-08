@@ -104,8 +104,8 @@ const RolesCreateUpdateForm = ({
               }}
             >
               {({ setFieldValue }) => (
-                <Form>
-                  <div className="form-container ">
+                <Form className="card view-padding">
+                  <div className="">
                     <InputField
                       name="name"
                       placeholder="Name"
@@ -115,7 +115,7 @@ const RolesCreateUpdateForm = ({
                   </div>
 
                   <Row className="d-flex justify-content-start">
-                    <Col md="2">
+                    <Col md="12">
                       <Restricted to={id ? "update_role" : "create_role"}>
                         <Button
                           type="submit"

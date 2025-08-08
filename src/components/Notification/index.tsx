@@ -35,6 +35,9 @@ import { showMsgToast } from "../../utils/showMsgToast";
 import Brands from "../Brands";
 import { BsFunnel, BsThreeDotsVertical } from "react-icons/bs";
 import { RiNotification2Line } from "react-icons/ri";
+import { useFlyout } from "../../hooks/useFlyout";
+import Flyout from "../../shared-components/Flyout";
+import NotificationCreateUpdateForm from "./NotificationCreateUpdateForm";
 
 const key = "fcm-notification";
 const intitialFilter = {
@@ -56,6 +59,7 @@ const Notifications = () => {
   const history = useHistory();
   const [selectedRows, setSelectedRows] = useState([]);
   const [filter, setFilter] = useState(intitialFilter);
+  const { isOpen: showFlyout, openFlyout, closeFlyout } = useFlyout();
   const { data, isLoading, isFetching, error } = useQuery<any>(
     [key, , filter],
     {
@@ -79,7 +83,8 @@ const Notifications = () => {
   );
 
   const _onCreateClick = () => {
-    history.push("/notifications/create-edit");
+    // history.push("/notifications/create-edit");
+    openFlyout();
   };
   const _onEditClick = (id: string) => {
     history.push("/notifications/create-edit", { id });
@@ -343,6 +348,17 @@ const Notifications = () => {
           </Button>
         </div>
       )}
+
+      <Flyout
+        isOpen={showFlyout}
+        onClose={closeFlyout}
+        title={'Create Notifications'}
+        cancelText="Cancel"
+        width="800px"
+      >
+        <NotificationCreateUpdateForm
+        />
+      </Flyout>
     </>
   );
 };

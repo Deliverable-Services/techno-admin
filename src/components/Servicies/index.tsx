@@ -19,6 +19,9 @@ import { primaryColor } from "../../utils/constants";
 import { queryClient } from "../../utils/queryClient";
 import { showMsgToast } from "../../utils/showMsgToast";
 import { RiServiceFill } from "react-icons/ri";
+import { useFlyout } from "../../hooks/useFlyout";
+import Flyout from "../../shared-components/Flyout";
+import ServicesCreateUpdateForm from "./ServiciesCreateUpdateForm";
 
 const key = "services";
 
@@ -37,6 +40,7 @@ const Services = () => {
   const [selectedRows, setSelectedRows] = useState([]);
   console.log(selectedRows.map((item) => item.id));
   const [filter, setFilter] = useState(intitialFilter);
+  const { isOpen: showFlyout, openFlyout, closeFlyout } = useFlyout();
   console.log({ filter });
   const { data, isLoading, isFetching, error } = useQuery<any>(
     [key, , filter],
@@ -58,7 +62,10 @@ const Services = () => {
   });
 
   const _onCreateClick = () => {
-    history.push("/services/create-edit");
+    // history.push("/services/create-edit");
+    openFlyout();
+
+
   };
   const _onEditClick = (id: string) => {
     history.push("/services/create-edit", { id });
@@ -204,6 +211,16 @@ const Services = () => {
           </Button>
         </div>
       )}
+      <Flyout
+        isOpen={showFlyout}
+        onClose={closeFlyout}
+        title={'Create Services'}
+        cancelText="Cancel"
+        width="800px"
+      >
+        <ServicesCreateUpdateForm
+        />
+      </Flyout>
     </>
   );
 };
