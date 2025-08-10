@@ -2,7 +2,15 @@ import { AxiosError } from "axios";
 import moment from "moment";
 import { useContext } from "react";
 import { useMemo, useState } from "react";
-import { Button, Col, Container, Dropdown, Form, Nav, Row } from "react-bootstrap";
+import {
+  Button,
+  Col,
+  Container,
+  Dropdown,
+  Form,
+  Nav,
+  Row,
+} from "react-bootstrap";
 import { BiSad } from "react-icons/bi";
 import { useQuery } from "react-query";
 import { useHistory } from "react-router-dom";
@@ -42,7 +50,6 @@ const Orders = () => {
   const [page, setPage] = useState<number>(1);
   const [selectedRows, setSelectedRows] = useState([]);
   const [localFilter, setFilter] = useState(intitialFilter);
-  console.log({ localFilter });
   const filter = useOrderStoreFilter((state) => state.filter);
   const onFilterChange = useOrderStoreFilter((state) => state.onFilterChange);
   const resetFilter = useOrderStoreFilter((state) => state.resetFilter);
@@ -198,7 +205,6 @@ const Orders = () => {
       {
         Header: "Actions",
         Cell: (data: Cell) => {
-          console.log({ data });
           return (
             <div className="d-flex">
               <Button
@@ -228,7 +234,12 @@ const Orders = () => {
   return (
     <>
       <div className="view-padding">
-        <PageHeading title="Orders" description="Orders for your workflow" icon={<FaBoxes size={24} />} totalRecords={data?.total} />
+        <PageHeading
+          title="Orders"
+          description="Orders for your workflow"
+          icon={<FaBoxes size={24} />}
+          totalRecords={data?.total}
+        />
       </div>
       <hr />
       <div className="h-100 p-0">
@@ -239,115 +250,100 @@ const Orders = () => {
             <>
               {!error && (
                 <>
-
                   <ReactTable
                     data={data.data}
-                    tabs={<div className="d-flex justify-content-between">
-                      {(!isLoading || !isFetching) && (
-                        <Nav
-                          className="global-navs"
-                          variant="tabs"
-                          activeKey={filter.status}
-                          onSelect={(selectedKey) =>
-                            onFilterChange("status", selectedKey)
-                          }
-                        >
-                          <Nav.Item>
-                            <Nav.Link eventKey="">
-                              All ({data?.data?.length || 0})
-                            </Nav.Link>
-                          </Nav.Item>
-                          <Nav.Item>
-                            <Nav.Link eventKey="confirmed">
-                              Confirmed (
-                              {
-                                data?.data?.filter(
+                    tabs={
+                      <div className="d-flex justify-content-between">
+                        {(!isLoading || !isFetching) && (
+                          <Nav
+                            className="global-navs"
+                            variant="tabs"
+                            activeKey={filter.status}
+                            onSelect={(selectedKey) =>
+                              onFilterChange("status", selectedKey)
+                            }
+                          >
+                            <Nav.Item>
+                              <Nav.Link eventKey="">
+                                All ({data?.data?.length || 0})
+                              </Nav.Link>
+                            </Nav.Item>
+                            <Nav.Item>
+                              <Nav.Link eventKey="confirmed">
+                                Confirmed (
+                                {data?.data?.filter(
                                   (item) => item.status === "confirmed"
-                                ).length || 0
-                              }
-                              )
-                            </Nav.Link>
-                          </Nav.Item>
-                          <Nav.Item>
-                            <Nav.Link eventKey="fulfilled">
-                              Fulfilled (
-                              {
-                                data?.data?.filter(
+                                ).length || 0}
+                                )
+                              </Nav.Link>
+                            </Nav.Item>
+                            <Nav.Item>
+                              <Nav.Link eventKey="fulfilled">
+                                Fulfilled (
+                                {data?.data?.filter(
                                   (item) => item.status === "fulfilled"
-                                ).length || 0
-                              }
-                              )
-                            </Nav.Link>
-                          </Nav.Item>
-                          <Nav.Item>
-                            <Nav.Link eventKey="picked">
-                              Picked (
-                              {
-                                data?.data?.filter(
+                                ).length || 0}
+                                )
+                              </Nav.Link>
+                            </Nav.Item>
+                            <Nav.Item>
+                              <Nav.Link eventKey="picked">
+                                Picked (
+                                {data?.data?.filter(
                                   (item) => item.status === "picked"
-                                ).length || 0
-                              }
-                              )
-                            </Nav.Link>
-                          </Nav.Item>
-                          <Nav.Item>
-                            <Nav.Link eventKey="picked">
-                              Pending (
-                              {
-                                data?.data?.filter(
+                                ).length || 0}
+                                )
+                              </Nav.Link>
+                            </Nav.Item>
+                            <Nav.Item>
+                              <Nav.Link eventKey="picked">
+                                Pending (
+                                {data?.data?.filter(
                                   (item) => item.status === "pending"
-                                ).length || 0
-                              }
-                              )
-                            </Nav.Link>
-                          </Nav.Item>
-                          <Nav.Item>
-                            <Nav.Link eventKey="pending_payment">
-                              Pending Payment (
-                              {
-                                data?.data?.filter(
+                                ).length || 0}
+                                )
+                              </Nav.Link>
+                            </Nav.Item>
+                            <Nav.Item>
+                              <Nav.Link eventKey="pending_payment">
+                                Pending Payment (
+                                {data?.data?.filter(
                                   (item) => item.status === "pending_payment"
-                                ).length || 0
-                              }
-                              )
-                            </Nav.Link>
-                          </Nav.Item>
-                          <Nav.Item>
-                            <Nav.Link eventKey="error_payment">
-                              Error Payment (
-                              {
-                                data?.data?.filter(
+                                ).length || 0}
+                                )
+                              </Nav.Link>
+                            </Nav.Item>
+                            <Nav.Item>
+                              <Nav.Link eventKey="error_payment">
+                                Error Payment (
+                                {data?.data?.filter(
                                   (item) => item.status === "error_payment"
-                                ).length || 0
-                              }
-                              )
-                            </Nav.Link>
-                          </Nav.Item>
-                          <Nav.Item>
-                            <Nav.Link eventKey="cancelled">
-                              Cancelled (
-                              {
-                                data?.data?.filter(
+                                ).length || 0}
+                                )
+                              </Nav.Link>
+                            </Nav.Item>
+                            <Nav.Item>
+                              <Nav.Link eventKey="cancelled">
+                                Cancelled (
+                                {data?.data?.filter(
                                   (item) => item.status === "cancelled"
-                                ).length || 0
-                              }
-                              )
-                            </Nav.Link>
-                          </Nav.Item>
-                          <Nav.Item>
-                            <Nav.Link eventKey="failed">
-                              Failed (
-                              {
-                                data?.data?.filter(
+                                ).length || 0}
+                                )
+                              </Nav.Link>
+                            </Nav.Item>
+                            <Nav.Item>
+                              <Nav.Link eventKey="failed">
+                                Failed (
+                                {data?.data?.filter(
                                   (item) => item.status === "failed"
-                                ).length || 0
-                              }
-                              )
-                            </Nav.Link>
-                          </Nav.Item>
-                        </Nav>
-                      )}
-                    </div>}
+                                ).length || 0}
+                                )
+                              </Nav.Link>
+                            </Nav.Item>
+                          </Nav>
+                        )}
+                      </div>
+                    }
                     filters={
                       <Dropdown className="search-filters-div filter-dropdown mr-2">
                         <Dropdown.Toggle as={Button} variant="primary">

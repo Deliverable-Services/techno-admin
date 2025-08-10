@@ -73,7 +73,6 @@ const RevokePermission = () => {
                   : {}
               }
               onSubmit={(values) => {
-                console.log({ values });
                 mutate({ formdata: values, id });
               }}
             >

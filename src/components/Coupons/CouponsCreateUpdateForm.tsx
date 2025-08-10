@@ -63,8 +63,6 @@ const CouponCreateUpdateForm = () => {
 
   const apiData = data && (data as any);
 
-  console.log("apiData", apiData);
-
   if (dataLoading) return <IsLoading />;
 
   return (

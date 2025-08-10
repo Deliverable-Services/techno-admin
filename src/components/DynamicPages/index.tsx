@@ -44,7 +44,6 @@ const DynamicPages = () => {
 
   const [selectedRows, setSelectedRows] = useState([]);
   const [modalShow, setModalShow] = useState(false);
-  console.log(selectedRows.map((item) => item.id));
   const [filter, setFilter] = useState(intitialFilter);
 
   const {
@@ -58,7 +57,6 @@ const DynamicPages = () => {
     },
   });
 
-  // console.log("pageData", pageData);
   pageData?.data?.map((page, i) => {
     page["isArchived"] = i === pageData.data.length - 1 ? true : false;
   });

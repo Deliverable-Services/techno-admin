@@ -70,118 +70,185 @@ const ProfileTab = () => {
   };
 
   return (
-    <div className="mt-5">
-      <div>
-        <div className="tab-header pb-3">
-          <h4>Personal Info</h4>
-          <p>Update your photo and personal details here.</p>
-        </div>
-        <div className="right-content">
-          <div className="profile-card d-flex flex-column align-items-center">
-            <Formik
-              enableReinitialize
-              initialValues={loggedInUser}
-              onSubmit={(values) => {
-                console.log({ values });
-                const formdata = {
-                  name: values.name,
-                  email: values.email,
-                };
-                mutate({ formdata });
-              }}
-              validationSchema={ValidationSchema}
-            >
-              {({ errors }) => (
-                <Form className="w-100 mt-2">
-                  <div className="border-div pb-0 form-group w-100 mt-4 d-flex align-items-center">
-                    <label htmlFor="fname">Name</label>
-                    <div className="input-div w-100 d-flex align-items-center gap-3">
-                      <InputField
-                        name="name"
-                        placeholder="Name"
-                        error={errors.name}
-                      />
-                    </div>
-                  </div>
-                  <div className="border-div pb-0 form-group w-100 mt-3 d-flex align-items-center">
-                    <label htmlFor="email">Email</label>
-                    <InputField
-                      name="email"
-                      placeholder="email"
-                      label="Email"
-                      error={errors.email}
-                    />
-                  </div>
-                  <div className="border-div pb-0 form-group w-100 mt-3 d-flex align-items-center">
-                    <label htmlFor="phone">Phone</label>
-                    <InputField
-                      name="phone"
-                      placeholder="Phone"
-                      label="Phone"
-                      isDisabled
-                      error={errors.phone}
-                    />
-                  </div>
-
-                  <div className="update-profile-pic mt-3 form-group w-100 mt-3 d-flex align-items-start">
-                    <label>Your photo</label>
-                    <div className="d-flex gap-3">
-                      <img
-                        src={loggedInUser.profile_pic || profile}
-                        alt="Profile"
-                        style={{
-                          borderRadius: "50%",
-                          objectFit: "cover",
-                          width: 64,
-                          height: 64,
-                        }}
-                      />
-
-                      <div className="position-relative upload-container">
-                        <input
-                          accept="image/*"
-                          className={"d-none"}
-                          id="contained-button-file"
-                          type="file"
-                          onChange={(e) => _updateProfilePicutre(e)}
-                        />
-                        <label htmlFor="contained-button-file">
-                          <div
-                            className="text-center px-2 py-1"
-                            style={{ cursor: "pointer" }}
-                          >
-                            <p className="mb-0">
-                              Click to upload or drag and drop
-                              <br />
-                              SVG, PNG, JPG or GIF (max. 800x400px)
-                            </p>
-                          </div>
-                        </label>
-                      </div>
-                    </div>
-                  </div>
-
-                  <Row className="d-flex justify-content-start">
-                    <Col md="2">
-                      <Button
-                        type="submit"
-                        disabled={isLoading}
-                        className="w-100"
-                      >
-                        {isLoading ? (
-                          <Spinner animation="border" size="sm" />
-                        ) : (
-                          "Save"
-                        )}
-                      </Button>
-                    </Col>
-                  </Row>
-                </Form>
-              )}
-            </Formik>
-          </div>
-        </div>
+    <div>
+      {/* Section Header */}
+      <div className="section-header">
+        <h4>Personal Information</h4>
+        <p>Update your photo and personal details here.</p>
       </div>
+
+      {/* Form Content */}
+      <Formik
+        enableReinitialize
+        initialValues={loggedInUser}
+        onSubmit={(values) => {
+          const formdata = {
+            name: values.name,
+            email: values.email,
+          };
+          mutate({ formdata });
+        }}
+        validationSchema={ValidationSchema}
+      >
+        {({ errors }) => (
+          <Form>
+            {/* Form Grid */}
+            <div className="row">
+              <div className="col-md-6">
+                <div className="form-group">
+                  <label htmlFor="name">Full Name</label>
+                  <InputField
+                    name="name"
+                    placeholder="Enter your full name"
+                    error={errors.name}
+                  />
+                </div>
+              </div>
+              <div className="col-md-6">
+                <div className="form-group">
+                  <label htmlFor="email">Email Address</label>
+                  <InputField
+                    name="email"
+                    placeholder="Enter your email address"
+                    error={errors.email}
+                  />
+                </div>
+              </div>
+            </div>
+
+            <div className="row">
+              <div className="col-md-6">
+                <div className="form-group">
+                  <label htmlFor="phone">Phone Number</label>
+                  <InputField
+                    name="phone"
+                    placeholder="Enter your phone number"
+                    isDisabled
+                    error={errors.phone}
+                  />
+                  <small className="text-muted">
+                    Phone number cannot be changed
+                  </small>
+                </div>
+              </div>
+            </div>
+
+            {/* Profile Photo Section */}
+            <div className="form-group">
+              <label>Profile Photo</label>
+              <div className="d-flex align-items-start gap-4">
+                <img
+                  src={loggedInUser.profile_pic || profile}
+                  alt="Profile"
+                  style={{
+                    borderRadius: "12px",
+                    objectFit: "cover",
+                    width: 80,
+                    height: 80,
+                    border: "3px solid #f0f0f0",
+                  }}
+                />
+                <div className="flex-grow-1">
+                  <div
+                    className="upload-container"
+                    style={{ maxWidth: "300px" }}
+                  >
+                    <input
+                      accept="image/*"
+                      className={"d-none"}
+                      id="contained-button-file"
+                      type="file"
+                      onChange={(e) => _updateProfilePicutre(e)}
+                    />
+                    <label
+                      htmlFor="contained-button-file"
+                      className="w-100 h-100 d-flex align-items-center justify-content-center"
+                    >
+                      <div className="text-center">
+                        <svg
+                          width="20"
+                          height="20"
+                          viewBox="0 0 20 20"
+                          fill="none"
+                          className="mb-2"
+                        >
+                          <path
+                            d="M6.66667 13.3333L9.16667 10.8333L10.8333 12.5L13.3333 9.16667L16.6667 13.3333H3.33333L6.66667 13.3333Z"
+                            stroke="#667085"
+                            strokeWidth="1.67"
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                          />
+                          <path
+                            d="M13.3333 6.66667H13.3417"
+                            stroke="#667085"
+                            strokeWidth="1.67"
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                          />
+                        </svg>
+                        <p
+                          className="mb-1"
+                          style={{ fontSize: "14px", color: "#667085" }}
+                        >
+                          <span style={{ color: "#0b64fe", fontWeight: "600" }}>
+                            Click to upload
+                          </span>{" "}
+                          or drag and drop
+                        </p>
+                        <p
+                          className="mb-0"
+                          style={{ fontSize: "12px", color: "#98A2B3" }}
+                        >
+                          SVG, PNG, JPG or GIF (max. 800x400px)
+                        </p>
+                      </div>
+                    </label>
+                  </div>
+                  {isImageLoading && (
+                    <div className="mt-2">
+                      <small className="text-muted">
+                        <Spinner
+                          animation="border"
+                          size="sm"
+                          className="me-2"
+                        />
+                        Uploading image...
+                      </small>
+                    </div>
+                  )}
+                </div>
+              </div>
+            </div>
+
+            {/* Action Buttons */}
+            <div className="d-flex justify-content-end gap-3 mt-4 pt-4 border-top">
+              <Button
+                variant="outline-primary"
+                type="button"
+                disabled={isLoading}
+              >
+                Cancel
+              </Button>
+              <Button
+                variant="primary"
+                type="submit"
+                disabled={isLoading}
+                className="px-4"
+              >
+                {isLoading ? (
+                  <>
+                    <Spinner animation="border" size="sm" className="me-2" />
+                    Saving...
+                  </>
+                ) : (
+                  "Save Changes"
+                )}
+              </Button>
+            </div>
+          </Form>
+        )}
+      </Formik>
     </div>
   );
 };

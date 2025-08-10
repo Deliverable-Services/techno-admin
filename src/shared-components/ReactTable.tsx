@@ -222,7 +222,6 @@ function ReactTable({
         ]);
     }
   );
-  console.log("selected flat rows", selectedFlatRows);
   React.useEffect(() => {
     function filterRows() {
       let data = [];
@@ -270,8 +269,9 @@ function ReactTable({
       >
         {tabs && tabs}
         <div
-          className={`d-flex align-items-center ${isDesktop ? "ml-auto" : "ml-unset"
-            }`}
+          className={`d-flex align-items-center ${
+            isDesktop ? "ml-auto" : "ml-unset"
+          }`}
         >
           <div
             className="w-100"
@@ -666,8 +666,8 @@ const Row = ({ row }: any) => (
       return (
         <td {...cell.getCellProps()} style={{ verticalAlign: "middle" }}>
           {cell.value ||
-            cell.column.id === "selection" ||
-            cell.column.id === "Actions" ? (
+          cell.column.id === "selection" ||
+          cell.column.id === "Actions" ? (
             cell.render("Cell")
           ) : (
             <span className="text-muted">NA</span>

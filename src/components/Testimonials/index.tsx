@@ -40,7 +40,6 @@ const intitialFilter = {
 const Testimonial = () => {
   const history = useHistory();
   const [selectedRows, setSelectedRows] = useState([]);
-  console.log(selectedRows.map((item) => item.id));
   const [filter, setFilter] = useState(intitialFilter);
   const { isOpen: showFlyout, openFlyout, closeFlyout } = useFlyout();
   const { data, isLoading, isFetching, error } = useQuery<any>(
@@ -259,15 +258,14 @@ const Testimonial = () => {
           </Button>
         </div>
       )}
-       <Flyout
+      <Flyout
         isOpen={showFlyout}
         onClose={closeFlyout}
-        title={'Create Testimonial'}
+        title={"Create Testimonial"}
         cancelText="Cancel"
         width="800px"
       >
-        <TestimonialCreateUpdateForm
-        />
+        <TestimonialCreateUpdateForm />
       </Flyout>
     </>
   );

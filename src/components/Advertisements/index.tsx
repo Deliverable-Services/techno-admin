@@ -61,8 +61,6 @@ const getBanners: QueryFunction = async ({ queryKey }) => {
 const Advertisements = () => {
   const history = useHistory();
   const [selectedRows, setSelectedRows] = useState([]);
-  console.log(selectedRows.map((item) => item.id));
-
   const [isDraggable, setIsDraggable] = useState(false);
   const [filter, setFilter] = useState(initialFilter);
   const { isOpen: showFlyout, openFlyout, closeFlyout } = useFlyout();
@@ -97,7 +95,7 @@ const Advertisements = () => {
 
   const _onCreateClick = () => {
     // history.push("/advertisements/create-edit");
-     openFlyout();
+    openFlyout();
   };
   const _onEditClick = (id: string) => {
     history.push("/advertisements/create-edit", { id });
@@ -358,15 +356,14 @@ const Advertisements = () => {
           </Button>
         </div>
       )}
-       <Flyout
+      <Flyout
         isOpen={showFlyout}
         onClose={closeFlyout}
-        title={'Create Services'}
+        title={"Create Services"}
         cancelText="Cancel"
         width="800px"
       >
-        <AdvertisementCreateUpdateForm
-        />
+        <AdvertisementCreateUpdateForm />
       </Flyout>
     </>
   );

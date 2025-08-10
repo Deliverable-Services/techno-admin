@@ -72,7 +72,6 @@ const ConfigCreateUpdateForm = ({ id, onHideModal }) => {
               enableReinitialize
               initialValues={data || {}}
               onSubmit={(values) => {
-                console.log({ values });
                 const formdata = new FormData();
                 for (let k in values) formdata.append(k, values[k]);
 

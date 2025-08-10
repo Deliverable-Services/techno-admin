@@ -64,7 +64,6 @@ export const InputField: React.FC<InputFieldProps> = ({
             custom
             onChange={(e: ChangeEvent) => {
               const input = (e.currentTarget as HTMLInputElement).files;
-              console.log(typeof input);
               if (input && setFieldValue) {
                 if (!multipleImages) {
                   setFieldValue(field.name, input[0]);
@@ -112,7 +111,6 @@ export const InputField: React.FC<InputFieldProps> = ({
 
       {showImage && isFile && field?.value && (
         <div className="mb-2 bg-light p-2" style={{ position: "relative" }}>
-          {console.log({ image: field.value })}
           <button
             className="h5"
             style={{

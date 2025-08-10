@@ -41,7 +41,6 @@ const intitialFilter = {
 const Brands = () => {
   const history = useHistory();
   const [selectedRows, setSelectedRows] = useState([]);
-  console.log({ selectedRows });
   const [filter, setFilter] = useState(intitialFilter);
   const { data, isLoading, isFetching, error } = useQuery<any>(
     [key, , filter],
@@ -179,29 +178,48 @@ const Brands = () => {
                 {!error && (
                   <ReactTable
                     data={data?.data}
-                    tabs={<div className="d-flex justify-content-between">
-                      {!isLoading && (
-                        <div>
-                          <Nav className="global-navs" variant="tabs" activeKey={filter.active} onSelect={(selectedKey) => _onFilterChange('active', selectedKey)}>
-                            <Nav.Item>
-                              <Nav.Link eventKey="">All ({data?.data?.length || 0})</Nav.Link>
-                            </Nav.Item>
+                    tabs={
+                      <div className="d-flex justify-content-between">
+                        {!isLoading && (
+                          <div>
+                            <Nav
+                              className="global-navs"
+                              variant="tabs"
+                              activeKey={filter.active}
+                              onSelect={(selectedKey) =>
+                                _onFilterChange("active", selectedKey)
+                              }
+                            >
+                              <Nav.Item>
+                                <Nav.Link eventKey="">
+                                  All ({data?.data?.length || 0})
+                                </Nav.Link>
+                              </Nav.Item>
 
-                            <Nav.Item>
-                              <Nav.Link eventKey="active">
-                                Active ({data?.data?.filter(item => item.status === '1').length || 0})
-                              </Nav.Link>
-                            </Nav.Item>
+                              <Nav.Item>
+                                <Nav.Link eventKey="active">
+                                  Active (
+                                  {data?.data?.filter(
+                                    (item) => item.status === "1"
+                                  ).length || 0}
+                                  )
+                                </Nav.Link>
+                              </Nav.Item>
 
-                            <Nav.Item>
-                              <Nav.Link eventKey="notActive">
-                                Not Active ({data?.data?.filter(item => item.status === '0').length || 0})
-                              </Nav.Link>
-                            </Nav.Item>
-                          </Nav>
-                        </div>
-                      )}
-                    </div>}
+                              <Nav.Item>
+                                <Nav.Link eventKey="notActive">
+                                  Not Active (
+                                  {data?.data?.filter(
+                                    (item) => item.status === "0"
+                                  ).length || 0}
+                                  )
+                                </Nav.Link>
+                              </Nav.Item>
+                            </Nav>
+                          </div>
+                        )}
+                      </div>
+                    }
                     columns={columns}
                     setSelectedRows={setSelectedRows}
                     filter={filter}

@@ -111,7 +111,6 @@ const Meetings = () => {
       // formatting data in the calendar accepted form
       Object.values(data).map((items: Array<any>) => {
         items?.map((item) => {
-          console.log({ dataTime: item.datetime });
           const event = {
             id: item.id,
             from: moment.utc(item.datetime).format("YYYY-MM-DD HH:mm:ss"),
@@ -132,7 +131,6 @@ const Meetings = () => {
         });
       });
       setFormattedDataForCalendar(events);
-      console.log(events);
     };
 
     formataData();

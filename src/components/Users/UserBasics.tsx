@@ -69,7 +69,6 @@ const UserBasics = ({ toggleModal }: UserBasicsProps) => {
     if (isRolesLoading) return;
 
     // if (!Roles || Roles.length === 0) return;
-    console.log("are we running ");
     const r = [];
     Roles?.data?.forEach((role) => {
       r.push({ id: role.name.toLowerCase(), name: role.name.toUpperCase() });
@@ -101,7 +100,6 @@ const UserBasics = ({ toggleModal }: UserBasicsProps) => {
             enableReinitialize
             initialValues={apiData || { role }}
             onSubmit={(values) => {
-              console.log(values);
               const { profile_pic, ...rest } = values;
               const formdata = new FormData();
               for (let k in rest) formdata.append(k, rest[k]);

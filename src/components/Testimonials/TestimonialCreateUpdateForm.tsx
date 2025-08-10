@@ -102,7 +102,6 @@ const TestimonialCreateUpdateForm = () => {
 
                 if (picture) formdata.append("picture", picture);
 
-                console.log({ formdata });
                 mutate({ formdata, id });
               }}
             >

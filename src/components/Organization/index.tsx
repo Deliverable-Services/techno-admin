@@ -27,95 +27,46 @@ const Organization: React.FC = () => {
   const [activeTab, setActiveTab] = useState<string>("organization");
 
   return (
-    <div className="card">
-      <div>
-        <div className="organization-main p-5">
-          <div className="d-flex justify-content-between">
-            <PageHeading
-              title="Organization Settings"
-              icon={<GrOrganization size={24} />}
-            />
-          </div>
-          <div className="d-flex g-4 align-items-center mb-4 mx-auto">
-            <Nav
-              className="nav-tabs global-navs m-0 my-4 w-auto mr-4"
-              style={{ maxWidth: "100%" }}
-              variant="tabs"
-              activeKey={activeTab}
-              onSelect={(selectedKey) =>
-                setActiveTab(selectedKey || "organization")
-              }
-            >
-              {tabs.map((tab) => (
-                <Nav.Item key={tab.key}>
-                  <Nav.Link eventKey={tab.key}>{tab.label}</Nav.Link>
-                </Nav.Item>
-              ))}
-            </Nav>
-          </div>
+    <>
+      {/* Header Section */}
+      <div className="view-padding d-flex justify-content-between align-items-center">
+        <PageHeading
+          icon={<GrOrganization size={24} />}
+          title="Organization Settings"
+          description="Configure and manage your organization preferences"
+          permissionReq="create_lead"
+        />
+      </div>
+      <hr />
 
-          {/* Tab Content */}
-          <div className="tab-content">
-            <div
-              className={`tab-pane fade${
-                activeTab === "profile" ? " show active" : ""
-              }`}
-            >
-              {activeTab === "profile" && <ProfileTab />}
-            </div>
-            <div
-              className={`tab-pane fade${
-                activeTab === "organization" ? " show active" : ""
-              }`}
-            >
-              {activeTab === "organization" && <OrganizationTab />}
-            </div>
-            <div
-              className={`tab-pane fade${
-                activeTab === "domains" ? " show active" : ""
-              }`}
-            >
-              {activeTab === "domains" && <DomainTab />}
-            </div>
-            <div
-              className={`tab-pane fade${
-                activeTab === "appearance" ? " show active" : ""
-              }`}
-            >
-              {activeTab === "appearance" && <AppearanceTab />}
-            </div>
-            <div
-              className={`tab-pane fade${
-                activeTab === "website" ? " show active" : ""
-              }`}
-            >
-              {activeTab === "website" && <WebsiteTab />}
-            </div>
-            <div
-              className={`tab-pane fade${
-                activeTab === "platform" ? " show active" : ""
-              }`}
-            >
-              {activeTab === "platform" && <PlatformTab />}
-            </div>
-            <div
-              className={`tab-pane fade${
-                activeTab === "configurations" ? " show active" : ""
-              }`}
-            >
-              {activeTab === "configurations" && <CustomConfigTab />}
-            </div>
-            <div
-              className={`tab-pane fade${
-                activeTab === "integrations" ? " show active" : ""
-              }`}
-            >
-              {activeTab === "integrations" && <IntegrationsTab />}
-            </div>
-          </div>
+      <div className="px-4 py-4">
+        <Nav
+          className="nav-tabs global-navs w-100"
+          variant="tabs"
+          activeKey={activeTab}
+          onSelect={(selectedKey) =>
+            setActiveTab(selectedKey || "organization")
+          }
+        >
+          {tabs.map((tab) => (
+            <Nav.Item key={tab.key}>
+              <Nav.Link eventKey={tab.key}>{tab.label}</Nav.Link>
+            </Nav.Item>
+          ))}
+        </Nav>
+
+        <div className="mt-4 mx-2">
+          {activeTab === "profile" && <ProfileTab />}
+          {activeTab === "organization" && <OrganizationTab />}
+          {activeTab === "domains" && <DomainTab />}
+          {activeTab === "appearance" && <AppearanceTab />}
+          {activeTab === "website" && <WebsiteTab />}
+          {activeTab === "platform" && <PlatformTab />}
+          {activeTab === "configurations" && <CustomConfigTab />}
+          {activeTab === "integrations" && <IntegrationsTab />}
         </div>
       </div>
-    </div>
+    </>
   );
 };
 

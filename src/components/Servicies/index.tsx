@@ -38,10 +38,8 @@ const intitialFilter = {
 const Services = () => {
   const history = useHistory();
   const [selectedRows, setSelectedRows] = useState([]);
-  console.log(selectedRows.map((item) => item.id));
   const [filter, setFilter] = useState(intitialFilter);
   const { isOpen: showFlyout, openFlyout, closeFlyout } = useFlyout();
-  console.log({ filter });
   const { data, isLoading, isFetching, error } = useQuery<any>(
     [key, , filter],
     {
@@ -64,8 +62,6 @@ const Services = () => {
   const _onCreateClick = () => {
     // history.push("/services/create-edit");
     openFlyout();
-
-
   };
   const _onEditClick = (id: string) => {
     history.push("/services/create-edit", { id });
@@ -195,7 +191,6 @@ const Services = () => {
         </div>
       </div>
 
-
       {selectedRows.length > 0 && (
         <div className="delete-button rounded">
           <span>
@@ -214,12 +209,11 @@ const Services = () => {
       <Flyout
         isOpen={showFlyout}
         onClose={closeFlyout}
-        title={'Create Services'}
+        title={"Create Services"}
         cancelText="Cancel"
         width="800px"
       >
-        <ServicesCreateUpdateForm
-        />
+        <ServicesCreateUpdateForm />
       </Flyout>
     </>
   );

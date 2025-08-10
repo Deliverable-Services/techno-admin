@@ -88,7 +88,6 @@ const TargetCreateUpdateForm = () => {
                   : { agent_id: agentId }
               }
               onSubmit={(values) => {
-                console.log({ values });
                 mutate({ formdata: values, id });
               }}
             >

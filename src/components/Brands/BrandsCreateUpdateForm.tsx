@@ -86,7 +86,6 @@ const BrandsCreateUpdateForm = () => {
               enableReinitialize
               initialValues={apiData || { is_active: "1" }}
               onSubmit={(values) => {
-                console.log({ values });
                 const { logo, ...rest } = values;
                 const formdata = new FormData();
                 for (let k in rest) formdata.append(k, rest[k]);

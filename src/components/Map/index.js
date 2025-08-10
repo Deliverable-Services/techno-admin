@@ -17,8 +17,6 @@ const defaultLng = 77.209;
 const TrackingMap = ({ order }) => {
   const { address: userAddress } = order;
 
-  console.log({ order });
-
   const [agentLocation, setAgentLocation] = useState(null);
   const [route, setRoute] = useState();
   const [viewport, setViewport] = React.useState({

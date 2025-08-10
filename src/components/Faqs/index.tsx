@@ -41,7 +41,6 @@ const Faqs = () => {
   const [selectedRows, setSelectedRows] = useState([]);
   const [filter, setFilter] = useState(intitialFilter);
   const { isOpen: showFlyout, openFlyout, closeFlyout } = useFlyout();
-  console.log(selectedRows.map((item) => item.id));
   const { data, isLoading, isFetching, error } = useQuery<any>(
     [key, , filter],
     {
@@ -273,12 +272,11 @@ const Faqs = () => {
       <Flyout
         isOpen={showFlyout}
         onClose={closeFlyout}
-        title={'Create Faq'}
+        title={"Create Faq"}
         cancelText="Cancel"
         width="800px"
       >
-        <FaqCreateUpdateForm
-        />
+        <FaqCreateUpdateForm />
       </Flyout>
     </>
   );

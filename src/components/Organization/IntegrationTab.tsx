@@ -6,6 +6,7 @@ import googleAnalyticsService, {
   GoogleAnalyticsConnectorStatus,
 } from "../../services/googleAnalyticsService";
 import { showMsgToast } from "../../utils/showMsgToast";
+import { Badge } from "react-bootstrap";
 
 const IntegrationsTab = () => {
   const loggedInUser = useUserProfileStore((state) => state.user);
@@ -106,8 +107,95 @@ const IntegrationsTab = () => {
     <div>
       <div className="tab-header">
         <h4>Integrations</h4>
-        <p>This will have third-party platform integration options.</p>
+        <p>
+          From here you can connect your third-party platforms to your account.
+        </p>
       </div>
+
+      <div className="d-flex flex-column gap-4 mt-5">
+        {/* Google Analytics */}
+        <div className="w-100 border-bottom pb-4">
+          <div className="row justify-content-between w-100">
+            <div className="col-12 col-md-4">
+              <h5 className="mb-4 d-flex align-items-center gap-12">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                  <path
+                    d="M22.5 12.5v7.5c0 1.104-.896 2-2 2h-17c-1.104 0-2-.896-2-2v-15c0-1.104.896-2 2-2h7.5"
+                    fill="none"
+                    stroke="#FF6D01"
+                    strokeWidth="1.5"
+                  />
+                  <circle cx="8" cy="16" r="1.5" fill="#FF6D01" />
+                  <circle cx="14" cy="12" r="1.5" fill="#4285F4" />
+                  <circle cx="18" cy="8" r="1.5" fill="#0F9D58" />
+                  <path
+                    d="M8 16L14 12L18 8"
+                    stroke="#34A853"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  />
+                </svg>
+                Google Analytics
+              </h5>
+
+              {googleAnalyticsStatus?.connected ? (
+                <Badge variant="success">Connected</Badge>
+              ) : null}
+            </div>
+            <div className="col-12 col-md-7">
+              <div className="w-100">
+                <div className="d-flex align-items-center">
+                  {googleAnalyticsStatus?.connected ? (
+                    <div className="d-flex align-items-center">
+                      <span className="text-success mr-2">
+                        <i className="fas fa-check-circle"></i>
+                      </span>
+                      <span className="text-success font-weight-bold">
+                        Connected
+                      </span>
+                      <button
+                        className="btn btn-outline-danger btn-sm ml-3"
+                        onClick={handleGoogleAnalyticsDisconnect}
+                        disabled={loading}
+                      >
+                        {loading ? (
+                          <i className="fas fa-spinner fa-spin"></i>
+                        ) : (
+                          "Disconnect"
+                        )}
+                      </button>
+                    </div>
+                  ) : (
+                    <div className="card w-100 border-0">
+                      <div className="card-body d-flex flex-column gap-12">
+                        <p>
+                          Connect your Google Analytics account to access the
+                          dashboard and view detailed analytics data including
+                          page views, active users, demographic audience, and
+                          more directly from here.
+                        </p>
+                        <button
+                          className="btn btn-primary"
+                          onClick={handleGoogleAnalyticsConnect}
+                          disabled={loading}
+                        >
+                          {loading ? (
+                            <i className="fas fa-spinner fa-spin"></i>
+                          ) : (
+                            "Connect"
+                          )}
+                        </button>
+                      </div>
+                    </div>
+                  )}
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
       <div className="right-content">
         <div className="profile-card d-flex flex-column align-items-center">
           <div className="mt-5 border-div form-group w-100 mt-4 d-flex align-items-center">
@@ -128,75 +216,7 @@ const IntegrationsTab = () => {
               </div>
             </div>
           </div>
-          {/* Google Analytics Integration */}
-          <div className="mt-5 border-div form-group w-100 mt-4 d-flex align-items-center">
-            <h4 className="mb-4 title-style">Google Analytics Integration</h4>
-            <div className="row justify-content-start w-100">
-              <div className="col-md-12">
-                <div className="alert alert-info mb-3">
-                  <i className="fas fa-info-circle me-2"></i>
-                  <strong>Google Analytics:</strong> Connect your Google
-                  Analytics account to access the dashboard and view detailed
-                  analytics data including page views, active users, demographic
-                  audience, and more.
-                </div>
-                {/* Google Analytics Connection */}
-                <div className="form-group w-100 mt-3 d-flex align-items-center border-bottom pb-4">
-                  <label
-                    htmlFor="google-analytics"
-                    style={{ minWidth: 200 }}
-                    className="title-style"
-                  >
-                    Google Analytics
-                  </label>
-                  <div
-                    className="d-flex align-items-center"
-                    style={{ maxWidth: 300 }}
-                  >
-                    {googleAnalyticsStatus?.connected ? (
-                      <div className="d-flex align-items-center">
-                        <span className="text-success mr-2">
-                          <i className="fas fa-check-circle"></i>
-                        </span>
-                        <span className="text-success font-weight-bold">
-                          Connected
-                        </span>
-                        <button
-                          className="btn btn-outline-danger btn-sm ml-3"
-                          onClick={handleGoogleAnalyticsDisconnect}
-                          disabled={loading}
-                        >
-                          {loading ? (
-                            <i className="fas fa-spinner fa-spin"></i>
-                          ) : (
-                            "Disconnect"
-                          )}
-                        </button>
-                      </div>
-                    ) : (
-                      <div className="d-flex align-items-center">
-                        <span className="text-muted mr-2">
-                          <i className="fas fa-times-circle"></i>
-                        </span>
-                        <span className="text-muted">Not Connected</span>
-                        <button
-                          className="btn btn-primary btn-sm ml-3"
-                          onClick={handleGoogleAnalyticsConnect}
-                          disabled={loading}
-                        >
-                          {loading ? (
-                            <i className="fas fa-spinner fa-spin"></i>
-                          ) : (
-                            "Connect"
-                          )}
-                        </button>
-                      </div>
-                    )}
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
+
           {/* Google Tag Manager */}
           <div className="form-group w-100 mt-4 d-flex align-items-center border-bottom pb-4 ">
             <label

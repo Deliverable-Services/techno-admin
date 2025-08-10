@@ -36,8 +36,6 @@ const resendOtp = (formData: FormData) => {
 
 const VerifyOtp = (props: Props) => {
   const { state } = useLocation();
-
-  console.log({ state });
   const history = useHistory();
   const setToken = useTokenStore((state) => state.setToken);
   const setUser = useUserProfileStore((state) => state.setUser);

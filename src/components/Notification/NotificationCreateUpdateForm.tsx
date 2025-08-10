@@ -59,7 +59,6 @@ const NotificationCreateUpdateForm = () => {
   //   any
   // > | null>(null);
 
-  console.log({ selectedRows });
   const [filter, setFilter] = useState(intitialFilter);
   useEffect(() => {
     bsCustomFileInput.init();
@@ -150,7 +149,9 @@ const NotificationCreateUpdateForm = () => {
           <PageHeading
             title="Create New Notification"
             customButton={
-              <Restricted to={id ? "update_notification" : "create_notification"}>
+              <Restricted
+                to={id ? "update_notification" : "create_notification"}
+              >
                 <Button type="submit" disabled={isLoading}>
                   {isLoading ? (
                     <Spinner animation="border" size="sm" />
@@ -280,8 +281,9 @@ const NotificationCreateUpdateForm = () => {
                             </button>
                             <button
                               type="button"
-                              className={`${isScheduleOpen ? "text-primary" : "text-muted"
-                                } ml-2`}
+                              className={`${
+                                isScheduleOpen ? "text-primary" : "text-muted"
+                              } ml-2`}
                               style={{
                                 borderBottom: isScheduleOpen
                                   ? ` 2px solid ${primaryColor}`

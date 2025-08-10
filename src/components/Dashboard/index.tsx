@@ -111,7 +111,6 @@ const Dashboard = () => {
   //   );
   // }
 
-  console.log(selectedOrg);
   return (
     <>
       <div className="view-padding d-flex justify-content-between align-items-center">

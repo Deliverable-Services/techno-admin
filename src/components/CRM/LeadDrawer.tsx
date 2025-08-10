@@ -829,7 +829,6 @@ const Action = ({ icon, label }: { icon: JSX.Element; label: string }) => (
 
 const SingleValue = (props) => {
   const { data } = props;
-  console.log("data", data);
   return (
     <components.SingleValue {...props}>
       <img

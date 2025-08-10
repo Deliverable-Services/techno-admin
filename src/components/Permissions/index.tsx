@@ -1,6 +1,5 @@
 // Permissions/index.tsx
 
-
 import { AxiosError } from "axios";
 import { useMemo, useState } from "react";
 import { Button, Container, Dropdown, Nav } from "react-bootstrap";
@@ -44,9 +43,7 @@ const Permissions = () => {
   const [selectedRows, setSelectedRows] = useState([]);
   const [modalShow, setModalShow] = useState(false);
   const [activeTab, setActiveTab] = useState("roles"); // "roles" or "permissions"
-  console.log(selectedRows.map((item) => item.id));
   const [filter, setFilter] = useState(intitialFilter);
-  console.log({ filter });
   const { data, isLoading, isFetching, error } = useQuery<any>(
     [key, , filter],
     {
@@ -169,9 +166,7 @@ const Permissions = () => {
                 </Dropdown.Toggle>
 
                 <Dropdown.Menu className="menu-dropdown">
-                  <Dropdown.Item
-                    className="text-danger"
-                  >
+                  <Dropdown.Item className="text-danger">
                     <AiFillDelete size={16} className="me-1" />
                     Delete
                   </Dropdown.Item>
@@ -190,7 +185,13 @@ const Permissions = () => {
         Header: "Name",
         accessor: "name",
         Cell: (data: Cell) => {
-          return <span>{data.row.values.name.replace(/_/g, ' ').replace(/\b\w/g, c => c.toUpperCase())}</span>;
+          return (
+            <span>
+              {data.row.values.name
+                .replace(/_/g, " ")
+                .replace(/\b\w/g, (c) => c.toUpperCase())}
+            </span>
+          );
         },
       },
       {
@@ -237,7 +238,7 @@ const Permissions = () => {
 
   const _toggleModal = () => {
     setModalShow(!modalShow);
-  }
+  };
 
   // Get current data and columns based on active tab
   const getCurrentData = () => {
@@ -298,17 +299,27 @@ const Permissions = () => {
 
   return (
     <>
-      <CommonModal title="Create New Permission" modalShow={modalShow} onModalHideClick={_toggleModal}>
+      <CommonModal
+        title="Create New Permission"
+        modalShow={modalShow}
+        onModalHideClick={_toggleModal}
+      >
         <PermissionsCreateUpdateForm setShowModal={_toggleModal} />
       </CommonModal>
 
       <div className="view-padding">
         <PageHeading
           title={activeTab === "roles" ? "Roles" : "Permissions"}
-          description={activeTab === "roles" ? "Roles for your workflow" : "Permissions for your workflow"}
+          description={
+            activeTab === "roles"
+              ? "Roles for your workflow"
+              : "Permissions for your workflow"
+          }
           onClick={activeTab === "permissions" ? _onCreateClick : undefined}
           totalRecords={getCurrentTotalRecords()}
-          permissionReq={activeTab === "permissions" ? "create_permission" : undefined}
+          permissionReq={
+            activeTab === "permissions" ? "create_permission" : undefined
+          }
         />
       </div>
       <hr />
@@ -330,9 +341,7 @@ const Permissions = () => {
                         onSelect={handleTabChange}
                       >
                         <Nav.Item>
-                          <Nav.Link eventKey="roles">
-                            Roles
-                          </Nav.Link>
+                          <Nav.Link eventKey="roles">Roles</Nav.Link>
                         </Nav.Item>
 
                         <Nav.Item>
@@ -345,7 +354,9 @@ const Permissions = () => {
                   </div>
                 }
                 columns={getCurrentColumns()}
-                setSelectedRows={activeTab === "permissions" ? setSelectedRows : undefined}
+                setSelectedRows={
+                  activeTab === "permissions" ? setSelectedRows : undefined
+                }
                 filter={filter}
                 onFilterChange={_onFilterChange}
                 isDataLoading={getCurrentFetching()}
