@@ -75,6 +75,7 @@ import { MoreScreen } from "./components/MoreScreen/MoreScreen";
 import useUserProfileStore from "./hooks/useUserProfileStore";
 import GoogleAnalytics from "./components/Google-analytics";
 import SubscriptionPage from "./components/Subscription";
+import UsersCreateEdit from "./components/Users/UsersCreateEdit";
 import StaticPageCreateForm from "./components/StaticPages/StaticPageCreateUpdateForm";
 
 const App = () => {
@@ -326,7 +327,7 @@ const App = () => {
               <PrivateRoute
                 path="/users/create-edit"
                 exact
-                component={UserCreateUpdateForm}
+                component={UsersCreateEdit}
                 permissionReq="read_user"
               />
               <PrivateRoute
