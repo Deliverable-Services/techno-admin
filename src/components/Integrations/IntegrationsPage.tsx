@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback } from "react";
 import { Container, Row, Col, Card, Badge, Button } from "react-bootstrap";
-import useUserProfileStore from "../../hooks/useUserProfileStore";
+import { useOrganisation } from "../../context/OrganisationContext";
 import { GoogleBusinessProfile } from "./index";
 import { useQueryClient } from "react-query";
 import googleAnalyticsService, {
@@ -19,14 +19,11 @@ import {
 import "./IntegrationsPage.css";
 
 const IntegrationsPage: React.FC = () => {
-  const loggedInUser = useUserProfileStore((state) => state.user);
-  console.log({ loggedInUser });
+  const { selectedOrg } = useOrganisation();
   const queryClient = useQueryClient();
   const [googleAnalyticsStatus, setGoogleAnalyticsStatus] =
     useState<GoogleAnalyticsConnectorStatus | null>(null);
-  console.log({ googleAnalyticsStatus });
   const [loading, setLoading] = useState(false);
-  console.log({ loading });
   const [formData, setFormData] = useState({
     gtmTagId: "",
   });
@@ -46,34 +43,30 @@ const IntegrationsPage: React.FC = () => {
   };
 
   const loadGoogleAnalyticsStatus = useCallback(async () => {
-    if (!loggedInUser?.organisations[0]?.id) return;
+    if (!selectedOrg?.id) return;
 
     try {
-      const status = await googleAnalyticsService.getStatus(
-        loggedInUser.organisations[0].id
-      );
+      const status = await googleAnalyticsService.getStatus(selectedOrg.id);
       setGoogleAnalyticsStatus(status);
     } catch (error) {
       console.error("Failed to load Google Analytics status:", error);
     }
-  }, [loggedInUser?.organisations]);
+  }, [selectedOrg?.id]);
 
   // Load Google Analytics status
   useEffect(() => {
-    const organisationId = loggedInUser?.organisations?.[0]?.id;
+    const organisationId = selectedOrg?.id;
     if (organisationId) {
       loadGoogleAnalyticsStatus();
     }
-  }, [loggedInUser?.organisations, loadGoogleAnalyticsStatus]);
+  }, [selectedOrg?.id, loadGoogleAnalyticsStatus]);
 
   const handleGoogleAnalyticsConnect = async () => {
-    if (!loggedInUser?.organisations[0]?.id) return;
+    if (!selectedOrg?.id) return;
 
     try {
       setLoading(true);
-      const authData = await googleAnalyticsService.startAuth(
-        loggedInUser.organisations[0].id
-      );
+      const authData = await googleAnalyticsService.startAuth(selectedOrg.id);
 
       // Open OAuth popup
       const popup = window.open(
@@ -82,12 +75,26 @@ const IntegrationsPage: React.FC = () => {
         "width=600,height=600,scrollbars=yes,resizable=yes"
       );
 
-      // Poll for popup closure
+      // Listen for postMessage from popup and also poll for closure
+      const messageHandler = (event: MessageEvent) => {
+        if (
+          typeof event.data === "object" &&
+          event.data?.source === "ga-oauth" &&
+          event.data?.status === "success"
+        ) {
+          window.removeEventListener("message", messageHandler);
+          loadGoogleAnalyticsStatus();
+          handleConnectionChange();
+        }
+      };
+      window.addEventListener("message", messageHandler);
+
       const checkClosed = setInterval(() => {
         if (popup?.closed) {
           clearInterval(checkClosed);
-          loadGoogleAnalyticsStatus(); // Reload status after OAuth
-          handleConnectionChange(); // Refresh other connections
+          window.removeEventListener("message", messageHandler);
+          loadGoogleAnalyticsStatus();
+          handleConnectionChange();
         }
       }, 1000);
     } catch (error) {
@@ -99,11 +106,11 @@ const IntegrationsPage: React.FC = () => {
   };
 
   const handleGoogleAnalyticsDisconnect = async () => {
-    if (!loggedInUser?.organisations[0]?.id) return;
+    if (!selectedOrg?.id) return;
 
     try {
       setLoading(true);
-      await googleAnalyticsService.disconnect(loggedInUser.organisations[0].id);
+      await googleAnalyticsService.disconnect(selectedOrg.id);
       setGoogleAnalyticsStatus(null);
       handleConnectionChange();
       showMsgToast("Google Analytics disconnected successfully");
@@ -175,7 +182,7 @@ const IntegrationsPage: React.FC = () => {
               />
             </svg>
           ),
-          connected: googleAnalyticsStatus?.connected,
+          connected: !!googleAnalyticsStatus?.connected,
           loading: loading,
           onConnect: handleGoogleAnalyticsConnect,
           onDisconnect: handleGoogleAnalyticsDisconnect,
@@ -231,7 +238,7 @@ const IntegrationsPage: React.FC = () => {
           isComponent: true,
           component: (
             <GoogleBusinessProfile
-              organisationId={loggedInUser?.organisations?.[0]?.id}
+              organisationId={selectedOrg?.id}
               onConnectionChange={handleConnectionChange}
             />
           ),

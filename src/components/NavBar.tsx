@@ -295,7 +295,8 @@ const NavBar = ({ isNavOpen, setIsNavOpen }: INavBar) => {
   const isDesktop = useContext(IsDesktopContext);
   const [activeMenu, setActiveMenu] = useState<string | null>(null);
 
-  const { selectedOrg, setSelectedOrg, organisations } = useOrganisation();
+  const { selectedOrg, setSelectedOrg, organisations, switchOrganisation } =
+    useOrganisation();
   const { isConnected: isGoogleBusinessConnected } =
     useGoogleBusinessConnection();
   const { isConnected: isGoogleAnalyticsConnected } =
@@ -333,7 +334,7 @@ const NavBar = ({ isNavOpen, setIsNavOpen }: INavBar) => {
     } catch (error) {
       handleApiError(error, history);
     }
-    setSelectedOrg(org);
+    await switchOrganisation(org);
   };
 
   return (

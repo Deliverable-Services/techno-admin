@@ -1,20 +1,18 @@
 import React from "react";
 import { useQuery } from "react-query";
 import googleAnalyticsService from "../../services/googleAnalyticsService";
-import useUserProfileStore from "../../hooks/useUserProfileStore";
+import { useOrganisation } from "../../context/OrganisationContext";
 
 export const useGoogleAnalyticsConnection = () => {
-  const loggedInUser = useUserProfileStore((state) => state.user);
-
-  // Try multiple ways to get organisation ID for compatibility
-  const organisationId = loggedInUser?.organisations?.[0]?.id;
+  const { selectedOrg } = useOrganisation();
+  const organisationId = selectedOrg?.id;
 
   const {
     data: status,
     isLoading,
     refetch,
   } = useQuery(
-    ["google-analytics-connection-status", organisationId],
+    ["google-analytics-status", organisationId],
     () => googleAnalyticsService.getStatus(organisationId!),
     {
       enabled: !!organisationId,
@@ -33,10 +31,7 @@ export const useGoogleAnalyticsConnection = () => {
   );
 
   // More flexible connection detection - connected if OAuth completed OR fully connected
-  const isConnected =
-    status?.connected ||
-    status?.oauth_completed ||
-    (status?.status && ["connected", "pending"].includes(status.status));
+  const isConnected = !!status?.connected;
 
   return {
     isConnected: isConnected || false,

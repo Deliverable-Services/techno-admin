@@ -40,6 +40,9 @@ const GoogleAnalytics = () => {
   );
   const [accounts, setAccounts] = useState<GoogleAnalyticsAccount[]>([]);
   const [properties, setProperties] = useState<GoogleAnalyticsProperty[]>([]);
+  const [propertyList, setPropertyList] = useState<GoogleAnalyticsProperty[]>(
+    []
+  );
   const [selectedAccount, setSelectedAccount] = useState<string>("");
   const [selectedProperty, setSelectedProperty] = useState<string>("");
   const [reports, setReports] = useState<GoogleAnalyticsReport | null>(null);
@@ -74,12 +77,56 @@ const GoogleAnalytics = () => {
   useEffect(() => {
     if (status?.connected && organisation?.id) {
       loadAccounts();
+      // Fetch all accessible properties across all accounts to allow direct selection
+      (async () => {
+        try {
+          const props = await googleAnalyticsService.getAllAccessibleProperties(
+            organisation.id
+          );
+          const normalized = props.map((p: any) => ({
+            ...p,
+            propertyId:
+              p.propertyId || (p.name ? p.name.replace("properties/", "") : ""),
+          }));
+          setPropertyList(normalized);
+          if (!selectedProperty && normalized.length > 0) {
+            const pid = normalized[0].propertyId;
+            setSelectedProperty(pid);
+            try {
+              await googleAnalyticsService.updateSelection(organisation.id, {
+                propertyId: pid,
+              });
+            } catch {}
+          }
+        } catch {}
+      })();
+      // Restore persisted selection if present
+      const persisted = window.localStorage.getItem(
+        `ga_selection_${organisation.id}`
+      );
+      if (persisted) {
+        try {
+          const parsed = JSON.parse(persisted);
+          if (parsed.accountName) setSelectedAccount(parsed.accountName);
+          if (parsed.propertyId) setSelectedProperty(parsed.propertyId);
+        } catch {}
+      }
     }
   }, [status?.connected, organisation?.id]);
 
   useEffect(() => {
     if (selectedAccount && organisation?.id) {
       loadProperties(selectedAccount);
+      // persist selection
+      try {
+        const persisted = JSON.parse(
+          window.localStorage.getItem(`ga_selection_${organisation.id}`) || "{}"
+        );
+        window.localStorage.setItem(
+          `ga_selection_${organisation.id}`,
+          JSON.stringify({ ...persisted, accountName: selectedAccount })
+        );
+      } catch {}
     }
   }, [selectedAccount, organisation?.id]);
 
@@ -91,6 +138,16 @@ const GoogleAnalytics = () => {
       loadCountryData();
       loadPageData();
       loadDeviceData();
+      // persist selection
+      try {
+        const persisted = JSON.parse(
+          window.localStorage.getItem(`ga_selection_${organisation.id}`) || "{}"
+        );
+        window.localStorage.setItem(
+          `ga_selection_${organisation.id}`,
+          JSON.stringify({ ...persisted, propertyId: selectedProperty })
+        );
+      } catch {}
     }
   }, [selectedProperty, organisation?.id, dateRange]);
 
@@ -103,6 +160,11 @@ const GoogleAnalytics = () => {
         organisation.id
       );
       setStatus(statusData);
+      // Load persisted selection from backend metadata if present
+      const accountFromServer = (statusData as any).selected_account;
+      const propertyFromServer = (statusData as any).selected_property;
+      if (accountFromServer) setSelectedAccount(accountFromServer);
+      if (propertyFromServer) setSelectedProperty(propertyFromServer);
     } catch (error) {
       console.error("Failed to load Google Analytics status:", error);
       showMsgToast("Failed to load Google Analytics status");
@@ -120,8 +182,14 @@ const GoogleAnalytics = () => {
         organisation.id
       );
       setAccounts(accountsData);
-      if (accountsData.length > 0) {
-        setSelectedAccount(accountsData[0].name);
+      if (accountsData.length > 0 && !selectedAccount) {
+        const firstAccount = accountsData[0].name;
+        setSelectedAccount(firstAccount);
+        try {
+          await googleAnalyticsService.updateSelection(organisation.id, {
+            accountName: firstAccount,
+          });
+        } catch {}
       }
     } catch (error) {
       console.error("Failed to load Google Analytics accounts:", error);
@@ -140,9 +208,23 @@ const GoogleAnalytics = () => {
         organisation.id,
         accountName
       );
-      setProperties(propertiesData);
-      if (propertiesData.length > 0) {
-        setSelectedProperty(propertiesData[0].propertyId);
+      const normalized = propertiesData.map((p: any) => ({
+        ...p,
+        propertyId:
+          p.propertyId || (p.name ? p.name.replace("properties/", "") : ""),
+      }));
+      setProperties(normalized);
+      if (normalized.length > 0 && !selectedProperty) {
+        const first = normalized[0];
+        const pid =
+          first.propertyId ||
+          (first.name ? first.name.replace("properties/", "") : "");
+        setSelectedProperty(pid);
+        try {
+          await googleAnalyticsService.updateSelection(organisation.id, {
+            propertyId: pid,
+          });
+        } catch {}
       }
     } catch (error) {
       console.error("Failed to load Google Analytics properties:", error);
@@ -336,25 +418,25 @@ const GoogleAnalytics = () => {
         {
           label: "Total Users",
           value: "0",
-          change: "+0%",
+          change: "",
           icon: <MdAllInclusive />,
         },
         {
           label: "Sessions",
           value: "0",
-          change: "+0%",
+          change: "",
           icon: <GiShadowFollower />,
         },
         {
           label: "Page Views",
           value: "0",
-          change: "+0%",
+          change: "",
           icon: <RiUserFollowFill />,
         },
         {
           label: "Active Users",
           value: realTimeData?.rows?.[0]?.metricValues?.[0]?.value || "0",
-          change: "+0%",
+          change: "",
           icon: <IoStatsChart />,
         },
       ];
@@ -378,25 +460,25 @@ const GoogleAnalytics = () => {
       {
         label: "Total Users",
         value: totalUsers.toLocaleString(),
-        change: "+26.84%",
+        change: "",
         icon: <MdAllInclusive />,
       },
       {
         label: "Sessions",
         value: totalSessions.toLocaleString(),
-        change: "+26.32%",
+        change: "",
         icon: <GiShadowFollower />,
       },
       {
         label: "Page Views",
         value: totalPageViews.toLocaleString(),
-        change: "-0.86%",
+        change: "",
         icon: <RiUserFollowFill />,
       },
       {
         label: "Active Users",
         value: activeUsers,
-        change: "+8.64%",
+        change: "",
         icon: <IoStatsChart />,
       },
     ];
@@ -420,13 +502,7 @@ const GoogleAnalytics = () => {
   // Get world map data from country data
   const getWorldMapData = () => {
     if (!countryData?.rows || countryData.rows.length === 0) {
-      return [
-        { country: "us", value: 20 },
-        { country: "cn", value: 15 },
-        { country: "in", value: 10 },
-        { country: "ru", value: 8 },
-        { country: "br", value: 5 },
-      ];
+      return [];
     }
 
     // Convert country names to country codes
@@ -471,11 +547,7 @@ const GoogleAnalytics = () => {
   // Get device data for insights
   const getDeviceData = () => {
     if (!deviceData?.rows || deviceData.rows.length === 0) {
-      return [
-        { name: "Desktop", value: 450 },
-        { name: "Mobile", value: 320 },
-        { name: "Tablet", value: 120 },
-      ];
+      return [];
     }
 
     const deviceCategories = deviceData.rows.reduce((acc, row) => {
@@ -496,29 +568,12 @@ const GoogleAnalytics = () => {
   };
 
   // Get age data from audience data (fallback for now)
-  const getAgeData = () => {
-    // For now using device data as a proxy until we get age-specific data
-    return getDeviceData()
-      .slice(0, 7)
-      .map((item, index) => ({
-        name:
-          ["18-24", "25-34", "35-44", "45-54", "55-64", "65+", "13-17"][
-            index
-          ] || `Group ${index + 1}`,
-        value: item.value,
-      }));
-  };
+  const getAgeData = () => [];
 
   // Get top countries data
   const getTopCountriesData = () => {
     if (!countryData?.rows || countryData.rows.length === 0) {
-      return [
-        { country: "United States", users: 1200 },
-        { country: "China", users: 800 },
-        { country: "India", users: 600 },
-        { country: "Russia", users: 400 },
-        { country: "Brazil", users: 300 },
-      ];
+      return [];
     }
 
     return countryData.rows
@@ -546,13 +601,7 @@ const GoogleAnalytics = () => {
 
     // Fallback to real-time data
     if (!realTimeData?.rows || realTimeData.rows.length === 0) {
-      return [
-        { title: "Homepage", path: "/", pageViews: 150, users: 80 },
-        { title: "About Us", path: "/about", pageViews: 89, users: 45 },
-        { title: "Contact", path: "/contact", pageViews: 67, users: 34 },
-        { title: "Services", path: "/services", pageViews: 45, users: 23 },
-        { title: "Blog", path: "/blog", pageViews: 32, users: 18 },
-      ];
+      return [];
     }
 
     return realTimeData.rows
@@ -649,34 +698,64 @@ const GoogleAnalytics = () => {
       </div>
 
       {/* Property Selection */}
-      {accounts.length > 0 && (
+      {(accounts.length > 0 || propertyList.length > 0) && (
         <div className="row mb-4">
-          <div className="col-md-6">
-            <label className="form-label">Account</label>
-            <select
-              className="form-control"
-              value={selectedAccount}
-              onChange={(e) => setSelectedAccount(e.target.value)}
-            >
-              {accounts.map((account) => (
-                <option key={account.name} value={account.name}>
-                  {account.displayName}
-                </option>
-              ))}
-            </select>
-          </div>
+          {accounts.length > 0 && (
+            <div className="col-md-6">
+              <label className="form-label">Account</label>
+              <select
+                className="form-control"
+                value={selectedAccount}
+                onChange={async (e) => {
+                  const val = e.target.value;
+                  setSelectedAccount(val);
+                  if (organisation?.id) {
+                    try {
+                      await googleAnalyticsService.updateSelection(
+                        organisation.id,
+                        {
+                          accountName: val,
+                        }
+                      );
+                    } catch {}
+                  }
+                }}
+              >
+                {accounts.map((account) => (
+                  <option key={account.name} value={account.name}>
+                    {account.displayName}
+                  </option>
+                ))}
+              </select>
+            </div>
+          )}
           <div className="col-md-6">
             <label className="form-label">Property</label>
             <select
               className="form-control"
               value={selectedProperty}
-              onChange={(e) => setSelectedProperty(e.target.value)}
+              onChange={async (e) => {
+                const val = e.target.value;
+                setSelectedProperty(val);
+                if (organisation?.id) {
+                  try {
+                    await googleAnalyticsService.updateSelection(
+                      organisation.id,
+                      {
+                        propertyId: val,
+                      }
+                    );
+                  } catch {}
+                }
+              }}
             >
-              {properties.map((property) => (
-                <option key={property.propertyId} value={property.propertyId}>
-                  {property.displayName}
-                </option>
-              ))}
+              {(propertyList.length ? propertyList : properties).map(
+                (property) => (
+                  <option key={property.propertyId} value={property.propertyId}>
+                    {property.displayName}
+                  </option>
+                )
+              )}
             </select>
           </div>
         </div>
