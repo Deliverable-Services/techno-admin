@@ -76,6 +76,7 @@ import useUserProfileStore from "./hooks/useUserProfileStore";
 import GoogleAnalytics from "./components/Google-analytics";
 import SubscriptionPage from "./components/Subscription";
 import UsersCreateEdit from "./components/Users/UsersCreateEdit";
+import StaticPageCreateForm from "./components/StaticPages/StaticPageCreateUpdateForm";
 
 const App = () => {
   const [isDesktop, setIsDesktop] = useState<boolean>(false);
@@ -466,6 +467,12 @@ const App = () => {
                 path="/website-pages"
                 exact
                 component={WebsitePages}
+                permissionReq="read_staticpage"
+              />
+              <PrivateRoute
+                path="/website-pages/create-edit/:id"
+                exact
+                component={StaticPageCreateForm}
                 permissionReq="read_staticpage"
               />
               <PrivateRoute

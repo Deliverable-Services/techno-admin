@@ -10,6 +10,7 @@ import CustomConfigTab from "./CustomConfigTab";
 import DomainTab from "./DomainTab";
 import PageHeading from "../../shared-components/PageHeading";
 import { GrOrganization } from "react-icons/gr";
+import { Nav } from "react-bootstrap";
 
 const tabs = [
   { key: "profile", label: "Profile" },
@@ -33,21 +34,20 @@ const Organization: React.FC = () => {
             <PageHeading title="Organization Settings" icon={<GrOrganization size={24} />} />
           </div>
           <div className="d-flex g-4 align-items-center mb-4 mx-auto">
-            {/* Bootstrap Nav Tabs with map */}
-            <ul className="nav nav-tabs m-0 my-4 w-auto mr-4">
+            <Nav
+              className="nav-tabs global-navs m-0 my-4 w-auto mr-4" style={{ maxWidth: '100%' }}
+              variant="tabs"
+              activeKey={activeTab}
+              onSelect={(selectedKey) => setActiveTab(selectedKey || "organization")}
+            >
               {tabs.map((tab) => (
-                <li className="nav-item" key={tab.key}>
-                  <button
-                    className={`nav-link${activeTab === tab.key ? " active" : ""
-                      }`}
-                    style={{ cursor: "pointer" }}
-                    onClick={() => setActiveTab(tab.key)}
-                  >
+                <Nav.Item key={tab.key}>
+                  <Nav.Link eventKey={tab.key}>
                     {tab.label}
-                  </button>
-                </li>
+                  </Nav.Link>
+                </Nav.Item>
               ))}
-            </ul>
+            </Nav>
           </div>
 
           {/* Tab Content */}

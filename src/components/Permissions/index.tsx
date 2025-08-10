@@ -2,8 +2,8 @@
 
 
 import { AxiosError } from "axios";
-import React, { useMemo, useState } from "react";
-import { Button, Container } from "react-bootstrap";
+import { useMemo, useState } from "react";
+import { Button, Container, Dropdown, Nav } from "react-bootstrap";
 import { BiSad } from "react-icons/bi";
 import { useMutation, useQuery } from "react-query";
 import { useHistory } from "react-router-dom";
@@ -19,9 +19,10 @@ import API from "../../utils/API";
 import { primaryColor } from "../../utils/constants";
 import { queryClient } from "../../utils/queryClient";
 import { showMsgToast } from "../../utils/showMsgToast";
-import Roles from "../Roles";
 import { CommonModal } from "../CommonPopup/CommonModal";
 import PermissionsCreateUpdateForm from "./PermissoinsCreateUpdateForm";
+import { BsThreeDotsVertical } from "react-icons/bs";
+import { AiFillDelete } from "react-icons/ai";
 
 const key = "get-all-permission";
 
@@ -42,6 +43,7 @@ const Permissions = () => {
   const history = useHistory();
   const [selectedRows, setSelectedRows] = useState([]);
   const [modalShow, setModalShow] = useState(false);
+  const [activeTab, setActiveTab] = useState("roles"); // "roles" or "permissions"
   console.log(selectedRows.map((item) => item.id));
   const [filter, setFilter] = useState(intitialFilter);
   console.log({ filter });
@@ -117,6 +119,20 @@ const Permissions = () => {
         },
       },
       {
+        Header: "Created At",
+        accessor: "created_at",
+        Cell: (data: Cell) => {
+          return <CreatedUpdatedAt date={data.row.values.created_at} />;
+        },
+      },
+      {
+        Header: "Updated At",
+        accessor: "updated_at",
+        Cell: (data: Cell) => {
+          return <CreatedUpdatedAt date={data.row.values.updated_at} />;
+        },
+      },
+      {
         Header: "Actions",
         Cell: (data: Cell) => {
           return (
@@ -142,12 +158,31 @@ const Permissions = () => {
                   Revoke
                 </Button>
               </Restricted>
+              <Dropdown className="ellipsis-dropdown ml-2">
+                <Dropdown.Toggle
+                  variant="light"
+                  size="sm"
+                  className="p-1 border-0 shadow-none"
+                  id={`dropdown-${data.row.values.id}`}
+                >
+                  <BsThreeDotsVertical size={18} />
+                </Dropdown.Toggle>
+
+                <Dropdown.Menu className="menu-dropdown">
+                  <Dropdown.Item
+                    className="text-danger"
+                  >
+                    <AiFillDelete size={16} className="me-1" />
+                    Delete
+                  </Dropdown.Item>
+                </Dropdown.Menu>
+              </Dropdown>
             </div>
           );
         },
       },
     ],
-    []
+    [_onGiveClick, _onRevokeClick]
   );
   const permissionColumn = useMemo(
     () => [
@@ -204,69 +239,128 @@ const Permissions = () => {
     setModalShow(!modalShow);
   }
 
+  // Get current data and columns based on active tab
+  const getCurrentData = () => {
+    if (activeTab === "roles") {
+      return RolesPermission?.role;
+    } else {
+      return data;
+    }
+  };
+
+  const getCurrentColumns = () => {
+    if (activeTab === "roles") {
+      return columns;
+    } else {
+      return permissionColumn;
+    }
+  };
+
+  const getCurrentLoading = () => {
+    if (activeTab === "roles") {
+      return isRolesPermissionLoading;
+    } else {
+      return isLoading;
+    }
+  };
+
+  const getCurrentFetching = () => {
+    if (activeTab === "roles") {
+      return isRolesPermissoinFetch;
+    } else {
+      return isFetching;
+    }
+  };
+
+  const getCurrentError = () => {
+    if (activeTab === "roles") {
+      return RolesPermissionError;
+    } else {
+      return error;
+    }
+  };
+
+  const getCurrentTotalRecords = () => {
+    if (activeTab === "roles") {
+      return RolesPermission?.total;
+    } else {
+      return data?.total;
+    }
+  };
+
+  const handleTabChange = (eventKey: string | null) => {
+    if (eventKey === "permissions") {
+      setActiveTab("permissions");
+    } else {
+      setActiveTab("roles");
+    }
+  };
+
   return (
     <>
-    <CommonModal title="Create New Permission" modalShow={modalShow} onModalHideClick={_toggleModal}>
-      <PermissionsCreateUpdateForm setShowModal={_toggleModal} />
-    </CommonModal>
-      <Roles />
+      <CommonModal title="Create New Permission" modalShow={modalShow} onModalHideClick={_toggleModal}>
+        <PermissionsCreateUpdateForm setShowModal={_toggleModal} />
+      </CommonModal>
 
-      <div className="view-padding mb-3 mt-5">
-        <PageHeading title="Assign Permission" description="Assign permission for your workflow" />
-      </div>
-      <hr />
-      <div className="h-100 p-0">
-        {isRolesPermissionLoading ? (
-          <IsLoading />
-        ) : (
-          <>
-            {!error && (
-              <ReactTable
-                data={RolesPermission?.role}
-                columns={columns}
-                filter={filter}
-                onFilterChange={_onFilterChange}
-                isDataLoading={isRolesPermissoinFetch}
-                isSelectable={false}
-              />
-            )}
-          </>
-        )}
-      </div>
-
-      <div className="view-padding mt-3">
+      <div className="view-padding">
         <PageHeading
-          title="Permissions"
-          onClick={_onCreateClick}
-          totalRecords={data?.total}
-          permissionReq="create_permission"
+          title={activeTab === "roles" ? "Roles" : "Permissions"}
+          description={activeTab === "roles" ? "Roles for your workflow" : "Permissions for your workflow"}
+          onClick={activeTab === "permissions" ? _onCreateClick : undefined}
+          totalRecords={getCurrentTotalRecords()}
+          permissionReq={activeTab === "permissions" ? "create_permission" : undefined}
         />
       </div>
       <hr />
       <div className="h-100 p-0">
-        {isLoading ? (
+        {getCurrentLoading() ? (
           <IsLoading />
         ) : (
           <>
-            {!error && (
+            {!getCurrentError() && (
               <ReactTable
-                data={data}
-                columns={permissionColumn}
-                setSelectedRows={setSelectedRows}
+                data={getCurrentData()}
+                tabs={
+                  <div className="d-flex justify-content-between">
+                    <div>
+                      <Nav
+                        className="global-navs"
+                        variant="tabs"
+                        activeKey={activeTab}
+                        onSelect={handleTabChange}
+                      >
+                        <Nav.Item>
+                          <Nav.Link eventKey="roles">
+                            Roles
+                          </Nav.Link>
+                        </Nav.Item>
+
+                        <Nav.Item>
+                          <Nav.Link eventKey="permissions">
+                            Permissions
+                          </Nav.Link>
+                        </Nav.Item>
+                      </Nav>
+                    </div>
+                  </div>
+                }
+                columns={getCurrentColumns()}
+                setSelectedRows={activeTab === "permissions" ? setSelectedRows : undefined}
                 filter={filter}
                 onFilterChange={_onFilterChange}
-                isDataLoading={isFetching}
+                isDataLoading={getCurrentFetching()}
+                isSelectable={activeTab === "permissions"}
               />
             )}
-            {!error && data?.data?.length > 0 ? (
+            {!getCurrentError() && getCurrentData()?.data?.length > 0 ? (
               <TablePagination
-                currentPage={data?.current_page}
-                lastPage={data?.last_page}
+                currentPage={getCurrentData()?.current_page}
+                lastPage={getCurrentData()?.last_page}
                 setPage={_onFilterChange}
-                hasNextPage={!!data?.next_page_url}
-                hasPrevPage={!!data?.prev_page_url}
+                hasNextPage={!!getCurrentData()?.next_page_url}
+                hasPrevPage={!!getCurrentData()?.prev_page_url}
               />
-            ) : null}{" "}
+            ) : null}
           </>
         )}
       </div>

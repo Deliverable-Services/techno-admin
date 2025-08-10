@@ -59,77 +59,83 @@ const StaticPageCreateForm = ({ onHideModal }) => {
 
   const apiData = data && (data as any);
 
-  console.log("apiData", apiData);
-
   if (dataLoading) return <IsLoading />;
 
   return (
     <>
-      {/* <BackButton title="Static Page" /> */}
-      <Row className="rounded">
-        <Col className="mx-auto">
-          <Formik
-            enableReinitialize
-            initialValues={apiData || {}}
-            onSubmit={(values) => {
-              mutate({ formdata: values, id });
-            }}
-          >
-            {({ setFieldValue }) => (
-              <Form>
-                <div className="form-container  py-2 ">
-                  <InputField
-                    name="title"
-                    placeholder="Title"
-                    label="Title"
-                    required
-                  />
-
-                  <InputField
-                    name="url"
-                    placeholder="Url"
-                    label="Url"
-                    required
-                  />
-                  <InputField
-                    name="description"
-                    placeholder="Description"
-                    label="Description"
-                    as="textarea"
-                    required
-                  />
-                </div>
-
-                <Row>
-                  <Col md={12} xl={12}>
-                    <TextEditor
-                      name="content"
-                      label="Content"
-                      setFieldValue={setFieldValue}
+      <div className="">
+        {id && (
+          <div className="pl-5 pt-5">
+            <BackButton title="Static Page" />
+          </div>
+        )}
+        <Row className="rounded px-5">
+          <Col className="mx-auto">
+            <Formik
+              enableReinitialize
+              initialValues={apiData || {}}
+              onSubmit={(values) => {
+                mutate({ formdata: values, id });
+              }}
+            >
+              {({ setFieldValue }) => (
+                <Form>
+                  <div className="form-container  py-2 ">
+                    <InputField
+                      name="title"
+                      placeholder="Title"
+                      label="Title"
+                      required
                     />
-                  </Col>
-                </Row>
 
-                <Row className="d-flex justify-content-center">
-                  <Col md="6">
-                    <Button
-                      type="submit"
-                      disabled={isLoading}
-                      className="w-100"
-                    >
-                      {isLoading ? (
-                        <Spinner animation="border" size="sm" />
-                      ) : (
-                        "Submit"
-                      )}
-                    </Button>
-                  </Col>
-                </Row>
-              </Form>
-            )}
-          </Formik>
-        </Col>
-      </Row>
+                    <InputField
+                      name="url"
+                      placeholder="Url"
+                      label="Url"
+                      required
+                    />
+                    <InputField
+                      name="description"
+                      placeholder="Description"
+                      label="Description"
+                      as="textarea"
+                      required
+                    />
+                  </div>
+
+                  {!id && (
+                    <Row>
+                      <Col md={12} xl={12}>
+                        <TextEditor
+                          name="content"
+                          label="Content"
+                          setFieldValue={setFieldValue}
+                        />
+                      </Col>
+                    </Row>
+                  )}
+
+                  <Row className="d-flex justify-content-center">
+                    <Col md="6">
+                      <Button
+                        type="submit"
+                        disabled={isLoading}
+                        className="w-100"
+                      >
+                        {isLoading ? (
+                          <Spinner animation="border" size="sm" />
+                        ) : (
+                          "Submit"
+                        )}
+                      </Button>
+                    </Col>
+                  </Row>
+                </Form>
+              )}
+            </Formik>
+          </Col>
+        </Row>
+      </div>
     </>
   );
 };

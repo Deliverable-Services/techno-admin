@@ -1,0 +1,30 @@
+
+.fc .fc-toolbar-title {
+    font-size: 1.75em;
+    margin: 0;
+    font-weight: 500 !important;
+}
+.fc .fc-col-header-cell-cushion,
+.fc .fc-daygrid-day-number {
+    color: #1a252f;
+}
+
+.fc-daygrid-event.fc-daygrid-dot-event.fc-event {
+    color: #000000;
+}
+
+.fc-direction-ltr .fc-toolbar > * > :not(:first-child),
+.fc-direction-ltr .fc-button-group > .fc-button:not(:last-child),
+.fc-direction-ltr .fc-button-group > .fc-button:not(:first-child) {
+    text-transform: capitalize;
+}
+
+/* .fc-daygrid-event.fc-daygrid-dot-event.fc-event {
+    color: #ffffff;
+    background: #3688d8cc;
+} */
+
+.fc-direction-ltr .fc-list-day-side-text, .fc-direction-rtl .fc-list-day-text,
+.fc-direction-ltr .fc-list-day-text, .fc-direction-rtl .fc-list-day-side-text {
+    color: black;
+}

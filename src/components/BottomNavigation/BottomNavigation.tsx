@@ -23,11 +23,6 @@ const tabs = [
     icon: <FaFileInvoiceDollar size={20} />,
   },
   {
-    name: "Subscriptions",
-    linkTo: "/subscriptions",
-    icon: <FaFileInvoiceDollar size={20} />,
-  },
-  {
     name: "Services",
     linkTo: "/services",
     icon: <RiServiceFill />,
