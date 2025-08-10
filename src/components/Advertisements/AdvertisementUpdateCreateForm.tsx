@@ -70,7 +70,7 @@ const AdvertisementCreateUpdateForm = () => {
   return (
     <>
       <div className="card view-padding p-2 d-flex mt-3">
-        <BackButton title="Banners" />
+        {/* <BackButton title="Banners" /> */}
         <Row className="rounded">
           <Col className="mx-auto">
             <Formik
@@ -169,7 +169,7 @@ const AdvertisementCreateUpdateForm = () => {
                     />
                   </div>
                   <Row className="d-flex justify-content-start">
-                    <Col md="2">
+                    <Col md="12">
                       <Restricted to={id ? "update_banner" : "create_banner"}>
                         <Button
                           type="submit"

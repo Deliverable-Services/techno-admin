@@ -16,8 +16,10 @@ import API from "../../utils/API";
 import { primaryColor } from "../../utils/constants";
 import { showMsgToast } from "../../utils/showMsgToast";
 import { CommonModal } from "../CommonPopup/CommonModal";
-import RolesCreateUpdateForm from "./RolesCreateUpdateForm";
 import { queryClient } from "../../utils/queryClient";
+import { useFlyout } from "../../hooks/useFlyout";
+import Flyout from "../../shared-components/Flyout";
+import RolesCreateUpdateForm from "./RolesCreateUpdateForm";
 
 const key = "get-all-roles";
 
@@ -36,6 +38,7 @@ const Roles = () => {
   const [selectedRows, setSelectedRows] = useState([]);
   const [filter, setFilter] = useState(intitialFilter);
   const [modalShow, setModalShow] = useState(false);
+  const { isOpen: showFlyout, openFlyout, closeFlyout } = useFlyout();
   const { data, isLoading, isFetching, error } = useQuery<any>(
     [key, , filter],
     {
@@ -56,7 +59,8 @@ const Roles = () => {
   });
 
   const _onCreateClick = () => {
-    setModalShow(true);
+    // setModalShow(true);
+    openFlyout();
   };
   const _onEditClick = (id: string) => {
     history.push("/roles/create-edit", { id });
@@ -126,9 +130,9 @@ const Roles = () => {
 
   return (
     <>
-    <CommonModal title="Create New Role" modalShow={modalShow} onModalHideClick={_toggleModal}>
-      <RolesCreateUpdateForm setShowModal={_toggleModal} />
-    </CommonModal>
+      <CommonModal title="Create New Role" modalShow={modalShow} onModalHideClick={_toggleModal}>
+        <RolesCreateUpdateForm setShowModal={_toggleModal} />
+      </CommonModal>
       <Container fluid className="card component-wrapper view-padding">
         <PageHeading
           title="Roles"
@@ -175,6 +179,17 @@ const Roles = () => {
           </Button>
         </div>
       )}
+
+      <Flyout
+        isOpen={showFlyout}
+        onClose={closeFlyout}
+        title={'Create Services'}
+        cancelText="Cancel"
+
+      >
+        <RolesCreateUpdateForm setShowModal={_toggleModal}
+        />
+      </Flyout>
     </>
   );
 };

@@ -67,7 +67,7 @@ const CarTypesCreateUpdateForm = () => {
   return (
     <>
       <div className="card view-padding p-2 d-flex mt-3">
-        <BackButton title={title} />
+        {/* <BackButton title={title} /> */}
 
         <Row className="rounded">
           <Col className="mx-auto">
@@ -80,7 +80,7 @@ const CarTypesCreateUpdateForm = () => {
             >
               {({ setFieldValue }) => (
                 <Form>
-                  <div className="form-container ">
+                  <div className=" ">
                     <InputField
                       name="name"
                       placeholder="Name"
@@ -90,7 +90,7 @@ const CarTypesCreateUpdateForm = () => {
                   </div>
 
                   <Row className="d-flex justify-content-start">
-                    <Col md="2">
+                    <Col md="12">
                       <Restricted
                         to={
                           id ? "update_brandmodelType" : "create_brandmodelType"

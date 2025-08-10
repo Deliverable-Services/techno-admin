@@ -120,7 +120,7 @@ const ServicesCreateUpdateForm = () => {
   return (
     <>
       <div className="card view-padding p-2 d-flex mt-3">
-        <BackButton title="Services" />
+        {/* <BackButton title="Services" /> */}
         <Row className="rounded">
           <Col className="mx-auto">
             <Formik
@@ -262,7 +262,7 @@ const ServicesCreateUpdateForm = () => {
                     setFieldValue={setFieldValue}
                   />
                   <Row className="d-flex justify-content-start">
-                    <Col md="2">
+                    <Col md="12">
                       <Restricted to={id ? "update_service" : "create_service"}>
                         <Button
                           type="submit"

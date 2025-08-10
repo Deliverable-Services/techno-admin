@@ -1,12 +1,11 @@
 import React, { useState, useEffect } from "react";
-import { Container } from "react-bootstrap";
+import { Button, Container, Modal, Spinner } from "react-bootstrap";
 import FullCalendar from "@fullcalendar/react";
 import dayGridPlugin from "@fullcalendar/daygrid";
 import timeGridPlugin from "@fullcalendar/timegrid";
 import interactionPlugin from "@fullcalendar/interaction";
 import multiMonthPlugin from "@fullcalendar/multimonth";
 import listPlugin from "@fullcalendar/list";
-import { BsClock } from "react-icons/bs";
 import { useMutation, useQuery } from "react-query";
 import moment from "moment";
 import dayjs from "dayjs";
@@ -19,11 +18,17 @@ import { AxiosError } from "axios";
 import { useHistory } from "react-router-dom";
 import { queryClient } from "../../utils/queryClient";
 import { showMsgToast } from "../../utils/showMsgToast";
-import IsLoading from "../../shared-components/isLoading";
-import CreateUpdateMeeting from "./CreateUpdateMeeting";
-import Flyout from "../../shared-components/Flyout";
+import useUserProfileStore from "../../hooks/useUserProfileStore";
+import { BsClock } from "react-icons/bs";
 import { useFlyout } from "../../hooks/useFlyout";
+import Flyout from "../../shared-components/Flyout";
+// import SlotCreateUpdateForm from "./BookingSlotsCreateUpdateForm";
+import IsLoading from "../../shared-components/isLoading";
 import MeetingDetails from "./MeetingDetails";
+import CreateUpdateMeeting from "./CreateUpdateMeeting";
+import { primaryColor } from "../../utils/constants";
+
+// dummy event data
 
 const key = "meetings";
 
@@ -38,9 +43,14 @@ const intitialFilter = {
 
 const Meetings = () => {
   const history = useHistory();
+  const [selectedRows, setSelectedRows] = useState([]);
+  const [deletePopup, setDeletePopup] = useState(false);
+  const [selectedRowId, setSelectedRowId] = useState<string>("");
+  const [formattedDataForCalendar, setFormattedDataForCalendar] =
+    useState(null);
+  const [filter, setFilter] = useState(intitialFilter);
   const [meetings, setMeetings] = useState([]);
   const [prefillData, setPrefillData] = useState(null);
-  const [filter, setFilter] = useState(intitialFilter);
 
   const [modalShow, setModalShow] = useState(false);
 
@@ -93,13 +103,50 @@ const Meetings = () => {
     };
   });
 
+  React.useEffect(() => {
+    const formataData = () => {
+      const events = [];
+      if (isLoading) return;
+      if (!data) return;
+      // formatting data in the calendar accepted form
+      Object.values(data).map((items: Array<any>) => {
+        items?.map((item) => {
+          console.log({ dataTime: item.datetime });
+          const event = {
+            id: item.id,
+            from: moment.utc(item.datetime).format("YYYY-MM-DD HH:mm:ss"),
+            to: moment
+              .utc(item.datetime)
+              .add(1, "hour")
+              .format("YYYY-MM-DD HH:mm:ss"),
+            title: `${item.reason} ${moment
+              .utc(item.datetime)
+              .format("HH")}-${moment
+              .utc(item.datetime)
+              .add(1, "hour")
+              .format("HH")} `,
+            color: primaryColor,
+          };
+
+          events.push(event);
+        });
+      });
+      setFormattedDataForCalendar(events);
+      console.log(events);
+    };
+
+    formataData();
+  }, [data, isLoading]);
+
   const _toggleModal = () => {
     setModalShow(!modalShow);
     if (modalShow) setPrefillData(null); // reset on close
   };
 
   const _onCreateClick = () => {
+    // history.push("/booking-slots/create-edit");
     setModalShow(true);
+    openFlyout();
   };
 
   const handleCloseFlyout = () => {
@@ -199,6 +246,41 @@ const Meetings = () => {
           </Flyout>
         </Container>
       </Container>
+      <Modal show={deletePopup} onHide={() => setDeletePopup(false)}>
+        <Modal.Header closeButton>
+          <Modal.Title>Are you sure?</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          Do you really want to delete this disabled slot? This process cannot
+          be undone
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="bg-light" onClick={() => setDeletePopup(false)}>
+            Close
+          </Button>
+          <Button
+            variant="danger"
+            onClick={() => {
+              mutateDelete(selectedRowId);
+            }}
+          >
+            {isDeleteLoading ? (
+              <Spinner animation="border" size="sm" />
+            ) : (
+              "Delete"
+            )}
+          </Button>
+        </Modal.Footer>
+      </Modal>
+      <Flyout
+        isOpen={showFlyout}
+        onClose={closeFlyout}
+        title={"Create Meetings"}
+        cancelText="Cancel"
+        width="800px"
+      >
+        {/* <SlotCreateUpdateForm /> */}
+      </Flyout>
     </>
   );
 };

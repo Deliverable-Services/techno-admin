@@ -70,7 +70,7 @@ const CouponCreateUpdateForm = () => {
   return (
     <>
       <div className="card view-padding p-2 d-flex mt-3">
-        <BackButton title="Coupons" />
+        {/* <BackButton title="Coupons" /> */}
         <Row className="rounded">
           <Col className="mx-auto">
             <Formik
@@ -159,7 +159,7 @@ const CouponCreateUpdateForm = () => {
                     setFieldValue={setFieldValue}
                   />
                   <Row className="d-flex justify-content-center">
-                    <Col md="6">
+                    <Col md="12">
                       <Restricted to={id ? "update_coupon" : "create_coupon"}>
                         <Button
                           type="submit"
