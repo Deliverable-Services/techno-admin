@@ -45,9 +45,9 @@ export const OrganisationProvider = ({
       queryClient.clear();
     } catch {}
     // Small delay to allow state/localStorage flush
-    setTimeout(() => {
-      window.location.reload();
-    }, 50);
+    // setTimeout(() => {
+    //   window.location.reload();
+    // }, 50);
   };
 
   return (
