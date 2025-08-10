@@ -31,4 +31,42 @@ API.interceptors.request.use((req) => {
   return req;
 });
 
+// Response interceptor to transparently refresh token once on 401 and retry
+let isRefreshing = false;
+let pendingQueue: Array<() => void> = [];
+
+API.interceptors.response.use(
+  (res) => res,
+  async (error) => {
+    const originalRequest = error.config;
+    if (error?.response?.status === 401 && !originalRequest._retry) {
+      originalRequest._retry = true;
+      try {
+        if (isRefreshing) {
+          await new Promise<void>((resolve) => pendingQueue.push(resolve));
+        } else {
+          isRefreshing = true;
+          await API.post("auth/refresh");
+          isRefreshing = false;
+          pendingQueue.forEach((resolve) => resolve());
+          pendingQueue = [];
+        }
+        // Update header with latest token
+        const newToken = localStorage.getItem("token");
+        if (newToken) {
+          originalRequest.headers = originalRequest.headers || {};
+          originalRequest.headers.Authorization = `Bearer ${newToken}`;
+        }
+        return API(originalRequest);
+      } catch (e) {
+        isRefreshing = false;
+        pendingQueue = [];
+        // Bubble up to auth error handler (will redirect to login)
+        return Promise.reject(e);
+      }
+    }
+    return Promise.reject(error);
+  }
+);
+
 export default API;

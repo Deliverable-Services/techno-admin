@@ -2,6 +2,11 @@ import React, { useState, useRef, useEffect } from "react";
 import { Organisation } from "../../types/interface";
 import { IoChevronDown, IoCheckmark } from "react-icons/io5";
 import { HiOfficeBuilding } from "react-icons/hi";
+import { BiLogOut, BiEdit } from "react-icons/bi";
+import { useMutation } from "react-query";
+import useTokenStore from "../../hooks/useTokenStore";
+import useUserProfileStore from "../../hooks/useUserProfileStore";
+import API from "../../utils/API";
 import "./OrganizationSwitcher.css";
 
 interface OrganizationSwitcherProps {
@@ -17,6 +22,9 @@ const OrganizationSwitcher: React.FC<OrganizationSwitcherProps> = ({
 }) => {
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
+  const user = useUserProfileStore((state) => state.user);
+  const removeToken = useTokenStore((state) => state.removeToken);
+  const removeUser = useUserProfileStore((state) => state.removeUser);
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -60,6 +68,32 @@ const OrganizationSwitcher: React.FC<OrganizationSwitcherProps> = ({
       default:
         return "#8B5CF6"; // Purple
     }
+  };
+
+  const logout = () => API.post("/auth/logout");
+  const { mutate: logoutMutate, isLoading: isLogoutLoading } = useMutation(
+    logout,
+    {
+      onSettled: () => {
+        removeUser();
+        removeToken();
+        window.location.href = "/login";
+      },
+    }
+  );
+
+  const renderUserAvatar = () => {
+    const url = (user as any)?.profile_pic;
+    if (url) {
+      return <img src={url} alt={(user as any)?.name || "User"} />;
+    }
+    const initials = ((user as any)?.name || "U")
+      .split(" ")
+      .map((w: string) => w.charAt(0))
+      .join("")
+      .toUpperCase()
+      .slice(0, 2);
+    return <div className="org-avatar-placeholder">{initials}</div>;
   };
 
   return (
@@ -146,6 +180,45 @@ const OrganizationSwitcher: React.FC<OrganizationSwitcherProps> = ({
                 )}
               </div>
             ))}
+
+            {/* Divider */}
+            <div className="org-divider" />
+
+            {/* Profile Row */}
+            <a href="/profile" className="org-option profile-row">
+              <div className="org-option-content">
+                <div className="org-avatar">{renderUserAvatar()}</div>
+                <div className="org-info">
+                  <div className="org-name">
+                    {(user as any)?.name || "User"}
+                  </div>
+                  <div className="org-details">
+                    {(user as any)?.email || ""}
+                  </div>
+                </div>
+              </div>
+              <BiEdit className="action-icon" title="Edit profile" />
+            </a>
+
+            {/* Logout Row */}
+            <button
+              type="button"
+              className="org-option logout-row"
+              onClick={() => logoutMutate()}
+            >
+              <div className="org-option-content">
+                <div className="org-avatar">
+                  <div className="org-avatar-placeholder">
+                    <BiLogOut />
+                  </div>
+                </div>
+                <div className="org-info">
+                  <div className="org-name">
+                    {isLogoutLoading ? "Logging out..." : "Log out"}
+                  </div>
+                </div>
+              </div>
+            </button>
           </div>
         </div>
       )}
