@@ -1,5 +1,5 @@
 import React from "react";
-import { Button } from "react-bootstrap";
+import { Button } from "../components/ui/button";
 import { AiOutlinePlus } from "react-icons/ai";
 import Restricted from "./Restricted";
 interface Props {

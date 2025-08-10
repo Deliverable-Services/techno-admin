@@ -1,5 +1,5 @@
 import React, { PureComponent } from "react";
-import { CanvasOverlay } from "react-map-gl";
+// Map overlay removed – no longer used
 
 export default class PolylineOverlay extends PureComponent {
   _redraw({ width, height, ctx, isDragging, project, unproject }) {

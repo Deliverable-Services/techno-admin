@@ -1,5 +1,5 @@
 import React from "react";
-import { Container } from "react-bootstrap";
+import { Container } from "../components/ui/grid";
 import { FaShieldAlt, FaUserCheck, FaLock } from "react-icons/fa";
 import { MdVerifiedUser } from "react-icons/md";
 import { primaryColor } from "../utils/constants";

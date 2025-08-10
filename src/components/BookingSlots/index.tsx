@@ -11,8 +11,6 @@ import moment from "moment";
 import dayjs from "dayjs";
 import API from "../../utils/API";
 import { CommonModal } from "../CommonPopup/CommonModal";
-import "./meeting.css";
-import "./calendar-overrides.css";
 import PageHeading from "../../shared-components/PageHeading";
 import { handleApiError } from "../../hooks/handleApiErrors";
 import { AxiosError } from "axios";

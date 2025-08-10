@@ -1,5 +1,5 @@
 import { AxiosError } from "axios";
-import bsCustomFileInput from "bs-custom-file-input";
+// Removed bs-custom-file-input
 import { Form, Formik } from "formik";
 import { useEffect } from "react";
 import { Button, Col, Row, Spinner } from "react-bootstrap";
@@ -40,9 +40,7 @@ const BrandModlesCreateUpdateForm = () => {
   const { state } = useLocation();
   const history = useHistory();
   const id = state ? (state as any).id : null;
-  useEffect(() => {
-    bsCustomFileInput.init();
-  }, []);
+  useEffect(() => {}, []);
 
   const { data: brands, isLoading: isBrandLoading } = useQuery<any>(["brands"]);
   const { data: CarType, isLoading: isCarTypeLoading } = useQuery<any>([

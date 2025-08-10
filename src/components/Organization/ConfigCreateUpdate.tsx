@@ -1,5 +1,5 @@
 import { AxiosError } from "axios";
-import bsCustomFileInput from "bs-custom-file-input";
+// Removed bs-custom-file-input
 import { Form, Formik } from "formik";
 import { useEffect } from "react";
 import { Button, Col, Row, Spinner } from "react-bootstrap";
@@ -37,9 +37,7 @@ const createUpdateConfig = ({
 
 const ConfigCreateUpdateForm = ({ id, onHideModal }) => {
   const history = useHistory();
-  useEffect(() => {
-    bsCustomFileInput.init();
-  }, []);
+  useEffect(() => {}, []);
   const { data, isLoading: dataLoading } = useGetSingleQuery({ id, key });
   const { mutate, isLoading } = useMutation(createUpdateConfig, {
     onSuccess: () => {

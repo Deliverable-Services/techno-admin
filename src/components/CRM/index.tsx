@@ -3,7 +3,7 @@ import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
 import Column from "./Column";
 import { Lead } from "./types";
-import "./crm-board.css";
+
 import LeadDrawer from "./LeadDrawer";
 import { useMutation, useQuery } from "react-query";
 import { AxiosError } from "axios";
@@ -14,7 +14,7 @@ import { showMsgToast } from "../../utils/showMsgToast";
 import { showErrorToast } from "../../utils/showErrorToast";
 import { queryClient } from "../../utils/queryClient";
 import PageHeading from "../../shared-components/PageHeading";
-import { SiCivicrm } from "react-icons/si";
+import { Users2 } from "../../components/ui/icon";
 
 const key = "leads";
 const membersKey = "users";
@@ -83,16 +83,11 @@ const UserAvatar: React.FC<UserAvatarProps> = ({
   if (!profilePic || showFallback) {
     return (
       <div
-        className={`d-flex align-items-center justify-content-center text-white ${
+        className={`flex items-center justify-center text-white rounded-full w-8 h-8 text-xs font-bold ${
           className || ""
         }`}
         style={{
           backgroundColor: getBackgroundColor(name || "User"),
-          borderRadius: "50%",
-          fontSize: "12px",
-          fontWeight: "bold",
-          width: "30px",
-          height: "30px",
         }}
       >
         {getInitials(name || "User")}
@@ -104,14 +99,8 @@ const UserAvatar: React.FC<UserAvatarProps> = ({
     <img
       src={profilePic}
       alt={name || "User"}
-      className={className}
+      className={`rounded-full w-8 h-8 object-cover ${className || ""}`}
       onError={handleImageError}
-      style={{
-        borderRadius: "50%",
-        width: "30px",
-        height: "30px",
-        objectFit: "cover",
-      }}
     />
   );
 };
@@ -193,7 +182,7 @@ const Index: React.FC = () => {
     <>
       <div className="view-padding d-flex justify-content-between align-items-center">
         <PageHeading
-          icon={<SiCivicrm size={24} />}
+          icon={<Users2 size={24} />}
           title="CRM"
           description="Manage all ongoing leads"
           onClick={_onCreateClick}
@@ -201,18 +190,18 @@ const Index: React.FC = () => {
           permissionReq="create_lead"
         />
 
-        <div className="crm-users">
+        <div className="flex items-center">
           {membersList?.data.slice(0, 3).map((member, index) => (
             <UserAvatar
               key={index}
               profilePic={member?.user?.profile_pic}
               name={member?.name}
-              className="crm-avatar"
+              className="-ml-2 border-2 border-white"
             />
           ))}
 
           {membersList?.data.length > 3 && (
-            <span className="crm-avatar crm-avatar-extra">
+            <span className="w-8 h-8 -ml-2 border-2 border-white rounded-full bg-gray-300 flex items-center justify-center text-xs font-bold">
               +{membersList.data.length - 3}
             </span>
           )}
@@ -221,8 +210,8 @@ const Index: React.FC = () => {
       <hr />
 
       <DndProvider backend={HTML5Backend}>
-        <div className="crm-board-overflow">
-          <div className="row no-gutters crm-board">
+        <div className="overflow-x-auto pb-5">
+          <div className="flex gap-0 min-w-max">
             {Object.keys(statusMap).map((key) => {
               const typedKey = key as string;
               return (

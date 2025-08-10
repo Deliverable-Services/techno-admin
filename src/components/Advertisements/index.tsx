@@ -2,7 +2,6 @@ import { AxiosError } from "axios";
 import { useMemo, useState } from "react";
 import { Button, Container, Dropdown, Nav } from "react-bootstrap";
 import { BiSad } from "react-icons/bi";
-import LightBox from "react-lightbox-component";
 import { QueryFunction, useMutation, useQuery } from "react-query";
 import { useHistory } from "react-router-dom";
 
@@ -115,15 +114,21 @@ const Advertisements = () => {
         Header: "Image",
         accessor: "image",
         Cell: (data: Cell) => (
-          <LightBox
-            images={[
-              {
-                src: `${config.baseUploadUrl}banners/${data.row.values.image}`,
-                title: data.row.values.image,
-              },
-            ]}
-            thumbnailWidth="100px"
-            thumbnailHeight="50px"
+          <img
+            src={`${config.baseUploadUrl}banners/${data.row.values.image}`}
+            alt={String(data.row.values.image)}
+            style={{
+              width: "100px",
+              height: "50px",
+              objectFit: "cover",
+              cursor: "pointer",
+            }}
+            onClick={() =>
+              window.open(
+                `${config.baseUploadUrl}banners/${data.row.values.image}`,
+                "_blank"
+              )
+            }
           />
         ),
       },

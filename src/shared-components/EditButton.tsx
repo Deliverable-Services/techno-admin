@@ -1,5 +1,5 @@
 import React from "react";
-import { Button } from "react-bootstrap";
+import { Button } from "../components/ui/button";
 import { AiFillEdit } from "react-icons/ai";
 import Restricted from "./Restricted";
 
@@ -17,7 +17,7 @@ const EditButton = (props: Props) => {
         <Button
           variant="outline-primary"
           onClick={props.onClick}
-          className="d-flex align-items-center edit-btn"
+          className="flex items-center edit-btn"
         >
           <AiFillEdit size={16} className="mr-1" />
           Edit

@@ -1,5 +1,5 @@
 import { AxiosError } from "axios";
-import bsCustomFileInput from "bs-custom-file-input";
+// Removed bs-custom-file-input
 import { Form, Formik } from "formik";
 import { useEffect, useState } from "react";
 import { Button, Col, Row, Spinner } from "react-bootstrap";
@@ -50,9 +50,7 @@ const UserBasics = ({ toggleModal }: UserBasicsProps) => {
   const id = state ? (state as any).id : null;
   const role = state ? (state as any).role : null;
   const [allRoles, setAllRoles] = useState([]);
-  useEffect(() => {
-    bsCustomFileInput.init();
-  }, []);
+  useEffect(() => {}, []);
   const { data, isLoading: dataLoading } = useGetSingleQuery({ id, key });
   const { data: Roles, isLoading: isRolesLoading } = useQuery<any>(
     ["get-all-roles", , {}],

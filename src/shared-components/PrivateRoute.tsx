@@ -1,4 +1,5 @@
-import { Container, Spinner } from "react-bootstrap";
+import { Container } from "../components/ui/grid";
+import { Spinner } from "../components/ui/spinner";
 import { Route } from "react-router-dom";
 import useUserProfileStore from "../hooks/useUserProfileStore";
 import { useOrganisation } from "../context/OrganisationContext";
@@ -51,13 +52,10 @@ export const PrivateRoute = ({
 
   if (!hasPermission || isStoreTypeBlocked) {
     return (
-      <Container
-        fluid
-        className="d-flex justify-content-center align-items-center mt-4"
-      >
-        <Container fluid className="d-flex justify-content-center display-3">
-          <div className="d-flex flex-column align-items-center">
-            <Spinner animation="border" size="sm" className="mt-5" />
+      <Container fluid className="flex justify-center items-center mt-4">
+        <Container fluid className="flex justify-center text-5xl">
+          <div className="flex flex-col items-center">
+            <Spinner size="sm" className="mt-5" />
             {/* <FaBan color="red" />
             <span className="text-danger display-3">Unauthorised</span> */}
           </div>

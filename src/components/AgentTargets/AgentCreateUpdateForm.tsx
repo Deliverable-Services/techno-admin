@@ -1,5 +1,5 @@
 import { AxiosError } from "axios";
-import bsCustomFileInput from "bs-custom-file-input";
+// Removed bs-custom-file-input
 import { Form, Formik } from "formik";
 import moment from "moment";
 import { useEffect } from "react";
@@ -37,9 +37,7 @@ const TargetCreateUpdateForm = () => {
   const history = useHistory();
   const id = state ? (state as any).id : null;
   const agentId = state ? (state as any).agent_id : null;
-  useEffect(() => {
-    bsCustomFileInput.init();
-  }, []);
+  useEffect(() => {}, []);
   const { data, isLoading: dataLoading } = useGetSingleQuery({ id, key });
   const { mutate, isLoading } = useMutation(createUpdataTarget, {
     onSuccess: () => {

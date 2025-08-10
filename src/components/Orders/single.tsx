@@ -20,15 +20,17 @@ import { queryClient } from "../../utils/queryClient";
 import renderHTML from "../../utils/renderHTML";
 import { showErrorToast } from "../../utils/showErrorToast";
 import { showMsgToast } from "../../utils/showMsgToast";
-import ProgressBar from "./ProgressBar";
+// replaced legacy ProgressBar with shadcn progress
+import { Progress } from "../ui/progress";
 import { config } from "../../utils/constants";
 
 const key = "bookings";
 const dateFormat = "DD MMMM YY (hh:mm a)";
 
-
 function saveAsFile(blog, filename = "jobcard.pdf") {
-  const url = window.URL.createObjectURL(new Blob([blog], { type: "octet/stream" }));
+  const url = window.URL.createObjectURL(
+    new Blob([blog], { type: "octet/stream" })
+  );
   const link = document.createElement("a");
   link.href = url;
   link.setAttribute("download", filename);
@@ -36,7 +38,6 @@ function saveAsFile(blog, filename = "jobcard.pdf") {
   link.click();
   link.remove();
 }
-
 
 const assignAgent = ({
   formdata,
@@ -207,7 +208,11 @@ const SingleOrder = () => {
   // console.log(data);
   return (
     <Container fluid className="component-wrapper px-0 py-2">
-      <Button className="ml-2 back-btn" onClick={() => history.goBack()} size="sm">
+      <Button
+        className="ml-2 back-btn"
+        onClick={() => history.goBack()}
+        size="sm"
+      >
         <div className="d-flex align-items-center">
           <GoArrowLeft /> <p className="ml-1 mb-0">Back</p>
         </div>
@@ -216,7 +221,6 @@ const SingleOrder = () => {
         fluid
         className="d-flex justify-content-between py-2 flex-column flex-md-row"
       >
-
         <div className="d-flex align-md-items-center flex-column flex-md-row">
           <div className="d-flex align-items-center mb-1 mb-md-0">
             <p className=" mb-0">Order</p>
@@ -244,7 +248,13 @@ const SingleOrder = () => {
               <div className=" d-flex align-items-center text-white gap-3">
                 <BiDownload size={18} />
 
-                <a target="_blank" href={config.adminApiBaseUrl + "job-card-pdf/" + id} rel="noreferrer">Job Card</a>
+                <a
+                  target="_blank"
+                  href={config.adminApiBaseUrl + "job-card-pdf/" + id}
+                  rel="noreferrer"
+                >
+                  Job Card
+                </a>
               </div>
             )}
           </Button>
@@ -278,8 +288,6 @@ const SingleOrder = () => {
               </div>
             </Button>
           </Restricted>
-
-
         </div>
       </Container>
 
@@ -290,7 +298,37 @@ const SingleOrder = () => {
       )}
 
       <div className="w-75 mx-auto">
-        <ProgressBar orderStatus={data?.status} />
+        {(() => {
+          const steps = [
+            "confirmed",
+            "reached",
+            "picked",
+            "transit",
+            "processing",
+            "fulfilled",
+          ] as const;
+          const idx = steps.indexOf((data?.status || "").toLowerCase() as any);
+          const percent = idx >= 0 ? ((idx + 1) / steps.length) * 100 : 0;
+          return (
+            <div>
+              <div className="mb-2 flex justify-between text-xs text-muted-foreground">
+                {steps.map((s) => (
+                  <span
+                    key={s}
+                    className={`capitalize ${
+                      s === (data?.status || "").toLowerCase()
+                        ? "text-primary font-semibold"
+                        : ""
+                    }`}
+                  >
+                    {s}
+                  </span>
+                ))}
+              </div>
+              <Progress value={percent} />
+            </div>
+          );
+        })()}
       </div>
 
       <div className="dashboard-page w-100">

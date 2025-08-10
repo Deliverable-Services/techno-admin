@@ -1,4 +1,4 @@
-import axios from "axios";
+import axios, { AxiosHeaders } from "axios";
 import { config } from "./constants";
 
 const API = axios.create({
@@ -11,8 +11,14 @@ API.interceptors.request.use((req) => {
     // Token
     const token = localStorage.getItem("token");
     if (token) {
-      req.headers = req.headers || {};
-      req.headers.Authorization = `Bearer ${token}`;
+      if (req.headers && typeof (req.headers as any).set === "function") {
+        (req.headers as AxiosHeaders).set("Authorization", `Bearer ${token}`);
+      } else {
+        req.headers = {
+          ...(req.headers as any),
+          Authorization: `Bearer ${token}`,
+        } as any;
+      }
     }
 
     // Selected organisation
@@ -21,8 +27,14 @@ API.interceptors.request.use((req) => {
       const org = JSON.parse(stored);
       const orgId = org?.id;
       if (orgId) {
-        req.headers = req.headers || {};
-        req.headers["X-Organisation-Id"] = String(orgId);
+        if (req.headers && typeof (req.headers as any).set === "function") {
+          (req.headers as AxiosHeaders).set("X-Organisation-Id", String(orgId));
+        } else {
+          req.headers = {
+            ...(req.headers as any),
+            "X-Organisation-Id": String(orgId),
+          } as any;
+        }
       }
     }
   } catch {
@@ -61,8 +73,20 @@ API.interceptors.response.use(
         // Update header with latest token
         const newToken = localStorage.getItem("token");
         if (newToken) {
-          originalRequest.headers = originalRequest.headers || {};
-          originalRequest.headers.Authorization = `Bearer ${newToken}`;
+          if (
+            originalRequest.headers &&
+            typeof (originalRequest.headers as any).set === "function"
+          ) {
+            (originalRequest.headers as AxiosHeaders).set(
+              "Authorization",
+              `Bearer ${newToken}`
+            );
+          } else {
+            originalRequest.headers = {
+              ...(originalRequest.headers as any),
+              Authorization: `Bearer ${newToken}`,
+            } as any;
+          }
         }
         return API(originalRequest);
       } catch (e) {

@@ -1,5 +1,10 @@
 import React, { useState, useEffect, useCallback } from "react";
-import { Container, Row, Col, Card, Badge, Button } from "react-bootstrap";
+// Replaced react-bootstrap with shadcn/ui and Tailwind
+import { Container, Row, Col } from "../ui/grid";
+import { Card, CardContent } from "../ui/card";
+import { Badge } from "../ui/badge";
+import { Button } from "../ui/button";
+import { Input } from "../ui/input";
 import { useOrganisation } from "../../context/OrganisationContext";
 import { GoogleBusinessProfile } from "./index";
 import { useQueryClient } from "react-query";
@@ -252,6 +257,48 @@ const IntegrationsPage: React.FC = () => {
       ],
     },
     {
+      title: "Marketing & Ads",
+      description:
+        "Connect your marketing & ads tools for better business insights",
+      color: "warning",
+      integrations: [
+        {
+          name: "Google Ads",
+          description: "Sync google ads data and leads into the platform",
+          icon: (
+            <i
+              className="fas fa-google"
+              style={{ fontSize: "40px", color: "#0077C5" }}
+            ></i>
+          ),
+          connected: false,
+          comingSoon: true,
+          features: [
+            "Sync Leads directly to CRM",
+            "Spending reporting",
+            "Coversion reporting",
+          ],
+        },
+        {
+          name: "Meta Ads",
+          description: "Sync meta data and leads into the platform",
+          icon: (
+            <i
+              className="fas fa-facebook"
+              style={{ fontSize: "40px", color: "#13B5EA" }}
+            ></i>
+          ),
+          connected: false,
+          comingSoon: true,
+          features: [
+            "Sync Leads directly to CRM",
+            "Spending reporting",
+            "Coversion reporting",
+          ],
+        },
+      ],
+    },
+    {
       title: "Financial & Accounting",
       description: "Connect your financial tools for better business insights",
       color: "warning",
@@ -298,40 +345,34 @@ const IntegrationsPage: React.FC = () => {
 
   const renderIntegrationCard = (
     integration: Integration,
-    categoryColor: string
+    _categoryColor: string
   ) => (
-    <Card
-      key={integration.name}
-      className="h-100 global-card integration-card border-0 shadow-sm"
-    >
-      <Card.Body className="p-4">
+    <Card key={integration.name} className="h-full integration-card shadow-sm">
+      <CardContent className="p-4">
         {/* Header */}
-        <div className="d-flex align-items-start justify-content-between mb-3">
-          <div className="d-flex align-items-center gap-3">
+        <div className="flex items-start justify-between mb-3">
+          <div className="flex items-center gap-3">
             <div className="integration-icon">{integration.icon}</div>
             <div>
-              <h5 className="mb-1 font-weight-bold">{integration.name}</h5>
-              <div className="d-flex align-items-center gap-2">
+              <h5 className="mb-1 font-semibold">{integration.name}</h5>
+              <div className="flex items-center gap-2">
                 {integration.connected ? (
-                  <Badge
-                    variant="success"
-                    className="d-flex align-items-center gap-1"
-                  >
+                  <Badge className="flex items-center gap-1" variant="success">
                     <HiCheckCircle size={14} />
                     Connected
                   </Badge>
                 ) : integration.comingSoon ? (
                   <Badge
+                    className="flex items-center gap-1"
                     variant="secondary"
-                    className="d-flex align-items-center gap-1"
                   >
                     <HiSparkles size={14} />
                     Coming Soon
                   </Badge>
                 ) : (
                   <Badge
+                    className="flex items-center gap-1"
                     variant="outline-secondary"
-                    className="d-flex align-items-center gap-1"
                   >
                     <HiXCircle size={14} />
                     Not Connected
@@ -346,25 +387,25 @@ const IntegrationsPage: React.FC = () => {
         </div>
 
         {/* Description */}
-        <p className="text-muted mb-3" style={{ fontSize: "14px" }}>
+        <p className="text-muted-foreground mb-3 text-sm">
           {integration.description}
         </p>
 
         {/* Features */}
         <div className="mb-4">
-          <small className="text-muted font-weight-bold mb-2 d-block">
+          <small className="text-muted-foreground font-semibold mb-2 block">
             KEY FEATURES
           </small>
-          <div className="row">
+          <div className="grid grid-cols-2 gap-2">
             {integration.features
               ?.slice(0, 4)
               .map((feature: string, index: number) => (
-                <div key={index} className="col-6 mb-1">
-                  <small className="text-muted d-flex align-items-center">
+                <div key={index} className="mb-1">
+                  <small className="text-muted-foreground flex items-center">
                     <i
-                      className="fas fa-check text-success mr-1"
+                      className="fas fa-check text-green-500 mr-1"
                       style={{ fontSize: "10px" }}
-                    ></i>
+                    />
                     {feature}
                   </small>
                 </div>
@@ -375,15 +416,14 @@ const IntegrationsPage: React.FC = () => {
         {/* Action Area */}
         <div className="mt-auto">
           {integration.comingSoon ? (
-            <Button variant="outline-secondary" disabled className="w-100">
+            <Button variant="outline-secondary" disabled className="w-full">
               <HiSparkles size={16} className="mr-2" />
               Coming Soon
             </Button>
           ) : integration.isManual ? (
-            <div className="d-flex gap-2">
-              <input
+            <div className="flex gap-2">
+              <Input
                 type="text"
-                className="form-control"
                 placeholder={integration.formField.placeholder}
                 value={integration.formField.value}
                 onChange={integration.formField.onChange}
@@ -396,12 +436,8 @@ const IntegrationsPage: React.FC = () => {
           ) : integration.isComponent ? (
             <div>{integration.component}</div>
           ) : integration.connected ? (
-            <div className="d-flex gap-2">
-              <Button
-                variant="outline-primary"
-                size="sm"
-                className="flex-grow-1"
-              >
+            <div className="flex gap-2">
+              <Button variant="outline-primary" size="sm" className="flex-1">
                 <HiExternalLink size={16} className="mr-1" />
                 Manage
               </Button>
@@ -417,7 +453,7 @@ const IntegrationsPage: React.FC = () => {
           ) : (
             <Button
               variant="primary"
-              className="w-100"
+              className="w-full"
               onClick={integration.onConnect}
               disabled={integration.loading}
             >
@@ -435,7 +471,7 @@ const IntegrationsPage: React.FC = () => {
             </Button>
           )}
         </div>
-      </Card.Body>
+      </CardContent>
     </Card>
   );
 
@@ -456,8 +492,8 @@ const IntegrationsPage: React.FC = () => {
           {/* Stats Overview */}
           <Row className="mb-5">
             <Col md={3}>
-              <Card className="global-card border-0 text-center h-100">
-                <Card.Body className="py-4">
+              <Card className="text-center h-full">
+                <CardContent className="py-4">
                   <div className="text-primary mb-2">
                     <HiCheckCircle size={32} />
                   </div>
@@ -469,16 +505,16 @@ const IntegrationsPage: React.FC = () => {
                       0
                     )}
                   </h4>
-                  <small className="text-muted font-weight-bold">
+                  <small className="text-muted-foreground font-semibold">
                     CONNECTED
                   </small>
-                </Card.Body>
+                </CardContent>
               </Card>
             </Col>
             <Col md={3}>
-              <Card className="global-card border-0 text-center h-100">
-                <Card.Body className="py-4">
-                  <div className="text-warning mb-2">
+              <Card className="text-center h-full">
+                <CardContent className="py-4">
+                  <div className="text-yellow-500 mb-2">
                     <HiSparkles size={32} />
                   </div>
                   <h4 className="mb-1">
@@ -489,16 +525,16 @@ const IntegrationsPage: React.FC = () => {
                       0
                     )}
                   </h4>
-                  <small className="text-muted font-weight-bold">
+                  <small className="text-muted-foreground font-semibold">
                     COMING SOON
                   </small>
-                </Card.Body>
+                </CardContent>
               </Card>
             </Col>
             <Col md={3}>
-              <Card className="global-card border-0 text-center h-100">
-                <Card.Body className="py-4">
-                  <div className="text-info mb-2">
+              <Card className="text-center h-full">
+                <CardContent className="py-4">
+                  <div className="text-blue-500 mb-2">
                     <HiCog size={32} />
                   </div>
                   <h4 className="mb-1">
@@ -507,23 +543,23 @@ const IntegrationsPage: React.FC = () => {
                       0
                     )}
                   </h4>
-                  <small className="text-muted font-weight-bold">
+                  <small className="text-muted-foreground font-semibold">
                     TOTAL AVAILABLE
                   </small>
-                </Card.Body>
+                </CardContent>
               </Card>
             </Col>
             <Col md={3}>
-              <Card className="global-card border-0 text-center h-100">
-                <Card.Body className="py-4">
-                  <div className="text-success mb-2">
+              <Card className="text-center h-full">
+                <CardContent className="py-4">
+                  <div className="text-green-500 mb-2">
                     <HiRefresh size={32} />
                   </div>
                   <h4 className="mb-1">Auto</h4>
-                  <small className="text-muted font-weight-bold">
+                  <small className="text-muted-foreground font-semibold">
                     SYNC ENABLED
                   </small>
-                </Card.Body>
+                </CardContent>
               </Card>
             </Col>
           </Row>
@@ -531,18 +567,17 @@ const IntegrationsPage: React.FC = () => {
           {/* Integration Categories */}
           {integrationCategories.map((category, categoryIndex) => (
             <div key={categoryIndex} className="mb-5">
-              <div className="d-flex align-items-center mb-4">
+              <div className="flex items-center mb-4">
                 <div className="mr-3">
-                  <div
-                    className={`bg-${category.color} rounded-circle d-flex align-items-center justify-content-center`}
-                    style={{ width: "48px", height: "48px" }}
-                  >
+                  <div className="rounded-full flex items-center justify-center bg-gray-900 w-12 h-12">
                     <HiCog size={24} className="text-white" />
                   </div>
                 </div>
                 <div>
-                  <h4 className="mb-1 font-weight-bold">{category.title}</h4>
-                  <p className="text-muted mb-0">{category.description}</p>
+                  <h4 className="mb-1 font-semibold">{category.title}</h4>
+                  <p className="text-muted-foreground mb-0">
+                    {category.description}
+                  </p>
                 </div>
               </div>
 
@@ -555,28 +590,6 @@ const IntegrationsPage: React.FC = () => {
               </Row>
             </div>
           ))}
-
-          {/* Help Section */}
-          <Card className="global-card border-0 bg-light">
-            <Card.Body className="text-center py-5">
-              <HiSparkles size={48} className="text-primary mb-3" />
-              <h5 className="mb-3">Need Help with Integrations?</h5>
-              <p className="text-muted mb-4">
-                Our team is here to help you connect your tools and get the most
-                out of your integrations.
-              </p>
-              <div className="d-flex justify-content-center gap-3">
-                <Button variant="outline-primary">
-                  <i className="fas fa-book mr-2"></i>
-                  View Documentation
-                </Button>
-                <Button variant="primary">
-                  <i className="fas fa-headset mr-2"></i>
-                  Contact Support
-                </Button>
-              </div>
-            </Card.Body>
-          </Card>
         </div>
       </Container>
     </div>

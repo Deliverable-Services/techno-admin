@@ -1,6 +1,6 @@
 import React, { ReactElement, useMemo, useState } from "react";
 import { DragDropContext, Draggable, Droppable } from "react-beautiful-dnd";
-import { Container, Dropdown, Table } from "react-bootstrap";
+import { Container } from "../components/ui/grid";
 import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
 import { AiOutlineSearch } from "react-icons/ai";
@@ -291,51 +291,38 @@ function ReactTable({
           </div>
           {filters && filters}
           <div className="search-filters-div">
-            <Dropdown>
-              <Dropdown.Toggle
-                id="dropdown-basic"
-                className="filter-button m-0 p-0 manage-column d-flex align-items-center bg-transparent border-0 text-primary"
-              >
-                <BsLayoutTextSidebar className="mr-2" /> Columns
-              </Dropdown.Toggle>
-
-              <Dropdown.Menu className="p-2 menu-dropdown">
-                {allColumns.map((column) => {
-                  column.disableGlobalFilter = !column.isVisible;
-                  return (
-                    <div
-                      key={column.id}
-                      className="custom-control custom-checkbox w-100 px-2 dropdown-item"
-                    >
+            <div className="p-2 menu-dropdown">
+              {allColumns.map((column) => {
+                column.disableGlobalFilter = !column.isVisible;
+                return (
+                  <div
+                    key={column.id}
+                    className="custom-control custom-checkbox w-100 px-2 dropdown-item"
+                  >
+                    <input
+                      type="checkbox"
+                      {...column.getToggleHiddenProps()}
+                      className="d-none"
+                      id={column.id}
+                    />
+                    <div className="custom-control custom-checkbox ">
                       <input
                         type="checkbox"
-                        {...column.getToggleHiddenProps()}
-                        className="d-none"
+                        className="custom-control-input"
                         id={column.id}
+                        {...column.getToggleHiddenProps()}
                       />
-
-                      <div className="custom-control custom-checkbox ">
-                        <input
-                          type="checkbox"
-                          className="custom-control-input"
-                          id={column.id}
-                          {...column.getToggleHiddenProps()}
-                        />
-
-                        <label
-                          className="custom-control-label"
-                          htmlFor={column.id}
-                        >
-                          <p style={{ whiteSpace: "nowrap" }}>
-                            {column.Header}
-                          </p>
-                        </label>
-                      </div>
+                      <label
+                        className="custom-control-label"
+                        htmlFor={column.id}
+                      >
+                        <p style={{ whiteSpace: "nowrap" }}>{column.Header}</p>
+                      </label>
                     </div>
-                  );
-                })}
-              </Dropdown.Menu>
-            </Dropdown>
+                  </div>
+                );
+              })}
+            </div>
           </div>
         </div>
       </div>
@@ -344,13 +331,10 @@ function ReactTable({
       <div className="">
         <DndProvider backend={HTML5Backend}>
           <div className="tableFixed position-relative">
-            <Table
-              className="table-fixed mb-0"
+            <table
+              className="table-fixed mb-0 w-100"
               style={{ borderTop: "1px solid var(--border)" }}
               {...getTableProps()}
-              responsive
-              hover
-              size="sm"
             >
               <thead className="bg-grey-primary">
                 {isDataLoading ? (
@@ -492,7 +476,7 @@ function ReactTable({
 <span className="text-primary display-3">No data found</span>
 </Container>
 : ""} */}
-            </Table>
+            </table>
             {/* {rows.length === 0 ? (
               ""
             ) : showRecords ? (

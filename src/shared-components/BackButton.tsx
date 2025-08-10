@@ -1,5 +1,5 @@
 import React from "react";
-import { Button } from "react-bootstrap";
+import { Button } from "../components/ui/button";
 import { BiArrowFromRight } from "react-icons/bi";
 import { useHistory } from "react-router-dom";
 interface Props {
@@ -10,7 +10,7 @@ const BackButton: React.FC<Props> = ({ title }) => {
   const _onBackClick = () => history.goBack();
   return (
     <>
-      <div  className="d-flex justify-content-between py-2 px-0">
+      <div className="d-flex justify-content-between py-2 px-0">
         {/* <p className="font-weight-bold text-capitalize lead mb-0">{title}</p> */}
         <Button variant="primary" onClick={_onBackClick} size="sm">
           <div className="text-white d-flex align-items-center">
@@ -18,7 +18,6 @@ const BackButton: React.FC<Props> = ({ title }) => {
           </div>
         </Button>
       </div>
-  
     </>
   );
 };

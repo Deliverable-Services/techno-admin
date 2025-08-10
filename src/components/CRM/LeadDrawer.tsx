@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState, useCallback } from "react";
 import { Comment, Lead } from "./types";
-import "./lead-drawer.css";
+
 import useUserProfileStore from "../../hooks/useUserProfileStore";
 import API from "../../utils/API";
 import { useQuery, useMutation } from "react-query";
@@ -10,28 +10,27 @@ import { useHistory } from "react-router-dom";
 import { showMsgToast } from "../../utils/showMsgToast";
 
 import {
-  FaBuilding,
-  FaFileInvoiceDollar,
-  FaCalendarAlt,
-  FaComments,
-  FaChevronDown,
-  FaCheck,
-  FaEdit,
-  FaTrash,
-} from "react-icons/fa";
-import { IoMdArrowBack } from "react-icons/io";
-import { MdEmail, MdPerson, MdLocationOn, MdSms } from "react-icons/md";
-import { BsThreeDotsVertical } from "react-icons/bs";
-import { AiFillEdit } from "react-icons/ai";
-import {
-  FaCalendarCheck,
-  FaTruckMoving,
-  FaCheckCircle,
-  FaCreditCard,
-  FaUser,
-  FaUserPlus,
-} from "react-icons/fa";
-import { BsDiamond, BsDiamondHalf } from "react-icons/bs";
+  Building,
+  FileInvoice,
+  Calendar,
+  MessageCircle,
+  ChevronDown,
+  Check,
+  Edit,
+  Trash,
+  ArrowLeft,
+  Mail,
+  User,
+  MapPin,
+  MessageSquare,
+  MoreVertical,
+  CheckCircle,
+  Truck,
+  CreditCard,
+  UserPlus,
+  Circle,
+  CircleDot,
+} from "../../components/ui/icon";
 
 import { Dropdown, Button, Form, Card, Badge } from "react-bootstrap";
 // Using Dropdown for assignee as well
@@ -401,12 +400,12 @@ const LeadDrawer: React.FC<Props> = ({ lead, onClose }) => {
   ];
 
   const statusIcons: { [key: string]: JSX.Element } = {
-    NEW: <BsDiamond className="text-orange mr-2" />,
-    SCHEDULED: <FaCalendarCheck className="text-secondary mr-2" />,
-    EN_ROUTE: <FaTruckMoving className="text-warning mr-2" />,
-    IN_PROGRESS: <BsDiamondHalf className="text-blue mr-2" />,
-    COMPLETED: <FaCheckCircle className="text-green mr-2" />,
-    PAID: <FaCreditCard className="text-blue-dark mr-2" />,
+    NEW: <Circle className="text-orange mr-2" />,
+    SCHEDULED: <Calendar className="text-secondary mr-2" />,
+    EN_ROUTE: <Truck className="text-warning mr-2" />,
+    IN_PROGRESS: <CircleDot className="text-blue mr-2" />,
+    COMPLETED: <CheckCircle className="text-green mr-2" />,
+    PAID: <CreditCard className="text-blue-dark mr-2" />,
   };
 
   const renderStatus = (value: string) => {
@@ -491,24 +490,27 @@ const LeadDrawer: React.FC<Props> = ({ lead, onClose }) => {
 
   return (
     <>
-      <div className="lead-drawer-overlay" onClick={onClose} />
-      <div className="lead-drawer">
+      <div
+        className="fixed inset-0 bg-black bg-opacity-50 z-50 backdrop-blur-sm"
+        onClick={onClose}
+      />
+      <div className="fixed top-0 right-0 w-[90vw] max-w-[1400px] h-screen bg-white z-[51] flex flex-col shadow-[-4px_0_20px_rgba(0,0,0,0.15)] animate-[slideInRight_0.3s_ease-out]">
         {/* Main Content */}
-        <div className="lead-details">
-          <div className="crm-left-panel">
-            <div className="panel-content">
+        <div className="flex-1 flex overflow-hidden">
+          <div className="w-[400px] border-r border-gray-200 bg-white">
+            <div className="h-full overflow-y-auto p-6">
               <div className="d-flex justify-content-between align-items-center">
                 <button
                   type="button"
-                  className="back-link btn btn-link p-0"
+                  className="text-blue-600 no-underline font-medium flex items-center gap-2 mb-4 hover:text-blue-800 transition-colors"
                   onClick={onClose}
                 >
-                  <IoMdArrowBack />
+                  <ArrowLeft />
                   Back to leads
                 </button>
                 <div>
                   <span>
-                    <BsThreeDotsVertical />
+                    <MoreVertical />
                     More
                   </span>
                 </div>
@@ -518,7 +520,7 @@ const LeadDrawer: React.FC<Props> = ({ lead, onClose }) => {
                 <img
                   src={`https://ui-avatars.com/api/?name=${details.name}&size=80&background=667eea&color=fff&font-size=0.4&bold=true`}
                   alt={details.name}
-                  className="lead-avatar"
+                  className="w-20 h-20 rounded-full object-cover border-3 border-white shadow-lg"
                 />
 
                 <div className="d-flex flex-column gap-0">
@@ -527,30 +529,42 @@ const LeadDrawer: React.FC<Props> = ({ lead, onClose }) => {
                 </div>
               </div>
 
-              <div className="quick-actions">
-                <button className="quick-action-btn" type="button">
-                  <div className="icon">
-                    <MdEmail />
+              <div className="flex text-center justify-between py-4">
+                <button
+                  className="flex flex-col items-center justify-center gap-1 cursor-pointer transition-all duration-200 text-gray-700 rounded-full hover:border-blue-600 hover:text-blue-600 no-underline"
+                  type="button"
+                >
+                  <div className="text-lg border border-gray-300 h-10 w-10 flex items-center justify-center rounded-full">
+                    <Mail />
                   </div>
-                  <span className="label">Email</span>
+                  <span className="text-sm font-medium">Email</span>
                 </button>
-                <button className="quick-action-btn" type="button">
-                  <div className="icon">
-                    <MdSms />
+                <button
+                  className="flex flex-col items-center justify-center gap-1 cursor-pointer transition-all duration-200 text-gray-700 rounded-full hover:border-blue-600 hover:text-blue-600 no-underline"
+                  type="button"
+                >
+                  <div className="text-lg border border-gray-300 h-10 w-10 flex items-center justify-center rounded-full">
+                    <MessageSquare />
                   </div>
-                  <span className="label">SMS</span>
+                  <span className="text-sm font-medium">SMS</span>
                 </button>
-                <button className="quick-action-btn" type="button">
-                  <div className="icon">
-                    <FaCalendarAlt />
+                <button
+                  className="flex flex-col items-center justify-center gap-1 cursor-pointer transition-all duration-200 text-gray-700 rounded-full hover:border-blue-600 hover:text-blue-600 no-underline"
+                  type="button"
+                >
+                  <div className="text-lg border border-gray-300 h-10 w-10 flex items-center justify-center rounded-full">
+                    <Calendar />
                   </div>
-                  <span className="label">Meeting</span>
+                  <span className="text-sm font-medium">Meeting</span>
                 </button>
-                <button className="quick-action-btn" type="button">
-                  <div className="icon">
-                    <FaCalendarAlt />
+                <button
+                  className="flex flex-col items-center justify-center gap-1 cursor-pointer transition-all duration-200 text-gray-700 rounded-full hover:border-blue-600 hover:text-blue-600 no-underline"
+                  type="button"
+                >
+                  <div className="text-lg border border-gray-300 h-10 w-10 flex items-center justify-center rounded-full">
+                    <Calendar />
                   </div>
-                  <span className="label">Reminder</span>
+                  <span className="text-sm font-medium">Reminder</span>
                 </button>
               </div>
 
@@ -562,7 +576,7 @@ const LeadDrawer: React.FC<Props> = ({ lead, onClose }) => {
                     className="w-100"
                     onClick={handleViewCustomer}
                   >
-                    <FaUser className="me-2" />
+                    <User className="me-2" />
                     View Customer Profile
                   </Button>
                 ) : (
@@ -584,7 +598,7 @@ const LeadDrawer: React.FC<Props> = ({ lead, onClose }) => {
                       </>
                     ) : (
                       <>
-                        <FaUserPlus className="me-2" />
+                        <UserPlus className="me-2" />
                         Convert to Customer
                       </>
                     )}
@@ -606,7 +620,7 @@ const LeadDrawer: React.FC<Props> = ({ lead, onClose }) => {
                   >
                     <span className="d-flex align-items-center justify-content-between gap-2 w-100">
                       {renderStatus(leadStatus)}
-                      <FaChevronDown className="text-muted" />
+                      <ChevronDown className="text-muted" />
                     </span>
                   </Dropdown.Toggle>
                   <Dropdown.Menu className="w-100">
@@ -650,7 +664,7 @@ const LeadDrawer: React.FC<Props> = ({ lead, onClose }) => {
                   {/* Contact Information */}
                   <div className="info-section">
                     <h6>
-                      <MdPerson className="icon" />
+                      <User className="icon" />
                       Contact Information
                     </h6>
                     <div className="info-item">
@@ -671,7 +685,7 @@ const LeadDrawer: React.FC<Props> = ({ lead, onClose }) => {
                               className="btn btn-sm btn-success"
                               onClick={() => saveField("name")}
                             >
-                              <FaCheck />
+                              <Check />
                             </button>
                           </>
                         ) : (
@@ -683,7 +697,7 @@ const LeadDrawer: React.FC<Props> = ({ lead, onClose }) => {
                               className="btn btn-link p-0"
                               onClick={() => startEdit("name")}
                             >
-                              <AiFillEdit />
+                              <Edit />
                             </button>
                           </>
                         )}
@@ -707,7 +721,7 @@ const LeadDrawer: React.FC<Props> = ({ lead, onClose }) => {
                               className="btn btn-sm btn-success"
                               onClick={() => saveField("email")}
                             >
-                              <FaCheck />
+                              <Check />
                             </button>
                           </>
                         ) : (
@@ -719,7 +733,7 @@ const LeadDrawer: React.FC<Props> = ({ lead, onClose }) => {
                               className="btn btn-link p-0"
                               onClick={() => startEdit("email")}
                             >
-                              <AiFillEdit />
+                              <Edit />
                             </button>
                           </>
                         )}
@@ -743,7 +757,7 @@ const LeadDrawer: React.FC<Props> = ({ lead, onClose }) => {
                               className="btn btn-sm btn-success"
                               onClick={() => saveField("phone")}
                             >
-                              <FaCheck />
+                              <Check />
                             </button>
                           </>
                         ) : (
@@ -755,7 +769,7 @@ const LeadDrawer: React.FC<Props> = ({ lead, onClose }) => {
                               className="btn btn-link p-0"
                               onClick={() => startEdit("phone")}
                             >
-                              <AiFillEdit />
+                              <Edit />
                             </button>
                           </>
                         )}
@@ -799,7 +813,7 @@ const LeadDrawer: React.FC<Props> = ({ lead, onClose }) => {
                                 <span className="text-muted">Unassigned</span>
                               )}
                             </span>
-                            <FaChevronDown className="text-muted" />
+                            <ChevronDown className="text-muted" />
                           </Dropdown.Toggle>
                           <Dropdown.Menu className="w-100">
                             <Dropdown.Item eventKey="" active={!assignedMember}>
@@ -852,7 +866,7 @@ const LeadDrawer: React.FC<Props> = ({ lead, onClose }) => {
                               className="btn btn-sm btn-success"
                               onClick={() => saveField("jobTitle")}
                             >
-                              <FaCheck />
+                              <Check />
                             </button>
                           </>
                         ) : (
@@ -864,7 +878,7 @@ const LeadDrawer: React.FC<Props> = ({ lead, onClose }) => {
                               className="btn btn-link p-0"
                               onClick={() => startEdit("jobTitle")}
                             >
-                              <AiFillEdit />
+                              <Edit />
                             </button>
                           </>
                         )}
@@ -897,7 +911,7 @@ const LeadDrawer: React.FC<Props> = ({ lead, onClose }) => {
                               className="btn btn-sm btn-success"
                               onClick={() => saveField("gender")}
                             >
-                              <FaCheck />
+                              <Check />
                             </button>
                           </>
                         ) : (
@@ -909,7 +923,7 @@ const LeadDrawer: React.FC<Props> = ({ lead, onClose }) => {
                               className="btn btn-link p-0"
                               onClick={() => startEdit("gender")}
                             >
-                              <AiFillEdit />
+                              <Edit />
                             </button>
                           </>
                         )}
@@ -924,7 +938,7 @@ const LeadDrawer: React.FC<Props> = ({ lead, onClose }) => {
                   {/* Company Information */}
                   <div className="info-section">
                     <h6>
-                      <FaBuilding className="icon" />
+                      <Building className="icon" />
                       Company Information
                     </h6>
                     <div className="info-item">
@@ -945,7 +959,7 @@ const LeadDrawer: React.FC<Props> = ({ lead, onClose }) => {
                               className="btn btn-sm btn-success"
                               onClick={() => saveField("company")}
                             >
-                              <FaCheck />
+                              <Check />
                             </button>
                           </>
                         ) : (
@@ -957,7 +971,7 @@ const LeadDrawer: React.FC<Props> = ({ lead, onClose }) => {
                               className="btn btn-link p-0"
                               onClick={() => startEdit("company")}
                             >
-                              <AiFillEdit />
+                              <Edit />
                             </button>
                           </>
                         )}
@@ -982,7 +996,7 @@ const LeadDrawer: React.FC<Props> = ({ lead, onClose }) => {
                               className="btn btn-sm btn-success"
                               onClick={() => saveField("website")}
                             >
-                              <FaCheck />
+                              <Check />
                             </button>
                           </>
                         ) : (
@@ -994,7 +1008,7 @@ const LeadDrawer: React.FC<Props> = ({ lead, onClose }) => {
                               className="btn btn-link p-0"
                               onClick={() => startEdit("website")}
                             >
-                              <AiFillEdit />
+                              <Edit />
                             </button>
                           </>
                         )}
@@ -1015,7 +1029,7 @@ const LeadDrawer: React.FC<Props> = ({ lead, onClose }) => {
               {leftTab === "address" && (
                 <div className="info-section">
                   <h6>
-                    <MdLocationOn className="icon" />
+                    <MapPin className="icon" />
                     Address Information
                   </h6>
                   <div className="info-item">
@@ -1036,7 +1050,7 @@ const LeadDrawer: React.FC<Props> = ({ lead, onClose }) => {
                             className="btn btn-sm btn-success"
                             onClick={() => saveField("full_address")}
                           >
-                            <FaCheck />
+                            <Check />
                           </button>
                         </>
                       ) : (
@@ -1048,7 +1062,7 @@ const LeadDrawer: React.FC<Props> = ({ lead, onClose }) => {
                             className="btn btn-link p-0"
                             onClick={() => startEdit("full_address")}
                           >
-                            <AiFillEdit />
+                            <Edit />
                           </button>
                         </>
                       )}
@@ -1072,7 +1086,7 @@ const LeadDrawer: React.FC<Props> = ({ lead, onClose }) => {
                             className="btn btn-sm btn-success"
                             onClick={() => saveField("city")}
                           >
-                            <FaCheck />
+                            <Check />
                           </button>
                         </>
                       ) : (
@@ -1082,7 +1096,7 @@ const LeadDrawer: React.FC<Props> = ({ lead, onClose }) => {
                             className="btn btn-link p-0"
                             onClick={() => startEdit("city")}
                           >
-                            <AiFillEdit />
+                            <Edit />
                           </button>
                         </>
                       )}
@@ -1106,7 +1120,7 @@ const LeadDrawer: React.FC<Props> = ({ lead, onClose }) => {
                             className="btn btn-sm btn-success"
                             onClick={() => saveField("country")}
                           >
-                            <FaCheck />
+                            <Check />
                           </button>
                         </>
                       ) : (
@@ -1118,7 +1132,7 @@ const LeadDrawer: React.FC<Props> = ({ lead, onClose }) => {
                             className="btn btn-link p-0"
                             onClick={() => startEdit("country")}
                           >
-                            <AiFillEdit />
+                            <Edit />
                           </button>
                         </>
                       )}
@@ -1142,7 +1156,7 @@ const LeadDrawer: React.FC<Props> = ({ lead, onClose }) => {
                             className="btn btn-sm btn-success"
                             onClick={() => saveField("zipcode")}
                           >
-                            <FaCheck />
+                            <Check />
                           </button>
                         </>
                       ) : (
@@ -1154,7 +1168,7 @@ const LeadDrawer: React.FC<Props> = ({ lead, onClose }) => {
                             className="btn btn-link p-0"
                             onClick={() => startEdit("zipcode")}
                           >
-                            <AiFillEdit />
+                            <Edit />
                           </button>
                         </>
                       )}
@@ -1166,20 +1180,24 @@ const LeadDrawer: React.FC<Props> = ({ lead, onClose }) => {
           </div>
 
           {/* Center Panel - Timeline */}
-          <div className="crm-center-panel">
-            <div className="timeline-header">
-              <div className="timeline-tabs">
+          <div className="flex-1 bg-white">
+            <div className="p-5 border-b border-gray-200 bg-gray-50">
+              <div className="flex gap-8 mb-4">
                 <div
-                  className={`timeline-tab ${
-                    midTab === "overview" ? "active" : ""
+                  className={`py-2 cursor-pointer border-b-2 transition-all duration-200 font-medium ${
+                    midTab === "overview"
+                      ? "text-blue-600 border-blue-600"
+                      : "text-gray-600 border-transparent"
                   }`}
                   onClick={() => setMidTab("overview")}
                 >
                   Customer Journey
                 </div>
                 <div
-                  className={`timeline-tab ${
-                    midTab === "activities" ? "active" : ""
+                  className={`py-2 cursor-pointer border-b-2 transition-all duration-200 font-medium ${
+                    midTab === "activities"
+                      ? "text-blue-600 border-blue-600"
+                      : "text-gray-600 border-transparent"
                   }`}
                   onClick={() => setMidTab("activities")}
                 >
@@ -1188,7 +1206,7 @@ const LeadDrawer: React.FC<Props> = ({ lead, onClose }) => {
               </div>
             </div>
 
-            <div className="timeline-content">
+            <div className="p-6 h-full overflow-y-auto">
               {midTab === "overview" ? (
                 // User Journey Timeline
                 <div className="activity-timeline">
@@ -1305,7 +1323,7 @@ const LeadDrawer: React.FC<Props> = ({ lead, onClose }) => {
                                       onClick={handleSaveEditComment}
                                       disabled={editCommentMutation.isLoading}
                                     >
-                                      <FaCheck />
+                                      <Check />
                                     </Button>
                                     <Button
                                       variant="secondary"
@@ -1325,7 +1343,7 @@ const LeadDrawer: React.FC<Props> = ({ lead, onClose }) => {
                                         handleStartEditComment(comment)
                                       }
                                     >
-                                      <FaEdit />
+                                      <Edit />
                                     </Button>
                                     <Button
                                       variant="link"
@@ -1336,7 +1354,7 @@ const LeadDrawer: React.FC<Props> = ({ lead, onClose }) => {
                                       }
                                       disabled={deleteCommentMutation.isLoading}
                                     >
-                                      <FaTrash />
+                                      <Trash />
                                     </Button>
                                   </>
                                 )}
@@ -1367,12 +1385,12 @@ const LeadDrawer: React.FC<Props> = ({ lead, onClose }) => {
           </div>
 
           {/* Right Panel - Related Entities */}
-          <div className="crm-right-panel">
-            <div className="panel-content">
+          <div className="w-[350px] border-l border-gray-200 bg-white">
+            <div className="h-full overflow-y-auto p-6">
               {/* Invoices Section */}
               <div className="entity-section mb-4">
                 <h6 className="d-flex align-items-center gap-2 mb-3">
-                  <FaFileInvoiceDollar className="text-primary" />
+                  <FileInvoice className="text-primary" />
                   <span>Invoices ({invoices.length})</span>
                 </h6>
                 {invoices.length === 0 ? (
@@ -1425,7 +1443,7 @@ const LeadDrawer: React.FC<Props> = ({ lead, onClose }) => {
               {/* Support Tickets Section */}
               <div className="entity-section mb-4">
                 <h6 className="d-flex align-items-center gap-2 mb-3">
-                  <FaComments className="text-info" />
+                  <MessageCircle className="text-info" />
                   <span>Support Tickets ({tickets.length})</span>
                 </h6>
                 {tickets.length === 0 ? (
@@ -1480,7 +1498,7 @@ const LeadDrawer: React.FC<Props> = ({ lead, onClose }) => {
               {/* Meetings Section */}
               <div className="entity-section mb-4">
                 <h6 className="d-flex align-items-center gap-2 mb-3">
-                  <FaCalendarAlt className="text-warning" />
+                  <Calendar className="text-warning" />
                   <span>Meetings ({meetings.length})</span>
                 </h6>
                 {meetings.length === 0 ? (

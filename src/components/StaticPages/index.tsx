@@ -1,5 +1,6 @@
 import { AxiosError } from "axios";
-import BraftEditor, { EditorState } from "braft-editor";
+// Replaced braft-editor; using a simple textarea for now.
+type EditorState = string;
 import React, { useMemo, useState } from "react";
 import { useEffect } from "react";
 import { Modal, Button, Container, Dropdown } from "react-bootstrap";
@@ -245,10 +246,10 @@ const StaticPages = () => {
 const PageContainer = ({ page, selectedTitle }) => {
   const history = useHistory();
   const isRestricted = useUserProfileStore((state) => state.isRestricted);
-  const [contentDetails, setContentDetials] = useState<EditorState>();
+  const [contentDetails, setContentDetials] = useState<EditorState>("");
 
   useEffect(() => {
-    if (page) setContentDetials(BraftEditor.createEditorState(page.content));
+    if (page) setContentDetials(page.content || "");
   }, [page]);
 
   const { mutate, isLoading: isUpdatedLoading } = useMutation(updatePageData, {
@@ -334,16 +335,21 @@ const PageContainer = ({ page, selectedTitle }) => {
             {isUpdatedLoading ? (
               <IsLoading />
             ) : (
-              <div className="bg-light rounded">
-                <BraftEditor
+              <div className="bg-light rounded p-2">
+                <textarea
+                  className="form-control"
+                  style={{ minHeight: 300 }}
                   value={contentDetails}
-                  onSave={(editorState: EditorState) =>
-                    handleSave(editorState, page)
-                  }
-                  onChange={(editorState: EditorState) =>
-                    setContentDetials(editorState)
-                  }
-                  language="en"
+                  onChange={(e) => setContentDetials(e.target.value)}
+                  onKeyDown={(e) => {
+                    if (
+                      (e.ctrlKey || e.metaKey) &&
+                      e.key.toLowerCase() === "s"
+                    ) {
+                      e.preventDefault();
+                      handleSave(contentDetails, page);
+                    }
+                  }}
                 />
               </div>
             )}

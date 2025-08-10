@@ -1,7 +1,7 @@
 // Permissions/RevokePermissions.tsx
 
 import { AxiosError } from "axios";
-import bsCustomFileInput from "bs-custom-file-input";
+// Removed bs-custom-file-input
 import { Form, Formik } from "formik";
 import { useEffect } from "react";
 import { Button, Col, Row, Spinner } from "react-bootstrap";
@@ -28,9 +28,7 @@ const RevokePermission = () => {
   const { state } = useLocation();
   const history = useHistory();
   const id = state ? (state as any).id : null;
-  useEffect(() => {
-    bsCustomFileInput.init();
-  }, []);
+  useEffect(() => {}, []);
   const { data, isLoading: dataLoading } = useGetSingleQuery({
     id,
     key: "get-roles",

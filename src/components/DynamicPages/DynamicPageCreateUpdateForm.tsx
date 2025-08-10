@@ -1,5 +1,5 @@
 import { AxiosError } from "axios";
-import bsCustomFileInput from "bs-custom-file-input";
+// Removed bs-custom-file-input
 import { Form, Formik } from "formik";
 import { useEffect, useState } from "react";
 import { Button, Col, Row, Spinner } from "react-bootstrap";
@@ -66,9 +66,7 @@ const DynamicPageCreateUpdateForm = ({
     },
   });
 
-  useEffect(() => {
-    bsCustomFileInput.init();
-  }, []);
+  useEffect(() => {}, []);
 
   const apiData = data?.data as any;
 

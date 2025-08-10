@@ -1,10 +1,11 @@
 import { AxiosError } from "axios";
-import { useMemo, useState } from "react";
-import { Button, Container, Nav, Row } from "react-bootstrap";
+import { useMemo, useState, useCallback } from "react";
+import { Container, Row } from "../../components/ui/grid";
+import { Button } from "../../components/ui/button";
 import { BiSad } from "react-icons/bi";
 import { useMutation, useQuery } from "react-query";
 import { useHistory } from "react-router-dom";
-import { Cell, TableState } from "react-table";
+import { Cell } from "react-table";
 import { handleApiError } from "../../hooks/handleApiErrors";
 import CreatedUpdatedAt from "../../shared-components/CreatedUpdatedAt";
 import EditButton from "../../shared-components/EditButton";
@@ -51,14 +52,14 @@ const updateOrder = async (id: string, destinationIndex: any, row: any) => {
   }
 };
 
-const initialTableState: Partial<TableState<object>> = {
-  sortBy: [
-    {
-      id: "order",
-      desc: false,
-    },
-  ],
-};
+// const initialTableState: Partial<TableState<object>> = {
+//   sortBy: [
+//     {
+//       id: "order",
+//       desc: false,
+//     },
+//   ],
+// };
 const intitialFilter = {
   q: "",
   page: null,
@@ -70,19 +71,16 @@ const Categories = () => {
   const history = useHistory();
   const [selectedRows, setSelectedRows] = useState([]);
   const [filter, setFilter] = useState(intitialFilter);
-  const [isDraggable, setIsDraggable] = useState(false);
+  const [isDraggable, _setIsDraggable] = useState(false);
   const { isOpen: showFlyout, openFlyout, closeFlyout } = useFlyout();
-  const handleChange = (nextChecked) => {
-    setIsDraggable(nextChecked);
-  };
-  const { data, isLoading, isFetching, error } = useQuery<any>(
-    [key, , filter],
-    {
-      onError: (error: AxiosError) => {
-        handleApiError(error, history);
-      },
-    }
-  );
+  // const handleChange = (nextChecked) => {
+  //   setIsDraggable(nextChecked);
+  // };
+  const { data, isLoading, isFetching, error } = useQuery<any>([key, filter], {
+    onError: (error: AxiosError) => {
+      handleApiError(error, history);
+    },
+  });
 
   const { mutate, isLoading: isDeleteLoading } = useMutation(deleteCategories, {
     onSuccess: () => {
@@ -98,10 +96,13 @@ const Categories = () => {
     // history.push("/categories/create-edit");
     openFlyout();
   };
-  const _onEditClick = (id: string) => {
-    history.push("/categories/create-edit", { id });
-  };
-  const _onUrlClick = (data: Cell) => {
+  const _onEditClick = useCallback(
+    (id: string) => {
+      history.push("/categories/create-edit", { id });
+    },
+    [history]
+  );
+  const _onUrlClick = (_data: Cell) => {
     window.open(config.clientWebUrl);
   };
 
@@ -174,7 +175,7 @@ const Categories = () => {
         },
       },
     ],
-    []
+    [_onEditClick]
   );
 
   if (!data && (!isLoading || !isFetching)) {
@@ -252,28 +253,59 @@ const Categories = () => {
 
                   <ReactTable
                     data={data?.data}
-                    tabs={<div className="d-flex justify-content-between">
-                      {!isLoading && (
-                        <Nav className="global-navs" variant="tabs" activeKey={filter.active} onSelect={(selectedKey) => _onFilterChange('active', selectedKey)}>
-                          <Nav.Item>
-                            <Nav.Link eventKey="">All ({data?.data?.length || 0})</Nav.Link>
-                          </Nav.Item>
-
-                          <Nav.Item>
-                            <Nav.Link eventKey="active">
-                              Active ({data?.data?.filter(item => item.status === '1').length || 0})
-                            </Nav.Link>
-                          </Nav.Item>
-
-                          <Nav.Item>
-                            <Nav.Link eventKey="notActive">
-                              Not Active ({data?.data?.filter(item => item.status === '0').length || 0})
-                            </Nav.Link>
-                          </Nav.Item>
-                        </Nav>
-
-                      )}
-                    </div>}
+                    tabs={
+                      <div className="flex justify-between items-center w-full">
+                        {!isLoading && (
+                          <div className="flex gap-2">
+                            <Button
+                              variant={
+                                filter.active === ""
+                                  ? "primary"
+                                  : "outline-secondary"
+                              }
+                              size="sm"
+                              onClick={() => _onFilterChange("active", "")}
+                            >
+                              All ({data?.data?.length || 0})
+                            </Button>
+                            <Button
+                              variant={
+                                filter.active === "active"
+                                  ? "primary"
+                                  : "outline-secondary"
+                              }
+                              size="sm"
+                              onClick={() =>
+                                _onFilterChange("active", "active")
+                              }
+                            >
+                              Active (
+                              {data?.data?.filter(
+                                (item: any) => item.status === "1"
+                              ).length || 0}
+                              )
+                            </Button>
+                            <Button
+                              variant={
+                                filter.active === "notActive"
+                                  ? "primary"
+                                  : "outline-secondary"
+                              }
+                              size="sm"
+                              onClick={() =>
+                                _onFilterChange("active", "notActive")
+                              }
+                            >
+                              Not Active (
+                              {data?.data?.filter(
+                                (item: any) => item.status === "0"
+                              ).length || 0}
+                              )
+                            </Button>
+                          </div>
+                        )}
+                      </div>
+                    }
                     columns={columns}
                     setSelectedRows={setSelectedRows}
                     filter={filter}
@@ -306,7 +338,7 @@ const Categories = () => {
             <b>Delete {selectedRows.length} rows</b>
           </span>
           <Button
-            variant="danger"
+            variant="destructive"
             onClick={() => {
               mutate(selectedRows.map((i) => i.id));
             }}
@@ -318,11 +350,10 @@ const Categories = () => {
       <Flyout
         isOpen={showFlyout}
         onClose={closeFlyout}
-        title={'Create Categories'}
+        title={"Create Categories"}
         cancelText="Cancel"
       >
-        <CategoriesCreateUpdateForm
-        />
+        <CategoriesCreateUpdateForm />
       </Flyout>
     </>
   );

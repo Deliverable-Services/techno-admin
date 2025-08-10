@@ -1,5 +1,5 @@
 import React from "react";
-import { Button } from "react-bootstrap";
+import { Button } from "../components/ui/button";
 import { AiFillEye } from "react-icons/ai";
 import Restricted from "./Restricted";
 
@@ -17,7 +17,7 @@ const ViewButton = (props: Props) => {
         <Button
           variant="outline-primary"
           onClick={props.onClick}
-          className="d-flex align-items-center"
+          className="flex items-center"
         >
           <AiFillEye size={16} className="mr-1" />
           View

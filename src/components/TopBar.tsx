@@ -1,5 +1,5 @@
 import { useContext } from "react";
-import { Container } from "react-bootstrap";
+import { Container } from "../components/ui/grid";
 import { GiHamburgerMenu } from "react-icons/gi";
 import { IsDesktopContext } from "../context/IsDesktopContext";
 import Logo from "../shared-components/Logo";

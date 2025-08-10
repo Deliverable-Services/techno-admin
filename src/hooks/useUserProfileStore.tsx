@@ -1,4 +1,4 @@
-import create from "zustand";
+import { create } from "zustand";
 import { persist, combine } from "zustand/middleware";
 import { User } from "../types/interface";
 

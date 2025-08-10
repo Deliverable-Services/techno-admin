@@ -1,5 +1,5 @@
 import { AxiosError } from "axios";
-import bsCustomFileInput from "bs-custom-file-input";
+// Removed bs-custom-file-input
 import { FieldArray, Form, Formik } from "formik";
 import { useEffect } from "react";
 import { Button, Col, Row, Spinner } from "react-bootstrap";
@@ -47,9 +47,7 @@ const PlanCreateUpdateForm = () => {
   const history = useHistory();
   const { state } = useLocation();
   const id = state ? (state as any).id : null;
-  useEffect(() => {
-    bsCustomFileInput.init();
-  }, []);
+  useEffect(() => {}, []);
 
   const { data: categories, isLoading: isCategoriesLoading } = useQuery<any>([
     "categories",

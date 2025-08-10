@@ -11,7 +11,7 @@ import {
   CartesianGrid,
   Legend,
 } from "recharts";
-import WorldMap from "react-world-map";
+// Removed react-world-map (peer-incompatible). Rendering a simple placeholder list instead.
 import { GiShadowFollower } from "react-icons/gi";
 import { RiUserFollowFill } from "react-icons/ri";
 import { IoStatsChart } from "react-icons/io5";
@@ -923,13 +923,23 @@ const GoogleAnalytics = () => {
               </div>
             </div>
             <div style={{ height: 300 }} className="g-map pt-3">
-              <WorldMap
-                color="red"
-                valuePrefix="Audience: "
-                size="responsive"
-                selected="us"
-                data={getWorldMapData()}
-              />
+              <div className="card card-g border-0 p-3">
+                <div className="global-card">
+                  <h6 className="font-weight-bold mb-3 g-card-heading">
+                    Top Countries (simplified)
+                  </h6>
+                  <div className="space-y-2">
+                    {getTopCountriesData()
+                      .slice(0, 8)
+                      .map((c, i) => (
+                        <div key={i} className="d-flex justify-content-between">
+                          <span>{c.country}</span>
+                          <span className="badge badge-primary">{c.users}</span>
+                        </div>
+                      ))}
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
         </div>

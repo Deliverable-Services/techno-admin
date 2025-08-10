@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import BraftEditor from "braft-editor";
+// Replaced braft-editor with a simple textarea for now
 import { useField } from "formik";
 import { Container } from "react-bootstrap";
 interface Props {
@@ -14,12 +14,10 @@ interface Props {
 
 const TextEditor = ({ name, label, setFieldValue, ...props }: Props) => {
   const [field] = useField({ name, ...props });
-  const [value, setValue] = useState(
-    BraftEditor.createEditorState(field.value)
-  );
-  const handleChange = (editorState: any) => {
-    setFieldValue(name, editorState.toHTML());
-    setValue(editorState);
+  const [value, setValue] = useState<string>(field.value || "");
+  const handleChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+    setFieldValue(name, e.target.value);
+    setValue(e.target.value);
   };
   return (
     <Container
@@ -36,16 +34,11 @@ const TextEditor = ({ name, label, setFieldValue, ...props }: Props) => {
         {label}
       </span>
       <div className="mx-auto">
-        <BraftEditor
+        <textarea
+          className="form-control"
+          style={{ height: "300px", overflow: "auto", background: "#f0f0f0" }}
           value={value}
           onChange={handleChange}
-          language="en"
-          contentStyle={{ height: "300px", overflow: "auto" }}
-          style={{
-            height: "100%",
-            zIndex: 999999,
-            background: "#f0f0f0",
-          }}
         />
       </div>
     </Container>

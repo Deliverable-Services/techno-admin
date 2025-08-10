@@ -1,5 +1,5 @@
 import { AxiosError } from "axios";
-import bsCustomFileInput from "bs-custom-file-input";
+// Removed bs-custom-file-input
 import { Form, Formik } from "formik";
 import moment from "moment";
 import { useEffect } from "react";
@@ -43,7 +43,7 @@ const AdvertisementCreateUpdateForm = () => {
   const { state } = useLocation();
   const id = state ? (state as any).id : null;
   useEffect(() => {
-    bsCustomFileInput.init();
+    // no-op
   }, []);
 
   const { data, isLoading: dataLoading } = useGetSingleQuery({ id, key });

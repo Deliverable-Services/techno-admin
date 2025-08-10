@@ -1,5 +1,10 @@
 import React from "react";
-import { Card, Button, Badge, Spinner, Alert, Col } from "react-bootstrap";
+import { Card, CardContent } from "../ui/card";
+import { Button } from "../ui/button";
+import { Badge } from "../ui/badge";
+import { Alert, AlertDescription } from "../ui/alert";
+import { Col } from "../ui/grid";
+import { Spinner } from "../ui/spinner";
 import { useGoogleBusinessIntegration } from "./useGoogleBusinessIntegration";
 import moment from "moment";
 import IsLoading from "../../shared-components/isLoading";
@@ -55,7 +60,7 @@ const GoogleBusinessProfile: React.FC<GoogleBusinessProfileProps> = ({
       : "Not Connected";
 
     return (
-      <Badge variant={variant} className="me-2">
+      <Badge variant={variant as any} className="me-2">
         {label}
       </Badge>
     );
@@ -80,7 +85,7 @@ const GoogleBusinessProfile: React.FC<GoogleBusinessProfileProps> = ({
         ? "Syncing..."
         : `Sync: ${latestSync.status}`;
 
-    return <Badge variant={variant}>{label}</Badge>;
+    return <Badge variant={variant as any}>{label}</Badge>;
   };
 
   const renderInfoList = () => {
@@ -156,7 +161,7 @@ const GoogleBusinessProfile: React.FC<GoogleBusinessProfileProps> = ({
     if (isLoading) {
       return (
         <Button variant="outline-primary" disabled>
-          <Spinner animation="border" size="sm" className="me-2" />
+          <Spinner size="sm" className="me-2" />
           Loading...
         </Button>
       );
@@ -172,7 +177,7 @@ const GoogleBusinessProfile: React.FC<GoogleBusinessProfileProps> = ({
         >
           {isDisconnecting ? (
             <>
-              <Spinner animation="border" size="sm" className="me-2" />
+              <Spinner size="sm" className="me-2" />
               Disconnecting...
             </>
           ) : (
@@ -191,7 +196,7 @@ const GoogleBusinessProfile: React.FC<GoogleBusinessProfileProps> = ({
       >
         {isConnectingOAuth ? (
           <>
-            <Spinner animation="border" size="sm" className="me-2" />
+            <Spinner size="sm" className="me-2" />
             Connecting...
           </>
         ) : (
@@ -207,16 +212,16 @@ const GoogleBusinessProfile: React.FC<GoogleBusinessProfileProps> = ({
   if (isLoading && !isConnected) {
     return (
       <Card className={className}>
-        <Card.Body className="text-center">
+        <CardContent className="text-center">
           <IsLoading />
-        </Card.Body>
+        </CardContent>
       </Card>
     );
   }
 
   return (
     <Card className={` border-0 rounded ${className}`}>
-      <Card.Body>
+      <CardContent>
         <div className="align-items-top d-flex justify-content-between">
           <Col md={9} className="p-0">
             <h5 className="mb-1 text-primary d-flex align-items-center">
@@ -234,31 +239,34 @@ const GoogleBusinessProfile: React.FC<GoogleBusinessProfileProps> = ({
 
         {connectionStatus === "broken" && (
           <Alert variant="warning" className="mt-3">
-            <i className="fas fa-exclamation-triangle me-2" />
-            Connection broken. Please reconnect.
+            <AlertDescription>
+              <i className="fas fa-exclamation-triangle me-2" />
+              Connection broken. Please reconnect.
+            </AlertDescription>
           </Alert>
         )}
 
         {isConnected && !hasValidToken && (
-          <Alert
-            variant="danger"
-            className="mt-3 p-3 alert-new rounded-3 shadow-sm d-flex align-items-center"
-          >
-            <i className="fas fa-exclamation-circle me-3 text-danger fs-5" />
-            <div className="flex-grow-1">
-              <strong>Token Expired:</strong> Please reconnect your Google
-              account to resume syncing.
-            </div>
+          <Alert variant="danger" className="mt-3 p-3 rounded-3 shadow-sm">
+            <AlertDescription className="flex items-center">
+              <i className="fas fa-exclamation-circle me-3 text-danger fs-5" />
+              <div className="flex-grow-1">
+                <strong>Token Expired:</strong> Please reconnect your Google
+                account to resume syncing.
+              </div>
+            </AlertDescription>
           </Alert>
         )}
 
         {error && (error as any)?.response?.status !== 404 && (
           <Alert variant="danger" className="mt-3">
-            <i className="fas fa-exclamation-circle me-2" />
-            Unable to load status. Try again later.
+            <AlertDescription>
+              <i className="fas fa-exclamation-circle me-2" />
+              Unable to load status. Try again later.
+            </AlertDescription>
           </Alert>
         )}
-      </Card.Body>
+      </CardContent>
     </Card>
   );
 };

@@ -2,8 +2,8 @@ import { AxiosError } from "axios";
 import moment from "moment";
 import React, { useState } from "react";
 import { Container } from "react-bootstrap";
-import { DateRangePicker, FocusedInputShape } from "react-dates";
-import "react-dates/initialize";
+// Removed react-dates; using native inputs below
+type FocusedInputShape = "startDate" | "endDate" | null;
 import { BsCalendar, BsArrowRight } from "react-icons/bs";
 
 import { useQuery } from "react-query";
@@ -122,27 +122,30 @@ const Dashboard = () => {
 
         <div className="crm-users">
           <div className="d-flex align-items-center justify-content-start">
-            <DateRangePicker
-              customInputIcon={<BsCalendar color={primaryColor} size={19} />}
-              startDate={moment(filter.datefrom)}
-              startDateId={"start_date"}
-              endDate={moment(filter.dateto)}
-              endDateId={"end_date"}
-              isOutsideRange={() => false}
-              keepOpenOnDateSelect={true}
-              onDatesChange={({ startDate, endDate }) => {
-                if (startDate) {
-                  _onFilterChange("datefrom", startDate.format("YYYY-MM-DD"));
-                  _onFilterChange("startDate", startDate.format("YYYY-MM-DD"));
-                }
-                if (endDate) {
-                  _onFilterChange("dateto", endDate.format("YYYY-MM-DD"));
-                  _onFilterChange("endDate", endDate.format("YYYY-MM-DD"));
-                }
-              }}
-              focusedInput={focusedInput}
-              onFocusChange={(focusedInput) => setFocusInput(focusedInput)}
-            />
+            <div className="d-flex align-items-center gap-2">
+              <BsCalendar color={primaryColor} size={19} />
+              <input
+                type="date"
+                value={filter.startDate}
+                onChange={(e) => {
+                  _onFilterChange("datefrom", e.target.value);
+                  _onFilterChange("startDate", e.target.value);
+                }}
+                className="form-control"
+                style={{ width: 160 }}
+              />
+              <span>to</span>
+              <input
+                type="date"
+                value={filter.endDate}
+                onChange={(e) => {
+                  _onFilterChange("dateto", e.target.value);
+                  _onFilterChange("endDate", e.target.value);
+                }}
+                className="form-control"
+                style={{ width: 160 }}
+              />
+            </div>
           </div>
         </div>
       </div>

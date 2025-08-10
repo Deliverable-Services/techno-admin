@@ -1,10 +1,8 @@
 import React from "react";
-import ReactDOM from "react-dom";
-import "bootstrap/dist/css/bootstrap.min.css";
+import { createRoot } from "react-dom/client";
+// Removed Bootstrap CSS – now using Tailwind
 import "react-datetime/css/react-datetime.css";
-import "react-dates/lib/css/_datepicker.css";
-import "braft-editor/dist/index.css";
-import "react-lightbox-component/build/css/index.css";
+// Removed legacy CSS imports for react-dates, braft-editor, and react-lightbox-component
 import "./css/App.css";
 import "./index.css";
 import App from "./App";
@@ -14,7 +12,11 @@ import { QueryClientProvider } from "react-query";
 import { queryClient } from "./utils/queryClient";
 import { OrganisationProvider } from "./context/OrganisationContext";
 
-if (typeof process !== 'undefined' && process.env && process.env.NODE_ENV === "development") {
+if (
+  typeof process !== "undefined" &&
+  process.env &&
+  process.env.NODE_ENV === "development"
+) {
   const disableOverlayIframes = () => {
     document.querySelectorAll("iframe").forEach((iframe) => {
       const rect = iframe.getBoundingClientRect();
@@ -33,18 +35,20 @@ if (typeof process !== 'undefined' && process.env && process.env.NODE_ENV === "d
   setInterval(disableOverlayIframes, 1000);
 }
 
-ReactDOM.render(
-  <React.StrictMode>
-    <OrganisationProvider>
-      <QueryClientProvider client={queryClient}>
-        <BrowserRouter>
-          <App />
-        </BrowserRouter>
-        {/* <ReactQueryDevtools initialIsOpen={false} /> */}
-      </QueryClientProvider>
-    </OrganisationProvider>
-  </React.StrictMode>,
-  document.getElementById("root")
-);
+const container = document.getElementById("root");
+if (container) {
+  const root = createRoot(container);
+  root.render(
+    <React.StrictMode>
+      <OrganisationProvider>
+        <QueryClientProvider client={queryClient}>
+          <BrowserRouter>
+            <App />
+          </BrowserRouter>
+        </QueryClientProvider>
+      </OrganisationProvider>
+    </React.StrictMode>
+  );
+}
 
 reportWebVitals();
