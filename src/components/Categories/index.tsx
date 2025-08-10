@@ -258,9 +258,7 @@ const Categories = () => {
                           <div className="flex gap-2">
                             <Button
                               variant={
-                                filter.active === ""
-                                  ? "primary"
-                                  : "outline-secondary"
+                                filter.active === "" ? "default" : "secondary"
                               }
                               size="sm"
                               onClick={() => _onFilterChange("active", "")}
@@ -270,8 +268,8 @@ const Categories = () => {
                             <Button
                               variant={
                                 filter.active === "active"
-                                  ? "primary"
-                                  : "outline-secondary"
+                                  ? "default"
+                                  : "secondary"
                               }
                               size="sm"
                               onClick={() =>
@@ -287,8 +285,8 @@ const Categories = () => {
                             <Button
                               variant={
                                 filter.active === "notActive"
-                                  ? "primary"
-                                  : "outline-secondary"
+                                  ? "default"
+                                  : "secondary"
                               }
                               size="sm"
                               onClick={() =>

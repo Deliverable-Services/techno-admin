@@ -13,14 +13,15 @@ export const INITIAL_FILTER: IFilter = {
   payment_method: "",
 };
 
-let store = combine({ filter: INITIAL_FILTER }, (set) => ({
-  onFilterChange: (idx: string, value: any) =>
-    set((state) => ({ ...state, filter: { ...state.filter, [idx]: value } })),
-  resetFilter: () => set((state) => ({ filter: INITIAL_FILTER })),
-}));
-
-store = persist(store, { name: LocalStorageKey + "transaction_filter" });
-
-const useTransactionStoreFilter = create(store);
+const useTransactionStoreFilter = create(
+  persist(
+    combine({ filter: INITIAL_FILTER }, (set) => ({
+      onFilterChange: (idx: string, value: any) =>
+        set((state) => ({ ...state, filter: { ...state.filter, [idx]: value } })),
+      resetFilter: () => set((state) => ({ filter: INITIAL_FILTER })),
+    })),
+    { name: LocalStorageKey + "transaction_filter" }
+  )
+);
 
 export default useTransactionStoreFilter;

@@ -134,7 +134,7 @@ const PlatformTab = () => {
                     {errors["minimum-order-cart"] &&
                       touched["minimum-order-cart"] && (
                         <div className="text-danger ms-2">
-                          {errors["minimum-order-cart"]}
+                          {String(errors["minimum-order-cart"])}
                         </div>
                       )}
                   </div>
@@ -150,7 +150,7 @@ const PlatformTab = () => {
                     {errors["copyright-message"] &&
                       touched["copyright-message"] && (
                         <div className="text-danger ms-2">
-                          {errors["copyright-message"]}
+                          {String(errors["copyright-message"])}
                         </div>
                       )}
                   </div>

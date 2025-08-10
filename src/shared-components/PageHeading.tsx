@@ -46,7 +46,7 @@ const PageHeading: React.FC<Props> = ({
       {onClick && (
         <Restricted to={permissionReq}>
           <Button
-            variant="primary"
+            variant="default"
             onClick={onClick}
             size={"sm"}
             style={{

@@ -119,7 +119,7 @@ const AppearanceTab = () => {
                     </span>
                     {errors.primary_color && touched.primary_color && (
                       <div className="text-danger ms-2">
-                        {errors.primary_color}
+                        {String(errors.primary_color)}
                       </div>
                     )}
                   </div>
@@ -138,7 +138,7 @@ const AppearanceTab = () => {
                     </span>
                     {errors.secondary_color && touched.secondary_color && (
                       <div className="text-danger ms-2">
-                        {errors.secondary_color}
+                        {String(errors.secondary_color)}
                       </div>
                     )}
                   </div>
@@ -156,7 +156,9 @@ const AppearanceTab = () => {
                       <option value="Turkey">Turkey</option>
                     </Field>
                     {errors.language && touched.language && (
-                      <div className="text-danger ms-2">{errors.language}</div>
+                      <div className="text-danger ms-2">
+                        {String(errors.language)}
+                      </div>
                     )}
                   </div>
                   <div className="border-div form-group w-100 mt-3 d-flex align-items-center">
@@ -173,7 +175,9 @@ const AppearanceTab = () => {
                       <option value="EURO">EURO</option>
                     </Field>
                     {errors.currency && touched.currency && (
-                      <div className="text-danger ms-2">{errors.currency}</div>
+                      <div className="text-danger ms-2">
+                        {String(errors.currency)}
+                      </div>
                     )}
                   </div>
                   <Button

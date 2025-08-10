@@ -11919,6 +11919,8 @@ nav .navLink {
   padding: 5px 20px;
   letter-spacing: 0px;
   border-left: 4px solid transparent;
+  display: flex;
+  align-items: center;
 }
 
 nav .navLink svg {

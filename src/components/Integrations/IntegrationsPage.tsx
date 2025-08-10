@@ -340,12 +340,12 @@ const IntegrationsPage: React.FC = () => {
     integration: Integration,
     _categoryColor: string
   ) => (
-    <Card key={integration.name} className="h-full integration-card shadow-sm">
+    <Card key={integration.name} className="h-full shadow-sm transition-transform duration-200 ease-in-out border border-gray-200 hover:transform hover:-translate-y-1 hover:shadow-lg">
       <CardContent className="p-4">
         {/* Header */}
         <div className="flex items-start justify-between mb-3">
           <div className="flex items-center gap-3">
-            <div className="integration-icon">{integration.icon}</div>
+            <div className="flex items-center justify-center w-14 h-14 bg-blue-50 rounded-xl mb-2">{integration.icon}</div>
             <div>
               <h5 className="mb-1 font-semibold">{integration.name}</h5>
               <div className="flex items-center gap-2">

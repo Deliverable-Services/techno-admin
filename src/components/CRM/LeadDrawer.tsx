@@ -1413,9 +1413,7 @@ const LeadDrawer: React.FC<Props> = ({ lead, onClose }) => {
                                 {invoice.description}
                               </p>
                             </div>
-                            <Badge
-                              variant={getStatusBadgeVariant(invoice.status)}
-                            >
+                            <Badge bg={getStatusBadgeVariant(invoice.status)}>
                               {invoice.status}
                             </Badge>
                           </div>
@@ -1466,9 +1464,7 @@ const LeadDrawer: React.FC<Props> = ({ lead, onClose }) => {
                                 #{ticket.ref_id}
                               </p>
                             </div>
-                            <Badge
-                              variant={getStatusBadgeVariant(ticket.status)}
-                            >
+                            <Badge bg={getStatusBadgeVariant(ticket.status)}>
                               {ticket.status}
                             </Badge>
                           </div>
@@ -1519,15 +1515,13 @@ const LeadDrawer: React.FC<Props> = ({ lead, onClose }) => {
                                 {meeting.formatted_datetime}
                               </p>
                             </div>
-                            <Badge
-                              variant={getStatusBadgeVariant(meeting.status)}
-                            >
+                            <Badge bg={getStatusBadgeVariant(meeting.status)}>
                               {meeting.status}
                             </Badge>
                           </div>
                           {meeting.location && (
                             <div className="d-flex align-items-center gap-1 mb-1">
-                              <MdLocationOn className="text-muted" size={14} />
+                              <MapPin className="text-muted" size={14} />
                               <span className="text-muted small">
                                 {meeting.location}
                               </span>

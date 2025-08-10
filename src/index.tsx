@@ -1,13 +1,10 @@
 import React from "react";
 import { createRoot } from "react-dom/client";
-// Removed Bootstrap CSS – now using Tailwind
-import "react-datetime/css/react-datetime.css";
-// Removed legacy CSS imports for react-dates, braft-editor, and react-lightbox-component
 import "./css/App.css";
 import "./index.css";
 import App from "./App";
 import { BrowserRouter } from "react-router-dom";
-import reportWebVitals from "./reportWebVitals";
+
 import { QueryClientProvider } from "react-query";
 import { queryClient } from "./utils/queryClient";
 import { OrganisationProvider } from "./context/OrganisationContext";
@@ -50,5 +47,3 @@ if (container) {
     </React.StrictMode>
   );
 }
-
-reportWebVitals();

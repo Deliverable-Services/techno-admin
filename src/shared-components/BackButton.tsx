@@ -12,7 +12,7 @@ const BackButton: React.FC<Props> = ({ title }) => {
     <>
       <div className="d-flex justify-content-between py-2 px-0">
         {/* <p className="font-weight-bold text-capitalize lead mb-0">{title}</p> */}
-        <Button variant="primary" onClick={_onBackClick} size="sm">
+        <Button variant="default" onClick={_onBackClick} size="sm">
           <div className="text-white d-flex align-items-center">
             <Hammer size={18} /> <p className="mb-0">Back</p>
           </div>

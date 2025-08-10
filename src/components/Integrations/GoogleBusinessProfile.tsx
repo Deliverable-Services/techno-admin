@@ -60,7 +60,7 @@ const GoogleBusinessProfile: React.FC<GoogleBusinessProfileProps> = ({
       : "Not Connected";
 
     return (
-      <Badge bg={variant as any} className="me-2">
+      <Badge variant={variant as any} className="me-2">
         {label}
       </Badge>
     );
@@ -85,7 +85,7 @@ const GoogleBusinessProfile: React.FC<GoogleBusinessProfileProps> = ({
         ? "Syncing..."
         : `Sync: ${latestSync.status}`;
 
-    return <Badge bg={variant as any}>{label}</Badge>;
+    return <Badge variant={variant as any}>{label}</Badge>;
   };
 
   const renderInfoList = () => {
@@ -160,7 +160,7 @@ const GoogleBusinessProfile: React.FC<GoogleBusinessProfileProps> = ({
   const renderActionButton = () => {
     if (isLoading) {
       return (
-        <Button variant="outline-primary" disabled>
+        <Button variant="outline" disabled>
           <Spinner size="sm" className="me-2" />
           Loading...
         </Button>
@@ -170,7 +170,7 @@ const GoogleBusinessProfile: React.FC<GoogleBusinessProfileProps> = ({
     if (isConnected) {
       return (
         <Button
-          variant="outline-danger"
+          variant="destructive"
           onClick={disconnect}
           disabled={isDisconnecting}
           size="sm"
@@ -189,7 +189,7 @@ const GoogleBusinessProfile: React.FC<GoogleBusinessProfileProps> = ({
 
     return (
       <Button
-        variant="primary"
+        variant="default"
         onClick={connect}
         disabled={isConnectingOAuth}
         size="sm"

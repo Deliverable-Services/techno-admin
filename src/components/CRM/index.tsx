@@ -15,94 +15,21 @@ import { showErrorToast } from "../../utils/showErrorToast";
 import { queryClient } from "../../utils/queryClient";
 import PageHeading from "../../shared-components/PageHeading";
 import { Users2 } from "../../components/ui/icon";
+import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 
 const key = "leads";
 const membersKey = "users";
 
-interface UserAvatarProps {
-  profilePic?: string;
-  name?: string;
-  className?: string;
-}
+// Utility function to get user initials
+const getInitials = (fullName: string) => {
+  if (!fullName) return "U";
 
-const UserAvatar: React.FC<UserAvatarProps> = ({
-  profilePic,
-  name,
-  className,
-}) => {
-  const [showFallback, setShowFallback] = useState<boolean>(!profilePic);
-
-  const handleImageError = () => {
-    setShowFallback(true);
-  };
-
-  const getInitials = (fullName: string) => {
-    if (!fullName) return "U";
-
-    const names = fullName.trim().split(" ");
-    if (names.length === 1) {
-      return names[0].charAt(0).toUpperCase();
-    }
-
-    return (
-      names[0].charAt(0) + names[names.length - 1].charAt(0)
-    ).toUpperCase();
-  };
-
-  const getBackgroundColor = (name: string) => {
-    const colors = [
-      "#7e56da",
-      "#ffd76a",
-      "#7bbfff",
-      "#ff6b6b",
-      "#51cf66",
-      "#ffa726",
-      "#42a5f5",
-      "#ab47bc",
-      "#26c6da",
-      "#ffca28",
-    ];
-
-    if (!name) return colors[0];
-
-    const hash = name.split("").reduce((acc, char) => {
-      return char.charCodeAt(0) + ((acc << 5) - acc);
-    }, 0);
-
-    return colors[Math.abs(hash) % colors.length];
-  };
-
-  useEffect(() => {
-    if (profilePic) {
-      setShowFallback(false);
-    } else {
-      setShowFallback(true);
-    }
-  }, [profilePic]);
-
-  if (!profilePic || showFallback) {
-    return (
-      <div
-        className={`flex items-center justify-center text-white rounded-full w-8 h-8 text-xs font-bold ${
-          className || ""
-        }`}
-        style={{
-          backgroundColor: getBackgroundColor(name || "User"),
-        }}
-      >
-        {getInitials(name || "User")}
-      </div>
-    );
+  const names = fullName.trim().split(" ");
+  if (names.length === 1) {
+    return names[0].charAt(0).toUpperCase();
   }
 
-  return (
-    <img
-      src={profilePic}
-      alt={name || "User"}
-      className={`rounded-full w-8 h-8 object-cover ${className || ""}`}
-      onError={handleImageError}
-    />
-  );
+  return (names[0].charAt(0) + names[names.length - 1].charAt(0)).toUpperCase();
 };
 
 const statusMap: { [key in string]: string } = {
@@ -190,20 +117,25 @@ const Index: React.FC = () => {
           permissionReq="create_lead"
         />
 
-        <div className="flex items-center">
+        <div className="*:data-[slot=avatar]:ring-background flex -space-x-2 *:data-[slot=avatar]:ring-2 *:data-[slot=avatar]:grayscale">
           {membersList?.data.slice(0, 3).map((member, index) => (
-            <UserAvatar
-              key={index}
-              profilePic={member?.user?.profile_pic}
-              name={member?.name}
-              className="-ml-2 border-2 border-white"
-            />
+            <Avatar key={index} className="h-8 w-8" data-slot="avatar">
+              <AvatarImage
+                src={member?.user?.profile_pic}
+                alt={member?.name || "User"}
+              />
+              <AvatarFallback className="text-xs font-bold">
+                {getInitials(member?.name || "User")}
+              </AvatarFallback>
+            </Avatar>
           ))}
 
           {membersList?.data.length > 3 && (
-            <span className="w-8 h-8 -ml-2 border-2 border-white rounded-full bg-gray-300 flex items-center justify-center text-xs font-bold">
-              +{membersList.data.length - 3}
-            </span>
+            <Avatar className="h-8 w-8 bg-gray-300" data-slot="avatar">
+              <AvatarFallback className="text-xs font-bold">
+                +{membersList.data.length - 3}
+              </AvatarFallback>
+            </Avatar>
           )}
         </div>
       </div>

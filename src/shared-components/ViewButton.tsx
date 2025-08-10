@@ -15,7 +15,7 @@ const ViewButton = (props: Props) => {
     <div>
       <Restricted to={props.permissionReq} fallBackUI={NotAvailable}>
         <Button
-          variant="outline-primary"
+          variant="outline"
           onClick={props.onClick}
           className="flex items-center"
         >

@@ -5,7 +5,6 @@ import { Button, Spinner } from "react-bootstrap";
 import { useMutation } from "react-query";
 import { useHistory } from "react-router";
 import * as Yup from "yup";
-import { Hammer } from "../components/ui/icon";
 import { primaryColor } from "../utils/constants";
 
 import { InputField } from "../shared-components/InputFeild";
@@ -17,7 +16,7 @@ import { useOrganisation } from "../context/OrganisationContext";
 import API from "../utils/API";
 import { showErrorToast } from "../utils/showErrorToast";
 import { showMsgToast } from "../utils/showMsgToast";
-import {} from "lucide-react";
+import { Hammer } from "./ui/icon";
 
 const LoginSchema = Yup.object().shape({
   phone: Yup.string().required("Phone number required"),
@@ -221,7 +220,7 @@ const LoginFlow = () => {
                     }}
                     onClick={() => setActiveTab("signup")}
                   >
-                    <ShieldCheck size={12} className="mr-1" />
+                    <Hammer size={12} className="mr-1" />
                     Sign Up
                   </button>
                 </div>

@@ -2,6 +2,151 @@ import React from "react";
 import { LucideIcon, LucideProps } from "lucide-react";
 import { cn } from "../../lib/utils";
 
+// Import all the icons we're going to re-export
+import {
+  // Navigation & UI
+  ArrowLeft,
+  ArrowRight,
+  ArrowUp,
+  ArrowDown,
+  ChevronLeft,
+  ChevronRight,
+  ChevronUp,
+  ChevronDown,
+  Menu,
+  X,
+  Plus,
+  Minus,
+  MoreVertical,
+  MoreHorizontal,
+
+  // Actions
+  Edit,
+  Trash2,
+  Save,
+  Copy,
+  Share,
+  Download,
+  Upload,
+  RefreshCw,
+  Search,
+  Filter,
+  Settings,
+
+  // User & People
+  User,
+  Users,
+  UserPlus,
+  Eye,
+  EyeOff,
+
+  // Communication
+  Mail,
+  Phone,
+  MessageCircle,
+  MessageSquare,
+  Bell,
+
+  // Status & Feedback
+  Check,
+  CheckCircle,
+  AlertCircle,
+  AlertTriangle,
+  Info,
+  XCircle,
+  Circle,
+  CircleDot,
+
+  // Files & Folders
+  File,
+  FileText,
+  Folder,
+  FolderOpen,
+  Paperclip,
+
+  // Social
+  Heart,
+  Star,
+  ThumbsUp,
+  ThumbsDown,
+  Frown,
+
+  // Business & Finance
+  CreditCard,
+  DollarSign,
+  TrendingUp,
+  TrendingDown,
+  BarChart,
+  PieChart,
+
+  // Calendar & Time
+  Calendar,
+  Clock,
+
+  // Location
+  MapPin,
+  Globe,
+
+  // Media Controls
+  Play,
+  Pause,
+  StopCircle,
+  SkipForward,
+  SkipBack,
+  Volume2,
+  VolumeX,
+
+  // General
+  Home,
+  LayoutDashboard,
+  ShoppingCart,
+  Package,
+  Bookmark,
+  Tag,
+  Lock,
+  Unlock,
+  Key,
+  Shield,
+  Zap,
+  Lightbulb,
+  Database,
+  Server,
+  Wifi,
+  Bluetooth,
+  Battery,
+  Power,
+
+  // Tools
+  Wrench,
+  Hammer,
+  Scissors,
+  Ruler,
+  Palette,
+  Brush,
+  Pen,
+  PenTool,
+
+  // Transportation
+  Car,
+  Truck,
+  Plane,
+  Train,
+  Bike,
+
+  // Weather
+  Sun,
+  Moon,
+  Cloud,
+  CloudRain,
+  Snowflake,
+  Wind,
+
+  // CRM Specific
+  Target,
+  Building,
+  Users2,
+} from "lucide-react";
+
 export interface IconProps extends Omit<LucideProps, "ref"> {
   icon: LucideIcon;
   className?: string;

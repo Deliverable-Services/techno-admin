@@ -310,7 +310,7 @@ function ReactTable({
                         className="custom-control-label"
                         htmlFor={column.id}
                       >
-                        <p style={{ whiteSpace: "nowrap" }}>{column.Header}</p>
+                        <p style={{ whiteSpace: "nowrap" }}>{String(column.Header)}</p>
                       </label>
                     </div>
                   </div>
@@ -577,7 +577,7 @@ function ReactTable({
                     <span>Clear search and filters</span>
                   </div>
                   <div className="d-flex align-items-center mb-2 text-muted">
-                    <FaSearch size={12} color={primaryColor} className="mr-2" />
+                    <Hammer size={12} color={primaryColor} className="mr-2" />
                     <span>Try different search terms</span>
                   </div>
                   <div className="d-flex align-items-center text-muted">

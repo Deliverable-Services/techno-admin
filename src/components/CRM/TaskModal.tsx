@@ -49,7 +49,13 @@ const TaskModal: React.FC<Props> = ({ task, onClose }) => {
             <ul className="list-unstyled">
               {task.comments.map((c, i) => (
                 <li key={i} className="mb-2">
-                  <div className="border rounded p-2">{c}</div>
+                  <div className="border rounded p-2">
+                    <div className="d-flex justify-content-between">
+                      <strong>{c.username}</strong>
+                      <small className="text-muted">{c.created_at}</small>
+                    </div>
+                    <div>{c.comment}</div>
+                  </div>
                 </li>
               ))}
             </ul>

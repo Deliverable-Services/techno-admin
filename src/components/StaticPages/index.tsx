@@ -272,9 +272,8 @@ const PageContainer = ({ page, selectedTitle }) => {
     }
   );
 
-  const handleSave = (editorState: EditorState, pagedata: any) => {
+  const handleSave = (content: string, pagedata: any) => {
     if (isRestricted("update_staticpage")) return;
-    const content = editorState.toHTML();
     const formdata = {
       ...pagedata,
       content,

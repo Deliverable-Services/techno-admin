@@ -29,7 +29,7 @@ export const Row: React.FC<RowProps> = ({ className, ...props }) => {
   return <div className={cn("flex flex-wrap -mx-2", className)} {...props} />;
 };
 
-type ColSizes = 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12;
+type ColSizes = 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12 | "auto";
 
 type ColProps = React.HTMLAttributes<HTMLDivElement> & {
   xs?: ColSizes;
@@ -41,6 +41,7 @@ type ColProps = React.HTMLAttributes<HTMLDivElement> & {
 
 const widthClass = (span?: ColSizes) => {
   if (!span) return "";
+  if (span === "auto") return "w-auto";
   return `w-${span}/12`;
 };
 
