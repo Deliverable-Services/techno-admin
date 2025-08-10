@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from "react";
+import React from "react";
 import ReactMapGL, { Marker } from "react-map-gl";
 import { HiLocationMarker } from "react-icons/hi";
 import "mapbox-gl/dist/mapbox-gl.css";

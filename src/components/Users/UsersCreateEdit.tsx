@@ -7,7 +7,6 @@ import {
     Card,
     Button,
     Form,
-    Badge,
     Dropdown,
 } from "react-bootstrap";
 import "./UsersCreateEdit.css";

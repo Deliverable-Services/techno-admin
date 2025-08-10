@@ -1,7 +1,6 @@
 import React from "react";
 import { Button } from "react-bootstrap";
 import { AiFillEye } from "react-icons/ai";
-import { primaryColor } from "../utils/constants";
 import Restricted from "./Restricted";
 
 interface Props {

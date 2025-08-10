@@ -1,6 +1,6 @@
 import React from "react";
 import './index.css'
-import { Route, Router, useHistory } from "react-router-dom";
+import { useHistory } from "react-router-dom";
 
 interface BottomNavItemProps {
   icon: JSX.Element;

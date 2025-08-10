@@ -1,4 +1,3 @@
-import { useLocation } from "react-router-dom";
 import AgentTargets from "./AgentTarget";
 import UserAddress from "./UserAddresses";
 import UserBasics from "./UserBasics";

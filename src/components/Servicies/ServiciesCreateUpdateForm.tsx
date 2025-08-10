@@ -1,27 +1,22 @@
 import { AxiosError } from "axios";
 import bsCustomFileInput from "bs-custom-file-input";
-import { Field, FieldArray, Form, Formik } from "formik";
+import { Form, Formik } from "formik";
 import { useEffect } from "react";
 import {
-  Alert,
   Button,
   Col,
-  Container,
   Row,
   Spinner,
   Form as BForm,
-  FormCheck,
 } from "react-bootstrap";
 import { FaTrash } from "react-icons/fa";
 import { useMutation, useQuery } from "react-query";
 import { useHistory, useLocation } from "react-router-dom";
 import { handleApiError } from "../../hooks/handleApiErrors";
 import useGetSingleQuery from "../../hooks/useGetSingleQuery";
-import BackButton from "../../shared-components/BackButton";
 import ImagesContainer from "../../shared-components/ImagesContainer";
 import { InputField } from "../../shared-components/InputFeild";
 import IsLoading from "../../shared-components/isLoading";
-import PageHeading from "../../shared-components/PageHeading";
 import Restricted from "../../shared-components/Restricted";
 import TextEditor from "../../shared-components/TextEditor";
 import API from "../../utils/API";

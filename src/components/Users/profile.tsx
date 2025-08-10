@@ -4,10 +4,8 @@ import { Button, Col, Container, Row, Spinner } from "react-bootstrap";
 import { BiUpload } from "react-icons/bi";
 import useUserProfileStore from "../../hooks/useUserProfileStore";
 import { InputField } from "../../shared-components/InputFeild";
-import PageHeading from "../../shared-components/PageHeading";
 import { config } from "../../utils/constants";
 import * as Yup from "yup";
-import isLoading from "../../shared-components/isLoading";
 import API from "../../utils/API";
 import { useMutation } from "react-query";
 import { showMsgToast } from "../../utils/showMsgToast";
@@ -15,7 +13,6 @@ import { AxiosError } from "axios";
 import { handleApiError } from "../../hooks/handleApiErrors";
 import { queryClient } from "../../utils/queryClient";
 import { useHistory } from "react-router-dom";
-import { FormEvent } from "react";
 import BackButton from "../../shared-components/BackButton";
 
 const ValidationSchema = Yup.object().shape({

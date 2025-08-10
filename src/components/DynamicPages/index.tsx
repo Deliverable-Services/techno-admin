@@ -16,8 +16,6 @@ import API from "../../utils/API";
 import { primaryColor } from "../../utils/constants";
 import { queryClient } from "../../utils/queryClient";
 import { showMsgToast } from "../../utils/showMsgToast";
-import ViewButton from "../../shared-components/ViewButton";
-import BreadCrumb from "../../shared-components/BreadCrumb";
 import { AiFillDelete } from "react-icons/ai";
 import { CommonModal } from "../CommonPopup/CommonModal";
 import DynamicPageCreateUpdateForm from "./DynamicPageCreateUpdateForm";

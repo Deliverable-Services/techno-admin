@@ -52,7 +52,6 @@ import Users from "./components/Users";
 import Admins from "./components/Users/admin";
 import Agents from "./components/Users/agent";
 import ProfilePage from "./components/Users/profile";
-import UserCreateUpdateForm from "./components/Users/UsersCreateUpdateForm";
 import VerifyOtp from "./components/VerifyOtp";
 import { IsDesktopContext } from "./context/IsDesktopContext";
 import ErrorToast from "./shared-components/ErrorToast/ErrorToast";
@@ -61,7 +60,7 @@ import { PrivateRoute } from "./shared-components/PrivateRoute";
 import VerifingUserLoader from "./shared-components/VerifingUserLoader";
 import CMS from "./components/CMS";
 
-import CRMBoard from "./components/CRM/CRMBoard";
+import CRMBoard from "./components/CRM";
 import organization from "./components/Organization";
 import InvoicePage from "./components/Invoices";
 import { useOrganisation } from "./context/OrganisationContext";

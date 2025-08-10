@@ -6,7 +6,6 @@ import { useMutation, useQuery } from "react-query";
 import { useHistory } from "react-router-dom";
 import { Cell, TableState } from "react-table";
 import { handleApiError } from "../../hooks/handleApiErrors";
-import BreadCrumb from "../../shared-components/BreadCrumb";
 import CreatedUpdatedAt from "../../shared-components/CreatedUpdatedAt";
 import EditButton from "../../shared-components/EditButton";
 import IsActiveBadge from "../../shared-components/IsActiveBadge";

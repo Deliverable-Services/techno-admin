@@ -1,5 +1,5 @@
 import React from "react";
-import { Card, Button, Badge, Spinner, Alert, Row, Col } from "react-bootstrap";
+import { Card, Button, Badge, Spinner, Alert, Col } from "react-bootstrap";
 import { useGoogleBusinessIntegration } from "./useGoogleBusinessIntegration";
 import moment from "moment";
 import IsLoading from "../../shared-components/isLoading";

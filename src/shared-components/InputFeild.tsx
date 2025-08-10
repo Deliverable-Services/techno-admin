@@ -1,7 +1,6 @@
 import React, { ChangeEvent, ElementType, InputHTMLAttributes } from "react";
 import { useField } from "formik";
-import { Form, Image } from "react-bootstrap";
-import { config } from "process";
+import { Form } from "react-bootstrap";
 import TableImage from "./TableImage";
 import { DefaultInputHeight } from "../utils/constants";
 

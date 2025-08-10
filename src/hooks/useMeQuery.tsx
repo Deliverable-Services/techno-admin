@@ -1,8 +1,6 @@
 import axios, { AxiosError } from "axios";
 import { QueryFunction, useQuery } from "react-query";
-import { useHistory } from "react-router-dom";
 import { config } from "../utils/constants";
-import { handleApiError } from "./handleApiErrors";
 import useTokenStore from "./useTokenStore";
 import useUserProfileStore from "./useUserProfileStore";
 

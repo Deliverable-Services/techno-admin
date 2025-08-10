@@ -1,4 +1,3 @@
-import { useState } from "react";
 import { BottomNavItem } from "../BottomNavItem/BottomNavItem";
 import "./index.css";
 import { FaFileInvoiceDollar, FaHome } from "react-icons/fa";

@@ -6,7 +6,6 @@ import BackButton from "../../../shared-components/BackButton";
 import BusinessProfileTab from "./BusinessProfileTab";
 import ReviewsTab from "./ReviewsTab";
 import ImagesTab from "./ImagesTab";
-import { GoogleBusinessProfile } from "../index";
 import IsLoading from "../../../shared-components/isLoading";
 
 const GoogleBusinessDashboard: React.FC = () => {

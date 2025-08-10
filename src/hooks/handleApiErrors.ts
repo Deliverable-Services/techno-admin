@@ -1,6 +1,4 @@
 import { AxiosError } from "axios";
-import API from "../utils/API";
-import useTokenStore from "../hooks/useTokenStore";
 
 export const handleApiError = async (error: AxiosError, history?: any) => {
   if (!error) return;

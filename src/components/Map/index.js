@@ -1,9 +1,7 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import ReactMapGL, {
   Marker,
   FlyToInterpolator,
-  FullscreenControl,
-  NavigationControl,
 } from "react-map-gl";
 import { AiFillHome, AiFillCar } from "react-icons/ai";
 import PolyLine from "./Polyline";

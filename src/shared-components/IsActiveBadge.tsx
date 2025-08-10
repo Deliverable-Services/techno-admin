@@ -1,5 +1,4 @@
 import React from "react";
-import { Badge } from "react-bootstrap";
 import CustomBadge from "./CustomBadge";
 
 interface Props {

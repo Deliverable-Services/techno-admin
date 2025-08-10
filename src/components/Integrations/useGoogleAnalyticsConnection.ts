@@ -1,4 +1,3 @@
-import React from "react";
 import { useQuery } from "react-query";
 import googleAnalyticsService from "../../services/googleAnalyticsService";
 import { useOrganisation } from "../../context/OrganisationContext";

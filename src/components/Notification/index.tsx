@@ -3,20 +3,17 @@ import moment from "moment";
 import React, { useMemo, useState } from "react";
 import {
   Button,
-  Col,
   Container,
   Dropdown,
   Form,
   Nav,
-  Row,
 } from "react-bootstrap";
-import { AiFillDelete, AiFillEdit } from "react-icons/ai";
+import { AiFillDelete } from "react-icons/ai";
 import { BiSad } from "react-icons/bi";
 import { useMutation, useQuery } from "react-query";
 import { useHistory } from "react-router-dom";
 import { Cell } from "react-table";
 import { handleApiError } from "../../hooks/handleApiErrors";
-import BreadCrumb from "../../shared-components/BreadCrumb";
 import CreatedUpdatedAt from "../../shared-components/CreatedUpdatedAt";
 import CustomBadge from "../../shared-components/CustomBadge";
 import EditButton from "../../shared-components/EditButton";
@@ -29,10 +26,9 @@ import ReactTable from "../../shared-components/ReactTable";
 import API from "../../utils/API";
 import { areTwoObjEqual } from "../../utils/areTwoObjEqual";
 import { NotificationSendToCategories } from "../../utils/arrays";
-import { primaryColor, secondaryColor } from "../../utils/constants";
+import { primaryColor } from "../../utils/constants";
 import { queryClient } from "../../utils/queryClient";
 import { showMsgToast } from "../../utils/showMsgToast";
-import Brands from "../Brands";
 import { BsFunnel, BsThreeDotsVertical } from "react-icons/bs";
 import { RiNotification2Line } from "react-icons/ri";
 import { useFlyout } from "../../hooks/useFlyout";

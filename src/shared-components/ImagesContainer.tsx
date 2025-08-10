@@ -1,10 +1,7 @@
 import { AxiosError } from "axios";
 import React from "react";
 import { Col, Container, Row } from "react-bootstrap";
-import { AiOutlineDelete } from "react-icons/ai";
-import { BiTrash } from "react-icons/bi";
 import { BsFillTrashFill } from "react-icons/bs";
-import { ImCross } from "react-icons/im";
 import { MdRemoveShoppingCart } from "react-icons/md";
 import { useMutation } from "react-query";
 import { useHistory } from "react-router-dom";

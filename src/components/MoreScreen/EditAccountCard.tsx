@@ -1,10 +1,6 @@
-import { Button } from "react-bootstrap";
 import profile from "../../assets/profile.svg";
 import { useHistory } from "react-router-dom";
-import { GoArrowLeft } from "react-icons/go";
-import BackButton from "../../shared-components/BackButton";
-import { BiArrowFromRight } from "react-icons/bi";
-import { GiCandlestickPhone, GiPencil } from "react-icons/gi";
+import { GiPencil } from "react-icons/gi";
 import "./EditAccountCard.css";
 import useUserProfileStore from "../../hooks/useUserProfileStore";
 import { IoMdMail } from "react-icons/io";

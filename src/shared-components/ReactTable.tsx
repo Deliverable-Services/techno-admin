@@ -1,20 +1,16 @@
-import { AxiosResponse } from "axios";
 import React, { ReactElement, useMemo, useState } from "react";
 import { DragDropContext, Draggable, Droppable } from "react-beautiful-dnd";
-import { Container, Dropdown, Spinner, Table } from "react-bootstrap";
+import { Container, Dropdown, Table } from "react-bootstrap";
 import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
 import { AiOutlineSearch } from "react-icons/ai";
-import { MdRemoveShoppingCart, MdFilterList, MdRefresh } from "react-icons/md";
-import { GoSettings } from "react-icons/go";
+import { MdFilterList, MdRefresh } from "react-icons/md";
 import { FaDatabase, FaSearch } from "react-icons/fa";
-import { IoMdArrowDropdown, IoMdArrowDropup, IoMdClose } from "react-icons/io";
+import { IoMdArrowDropdown, IoMdArrowDropup } from "react-icons/io";
 import { BsLayoutTextSidebar } from "react-icons/bs";
 // import Checkbox from 'react-checkbox-component'
-import { UseMutateAsyncFunction } from "react-query";
 import {
   TableState,
-  useAsyncDebounce,
   useFilters,
   useGlobalFilter,
   usePagination,
@@ -22,9 +18,7 @@ import {
   useSortBy,
   useTable,
 } from "react-table";
-import { RowsPerPage } from "../utils/arrays";
 import { primaryColor } from "../utils/constants";
-import { ImCheckboxUnchecked } from "react-icons/im";
 import { useContext } from "react";
 import { IsDesktopContext } from "../context/IsDesktopContext";
 import useUserProfileStore from "../hooks/useUserProfileStore";
