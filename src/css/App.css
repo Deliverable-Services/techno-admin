@@ -13119,7 +13119,7 @@ li.navLink.my-1 svg path {
 }
 .crm-board-overflow {
   overflow-x: auto;
-  height: 100vh;
+  height: auto;
 }
 .btn-focus-none:focus {
   background-color: none !important;

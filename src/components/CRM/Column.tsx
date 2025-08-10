@@ -63,7 +63,10 @@ const Column: React.FC<Props> = ({
           <span className="badge badge-light">{leads?.length} Leads</span>
         </div>
 
-        <div className="p-3" style={{ maxHeight: '600px', overflow: 'auto' }}>
+        <div
+          className="p-3"
+          style={{ maxHeight: "calc(100vh - 280px)", overflow: "auto" }}
+        >
           {leads?.map((lead) => (
             <div key={lead.id} onClick={() => onCardClick(lead.id)}>
               <LeadCard lead={lead} />
