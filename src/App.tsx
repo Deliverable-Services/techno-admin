@@ -6,7 +6,7 @@ import AdvertisementCreateUpdateForm from "./components/Advertisements/Advertise
 import AgentTargets from "./components/AgentTargets";
 import TargetCreateUpdateForm from "./components/AgentTargets/AgentCreateUpdateForm";
 import BookingSlots from "./components/BookingSlots";
-import SlotCreateUpdateForm from "./components/BookingSlots/BookingSlotsCreateUpdateForm";
+// import SlotCreateUpdateForm from "./components/BookingSlots/BookingSlotsCreateUpdateForm";
 import BrandModels from "./components/BrandModels";
 import BrandModlesCreateUpdateForm from "./components/BrandModels/BrandModelsUpdateCreateForm";
 // ------pages components--------
@@ -408,12 +408,12 @@ const App = () => {
                 component={Cart}
                 permissionReq="read_booking"
               />
-              <PrivateRoute
+              {/* <PrivateRoute
                 path="/booking-slots/create-edit"
                 exact
                 component={SlotCreateUpdateForm}
                 permissionReq="create_bookingslot"
-              />
+              /> */}
               <PrivateRoute
                 path="/testimonials/create-edit"
                 exact

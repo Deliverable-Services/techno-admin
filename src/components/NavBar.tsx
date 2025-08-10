@@ -21,7 +21,7 @@ import {
   RiNotification2Line,
   RiServiceFill,
 } from "react-icons/ri";
-import Select from "react-select";
+import OrganizationSwitcher from "./OrganizationSwitcher";
 import { SiBrandfolder, SiCivicrm } from "react-icons/si";
 import { MdShoppingCart } from "react-icons/md";
 import { ImUsers } from "react-icons/im";
@@ -321,37 +321,13 @@ const NavBar = ({ isNavOpen, setIsNavOpen }: INavBar) => {
       : !hiddenRoutesForCRM.includes(link.path!);
   });
 
-  const handleSetSelectedOrg = async (option) => {
-    const org = organisations.find((o) => o.id === option.value);
-    if (org) {
-      try {
-        await API.post(`${key}/${org.id}/switch`);
-      } catch (error) {
-        handleApiError(error, history);
-      }
-      setSelectedOrg(org);
+  const handleSetSelectedOrg = async (org) => {
+    try {
+      await API.post(`${key}/${org.id}/switch`);
+    } catch (error) {
+      handleApiError(error, history);
     }
-  };
-
-  const organisationOptions = organisations.map((org) => ({
-    value: org.id,
-    label: org.name,
-    ...org,
-  }));
-
-  const customStyles = {
-    control: (provided, state) => ({
-      ...provided,
-      border: "none",
-      fontSize: "14px",
-      fontWeight: "500",
-      boxShadow: "0 0.125rem 0.25rem rgba(0, 0, 0, 0.075) !important",
-    }),
-    option: (provided, state) => ({
-      ...provided,
-      padding: "8px 12px",
-      fontSize: "14px",
-    }),
+    setSelectedOrg(org);
   };
 
   return (
@@ -364,36 +340,11 @@ const NavBar = ({ isNavOpen, setIsNavOpen }: INavBar) => {
         )}
 
         <div className="all-links">
-          {/* Organisation Dropdown */}
-          <div>
-            <section
-              style={{
-                fontSize: "11px",
-                fontWeight: "bold",
-                color: "#667085",
-                marginBottom: "4px",
-              }}
-              className="pt-3"
-            >
-              Organisation
-            </section>
-            <Select
-              options={organisationOptions}
-              value={
-                selectedOrg
-                  ? {
-                      value: selectedOrg.id,
-                      label: selectedOrg.name,
-                    }
-                  : null
-              }
-              onChange={handleSetSelectedOrg}
-              placeholder="Select Organisation"
-              isClearable={false}
-              styles={customStyles}
-              className="input-div"
-            />
-          </div>
+          <OrganizationSwitcher
+            organisations={organisations}
+            selectedOrg={selectedOrg}
+            onSelect={handleSetSelectedOrg}
+          />
 
           {/* Dashboard */}
           <ul className="pt-3">
