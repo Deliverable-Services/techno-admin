@@ -142,6 +142,457 @@ const App = () => {
   // Show loading while authentication is being checked
   if (!isInitialized || isAuthLoading) return <VerifingUserLoader />;
 
+  // Route configuration
+  type RouteConfig = {
+    path: string;
+    component: any;
+    exact?: boolean;
+    isPrivate?: boolean;
+    permissionReq?: string;
+    skipPermission?: boolean;
+  };
+
+  const routes: RouteConfig[] = [
+    {
+      path: "/dashboard",
+      component: Dashboard,
+      exact: true,
+      isPrivate: true,
+      permissionReq: "read_dashboard",
+    },
+    {
+      path: "/crm",
+      component: CRMBoard,
+      exact: true,
+      isPrivate: true,
+      permissionReq: "read_user",
+    },
+    {
+      path: "/meetings",
+      component: BookingSlots,
+      exact: true,
+      isPrivate: true,
+      permissionReq: "read_bookingslot",
+    },
+    {
+      path: "/invoices",
+      component: InvoicePage,
+      exact: true,
+      isPrivate: true,
+      permissionReq: "read_city",
+    },
+    {
+      path: "/subscriptions",
+      component: SubscriptionPage,
+      exact: true,
+      isPrivate: true,
+      permissionReq: "read_subscription",
+    },
+    {
+      path: "/transactions",
+      component: Transactions,
+      exact: true,
+      isPrivate: true,
+      permissionReq: "read_transaction",
+    },
+    {
+      path: "/users",
+      component: Users,
+      exact: true,
+      isPrivate: true,
+      permissionReq: "read_user",
+    },
+    {
+      path: "/profile",
+      component: ProfilePage,
+      exact: true,
+      isPrivate: true,
+      permissionReq: "read_profile",
+      skipPermission: true,
+    },
+    {
+      path: "/product-brands",
+      component: Brands,
+      exact: true,
+      isPrivate: true,
+      permissionReq: "read_brand",
+    },
+    {
+      path: "/products",
+      component: BrandModels,
+      exact: true,
+      isPrivate: true,
+      permissionReq: "read_brandmodel",
+    },
+    {
+      path: "/product-variants",
+      component: CarTypes,
+      exact: true,
+      isPrivate: true,
+      permissionReq: "read_brandmodelType",
+    },
+    {
+      path: "/categories",
+      component: Categories,
+      exact: true,
+      isPrivate: true,
+      permissionReq: "read_category",
+    },
+    {
+      path: "/team-members",
+      component: Admins,
+      exact: true,
+      isPrivate: true,
+      permissionReq: "read_user",
+    },
+    {
+      path: "/agent",
+      component: Agents,
+      exact: true,
+      isPrivate: true,
+      permissionReq: "read_user",
+    },
+    {
+      path: "/services",
+      component: Services,
+      exact: true,
+      isPrivate: true,
+      permissionReq: "read_service",
+    },
+    {
+      path: "/plans",
+      component: Plans,
+      exact: true,
+      isPrivate: true,
+      permissionReq: "read_plan",
+    },
+    {
+      path: "/coupons",
+      component: Coupons,
+      exact: true,
+      isPrivate: true,
+      permissionReq: "read_coupon",
+    },
+    {
+      path: "/orders",
+      component: Orders,
+      exact: true,
+      isPrivate: true,
+      permissionReq: "read_booking",
+    },
+    {
+      path: "/testimonials",
+      component: Testimonial,
+      exact: true,
+      isPrivate: true,
+      permissionReq: "read_testimonial",
+    },
+    {
+      path: "/agent-targets",
+      component: AgentTargets,
+      exact: true,
+      isPrivate: true,
+      permissionReq: "read_agenttarget",
+    },
+    {
+      path: "/organization",
+      component: organization,
+      exact: true,
+      isPrivate: true,
+      permissionReq: "read_config",
+    },
+    {
+      path: "/enable-integrations",
+      component: IntegrationsPage,
+      exact: true,
+      isPrivate: true,
+      permissionReq: "read_config",
+    },
+    {
+      path: "/cms",
+      component: CMS,
+      exact: true,
+      isPrivate: true,
+      permissionReq: "read_faq",
+    },
+    {
+      path: "/brands/create-edit",
+      component: BrandsCreateUpdateForm,
+      exact: true,
+      isPrivate: true,
+      permissionReq: "read_brand",
+    },
+    {
+      path: "/brand-models/create-edit",
+      component: BrandModlesCreateUpdateForm,
+      exact: true,
+      isPrivate: true,
+      permissionReq: "read_brandmodel",
+    },
+    {
+      path: "/car-types/create-edit",
+      component: CarTypesCreateUpdateForm,
+      exact: true,
+      isPrivate: true,
+      permissionReq: "read_brandmodel",
+    },
+    {
+      path: "/categories/create-edit",
+      component: CategoriesCreateUpdateForm,
+      exact: true,
+      isPrivate: true,
+      permissionReq: "read_category",
+    },
+    {
+      path: "/agent-targets/create-edit",
+      component: TargetCreateUpdateForm,
+      exact: true,
+      isPrivate: true,
+      permissionReq: "read_agenttarget",
+    },
+    {
+      path: "/users/create-edit",
+      component: UsersCreateEdit,
+      exact: true,
+      isPrivate: true,
+      permissionReq: "read_user",
+    },
+    {
+      path: "/services/create-edit",
+      component: ServicesCreateUpdateForm,
+      exact: true,
+      isPrivate: true,
+      permissionReq: "read_service",
+    },
+    {
+      path: "/plans/create-edit",
+      component: PlanCreateUpdateForm,
+      exact: true,
+      isPrivate: true,
+      permissionReq: "read_plan",
+    },
+    {
+      path: "/coupons/create-edit",
+      component: CouponCreateUpdateForm,
+      exact: true,
+      isPrivate: true,
+      permissionReq: "read_coupon",
+    },
+    {
+      path: "/faqs",
+      component: Faqs,
+      exact: true,
+      isPrivate: true,
+      permissionReq: "read_faq",
+    },
+    {
+      path: "/faqs/create-edit",
+      component: FaqCreateUpdateForm,
+      exact: true,
+      isPrivate: true,
+      permissionReq: "read_faq",
+    },
+    {
+      path: "/cities/create-edit",
+      component: CitiesCreateUpdateForm,
+      exact: true,
+      isPrivate: true,
+      permissionReq: "read_city",
+    },
+    {
+      path: "/advertisements",
+      component: Advertisements,
+      exact: true,
+      isPrivate: true,
+      permissionReq: "read_banner",
+    },
+    {
+      path: "/advertisements/create-edit",
+      component: AdvertisementCreateUpdateForm,
+      exact: true,
+      isPrivate: true,
+      permissionReq: "read_banner",
+    },
+    {
+      path: "/issues",
+      component: Issues,
+      exact: true,
+      isPrivate: true,
+      permissionReq: "read_ticket",
+    },
+    {
+      path: "/issues/create-edit",
+      component: IssuesCreateForm,
+      exact: true,
+      isPrivate: true,
+      permissionReq: "create_ticket",
+    },
+    {
+      path: "/permissions",
+      component: Permissions,
+      exact: true,
+      isPrivate: true,
+      permissionReq: "read_permission",
+    },
+    {
+      path: "/roles",
+      component: Roles,
+      exact: true,
+      isPrivate: true,
+      permissionReq: "read_role",
+    },
+    {
+      path: "/cart",
+      component: Cart,
+      exact: true,
+      isPrivate: true,
+      permissionReq: "read_booking",
+    },
+    {
+      path: "/testimonials/create-edit",
+      component: TestimonialCreateUpdateForm,
+      exact: true,
+      isPrivate: true,
+      permissionReq: "read_testimonial",
+    },
+    {
+      path: "/assign-permission/create-edit",
+      component: AssignPermissionForm,
+      exact: true,
+      isPrivate: true,
+      permissionReq: "assign_permission",
+    },
+    {
+      path: "/revoke-permission/create-edit",
+      component: RevokePermission,
+      exact: true,
+      isPrivate: true,
+      permissionReq: "revoke_permission",
+    },
+    {
+      path: "/permissions/create-edit",
+      component: PermissionsCreateUpdateForm,
+      exact: true,
+      isPrivate: true,
+      permissionReq: "read_permission",
+    },
+    {
+      path: "/roles/create-edit",
+      component: RolesCreateUpdateForm,
+      exact: true,
+      isPrivate: true,
+      permissionReq: "read_role",
+    },
+    {
+      path: "/website-pages/dynamic/create-edit",
+      component: DynamicPageCreateUpdateForm,
+      exact: true,
+      isPrivate: true,
+      permissionReq: "read_staticpage",
+    },
+    {
+      path: "/website-pages/dynamic/:id",
+      component: ViewWebsite,
+      exact: true,
+      isPrivate: true,
+      permissionReq: "read_staticpage",
+    },
+    {
+      path: "/website-pages",
+      component: WebsitePages,
+      exact: true,
+      isPrivate: true,
+      permissionReq: "read_staticpage",
+    },
+    {
+      path: "/website-pages/create-edit/:id",
+      component: StaticPageCreateForm,
+      exact: true,
+      isPrivate: true,
+      permissionReq: "read_staticpage",
+    },
+    {
+      path: "/more",
+      component: MoreScreen,
+      exact: true,
+      isPrivate: true,
+      permissionReq: "read_staticpage",
+    },
+    {
+      path: "/orders/:id",
+      component: SingleOrder,
+      exact: true,
+      isPrivate: true,
+      permissionReq: "read_booking",
+    },
+    {
+      path: "/issues/:id",
+      component: SingleIssue,
+      exact: true,
+      isPrivate: true,
+      permissionReq: "read_ticket",
+    },
+    {
+      path: "/orders/assign-agent/:id",
+      component: AssignAgent,
+      exact: true,
+      isPrivate: true,
+      permissionReq: "assign_agent",
+    },
+    {
+      path: "/google-business",
+      component: GoogleBusinessDashboard,
+      exact: true,
+      isPrivate: true,
+      permissionReq: "read_dashboard",
+    },
+    {
+      path: "/website",
+      component: WebsitePages,
+      exact: true,
+      isPrivate: true,
+      permissionReq: "read_staticpage",
+    },
+    {
+      path: "/website/:id",
+      component: ViewWebsite,
+      exact: true,
+      isPrivate: true,
+      permissionReq: "read_staticpage",
+    },
+    {
+      path: "/google-analytics",
+      component: GoogleAnalytics,
+      exact: true,
+      isPrivate: true,
+      permissionReq: "read_staticpage",
+    },
+    {
+      path: "/notifications",
+      component: Notifications,
+      exact: true,
+      isPrivate: true,
+      permissionReq: "read_notification",
+    },
+    {
+      path: "/notifications/create-edit",
+      component: NotificationCreateUpdateForm,
+      exact: true,
+      isPrivate: true,
+      permissionReq: "read_notification",
+    },
+    {
+      path: "/cities",
+      component: Cities,
+      exact: true,
+      isPrivate: true,
+      permissionReq: "read_city",
+    },
+    // Public routes
+    { path: "/login", component: LoginPage, exact: true },
+    { path: "/verify-otp", component: VerifyOtp, exact: true },
+  ];
+
   return (
     <IsDesktopContext.Provider value={isDesktop}>
       <div className="App">
@@ -168,408 +619,25 @@ const App = () => {
               <Route exact path="/">
                 <Redirect to="/dashboard" />
               </Route>
-              <PrivateRoute
-                path="/dashboard"
-                exact
-                component={Dashboard}
-                permissionReq="read_dashboard"
-              />
-              {/* CRM Links */}
-              <PrivateRoute
-                path="/crm"
-                exact
-                component={CRMBoard}
-                permissionReq="read_user"
-              />
-              <PrivateRoute
-                path="/meetings"
-                exact
-                component={BookingSlots}
-                permissionReq="read_bookingslot"
-              />
-              {/* Billing Links */}
-              <PrivateRoute
-                path="/invoices"
-                exact
-                component={InvoicePage}
-                permissionReq="read_city"
-              />
-              <PrivateRoute
-                path="/subscriptions"
-                exact
-                component={SubscriptionPage}
-                permissionReq="read_subscription"
-              />
-              <PrivateRoute
-                path="/transactions"
-                exact
-                component={Transactions}
-                permissionReq="read_transaction"
-              />
-              {/* Customers  */}
-              <PrivateRoute
-                path="/users"
-                exact
-                component={Users}
-                permissionReq="read_user"
-              />
-              {/* Others */}
-              <PrivateRoute
-                path="/profile"
-                exact
-                component={ProfilePage}
-                permissionReq="read_profile"
-                skipPermission
-              />
-              <PrivateRoute
-                path="/product-brands"
-                exact
-                component={Brands}
-                permissionReq="read_brand"
-              />
-              <PrivateRoute
-                path="/products"
-                exact
-                component={BrandModels}
-                permissionReq="read_brandmodel"
-              />
-              <PrivateRoute
-                path="/product-variants"
-                exact
-                component={CarTypes}
-                permissionReq="read_brandmodelType"
-              />
-              <PrivateRoute
-                path="/categories"
-                exact
-                component={Categories}
-                permissionReq="read_category"
-              />
-
-              <PrivateRoute
-                path="/team-members"
-                exact
-                component={Admins}
-                permissionReq="read_user"
-              />
-              <PrivateRoute
-                path="/agent"
-                exact
-                component={Agents}
-                permissionReq="read_user"
-              />
-              <PrivateRoute
-                path="/services"
-                exact
-                component={Services}
-                permissionReq="read_service"
-              />
-              <PrivateRoute
-                path="/plans"
-                exact
-                component={Plans}
-                permissionReq="read_plan"
-              />
-              <PrivateRoute
-                path="/coupons"
-                exact
-                component={Coupons}
-                permissionReq="read_coupon"
-              />
-              <PrivateRoute
-                path="/orders"
-                exact
-                component={Orders}
-                permissionReq="read_booking"
-              />
-              <PrivateRoute
-                path="/testimonials"
-                exact
-                component={Testimonial}
-                permissionReq="read_testimonial"
-              />
-              <PrivateRoute
-                path="/agent-targets"
-                exact
-                component={AgentTargets}
-                permissionReq="read_agenttarget"
-              />
-              <PrivateRoute
-                path="/organization"
-                exact
-                component={organization}
-                permissionReq="read_config"
-              />
-              <PrivateRoute
-                path="/enable-integrations"
-                exact
-                component={IntegrationsPage}
-                permissionReq="read_config"
-              />
-              <PrivateRoute
-                path="/cms"
-                exact
-                component={CMS}
-                permissionReq="read_faq"
-              />
-              <PrivateRoute
-                path="/brands/create-edit"
-                exact
-                component={BrandsCreateUpdateForm}
-                permissionReq="read_brand"
-              />
-              <PrivateRoute
-                path="/brand-models/create-edit"
-                exact
-                component={BrandModlesCreateUpdateForm}
-                permissionReq="read_brandmodel"
-              />
-              <PrivateRoute
-                path="/car-types/create-edit"
-                exact
-                component={CarTypesCreateUpdateForm}
-                permissionReq="read_brandmodel"
-              />
-              <PrivateRoute
-                path="/categories/create-edit"
-                exact
-                component={CategoriesCreateUpdateForm}
-                permissionReq="read_category"
-              />
-              <PrivateRoute
-                path="/agent-targets/create-edit"
-                exact
-                component={TargetCreateUpdateForm}
-                permissionReq="read_agenttarget"
-              />
-              <PrivateRoute
-                path="/users/create-edit"
-                exact
-                component={UsersCreateEdit}
-                permissionReq="read_user"
-              />
-              <PrivateRoute
-                path="/services/create-edit"
-                exact
-                component={ServicesCreateUpdateForm}
-                permissionReq="read_service"
-              />
-              <PrivateRoute
-                path="/plans/create-edit"
-                exact
-                component={PlanCreateUpdateForm}
-                permissionReq="read_plan"
-              />
-              <PrivateRoute
-                path="/coupons/create-edit"
-                exact
-                component={CouponCreateUpdateForm}
-                permissionReq="read_coupon"
-              />
-              <PrivateRoute
-                path="/faqs"
-                exact
-                component={Faqs}
-                permissionReq="read_faq"
-              />
-              <PrivateRoute
-                path="/faqs/create-edit"
-                exact
-                component={FaqCreateUpdateForm}
-                permissionReq="read_faq"
-              />
-              <PrivateRoute
-                path="/cities/create-edit"
-                exact
-                component={CitiesCreateUpdateForm}
-                permissionReq="read_city"
-              />
-              <PrivateRoute
-                path="/advertisements"
-                exact
-                component={Advertisements}
-                permissionReq="read_banner"
-              />
-              <PrivateRoute
-                path="/advertisements/create-edit"
-                exact
-                component={AdvertisementCreateUpdateForm}
-                permissionReq="read_banner"
-              />
-
-              <PrivateRoute
-                path="/issues"
-                exact
-                component={Issues}
-                permissionReq="read_ticket"
-              />
-              <PrivateRoute
-                path="/issues/create-edit"
-                exact
-                component={IssuesCreateForm}
-                permissionReq="create_ticket"
-              />
-              <PrivateRoute
-                path="/permissions"
-                exact
-                component={Permissions}
-                permissionReq="read_permission"
-              />
-              <PrivateRoute
-                path="/roles"
-                exact
-                component={Roles}
-                permissionReq="read_role"
-              />
-              <PrivateRoute
-                path="/cart"
-                exact
-                component={Cart}
-                permissionReq="read_booking"
-              />
-              {/* <PrivateRoute
-                path="/booking-slots/create-edit"
-                exact
-                component={SlotCreateUpdateForm}
-                permissionReq="create_bookingslot"
-              /> */}
-              <PrivateRoute
-                path="/testimonials/create-edit"
-                exact
-                component={TestimonialCreateUpdateForm}
-                permissionReq="read_testimonial"
-              />
-              <PrivateRoute
-                path="/assign-permission/create-edit"
-                exact
-                component={AssignPermissionForm}
-                permissionReq="assign_permission"
-              />
-              <PrivateRoute
-                path="/revoke-permission/create-edit"
-                exact
-                component={RevokePermission}
-                permissionReq="revoke_permission"
-              />
-              <PrivateRoute
-                path="/permissions/create-edit"
-                exact
-                component={PermissionsCreateUpdateForm}
-                permissionReq="read_permission"
-              />
-              <PrivateRoute
-                path="/roles/create-edit"
-                exact
-                component={RolesCreateUpdateForm}
-                permissionReq="read_role"
-              />
-              {/* <PrivateRoute
-                path="/subscriptions"
-                exact
-                component={Subscriptions}
-                permissionReq="read_subscription"
-              /> */}
-              <PrivateRoute
-                path="/website-pages/dynamic/create-edit"
-                exact
-                component={DynamicPageCreateUpdateForm}
-                permissionReq="read_staticpage"
-              />
-              <PrivateRoute
-                path="/website-pages/dynamic/:id"
-                exact
-                component={ViewWebsite}
-                permissionReq="read_staticpage"
-              />
-              <PrivateRoute
-                path="/website-pages"
-                exact
-                component={WebsitePages}
-                permissionReq="read_staticpage"
-              />
-              <PrivateRoute
-                path="/website-pages/create-edit/:id"
-                exact
-                component={StaticPageCreateForm}
-                permissionReq="read_staticpage"
-              />
-              <PrivateRoute
-                path="/more"
-                exact
-                component={MoreScreen}
-                permissionReq="read_staticpage"
-              />
-              {/* <PrivateRoute
-                path="/subscriptions/:id"
-                exact
-                component={SingleSubscriptions}
-                permissionReq="read_subscription"
-              /> */}
-              <PrivateRoute
-                path="/orders/:id"
-                exact
-                component={SingleOrder}
-                permissionReq="read_booking"
-              />
-              <PrivateRoute
-                path="/issues/:id"
-                exact
-                component={SingleIssue}
-                permissionReq="read_ticket"
-              />
-              <PrivateRoute
-                path="/orders/assign-agent/:id"
-                exact
-                component={AssignAgent}
-                permissionReq="assign_agent"
-              />
-
-              <PrivateRoute
-                path="/google-business"
-                exact
-                component={GoogleBusinessDashboard}
-                permissionReq="read_dashboard"
-              />
-              <PrivateRoute
-                path="/website"
-                exact
-                component={WebsitePages}
-                permissionReq="read_staticpage"
-              />
-              <PrivateRoute
-                path="/website/:id"
-                exact
-                component={ViewWebsite}
-                permissionReq="read_staticpage"
-              />
-              <PrivateRoute
-                path="/google-analytics"
-                exact
-                component={GoogleAnalytics}
-                permissionReq="read_staticpage"
-              />
-              <Route path="/login" exact component={LoginPage} />
-              <Route path="/verify-otp" exact component={VerifyOtp} />
-
-              {/* // -- BELOW ROUTES DONE */}
-              <PrivateRoute
-                path="/notifications"
-                exact
-                component={Notifications}
-                permissionReq="read_notification"
-              />
-              <PrivateRoute
-                path="/notifications/create-edit"
-                exact
-                component={NotificationCreateUpdateForm}
-                permissionReq="read_notification"
-              />
-              <PrivateRoute
-                path="/cities"
-                exact
-                component={Cities}
-                permissionReq="read_city"
-              />
+              {routes.map((r) =>
+                r.isPrivate ? (
+                  <PrivateRoute
+                    key={r.path}
+                    path={r.path}
+                    exact={r.exact}
+                    component={r.component}
+                    permissionReq={r.permissionReq as any}
+                    skipPermission={r.skipPermission}
+                  />
+                ) : (
+                  <Route
+                    key={r.path}
+                    path={r.path}
+                    exact={r.exact}
+                    component={r.component}
+                  />
+                )
+              )}
             </Switch>
             <ErrorToast />
             <MsgToast />

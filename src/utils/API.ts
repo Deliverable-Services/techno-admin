@@ -46,7 +46,14 @@ API.interceptors.response.use(
           await new Promise<void>((resolve) => pendingQueue.push(resolve));
         } else {
           isRefreshing = true;
-          await API.post("auth/refresh");
+          const res = await API.post("auth/refresh");
+          // Persist the new token from refresh response
+          try {
+            const newToken = res?.data?.access_token || res?.data?.token;
+            if (newToken) {
+              localStorage.setItem("token", newToken);
+            }
+          } catch {}
           isRefreshing = false;
           pendingQueue.forEach((resolve) => resolve());
           pendingQueue = [];

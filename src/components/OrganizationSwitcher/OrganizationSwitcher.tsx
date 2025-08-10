@@ -97,9 +97,7 @@ const OrganizationSwitcher: React.FC<OrganizationSwitcherProps> = ({
   };
 
   return (
-    <div className="organization-switcher" ref={dropdownRef}>
-      <div className="org-switcher-label">Organisation</div>
-
+    <div className="organization-switcher mt-2" ref={dropdownRef}>
       <div
         className={`org-switcher-trigger ${isOpen ? "open" : ""}`}
         onClick={() => setIsOpen(!isOpen)}
