@@ -33,6 +33,10 @@ const deleteMeeting = (id: any) => {
   return API.delete(`${key}/${id}`);
 };
 
+const updateMeetingTime = (id: any, data: any) => {
+  return API.put(`${key}/${id}`, data);
+};
+
 const intitialFilter = {
   start: moment().startOf("month").format("YYYY-MM-DD"),
   end: moment().endOf("month").format("YYYY-MM-DD"),
@@ -70,6 +74,35 @@ const Meetings = () => {
       },
       onError: (error: AxiosError) => {
         handleApiError(error, history);
+      },
+    }
+  );
+
+  const { mutate: mutateUpdate } = useMutation(
+    ({ id, data }: { id: any; data: any }) => updateMeetingTime(id, data),
+    {
+      onSuccess: (_response, _variables) => {
+        // Remove loading state and add success animation
+        document.querySelectorAll(".fc-event-updating").forEach((el) => {
+          el.classList.remove("fc-event-updating");
+          el.classList.add("fc-event-update-success");
+          // Remove success class after animation
+          setTimeout(() => {
+            el.classList.remove("fc-event-update-success");
+          }, 1000);
+        });
+        queryClient.invalidateQueries(key);
+        showMsgToast("Meeting time updated successfully");
+      },
+      onError: (error: AxiosError) => {
+        // Remove loading state from all events
+        document.querySelectorAll(".fc-event-updating").forEach((el) => {
+          el.classList.remove("fc-event-updating");
+        });
+        handleApiError(error, history);
+        showMsgToast("Failed to update meeting time. Please try again.");
+        // Revert the calendar change on error
+        queryClient.invalidateQueries(key);
       },
     }
   );
@@ -267,26 +300,166 @@ const Meetings = () => {
               eventDurationEditable={true}
               eventStartEditable={true}
               editable={true}
-              eventResize={(info) => {
-                // Handle event resize
-                const updatedMeeting = {
-                  ...info.event.extendedProps,
-                  time_from: dayjs(info.event.start).format("HH:mm"),
-                  time_to: dayjs(info.event.end).format("HH:mm"),
-                };
-                setPrefillData(updatedMeeting);
-                setModalShow(true);
+              // Prevent dragging to invalid times
+              eventAllow={(dropInfo, _draggedEvent) => {
+                // Prevent events from being dragged to span multiple days
+                const start = dayjs(dropInfo.start);
+                const end = dayjs(dropInfo.end);
+                const sameDay =
+                  start.format("YYYY-MM-DD") === end.format("YYYY-MM-DD");
+
+                // Also prevent dragging to past dates
+                const notInPast = start.isAfter(dayjs().subtract(1, "day"));
+
+                return sameDay && notInPast;
               }}
-              eventDrop={(info) => {
-                // Handle event drag and drop
-                const updatedMeeting = {
-                  ...info.event.extendedProps,
+              eventDragStart={(info) => {
+                // Add visual feedback when dragging starts
+                info.el.style.cursor = "grabbing";
+              }}
+              eventDragStop={(info) => {
+                // Reset cursor when dragging stops
+                info.el.style.cursor = "pointer";
+              }}
+              eventResize={(info) => {
+                // Handle event resize - directly update without opening modal
+                const meetingData = info.event.extendedProps;
+
+                // Process guests to ensure they have the correct format
+                const processedGuests = (meetingData.guests || []).map(
+                  (guest: any) => ({
+                    guest_id: guest.guest_id || null,
+                    guest_type: guest.guest_type || null,
+                    guest_name: guest.guest_name || null,
+                    guest_email: guest.guest_email,
+                    guest_phone: guest.guest_phone || null,
+                  })
+                );
+
+                // Prepare update data - ensure we only send what's needed
+                const updateData: any = {
+                  // Times and date from the drag/resize action
                   date: dayjs(info.event.start).format("YYYY-MM-DD"),
                   time_from: dayjs(info.event.start).format("HH:mm"),
                   time_to: dayjs(info.event.end).format("HH:mm"),
                 };
-                setPrefillData(updatedMeeting);
-                setModalShow(true);
+
+                // Only include other fields if they exist
+                if (meetingData.title) updateData.title = meetingData.title;
+                if (meetingData.timezone)
+                  updateData.timezone = meetingData.timezone;
+                if (meetingData.location !== undefined)
+                  updateData.location = meetingData.location;
+                if (meetingData.meet_link !== undefined)
+                  updateData.meet_link = meetingData.meet_link;
+                if (meetingData.description !== undefined)
+                  updateData.description = meetingData.description;
+                if (meetingData.color || meetingData.originalColor) {
+                  updateData.color =
+                    meetingData.color || meetingData.originalColor;
+                }
+                if (meetingData.reminder_before_minutes !== undefined) {
+                  updateData.reminder_before_minutes =
+                    meetingData.reminder_before_minutes;
+                }
+                if (processedGuests.length > 0) {
+                  updateData.guests = processedGuests;
+                }
+
+                // Debug: Log what we're sending
+                console.log(
+                  "Sending update data:",
+                  JSON.stringify(updateData, null, 2)
+                );
+
+                // Show loading state on the event
+                info.el.classList.add("fc-event-updating");
+
+                // Store original position in case we need to revert
+                const revertFunc = info.revert;
+
+                mutateUpdate(
+                  {
+                    id: info.event.id,
+                    data: updateData,
+                  },
+                  {
+                    onError: () => {
+                      // Revert the change on error
+                      if (revertFunc) revertFunc();
+                    },
+                  }
+                );
+              }}
+              eventDrop={(info) => {
+                // Handle event drag and drop - directly update without opening modal
+                const meetingData = info.event.extendedProps;
+
+                // Process guests to ensure they have the correct format
+                const processedGuests = (meetingData.guests || []).map(
+                  (guest: any) => ({
+                    guest_id: guest.guest_id || null,
+                    guest_type: guest.guest_type || null,
+                    guest_name: guest.guest_name || null,
+                    guest_email: guest.guest_email,
+                    guest_phone: guest.guest_phone || null,
+                  })
+                );
+
+                // Prepare update data - ensure we only send what's needed
+                const updateData: any = {
+                  // Times and date from the drag/resize action
+                  date: dayjs(info.event.start).format("YYYY-MM-DD"),
+                  time_from: dayjs(info.event.start).format("HH:mm"),
+                  time_to: dayjs(info.event.end).format("HH:mm"),
+                };
+
+                // Only include other fields if they exist
+                if (meetingData.title) updateData.title = meetingData.title;
+                if (meetingData.timezone)
+                  updateData.timezone = meetingData.timezone;
+                if (meetingData.location !== undefined)
+                  updateData.location = meetingData.location;
+                if (meetingData.meet_link !== undefined)
+                  updateData.meet_link = meetingData.meet_link;
+                if (meetingData.description !== undefined)
+                  updateData.description = meetingData.description;
+                if (meetingData.color || meetingData.originalColor) {
+                  updateData.color =
+                    meetingData.color || meetingData.originalColor;
+                }
+                if (meetingData.reminder_before_minutes !== undefined) {
+                  updateData.reminder_before_minutes =
+                    meetingData.reminder_before_minutes;
+                }
+                if (processedGuests.length > 0) {
+                  updateData.guests = processedGuests;
+                }
+
+                // Debug: Log what we're sending
+                console.log(
+                  "Sending update data:",
+                  JSON.stringify(updateData, null, 2)
+                );
+
+                // Show loading state on the event
+                info.el.classList.add("fc-event-updating");
+
+                // Store original position in case we need to revert
+                const revertFunc = info.revert;
+
+                mutateUpdate(
+                  {
+                    id: info.event.id,
+                    data: updateData,
+                  },
+                  {
+                    onError: () => {
+                      // Revert the change on error
+                      if (revertFunc) revertFunc();
+                    },
+                  }
+                );
               }}
               // Google Calendar-like features
               weekNumbers={true}
