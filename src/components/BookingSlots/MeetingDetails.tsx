@@ -1,5 +1,5 @@
 import dayjs from "dayjs";
-import { Col, Row } from "react-bootstrap";
+import { Col, Row, Badge } from "react-bootstrap";
 import {
   BiAlarm,
   BiEdit,
@@ -102,11 +102,55 @@ const MeetingDetails = ({ meeting, onDelete, onEdit, toggleFlyout }) => {
             )}
 
             {/* Guests */}
-            <div className="mb-2 d-flex gap-10 align-items-center ">
-              <BiGroup />
-              {guests.length > 0
-                ? `${guests.length} guest${guests.length > 1 ? "s" : ""}`
-                : "No guests"}
+            <div className="mb-3">
+              <div className="d-flex gap-10 align-items-center mb-2">
+                <BiGroup />
+                <span className="fw-medium">Guests ({guests.length})</span>
+              </div>
+              {guests.length > 0 ? (
+                <div className="ms-4">
+                  {guests.map((guest, index) => (
+                    <div key={index} className="mb-1">
+                      <div className="d-flex align-items-center">
+                        <small className="text-muted me-2">•</small>
+                        <div>
+                          <div className="fw-medium">
+                            {guest.guest_name || guest.guest_email}
+                          </div>
+                          {guest.guest_name && (
+                            <small className="text-muted">
+                              {guest.guest_email}
+                            </small>
+                          )}
+                          {guest.guest_type && (
+                            <Badge
+                              variant={
+                                guest.guest_type === "lead"
+                                  ? "warning"
+                                  : guest.guest_type === "customer"
+                                  ? "success"
+                                  : "primary"
+                              }
+                              className="ms-2"
+                            >
+                              {guest.guest_type}
+                            </Badge>
+                          )}
+                          {!guest.guest_id && (
+                            <Badge variant="secondary" className="ms-2">
+                              External
+                            </Badge>
+                          )}
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              ) : (
+                <div className="ms-4 text-muted">
+                  <small>No guests added</small>
+                </div>
+              )}
             </div>
 
             {/* Reminder */}

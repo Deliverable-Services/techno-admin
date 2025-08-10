@@ -12,6 +12,7 @@ import dayjs from "dayjs";
 import API from "../../utils/API";
 import { CommonModal } from "../CommonPopup/CommonModal";
 import "./meeting.css";
+import "./calendar-overrides.css";
 import PageHeading from "../../shared-components/PageHeading";
 import { handleApiError } from "../../hooks/handleApiErrors";
 import { AxiosError } from "axios";
@@ -25,9 +26,6 @@ import Flyout from "../../shared-components/Flyout";
 import IsLoading from "../../shared-components/isLoading";
 import MeetingDetails from "./MeetingDetails";
 import CreateUpdateMeeting from "./CreateUpdateMeeting";
-import { primaryColor } from "../../utils/constants";
-
-// dummy event data
 
 const key = "meetings";
 
@@ -42,12 +40,9 @@ const intitialFilter = {
 
 const Meetings = () => {
   const history = useHistory();
-  const [selectedRows, setSelectedRows] = useState([]);
   const [deletePopup, setDeletePopup] = useState(false);
   const [selectedRowId, setSelectedRowId] = useState<string>("");
-  const [formattedDataForCalendar, setFormattedDataForCalendar] =
-    useState(null);
-  const [filter, setFilter] = useState(intitialFilter);
+  const [filter] = useState(intitialFilter);
   const [meetings, setMeetings] = useState([]);
   const [prefillData, setPrefillData] = useState(null);
 
@@ -56,17 +51,14 @@ const Meetings = () => {
   const [selectedMeeting, setSelectedMeeting] = useState(null);
   const { isOpen: showFlyout, openFlyout, closeFlyout } = useFlyout();
 
-  const { data, isLoading, isFetching, error } = useQuery<any>(
-    [key, , filter],
-    {
-      onError: (error: AxiosError) => {
-        handleApiError(error, history);
-      },
-    }
-  );
+  const { data, isLoading } = useQuery<any>([key, filter], {
+    onError: (error: AxiosError) => {
+      handleApiError(error, history);
+    },
+  });
 
   useEffect(() => {
-    if (data) setMeetings(data?.data?.data);
+    if (data) setMeetings(data?.data?.data || data?.data || []);
   }, [data]);
 
   const { mutate: mutateDelete, isLoading: isDeleteLoading } = useMutation(
@@ -87,53 +79,32 @@ const Meetings = () => {
     const start = `${date}T${m.time_from}`;
     const end = `${date}T${m.time_to}`;
 
+    // Convert hex to rgba with 0.2 opacity for background
+    const color = m.color || "#3b82f6";
+    const r = parseInt(color.slice(1, 3), 16);
+    const g = parseInt(color.slice(3, 5), 16);
+    const b = parseInt(color.slice(5, 7), 16);
+    const bgColor = `rgba(${r}, ${g}, ${b}, 0.2)`;
+
     return {
       id: m.id,
       title: m.title || "Meeting",
       start,
       end,
-      backgroundColor: m.color || "#007bff",
+      backgroundColor: bgColor,
+      borderColor: color,
+      textColor: color,
+      classNames: [`event-${m.id}`],
       extendedProps: {
         ...m,
         date,
         time_from: m.time_from,
         time_to: m.time_to,
+        originalColor: color,
+        bgColor: bgColor,
       },
     };
   });
-
-  React.useEffect(() => {
-    const formataData = () => {
-      const events = [];
-      if (isLoading) return;
-      if (!data) return;
-      // formatting data in the calendar accepted form
-      Object.values(data).map((items: Array<any>) => {
-        items?.map((item) => {
-          const event = {
-            id: item.id,
-            from: moment.utc(item.datetime).format("YYYY-MM-DD HH:mm:ss"),
-            to: moment
-              .utc(item.datetime)
-              .add(1, "hour")
-              .format("YYYY-MM-DD HH:mm:ss"),
-            title: `${item.reason} ${moment
-              .utc(item.datetime)
-              .format("HH")}-${moment
-              .utc(item.datetime)
-              .add(1, "hour")
-              .format("HH")} `,
-            color: primaryColor,
-          };
-
-          events.push(event);
-        });
-      });
-      setFormattedDataForCalendar(events);
-    };
-
-    formataData();
-  }, [data, isLoading]);
 
   const _toggleModal = () => {
     setModalShow(!modalShow);
@@ -141,9 +112,8 @@ const Meetings = () => {
   };
 
   const _onCreateClick = () => {
-    // history.push("/booking-slots/create-edit");
+    setPrefillData(null); // Reset prefill data
     setModalShow(true);
-    openFlyout();
   };
 
   const handleCloseFlyout = () => {
@@ -179,13 +149,18 @@ const Meetings = () => {
                 listPlugin,
                 multiMonthPlugin,
               ]}
-              initialView="dayGridMonth"
+              initialView="timeGridWeek"
               multiMonthMaxColumns={1}
               headerToolbar={{
-                left: "prev,next today",
+                left: "prev,today,next",
                 center: "title",
-                right:
-                  "listWeek,multiMonthYear,dayGridMonth,timeGridWeek,timeGridDay",
+                right: "dayGridMonth,timeGridWeek,timeGridDay",
+              }}
+              buttonText={{
+                today: "Today",
+                month: "Month",
+                week: "Week",
+                day: "Day",
               }}
               events={formattedEvents}
               eventContent={renderEventContent}
@@ -197,21 +172,138 @@ const Meetings = () => {
                 setSelectedMeeting(m);
                 openFlyout();
               }}
-              dateClick={(info) => {
-                const clickedDate = info.date;
-                const formattedDate = dayjs(clickedDate).format("YYYY-MM-DD");
-                const formattedTime = dayjs().format("HH:mm");
+              // Enable drag selection
+              selectable={true}
+              selectMirror={true}
+              select={(info) => {
+                // For drag selection in time grid views
+                const start = dayjs(info.start);
+                const end = dayjs(info.end);
 
                 setPrefillData({
-                  date: formattedDate,
-                  time_from: formattedTime,
-                  time_to: dayjs(dayjs()).add(1, "hour").format("HH:mm"),
+                  date: start.format("YYYY-MM-DD"),
+                  time_from: start.format("HH:mm"),
+                  time_to: end.format("HH:mm"),
                 });
 
                 setModalShow(true);
               }}
-              themeSystem="bootstrap"
+              dateClick={(info) => {
+                // Only handle clicks in month view
+                if (info.view.type === "dayGridMonth") {
+                  const clickedDate = info.date;
+                  const formattedDate = dayjs(clickedDate).format("YYYY-MM-DD");
+                  const currentTime = dayjs();
+
+                  setPrefillData({
+                    date: formattedDate,
+                    time_from: currentTime.format("HH:mm"),
+                    time_to: currentTime.add(1, "hour").format("HH:mm"),
+                  });
+
+                  setModalShow(true);
+                }
+              }}
+              unselectAuto={true}
+              selectOverlap={false}
+              dayMaxEvents={3}
+              dayMaxEventRows={3}
+              moreLinkText={(num) => `+${num} more`}
+              moreLinkClick="popover"
+              eventTimeFormat={{
+                hour: "numeric",
+                minute: "2-digit",
+                meridiem: "short",
+              }}
+              slotLabelFormat={{
+                hour: "numeric",
+                minute: "2-digit",
+                meridiem: "short",
+              }}
+              nowIndicator={true}
+              allDaySlot={false}
+              slotMinTime="00:00:00"
+              slotMaxTime="24:00:00"
+              slotDuration="00:30:00"
               height="auto"
+              expandRows={true}
+              eventDidMount={(info) => {
+                // Apply CSS variables for colors
+                const { originalColor, bgColor } = info.event.extendedProps;
+                info.el.style.setProperty(
+                  "--fc-event-border-color",
+                  originalColor
+                );
+                info.el.style.setProperty("--fc-event-bg-color", bgColor);
+                info.el.style.setProperty(
+                  "--fc-event-text-color",
+                  originalColor
+                );
+
+                // Add animation on mount
+                info.el.style.animation = "fadeIn 0.3s ease-in";
+              }}
+              eventMouseEnter={(info) => {
+                // Add hover effect with transition
+                info.el.style.transition =
+                  "all 0.3s cubic-bezier(0.4, 0, 0.2, 1)";
+                info.el.style.transform = "translateY(-2px) scale(1.02)";
+                info.el.style.boxShadow = "0 4px 12px rgba(0, 0, 0, 0.15)";
+                info.el.style.zIndex = "1000";
+              }}
+              eventMouseLeave={(info) => {
+                // Remove hover effect
+                info.el.style.transform = "translateY(0) scale(1)";
+                info.el.style.boxShadow = "none";
+                info.el.style.zIndex = "auto";
+              }}
+              dayHeaderFormat={{
+                weekday: "short",
+                month: "numeric",
+                day: "numeric",
+              }}
+              // Enable event resizing
+              eventResizableFromStart={true}
+              eventDurationEditable={true}
+              eventStartEditable={true}
+              editable={true}
+              eventResize={(info) => {
+                // Handle event resize
+                const updatedMeeting = {
+                  ...info.event.extendedProps,
+                  time_from: dayjs(info.event.start).format("HH:mm"),
+                  time_to: dayjs(info.event.end).format("HH:mm"),
+                };
+                setPrefillData(updatedMeeting);
+                setModalShow(true);
+              }}
+              eventDrop={(info) => {
+                // Handle event drag and drop
+                const updatedMeeting = {
+                  ...info.event.extendedProps,
+                  date: dayjs(info.event.start).format("YYYY-MM-DD"),
+                  time_from: dayjs(info.event.start).format("HH:mm"),
+                  time_to: dayjs(info.event.end).format("HH:mm"),
+                };
+                setPrefillData(updatedMeeting);
+                setModalShow(true);
+              }}
+              // Google Calendar-like features
+              weekNumbers={true}
+              weekNumberFormat={{ week: "narrow" }}
+              businessHours={{
+                daysOfWeek: [1, 2, 3, 4, 5],
+                startTime: "09:00",
+                endTime: "18:00",
+              }}
+              scrollTime={"08:00:00"}
+              aspectRatio={1.8}
+              handleWindowResize={true}
+              windowResizeDelay={100}
+              navLinks={true}
+              navLinkDayClick="timeGridDay"
+              stickyHeaderDates={true}
+              eventMaxStack={3}
             />
           )}
           <CommonModal
@@ -233,7 +325,11 @@ const Meetings = () => {
           >
             <MeetingDetails
               meeting={selectedMeeting}
-              onDelete={mutateDelete}
+              onDelete={(id) => {
+                setSelectedRowId(id);
+                setDeletePopup(true);
+                closeFlyout();
+              }}
               onEdit={(meeting) => {
                 setPrefillData(meeting);
                 setModalShow(true);
@@ -245,20 +341,21 @@ const Meetings = () => {
       </Container>
       <Modal show={deletePopup} onHide={() => setDeletePopup(false)}>
         <Modal.Header closeButton>
-          <Modal.Title>Are you sure?</Modal.Title>
+          <Modal.Title>Delete Meeting</Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          Do you really want to delete this disabled slot? This process cannot
-          be undone
+          Are you sure you want to delete this meeting? This action cannot be
+          undone.
         </Modal.Body>
         <Modal.Footer>
-          <Button variant="bg-light" onClick={() => setDeletePopup(false)}>
-            Close
+          <Button variant="secondary" onClick={() => setDeletePopup(false)}>
+            Cancel
           </Button>
           <Button
             variant="danger"
             onClick={() => {
               mutateDelete(selectedRowId);
+              setDeletePopup(false);
             }}
           >
             {isDeleteLoading ? (
@@ -269,36 +366,50 @@ const Meetings = () => {
           </Button>
         </Modal.Footer>
       </Modal>
-      <Flyout
-        isOpen={showFlyout}
-        onClose={closeFlyout}
-        title={"Create Meetings"}
-        cancelText="Cancel"
-        width="800px"
-      >
-        {/* <SlotCreateUpdateForm /> */}
-      </Flyout>
     </>
   );
 };
 const renderEventContent = (arg) => {
-  const color = arg.event.extendedProps.color || "#555";
+  const { event, view } = arg;
+  const isWeekOrDayView =
+    view.type === "timeGridWeek" || view.type === "timeGridDay";
+
+  // For week/day view, show time and title
+  if (isWeekOrDayView) {
+    return (
+      <div className="fc-event-content-wrapper" style={{ padding: "2px 4px" }}>
+        <div
+          className="fc-event-time"
+          style={{ fontSize: "0.7rem", fontWeight: "600" }}
+        >
+          {dayjs(event.start).format("h:mm A")}
+        </div>
+        <div
+          className="fc-event-title"
+          style={{ fontSize: "0.75rem", fontWeight: "500" }}
+        >
+          {event.title}
+        </div>
+      </div>
+    );
+  }
+
+  // For month view, show abbreviated format
   return (
     <div
+      className="fc-event-content-wrapper"
       style={{
-        width: "100%",
-        backgroundColor: color,
         padding: "2px 6px",
-        borderRadius: "4px",
-        color: "#fff",
         fontSize: "0.75rem",
         overflow: "hidden",
         textOverflow: "ellipsis",
         whiteSpace: "nowrap",
-        cursor: "pointer",
       }}
     >
-      {arg.event.title} {dayjs(arg.event.start).format("HH:mm A")}
+      <span style={{ fontWeight: "500" }}>
+        {dayjs(event.start).format("h:mm A")}
+      </span>{" "}
+      <span>{event.title}</span>
     </div>
   );
 };

@@ -9,6 +9,7 @@ import { showMsgToast } from "../../utils/showMsgToast";
 import { useMutation } from "react-query";
 import { useHistory } from "react-router-dom";
 import { InputField } from "../../shared-components/InputFeild";
+import GuestSelector from "./GuestSelector";
 import dayjs from "dayjs";
 
 const MeetingSchema = Yup.object().shape({
@@ -16,7 +17,22 @@ const MeetingSchema = Yup.object().shape({
   timezone: Yup.string().required("Timezone is required"),
   date: Yup.string().required("Date is required"),
   time_from: Yup.string().required("Start time is required"),
-  time_to: Yup.string().required("End time is required"),
+  time_to: Yup.string()
+    .required("End time is required")
+    .test(
+      "is-after-start",
+      "End time must be after start time",
+      function (value) {
+        const { time_from } = this.parent;
+        if (!time_from || !value) return true;
+
+        // Convert times to comparable format
+        const startTime = dayjs(`2000-01-01 ${time_from}`);
+        const endTime = dayjs(`2000-01-01 ${value}`);
+
+        return endTime.isAfter(startTime);
+      }
+    ),
   location: Yup.string().required("Location is required"),
   meet_link: Yup.string()
     .url("Invalid URL. e.g. https://letsmeetandchat.com")
@@ -26,6 +42,19 @@ const MeetingSchema = Yup.object().shape({
   reminder_before_minutes: Yup.number()
     .min(0, "Must be positive")
     .required("Reminder time is required"),
+  guests: Yup.array()
+    .of(
+      Yup.object().shape({
+        guest_id: Yup.number().nullable(),
+        guest_type: Yup.string().nullable(),
+        guest_name: Yup.string().nullable(),
+        guest_email: Yup.string()
+          .email("Invalid email")
+          .required("Email is required"),
+        guest_phone: Yup.string().nullable(),
+      })
+    )
+    .nullable(),
 });
 
 const getRandomColor = () => {
@@ -39,11 +68,27 @@ const getRandomColor = () => {
 
 const key = "meetings";
 
+const processGuestsForAPI = (guests: any[]) => {
+  return guests.map((guest) => ({
+    guest_id: guest.guest_id || null,
+    guest_type: guest.guest_type || null,
+    guest_name: guest.guest_name || null,
+    guest_email: guest.guest_email,
+    guest_phone: guest.guest_phone || null,
+  }));
+};
+
 const scheduleMeeting = ({ formdata, id }: { formdata: any; id: any }) => {
+  // Process guests data for API
+  const processedData = {
+    ...formdata,
+    guests: formdata.guests ? processGuestsForAPI(formdata.guests) : [],
+  };
+
   if (id) {
-    return API.put(`${key}/${id}`, formdata);
+    return API.put(`${key}/${id}`, processedData);
   }
-  return API.post(`${key}`, formdata);
+  return API.post(`${key}`, processedData);
 };
 
 const CreateUpdateMeeting = ({ _toggleModal, prefillData }) => {
@@ -52,7 +97,11 @@ const CreateUpdateMeeting = ({ _toggleModal, prefillData }) => {
     onSuccess: () => {
       setTimeout(() => queryClient.invalidateQueries(key), 500);
       _toggleModal();
-      showMsgToast("Slot has been  disabled successfully");
+      showMsgToast(
+        isEditMode
+          ? "Meeting updated successfully"
+          : "Meeting created successfully"
+      );
     },
     onError: (error: AxiosError) => {
       handleApiError(error, history);
@@ -60,6 +109,23 @@ const CreateUpdateMeeting = ({ _toggleModal, prefillData }) => {
   });
 
   const isEditMode = !!prefillData?.id;
+
+  // Process guests from prefillData for the form
+  const processGuestsFromAPI = (guests: any[]) => {
+    if (!guests || !Array.isArray(guests)) return [];
+
+    return guests.map((guest) => ({
+      guest_id: guest.guest_id,
+      guest_type: guest.guest_type,
+      guest_name: guest.guest_name,
+      guest_email: guest.guest_email,
+      guest_phone: guest.guest_phone,
+      display_text: guest.guest_name
+        ? `${guest.guest_name} (${guest.guest_email})`
+        : guest.guest_email,
+      isExternal: !guest.guest_id,
+    }));
+  };
 
   const initialValues = {
     title: prefillData?.title || "",
@@ -72,9 +138,6 @@ const CreateUpdateMeeting = ({ _toggleModal, prefillData }) => {
     time_to: isEditMode
       ? dayjs(prefillData?.time_to).format("HH:mm")
       : prefillData?.time_to || dayjs().add(1, "hour").format("HH:mm"),
-    // date: prefillData?.date || dayjs().format("YYYY-MM-DD"),
-    // time_from: prefillData?.time_from || dayjs().format("HH:mm"),
-    // time_to: prefillData?.time_to || dayjs().add(1, "hour").format("HH:mm"),
     timezone: prefillData?.timezone || "Asia/Calcutta",
     location: prefillData?.location || "",
     meet_link: prefillData?.meet_link || "",
@@ -83,6 +146,7 @@ const CreateUpdateMeeting = ({ _toggleModal, prefillData }) => {
     reminder_before_minutes: prefillData?.reminder_before_minutes || 10,
     created_by_id: prefillData?.created_by_id || 1,
     created_by_type: prefillData?.created_by_type || "admin",
+    guests: processGuestsFromAPI(prefillData?.guests || []),
   };
 
   return (
@@ -101,14 +165,6 @@ const CreateUpdateMeeting = ({ _toggleModal, prefillData }) => {
           }}
         >
           {({ values, handleChange, setFieldValue, errors }) => {
-            const today = dayjs().format("YYYY-MM-DD");
-            const now = dayjs();
-
-            const isToday = values.date === today;
-            const currentTime = now.format("HH:mm");
-            const minStartTime = isToday ? currentTime : "00:00";
-            const minEndTime = values.time_from || minStartTime;
-
             return (
               <Form className="space-y-4 max-w-lg">
                 <div className="form-container  py-2 ">
@@ -134,7 +190,6 @@ const CreateUpdateMeeting = ({ _toggleModal, prefillData }) => {
                     placeholder="Start"
                     label="Start From"
                     value={values.time_from}
-                    min={minStartTime}
                     onChange={handleChange}
                     error={errors.time_from as string}
                     type="time"
@@ -146,7 +201,6 @@ const CreateUpdateMeeting = ({ _toggleModal, prefillData }) => {
                     label="To"
                     type="time"
                     value={values.time_to}
-                    min={minEndTime}
                     onChange={handleChange}
                     error={errors.time_to as string}
                     required
@@ -192,6 +246,15 @@ const CreateUpdateMeeting = ({ _toggleModal, prefillData }) => {
                     type="number"
                     required
                   />
+
+                  {/* Guest Selection */}
+                  <div className="mb-3">
+                    <GuestSelector
+                      guests={values.guests || []}
+                      onChange={(guests) => setFieldValue("guests", guests)}
+                      error={errors.guests as string}
+                    />
+                  </div>
                 </div>
 
                 <Row className="d-flex justify-content-start mt-2">

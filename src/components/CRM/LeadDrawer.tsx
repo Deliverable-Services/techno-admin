@@ -28,10 +28,12 @@ import {
   FaTruckMoving,
   FaCheckCircle,
   FaCreditCard,
+  FaUser,
+  FaUserPlus,
 } from "react-icons/fa";
 import { BsDiamond, BsDiamondHalf } from "react-icons/bs";
 
-import { Dropdown, Button, Form } from "react-bootstrap";
+import { Dropdown, Button, Form, Card, Badge } from "react-bootstrap";
 // Using Dropdown for assignee as well
 import { queryClient } from "../../utils/queryClient";
 
@@ -50,6 +52,10 @@ const LeadDrawer: React.FC<Props> = ({ lead, onClose }) => {
   const [editingCommentId, setEditingCommentId] = useState<string | null>(null);
   const [editCommentText, setEditCommentText] = useState<string>("");
   const [activityLogs, setActivityLogs] = useState<any[]>([]);
+  const [invoices, setInvoices] = useState<any[]>([]);
+  const [tickets, setTickets] = useState<any[]>([]);
+  const [meetings, setMeetings] = useState<any[]>([]);
+  const [isConverting, setIsConverting] = useState(false);
   // Separate tabs state to avoid cross-interference
   const [leftTab, setLeftTab] = useState<"about" | "address">("about");
   const [midTab, setMidTab] = useState<"overview" | "activities">("overview");
@@ -72,6 +78,7 @@ const LeadDrawer: React.FC<Props> = ({ lead, onClose }) => {
     relationship: "Partner",
     instagram: "@jacobsss",
     tiktok: "@jacobshoe",
+    user_id: lead?.user_id || null,
   });
 
   const [leadStatus, setLeadStatus] = useState(lead?.status || "NEW");
@@ -149,6 +156,7 @@ const LeadDrawer: React.FC<Props> = ({ lead, onClose }) => {
       jobTitle: d?.job_title ?? prev.jobTitle,
       company: d?.company ?? prev.company,
       gender: d?.gender ? String(d.gender).toLowerCase() : prev.gender,
+      user_id: d?.user_id ?? prev.user_id,
     }));
     setLeadStatus((prev) => d?.status ?? prev);
     setAssignedMember(d?.assignee ?? d?.assigned_member ?? null);
@@ -161,6 +169,36 @@ const LeadDrawer: React.FC<Props> = ({ lead, onClose }) => {
     },
     onSuccess: (data) => {
       setActivityLogs(data);
+    },
+  });
+
+  // Fetch invoices
+  useQuery<any>([`${key}/${lead.id}/invoices`], {
+    onError: (error: AxiosError) => {
+      console.error("Error fetching invoices:", error);
+    },
+    onSuccess: (data) => {
+      setInvoices(data);
+    },
+  });
+
+  // Fetch tickets
+  useQuery<any>([`${key}/${lead.id}/tickets`], {
+    onError: (error: AxiosError) => {
+      console.error("Error fetching tickets:", error);
+    },
+    onSuccess: (data) => {
+      setTickets(data);
+    },
+  });
+
+  // Fetch meetings
+  useQuery<any>([`${key}/${lead.id}/meetings`], {
+    onError: (error: AxiosError) => {
+      console.error("Error fetching meetings:", error);
+    },
+    onSuccess: (data) => {
+      setMeetings(data);
     },
   });
 
@@ -384,32 +422,72 @@ const LeadDrawer: React.FC<Props> = ({ lead, onClose }) => {
   // const currentStatus =
   //   statusOptions.find((s) => s.value === leadStatus) || statusOptions[0];
 
-  const relatedDeals = [
-    {
-      id: 1,
-      name: "Web3 Landing Page",
-      amount: "$5,000",
-      closeDate: "June 20, 2024",
-      status: "Contract Signed",
-      statusClass: "contract-signed",
-    },
-    {
-      id: 2,
-      name: "CRM Product",
-      amount: "$16,000",
-      closeDate: "June 24, 2024",
-      status: "Contract Sent",
-      statusClass: "contract-sent",
-    },
-    {
-      id: 3,
-      name: "Property Website",
-      amount: "$10,000",
-      closeDate: "June 28, 2024",
-      status: "Contract Sent",
-      statusClass: "contract-sent",
-    },
-  ];
+  const getStatusBadgeVariant = (status: string) => {
+    switch (status.toLowerCase()) {
+      case "paid":
+        return "success";
+      case "pending":
+        return "warning";
+      case "overdue":
+        return "danger";
+      case "active":
+        return "primary";
+      case "closed":
+        return "secondary";
+      case "approved":
+        return "success";
+      case "declined":
+        return "danger";
+      default:
+        return "secondary";
+    }
+  };
+
+  const handleInvoiceClick = (invoiceId: number) => {
+    history.push(`/invoices/${invoiceId}`);
+  };
+
+  const handleTicketClick = (ticketId: number) => {
+    history.push(`/tickets/${ticketId}`);
+  };
+
+  const handleMeetingClick = (meetingId: number) => {
+    history.push(`/meetings/${meetingId}`);
+  };
+
+  const handleConvertToCustomer = async () => {
+    try {
+      setIsConverting(true);
+      const response = await API.post(`${key}/${lead.id}/convert-to-customer`);
+
+      showMsgToast("Lead successfully converted to customer!");
+
+      // Show the temporary password to the user
+      if (response.data.temporary_password) {
+        alert(
+          `Customer account created successfully!\n\nTemporary Password: ${response.data.temporary_password}\n\nPlease share this password with the customer securely.`
+        );
+      }
+
+      // Refresh the lead data
+      queryClient.invalidateQueries([`${key}/${lead.id}`]);
+      queryClient.invalidateQueries([key]);
+    } catch (error: any) {
+      if (error.response?.status === 400) {
+        showMsgToast(error.response.data.message);
+      } else {
+        handleApiError(error, history);
+      }
+    } finally {
+      setIsConverting(false);
+    }
+  };
+
+  const handleViewCustomer = () => {
+    if (details.user_id) {
+      history.push(`/users/${details.user_id}`);
+    }
+  };
 
   return (
     <>
@@ -476,6 +554,43 @@ const LeadDrawer: React.FC<Props> = ({ lead, onClose }) => {
                 </button>
               </div>
 
+              {/* Convert to Customer / View Customer Button */}
+              <div className="mb-3 mt-3">
+                {details.user_id ? (
+                  <Button
+                    variant="info"
+                    className="w-100"
+                    onClick={handleViewCustomer}
+                  >
+                    <FaUser className="me-2" />
+                    View Customer Profile
+                  </Button>
+                ) : (
+                  <Button
+                    variant="success"
+                    className="w-100"
+                    onClick={handleConvertToCustomer}
+                    disabled={isConverting}
+                  >
+                    {isConverting ? (
+                      <>
+                        <div
+                          className="spinner-border spinner-border-sm me-2"
+                          role="status"
+                        >
+                          <span className="visually-hidden">Loading...</span>
+                        </div>
+                        Converting...
+                      </>
+                    ) : (
+                      <>
+                        <FaUserPlus className="me-2" />
+                        Convert to Customer
+                      </>
+                    )}
+                  </Button>
+                )}
+              </div>
               {/* Status Updater - full width with icon */}
               <div className="mb-3 mt-3 d-flex align-items-center gap-4">
                 <span>Status: </span>
@@ -1254,43 +1369,172 @@ const LeadDrawer: React.FC<Props> = ({ lead, onClose }) => {
           {/* Right Panel - Related Entities */}
           <div className="crm-right-panel">
             <div className="panel-content">
-              {/* Invoices / Subscriptions */}
-              <div className="entity-section">
-                <h6>
-                  <FaFileInvoiceDollar className="icon" />
-                  Deals ({relatedDeals.length})
+              {/* Invoices Section */}
+              <div className="entity-section mb-4">
+                <h6 className="d-flex align-items-center gap-2 mb-3">
+                  <FaFileInvoiceDollar className="text-primary" />
+                  <span>Invoices ({invoices.length})</span>
                 </h6>
-                {relatedDeals.map((deal) => (
-                  <div key={deal.id} className="entity-item">
-                    <div className="entity-info">
-                      <div className="entity-name">{deal.name}</div>
-                      <div className="entity-details">
-                        <div className="entity-detail">
-                          <FaFileInvoiceDollar className="icon" />
-                          {deal.amount}
-                        </div>
-                        <div className="entity-detail">
-                          <FaCalendarAlt className="icon" />
-                          {deal.closeDate}
-                        </div>
-                        <div className="entity-detail">
-                          <span className={`status-badge ${deal.statusClass}`}>
-                            {deal.status}
-                          </span>
-                        </div>
-                      </div>
-                    </div>
+                {invoices.length === 0 ? (
+                  <div className="text-muted small">No invoices found</div>
+                ) : (
+                  <div className="entity-list">
+                    {invoices.map((invoice) => (
+                      <Card
+                        key={invoice.id}
+                        className="entity-card mb-2 cursor-pointer"
+                        onClick={() => handleInvoiceClick(invoice.id)}
+                      >
+                        <Card.Body className="p-3">
+                          <div className="d-flex justify-content-between align-items-start mb-2">
+                            <div>
+                              <h6 className="mb-1">
+                                #{invoice.invoice_number}
+                              </h6>
+                              <p className="mb-1 text-muted small">
+                                {invoice.description}
+                              </p>
+                            </div>
+                            <Badge
+                              variant={getStatusBadgeVariant(invoice.status)}
+                            >
+                              {invoice.status}
+                            </Badge>
+                          </div>
+                          <div className="d-flex justify-content-between align-items-center">
+                            <span className="fw-bold text-success">
+                              {invoice.formatted_total}
+                            </span>
+                            <span className="text-muted small">
+                              {invoice.invoice_date &&
+                                new Date(
+                                  invoice.invoice_date
+                                ).toLocaleDateString()}
+                            </span>
+                          </div>
+                          <div className="text-muted small mt-1">
+                            {invoice.items_count} item(s)
+                          </div>
+                        </Card.Body>
+                      </Card>
+                    ))}
                   </div>
-                ))}
+                )}
               </div>
 
-              {/* Tickets */}
-              <div className="entity-section">
-                <h6>
-                  <FaComments className="icon" />
-                  Tickets (2)
+              {/* Support Tickets Section */}
+              <div className="entity-section mb-4">
+                <h6 className="d-flex align-items-center gap-2 mb-3">
+                  <FaComments className="text-info" />
+                  <span>Support Tickets ({tickets.length})</span>
                 </h6>
-                <div className="text-muted small">No tickets found</div>
+                {tickets.length === 0 ? (
+                  <div className="text-muted small">
+                    No support tickets found
+                  </div>
+                ) : (
+                  <div className="entity-list">
+                    {tickets.map((ticket) => (
+                      <Card
+                        key={ticket.id}
+                        className="entity-card mb-2 cursor-pointer"
+                        onClick={() => handleTicketClick(ticket.id)}
+                      >
+                        <Card.Body className="p-3">
+                          <div className="d-flex justify-content-between align-items-start mb-2">
+                            <div>
+                              <h6 className="mb-1">{ticket.title}</h6>
+                              <p className="mb-1 text-muted small">
+                                #{ticket.ref_id}
+                              </p>
+                            </div>
+                            <Badge
+                              variant={getStatusBadgeVariant(ticket.status)}
+                            >
+                              {ticket.status}
+                            </Badge>
+                          </div>
+                          <div className="d-flex justify-content-between align-items-center">
+                            <span className="text-muted small">
+                              {ticket.messages_count} message(s)
+                            </span>
+                            <span className="text-muted small">
+                              {ticket.last_message_at &&
+                                new Date(
+                                  ticket.last_message_at
+                                ).toLocaleDateString()}
+                            </span>
+                          </div>
+                          {ticket.related_to && (
+                            <div className="text-muted small mt-1">
+                              Related to: {ticket.related_to}
+                            </div>
+                          )}
+                        </Card.Body>
+                      </Card>
+                    ))}
+                  </div>
+                )}
+              </div>
+
+              {/* Meetings Section */}
+              <div className="entity-section mb-4">
+                <h6 className="d-flex align-items-center gap-2 mb-3">
+                  <FaCalendarAlt className="text-warning" />
+                  <span>Meetings ({meetings.length})</span>
+                </h6>
+                {meetings.length === 0 ? (
+                  <div className="text-muted small">No meetings found</div>
+                ) : (
+                  <div className="entity-list">
+                    {meetings.map((meeting) => (
+                      <Card
+                        key={meeting.id}
+                        className="entity-card mb-2 cursor-pointer"
+                        onClick={() => handleMeetingClick(meeting.id)}
+                      >
+                        <Card.Body className="p-3">
+                          <div className="d-flex justify-content-between align-items-start mb-2">
+                            <div>
+                              <h6 className="mb-1">{meeting.title}</h6>
+                              <p className="mb-1 text-muted small">
+                                {meeting.formatted_datetime}
+                              </p>
+                            </div>
+                            <Badge
+                              variant={getStatusBadgeVariant(meeting.status)}
+                            >
+                              {meeting.status}
+                            </Badge>
+                          </div>
+                          {meeting.location && (
+                            <div className="d-flex align-items-center gap-1 mb-1">
+                              <MdLocationOn className="text-muted" size={14} />
+                              <span className="text-muted small">
+                                {meeting.location}
+                              </span>
+                            </div>
+                          )}
+                          {meeting.meet_link && (
+                            <div className="text-muted small mb-1">
+                              <a
+                                href={meeting.meet_link}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="text-decoration-none"
+                              >
+                                Join Meeting
+                              </a>
+                            </div>
+                          )}
+                          <div className="text-muted small">
+                            {meeting.guests_count} guest(s)
+                          </div>
+                        </Card.Body>
+                      </Card>
+                    ))}
+                  </div>
+                )}
               </div>
             </div>
           </div>

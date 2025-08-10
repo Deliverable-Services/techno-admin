@@ -372,6 +372,65 @@
   word-break: break-word;
 }
 
+/* Right Panel Accordion Styles */
+.entity-card {
+  border: 1px solid #e5e7eb;
+  transition: all 0.2s ease;
+}
+
+.entity-card:hover {
+  border-color: #667eea;
+  box-shadow: 0 2px 8px rgba(102, 126, 234, 0.1);
+  transform: translateY(-1px);
+}
+
+.cursor-pointer {
+  cursor: pointer;
+}
+
+.entity-list {
+  max-height: 300px;
+  overflow-y: auto;
+}
+
+.accordion-button {
+  font-weight: 600;
+  color: #374151;
+}
+
+.accordion-button:not(.collapsed) {
+  color: #667eea;
+  background-color: #f8fafc;
+}
+
+.accordion-item {
+  border-color: #e5e7eb;
+}
+
+.accordion-body {
+  padding: 1rem;
+}
+
+/* Entity Section Styles */
+.entity-section {
+  border-bottom: 1px solid #e5e7eb;
+  padding-bottom: 1.5rem;
+}
+
+.entity-section:last-child {
+  border-bottom: none;
+}
+
+.entity-section h6 {
+  color: #374151;
+  font-weight: 600;
+  margin-bottom: 1rem;
+}
+
+.fw-bold {
+  font-weight: 700 !important;
+}
+
 .note-input {
   width: 100%;
   border: none;
