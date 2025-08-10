@@ -1,7 +1,7 @@
 import React from "react";
 import { Card, Badge, Button } from "react-bootstrap";
 import { useHistory } from "react-router-dom";
-import { useGoogleBusinessIntegration } from "../../hooks/useGoogleBusinessIntegration";
+import { useGoogleBusinessIntegration } from "./useGoogleBusinessIntegration";
 import useUserProfileStore from "../../hooks/useUserProfileStore";
 
 const IntegrationsWidget: React.FC = () => {

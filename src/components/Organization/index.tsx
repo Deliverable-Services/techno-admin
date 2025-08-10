@@ -5,7 +5,6 @@ import OrganizationTab from "./OrganisationTab";
 import AppearanceTab from "./AppearanceTab";
 import WebsiteTab from "./WebsiteTab";
 import PlatformTab from "./PlatformTab";
-import IntegrationsTab from "./IntegrationTab";
 import CustomConfigTab from "./CustomConfigTab";
 import DomainTab from "./DomainTab";
 import PageHeading from "../../shared-components/PageHeading";
@@ -63,7 +62,6 @@ const Organization: React.FC = () => {
           {activeTab === "website" && <WebsiteTab />}
           {activeTab === "platform" && <PlatformTab />}
           {activeTab === "configurations" && <CustomConfigTab />}
-          {activeTab === "integrations" && <IntegrationsTab />}
         </div>
       </div>
     </>

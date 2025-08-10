@@ -30,8 +30,8 @@ import { BsClock, BsShieldLock } from "react-icons/bs";
 import { GrOrganization } from "react-icons/gr";
 
 import { IsDesktopContext } from "../context/IsDesktopContext";
-import { useGoogleBusinessConnection } from "../hooks/useGoogleBusinessConnection";
-import { useGoogleAnalyticsConnection } from "../hooks/useGoogleAnalyticsConnection";
+import { useGoogleBusinessConnection } from "./Integrations/useGoogleBusinessConnection";
+import { useGoogleAnalyticsConnection } from "./Integrations/useGoogleAnalyticsConnection";
 import { useOrganisation } from "../context/OrganisationContext";
 
 import { INavBar, INavLink } from "../types/interface";
@@ -253,6 +253,12 @@ const organisationLinks: Array<INavLink> = [
 ];
 
 const googleLinks: Array<INavLink> = [
+  {
+    title: "Integrations",
+    path: "/enable-integrations",
+    permissionReq: "read_notification",
+    icon: <IoMdAnalytics />,
+  },
   {
     title: "Google Analytics",
     path: "/google-analytics",

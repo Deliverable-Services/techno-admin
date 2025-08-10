@@ -26,10 +26,10 @@ import googleAnalyticsService, {
   GoogleAnalyticsReport,
   GoogleAnalyticsRealTimeData,
   GoogleAnalyticsAudienceData,
-} from "../../services/googleAnalyticsService";
-import { useOrganisation } from "../../context/OrganisationContext";
-import { showMsgToast } from "../../utils/showMsgToast";
-import "./google-analytics.css";
+} from "../../../services/googleAnalyticsService";
+import { useOrganisation } from "../../../context/OrganisationContext";
+import { showMsgToast } from "../../../utils/showMsgToast";
+// import "./google-analytics.css";
 import { FaExternalLinkAlt, FaSync } from "react-icons/fa";
 import { AiOutlineDisconnect } from "react-icons/ai";
 
@@ -503,7 +503,7 @@ const GoogleAnalytics = () => {
       .map((item, index) => ({
         name:
           ["18-24", "25-34", "35-44", "45-54", "55-64", "65+", "13-17"][
-          index
+            index
           ] || `Group ${index + 1}`,
         value: item.value,
       }));
@@ -730,8 +730,9 @@ const GoogleAnalytics = () => {
                   {item.label}
                 </small>
                 <div
-                  className={`mt-2 weight-600 small ${item.change.includes("-") ? "text-danger" : "text-green"
-                    }`}
+                  className={`mt-2 weight-600 small ${
+                    item.change.includes("-") ? "text-danger" : "text-green"
+                  }`}
                 >
                   {item.change}
                 </div>

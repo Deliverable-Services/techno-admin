@@ -64,7 +64,6 @@ import CMS from "./components/CMS";
 import CRMBoard from "./components/CRM/CRMBoard";
 import organization from "./components/Organization";
 import InvoicePage from "./components/Invoices";
-import GoogleBusinessDashboard from "./components/GoogleBusiness";
 import { useOrganisation } from "./context/OrganisationContext";
 import DynamicPageCreateUpdateForm from "./components/DynamicPages/DynamicPageCreateUpdateForm";
 import ViewWebsite from "./components/DynamicPages/ViewWebsite";
@@ -72,10 +71,14 @@ import WebsitePages from "./components/WebsitePages";
 import { BottomNavigation } from "./components/BottomNavigation/BottomNavigation";
 import { MoreScreen } from "./components/MoreScreen/MoreScreen";
 import useUserProfileStore from "./hooks/useUserProfileStore";
-import GoogleAnalytics from "./components/Google-analytics";
 import SubscriptionPage from "./components/Subscription";
 import UsersCreateEdit from "./components/Users/UsersCreateEdit";
 import StaticPageCreateForm from "./components/StaticPages/StaticPageCreateUpdateForm";
+import {
+  IntegrationsPage,
+  GoogleAnalytics,
+  GoogleBusinessDashboard,
+} from "./components/Integrations";
 
 const App = () => {
   const [isDesktop, setIsDesktop] = useState<boolean>(false);
@@ -285,6 +288,12 @@ const App = () => {
                 path="/organization"
                 exact
                 component={organization}
+                permissionReq="read_config"
+              />
+              <PrivateRoute
+                path="/enable-integrations"
+                exact
+                component={IntegrationsPage}
                 permissionReq="read_config"
               />
               <PrivateRoute

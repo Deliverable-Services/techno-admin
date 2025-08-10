@@ -1,6 +1,6 @@
 import { useQuery } from "react-query";
-import fivetranService from "../services/fivetranService";
-import useUserProfileStore from "./useUserProfileStore";
+import fivetranService from "../../services/fivetranService";
+import useUserProfileStore from "../../hooks/useUserProfileStore";
 
 export const useGoogleBusinessConnection = () => {
   const loggedInUser = useUserProfileStore((state) => state.user);

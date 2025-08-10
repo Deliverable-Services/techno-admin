@@ -14,11 +14,11 @@ import { useQuery, useMutation, useQueryClient } from "react-query";
 import googleBusinessService, {
   BusinessReview,
   ReviewReplyRequest,
-} from "../../services/googleBusinessService";
-import IsLoading from "../../shared-components/isLoading";
+} from "../../../services/googleBusinessService";
+import IsLoading from "../../../shared-components/isLoading";
 import moment from "moment";
-import { showMsgToast } from "../../utils/showMsgToast";
-import { showErrorToast } from "../../utils/showErrorToast";
+import { showMsgToast } from "../../../utils/showMsgToast";
+import { showErrorToast } from "../../../utils/showErrorToast";
 
 interface ReviewsTabProps {
   organisationId?: number;
@@ -234,7 +234,9 @@ const ReviewsTab: React.FC<ReviewsTabProps> = ({ organisationId }) => {
                             <span className="me-2">
                               {renderStars(review.rating)}
                             </span>
-                            <Badge variant={getReviewBadgeVariant(review.rating)}>
+                            <Badge
+                              variant={getReviewBadgeVariant(review.rating)}
+                            >
                               {review.rating}/5
                             </Badge>
                           </div>

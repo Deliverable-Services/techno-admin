@@ -1,6 +1,6 @@
 import React from "react";
 import { Card, Button, Badge, Spinner, Alert, Row, Col } from "react-bootstrap";
-import { useGoogleBusinessIntegration } from "../../hooks/useGoogleBusinessIntegration";
+import { useGoogleBusinessIntegration } from "./useGoogleBusinessIntegration";
 import moment from "moment";
 import IsLoading from "../../shared-components/isLoading";
 
@@ -75,10 +75,10 @@ const GoogleBusinessProfile: React.FC<GoogleBusinessProfileProps> = ({
       latestSync.status === "completed"
         ? "Sync: Success"
         : latestSync.status === "failed"
-          ? "Sync: Failed"
-          : latestSync.status === "running"
-            ? "Syncing..."
-            : `Sync: ${latestSync.status}`;
+        ? "Sync: Failed"
+        : latestSync.status === "running"
+        ? "Syncing..."
+        : `Sync: ${latestSync.status}`;
 
     return <Badge variant={variant}>{label}</Badge>;
   };

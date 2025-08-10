@@ -1,14 +1,13 @@
 import React from "react";
 import { useQuery } from "react-query";
-import googleAnalyticsService from "../services/googleAnalyticsService";
-import useUserProfileStore from "./useUserProfileStore";
+import googleAnalyticsService from "../../services/googleAnalyticsService";
+import useUserProfileStore from "../../hooks/useUserProfileStore";
 
 export const useGoogleAnalyticsConnection = () => {
   const loggedInUser = useUserProfileStore((state) => state.user);
 
   // Try multiple ways to get organisation ID for compatibility
-  const organisationId =
-    loggedInUser?.organisations?.[0]?.id;
+  const organisationId = loggedInUser?.organisations?.[0]?.id;
 
   const {
     data: status,
