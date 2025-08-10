@@ -1,15 +1,10 @@
 import React from "react";
 import { useDrop } from "react-dnd";
-import {
-  BiArrowFromBottom,
-  BiArrowFromTop,
-  BiCopy,
-  BiTrash,
-} from "react-icons/bi";
 import API from "../../utils/API";
 import { showMsgToast } from "../../utils/showMsgToast";
 import { handleApiError } from "../../hooks/handleApiErrors";
 import { useHistory } from "react-router-dom";
+import { Hammer } from "../ui/icon";
 
 const PageCanvas = ({
   sections,
@@ -99,7 +94,7 @@ const PageCanvas = ({
                       onClick={() => onMoveUp(idx)}
                       disabled={idx === 0} // Disable for first section
                     >
-                      <BiArrowFromBottom size={18} />
+                      <Hammer size={18} />
                     </button>
                     <button
                       className={`bg-white border p-1 rounded-lg ${
@@ -108,19 +103,19 @@ const PageCanvas = ({
                       onClick={() => onMoveDown(idx)}
                       disabled={idx === sections.length - 1} // Disable for last section
                     >
-                      <BiArrowFromTop size={18} />
+                      <Hammer size={18} />
                     </button>
                     <button
                       className="bg-white border p-1 rounded-lg"
                       onClick={() => onCopy(section?.id)}
                     >
-                      <BiCopy size={18} />
+                      <Hammer size={18} />
                     </button>
                     <button
                       className="bg-white border p-1 rounded-lg"
                       onClick={() => onDelete(section?.id)}
                     >
-                      <BiTrash size={18} />
+                      <Hammer size={18} />
                     </button>
                   </div>
                 </div>

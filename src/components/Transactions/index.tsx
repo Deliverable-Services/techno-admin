@@ -1,6 +1,5 @@
 import { useMemo, useState } from "react";
 import { Button, Container, Nav, Dropdown } from "react-bootstrap";
-import { BiSad } from "react-icons/bi";
 import { useHistory } from "react-router-dom";
 import { Cell } from "react-table";
 import useTransactionStoreFilter, {
@@ -17,9 +16,8 @@ import { areTwoObjEqual } from "../../utils/areTwoObjEqual";
 import { PaymentMethods } from "../../utils/arrays";
 import { primaryColor } from "../../utils/constants";
 import { showErrorToast } from "../../utils/showErrorToast";
-import { BsFunnel } from "react-icons/bs";
-import { FaMoneyCheck } from "react-icons/fa";
 import { useQuery } from "react-query";
+import { Hammer } from "../ui/icon";
 
 const key = "transactions";
 
@@ -155,7 +153,7 @@ const Transactions = () => {
     <>
       <div className="view-padding">
         <PageHeading
-          icon={<FaMoneyCheck size={24} />}
+          icon={<Hammer size={24} />}
           title="Transactions"
           description="Track all your payments at once glance"
         />
@@ -174,7 +172,7 @@ const Transactions = () => {
                 className="d-flex justify-content-center display-3"
               >
                 <div className="d-flex flex-column align-items-center">
-                  <BiSad color={primaryColor} />
+                  <Hammer color={primaryColor} />
                   <span className="text-primary display-3">
                     Something went wrong
                   </span>
@@ -232,7 +230,7 @@ const Transactions = () => {
                 filters={
                   <Dropdown className="search-filters-div filter-dropdown mr-2">
                     <Dropdown.Toggle as={Button} variant="primary">
-                      <BsFunnel className="mr-2" />
+                      <Hammer className="mr-2" />
                       Filters
                     </Dropdown.Toggle>
                     <Dropdown.Menu>

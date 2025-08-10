@@ -2,7 +2,6 @@ import { AxiosError } from "axios";
 import { useMemo, useState, useCallback } from "react";
 import { Container, Row } from "../../components/ui/grid";
 import { Button } from "../../components/ui/button";
-import { BiSad } from "react-icons/bi";
 import { useMutation, useQuery } from "react-query";
 import { useHistory } from "react-router-dom";
 import { Cell } from "react-table";
@@ -19,10 +18,10 @@ import { config, primaryColor } from "../../utils/constants";
 import { queryClient } from "../../utils/queryClient";
 import { showErrorToast } from "../../utils/showErrorToast";
 import { showMsgToast } from "../../utils/showMsgToast";
-import { FaDiceFour } from "react-icons/fa";
 import { useFlyout } from "../../hooks/useFlyout";
 import Flyout from "../../shared-components/Flyout";
 import CategoriesCreateUpdateForm from "./CategoriesCreateUpdateForm";
+import { Hammer } from "../ui/icon";
 
 const key = "categories";
 
@@ -182,7 +181,7 @@ const Categories = () => {
     return (
       <Container fluid className="d-flex justify-content-center display-3">
         <div className="d-flex flex-column align-items-center">
-          <BiSad color={primaryColor} />
+          <Hammer color={primaryColor} />
           <span className="text-primary display-3">Something went wrong</span>
         </div>
       </Container>
@@ -193,7 +192,7 @@ const Categories = () => {
     <>
       <div className="view-padding">
         <PageHeading
-          icon={<FaDiceFour size={24} />}
+          icon={<Hammer size={24} />}
           description="Create and manage categories"
           title="Categories"
           onClick={_onCreateClick}

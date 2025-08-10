@@ -3,12 +3,6 @@ import { DragDropContext, Draggable, Droppable } from "react-beautiful-dnd";
 import { Container } from "../components/ui/grid";
 import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
-import { AiOutlineSearch } from "react-icons/ai";
-import { MdFilterList, MdRefresh } from "react-icons/md";
-import { FaDatabase, FaSearch } from "react-icons/fa";
-import { IoMdArrowDropdown, IoMdArrowDropup } from "react-icons/io";
-import { BsLayoutTextSidebar } from "react-icons/bs";
-// import Checkbox from 'react-checkbox-component'
 import {
   TableState,
   useFilters,
@@ -22,7 +16,7 @@ import { primaryColor } from "../utils/constants";
 import { useContext } from "react";
 import { IsDesktopContext } from "../context/IsDesktopContext";
 import useUserProfileStore from "../hooks/useUserProfileStore";
-
+import { Hammer } from "../components/ui/icon";
 interface Props {
   data: any;
   filters?: any;
@@ -276,7 +270,7 @@ function ReactTable({
                 className="search-input global-card"
                 style={{ paddingInline: "10px" }}
               >
-                <AiOutlineSearch size={22} />
+                <Hammer size={22} />
                 <SearchInput
                   preGlobalFilteredRows={preGlobalFilteredRows}
                   globalFilter={state.globalFilter}
@@ -384,7 +378,7 @@ function ReactTable({
                               boxShadow: "0 2px 8px rgba(0,0,0,0.1)",
                             }}
                           >
-                            <FaDatabase size={12} color={primaryColor} />
+                            <Hammer size={12} color={primaryColor} />
                           </div>
 
                           <div className="d-flex align-items-center">
@@ -422,9 +416,9 @@ function ReactTable({
                               <span>
                                 {column.isSorted ? (
                                   column.isSortedDesc ? (
-                                    <IoMdArrowDropup />
+                                    <Hammer />
                                   ) : (
-                                    <IoMdArrowDropdown />
+                                    <Hammer />
                                   )
                                 ) : (
                                   ""
@@ -531,7 +525,7 @@ function ReactTable({
                     border: `3px solid ${primaryColor}20`,
                   }}
                 >
-                  <FaDatabase size={40} color={primaryColor} />
+                  <Hammer size={40} color={primaryColor} />
                 </div>
                 <div
                   className="position-absolute d-flex align-items-center justify-content-center"
@@ -545,7 +539,7 @@ function ReactTable({
                     border: "2px solid white",
                   }}
                 >
-                  <FaSearch size={14} color="white" />
+                  <Hammer size={14} color="white" />
                 </div>
               </div>
 
@@ -579,11 +573,7 @@ function ReactTable({
                   style={{ fontSize: "13px" }}
                 >
                   <div className="d-flex align-items-center mb-2 text-muted">
-                    <MdRefresh
-                      size={14}
-                      color={primaryColor}
-                      className="mr-2"
-                    />
+                    <Hammer size={14} color={primaryColor} className="mr-2" />
                     <span>Clear search and filters</span>
                   </div>
                   <div className="d-flex align-items-center mb-2 text-muted">
@@ -591,11 +581,7 @@ function ReactTable({
                     <span>Try different search terms</span>
                   </div>
                   <div className="d-flex align-items-center text-muted">
-                    <MdFilterList
-                      size={14}
-                      color={primaryColor}
-                      className="mr-2"
-                    />
+                    <Hammer size={14} color={primaryColor} className="mr-2" />
                     <span>Adjust filter criteria</span>
                   </div>
                 </div>

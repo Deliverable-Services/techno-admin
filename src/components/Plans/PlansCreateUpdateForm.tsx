@@ -16,7 +16,7 @@ import { queryClient } from "../../utils/queryClient";
 import { showMsgToast } from "../../utils/showMsgToast";
 import ImagesContainer from "../../shared-components/ImagesContainer";
 import Restricted from "../../shared-components/Restricted";
-import { FaTrash } from "react-icons/fa";
+import { Hammer } from "../ui/icon";
 
 const key = "plans";
 
@@ -343,7 +343,7 @@ const PlanCreateUpdateForm = () => {
                                           );
                                         }}
                                       >
-                                        <FaTrash />
+                                        <Hammer />
                                       </div>
                                     </div>
                                   </div>

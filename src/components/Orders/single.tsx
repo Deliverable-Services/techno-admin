@@ -2,9 +2,6 @@ import { AxiosError } from "axios";
 import moment from "moment";
 import React, { useState } from "react";
 import { Button, Col, Container, Form, Row } from "react-bootstrap";
-import { AiFillPlusSquare } from "react-icons/ai";
-import { BiDownload, BiSad } from "react-icons/bi";
-import { GoArrowLeft } from "react-icons/go";
 import { useMutation, useQuery } from "react-query";
 import { useHistory, useParams } from "react-router-dom";
 import Map from "../../components/Map";
@@ -23,6 +20,7 @@ import { showMsgToast } from "../../utils/showMsgToast";
 // replaced legacy ProgressBar with shadcn progress
 import { Progress } from "../ui/progress";
 import { config } from "../../utils/constants";
+import { Hammer } from "../ui/icon";
 
 const key = "bookings";
 const dateFormat = "DD MMMM YY (hh:mm a)";
@@ -199,7 +197,7 @@ const SingleOrder = () => {
     return (
       <Container fluid className="d-flex justify-content-center display-3">
         <div className="d-flex flex-column align-items-center">
-          <BiSad color={primaryColor} />
+          <Hammer color={primaryColor} />
           <span className="text-primary display-3">Something went wrong</span>
         </div>
       </Container>
@@ -214,7 +212,7 @@ const SingleOrder = () => {
         size="sm"
       >
         <div className="d-flex align-items-center">
-          <GoArrowLeft /> <p className="ml-1 mb-0">Back</p>
+          <Hammer /> <p className="ml-1 mb-0">Back</p>
         </div>
       </Button>
       <Container
@@ -246,7 +244,7 @@ const SingleOrder = () => {
               <p className="text-white m-0">Downloading...</p>
             ) : (
               <div className=" d-flex align-items-center text-white gap-3">
-                <BiDownload size={18} />
+                <Hammer size={18} />
 
                 <a
                   target="_blank"
@@ -269,7 +267,7 @@ const SingleOrder = () => {
                 <p className="text-white m-0">Downloading...</p>
               ) : (
                 <div className=" d-flex align-items-center text-white gap-3">
-                  <BiDownload size={18} />
+                  <Hammer size={18} />
 
                   <p className="mb-0 ml-1">Invoice</p>
                 </div>
@@ -283,8 +281,7 @@ const SingleOrder = () => {
               onClick={() => _onCreateIssueClick()}
             >
               <div className="d-flex text-white align-items-center">
-                <AiFillPlusSquare size={18} />{" "}
-                <p className="mb-0 ml-1">Issue</p>
+                <Hammer size={18} /> <p className="mb-0 ml-1">Issue</p>
               </div>
             </Button>
           </Restricted>

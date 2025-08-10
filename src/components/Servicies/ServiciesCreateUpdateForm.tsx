@@ -3,7 +3,6 @@ import { AxiosError } from "axios";
 import { Form, Formik } from "formik";
 import { useEffect } from "react";
 import { Button, Col, Row, Spinner, Form as BForm } from "react-bootstrap";
-import { FaTrash } from "react-icons/fa";
 import { useMutation, useQuery } from "react-query";
 import { useHistory, useLocation } from "react-router-dom";
 import { handleApiError } from "../../hooks/handleApiErrors";
@@ -17,6 +16,7 @@ import API from "../../utils/API";
 import { isActiveArray } from "../../utils/arrays";
 import { queryClient } from "../../utils/queryClient";
 import { showMsgToast } from "../../utils/showMsgToast";
+import { Hammer } from "../ui/icon";
 
 const key = "services";
 
@@ -369,7 +369,7 @@ const ServicesCreateUpdateForm = () => {
                                         setFieldValue("images", values.images);
                                       }}
                                     >
-                                      <FaTrash />
+                                      <Hammer />
                                     </div>
                                   </div>
                                 </div>

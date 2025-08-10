@@ -1,24 +1,24 @@
 import { Form, Formik } from "formik";
 import React from "react";
 import { Alert, Button, Col, Container, Row, Spinner } from "react-bootstrap";
-import { BiArrowFromRight } from "react-icons/bi";
 import { useMutation, useQuery } from "react-query";
 import { useHistory, useParams } from "react-router-dom";
 import { InputField } from "../../shared-components/InputFeild";
 import IsLoading from "../../shared-components/isLoading";
 import API from "../../utils/API";
 import { queryClient } from "../../utils/queryClient";
+import { Hammer } from "../ui/icon";
 
 const key = "bookings";
 
 const getAgents = async () => {
   const r = await API.get("/users", {
     params: {
-      role: "agent"
-    }
-  })
-  return r.data
-}
+      role: "agent",
+    },
+  });
+  return r.data;
+};
 
 const assignAgent = ({
   formdata,
@@ -36,7 +36,9 @@ const AssignAgent = () => {
   const { id }: { id: string } = useParams();
 
   const history = useHistory();
-  const { data: agents, isLoading: isAgentLoading } = useQuery("agent", () => getAgents())
+  const { data: agents, isLoading: isAgentLoading } = useQuery("agent", () =>
+    getAgents()
+  );
   const { data, mutate, isLoading, error, status } = useMutation(assignAgent, {
     onSuccess: (data) => {
       setTimeout(() => {
@@ -55,7 +57,7 @@ const AssignAgent = () => {
         <h2 className="font-weight-bold">Assign Aggent</h2>
         <Button variant="primary" onClick={() => history.goBack()}>
           <div className="text-white">
-            <BiArrowFromRight size={25} /> <b>Back</b>
+            <Hammer size={25} /> <b>Back</b>
           </div>
         </Button>
       </Container>

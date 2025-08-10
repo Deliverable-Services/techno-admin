@@ -2,19 +2,13 @@ import { AxiosError } from "axios";
 import moment from "moment";
 import React, { useState } from "react";
 import { Container } from "react-bootstrap";
-// Removed react-dates; using native inputs below
 type FocusedInputShape = "startDate" | "endDate" | null;
-import { BsCalendar, BsArrowRight } from "react-icons/bs";
 
 import { useQuery } from "react-query";
 import { useHistory } from "react-router-dom";
 import { handleApiError } from "../../hooks/handleApiErrors";
 import IsLoading from "../../shared-components/isLoading";
-import { FaFacebook } from "react-icons/fa";
-import { IoLogoInstagram } from "react-icons/io5";
-import { FaYoutube } from "react-icons/fa";
 import { useOrganisation } from "../../context/OrganisationContext";
-
 import { primaryColor } from "../../utils/constants";
 import {
   ResponsiveContainer,
@@ -30,9 +24,7 @@ import {
 import { WebsiteAnalyticsChart, BrandGMBChart } from "./Chart";
 import "./dashboard.css";
 import PageHeading from "../../shared-components/PageHeading";
-import { RiDashboardFill } from "react-icons/ri";
-import { SiCivicrm } from "react-icons/si";
-import { HiUsers, HiDocumentText, HiExclamation } from "react-icons/hi";
+import { Hammer } from "../ui/icon";
 
 const bookingFilter = {
   datefrom: moment().subtract(7, "days").format("YYYY-MM-DD"),
@@ -115,7 +107,7 @@ const Dashboard = () => {
     <>
       <div className="view-padding d-flex justify-content-between align-items-center">
         <PageHeading
-          icon={<RiDashboardFill size={24} />}
+          icon={<Hammer size={24} />}
           title="Dashboard"
           description="Quick glance of your platform"
         />
@@ -123,7 +115,7 @@ const Dashboard = () => {
         <div className="crm-users">
           <div className="d-flex align-items-center justify-content-start">
             <div className="d-flex align-items-center gap-2">
-              <BsCalendar color={primaryColor} size={19} />
+              <Hammer color={primaryColor} size={19} />
               <input
                 type="date"
                 value={filter.startDate}
@@ -164,7 +156,7 @@ const Dashboard = () => {
             <div className="card hoverable w-100 shadow-sm">
               <div className="card-body">
                 <div className="d-flex align-items-center mb-3">
-                  <SiCivicrm size={16} />
+                  <Hammer size={16} />
                   <h5 className="mb-0 font-weight-bold ml-2">Leads</h5>
                 </div>
 
@@ -223,7 +215,7 @@ const Dashboard = () => {
                 >
                   Go to CRM
                 </span>
-                <BsArrowRight className="text-primary" />
+                <Hammer className="text-primary" />
               </div>
             </div>
           ) : (
@@ -298,7 +290,7 @@ const Dashboard = () => {
                 >
                   Go to Orders
                 </span>
-                <BsArrowRight className="text-primary" />
+                <Hammer className="text-primary" />
               </div>
             </div>
           )}
@@ -309,7 +301,7 @@ const Dashboard = () => {
               <div className="card hoverable w-100 shadow-sm">
                 <div className="card-body">
                   <div className="d-flex align-items-center mb-3">
-                    <HiUsers size={16} />
+                    <Hammer size={16} />
                     <h5 className="mb-0 font-weight-bold ml-2">Customers</h5>
                   </div>
 
@@ -352,14 +344,14 @@ const Dashboard = () => {
                   >
                     Go to Customers
                   </span>
-                  <BsArrowRight className="text-primary" />
+                  <Hammer className="text-primary" />
                 </div>
               </div>
 
               <div className="card hoverable w-100 shadow-sm">
                 <div className="card-body">
                   <div className="d-flex align-items-center mb-3">
-                    <HiDocumentText size={16} />
+                    <Hammer size={16} />
                     <h5 className="mb-0 font-weight-bold ml-2">Invoices</h5>
                   </div>
 
@@ -418,7 +410,7 @@ const Dashboard = () => {
                   >
                     Go to Invoices
                   </span>
-                  <BsArrowRight className="text-primary" />
+                  <Hammer className="text-primary" />
                 </div>
               </div>
 
@@ -426,7 +418,7 @@ const Dashboard = () => {
               <div className="card hoverable w-100 border-0 shadow-sm">
                 <div className="card-body">
                   <div className="d-flex align-items-center mb-3">
-                    <HiExclamation size={16} />
+                    <Hammer size={16} />
                     <h5 className="mb-0 font-weight-bold ml-2">Issues</h5>
                   </div>
 
@@ -485,7 +477,7 @@ const Dashboard = () => {
                   >
                     Go to Issues
                   </span>
-                  <BsArrowRight className="text-primary" />
+                  <Hammer className="text-primary" />
                 </div>
               </div>
             </>
@@ -776,9 +768,9 @@ const Dashboard = () => {
                   </div>
                 </div>
                 <div className="social-icons">
-                  <FaFacebook />
-                  <IoLogoInstagram />
-                  <FaYoutube />
+                  <Hammer />
+                  <Hammer />
+                  <Hammer />
                 </div>
               </div>
             </div>

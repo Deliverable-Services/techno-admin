@@ -1,14 +1,7 @@
 import { AxiosError } from "axios";
 import moment from "moment";
 import { useMemo, useState } from "react";
-import {
-  Button,
-  Container,
-  Dropdown,
-  Form,
-  Nav,
-} from "react-bootstrap";
-import { BiSad } from "react-icons/bi";
+import { Button, Container, Dropdown, Form, Nav } from "react-bootstrap";
 import { useQuery } from "react-query";
 import { useHistory } from "react-router-dom";
 import { Cell } from "react-table";
@@ -24,10 +17,9 @@ import { areTwoObjEqual } from "../../utils/areTwoObjEqual";
 import { IssueRelatedTo } from "../../utils/arrays";
 import { primaryColor } from "../../utils/constants";
 import { showErrorToast } from "../../utils/showErrorToast";
-import { BsEye, BsFunnel } from "react-icons/bs";
-import { GoIssueOpened } from "react-icons/go";
 import IssuesCreateForm from "./IssuesCreateForm";
 import Flyout from "../../shared-components/Flyout"; // ✅ Import your shared Flyout
+import { Hammer } from "../ui/icon";
 
 const key = "tickets";
 const intitialFilter = {
@@ -177,11 +169,9 @@ const Issues = () => {
         Cell: (data: Cell) => {
           return (
             <div className="d-flex align-items-center justify-content-end">
-              <BsEye
+              <Hammer
                 className="cursor-pointer"
-                onClick={() =>
-                  history.push(`/issues/${data.row.values.id}`)
-                }
+                onClick={() => history.push(`/issues/${data.row.values.id}`)}
               />
             </div>
           );
@@ -195,7 +185,7 @@ const Issues = () => {
     return (
       <Container fluid className="d-flex justify-content-center display-3">
         <div className="d-flex flex-column align-items-center">
-          <BiSad color={primaryColor} />
+          <Hammer color={primaryColor} />
           <span className="text-primary display-3">Something went wrong</span>
         </div>
       </Container>
@@ -206,7 +196,7 @@ const Issues = () => {
     <>
       <div className="view-padding">
         <PageHeading
-          icon={<GoIssueOpened size={24} />}
+          icon={<Hammer size={24} />}
           description="Create and manage tickets"
           title="Support Tickets"
           totalRecords={data?.total}
@@ -244,22 +234,18 @@ const Issues = () => {
                         <Nav.Item>
                           <Nav.Link eventKey="active">
                             Active (
-                            {
-                              data?.data?.filter(
-                                (item) => item.status === "active"
-                              ).length || 0
-                            }
+                            {data?.data?.filter(
+                              (item) => item.status === "active"
+                            ).length || 0}
                             )
                           </Nav.Link>
                         </Nav.Item>
                         <Nav.Item>
                           <Nav.Link eventKey="closed">
                             Closed (
-                            {
-                              data?.data?.filter(
-                                (item) => item.status === "closed"
-                              ).length || 0
-                            }
+                            {data?.data?.filter(
+                              (item) => item.status === "closed"
+                            ).length || 0}
                             )
                           </Nav.Link>
                         </Nav.Item>
@@ -270,7 +256,7 @@ const Issues = () => {
                 filters={
                   <Dropdown className="search-filters-div filter-dropdown mr-2">
                     <Dropdown.Toggle as={Button} variant="primary">
-                      <BsFunnel /> Filters
+                      <Hammer /> Filters
                     </Dropdown.Toggle>
                     <Dropdown.Menu>
                       <div className="filter-dropdown-heading d-flex justify-content-between w-100">
@@ -352,7 +338,6 @@ const Issues = () => {
         )}
       </div>
 
-     
       <Flyout
         isOpen={modalShow}
         onClose={_onModalHideClick}

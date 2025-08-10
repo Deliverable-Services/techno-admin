@@ -1,9 +1,8 @@
 // Roles/index.tsx
 
 import { AxiosError } from "axios";
-import React, { useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import { Button, Container } from "react-bootstrap";
-import { BiSad } from "react-icons/bi";
 import { useMutation, useQuery } from "react-query";
 import { useHistory } from "react-router-dom";
 import { Cell } from "react-table";
@@ -20,6 +19,7 @@ import { queryClient } from "../../utils/queryClient";
 import { useFlyout } from "../../hooks/useFlyout";
 import Flyout from "../../shared-components/Flyout";
 import RolesCreateUpdateForm from "./RolesCreateUpdateForm";
+import { Hammer } from "../ui/icon";
 
 const key = "get-all-roles";
 
@@ -115,13 +115,13 @@ const Roles = () => {
 
   const _toggleModal = () => {
     setModalShow(!modalShow);
-  }
+  };
 
   if (!data && (!isLoading || !isFetching)) {
     return (
       <Container fluid className="d-flex justify-content-center display-3">
         <div className="d-flex flex-column align-items-center">
-          <BiSad color={primaryColor} />
+          <Hammer color={primaryColor} />
           <span className="text-primary display-3">Something went wrong</span>
         </div>
       </Container>
@@ -130,7 +130,11 @@ const Roles = () => {
 
   return (
     <>
-      <CommonModal title="Create New Role" modalShow={modalShow} onModalHideClick={_toggleModal}>
+      <CommonModal
+        title="Create New Role"
+        modalShow={modalShow}
+        onModalHideClick={_toggleModal}
+      >
         <RolesCreateUpdateForm setShowModal={_toggleModal} />
       </CommonModal>
       <Container fluid className="card component-wrapper view-padding">
@@ -183,12 +187,10 @@ const Roles = () => {
       <Flyout
         isOpen={showFlyout}
         onClose={closeFlyout}
-        title={'Create Services'}
+        title={"Create Services"}
         cancelText="Cancel"
-
       >
-        <RolesCreateUpdateForm setShowModal={_toggleModal}
-        />
+        <RolesCreateUpdateForm setShowModal={_toggleModal} />
       </Flyout>
     </>
   );

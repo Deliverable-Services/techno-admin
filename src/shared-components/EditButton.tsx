@@ -1,7 +1,7 @@
 import React from "react";
 import { Button } from "../components/ui/button";
-import { AiFillEdit } from "react-icons/ai";
 import Restricted from "./Restricted";
+import { Hammer } from "../components/ui/icon";
 
 interface Props {
   onClick: () => void;
@@ -19,7 +19,7 @@ const EditButton = (props: Props) => {
           onClick={props.onClick}
           className="flex items-center edit-btn"
         >
-          <AiFillEdit size={16} className="mr-1" />
+          <Hammer size={16} className="mr-1" />
           Edit
         </Button>
       </Restricted>

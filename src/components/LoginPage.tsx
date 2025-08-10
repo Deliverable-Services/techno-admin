@@ -5,8 +5,7 @@ import { Button, Spinner } from "react-bootstrap";
 import { useMutation } from "react-query";
 import { useHistory } from "react-router";
 import * as Yup from "yup";
-import { FaLock, FaArrowLeft } from "react-icons/fa";
-import { MdSecurity, MdVerifiedUser } from "react-icons/md";
+import { Hammer } from "../components/ui/icon";
 import { primaryColor } from "../utils/constants";
 
 import { InputField } from "../shared-components/InputFeild";
@@ -18,6 +17,7 @@ import { useOrganisation } from "../context/OrganisationContext";
 import API from "../utils/API";
 import { showErrorToast } from "../utils/showErrorToast";
 import { showMsgToast } from "../utils/showMsgToast";
+import {} from "lucide-react";
 
 const LoginSchema = Yup.object().shape({
   phone: Yup.string().required("Phone number required"),
@@ -201,7 +201,7 @@ const LoginFlow = () => {
                       setStep("login");
                     }}
                   >
-                    <FaLock size={12} className="mr-1" />
+                    <Hammer size={12} className="mr-1" />
                     Login
                   </button>
                   <button
@@ -221,7 +221,7 @@ const LoginFlow = () => {
                     }}
                     onClick={() => setActiveTab("signup")}
                   >
-                    <MdVerifiedUser size={12} className="mr-1" />
+                    <ShieldCheck size={12} className="mr-1" />
                     Sign Up
                   </button>
                 </div>
@@ -339,7 +339,7 @@ const LoginFlow = () => {
                         </div>
                       ) : (
                         <div className="d-flex align-items-center justify-content-center">
-                          <MdSecurity size={16} className="mr-2" />
+                          <Hammer size={16} className="mr-2" />
                           Get Secure Code
                         </div>
                       )}
@@ -431,7 +431,7 @@ const LoginFlow = () => {
                           </div>
                         ) : (
                           <div className="d-flex align-items-center justify-content-center">
-                            <MdVerifiedUser size={16} className="mr-2" />
+                            <Hammer size={16} className="mr-2" />
                             Continue
                           </div>
                         )}
@@ -475,7 +475,7 @@ const LoginFlow = () => {
                           }}
                           onClick={() => setStep("login")}
                         >
-                          <FaArrowLeft size={12} className="mr-2" />
+                          <Hammer size={12} className="mr-2" />
                           Change Phone Number
                         </button>
                       </div>

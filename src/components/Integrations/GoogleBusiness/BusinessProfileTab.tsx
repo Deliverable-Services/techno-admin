@@ -1,20 +1,6 @@
 import React, { useState } from "react";
-import {
-  Row,
-  Col,
-  Card,
-  Badge,
-  Modal,
-  Image,
-  Button,
-} from "react-bootstrap";
-import {
-  FaStar,
-  FaFacebook,
-  FaInstagram,
-  FaTwitter,
-  FaYoutube,
-} from "react-icons/fa";
+import { Row, Col, Card, Badge, Modal, Image, Button } from "react-bootstrap";
+import { Hammer } from "../../ui/icon";
 
 const dummyPhotos = [
   "https://www.shutterstock.com/image-photo/happy-mid-aged-business-woman-600nw-2353012835.jpg",
@@ -44,7 +30,9 @@ interface BusinessProfileTabProps {
   organisationId?: number;
 }
 
-const GoogleBusinessProfile: React.FC<BusinessProfileTabProps> = ({ organisationId }) => {
+const GoogleBusinessProfile: React.FC<BusinessProfileTabProps> = ({
+  organisationId,
+}) => {
   const [selectedPhoto, setSelectedPhoto] = useState<string | null>(null);
 
   return (
@@ -70,7 +58,7 @@ const GoogleBusinessProfile: React.FC<BusinessProfileTabProps> = ({ organisation
           />
           <div>
             <h4 className="mb-0">My Business Name</h4>
-            <Badge variant="success" className="mt-1">
+            <Badge bg="success" className="mt-1">
               Open Now
             </Badge>
           </div>
@@ -81,12 +69,21 @@ const GoogleBusinessProfile: React.FC<BusinessProfileTabProps> = ({ organisation
         {/* Contact Info */}
         <Col md={6} className="mb-4">
           <Card>
-            <Card.Header className="g-card-heading">Contact Information</Card.Header>
+            <Card.Header className="g-card-heading">
+              Contact Information
+            </Card.Header>
             <Card.Body className="g-contact_information">
-              <p><strong>Phone:</strong> +91 9876543210</p>
-              <p><strong>Email:</strong> info@example.com</p>
-              <p><strong>Address:</strong> 123 Street, New Delhi, India</p>
-              <p><strong>Website:</strong>{" "}
+              <p>
+                <strong>Phone:</strong> +91 9876543210
+              </p>
+              <p>
+                <strong>Email:</strong> info@example.com
+              </p>
+              <p>
+                <strong>Address:</strong> 123 Street, New Delhi, India
+              </p>
+              <p>
+                <strong>Website:</strong>{" "}
                 <a href="https://example.com" target="_blank" rel="noreferrer">
                   www.example.com
                 </a>
@@ -109,7 +106,10 @@ const GoogleBusinessProfile: React.FC<BusinessProfileTabProps> = ({ organisation
                 { day: "Saturday", hours: "10 AM – 4 PM" },
                 { day: "Sunday", hours: "Closed" },
               ].map((item, index) => (
-                <div key={index} className="d-flex justify-content-between border-bottom py-1">
+                <div
+                  key={index}
+                  className="d-flex justify-content-between border-bottom py-1"
+                >
                   <strong>{item.day}</strong>
                   <span>{item.hours}</span>
                 </div>
@@ -128,7 +128,7 @@ const GoogleBusinessProfile: React.FC<BusinessProfileTabProps> = ({ organisation
               <h1 className="display-4 mb-0">4.9</h1>
               <div className="text-warning mb-2">
                 {[...Array(5)].map((_, i) => (
-                  <FaStar key={i} color="#f4c150" />
+                  <Hammer key={i} color="#f4c150" />
                 ))}
               </div>
               <div className="text-info">63 reviews</div>
@@ -139,13 +139,20 @@ const GoogleBusinessProfile: React.FC<BusinessProfileTabProps> = ({ organisation
                 const percentage = star === 5 ? 90 : star === 4 ? 5 : 1;
                 return (
                   <div key={idx} className="d-flex align-items-center mb-2">
-                    <strong className="me-2" style={{ width: "20px" }}>{star}</strong>
-                    <div className="flex-grow-1 bg-light rounded-pill overflow-hidden me-2" style={{ height: "8px" }}>
-                      <div style={{
-                        width: `${percentage}%`,
-                        height: "100%",
-                        backgroundColor: "#f4c150"
-                      }} />
+                    <strong className="me-2" style={{ width: "20px" }}>
+                      {star}
+                    </strong>
+                    <div
+                      className="flex-grow-1 bg-light rounded-pill overflow-hidden me-2"
+                      style={{ height: "8px" }}
+                    >
+                      <div
+                        style={{
+                          width: `${percentage}%`,
+                          height: "100%",
+                          backgroundColor: "#f4c150",
+                        }}
+                      />
                     </div>
                   </div>
                 );
@@ -155,21 +162,51 @@ const GoogleBusinessProfile: React.FC<BusinessProfileTabProps> = ({ organisation
 
           <div className="mt-4 review-summery">
             <div className="d-flex align-items-center mb-3">
-              <Image src="https://randomuser.me/api/portraits/women/65.jpg" roundedCircle width={40} height={40} className="me-3" />
-              <p className="mb-0">"Nice company with nice <strong>environment</strong> and nice <strong>people</strong> 😊"</p>
+              <Image
+                src="https://randomuser.me/api/portraits/women/65.jpg"
+                roundedCircle
+                width={40}
+                height={40}
+                className="me-3"
+              />
+              <p className="mb-0">
+                "Nice company with nice <strong>environment</strong> and nice{" "}
+                <strong>people</strong> 😊"
+              </p>
             </div>
             <div className="d-flex align-items-center mb-3">
-              <Image src="https://randomuser.me/api/portraits/men/52.jpg" roundedCircle width={40} height={40} className="me-3" />
-              <p className="mb-0">"It's a great <strong>place</strong> to work, and I highly recommend it."</p>
+              <Image
+                src="https://randomuser.me/api/portraits/men/52.jpg"
+                roundedCircle
+                width={40}
+                height={40}
+                className="me-3"
+              />
+              <p className="mb-0">
+                "It's a great <strong>place</strong> to work, and I highly
+                recommend it."
+              </p>
             </div>
             <div className="d-flex align-items-center mb-3">
-              <Image src="https://randomuser.me/api/portraits/men/60.jpg" roundedCircle width={40} height={40} className="me-3" />
-              <p className="mb-0">"The work <strong>environment</strong> is positive, and the <strong>management</strong> truly values <strong>employees</strong>."</p>
+              <Image
+                src="https://randomuser.me/api/portraits/men/60.jpg"
+                roundedCircle
+                width={40}
+                height={40}
+                className="me-3"
+              />
+              <p className="mb-0">
+                "The work <strong>environment</strong> is positive, and the{" "}
+                <strong>management</strong> truly values{" "}
+                <strong>employees</strong>."
+              </p>
             </div>
           </div>
 
           <div className="text-center mt-4">
-            <Button variant="info" className="px-4">📝 Write a review</Button>
+            <Button variant="info" className="px-4">
+              📝 Write a review
+            </Button>
           </div>
         </Card.Body>
       </Card>
@@ -191,7 +228,10 @@ const GoogleBusinessProfile: React.FC<BusinessProfileTabProps> = ({ organisation
                 <h6 className="mb-1">{review.name}</h6>
                 <div className="text-warning mb-1">
                   {[...Array(5)].map((_, i) => (
-                    <FaStar key={i} color={i < review.rating ? "#f4c150" : "#ccc"} />
+                    <Hammer
+                      key={i}
+                      color={i < review.rating ? "#f4c150" : "#ccc"}
+                    />
                   ))}
                 </div>
                 <p className="mb-0">{review.comment}</p>
@@ -221,7 +261,12 @@ const GoogleBusinessProfile: React.FC<BusinessProfileTabProps> = ({ organisation
       </Card>
 
       {/* Photo Modal */}
-      <Modal show={!!selectedPhoto} onHide={() => setSelectedPhoto(null)} centered size="lg">
+      <Modal
+        show={!!selectedPhoto}
+        onHide={() => setSelectedPhoto(null)}
+        centered
+        size="lg"
+      >
         <Modal.Body className="text-center">
           <Image src={selectedPhoto!} fluid />
         </Modal.Body>
@@ -255,10 +300,18 @@ const GoogleBusinessProfile: React.FC<BusinessProfileTabProps> = ({ organisation
       <Card>
         <Card.Header className="g-card-heading">Connect with Us</Card.Header>
         <Card.Body className="d-flex gap-3 g-social">
-          <a href="#"><FaFacebook size={24} /></a>
-          <a href="#"><FaInstagram size={24} /></a>
-          <a href="#"><FaTwitter size={24} /></a>
-          <a href="#"><FaYoutube size={24} /></a>
+          <a href="#">
+            <Hammer size={24} />
+          </a>
+          <a href="#">
+            <Hammer size={24} />
+          </a>
+          <a href="#">
+            <Hammer size={24} />
+          </a>
+          <a href="#">
+            <Hammer size={24} />
+          </a>
         </Card.Body>
       </Card>
     </div>

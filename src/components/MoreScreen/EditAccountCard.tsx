@@ -1,15 +1,13 @@
 import profile from "../../assets/profile.svg";
 import { useHistory } from "react-router-dom";
-import { GiPencil } from "react-icons/gi";
 import "./EditAccountCard.css";
 import useUserProfileStore from "../../hooks/useUserProfileStore";
-import { IoMdMail } from "react-icons/io";
-import { FaHeadphones } from "react-icons/fa";
+import { Hammer } from "../ui/icon";
 
 export const EditAccountCard = () => {
   const history = useHistory();
   const user = useUserProfileStore((state) => state.user);
-  
+
   return (
     <div className="card-container">
       <div className="details-main-container">
@@ -21,18 +19,21 @@ export const EditAccountCard = () => {
           </div>
           <div className="details-container">
             <div className="contact-info-cont">
-              <IoMdMail />
+              <Hammer />
               <p className="text c-black">{user?.email}</p>
             </div>
             <div className="contact-info-cont">
-              <FaHeadphones />
+              <Hammer />
               <p className="text c-black">{user?.phone}</p>
             </div>
           </div>
         </div>
       </div>
-      <button className="edit-account-btn" onClick={() => history.push('/profile')}>
-        <GiPencil /> Edit Account
+      <button
+        className="edit-account-btn"
+        onClick={() => history.push("/profile")}
+      >
+        <Hammer /> Edit Account
       </button>
     </div>
   );

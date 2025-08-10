@@ -17,13 +17,13 @@ import { AxiosError } from "axios";
 import { useHistory } from "react-router-dom";
 import { queryClient } from "../../utils/queryClient";
 import { showMsgToast } from "../../utils/showMsgToast";
-import { BsClock } from "react-icons/bs";
 import { useFlyout } from "../../hooks/useFlyout";
 import Flyout from "../../shared-components/Flyout";
 // import SlotCreateUpdateForm from "./BookingSlotsCreateUpdateForm";
 import IsLoading from "../../shared-components/isLoading";
 import MeetingDetails from "./MeetingDetails";
 import CreateUpdateMeeting from "./CreateUpdateMeeting";
+import { Hammer } from "../ui/icon";
 
 const key = "meetings";
 
@@ -156,7 +156,7 @@ const Meetings = () => {
     <>
       <div className="view-padding">
         <PageHeading
-          icon={<BsClock size={24} />}
+          icon={<Hammer size={24} />}
           title="Meetings"
           description="Manage all booked meetings from here"
           onClick={_onCreateClick}

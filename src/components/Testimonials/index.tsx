@@ -1,7 +1,6 @@
 import { AxiosError } from "axios";
 import React, { useMemo, useState } from "react";
 import { Button, Container, Dropdown, Modal } from "react-bootstrap";
-import { BiSad } from "react-icons/bi";
 import { useMutation, useQuery } from "react-query";
 import { useHistory } from "react-router-dom";
 import { Cell } from "react-table";
@@ -16,12 +15,11 @@ import TableImage from "../../shared-components/TableImage";
 import API from "../../utils/API";
 import { primaryColor } from "../../utils/constants";
 import { showMsgToast } from "../../utils/showMsgToast";
-import { AiFillDelete, AiFillIdcard } from "react-icons/ai";
 import { queryClient } from "../../utils/queryClient";
-import { BsThreeDotsVertical } from "react-icons/bs";
 import { useFlyout } from "../../hooks/useFlyout";
 import Flyout from "../../shared-components/Flyout";
 import TestimonialCreateUpdateForm from "./TestimonialCreateUpdateForm";
+import { Hammer } from "../ui/icon";
 
 const key = "testimonial";
 
@@ -136,7 +134,7 @@ const Testimonial = () => {
                   className="p-1 border-0 shadow-none"
                   id={`dropdown-${data.row.values.id}`}
                 >
-                  <BsThreeDotsVertical size={18} />
+                  <Hammer size={18} />
                 </Dropdown.Toggle>
                 <Dropdown.Menu className="menu-dropdown">
                   <Dropdown.Item
@@ -146,7 +144,7 @@ const Testimonial = () => {
                       setDeletePopup(true);
                     }}
                   >
-                    <AiFillDelete size={16} className="me-1" />
+                    <Hammer size={16} className="me-1" />
                     Delete
                   </Dropdown.Item>
                 </Dropdown.Menu>
@@ -163,7 +161,7 @@ const Testimonial = () => {
     return (
       <Container fluid className="d-flex justify-content-center display-3">
         <div className="d-flex flex-column align-items-center">
-          <BiSad color={primaryColor} />
+          <Hammer color={primaryColor} />
           <span className="text-primary display-3">Something went wrong</span>
         </div>
       </Container>
@@ -174,7 +172,7 @@ const Testimonial = () => {
     <>
       <div className="view-padding">
         <PageHeading
-          icon={<AiFillIdcard size={24} />}
+          icon={<Hammer size={24} />}
           title="Testimonials"
           description="Create and manage testimonials for your workflow"
           onClick={_onCreateClick}

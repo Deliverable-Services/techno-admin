@@ -1,14 +1,6 @@
 import dayjs from "dayjs";
 import { Col, Row, Badge } from "react-bootstrap";
-import {
-  BiAlarm,
-  BiEdit,
-  BiGroup,
-  BiMapAlt,
-  BiText,
-  BiTrash,
-  BiVideo,
-} from "react-icons/bi";
+import { Hammer } from "../ui/icon";
 
 const MeetingDetails = ({ meeting, onDelete, onEdit, toggleFlyout }) => {
   const {
@@ -41,7 +33,7 @@ const MeetingDetails = ({ meeting, onDelete, onEdit, toggleFlyout }) => {
                   onEdit(meeting);
                 }}
               >
-                <BiEdit size={18} />
+                <Hammer size={18} />
               </button>
               <button
                 className="bg-white border p-1 rounded-lg"
@@ -50,7 +42,7 @@ const MeetingDetails = ({ meeting, onDelete, onEdit, toggleFlyout }) => {
                   onDelete(id);
                 }}
               >
-                <BiTrash size={18} />
+                <Hammer size={18} />
               </button>
             </div>
 
@@ -81,7 +73,7 @@ const MeetingDetails = ({ meeting, onDelete, onEdit, toggleFlyout }) => {
             {/* Join links */}
             {meet_link && (
               <div className="mb-2 d-flex gap-10 align-items-center ">
-                <BiVideo />
+                <Hammer />
                 <a
                   href={meet_link}
                   className="text-dark"
@@ -96,7 +88,7 @@ const MeetingDetails = ({ meeting, onDelete, onEdit, toggleFlyout }) => {
             {/* Location */}
             {location && (
               <div className="mb-2 d-flex gap-10 align-items-center ">
-                <BiMapAlt />
+                <Hammer />
                 {location}
               </div>
             )}
@@ -104,7 +96,7 @@ const MeetingDetails = ({ meeting, onDelete, onEdit, toggleFlyout }) => {
             {/* Guests */}
             <div className="mb-3">
               <div className="d-flex gap-10 align-items-center mb-2">
-                <BiGroup />
+                <Hammer />
                 <span className="fw-medium">Guests ({guests.length})</span>
               </div>
               {guests.length > 0 ? (
@@ -124,7 +116,7 @@ const MeetingDetails = ({ meeting, onDelete, onEdit, toggleFlyout }) => {
                           )}
                           {guest.guest_type && (
                             <Badge
-                              variant={
+                              bg={
                                 guest.guest_type === "lead"
                                   ? "warning"
                                   : guest.guest_type === "customer"
@@ -137,7 +129,7 @@ const MeetingDetails = ({ meeting, onDelete, onEdit, toggleFlyout }) => {
                             </Badge>
                           )}
                           {!guest.guest_id && (
-                            <Badge variant="secondary" className="ms-2">
+                            <Badge bg="secondary" className="ms-2">
                               External
                             </Badge>
                           )}
@@ -155,7 +147,7 @@ const MeetingDetails = ({ meeting, onDelete, onEdit, toggleFlyout }) => {
 
             {/* Reminder */}
             <div className="mb-2 d-flex gap-10 align-items-center ">
-              <BiAlarm />
+              <Hammer />
               Reminder {reminder_before_minutes} minutes before
             </div>
 
@@ -163,7 +155,7 @@ const MeetingDetails = ({ meeting, onDelete, onEdit, toggleFlyout }) => {
             {description && (
               <div className="mb-2">
                 <div className="font-medium mb-2 d-flex gap-10 align-items-center ">
-                  <BiText />
+                  <Hammer />
                   <section>Description</section>
                 </div>
                 <p className="bg-light rounded p-2">{description}</p>

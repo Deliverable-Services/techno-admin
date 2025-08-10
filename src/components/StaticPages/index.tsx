@@ -4,7 +4,6 @@ type EditorState = string;
 import React, { useMemo, useState } from "react";
 import { useEffect } from "react";
 import { Modal, Button, Container, Dropdown } from "react-bootstrap";
-import { BiSad } from "react-icons/bi";
 import { useMutation, useQuery } from "react-query";
 import { useHistory } from "react-router-dom";
 import { handleApiError } from "../../hooks/handleApiErrors";
@@ -20,8 +19,7 @@ import { showMsgToast } from "../../utils/showMsgToast";
 import StaticPageCreateForm from "./StaticPageCreateUpdateForm";
 import ReactTable from "../../shared-components/ReactTable";
 import { Cell } from "react-table";
-import { BsThreeDotsVertical } from "react-icons/bs";
-import { AiFillDelete } from "react-icons/ai";
+import { Hammer } from "../ui/icon";
 
 const key = "staticPages";
 
@@ -111,7 +109,7 @@ const StaticPages = () => {
                   className="p-1 border-0 shadow-none"
                   id={`dropdown-${data.row.values.id}`}
                 >
-                  <BsThreeDotsVertical size={18} />
+                  <Hammer size={18} />
                 </Dropdown.Toggle>
 
                 <Dropdown.Menu className="menu-dropdown">
@@ -122,7 +120,7 @@ const StaticPages = () => {
                     }}
                     className="text-danger"
                   >
-                    <AiFillDelete size={16} className="me-1" />
+                    <Hammer size={16} className="me-1" />
                     Delete
                   </Dropdown.Item>
                 </Dropdown.Menu>
@@ -164,7 +162,7 @@ const StaticPages = () => {
     return (
       <Container fluid className="d-flex justify-content-center display-3">
         <div className="d-flex flex-column align-items-center">
-          <BiSad color={primaryColor} />
+          <Hammer color={primaryColor} />
           <span className="text-primary display-3">Something went wrong</span>
         </div>
       </Container>

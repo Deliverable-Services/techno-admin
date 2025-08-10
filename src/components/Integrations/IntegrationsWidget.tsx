@@ -22,20 +22,20 @@ const IntegrationsWidget: React.FC = () => {
   const getStatusBadge = (status: string, isConnected: boolean) => {
     if (isConnected && status === "connected") {
       return (
-        <Badge variant="success" className="ml-2">
+        <Badge bg="success" className="ml-2">
           Connected
         </Badge>
       );
     }
     if (isConnected && status === "broken") {
       return (
-        <Badge variant="warning" className="ml-2">
+        <Badge bg="warning" className="ml-2">
           Issue
         </Badge>
       );
     }
     return (
-      <Badge variant="secondary" className="ml-2">
+      <Badge bg="secondary" className="ml-2">
         Not Connected
       </Badge>
     );
@@ -88,7 +88,7 @@ const IntegrationsWidget: React.FC = () => {
               <i className="fab fa-facebook text-muted mr-2"></i>
               <span className="small">Facebook Ads</span>
             </div>
-            <Badge variant="light">Coming Soon</Badge>
+            <Badge bg="light">Coming Soon</Badge>
           </div>
 
           <div className="d-flex justify-content-between align-items-center py-2 text-muted">
@@ -96,7 +96,7 @@ const IntegrationsWidget: React.FC = () => {
               <i className="fab fa-google text-muted mr-2"></i>
               <span className="small">Google Ads</span>
             </div>
-            <Badge variant="light">Coming Soon</Badge>
+            <Badge bg="light">Coming Soon</Badge>
           </div>
         </div>
 

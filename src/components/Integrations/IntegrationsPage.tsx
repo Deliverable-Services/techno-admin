@@ -13,15 +13,8 @@ import googleAnalyticsService, {
 } from "../../services/googleAnalyticsService";
 import { showMsgToast } from "../../utils/showMsgToast";
 import PageHeading from "../../shared-components/PageHeading";
-import {
-  HiCog,
-  HiExternalLink,
-  HiCheckCircle,
-  HiXCircle,
-  HiRefresh,
-  HiSparkles,
-} from "react-icons/hi";
 import "./IntegrationsPage.css";
+import { Hammer } from "../ui/icon";
 
 const IntegrationsPage: React.FC = () => {
   const { selectedOrg } = useOrganisation();
@@ -358,7 +351,7 @@ const IntegrationsPage: React.FC = () => {
               <div className="flex items-center gap-2">
                 {integration.connected ? (
                   <Badge className="flex items-center gap-1" variant="success">
-                    <HiCheckCircle size={14} />
+                    <Hammer size={14} />
                     Connected
                   </Badge>
                 ) : integration.comingSoon ? (
@@ -366,15 +359,15 @@ const IntegrationsPage: React.FC = () => {
                     className="flex items-center gap-1"
                     variant="secondary"
                   >
-                    <HiSparkles size={14} />
+                    <Hammer size={14} />
                     Coming Soon
                   </Badge>
                 ) : (
                   <Badge
                     className="flex items-center gap-1"
-                    variant="outline-secondary"
+                    variant="secondary"
                   >
-                    <HiXCircle size={14} />
+                    <Hammer size={14} />
                     Not Connected
                   </Badge>
                 )}
@@ -382,7 +375,7 @@ const IntegrationsPage: React.FC = () => {
             </div>
           </div>
           {integration.loading && (
-            <HiRefresh className="text-primary animate-spin" size={20} />
+            <Hammer className="text-primary animate-spin" size={20} />
           )}
         </div>
 
@@ -416,8 +409,8 @@ const IntegrationsPage: React.FC = () => {
         {/* Action Area */}
         <div className="mt-auto">
           {integration.comingSoon ? (
-            <Button variant="outline-secondary" disabled className="w-full">
-              <HiSparkles size={16} className="mr-2" />
+            <Button variant="outline" disabled className="w-full">
+              <Hammer size={16} className="mr-2" />
               Coming Soon
             </Button>
           ) : integration.isManual ? (
@@ -429,7 +422,7 @@ const IntegrationsPage: React.FC = () => {
                 onChange={integration.formField.onChange}
                 name={integration.formField.name}
               />
-              <Button variant="primary" size="sm">
+              <Button variant="default" size="sm">
                 Save
               </Button>
             </div>
@@ -437,12 +430,12 @@ const IntegrationsPage: React.FC = () => {
             <div>{integration.component}</div>
           ) : integration.connected ? (
             <div className="flex gap-2">
-              <Button variant="outline-primary" size="sm" className="flex-1">
-                <HiExternalLink size={16} className="mr-1" />
+              <Button variant="outline" size="sm" className="flex-1">
+                <Hammer size={16} className="mr-1" />
                 Manage
               </Button>
               <Button
-                variant="outline-danger"
+                variant="destructive"
                 size="sm"
                 onClick={integration.onDisconnect}
                 disabled={integration.loading}
@@ -452,19 +445,19 @@ const IntegrationsPage: React.FC = () => {
             </div>
           ) : (
             <Button
-              variant="primary"
+              variant="default"
               className="w-full"
               onClick={integration.onConnect}
               disabled={integration.loading}
             >
               {integration.loading ? (
                 <>
-                  <HiRefresh className="animate-spin mr-2" size={16} />
+                  <Hammer className="animate-spin mr-2" size={16} />
                   Connecting...
                 </>
               ) : (
                 <>
-                  <HiExternalLink size={16} className="mr-2" />
+                  <Hammer size={16} className="mr-2" />
                   Connect {integration.name}
                 </>
               )}
@@ -481,7 +474,7 @@ const IntegrationsPage: React.FC = () => {
         {/* Page Header */}
         <div className="view-padding">
           <PageHeading
-            icon={<HiCog size={24} />}
+            icon={<Hammer size={24} />}
             title="Integrations"
             description="Connect your favorite tools and services to streamline your workflow"
           />
@@ -495,7 +488,7 @@ const IntegrationsPage: React.FC = () => {
               <Card className="text-center h-full">
                 <CardContent className="py-4">
                   <div className="text-primary mb-2">
-                    <HiCheckCircle size={32} />
+                    <Hammer size={32} />
                   </div>
                   <h4 className="mb-1">
                     {integrationCategories.reduce(
@@ -515,7 +508,7 @@ const IntegrationsPage: React.FC = () => {
               <Card className="text-center h-full">
                 <CardContent className="py-4">
                   <div className="text-yellow-500 mb-2">
-                    <HiSparkles size={32} />
+                    <Hammer size={32} />
                   </div>
                   <h4 className="mb-1">
                     {integrationCategories.reduce(
@@ -535,7 +528,7 @@ const IntegrationsPage: React.FC = () => {
               <Card className="text-center h-full">
                 <CardContent className="py-4">
                   <div className="text-blue-500 mb-2">
-                    <HiCog size={32} />
+                    <Hammer size={32} />
                   </div>
                   <h4 className="mb-1">
                     {integrationCategories.reduce(
@@ -553,7 +546,7 @@ const IntegrationsPage: React.FC = () => {
               <Card className="text-center h-full">
                 <CardContent className="py-4">
                   <div className="text-green-500 mb-2">
-                    <HiRefresh size={32} />
+                    <Hammer size={32} />
                   </div>
                   <h4 className="mb-1">Auto</h4>
                   <small className="text-muted-foreground font-semibold">
@@ -570,7 +563,7 @@ const IntegrationsPage: React.FC = () => {
               <div className="flex items-center mb-4">
                 <div className="mr-3">
                   <div className="rounded-full flex items-center justify-center bg-gray-900 w-12 h-12">
-                    <HiCog size={24} className="text-white" />
+                    <Hammer size={24} className="text-white" />
                   </div>
                 </div>
                 <div>

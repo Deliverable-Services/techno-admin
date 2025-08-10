@@ -11,11 +11,6 @@ import {
   CartesianGrid,
   Legend,
 } from "recharts";
-// Removed react-world-map (peer-incompatible). Rendering a simple placeholder list instead.
-import { GiShadowFollower } from "react-icons/gi";
-import { RiUserFollowFill } from "react-icons/ri";
-import { IoStatsChart } from "react-icons/io5";
-import { MdAllInclusive } from "react-icons/md";
 import googleAnalyticsService, {
   GoogleAnalyticsConnectorStatus,
   GoogleAnalyticsAccount,
@@ -27,8 +22,7 @@ import googleAnalyticsService, {
 import { useOrganisation } from "../../../context/OrganisationContext";
 import { showMsgToast } from "../../../utils/showMsgToast";
 // import "./google-analytics.css";
-import { FaExternalLinkAlt, FaSync } from "react-icons/fa";
-import { AiOutlineDisconnect } from "react-icons/ai";
+import { Hammer } from "../../ui/icon";
 
 const GoogleAnalytics = () => {
   const { selectedOrg: organisation } = useOrganisation();
@@ -416,25 +410,25 @@ const GoogleAnalytics = () => {
           label: "Total Users",
           value: "0",
           change: "",
-          icon: <MdAllInclusive />,
+          icon: <Hammer />,
         },
         {
           label: "Sessions",
           value: "0",
           change: "",
-          icon: <GiShadowFollower />,
+          icon: <Hammer />,
         },
         {
           label: "Page Views",
           value: "0",
           change: "",
-          icon: <RiUserFollowFill />,
+          icon: <Hammer />,
         },
         {
           label: "Active Users",
           value: realTimeData?.rows?.[0]?.metricValues?.[0]?.value || "0",
           change: "",
-          icon: <IoStatsChart />,
+          icon: <Hammer />,
         },
       ];
     }
@@ -458,25 +452,25 @@ const GoogleAnalytics = () => {
         label: "Total Users",
         value: totalUsers.toLocaleString(),
         change: "",
-        icon: <MdAllInclusive />,
+        icon: <Hammer />,
       },
       {
         label: "Sessions",
         value: totalSessions.toLocaleString(),
         change: "",
-        icon: <GiShadowFollower />,
+        icon: <Hammer />,
       },
       {
         label: "Page Views",
         value: totalPageViews.toLocaleString(),
         change: "",
-        icon: <RiUserFollowFill />,
+        icon: <Hammer />,
       },
       {
         label: "Active Users",
         value: activeUsers,
         change: "",
-        icon: <IoStatsChart />,
+        icon: <Hammer />,
       },
     ];
   };
@@ -642,7 +636,7 @@ const GoogleAnalytics = () => {
             {loading ? (
               <i className="fas fa-spinner fa-spin me-2"></i>
             ) : (
-              <FaExternalLinkAlt className="h-4 w-4 me-2" />
+              <Hammer className="h-4 w-4 me-2" />
             )}
             Connect Google Analytics
           </button>
@@ -681,14 +675,14 @@ const GoogleAnalytics = () => {
             disabled={loading}
             title="Refresh Data"
           >
-            <FaSync className={`h-4 w-4 ${loading ? "animate-spin" : ""}`} />
+            <Hammer className={`h-4 w-4 ${loading ? "animate-spin" : ""}`} />
           </button>
           <button
             className="btn btn-outline-danger btn-sm"
             onClick={handleDisconnect}
             disabled={loading}
           >
-            <AiOutlineDisconnect className="h-4 w-4 me-1" />
+            <Hammer className="h-4 w-4 me-1" />
             Disconnect
           </button>
         </div>

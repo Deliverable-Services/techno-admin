@@ -1,13 +1,11 @@
 import React, { useState, useRef, useEffect } from "react";
 import { Organisation } from "../../types/interface";
-import { IoChevronDown, IoCheckmark } from "react-icons/io5";
-import { HiOfficeBuilding } from "react-icons/hi";
-import { BiLogOut, BiEdit } from "react-icons/bi";
 import { useMutation } from "react-query";
 import useTokenStore from "../../hooks/useTokenStore";
 import useUserProfileStore from "../../hooks/useUserProfileStore";
 import API from "../../utils/API";
 import "./OrganizationSwitcher.css";
+import { Hammer } from "../ui/icon";
 
 interface OrganizationSwitcherProps {
   organisations: Organisation[];
@@ -108,11 +106,7 @@ const OrganizationSwitcher: React.FC<OrganizationSwitcherProps> = ({
               <img src={selectedOrg.logo} alt={selectedOrg.name} />
             ) : (
               <div className="org-avatar-placeholder">
-                {selectedOrg ? (
-                  getInitials(selectedOrg.name)
-                ) : (
-                  <HiOfficeBuilding />
-                )}
+                {selectedOrg ? getInitials(selectedOrg.name) : <Hammer />}
               </div>
             )}
           </div>
@@ -130,7 +124,7 @@ const OrganizationSwitcher: React.FC<OrganizationSwitcherProps> = ({
             )}
           </div>
         </div>
-        <IoChevronDown className={`chevron ${isOpen ? "rotated" : ""}`} />
+        <Hammer className={`chevron ${isOpen ? "rotated" : ""}`} />
       </div>
 
       {isOpen && (
@@ -173,9 +167,7 @@ const OrganizationSwitcher: React.FC<OrganizationSwitcherProps> = ({
                     </div>
                   </div>
                 </div>
-                {selectedOrg?.id === org.id && (
-                  <IoCheckmark className="checkmark" />
-                )}
+                {selectedOrg?.id === org.id && <Hammer className="checkmark" />}
               </div>
             ))}
 
@@ -195,7 +187,7 @@ const OrganizationSwitcher: React.FC<OrganizationSwitcherProps> = ({
                   </div>
                 </div>
               </div>
-              <BiEdit className="action-icon" title="Edit profile" />
+              <Hammer className="action-icon" title="Edit profile" />
             </a>
 
             {/* Logout Row */}
@@ -207,7 +199,7 @@ const OrganizationSwitcher: React.FC<OrganizationSwitcherProps> = ({
               <div className="org-option-content">
                 <div className="org-avatar">
                   <div className="org-avatar-placeholder">
-                    <BiLogOut />
+                    <Hammer />
                   </div>
                 </div>
                 <div className="org-info">

@@ -1,35 +1,33 @@
 import { BottomNavItem } from "../BottomNavItem/BottomNavItem";
 import "./index.css";
-import { FaFileInvoiceDollar, FaHome } from "react-icons/fa";
-import { SiCivicrm } from "react-icons/si";
-import { RiServiceFill } from "react-icons/ri";
 import { MoreTabIcon } from "../../assets/MoreTabIcon";
+import { Hammer } from "../ui/icon";
 
 const tabs = [
   {
     name: "Home",
     linkTo: "/dashboard",
-    icon: <FaHome size={20} />,
+    icon: <Hammer size={20} />,
   },
   {
     name: "CRM",
     linkTo: "/crm",
-    icon: <SiCivicrm />,
+    icon: <Hammer />,
   },
   {
     name: "Invoices",
     linkTo: "/invoices",
-    icon: <FaFileInvoiceDollar size={20} />,
+    icon: <Hammer size={20} />,
   },
   {
     name: "Services",
     linkTo: "/services",
-    icon: <RiServiceFill />,
+    icon: <Hammer />,
   },
   {
     name: "More",
     linkTo: "/more",
-    icon: <MoreTabIcon />,
+    icon: <Hammer />,
   },
 ];
 

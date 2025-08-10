@@ -1,7 +1,7 @@
 import React from "react";
 import { Button } from "../components/ui/button";
-import { AiFillEye } from "react-icons/ai";
 import Restricted from "./Restricted";
+import { Hammer } from "../components/ui/icon";
 
 interface Props {
   onClick: () => void;
@@ -19,7 +19,7 @@ const ViewButton = (props: Props) => {
           onClick={props.onClick}
           className="flex items-center"
         >
-          <AiFillEye size={16} className="mr-1" />
+          <Hammer size={16} className="mr-1" />
           View
         </Button>
       </Restricted>

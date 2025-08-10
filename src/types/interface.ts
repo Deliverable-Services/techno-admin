@@ -1,11 +1,10 @@
-import { IconBaseProps } from "react-icons/lib";
 import { TableState } from "react-table";
 
 export interface INavLink {
   title: string;
   path?: string;
   onClick?: () => void;
-  icon?: IconBaseProps;
+  icon?: React.ReactNode;
   isNavOpen?: boolean;
   permissionReq?: string;
   children?: INavLink[];

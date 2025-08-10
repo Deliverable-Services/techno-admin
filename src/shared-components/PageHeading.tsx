@@ -1,7 +1,7 @@
 import React from "react";
 import { Button } from "../components/ui/button";
-import { AiOutlinePlus } from "react-icons/ai";
 import Restricted from "./Restricted";
+import { Hammer } from "../components/ui/icon";
 interface Props {
   title: string;
   icon?: React.ReactNode;
@@ -55,7 +55,7 @@ const PageHeading: React.FC<Props> = ({
             }}
           >
             <div className="text-white d-flex align-items-center">
-              <AiOutlinePlus size={18} />
+              <Hammer size={18} />
               <p className="mb-0 ml-1">{btnText || "Create"}</p>
             </div>
           </Button>

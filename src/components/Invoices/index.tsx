@@ -9,13 +9,11 @@ import autoTable from "jspdf-autotable";
 import { showMsgToast } from "../../utils/showMsgToast";
 import { showErrorToast } from "../../utils/showErrorToast";
 import PageHeading from "../../shared-components/PageHeading";
-import { FaStripe } from "react-icons/fa";
 import { Container, Button } from "react-bootstrap";
 import ReactTable from "../../shared-components/ReactTable";
 import { Cell } from "react-table";
-
+import { Hammer } from "../ui/icon";
 import { primaryColor } from "../../utils/constants";
-import { SiCivicrm } from "react-icons/si";
 
 interface Invoice {
   id: string;
@@ -241,7 +239,7 @@ const InvoicePage: React.FC = () => {
     <>
       <div className="view-padding">
         <PageHeading
-          icon={<SiCivicrm size={24} />}
+          icon={<Hammer size={24} />}
           title="Invoices"
           description="Raise invoices to your customers with one click"
           onClick={_onCreateClick}
@@ -255,7 +253,7 @@ const InvoicePage: React.FC = () => {
           return (
             <div className="view-padding">
               <div className="d-flex flex-column align-items-center text-center">
-                <FaStripe size={80} color={primaryColor} className="mb-4" />
+                <Hammer size={80} color={primaryColor} className="mb-4" />
                 <h3 className="mb-3">Get started with Billings</h3>
                 <p className="text-muted mb-4" style={{ maxWidth: "400px" }}>
                   To start using billing you need to create your Stripe account
@@ -275,7 +273,7 @@ const InvoicePage: React.FC = () => {
                   }}
                 >
                   <div className="text-white d-flex align-items-center">
-                    <FaStripe className="mr-2" />
+                    <Hammer className="mr-2" />
                     Create Stripe Account
                   </div>
                 </Button>

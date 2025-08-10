@@ -2,13 +2,13 @@ import { AxiosError } from "axios";
 import moment from "moment";
 import React from "react";
 import { Row, Col, Container, Spinner } from "react-bootstrap";
-import { BiTrash } from "react-icons/bi";
 import { useMutation } from "react-query";
 import { useHistory } from "react-router-dom";
 import { handleApiError } from "../hooks/handleApiErrors";
 import API from "../utils/API";
 import { queryClient } from "../utils/queryClient";
 import { showMsgToast } from "../utils/showMsgToast";
+import { Hammer } from "../components/ui/icon";
 
 const key = "disabled-slots";
 interface Props {
@@ -72,7 +72,7 @@ const Slots = (props: Props) => {
                 )}
               </div>
               <button onClick={() => mutate(slot.id)}>
-                {<BiTrash size={24} color={"red"} />}
+                {<Hammer size={24} color={"red"} />}
               </button>
             </Col>
           );

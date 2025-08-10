@@ -1,7 +1,7 @@
 import React from "react";
 import { Button } from "../components/ui/button";
-import { BiArrowFromRight } from "react-icons/bi";
 import { useHistory } from "react-router-dom";
+import { Hammer } from "../components/ui/icon";
 interface Props {
   title: string;
 }
@@ -14,7 +14,7 @@ const BackButton: React.FC<Props> = ({ title }) => {
         {/* <p className="font-weight-bold text-capitalize lead mb-0">{title}</p> */}
         <Button variant="primary" onClick={_onBackClick} size="sm">
           <div className="text-white d-flex align-items-center">
-            <BiArrowFromRight size={18} /> <p className="mb-0">Back</p>
+            <Hammer size={18} /> <p className="mb-0">Back</p>
           </div>
         </Button>
       </div>

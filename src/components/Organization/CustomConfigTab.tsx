@@ -1,7 +1,6 @@
 import { AxiosError } from "axios";
 import React, { useMemo, useState } from "react";
 import { Modal, Button, Container } from "react-bootstrap";
-import { BiSad } from "react-icons/bi";
 import { useMutation, useQuery } from "react-query";
 import { useHistory } from "react-router-dom";
 import { Cell } from "react-table";
@@ -15,9 +14,9 @@ import API from "../../utils/API";
 import { primaryColor } from "../../utils/constants";
 import { queryClient } from "../../utils/queryClient";
 import { showMsgToast } from "../../utils/showMsgToast";
-import { AiFillDelete, AiOutlinePlus } from "react-icons/ai";
 import Restricted from "../../shared-components/Restricted";
 import ConfigCreateUpdateForm from "./ConfigCreateUpdate";
+import { Hammer } from "../ui/icon";
 
 const key = "configuration";
 
@@ -131,7 +130,7 @@ const CustomConfigTab = () => {
                 }}
                 style={{ padding: "0.25rem 0.5rem" }}
               >
-                <AiFillDelete size={16} className="mr-1" /> Delete
+                <Hammer size={16} className="mr-1" /> Delete
               </Button>
             </div>
           );
@@ -145,7 +144,7 @@ const CustomConfigTab = () => {
     return (
       <Container fluid className="d-flex justify-content-center display-3">
         <div className="d-flex flex-column align-items-center">
-          <BiSad color={primaryColor} />
+          <Hammer color={primaryColor} />
           <span className="text-primary display-3">Something went wrong</span>
         </div>
       </Container>
@@ -164,10 +163,13 @@ const CustomConfigTab = () => {
             variant="primary"
             onClick={() => setModalShow(true)}
             size={"sm"}
-            style={{ background: "var(--primary-color)", borderColor: "var(--primary-color)" }}
+            style={{
+              background: "var(--primary-color)",
+              borderColor: "var(--primary-color)",
+            }}
           >
             <div className="text-white d-flex align-items-center">
-              <AiOutlinePlus size={18} />
+              <Hammer size={18} />
               <p className="mb-0 ml-1">Create</p>
             </div>
           </Button>
