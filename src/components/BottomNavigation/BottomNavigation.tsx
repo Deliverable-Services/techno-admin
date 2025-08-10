@@ -1,5 +1,4 @@
 import { BottomNavItem } from "../BottomNavItem/BottomNavItem";
-import "./index.css";
 import { MoreTabIcon } from "../../assets/MoreTabIcon";
 import { Hammer } from "../ui/icon";
 
@@ -33,10 +32,11 @@ const tabs = [
 
 export const BottomNavigation = () => {
   return (
-    <div className="navContainer">
-      <div className="navItemsCont">
+    <div className="fixed bottom-0 min-w-full px-5 py-2.5 bg-white border-t border-[#E9E7EA] z-[100000000000000000]">
+      <div className="flex flex-row gap-[15px] justify-between">
         {tabs?.map((item, index) => (
           <BottomNavItem
+            key={index}
             icon={item?.icon}
             linkTo={item?.linkTo}
             name={item?.name}

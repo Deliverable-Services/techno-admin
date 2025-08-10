@@ -120,7 +120,7 @@ const PlatformTab = () => {
             >
               {({ values, errors, touched, isSubmitting, setFieldValue }) => (
                 <Form className="w-100 mt-2">
-                  <div className="border-div form-group w-100 mt-4 d-flex align-items-center">
+                  <div className="border-b border-gray-200 mb-6 w-full mt-4 flex items-center">
                     <label htmlFor="minimum-order-cart">
                       Minimum Order Cart
                     </label>
@@ -195,7 +195,7 @@ const PlatformTab = () => {
                           lg={3}
                           className="p-2"
                         >
-                          <Card className="position-relative mb-3 shadow-sm border-0 mb-0">
+                          <Card className="position-relative shadow-sm border-0 mb-0">
                             <Card.Body className="d-flex align-items-center">
                               <div className="d-flex align-items-top">
                                 <span

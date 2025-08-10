@@ -109,7 +109,7 @@ const WebsiteTab = () => {
               >
                 {({ values, errors, touched, isSubmitting, handleChange }) => (
                   <Form className="w-100 mt-2">
-                    <div className="border-div form-group w-100 mt-4 d-flex align-items-center">
+                    <div className="border-b border-gray-200 mb-6 w-full mt-4 flex items-center">
                       <label htmlFor="contact-email">Contact Email</label>
                       <Field
                         type="email"

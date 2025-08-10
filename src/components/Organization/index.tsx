@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import "./organization.css"; // Optional custom styles
 import ProfileTab from "./ProfileTab";
 import OrganizationTab from "./OrganisationTab";
 import AppearanceTab from "./AppearanceTab";

@@ -129,7 +129,7 @@ const LoginFlow = () => {
           style={{ position: "relative", zIndex: 2 }}
         >
           <div
-            className="organization-main w-100 px-5 py-5 login-wrapper text-center"
+            className="w-100 px-5 py-5 login-wrapper text-center"
             style={{
               maxWidth: "500px",
               backgroundColor: "rgba(255, 255, 255, 0.95)",

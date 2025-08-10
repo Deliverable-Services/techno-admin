@@ -110,7 +110,7 @@ const AppearanceTab = () => {
                     <label htmlFor="primary_color">Brand Primary Color</label>
                     <Field
                       type="color"
-                      className="form-control color"
+                      className="border border-gray-300 w-11 h-11 p-0 rounded-lg cursor-pointer"
                       id="primary_color"
                       name="primary_color"
                     />
@@ -129,7 +129,7 @@ const AppearanceTab = () => {
                     </label>
                     <Field
                       type="color"
-                      className="form-control color"
+                      className="border border-gray-300 w-11 h-11 p-0 rounded-lg cursor-pointer"
                       id="secondary_color"
                       name="secondary_color"
                     />
@@ -146,7 +146,7 @@ const AppearanceTab = () => {
                     <label htmlFor="language">Preferences Language</label>
                     <Field
                       as="select"
-                      className="form-control input-div"
+                      className="h-11 border border-gray-300 rounded-lg px-3.5 py-2.5 text-sm transition-colors focus:border-blue-600 focus:ring-4 focus:ring-blue-100 focus:outline-none bg-white"
                       id="language"
                       name="language"
                     >
@@ -165,7 +165,7 @@ const AppearanceTab = () => {
                     <label htmlFor="currency">Preferences Currency</label>
                     <Field
                       as="select"
-                      className="form-control input-div"
+                      className="h-11 border border-gray-300 rounded-lg px-3.5 py-2.5 text-sm transition-colors focus:border-blue-600 focus:ring-4 focus:ring-blue-100 focus:outline-none bg-white"
                       id="currency"
                       name="currency"
                     >

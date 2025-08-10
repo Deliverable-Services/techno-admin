@@ -1,5 +1,4 @@
 import React, { useState, useEffect, useCallback } from "react";
-import "./subscription.css";
 import API from "../../utils/API";
 import VerifingUserLoader from "../../shared-components/VerifingUserLoader";
 import useUserProfileStore from "../../hooks/useUserProfileStore";
@@ -141,9 +140,6 @@ const SubscriptionPage: React.FC = () => {
                   style={{
                     backgroundColor: primaryColor,
                     borderColor: primaryColor,
-                    padding: "12px 30px",
-                    fontSize: "16px",
-                    fontWeight: "600",
                   }}
                 >
                   <div className="text-white d-flex align-items-center">
@@ -285,10 +281,6 @@ const SubscriptionPage: React.FC = () => {
                   style={{
                     backgroundColor: primaryColor,
                     borderColor: primaryColor,
-                    padding: "12px 32px",
-                    fontSize: "16px",
-                    fontWeight: "600",
-                    borderRadius: "8px",
                     boxShadow: `0 4px 12px ${primaryColor}25`,
                   }}
                 >
@@ -324,7 +316,7 @@ const SubscriptionPage: React.FC = () => {
         if (!showForm) {
           return (
             <Container fluid className="h-100 p-0">
-              <table className="invoice-table">
+              <table className="table-primary">
                 <thead>
                   <tr>
                     <th>Subscription Number</th>
@@ -345,7 +337,7 @@ const SubscriptionPage: React.FC = () => {
                       <td>{sub.customer_name}</td>
                       <td>{sub.plan_name}</td>
                       <td>
-                        <span className="status-open">{sub.status}</span>
+                        <span className="status-badge">{sub.status}</span>
                       </td>
                       <td>${sub.amount}</td>
                       <td>{sub.currency}</td>
@@ -361,7 +353,7 @@ const SubscriptionPage: React.FC = () => {
         }
 
         return (
-          <div className="invoice-form">
+          <div className="form-container">
             <SubscriptionCreateForm
               onSuccess={() => {
                 setShowForm(false);

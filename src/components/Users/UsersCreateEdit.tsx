@@ -9,7 +9,7 @@ import {
   Form,
   Dropdown,
 } from "react-bootstrap";
-import "./UsersCreateEdit.css";
+
 import { Hammer } from "../ui/icon";
 
 const UsersCreateEdit: React.FC = () => {
@@ -29,7 +29,7 @@ const UsersCreateEdit: React.FC = () => {
   };
 
   return (
-    <Container fluid className="p-4 user-page">
+    <Container fluid className="p-4 bg-gray-50">
       {/* Top Summary */}
       <Row className="mb-3">
         {[
@@ -87,37 +87,45 @@ const UsersCreateEdit: React.FC = () => {
               <Dropdown>
                 <Dropdown.Toggle
                   as="span"
-                  className="three-dot-menu"
+                  className="cursor-pointer"
                   id="dropdown-custom-components"
                 >
                   <Hammer size={20} />
                 </Dropdown.Toggle>
-                <Dropdown.Menu className="wrapper-model">
-                  <Dropdown.Item className="wrapper-model-item">
+                <Dropdown.Menu className="rounded-2xl p-2.5">
+                  <Dropdown.Item className="text-sm mb-2.5 hover:rounded-lg">
                     Edit contact information
                   </Dropdown.Item>
-                  <Dropdown.Item className="wrapper-model-item">
+                  <Dropdown.Item className="text-sm mb-2.5 hover:rounded-lg">
                     Manage addresses
                   </Dropdown.Item>
-                  <Dropdown.Item className="wrapper-model-item">
+                  <Dropdown.Item className="text-sm mb-2.5 hover:rounded-lg">
                     Edit marketing settings
                   </Dropdown.Item>
-                  <Dropdown.Item className="wrapper-model-item">
+                  <Dropdown.Item className="text-sm mb-2.5 hover:rounded-lg">
                     Edit tax details
                   </Dropdown.Item>
                 </Dropdown.Menu>
               </Dropdown>
             </Card.Header>
             <Card.Body>
-              <div className="fw-bold wrapper-contact">Contact information</div>
-              <div className="text-primary wrapper-contact">dishat@asd.com</div>
-              <div className="text-muted wrapper-contact">+91 70180 64278</div>
-              <div className="small text-muted mb-3 wrapper-contact">
+              <div className="fw-bold text-sm font-semibold">
+                Contact information
+              </div>
+              <div className="text-primary text-sm font-semibold">
+                dishat@asd.com
+              </div>
+              <div className="text-muted text-sm font-semibold">
+                +91 70180 64278
+              </div>
+              <div className="small text-muted mb-3 text-sm font-semibold">
                 Will receive notifications in English
               </div>
 
-              <div className="fw-bold wrapper-contact">Default address</div>
-              <div className="text-muted small pb-2 wrapper-contact">
+              <div className="fw-bold text-sm font-semibold">
+                Default address
+              </div>
+              <div className="text-muted small pb-2 text-sm font-semibold">
                 Dishant Customer
                 <br />
                 Abc 24
@@ -130,17 +138,18 @@ const UsersCreateEdit: React.FC = () => {
               </div>
 
               <hr className="pb-2" />
-              <div className="fw-bold wrapper-contact">Marketing</div>
-              <div className="wrapper-contact">
-                Email: <span>Not subscribed</span>
+              <div className="fw-bold text-sm font-semibold">Marketing</div>
+              <div className="text-sm font-semibold">
+                Email:{" "}
+                <span className="text-xs font-medium">Not subscribed</span>
               </div>
-              <div className="pb-2 wrapper-contact">
-                SMS: <span>Subscribed</span>
+              <div className="pb-2 text-sm font-semibold">
+                SMS: <span className="text-xs font-medium">Subscribed</span>
               </div>
 
               <hr className="pb-2" />
-              <div className="wrapper-contact">Tax details</div>
-              <div className="text-muted small wrapper-contact">
+              <div className="text-sm font-semibold">Tax details</div>
+              <div className="text-muted small text-sm font-semibold">
                 Don't collect tax
               </div>
             </Card.Body>
@@ -161,10 +170,19 @@ const UsersCreateEdit: React.FC = () => {
                 onKeyDown={addTag}
                 className="mb-2"
               />
-              <div className="tags-container">
+              <div className="flex flex-wrap gap-1.5">
                 {tags.map((tag, i) => (
-                  <span key={i} className="tag-pill">
-                    {tag} <span onClick={() => removeTag(tag)}>×</span>
+                  <span
+                    key={i}
+                    className="bg-gray-300 py-1 px-2.5 rounded-xl text-sm inline-flex items-center"
+                  >
+                    {tag}{" "}
+                    <span
+                      onClick={() => removeTag(tag)}
+                      className="ml-1.5 cursor-pointer"
+                    >
+                      ×
+                    </span>
                   </span>
                 ))}
               </div>

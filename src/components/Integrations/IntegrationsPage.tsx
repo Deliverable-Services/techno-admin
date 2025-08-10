@@ -13,7 +13,7 @@ import googleAnalyticsService, {
 } from "../../services/googleAnalyticsService";
 import { showMsgToast } from "../../utils/showMsgToast";
 import PageHeading from "../../shared-components/PageHeading";
-import "./IntegrationsPage.css";
+
 import { Hammer } from "../ui/icon";
 
 const IntegrationsPage: React.FC = () => {
@@ -340,12 +340,17 @@ const IntegrationsPage: React.FC = () => {
     integration: Integration,
     _categoryColor: string
   ) => (
-    <Card key={integration.name} className="h-full shadow-sm transition-transform duration-200 ease-in-out border border-gray-200 hover:transform hover:-translate-y-1 hover:shadow-lg">
+    <Card
+      key={integration.name}
+      className="h-full shadow-sm transition-transform duration-200 ease-in-out border border-gray-200 hover:transform hover:-translate-y-1 hover:shadow-lg"
+    >
       <CardContent className="p-4">
         {/* Header */}
         <div className="flex items-start justify-between mb-3">
           <div className="flex items-center gap-3">
-            <div className="flex items-center justify-center w-14 h-14 bg-blue-50 rounded-xl mb-2">{integration.icon}</div>
+            <div className="flex items-center justify-center w-14 h-14 bg-blue-50 rounded-xl mb-2">
+              {integration.icon}
+            </div>
             <div>
               <h5 className="mb-1 font-semibold">{integration.name}</h5>
               <div className="flex items-center gap-2">
@@ -485,7 +490,7 @@ const IntegrationsPage: React.FC = () => {
           {/* Stats Overview */}
           <Row className="mb-5">
             <Col md={3}>
-              <Card className="text-center h-full">
+              <Card className="text-center h-full transition-transform duration-200 ease-in-out hover:scale-105">
                 <CardContent className="py-4">
                   <div className="text-primary mb-2">
                     <Hammer size={32} />
@@ -505,7 +510,7 @@ const IntegrationsPage: React.FC = () => {
               </Card>
             </Col>
             <Col md={3}>
-              <Card className="text-center h-full">
+              <Card className="text-center h-full transition-transform duration-200 ease-in-out hover:scale-105">
                 <CardContent className="py-4">
                   <div className="text-yellow-500 mb-2">
                     <Hammer size={32} />
@@ -525,7 +530,7 @@ const IntegrationsPage: React.FC = () => {
               </Card>
             </Col>
             <Col md={3}>
-              <Card className="text-center h-full">
+              <Card className="text-center h-full transition-transform duration-200 ease-in-out hover:scale-105">
                 <CardContent className="py-4">
                   <div className="text-blue-500 mb-2">
                     <Hammer size={32} />
@@ -543,7 +548,7 @@ const IntegrationsPage: React.FC = () => {
               </Card>
             </Col>
             <Col md={3}>
-              <Card className="text-center h-full">
+              <Card className="text-center h-full transition-transform duration-200 ease-in-out hover:scale-105">
                 <CardContent className="py-4">
                   <div className="text-green-500 mb-2">
                     <Hammer size={32} />

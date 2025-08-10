@@ -22,7 +22,6 @@ import {
   Legend,
 } from "recharts";
 import { WebsiteAnalyticsChart, BrandGMBChart } from "./Chart";
-import "./dashboard.css";
 import PageHeading from "../../shared-components/PageHeading";
 import { Hammer } from "../ui/icon";
 
@@ -699,30 +698,44 @@ const Dashboard = () => {
 
         <div className="dashboard-page w-100 mt-4">
           <Container fluid className=" mt-0 pl-2 pr-0">
-            <div className="analytics-dashboard">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mt-6">
               {/* Website Analytics Section */}
-              <div className="analytics-section">
-                <div className="analytics-header">
-                  <h3 className="analytics-title">Website Analytics</h3>
+              <div className="bg-white rounded-2xl p-6 border border-gray-200">
+                <div className="mb-5">
+                  <h3 className="text-lg font-semibold text-gray-800 m-0 p-0">
+                    Website Analytics
+                  </h3>
                 </div>
 
-                <div className="metrics-row">
-                  <div className="metric-card">
-                    <div className="metric-label">Active Users</div>
-                    <div className="metric-value">24</div>
+                <div className="flex gap-4 mb-6 flex-wrap">
+                  <div className="flex-1 min-w-[120px] md:min-w-[100px] lg:min-w-[120px] p-4 md:p-3 lg:p-4 bg-slate-50 rounded-xl border border-slate-200 text-center">
+                    <div className="text-xs font-medium text-slate-500 mb-1 uppercase tracking-wide">
+                      Active Users
+                    </div>
+                    <div className="text-2xl md:text-xl lg:text-2xl font-bold text-gray-800 leading-tight">
+                      24
+                    </div>
                   </div>
-                  <div className="metric-card">
-                    <div className="metric-label">New users</div>
-                    <div className="metric-value">500</div>
+                  <div className="flex-1 min-w-[120px] md:min-w-[100px] lg:min-w-[120px] p-4 md:p-3 lg:p-4 bg-slate-50 rounded-xl border border-slate-200 text-center">
+                    <div className="text-xs font-medium text-slate-500 mb-1 uppercase tracking-wide">
+                      New users
+                    </div>
+                    <div className="text-2xl md:text-xl lg:text-2xl font-bold text-gray-800 leading-tight">
+                      500
+                    </div>
                   </div>
-                  <div className="metric-card">
-                    <div className="metric-label">Alltime users</div>
-                    <div className="metric-value">5.4K</div>
+                  <div className="flex-1 min-w-[120px] md:min-w-[100px] lg:min-w-[120px] p-4 md:p-3 lg:p-4 bg-slate-50 rounded-xl border border-slate-200 text-center">
+                    <div className="text-xs font-medium text-slate-500 mb-1 uppercase tracking-wide">
+                      Alltime users
+                    </div>
+                    <div className="text-2xl md:text-xl lg:text-2xl font-bold text-gray-800 leading-tight">
+                      5.4K
+                    </div>
                   </div>
                 </div>
 
-                <div className="chart-container">
-                  <div className="chart-wrapper">
+                <div className="bg-white rounded-xl p-4 border border-slate-200">
+                  <div className="h-[280px] md:h-[240px] lg:h-[280px] w-full">
                     {isBookingAnalyticsLoading ? (
                       <IsLoading />
                     ) : (
@@ -737,24 +750,34 @@ const Dashboard = () => {
               </div>
 
               {/* Brand & GMB Section */}
-              <div className="analytics-section">
-                <div className="analytics-header">
-                  <h3 className="analytics-title">Brand & GMB</h3>
+              <div className="bg-white rounded-2xl p-6 border border-gray-200">
+                <div className="mb-5">
+                  <h3 className="text-lg font-semibold text-gray-800 m-0 p-0">
+                    Brand & GMB
+                  </h3>
                 </div>
 
-                <div className="metrics-row">
-                  <div className="metric-card">
-                    <div className="metric-label">Reviews</div>
-                    <div className="metric-value">5</div>
+                <div className="flex gap-4 mb-6 flex-wrap">
+                  <div className="flex-1 min-w-[120px] md:min-w-[100px] lg:min-w-[120px] p-4 md:p-3 lg:p-4 bg-slate-50 rounded-xl border border-slate-200 text-center">
+                    <div className="text-xs font-medium text-slate-500 mb-1 uppercase tracking-wide">
+                      Reviews
+                    </div>
+                    <div className="text-2xl md:text-xl lg:text-2xl font-bold text-gray-800 leading-tight">
+                      5
+                    </div>
                   </div>
-                  <div className="metric-card">
-                    <div className="metric-label">Comments</div>
-                    <div className="metric-value">20</div>
+                  <div className="flex-1 min-w-[120px] md:min-w-[100px] lg:min-w-[120px] p-4 md:p-3 lg:p-4 bg-slate-50 rounded-xl border border-slate-200 text-center">
+                    <div className="text-xs font-medium text-slate-500 mb-1 uppercase tracking-wide">
+                      Comments
+                    </div>
+                    <div className="text-2xl md:text-xl lg:text-2xl font-bold text-gray-800 leading-tight">
+                      20
+                    </div>
                   </div>
                 </div>
 
-                <div className="chart-container">
-                  <div className="chart-wrapper">
+                <div className="bg-white rounded-xl p-4 border border-slate-200">
+                  <div className="h-[280px] md:h-[240px] lg:h-[280px] w-full">
                     {isRevenueAnalyticsLoading ? (
                       <IsLoading />
                     ) : (

@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useMemo, useCallback } from "react";
-import "./invoice.css";
+
 import InvoicesCreateForm from "./InvoicesCreateForm";
 import API from "../../utils/API";
 import VerifingUserLoader from "../../shared-components/VerifingUserLoader";
@@ -83,7 +83,7 @@ const InvoicePage: React.FC = () => {
         Cell: (data: Cell) => {
           return (
             <button
-              className="secondary-btn"
+              className="bg-gray-100 text-gray-800 border-0 rounded px-4 py-2 font-medium cursor-pointer text-base ml-2"
               onClick={() => downloadInvoicePDF(data?.row?.values as any)}
               disabled={downloadingInvoices[data?.row?.values?.id]}
               style={{
@@ -263,7 +263,7 @@ const InvoicePage: React.FC = () => {
                   variant="primary"
                   onClick={handleCreateStripeAccount}
                   size="lg"
-                  className="primary-btn"
+                  className="bg-gray-800 text-white border-0 rounded px-4 py-2 font-medium cursor-pointer text-base transition-colors hover:bg-gray-600"
                   style={{
                     backgroundColor: primaryColor,
                     borderColor: primaryColor,
@@ -283,7 +283,7 @@ const InvoicePage: React.FC = () => {
         }
         if (loading) {
           return (
-            <div className="invoice-empty">
+            <div className="text-center my-20">
               <p>Loading...</p>
             </div>
           );
@@ -291,12 +291,15 @@ const InvoicePage: React.FC = () => {
 
         if (!invoices.length) {
           return (
-            <div className="invoice-empty">
-              <h4>Send your first invoice</h4>
-              <p>
+            <div className="text-center my-20">
+              <h4 className="text-xl mb-0">Send your first invoice</h4>
+              <p className="text-xl text-gray-500 mb-4">
                 This is where you can see invoice and their associated status
               </p>
-              <button className="primary-btn" onClick={handleCreate}>
+              <button
+                className="bg-gray-800 text-white border-0 rounded px-4 py-2 font-medium cursor-pointer text-base transition-colors hover:bg-gray-600"
+                onClick={handleCreate}
+              >
                 + Create invoice
               </button>
             </div>
@@ -328,7 +331,7 @@ const InvoicePage: React.FC = () => {
         }
 
         return (
-          <div className="invoice-form">
+          <div className="max-w-lg mx-auto px-7">
             <InvoicesCreateForm
               onSuccess={() => {
                 setShowForm(false);

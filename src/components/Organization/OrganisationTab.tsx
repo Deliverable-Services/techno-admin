@@ -74,9 +74,13 @@ const OrganizationTab = () => {
   return (
     <div>
       {/* Section Header */}
-      <div className="section-header">
-        <h4>Organization Settings</h4>
-        <p>Update your organization details and preferences.</p>
+      <div className="border-b border-gray-200 pb-4 mb-6">
+        <h4 className="text-lg font-semibold text-gray-900 mb-1">
+          Organization Settings
+        </h4>
+        <p className="text-sm text-gray-600 mb-0">
+          Update your organization details and preferences.
+        </p>
       </div>
 
       {/* Form Content */}
@@ -93,34 +97,44 @@ const OrganizationTab = () => {
             {/* Basic Information */}
             <div className="row">
               <div className="col-md-6">
-                <div className="form-group">
-                  <label htmlFor="organizationName">Organization Name</label>
+                <div className="mb-6">
+                  <label
+                    htmlFor="organizationName"
+                    className="block text-sm font-semibold text-gray-700 mb-1.5"
+                  >
+                    Organization Name
+                  </label>
                   <Field
                     type="text"
-                    className="form-control"
+                    className="h-11 border border-gray-300 rounded-lg px-3.5 py-2.5 text-sm transition-colors focus:border-blue-600 focus:ring-4 focus:ring-blue-100 focus:outline-none bg-white w-full"
                     id="organizationName"
                     name="organizationName"
                     placeholder="Enter organization name"
                   />
                   {errors.organizationName && touched.organizationName && (
-                    <div className="text-danger fs-12 mt-1">
+                    <div className="text-red-600 text-xs mt-1">
                       {errors.organizationName}
                     </div>
                   )}
                 </div>
               </div>
               <div className="col-md-6">
-                <div className="form-group">
-                  <label htmlFor="organizationEmail">Organization Email</label>
+                <div className="mb-6">
+                  <label
+                    htmlFor="organizationEmail"
+                    className="block text-sm font-semibold text-gray-700 mb-1.5"
+                  >
+                    Organization Email
+                  </label>
                   <Field
                     type="email"
-                    className="form-control"
+                    className="h-11 border border-gray-300 rounded-lg px-3.5 py-2.5 text-sm transition-colors focus:border-blue-600 focus:ring-4 focus:ring-blue-100 focus:outline-none bg-white w-full"
                     id="organizationEmail"
                     name="organizationEmail"
                     placeholder="Enter organization email"
                   />
                   {errors.organizationEmail && touched.organizationEmail && (
-                    <div className="text-danger fs-12 mt-1">
+                    <div className="text-red-600 text-xs mt-1">
                       {errors.organizationEmail}
                     </div>
                   )}
@@ -129,9 +143,11 @@ const OrganizationTab = () => {
             </div>
 
             {/* Organization Type Selection */}
-            <div className="form-group">
-              <label>Organization Type</label>
-              <p className="text-muted mb-3" style={{ fontSize: "14px" }}>
+            <div className="mb-6">
+              <label className="block text-sm font-semibold text-gray-700 mb-1.5">
+                Organization Type
+              </label>
+              <p className="text-gray-600 mb-3 text-sm">
                 Choose the type that best describes your organization
               </p>
 
@@ -139,40 +155,25 @@ const OrganizationTab = () => {
                 {/* CRM Option */}
                 <div className="col-md-6">
                   <div
-                    className={`card h-100 border-2 ${
+                    className={`card h-100 border-2 transition-all duration-200 cursor-pointer ${
                       values.storeType === "crm"
-                        ? "border-primary selected"
-                        : "border-light"
+                        ? "border-blue-600 shadow-lg shadow-blue-600/30"
+                        : "border-gray-200"
                     }`}
                     onClick={() => setFieldValue("storeType", "crm")}
-                    style={{ cursor: "pointer", transition: "all 0.2s ease" }}
                   >
                     <img
                       src="https://miro.medium.com/v2/resize:fit:1400/1*TR-8mgpp0_X5P0ZbB6XYfQ.jpeg"
-                      className="card-img-top"
+                      className="card-img-top w-full h-36 object-cover rounded-lg"
                       alt="CRM"
-                      style={{ height: "180px", objectFit: "cover" }}
                     />
                     <div className="card-body position-relative">
                       <div className="d-flex align-items-center justify-content-between mb-2">
-                        <h5
-                          className="card-title mb-0 text-primary"
-                          style={{ fontSize: "16px", fontWeight: "600" }}
-                        >
+                        <h5 className="card-title mb-0 text-blue-600 text-base font-semibold">
                           CRM System
                         </h5>
                         {values.storeType === "crm" && (
-                          <div
-                            style={{
-                              width: "20px",
-                              height: "20px",
-                              backgroundColor: "#0b64fe",
-                              borderRadius: "50%",
-                              display: "flex",
-                              alignItems: "center",
-                              justifyContent: "center",
-                            }}
-                          >
+                          <div className="w-5 h-5 bg-blue-600 rounded-full flex items-center justify-center">
                             <svg
                               width="12"
                               height="12"
@@ -190,10 +191,7 @@ const OrganizationTab = () => {
                           </div>
                         )}
                       </div>
-                      <p
-                        className="card-text text-muted"
-                        style={{ fontSize: "14px" }}
-                      >
+                      <p className="card-text text-gray-600 text-sm">
                         Manage leads, sales, and customer relationships with
                         advanced CRM tools.
                       </p>
@@ -204,40 +202,25 @@ const OrganizationTab = () => {
                 {/* Ecommerce Option */}
                 <div className="col-md-6">
                   <div
-                    className={`card h-100 border-2 ${
+                    className={`card h-100 border-2 transition-all duration-200 cursor-pointer ${
                       values.storeType === "ecommerce"
-                        ? "border-primary selected"
-                        : "border-light"
+                        ? "border-blue-600 shadow-lg shadow-blue-600/30"
+                        : "border-gray-200"
                     }`}
                     onClick={() => setFieldValue("storeType", "ecommerce")}
-                    style={{ cursor: "pointer", transition: "all 0.2s ease" }}
                   >
                     <img
                       src="https://s3.envato.com/files/101016168/2a.UCM-CRM-dashboard-desktop.png"
-                      className="card-img-top"
+                      className="card-img-top w-full h-36 object-cover rounded-lg"
                       alt="Ecommerce"
-                      style={{ height: "180px", objectFit: "cover" }}
                     />
                     <div className="card-body position-relative">
                       <div className="d-flex align-items-center justify-content-between mb-2">
-                        <h5
-                          className="card-title mb-0"
-                          style={{ fontSize: "16px", fontWeight: "600" }}
-                        >
+                        <h5 className="card-title mb-0 text-base font-semibold">
                           E-commerce
                         </h5>
                         {values.storeType === "ecommerce" && (
-                          <div
-                            style={{
-                              width: "20px",
-                              height: "20px",
-                              backgroundColor: "#0b64fe",
-                              borderRadius: "50%",
-                              display: "flex",
-                              alignItems: "center",
-                              justifyContent: "center",
-                            }}
-                          >
+                          <div className="w-5 h-5 bg-blue-600 rounded-full flex items-center justify-center">
                             <svg
                               width="12"
                               height="12"
@@ -255,10 +238,7 @@ const OrganizationTab = () => {
                           </div>
                         )}
                       </div>
-                      <p
-                        className="card-text text-muted"
-                        style={{ fontSize: "14px" }}
-                      >
+                      <p className="card-text text-gray-600 text-sm">
                         Control your online store, manage products, and track
                         orders efficiently.
                       </p>
@@ -268,7 +248,9 @@ const OrganizationTab = () => {
               </div>
 
               {errors.storeType && touched.storeType && (
-                <div className="text-danger fs-12 mt-2">{errors.storeType}</div>
+                <div className="text-red-600 text-xs mt-2">
+                  {errors.storeType}
+                </div>
               )}
             </div>
 
