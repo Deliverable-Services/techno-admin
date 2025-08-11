@@ -20,6 +20,8 @@ import { showErrorToast } from "../../utils/showErrorToast";
 import IssuesCreateForm from "./IssuesCreateForm";
 import Flyout from "../../shared-components/Flyout"; // ✅ Import your shared Flyout
 import { Hammer } from "../ui/icon";
+import { CircleAlert } from 'lucide-react';
+
 
 const key = "tickets";
 const intitialFilter = {
@@ -196,7 +198,7 @@ const Issues = () => {
     <>
       <div className="view-padding">
         <PageHeading
-          icon={<Hammer size={24} />}
+          icon={<CircleAlert size={24} />}
           description="Create and manage tickets"
           title="Support Tickets"
           totalRecords={data?.total}

@@ -25,6 +25,8 @@ import { primaryColor } from "../../utils/constants";
 import { queryClient } from "../../utils/queryClient";
 import { showMsgToast } from "../../utils/showMsgToast";
 import { Hammer } from "../ui/icon";
+import { UsersRound } from 'lucide-react';
+
 
 const key = "users";
 
@@ -186,7 +188,7 @@ const Users = () => {
     <>
       <div className="view-padding">
         <PageHeading
-          icon={<Hammer size={24} />}
+          icon={<UsersRound size={24} />}
           description="Create and manage customers"
           title="Customers"
           onClick={_onCreateClick}

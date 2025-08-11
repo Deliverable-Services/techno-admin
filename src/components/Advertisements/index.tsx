@@ -25,6 +25,7 @@ import { useFlyout } from "../../hooks/useFlyout";
 import Flyout from "../../shared-components/Flyout";
 import AdvertisementCreateUpdateForm from "./AdvertisementUpdateCreateForm";
 import { Hammer } from "../ui/icon";
+import { Image } from 'lucide-react';
 
 const key = "banners/list";
 
@@ -221,7 +222,7 @@ const Advertisements = () => {
         <PageHeading
           title="Banners"
           description="Create and manage banners"
-          icon={<Hammer size={24} />}
+          icon={<Image size={24} />}
           onClick={() => _onCreateClick()}
           totalRecords={data?.total}
           permissionReq="create_banner"

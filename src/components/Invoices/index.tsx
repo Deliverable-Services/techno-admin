@@ -13,7 +13,10 @@ import { Container, Button } from "../ui/bootstrap-compat";
 import ReactTable from "../../shared-components/ReactTable";
 import { Cell } from "react-table";
 import { Hammer } from "../ui/icon";
+import { Plus } from 'lucide-react';
 import { primaryColor } from "../../utils/constants";
+import { ReceiptText } from 'lucide-react';
+
 
 interface Invoice {
   id: string;
@@ -239,7 +242,7 @@ const InvoicePage: React.FC = () => {
     <>
       <div className="view-padding">
         <PageHeading
-          icon={<Hammer size={24} />}
+          icon={<ReceiptText size={24} />}
           title="Invoices"
           description="Raise invoices to your customers with one click"
           onClick={_onCreateClick}

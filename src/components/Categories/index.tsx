@@ -22,6 +22,8 @@ import { useFlyout } from "../../hooks/useFlyout";
 import Flyout from "../../shared-components/Flyout";
 import CategoriesCreateUpdateForm from "./CategoriesCreateUpdateForm";
 import { Hammer } from "../ui/icon";
+import { VectorSquare } from 'lucide-react';
+
 
 const key = "categories";
 
@@ -192,7 +194,7 @@ const Categories = () => {
     <>
       <div className="view-padding">
         <PageHeading
-          icon={<Hammer size={24} />}
+          icon={<VectorSquare size={24} />}
           description="Create and manage categories"
           title="Categories"
           onClick={_onCreateClick}

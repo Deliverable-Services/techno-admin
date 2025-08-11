@@ -7,7 +7,14 @@ import PageHeading from "../../shared-components/PageHeading";
 import { Container, Button } from "../ui/bootstrap-compat";
 import { showErrorToast } from "../../utils/showErrorToast";
 import { primaryColor } from "../../utils/constants";
+import { Plus, CalendarDays, Repeat, CreditCard, RefreshCw, Triangle } from 'lucide-react';
 import { Hammer } from "../ui/icon";
+import { Play } from 'lucide-react';
+import { UserRoundPlus } from 'lucide-react';
+
+
+
+
 interface Subscription {
   id: string;
   customer_name: string;
@@ -112,7 +119,7 @@ const SubscriptionPage: React.FC = () => {
     <>
       <div className="view-padding">
         <PageHeading
-          icon={<Hammer size={24} />}
+          icon={<UserRoundPlus size={24} />}
           title="Subscriptions"
           description="Raise recurring invoices to your customers with one click"
           onClick={_onCreateClick}
@@ -209,7 +216,7 @@ const SubscriptionPage: React.FC = () => {
                       border: `3px solid ${primaryColor}20`,
                     }}
                   >
-                    <Hammer size={50} color={primaryColor} />
+                    <Play size={50} color={primaryColor} />
                   </div>
                   <div
                     className="position-absolute d-flex align-items-center justify-content-center"
@@ -223,7 +230,8 @@ const SubscriptionPage: React.FC = () => {
                       border: "3px solid white",
                     }}
                   >
-                    <Hammer size={18} color="white" />
+                    <RefreshCw size={18} color="white" />
+                    
                   </div>
                 </div>
 
@@ -259,16 +267,18 @@ const SubscriptionPage: React.FC = () => {
                   style={{ fontSize: "14px" }}
                 >
                   <div className="d-flex align-items-center mb-2 text-muted">
-                    <Hammer size={14} color={primaryColor} className="mr-2" />
+                    <CalendarDays size={14} color={primaryColor} className="mr-2" />
                     <span>Automated recurring billing</span>
+                    
                   </div>
                   <div className="d-flex align-items-center mb-2 text-muted">
-                    <Hammer size={14} color={primaryColor} className="mr-2" />
+                    <CreditCard size={14} color={primaryColor} className="mr-2" />
                     <span>Flexible pricing plans</span>
                   </div>
                   <div className="d-flex align-items-center mb-2 text-muted">
-                    <Hammer size={14} color={primaryColor} className="mr-2" />
+                    <Repeat size={14} color={primaryColor} className="mr-2" />
                     <span>Easy subscription management</span>
+                    
                   </div>
                 </div>
 
@@ -285,7 +295,7 @@ const SubscriptionPage: React.FC = () => {
                   }}
                 >
                   <div className="text-white d-flex align-items-center">
-                    <Hammer className="mr-2" size={14} />
+                    <Plus className="mr-2" size={14} />
                     Create your first subscription
                   </div>
                 </Button>

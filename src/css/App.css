@@ -13303,3 +13303,6 @@ li.navLink.my-1 svg path {
 .scrollbarCustom::-webkit-scrollbar {
   width: 0;
 }
+.menu-hamburger {
+  rotate: 90deg;
+}

@@ -2,6 +2,8 @@ import React from "react";
 import { Button } from "../components/ui/button";
 import Restricted from "./Restricted";
 import { Hammer } from "../components/ui/icon";
+import { Plus } from 'lucide-react';
+
 interface Props {
   title: string;
   icon?: React.ReactNode;
@@ -55,7 +57,7 @@ const PageHeading: React.FC<Props> = ({
             }}
           >
             <div className="text-white flex items-center">
-              <Hammer size={18} />
+              <Plus size={18} />
               <p className="mb-0 ml-1">{btnText || "Create"}</p>
             </div>
           </Button>

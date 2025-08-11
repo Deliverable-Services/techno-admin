@@ -4,6 +4,8 @@ import { IsDesktopContext } from "../context/IsDesktopContext";
 import Logo from "../shared-components/Logo";
 import { INavBar } from "../types/interface";
 import { Hammer } from "./ui/icon";
+import { Tally3 } from 'lucide-react';
+
 
 const TopBar = ({ isNavOpen, setIsNavOpen }: INavBar) => {
   const isDesktop = useContext(IsDesktopContext);
@@ -21,7 +23,8 @@ const TopBar = ({ isNavOpen, setIsNavOpen }: INavBar) => {
     >
       {isDesktop ? (
         <div className="menu-hamburger" style={{ cursor: "pointer" }}>
-          <Hammer size={28} onClick={openNavBar} />
+          <Tally3 size={28} onClick={openNavBar} />
+          
         </div>
       ) : null}
 
