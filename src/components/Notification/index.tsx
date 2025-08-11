@@ -25,6 +25,7 @@ import { useFlyout } from "../../hooks/useFlyout";
 import Flyout from "../../shared-components/Flyout";
 import NotificationCreateUpdateForm from "./NotificationCreateUpdateForm";
 import { Hammer } from "../ui/icon";
+import { BellRing } from 'lucide-react';
 
 const key = "fcm-notification";
 const intitialFilter = {
@@ -185,7 +186,7 @@ const Notifications = () => {
     <>
       <div className="view-padding">
         <PageHeading
-          icon={<Hammer size={24} />}
+          icon={<BellRing size={24} />}
           title="Notifications"
           description="Create and manage notifications for your workflow"
           onClick={_onCreateClick}

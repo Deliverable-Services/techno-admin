@@ -9,6 +9,7 @@ import DomainTab from "./DomainTab";
 import PageHeading from "../../shared-components/PageHeading";
 import { Nav } from "../ui/bootstrap-compat";
 import { Hammer } from "../ui/icon";
+import { Building } from 'lucide-react';
 
 const tabs = [
   { key: "profile", label: "Profile" },
@@ -29,7 +30,7 @@ const Organization: React.FC = () => {
       {/* Header Section */}
       <div className="view-padding d-flex justify-content-between align-items-center">
         <PageHeading
-          icon={<Hammer size={24} />}
+          icon={<Building size={24} />}
           title="Organization Settings"
           description="Configure and manage your organization preferences"
           permissionReq="create_lead"

@@ -20,6 +20,7 @@ import { useFlyout } from "../../hooks/useFlyout";
 import FaqCreateUpdateForm from "./FaqsCreateUpdateForm";
 import Flyout from "../../shared-components/Flyout";
 import { Hammer } from "../ui/icon";
+import { CircleQuestionMark } from 'lucide-react';
 
 const key = "faqs";
 
@@ -157,7 +158,7 @@ const Faqs = () => {
     <>
       <div className=" view-padding">
         <PageHeading
-          icon={<Hammer size={24} />}
+          icon={<CircleQuestionMark size={24} />}
           description="This will be show on your website & support center"
           title="Frequently Asked Questions"
           onClick={_onCreateClick}

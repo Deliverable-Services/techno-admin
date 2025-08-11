@@ -10,6 +10,8 @@ import { handleApiError } from "../../hooks/handleApiErrors";
 import IsLoading from "../../shared-components/isLoading";
 import { useOrganisation } from "../../context/OrganisationContext";
 import { primaryColor } from "../../utils/constants";
+import { LayoutGrid } from 'lucide-react';
+
 import {
   ResponsiveContainer,
   ComposedChart,
@@ -25,6 +27,8 @@ import { WebsiteAnalyticsChart, BrandGMBChart } from "./Chart";
 import PageHeading from "../../shared-components/PageHeading";
 import { Hammer } from "../ui/icon";
 import { Card, CardContent, CardFooter } from "../ui/card";
+import { Triangle, Users, NotepadText, Bug, MoveRight, Instagram, Facebook, Youtube } from 'lucide-react';
+
 
 const bookingFilter = {
   datefrom: moment().subtract(7, "days").format("YYYY-MM-DD"),
@@ -107,9 +111,10 @@ const Dashboard = () => {
     <>
       <div className="view-padding flex justify-between items-center">
         <PageHeading
-          icon={<Hammer size={24} />}
+          icon={<LayoutGrid size={24} />}
           title="Dashboard"
           description="Quick glance of your platform"
+
         />
 
         <div className="crm-users">
@@ -156,7 +161,7 @@ const Dashboard = () => {
             <Card className="p-0 overflow-hidden">
               <CardContent>
                 <div className="flex items-center mb-4">
-                  <Hammer size={16} />
+                  <Triangle size={16} />
                   <h5 className="mb-0 font-bold ml-2">Leads</h5>
                 </div>
 
@@ -198,10 +203,10 @@ const Dashboard = () => {
                 >
                   Go to CRM
                 </span>
-                <Hammer className="text-primary" />
+                <MoveRight className="text-primary" />
 
-              </CardFooter>
-            </Card>
+              </CardFooter >
+            </Card >
           ) : (
             <Card className="p-0 overflow-hidden">
               <CardContent>
@@ -265,157 +270,159 @@ const Dashboard = () => {
             </Card>
           )}
 
-          {selectedOrg?.store_type?.toLowerCase() === "crm" && (
-            <>
-              {/* Customers Card for CRM */}
-              <Card className="p-0 overflow-hidden">
-                <CardContent>
-                  <div className="flex items-center mb-4">
-                    <Hammer size={16} />
-                    <h5 className="mb-0 font-bold ml-2">Customers</h5>
-                  </div>
-
-                  <div className="flex items-center">
-                    <div className="flex-1">
-                      <h4 className="mb-0 font-bold text-primary">
-                        {data?.customer?.customers || 0}
-                      </h4>
-                      <span className="text-muted small">Total</span>
+          {
+            selectedOrg?.store_type?.toLowerCase() === "crm" && (
+              <>
+                {/* Customers Card for CRM */}
+                <Card className="p-0 overflow-hidden">
+                  <CardContent>
+                    <div className="flex items-center mb-4">
+                      <Users size={16} />
+                      <h5 className="mb-0 font-bold ml-2">Customers</h5>
                     </div>
 
-                    <div
-                      className="mx-3 bg-[#dee2e6] w-[1px] h-[50px]"
-                    ></div>
+                    <div className="flex items-center">
+                      <div className="flex-1">
+                        <h4 className="mb-0 font-bold text-primary">
+                          {data?.customer?.customers || 0}
+                        </h4>
+                        <span className="text-muted small">Total</span>
+                      </div>
 
-                    <div className="flex-1">
-                      <h4 className="mb-0 font-bold text-success">
-                        {data?.customer?.new || 0}
-                      </h4>
-                      <span className="text-muted small">New</span>
+                      <div
+                        className="mx-3 bg-[#dee2e6] w-[1px] h-[50px]"
+                      ></div>
+
+                      <div className="flex-1">
+                        <h4 className="mb-0 font-bold text-success">
+                          {data?.customer?.new || 0}
+                        </h4>
+                        <span className="text-muted small">New</span>
+                      </div>
                     </div>
-                  </div>
-                </CardContent>
-                <CardFooter
-                  className="flex items-center justify-between border-t cursor-pointer w-full bg-[#f8f9fa]"
-                  onClick={() => history.push("/users")}
-                >
-                  <span
-                    className="font-bold text-primary"
-                    style={{ fontSize: "14px" }}
+                  </CardContent>
+                  <CardFooter
+                    className="flex items-center justify-between border-t cursor-pointer w-full bg-[#f8f9fa]"
+                    onClick={() => history.push("/users")}
                   >
-                    Go to Customers
-                  </span>
-                  <Hammer className="text-primary" />
-                </CardFooter>
-              </Card>
+                    <span
+                      className="font-bold text-primary"
+                      style={{ fontSize: "14px" }}
+                    >
+                      Go to Customers
+                    </span>
+                    <Hammer className="text-primary" />
+                  </CardFooter >
+                </Card >
 
-              <Card className="p-0 overflow-hidden">
-                <CardContent>
-                  <div className="flex items-center mb-3">
-                    <Hammer size={16} />
-                    <h5 className="mb-0 font-bold ml-2">Invoices</h5>
-                  </div>
-
-                  <div className="flex items-center">
-                    <div className="flex-fill">
-                      <h4 className="mb-0 font-bold text-warning">
-                        {data?.invoices?.pending || 0}
-                      </h4>
-                      <span className="text-muted small">Pending</span>
+                <Card className="p-0 overflow-hidden">
+                  <CardContent>
+                    <div className="flex items-center mb-3">
+                      <MoveRight size={16} />
+                      <h5 className="mb-0 font-bold ml-2">Invoices</h5>
                     </div>
 
-                    <div
-                      className="mx-3 bg-[#dee2e6] w-[1px] h-[50px]"
-                    ></div>
+                    <div className="flex items-center">
+                      <div className="flex-fill">
+                        <h4 className="mb-0 font-bold text-warning">
+                          {data?.invoices?.pending || 0}
+                        </h4>
+                        <span className="text-muted small">Pending</span>
+                      </div>
 
-                    <div className="flex-1">
-                      <h4 className="mb-0 font-bold text-success">
-                        {data?.invoices?.completed || 0}
-                      </h4>
-                      <span className="text-muted small">Paid</span>
+                      <div
+                        className="mx-3 bg-[#dee2e6] w-[1px] h-[50px]"
+                      ></div>
+
+                      <div className="flex-1">
+                        <h4 className="mb-0 font-bold text-success">
+                          {data?.invoices?.completed || 0}
+                        </h4>
+                        <span className="text-muted small">Paid</span>
+                      </div>
+
+                      <div
+                        className="mx-3 bg-[#dee2e6] w-[1px] h-[50px]"
+                      ></div>
+
+                      <div className="flex-0">
+                        <h4 className="mb-0 font-bold text-primary">
+                          {data?.invoices?.total || 0}
+                        </h4>
+                        <span className="text-muted small">Total</span>
+                      </div>
                     </div>
-
-                    <div
-                      className="mx-3 bg-[#dee2e6] w-[1px] h-[50px]"
-                    ></div>
-
-                    <div className="flex-0">
-                      <h4 className="mb-0 font-bold text-primary">
-                        {data?.invoices?.total || 0}
-                      </h4>
-                      <span className="text-muted small">Total</span>
-                    </div>
-                  </div>
-                </CardContent>
-                <CardFooter
-                  className="flex items-center justify-between border-t cursor-pointer w-full bg-[#f8f9fa]"
-                  onClick={() => history.push("/invoices")}
-                >
-                  <span
-                    className="font-bold text-primary"
-                    style={{ fontSize: "14px" }}
+                  </CardContent>
+                  <CardFooter
+                    className="flex items-center justify-between border-t cursor-pointer w-full bg-[#f8f9fa]"
+                    onClick={() => history.push("/invoices")}
                   >
-                    Go to Invoices
-                  </span>
-                  <Hammer className="text-primary" />
-                </CardFooter>
-              </Card>
+                    <span
+                      className="font-bold text-primary"
+                      style={{ fontSize: "14px" }}
+                    >
+                      Go to Invoices
+                    </span>
+                    <Hammer className="text-primary" />
+                  </CardFooter >
+                </Card >
 
-              {/* Issues Card for CRM */}
-              <Card className="p-0 overflow-hidden">
-                <CardContent>
-                  <div className="flex items-center mb-3">
-                    <Hammer size={16} />
-                    <h5 className="mb-0 font-bold ml-2">Issues</h5>
-                  </div>
-
-                  <div className="flex items-center">
-                    <div className="flex-1">
-                      <h4 className="mb-0 font-bold text-danger">
-                        {data?.issues?.open || 0}
-                      </h4>
-                      <span className="text-muted small">Open</span>
+                {/* Issues Card for CRM */}
+                < Card className="p-0 overflow-hidden" >
+                  <CardContent>
+                    <div className="flex items-center mb-3">
+                      <MoveRight size={16} />
+                      <h5 className="mb-0 font-bold ml-2">Issues</h5>
                     </div>
 
-                    <div
-                      className="mx-3 bg-[#dee2e6] w-[1px] h-[50px]"
-                    ></div>
+                    <div className="flex items-center">
+                      <div className="flex-1">
+                        <h4 className="mb-0 font-bold text-danger">
+                          {data?.issues?.open || 0}
+                        </h4>
+                        <span className="text-muted small">Open</span>
+                      </div>
 
-                    <div className="flex-1">
-                      <h4 className="mb-0 font-bold text-success">
-                        {data?.issues?.close || 0}
-                      </h4>
-                      <span className="text-muted small">Closed</span>
+                      <div
+                        className="mx-3 bg-[#dee2e6] w-[1px] h-[50px]"
+                      ></div>
+
+                      <div className="flex-1">
+                        <h4 className="mb-0 font-bold text-success">
+                          {data?.issues?.close || 0}
+                        </h4>
+                        <span className="text-muted small">Closed</span>
+                      </div>
+
+                      <div
+                        className="mx-3 bg-[#dee2e6] w-[1px] h-[50px]"
+                      ></div>
+
+                      <div className="flex-1">
+                        <h4 className="mb-0 font-bold text-primary">
+                          {data?.issues?.total || 0}
+                        </h4>
+                        <span className="text-muted small">Total</span>
+                      </div>
                     </div>
-
-                    <div
-                      className="mx-3 bg-[#dee2e6] w-[1px] h-[50px]"
-                    ></div>
-
-                    <div className="flex-1">
-                      <h4 className="mb-0 font-bold text-primary">
-                        {data?.issues?.total || 0}
-                      </h4>
-                      <span className="text-muted small">Total</span>
-                    </div>
-                  </div>
-                </CardContent>
-                <CardFooter
-                  className="flex items-center justify-between border-t cursor-pointer w-full bg-[#f8f9fa]"
-                  onClick={() => history.push("/issues")}
-                >
-                  <span
-                    className="font-bold text-primary"
-                    style={{ fontSize: "14px" }}
+                  </CardContent>
+                  <CardFooter
+                    className="flex items-center justify-between border-t cursor-pointer w-full bg-[#f8f9fa]"
+                    onClick={() => history.push("/issues")}
                   >
-                    Go to Issues
-                  </span>
-                  <Hammer className="text-primary" />
-                </CardFooter>
-              </Card>
-            </>
-          )}
-        </div>
+                    <span
+                      className="font-bold text-primary"
+                      style={{ fontSize: "14px" }}
+                    >
+                      Go to Issues
+                    </span>
+                    <MoveRight className="text-primary" />
+                  </CardFooter >
+                </Card >
+              </>
+            )
+          }
+        </div >
 
         {data?.graphData && (
           <Card className="p-0 overflow-hidden">
@@ -725,15 +732,15 @@ const Dashboard = () => {
                   </div>
                 </div>
                 <div className="social-icons flex items-center gap-4 p-2.5">
-                  <Hammer />
-                  <Hammer />
-                  <Hammer />
+                  <Instagram />
+                  <Facebook />
+                  <Youtube />
                 </div>
               </div>
-            </div>
-          </Container>
-        </div>
-      </div>
+            </div >
+          </Container >
+        </div >
+      </div >
     </>
   );
 };

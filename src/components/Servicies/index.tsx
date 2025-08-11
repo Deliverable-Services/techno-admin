@@ -21,6 +21,8 @@ import { useFlyout } from "../../hooks/useFlyout";
 import Flyout from "../../shared-components/Flyout";
 import ServicesCreateUpdateForm from "./ServiciesCreateUpdateForm";
 import { Hammer } from "../ui/icon";
+import { HeartPulse } from 'lucide-react';
+
 
 const key = "services";
 
@@ -150,7 +152,7 @@ const Services = () => {
     <>
       <div className="view-padding">
         <PageHeading
-          icon={<Hammer size={24} />}
+          icon={<HeartPulse size={24} />}
           description="Create and manage service"
           title="Services"
           onClick={_onCreateClick}

@@ -16,6 +16,8 @@ import { queryClient } from "../../utils/queryClient";
 import PageHeading from "../../shared-components/PageHeading";
 import { Users2 } from "../../components/ui/icon";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
+import { Triangle } from 'lucide-react';
+
 
 const key = "leads";
 const membersKey = "users";
@@ -109,7 +111,7 @@ const Index: React.FC = () => {
     <>
       <div className="view-padding d-flex justify-content-between align-items-center">
         <PageHeading
-          icon={<Users2 size={24} />}
+          icon={<Triangle size={24} />}
           title="CRM"
           description="Manage all ongoing leads"
           onClick={_onCreateClick}

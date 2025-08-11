@@ -12,6 +12,7 @@ import googleAnalyticsService, {
 } from "../../services/googleAnalyticsService";
 import { showMsgToast } from "../../utils/showMsgToast";
 import PageHeading from "../../shared-components/PageHeading";
+import { Rotate3d } from 'lucide-react';
 
 import { Hammer } from "../ui/icon";
 
@@ -478,7 +479,7 @@ const IntegrationsPage: React.FC = () => {
         {/* Page Header */}
         <div className="view-padding">
           <PageHeading
-            icon={<Hammer size={24} />}
+            icon={<Rotate3d size={24} />}
             title="Integrations"
             description="Connect your favorite tools and services to streamline your workflow"
           />

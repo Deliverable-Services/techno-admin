@@ -4,9 +4,7 @@ import { IsDesktopContext } from "../context/IsDesktopContext";
 import { useGoogleBusinessConnection } from "./Integrations/useGoogleBusinessConnection";
 import { useGoogleAnalyticsConnection } from "./Integrations/useGoogleAnalyticsConnection";
 import { useOrganisation } from "../context/OrganisationContext";
-
 import { INavBar, INavLink } from "../types/interface";
-
 import Logo from "../shared-components/Logo";
 import Navlink from "../shared-components/Navlink";
 import Overlay from "../shared-components/Overlay";
@@ -14,6 +12,9 @@ import { handleApiError } from "../hooks/handleApiErrors";
 import API from "../utils/API";
 import { useHistory } from "react-router-dom";
 import { Hammer } from "./ui/icon";
+import { Triangle, Clock, LayoutGrid, Rotate3d, LetterText, Building, BellRing, UserStar, ShieldCheck,  CircleQuestionMark, Banknote, ReceiptText, UserRoundPlus, CreditCard, Users, CircleAlert, HeartPulse, VectorSquare, Building2, Globe, Ticket , Image } from 'lucide-react';
+
+
 // === Main Navigation Sections ===
 // # TODO: Fix all the permissions and introduce the list in the permissions table
 const mainLinks: Array<INavLink> = [
@@ -25,46 +26,46 @@ const mainLinks: Array<INavLink> = [
   },
   {
     title: "Leads",
-    icon: <Hammer />,
+    icon:<Triangle />,
     permissionReq: "read_bookingslot",
     children: [
       {
         title: "CRM",
         path: "/crm",
         permissionReq: "read_subscription",
-        icon: <Hammer />,
+        icon: <Triangle />,
       },
       {
         title: "Meetings",
         path: "/meetings",
         permissionReq: "read_booking",
-        icon: <Hammer />,
+        icon: <Clock />,
       },
     ],
   },
   {
     title: "Billings",
-    icon: <Hammer />,
+    icon: <Banknote />,
     path: "/invoices",
     permissionReq: "read_bookingslot",
     children: [
       {
         title: "Invoices",
         path: "/invoices",
-        icon: <Hammer />,
+        icon: <ReceiptText />,
         permissionReq: "read_city",
       },
       {
         title: "Subscriptions",
         path: "/subscriptions",
-        icon: <Hammer />,
+        icon:<UserRoundPlus />,
         permissionReq: "read_subscription",
       },
       {
         title: "Transactions",
         path: "/transactions",
         permissionReq: "read_transaction",
-        icon: <Hammer />,
+        icon: <CreditCard />,
       },
     ],
   },
@@ -77,37 +78,37 @@ const mainLinks: Array<INavLink> = [
   {
     title: "Customers",
     path: "/users",
-    icon: <Hammer />,
+    icon: <Users />,
     permissionReq: "read_user",
   },
   {
     title: "Support Tickets",
     path: "/issues",
-    icon: <Hammer />,
+    icon: <CircleAlert />,
     permissionReq: "read_ticket",
   },
   {
     title: "Services",
     path: "/services",
-    icon: <Hammer />,
+    icon:<HeartPulse />,
     permissionReq: "read_bookingslot",
     children: [
       {
         title: "Services",
         path: "/services",
-        icon: <Hammer />,
+        icon: <HeartPulse />,
         permissionReq: "read_service",
       },
       {
         title: "Categories",
         path: "/categories",
-        icon: <Hammer />,
+        icon:<VectorSquare />,
         permissionReq: "read_category",
       },
       {
         title: "Servicable Cities",
         path: "/cities",
-        icon: <Hammer />,
+        icon: <Building2 />,
         permissionReq: "read_city",
       },
     ],
@@ -147,37 +148,37 @@ const mainLinks: Array<INavLink> = [
   {
     title: "Website",
     path: "/website-pages",
-    icon: <Hammer />,
+    icon: <Globe />,
     permissionReq: "read_bookingslot",
     children: [
       {
         title: "Pages",
         path: "/website-pages",
-        icon: <Hammer />,
+        icon: <Globe />,
         permissionReq: "read_staticpage",
       },
       {
         title: "Faqs",
         path: "/faqs",
-        icon: <Hammer />,
+        icon: <CircleQuestionMark />,
         permissionReq: "read_faq",
       },
       {
         title: "Coupons",
         path: "/coupons",
-        icon: <Hammer />,
+        icon: <Ticket />,
         permissionReq: "read_coupon",
       },
       {
         title: "Banners",
         path: "/advertisements",
-        icon: <Hammer />,
+        icon: <Image />,
         permissionReq: "read_banner",
       },
       {
         title: "Testimonials",
         path: "/testimonials",
-        icon: <Hammer />,
+        icon: <LetterText />,
         permissionReq: "read_testimonial",
       },
     ],
@@ -188,7 +189,7 @@ const organisationLinks: Array<INavLink> = [
   {
     title: "Team Members",
     path: "/team-members",
-    icon: <Hammer />,
+    icon: <UserStar />,
     permissionReq: "read_user",
   },
   {
@@ -206,19 +207,19 @@ const organisationLinks: Array<INavLink> = [
   {
     title: "Roles & Permissions",
     path: "/permissions",
-    icon: <Hammer />,
+    icon: <ShieldCheck />,
     permissionReq: "read_permission",
   },
   {
     title: "Organization",
     path: "/organization",
-    icon: <Hammer />,
+    icon: <Building />,
     permissionReq: "read_city",
   },
   {
     title: "Workflow Notifications",
     path: "/notifications",
-    icon: <Hammer />,
+    icon: <BellRing />,
     permissionReq: "read_notification",
   },
 ];
@@ -228,7 +229,7 @@ const googleLinks: Array<INavLink> = [
     title: "Integrations",
     path: "/enable-integrations",
     permissionReq: "read_notification",
-    icon: <Hammer />,
+    icon: <Rotate3d />,
   },
   {
     title: "Google Analytics",
@@ -330,7 +331,7 @@ const NavBar = ({ isNavOpen, setIsNavOpen }: INavBar) => {
               title="Dashboard"
               path="/dashboard"
               onClick={closeNavBar}
-              icon={<Hammer />}
+              icon={<LayoutGrid />}
               isNavOpen={isNavOpen}
               permissionReq="read_dashboard"
               activeMenu={activeMenu}

@@ -18,6 +18,8 @@ import { primaryColor } from "../../utils/constants";
 import { showErrorToast } from "../../utils/showErrorToast";
 import { useQuery } from "react-query";
 import { Hammer } from "../ui/icon";
+import { CreditCard } from 'lucide-react';
+
 
 const key = "transactions";
 
@@ -153,7 +155,7 @@ const Transactions = () => {
     <>
       <div className="view-padding">
         <PageHeading
-          icon={<Hammer size={24} />}
+          icon={<CreditCard size={24} />}
           title="Transactions"
           description="Track all your payments at once glance"
         />

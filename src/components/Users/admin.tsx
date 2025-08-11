@@ -24,6 +24,8 @@ import { showMsgToast } from "../../utils/showMsgToast";
 import { CommonModal } from "../CommonPopup/CommonModal";
 import UserCreateUpdateForm from "./UsersCreateUpdateForm";
 import { Hammer } from "../ui/icon";
+import { UserStar } from 'lucide-react';
+
 interface IFilter {
   role: string | null;
 }
@@ -198,7 +200,7 @@ const Admins = () => {
       </CommonModal>
       <div className="view-padding">
         <PageHeading
-          icon={<Hammer size={24} />}
+          icon={<UserStar size={24} />}
           title="Team Members"
           description="Create and manage team members for your workflow"
           onClick={_toggleModal}

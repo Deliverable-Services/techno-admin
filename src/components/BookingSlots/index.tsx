@@ -24,6 +24,8 @@ import IsLoading from "../../shared-components/isLoading";
 import MeetingDetails from "./MeetingDetails";
 import CreateUpdateMeeting from "./CreateUpdateMeeting";
 import { Hammer } from "../ui/icon";
+import { Clock } from 'lucide-react';
+
 
 const key = "meetings";
 
@@ -156,7 +158,7 @@ const Meetings = () => {
     <>
       <div className="view-padding">
         <PageHeading
-          icon={<Hammer size={24} />}
+          icon={<Clock size={24} />}
           title="Meetings"
           description="Manage all booked meetings from here"
           onClick={_onCreateClick}

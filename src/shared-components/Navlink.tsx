@@ -2,7 +2,7 @@ import { useRef } from "react";
 import { Link, useLocation, useHistory } from "react-router-dom";
 import { INavLink } from "../types/interface";
 import Restricted from "./Restricted";
-import { Hammer } from "../components/ui/icon";
+import { ChevronDown } from "../components/ui/icon";
 
 interface SidebarMenuItemProps extends INavLink {
   onClick: () => void;
@@ -62,7 +62,7 @@ const NavLink = ({
             <div style={{ display: "flex", alignItems: "center" }}>
               {icon} {title}
             </div>
-            <Hammer
+            <ChevronDown 
               style={{
                 transition: "transform 0.3s ease",
                 transform: isOpen ? "rotate(180deg)" : "rotate(0deg)",

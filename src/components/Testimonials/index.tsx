@@ -20,6 +20,8 @@ import { useFlyout } from "../../hooks/useFlyout";
 import Flyout from "../../shared-components/Flyout";
 import TestimonialCreateUpdateForm from "./TestimonialCreateUpdateForm";
 import { Hammer } from "../ui/icon";
+import { LetterText } from 'lucide-react';
+
 
 const key = "testimonial";
 
@@ -172,7 +174,7 @@ const Testimonial = () => {
     <>
       <div className="view-padding">
         <PageHeading
-          icon={<Hammer size={24} />}
+          icon={<LetterText size={24} />}
           title="Testimonials"
           description="Create and manage testimonials for your workflow"
           onClick={_onCreateClick}

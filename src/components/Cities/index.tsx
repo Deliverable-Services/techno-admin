@@ -19,6 +19,8 @@ import { useFlyout } from "../../hooks/useFlyout";
 import Flyout from "../../shared-components/Flyout";
 import CitiesCreateUpdateForm from "./CitiesCreateUpdateForm";
 import { Hammer } from "../ui/icon";
+import { Building2 } from 'lucide-react';
+
 
 const key = "cities";
 
@@ -143,7 +145,7 @@ const Cities = () => {
     <>
       <div className="view-padding">
         <PageHeading
-          icon={<Hammer size={24} />}
+          icon={<Building2 size={24} />}
           title="Serviceable Cities"
           description="Create and manage cities for your workflow"
           onClick={_onCreateClick}

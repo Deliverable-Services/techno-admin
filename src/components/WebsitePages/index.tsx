@@ -5,6 +5,7 @@ import PageHeading from "../../shared-components/PageHeading";
 import StaticPages from "../StaticPages";
 import DynamicPages from "../DynamicPages";
 import { Hammer } from "../ui/icon";
+import { Globe } from 'lucide-react';
 
 const intitialFilter = {
   q: "",
@@ -54,7 +55,7 @@ const WebsitePages = () => {
     <>
       <div className="view-padding">
         <PageHeading
-          icon={<Hammer size={24} />}
+          icon={<Globe size={24} />}
           title="Website Pages"
           description="Create and manage website pages"
         />
