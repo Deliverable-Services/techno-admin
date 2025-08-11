@@ -1,6 +1,12 @@
 import { AxiosError } from "axios";
 import { useMemo, useState } from "react";
-import { Button, Container, Dropdown, Modal } from "../ui/bootstrap-compat";
+import {
+  Button,
+  Container,
+  Dropdown,
+  Modal,
+} from "react-bootstrap";
+import { BiSad } from "react-icons/bi";
 import { useMutation, useQuery } from "react-query";
 import { useHistory } from "react-router-dom";
 import { Cell } from "react-table";
@@ -21,9 +27,11 @@ import { isActiveArray } from "../../utils/arrays";
 import { primaryColor } from "../../utils/constants";
 import { queryClient } from "../../utils/queryClient";
 import { showMsgToast } from "../../utils/showMsgToast";
+import { AiFillDelete } from "react-icons/ai";
+import { BsFunnel, BsThreeDotsVertical } from "react-icons/bs";
+import { RiAdminFill } from "react-icons/ri";
 import { CommonModal } from "../CommonPopup/CommonModal";
 import UserCreateUpdateForm from "./UsersCreateUpdateForm";
-import { Hammer } from "../ui/icon";
 interface IFilter {
   role: string | null;
 }
@@ -149,7 +157,7 @@ const Admins = () => {
                   className="p-1 border-0 shadow-none"
                   id={`dropdown-${data.row.values.id}`}
                 >
-                  <Hammer size={18} />
+                  <BsThreeDotsVertical size={18} />
                 </Dropdown.Toggle>
                 <Dropdown.Menu className="menu-dropdown">
                   <Dropdown.Item
@@ -159,7 +167,7 @@ const Admins = () => {
                       setDeletePopup(true);
                     }}
                   >
-                    <Hammer size={16} className="ml-1" />
+                    <AiFillDelete size={16} className="ml-1" />
                     Delete
                   </Dropdown.Item>
                 </Dropdown.Menu>
@@ -176,7 +184,7 @@ const Admins = () => {
     return (
       <Container fluid className="d-flex justify-content-center display-3">
         <div className="d-flex flex-column align-items-center">
-          <Hammer color={primaryColor} />
+          <BiSad color={primaryColor} />
           <span className="text-primary display-3">Something went wrong</span>
         </div>
       </Container>
@@ -198,7 +206,7 @@ const Admins = () => {
       </CommonModal>
       <div className="view-padding">
         <PageHeading
-          icon={<Hammer size={24} />}
+          icon={<RiAdminFill size={24} />}
           title="Team Members"
           description="Create and manage team members for your workflow"
           onClick={_toggleModal}
@@ -220,7 +228,7 @@ const Admins = () => {
                     filters={
                       <Dropdown className="search-filters-div filter-dropdown mr-2">
                         <Dropdown.Toggle as={Button} variant="primary">
-                          <Hammer /> Filters
+                          <BsFunnel /> Filters
                         </Dropdown.Toggle>
                         <Dropdown.Menu>
                           <div className="filter-dropdown-heading d-flex justify-content-between w-100">

@@ -1,9 +1,9 @@
-import { Col, Container, Row } from "../ui/bootstrap-compat";
+import { Col, Container, Row } from "react-bootstrap";
+import { MdRemoveShoppingCart } from "react-icons/md";
 import { useLocation } from "react-router-dom";
 import useGetSingleQuery from "../../hooks/useGetSingleQuery";
 import PageHeading from "../../shared-components/PageHeading";
 import AddressCard from "./AddressCard";
-import { Hammer } from "../ui/icon";
 
 const key = "users";
 
@@ -60,7 +60,7 @@ const UserAddress = () => {
               className="d-flex justify-content-center display-3"
             >
               <div className="d-flex flex-column align-items-center pt-3 pb-3">
-                <Hammer color="#000" size={60} />
+                <MdRemoveShoppingCart color="#000" size={60} />
                 <h4 className="text-black font-weight-bold mt-2">
                   No address found
                 </h4>

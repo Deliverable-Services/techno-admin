@@ -1,0 +1,21 @@
+.itemContainer {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    align-items: center;
+
+}
+.iconContainer {
+    padding: 4px 15px;
+    border-radius: 52px;
+}
+
+.name {
+    font-size: 12px;
+    font-weight: 600;
+    color: #26262A;
+}
+
+.item-selected {
+    background-color: rgb(207, 204, 204);
+}

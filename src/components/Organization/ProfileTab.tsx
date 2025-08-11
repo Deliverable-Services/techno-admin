@@ -1,5 +1,5 @@
 import { Formik, Form } from "formik";
-import { Button, Spinner } from "../ui/bootstrap-compat";
+import { Button, Spinner } from "react-bootstrap";
 import { AxiosError } from "axios";
 import { useMutation } from "react-query";
 import { useHistory } from "react-router-dom";
@@ -72,13 +72,9 @@ const ProfileTab = () => {
   return (
     <div>
       {/* Section Header */}
-      <div className="border-b border-gray-200 pb-4 mb-6">
-        <h4 className="text-lg font-semibold text-gray-900 mb-1">
-          Personal Information
-        </h4>
-        <p className="text-sm text-gray-600 mb-0">
-          Update your photo and personal details here.
-        </p>
+      <div className="section-header">
+        <h4>Personal Information</h4>
+        <p>Update your photo and personal details here.</p>
       </div>
 
       {/* Form Content */}
@@ -99,13 +95,8 @@ const ProfileTab = () => {
             {/* Form Grid */}
             <div className="row">
               <div className="col-md-6">
-                <div className="mb-6">
-                  <label
-                    htmlFor="name"
-                    className="block text-sm font-semibold text-gray-700 mb-1.5"
-                  >
-                    Full Name
-                  </label>
+                <div className="form-group">
+                  <label htmlFor="name">Full Name</label>
                   <InputField
                     name="name"
                     placeholder="Enter your full name"
@@ -114,13 +105,8 @@ const ProfileTab = () => {
                 </div>
               </div>
               <div className="col-md-6">
-                <div className="mb-6">
-                  <label
-                    htmlFor="email"
-                    className="block text-sm font-semibold text-gray-700 mb-1.5"
-                  >
-                    Email Address
-                  </label>
+                <div className="form-group">
+                  <label htmlFor="email">Email Address</label>
                   <InputField
                     name="email"
                     placeholder="Enter your email address"
@@ -132,13 +118,8 @@ const ProfileTab = () => {
 
             <div className="row">
               <div className="col-md-6">
-                <div className="mb-6">
-                  <label
-                    htmlFor="phone"
-                    className="block text-sm font-semibold text-gray-700 mb-1.5"
-                  >
-                    Phone Number
-                  </label>
+                <div className="form-group">
+                  <label htmlFor="phone">Phone Number</label>
                   <InputField
                     name="phone"
                     placeholder="Enter your phone number"
@@ -153,10 +134,8 @@ const ProfileTab = () => {
             </div>
 
             {/* Profile Photo Section */}
-            <div className="mb-6">
-              <label className="block text-sm font-semibold text-gray-700 mb-1.5">
-                Profile Photo
-              </label>
+            <div className="form-group">
+              <label>Profile Photo</label>
               <div className="d-flex align-items-start gap-4">
                 <img
                   src={loggedInUser.profile_pic || profile}
@@ -171,7 +150,7 @@ const ProfileTab = () => {
                 />
                 <div className="flex-grow-1">
                   <div
-                    className="border-2 border-dashed border-gray-300 bg-gray-50 rounded-xl min-h-32 flex items-center justify-center flex-col transition-all duration-200 cursor-pointer hover:border-blue-600 hover:bg-blue-50"
+                    className="upload-container"
                     style={{ maxWidth: "300px" }}
                   >
                     <input

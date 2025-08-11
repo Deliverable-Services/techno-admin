@@ -1,7 +1,8 @@
 import { AxiosError } from "axios";
 import { Formik, Form } from "formik";
 import { useMemo, useState } from "react";
-import { Button, Col, Row, Spinner } from "../ui/bootstrap-compat";
+import { Button, Col, Row, Spinner } from "react-bootstrap";
+import { HiMinusSm, HiPlus } from "react-icons/hi";
 import { useMutation, useQuery } from "react-query";
 import { useHistory, useLocation } from "react-router-dom";
 import { Cell } from "react-table";
@@ -14,7 +15,6 @@ import ReactTable from "../../shared-components/ReactTable";
 import API from "../../utils/API";
 import { queryClient } from "../../utils/queryClient";
 import { showMsgToast } from "../../utils/showMsgToast";
-import { Hammer } from "../ui/icon";
 
 const key = "user-balance";
 
@@ -68,13 +68,13 @@ const UserWallet = () => {
           if (type === "deposit")
             return (
               <p className="text-success mb-0">
-                <Hammer className="mb-1" />₹{amount}
+                <HiPlus className="mb-1" />₹{amount}
               </p>
             );
           if (type === "withdraw")
             return (
               <p className="text-danger mb-0 ">
-                <Hammer />₹{amount}
+                <HiMinusSm />₹{amount}
               </p>
             );
 

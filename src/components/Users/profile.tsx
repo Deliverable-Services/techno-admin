@@ -1,5 +1,7 @@
 import { Formik, Form } from "formik";
-import { Button, Col, Container, Row, Spinner } from "../ui/bootstrap-compat";
+import React from "react";
+import { Button, Col, Container, Row, Spinner } from "react-bootstrap";
+import { BiUpload } from "react-icons/bi";
 import useUserProfileStore from "../../hooks/useUserProfileStore";
 import { InputField } from "../../shared-components/InputFeild";
 import { config } from "../../utils/constants";
@@ -12,7 +14,6 @@ import { handleApiError } from "../../hooks/handleApiErrors";
 import { queryClient } from "../../utils/queryClient";
 import { useHistory } from "react-router-dom";
 import BackButton from "../../shared-components/BackButton";
-import { Hammer } from "../ui/icon";
 
 const ValidationSchema = Yup.object().shape({
   phone: Yup.string()
@@ -113,7 +114,7 @@ const ProfilePage = () => {
           />
           <label htmlFor="contained-button-file">
             <div className="d-flex bg-primary text-white align-items-center px-2 py-1 rounded">
-              <Hammer size={18} color="#fff" />
+              <BiUpload size={18} color="#fff" />
               {isImageLoading ? (
                 "Uploading..."
               ) : (

@@ -1,7 +1,8 @@
 import { AxiosError } from "axios";
 import moment from "moment";
 import React, { useMemo, useState } from "react";
-import { Button, Container, Dropdown, Form } from "../ui/bootstrap-compat";
+import { Button, Container, Dropdown, Form } from "react-bootstrap";
+import { BiSad } from "react-icons/bi";
 import { useQuery } from "react-query";
 import { useHistory } from "react-router-dom";
 import { Cell } from "react-table";
@@ -16,7 +17,8 @@ import ReactTable from "../../shared-components/ReactTable";
 import TableLink from "../../shared-components/TableLink";
 import { areTwoObjEqual } from "../../utils/areTwoObjEqual";
 import { primaryColor } from "../../utils/constants";
-import { Filter, Target, Frown } from "../../components/ui/icon";
+import { BsFunnel } from "react-icons/bs";
+import { GiOnTarget } from "react-icons/gi";
 import { useFlyout } from "../../hooks/useFlyout";
 import Flyout from "../../shared-components/Flyout";
 import TargetCreateUpdateForm from "./AgentCreateUpdateForm";
@@ -52,6 +54,7 @@ const AgentTargets = () => {
   const _onCreateClick = () => {
     // history.push("/agent-targets/create-edit");
     openFlyout();
+
   };
   const _onEditClick = (id: string) => {
     history.push("/agent-targets/create-edit", { id });
@@ -135,7 +138,7 @@ const AgentTargets = () => {
     return (
       <Container fluid className="d-flex justify-content-center display-3">
         <div className="d-flex flex-column align-items-center">
-          <Frown color={primaryColor} />
+          <BiSad color={primaryColor} />
           <span className="text-primary display-3">Something went wrong</span>
         </div>
       </Container>
@@ -148,7 +151,7 @@ const AgentTargets = () => {
         <PageHeading
           title="Agent Targets"
           description="Create and manage targets for your agents"
-          icon={<Target size={24} />}
+          icon={<GiOnTarget size={24} />}
           onClick={_onCreateClick}
           totalRecords={data?.total}
           permissionReq="create_agenttarget"
@@ -168,7 +171,7 @@ const AgentTargets = () => {
                   filters={
                     <Dropdown className="search-filters-div filter-dropdown mr-2">
                       <Dropdown.Toggle as={Button} variant="primary">
-                        <Filter /> Filters
+                        <BsFunnel /> Filters
                       </Dropdown.Toggle>
                       <Dropdown.Menu>
                         <div className="filter-dropdown-heading d-flex justify-content-between w-100">
@@ -245,11 +248,12 @@ const AgentTargets = () => {
       <Flyout
         isOpen={showFlyout}
         onClose={closeFlyout}
-        title={"Create and manage targets for your agents"}
+        title={'Create and manage targets for your agents'}
         cancelText="Cancel"
         width="800px"
       >
-        <TargetCreateUpdateForm />
+        <TargetCreateUpdateForm
+        />
       </Flyout>
     </>
   );

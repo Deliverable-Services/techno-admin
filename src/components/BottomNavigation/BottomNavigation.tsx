@@ -1,42 +1,44 @@
 import { BottomNavItem } from "../BottomNavItem/BottomNavItem";
+import "./index.css";
+import { FaFileInvoiceDollar, FaHome } from "react-icons/fa";
+import { SiCivicrm } from "react-icons/si";
+import { RiServiceFill } from "react-icons/ri";
 import { MoreTabIcon } from "../../assets/MoreTabIcon";
-import { Hammer } from "../ui/icon";
 
 const tabs = [
   {
     name: "Home",
     linkTo: "/dashboard",
-    icon: <Hammer size={20} />,
+    icon: <FaHome size={20} />,
   },
   {
     name: "CRM",
     linkTo: "/crm",
-    icon: <Hammer />,
+    icon: <SiCivicrm />,
   },
   {
     name: "Invoices",
     linkTo: "/invoices",
-    icon: <Hammer size={20} />,
+    icon: <FaFileInvoiceDollar size={20} />,
   },
   {
     name: "Services",
     linkTo: "/services",
-    icon: <Hammer />,
+    icon: <RiServiceFill />,
   },
   {
     name: "More",
     linkTo: "/more",
-    icon: <Hammer />,
+    icon: <MoreTabIcon />,
   },
 ];
 
 export const BottomNavigation = () => {
   return (
-    <div className="fixed bottom-0 min-w-full px-5 py-2.5 bg-white border-t border-[#E9E7EA] z-[100000000000000000]">
-      <div className="flex flex-row gap-[15px] justify-between">
+    <div className="navContainer">
+      <div className="navItemsCont">
         {tabs?.map((item, index) => (
           <BottomNavItem
-            key={index}
             icon={item?.icon}
             linkTo={item?.linkTo}
             name={item?.name}

@@ -1,38 +1,57 @@
+import { BsClock, BsShieldLock } from "react-icons/bs";
+import {
+  FaAddressCard,
+  FaDiceFour,
+  FaMoneyCheck,
+  FaQuestionCircle,
+} from "react-icons/fa";
+import { ImUsers } from "react-icons/im";
+import { MdKeyboardArrowRight } from "react-icons/md";
+import "./index.css";
 import { useHistory } from "react-router-dom";
-
+import { GoIssueOpened } from "react-icons/go";
+import { IoLogoModelS } from "react-icons/io";
+import { SiBrandfolder } from "react-icons/si";
+import {
+  RiAdminFill,
+  RiAdvertisementFill,
+  RiGlobalLine,
+  RiNotification2Line,
+} from "react-icons/ri";
+import { AiFillIdcard, AiFillSetting } from "react-icons/ai";
+import { BiLogOut } from "react-icons/bi";
 import { useMutation } from "react-query";
 import API from "../../utils/API";
 import useTokenStore from "../../hooks/useTokenStore";
 import useUserProfileStore from "../../hooks/useUserProfileStore";
 import { EditAccountCard } from "./EditAccountCard";
-import { Hammer } from "../ui/icon";
 
 const sections = [
   {
     title: "Leads & Customers",
     items: [
       {
-        icon: <Hammer />,
+        icon: <BsClock />,
         name: "Bookings",
         linkTo: "/crm-bookings",
       },
       {
-        icon: <Hammer />,
+        icon: <ImUsers />,
         name: "Customers",
         linkTo: "/users",
       },
       {
-        icon: <Hammer />,
+        icon: <FaAddressCard />,
         name: "Subscriptions",
         linkTo: "/subscriptions",
       },
       {
-        icon: <Hammer />,
+        icon: <FaMoneyCheck />,
         name: "Transactions",
         linkTo: "/transactions",
       },
       {
-        icon: <Hammer />,
+        icon: <GoIssueOpened />,
         name: "Help Center",
         linkTo: "/issues",
       },
@@ -42,17 +61,17 @@ const sections = [
     title: "Products & Services",
     items: [
       {
-        icon: <Hammer />,
+        icon: <IoLogoModelS />,
         name: "Products",
         linkTo: "/products",
       },
       {
-        icon: <Hammer />,
+        icon: <SiBrandfolder />,
         name: "Product Brands",
         linkTo: "/product-brands",
       },
       {
-        icon: <Hammer />,
+        icon: <FaDiceFour />,
         name: "Categories",
         linkTo: "/categories",
       },
@@ -62,17 +81,17 @@ const sections = [
     title: "Products & Services",
     items: [
       {
-        icon: <Hammer />,
+        icon: <IoLogoModelS />,
         name: "Products",
         linkTo: "/products",
       },
       {
-        icon: <Hammer />,
+        icon: <SiBrandfolder />,
         name: "Product Brands",
         linkTo: "/product-brands",
       },
       {
-        icon: <Hammer />,
+        icon: <FaDiceFour />,
         name: "Categories",
         linkTo: "/categories",
       },
@@ -82,22 +101,22 @@ const sections = [
     title: "Websites & Pages",
     items: [
       {
-        icon: <Hammer />,
+        icon: <FaQuestionCircle />,
         name: "Faqs",
         linkTo: "/faqs",
       },
       {
-        icon: <Hammer />,
+        icon: <RiAdvertisementFill />,
         name: "Banners",
         linkTo: "/advertisements",
       },
       {
-        icon: <Hammer />,
+        icon: <AiFillIdcard />,
         name: "Testimonials",
         linkTo: "/testimonials",
       },
       {
-        icon: <Hammer />,
+        icon: <RiGlobalLine />,
         name: "Website Pages",
         linkTo: "/website-pages",
       },
@@ -107,29 +126,29 @@ const sections = [
     title: "ORGANIZATION & SETTINGS",
     items: [
       {
-        icon: <Hammer />,
+        icon: <RiAdminFill />,
         name: "Team Members",
         linkTo: "/team-members",
       },
       {
-        icon: <Hammer />,
+        icon: <BsShieldLock />,
         name: "Roles & Permissions",
         linkTo: "/permissions",
       },
       {
-        icon: <Hammer />,
+        icon: <AiFillSetting />,
         name: "Configurations",
         linkTo: "/configurations",
       },
       {
-        icon: <Hammer />,
+        icon: <RiGlobalLine />,
         name: "Organization",
         linkTo: "/organization",
       },
       {
         name: "Notification/Sms",
         linkTo: "/notifications",
-        icon: <Hammer />,
+        icon: <RiNotification2Line />,
       },
     ],
   },
@@ -158,38 +177,35 @@ export const MoreScreen = () => {
   });
 
   return (
-    <div className="flex flex-col gap-3 pb-10 m-3">
+    <div className="sections-container m-3">
       <EditAccountCard />
       {sections?.map((item, index) => (
-        <div className="flex flex-col gap-2" key={index + 1}>
-          <p className="text-lg font-semibold pl-1">{item?.title}</p>
-          <div className="flex flex-col gap-7 p-6 rounded-2xl bg-white border border-gray-200 shadow-sm">
+        <div className="section-container" key={index + 1}>
+          <p className="section-heading">{item?.title}</p>
+          <div className="items-container">
             {item?.items?.map((item, index) => (
               <div
-                className="flex flex-row justify-between cursor-pointer"
+                className="item-container"
                 key={index + 1}
                 onClick={() => history.push(item?.linkTo)}
               >
-                <div className="flex flex-row gap-3 items-center">
+                <div className="item-left-container">
                   {item?.icon}
-                  <p className="text-base font-medium">{item?.name}</p>
+                  <p className="item-title">{item?.name}</p>
                 </div>
                 <div>
-                  <Hammer />
+                  <MdKeyboardArrowRight />
                 </div>
               </div>
             ))}
           </div>
         </div>
       ))}
-      <div className="flex flex-col gap-7 p-6 rounded-2xl bg-white border border-gray-200 shadow-sm">
-        <div
-          className="flex flex-row justify-between cursor-pointer"
-          onClick={() => mutate()}
-        >
-          <div className="flex flex-row gap-3 items-center">
-            <Hammer className="mr-2" />
-            <p className="text-base font-medium">Log Out</p>
+      <div className="items-container">
+        <div className="item-container" onClick={() => mutate()}>
+          <div className="item-left-container">
+            <BiLogOut className="mr-2" />
+            <p className="item-title">Log Out</p>
           </div>
         </div>
       </div>

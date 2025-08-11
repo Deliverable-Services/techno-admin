@@ -1,7 +1,15 @@
 import { AxiosError } from "axios";
 import moment from "moment";
 import React, { useMemo, useState } from "react";
-import { Button, Container, Dropdown, Form, Nav } from "../ui/bootstrap-compat";
+import {
+  Button,
+  Container,
+  Dropdown,
+  Form,
+  Nav,
+} from "react-bootstrap";
+import { AiFillDelete } from "react-icons/ai";
+import { BiSad } from "react-icons/bi";
 import { useMutation, useQuery } from "react-query";
 import { useHistory } from "react-router-dom";
 import { Cell } from "react-table";
@@ -21,10 +29,11 @@ import { NotificationSendToCategories } from "../../utils/arrays";
 import { primaryColor } from "../../utils/constants";
 import { queryClient } from "../../utils/queryClient";
 import { showMsgToast } from "../../utils/showMsgToast";
+import { BsFunnel, BsThreeDotsVertical } from "react-icons/bs";
+import { RiNotification2Line } from "react-icons/ri";
 import { useFlyout } from "../../hooks/useFlyout";
 import Flyout from "../../shared-components/Flyout";
 import NotificationCreateUpdateForm from "./NotificationCreateUpdateForm";
-import { Hammer } from "../ui/icon";
 
 const key = "fcm-notification";
 const intitialFilter = {
@@ -148,7 +157,7 @@ const Notifications = () => {
                   className="p-1 border-0 shadow-none"
                   id={`dropdown-${data.row.values.id}`}
                 >
-                  <Hammer size={18} />
+                  <BsThreeDotsVertical size={18} />
                 </Dropdown.Toggle>
                 <Dropdown.Menu className="menu-dropdown">
                   <Dropdown.Item
@@ -157,7 +166,7 @@ const Notifications = () => {
                       mutate(selectedRows.map((i) => i.id));
                     }}
                   >
-                    <Hammer size={16} className="me-1" />
+                    <AiFillDelete size={16} className="me-1" />
                     Delete
                   </Dropdown.Item>
                 </Dropdown.Menu>
@@ -174,7 +183,7 @@ const Notifications = () => {
     return (
       <Container fluid className="d-flex justify-content-center display-3">
         <div className="d-flex flex-column align-items-center">
-          <Hammer color={primaryColor} />
+          <BiSad color={primaryColor} />
           <span className="text-primary display-3">Something went wrong</span>
         </div>
       </Container>
@@ -185,7 +194,9 @@ const Notifications = () => {
     <>
       <div className="view-padding">
         <PageHeading
-          icon={<Hammer size={24} />}
+          icon={
+            <RiNotification2Line size={24} />
+          }
           title="Notifications"
           description="Create and manage notifications for your workflow"
           onClick={_onCreateClick}
@@ -242,7 +253,7 @@ const Notifications = () => {
                   filters={
                     <Dropdown className="search-filters-div filter-dropdown mr-2">
                       <Dropdown.Toggle as={Button} variant="primary">
-                        <Hammer /> Filters
+                        <BsFunnel /> Filters
                       </Dropdown.Toggle>
                       <Dropdown.Menu>
                         <div className="filter-dropdown-heading d-flex justify-content-between w-100">
@@ -337,11 +348,12 @@ const Notifications = () => {
       <Flyout
         isOpen={showFlyout}
         onClose={closeFlyout}
-        title={"Create Notifications"}
+        title={'Create Notifications'}
         cancelText="Cancel"
         width="800px"
       >
-        <NotificationCreateUpdateForm />
+        <NotificationCreateUpdateForm
+        />
       </Flyout>
     </>
   );

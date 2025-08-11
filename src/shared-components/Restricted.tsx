@@ -1,10 +1,10 @@
 import React from "react";
 import useUserProfileStore from "../hooks/useUserProfileStore";
 
-type Props = React.PropsWithChildren<{
+interface Props {
   to: string;
-  fallBackUI?: React.ComponentType | null;
-}>;
+  fallBackUI?: any;
+}
 
 const Restricted: React.FC<Props> = (props) => {
   const loggedInUserPermissoins = useUserProfileStore(
@@ -13,10 +13,7 @@ const Restricted: React.FC<Props> = (props) => {
 
   const isAllowed = (to: string) => loggedInUserPermissoins?.includes(to);
   if (!isAllowed(props.to)) {
-    if (props.fallBackUI) {
-      const Fallback = props.fallBackUI;
-      return <Fallback />;
-    }
+    if (props.fallBackUI) return <props.fallBackUI />;
 
     return null;
   }

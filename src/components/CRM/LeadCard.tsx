@@ -3,7 +3,7 @@
 import React, { useEffect, useState, useMemo } from "react";
 import { useDrag } from "react-dnd";
 import { Lead } from "./types";
-import { MessageCircle, Paperclip, Calendar } from "../../components/ui/icon";
+import { FaComment, FaPaperclip, FaCalendarAlt } from "react-icons/fa";
 import moment from "moment";
 
 interface UserAvatarProps {
@@ -73,12 +73,14 @@ const UserAvatar: React.FC<UserAvatarProps> = ({
   if (!profilePic || showFallback) {
     return (
       <div
-        className={`flex items-center justify-center text-white rounded-full font-bold ${
+        className={`d-flex align-items-center justify-content-center text-white ${
           className || ""
         }`}
         style={{
           backgroundColor,
+          borderRadius: "50%",
           fontSize: `${size * 0.4}px`,
+          fontWeight: "bold",
           width: `${size}px`,
           height: `${size}px`,
         }}
@@ -92,11 +94,13 @@ const UserAvatar: React.FC<UserAvatarProps> = ({
     <img
       src={profilePic}
       alt={name || "User"}
-      className={`rounded-full object-cover ${className || ""}`}
+      className={className}
       onError={handleImageError}
       style={{
+        borderRadius: "50%",
         width: `${size}px`,
         height: `${size}px`,
+        objectFit: "cover",
       }}
     />
   );
@@ -187,7 +191,7 @@ const LeadCard: React.FC<Props> = ({ lead }) => {
               fontSize: "11px",
             }}
           >
-            <Calendar className="mr-1 text-muted" />
+            <FaCalendarAlt className="mr-1 text-muted" />
             Last Updated At:{" "}
             <strong className="text-dark">
               {formattedDate(lead.updated_at)}
@@ -201,18 +205,18 @@ const LeadCard: React.FC<Props> = ({ lead }) => {
           <UserAvatar
             profilePic={lead.user?.profile_pic}
             name={lead.user?.name}
-            className=""
+            className="rounded-circle crm-user-img"
             size={24}
           />
 
           {/* Comment & Attachments */}
           <div className="d-flex align-items-center text-muted small">
             <div className="d-flex align-items-center mr-3">
-              <MessageCircle className="mr-1" />
+              <FaComment className="mr-1" />
               {lead?.comments?.length || 0}
             </div>
             <div className="d-flex align-items-center">
-              <Paperclip className="mr-1" />
+              <FaPaperclip className="mr-1" />
               {lead?.extra?.attachments || 0}
             </div>
           </div>

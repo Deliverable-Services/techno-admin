@@ -1,7 +1,13 @@
 import { AxiosError } from "axios";
 import { useContext } from "react";
 import { useMemo, useState } from "react";
-import { Button, Container, Dropdown, Nav } from "../ui/bootstrap-compat";
+import {
+  Button,
+  Container,
+  Dropdown,
+  Nav,
+} from "react-bootstrap";
+import { BiSad } from "react-icons/bi";
 import { useQuery } from "react-query";
 import { useHistory } from "react-router-dom";
 import { Cell } from "react-table";
@@ -19,7 +25,9 @@ import TableLink from "../../shared-components/TableLink";
 import { areTwoObjEqual } from "../../utils/areTwoObjEqual";
 import { OrderStatus, OrderType } from "../../utils/arrays";
 import { primaryColor } from "../../utils/constants";
-import { Hammer } from "../ui/icon";
+import { FaBoxes } from "react-icons/fa";
+import { BsFunnel } from "react-icons/bs";
+// import UpdateCreateForm from "./FaqsCreateUpdateForm"
 
 const key = "bookings";
 const intitialFilter = {
@@ -209,7 +217,7 @@ const Orders = () => {
     return (
       <Container fluid className="d-flex justify-content-center display-3">
         <div className="d-flex flex-column align-items-center">
-          <Hammer color={primaryColor} />
+          <BiSad color={primaryColor} />
           <span className="text-primary display-3">Something went wrong</span>
         </div>
       </Container>
@@ -222,7 +230,7 @@ const Orders = () => {
         <PageHeading
           title="Orders"
           description="Orders for your workflow"
-          icon={<Hammer size={24} />}
+          icon={<FaBoxes size={24} />}
           totalRecords={data?.total}
         />
       </div>
@@ -332,7 +340,7 @@ const Orders = () => {
                     filters={
                       <Dropdown className="search-filters-div filter-dropdown mr-2">
                         <Dropdown.Toggle as={Button} variant="primary">
-                          <Hammer /> Filters
+                          <BsFunnel /> Filters
                         </Dropdown.Toggle>
                         <Dropdown.Menu>
                           <div className="filter-dropdown-heading d-flex justify-content-between w-100">

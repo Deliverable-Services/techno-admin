@@ -1,10 +1,10 @@
 // Roles/RolesCreateUpdateForm.tsx
 
 import { AxiosError } from "axios";
-// Removed bs-custom-file-input
+import bsCustomFileInput from "bs-custom-file-input";
 import { Form, Formik } from "formik";
 import { useEffect } from "react";
-import { Button, Col, Row, Spinner } from "../ui/bootstrap-compat";
+import { Button, Col, Row, Spinner } from "react-bootstrap";
 import { useMutation } from "react-query";
 import { useHistory, useLocation } from "react-router-dom";
 import { handleApiError } from "../../hooks/handleApiErrors";
@@ -46,7 +46,9 @@ const RolesCreateUpdateForm = ({
   const { state } = useLocation();
   const history = useHistory();
   const id = state ? (state as any).id : null;
-  useEffect(() => {}, []);
+  useEffect(() => {
+    bsCustomFileInput.init();
+  }, []);
   const { data, isLoading: dataLoading } = useGetSingleQuery({
     id,
     key: "get-roles",

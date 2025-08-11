@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Container, Row, Col, Card, Tabs, Tab, Button } from "../../ui/bootstrap-compat";
+import { Container, Row, Col, Card, Tabs, Tab, Button } from "react-bootstrap";
 import { useGoogleBusinessIntegration } from "../useGoogleBusinessIntegration";
 import useUserProfileStore from "../../../hooks/useUserProfileStore";
 import BackButton from "../../../shared-components/BackButton";

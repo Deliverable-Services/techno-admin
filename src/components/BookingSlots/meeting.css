@@ -1,0 +1,67 @@
+/* Meeting Component Specific Styles */
+
+/* Calendar Container */
+.meeting-calendar-container {
+  background: white;
+  border-radius: 0.5rem;
+  padding: 1.5rem;
+}
+
+/* Override some base styles for consistency */
+.fc .fc-toolbar-title {
+  font-size: 1.5rem !important;
+  margin: 0;
+  font-weight: 600 !important;
+  color: #1a1a1a;
+}
+
+/* Event hover effects */
+.fc-event:hover {
+  filter: brightness(0.95);
+  transform: translateY(-1px);
+  transition: all 0.2s ease;
+}
+
+/* Custom event limit styling */
+.fc-more-link {
+  font-weight: 600 !important;
+  color: #3b82f6 !important;
+}
+
+/* Time grid specific adjustments */
+.fc-timegrid-event {
+  overflow: visible !important;
+}
+
+/* Ensure proper z-index for popover */
+.fc-popover {
+  z-index: 1050 !important;
+}
+
+/* Custom scrollbar for time grid */
+.fc-timegrid-slots::-webkit-scrollbar,
+.fc-timegrid-body::-webkit-scrollbar {
+  width: 8px;
+}
+
+.fc-timegrid-slots::-webkit-scrollbar-track,
+.fc-timegrid-body::-webkit-scrollbar-track {
+  background: #f3f4f6;
+}
+
+.fc-timegrid-slots::-webkit-scrollbar-thumb,
+.fc-timegrid-body::-webkit-scrollbar-thumb {
+  background: #d1d5db;
+  border-radius: 4px;
+}
+
+/* Mobile responsive adjustments */
+@media (max-width: 640px) {
+  .fc .fc-toolbar-title {
+    font-size: 1.25rem !important;
+  }
+
+  .fc-event {
+    font-size: 0.7rem !important;
+  }
+}

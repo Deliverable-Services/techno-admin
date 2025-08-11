@@ -1,6 +1,7 @@
 import { AxiosError } from "axios";
 import React, { useMemo, useState } from "react";
-import { Button, Container } from "../ui/bootstrap-compat";
+import { Button, Container } from "react-bootstrap";
+import { BiSad } from "react-icons/bi";
 import { useMutation, useQuery } from "react-query";
 import { useHistory } from "react-router-dom";
 import { Cell } from "react-table";
@@ -15,10 +16,10 @@ import API from "../../utils/API";
 import { primaryColor } from "../../utils/constants";
 import { queryClient } from "../../utils/queryClient";
 import { showMsgToast } from "../../utils/showMsgToast";
+import { GiModernCity } from "react-icons/gi";
 import { useFlyout } from "../../hooks/useFlyout";
 import Flyout from "../../shared-components/Flyout";
 import CitiesCreateUpdateForm from "./CitiesCreateUpdateForm";
-import { Hammer } from "../ui/icon";
 
 const key = "cities";
 
@@ -132,7 +133,7 @@ const Cities = () => {
     return (
       <Container fluid className="d-flex justify-content-center display-3">
         <div className="d-flex flex-column align-items-center">
-          <Hammer color={primaryColor} />
+          <BiSad color={primaryColor} />
           <span className="text-primary display-3">Something went wrong</span>
         </div>
       </Container>
@@ -143,7 +144,7 @@ const Cities = () => {
     <>
       <div className="view-padding">
         <PageHeading
-          icon={<Hammer size={24} />}
+          icon={<GiModernCity size={24} />}
           title="Serviceable Cities"
           description="Create and manage cities for your workflow"
           onClick={_onCreateClick}
@@ -196,13 +197,14 @@ const Cities = () => {
           </Button>
         </div>
       )}
-      <Flyout
+       <Flyout
         isOpen={showFlyout}
         onClose={closeFlyout}
-        title={"Create Cities"}
+        title={'Create Cities'}
         cancelText="Cancel"
       >
-        <CitiesCreateUpdateForm />
+        <CitiesCreateUpdateForm
+        />
       </Flyout>
     </>
   );

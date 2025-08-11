@@ -6,8 +6,8 @@ import {
   ListGroup,
   InputGroup,
   Spinner,
-} from "../ui/bootstrap-compat";
-import { X, User, UserPlus } from "../../components/ui/icon";
+} from "react-bootstrap";
+import { BiX, BiUser, BiUserPlus } from "react-icons/bi";
 import API from "../../utils/API";
 
 interface Guest {
@@ -198,7 +198,7 @@ const GuestSelector: React.FC<GuestSelectorProps> = ({
   return (
     <div className="guest-selector">
       <Form.Label>
-        <User className="me-1" />
+        <BiUser className="me-1" />
         Meeting Guests
       </Form.Label>
 
@@ -237,12 +237,12 @@ const GuestSelector: React.FC<GuestSelectorProps> = ({
                   className="d-flex align-items-center"
                   style={{ cursor: "pointer" }}
                 >
-                  <User className="me-2 text-muted" />
+                  <BiUser className="me-2 text-muted" />
                   <div>
                     <div className="fw-medium">{result.name}</div>
                     <small className="text-muted">{result.email}</small>
                     <Badge
-                      bg={
+                      variant={
                         result.type === "lead"
                           ? "warning"
                           : result.type === "customer"
@@ -276,7 +276,7 @@ const GuestSelector: React.FC<GuestSelectorProps> = ({
             onClick={addExternalGuest}
             disabled={!externalEmail || !isValidEmail(externalEmail)}
           >
-            <UserPlus />
+            <BiUserPlus />
           </Button>
         </InputGroup>
       </div>
@@ -293,11 +293,11 @@ const GuestSelector: React.FC<GuestSelectorProps> = ({
             {guests.map((guest, index) => (
               <Badge
                 key={index}
-                bg={guest.isExternal ? "secondary" : "primary"}
+                variant={guest.isExternal ? "secondary" : "primary"}
                 className="d-flex align-items-center gap-1 p-2"
               >
                 <span>{guest.display_text || guest.guest_email}</span>
-                <X
+                <BiX
                   style={{ cursor: "pointer" }}
                   onClick={() => removeGuest(index)}
                   size={16}
@@ -313,7 +313,7 @@ const GuestSelector: React.FC<GuestSelectorProps> = ({
 
       {/* Helper text */}
       <Form.Text className="text-muted">
-        <User className="me-1" />
+        <BiUser className="me-1" />
         Search for existing users and leads, or add external guests by email
       </Form.Text>
     </div>

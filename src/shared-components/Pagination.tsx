@@ -1,4 +1,4 @@
-import { Container, Pagination } from "../components/ui/bootstrap-compat";
+import { Container, Pagination } from "react-bootstrap";
 
 interface Props {
   currentPage: number;
@@ -6,7 +6,7 @@ interface Props {
   hasPrevPage: boolean;
   hasNextPage: boolean;
   // setPage: (idx: string, value: any) => void;
-  setPage: any;
+  setPage: any
 }
 
 const TablePagination = ({

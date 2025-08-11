@@ -1,6 +1,8 @@
 import { AxiosError } from "axios";
 import { useMemo, useState } from "react";
-import { Button, Container, Dropdown, Nav } from "../ui/bootstrap-compat";
+import { Button, Container, Dropdown, Nav } from "react-bootstrap";
+import { BiSad } from "react-icons/bi";
+import LightBox from "react-lightbox-component";
 import { QueryFunction, useMutation, useQuery } from "react-query";
 import { useHistory } from "react-router-dom";
 
@@ -21,11 +23,11 @@ import { isActiveArray } from "../../utils/arrays";
 import { primaryColor, config } from "../../utils/constants";
 import { queryClient } from "../../utils/queryClient";
 import { showMsgToast } from "../../utils/showMsgToast";
+import { BsFunnel } from "react-icons/bs";
+import { RiAdvertisementFill } from "react-icons/ri";
 import { useFlyout } from "../../hooks/useFlyout";
 import Flyout from "../../shared-components/Flyout";
 import AdvertisementCreateUpdateForm from "./AdvertisementUpdateCreateForm";
-import { Hammer } from "../ui/icon";
-
 const key = "banners/list";
 
 const deleteAd = (id: Array<any>) => {
@@ -113,21 +115,15 @@ const Advertisements = () => {
         Header: "Image",
         accessor: "image",
         Cell: (data: Cell) => (
-          <img
-            src={`${config.baseUploadUrl}banners/${data.row.values.image}`}
-            alt={String(data.row.values.image)}
-            style={{
-              width: "100px",
-              height: "50px",
-              objectFit: "cover",
-              cursor: "pointer",
-            }}
-            onClick={() =>
-              window.open(
-                `${config.baseUploadUrl}banners/${data.row.values.image}`,
-                "_blank"
-              )
-            }
+          <LightBox
+            images={[
+              {
+                src: `${config.baseUploadUrl}banners/${data.row.values.image}`,
+                title: data.row.values.image,
+              },
+            ]}
+            thumbnailWidth="100px"
+            thumbnailHeight="50px"
           />
         ),
       },
@@ -208,7 +204,7 @@ const Advertisements = () => {
     return (
       <Container fluid className="d-flex justify-content-center display-3">
         <div className="d-flex flex-column align-items-center">
-          <Hammer color={primaryColor} />
+          <BiSad color={primaryColor} />
           <span className="text-primary display-3">Something went wrong</span>
         </div>
       </Container>
@@ -221,7 +217,7 @@ const Advertisements = () => {
         <PageHeading
           title="Banners"
           description="Create and manage banners"
-          icon={<Hammer size={24} />}
+          icon={<RiAdvertisementFill size={24} />}
           onClick={() => _onCreateClick()}
           totalRecords={data?.total}
           permissionReq="create_banner"
@@ -285,7 +281,7 @@ const Advertisements = () => {
                     filters={
                       <Dropdown className="search-filters-div filter-dropdown mr-2">
                         <Dropdown.Toggle as={Button} variant="primary">
-                          <Hammer /> Filters
+                          <BsFunnel /> Filters
                         </Dropdown.Toggle>
                         <Dropdown.Menu>
                           <div className="filter-dropdown-heading d-flex justify-content-between w-100">

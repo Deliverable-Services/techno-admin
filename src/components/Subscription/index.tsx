@@ -1,13 +1,21 @@
 import React, { useState, useEffect, useCallback } from "react";
+import "./subscription.css";
 import API from "../../utils/API";
 import VerifingUserLoader from "../../shared-components/VerifingUserLoader";
 import useUserProfileStore from "../../hooks/useUserProfileStore";
 import SubscriptionCreateForm from "./SubscriptionCreateForm";
 import PageHeading from "../../shared-components/PageHeading";
-import { Container, Button } from "../ui/bootstrap-compat";
+import {
+  FaStripe,
+  FaRegMoneyBillAlt,
+  FaCalendarAlt,
+  FaPlus,
+} from "react-icons/fa";
+import { Container, Button } from "react-bootstrap";
+import { SiCivicrm } from "react-icons/si";
+import { MdSubscriptions, MdAutorenew } from "react-icons/md";
 import { showErrorToast } from "../../utils/showErrorToast";
 import { primaryColor } from "../../utils/constants";
-import { Hammer } from "../ui/icon";
 interface Subscription {
   id: string;
   customer_name: string;
@@ -112,7 +120,7 @@ const SubscriptionPage: React.FC = () => {
     <>
       <div className="view-padding">
         <PageHeading
-          icon={<Hammer size={24} />}
+          icon={<SiCivicrm size={24} />}
           title="Subscriptions"
           description="Raise recurring invoices to your customers with one click"
           onClick={_onCreateClick}
@@ -126,7 +134,7 @@ const SubscriptionPage: React.FC = () => {
           return (
             <div className="view-padding">
               <div className="d-flex flex-column align-items-center text-center">
-                <Hammer size={80} color={primaryColor} className="mb-4" />
+                <FaStripe size={80} color={primaryColor} className="mb-4" />
                 <h3 className="mb-3">Get started with Subscriptions</h3>
                 <p className="text-muted mb-4" style={{ maxWidth: "400px" }}>
                   To start using subscriptions you need to create your Stripe
@@ -140,10 +148,13 @@ const SubscriptionPage: React.FC = () => {
                   style={{
                     backgroundColor: primaryColor,
                     borderColor: primaryColor,
+                    padding: "12px 30px",
+                    fontSize: "16px",
+                    fontWeight: "600",
                   }}
                 >
                   <div className="text-white d-flex align-items-center">
-                    <Hammer className="mr-2" />
+                    <FaStripe className="mr-2" />
                     Create Stripe Account
                   </div>
                 </Button>
@@ -169,7 +180,7 @@ const SubscriptionPage: React.FC = () => {
                     border: `2px solid ${primaryColor}20`,
                   }}
                 >
-                  <Hammer size={35} color={primaryColor} />
+                  <MdSubscriptions size={35} color={primaryColor} />
                 </div>
                 <h5 className="text-muted mb-2" style={{ fontWeight: "500" }}>
                   Loading subscriptions...
@@ -209,7 +220,7 @@ const SubscriptionPage: React.FC = () => {
                       border: `3px solid ${primaryColor}20`,
                     }}
                   >
-                    <Hammer size={50} color={primaryColor} />
+                    <MdSubscriptions size={50} color={primaryColor} />
                   </div>
                   <div
                     className="position-absolute d-flex align-items-center justify-content-center"
@@ -223,7 +234,7 @@ const SubscriptionPage: React.FC = () => {
                       border: "3px solid white",
                     }}
                   >
-                    <Hammer size={18} color="white" />
+                    <MdAutorenew size={18} color="white" />
                   </div>
                 </div>
 
@@ -259,15 +270,27 @@ const SubscriptionPage: React.FC = () => {
                   style={{ fontSize: "14px" }}
                 >
                   <div className="d-flex align-items-center mb-2 text-muted">
-                    <Hammer size={14} color={primaryColor} className="mr-2" />
+                    <FaCalendarAlt
+                      size={14}
+                      color={primaryColor}
+                      className="mr-2"
+                    />
                     <span>Automated recurring billing</span>
                   </div>
                   <div className="d-flex align-items-center mb-2 text-muted">
-                    <Hammer size={14} color={primaryColor} className="mr-2" />
+                    <FaRegMoneyBillAlt
+                      size={14}
+                      color={primaryColor}
+                      className="mr-2"
+                    />
                     <span>Flexible pricing plans</span>
                   </div>
                   <div className="d-flex align-items-center mb-2 text-muted">
-                    <Hammer size={14} color={primaryColor} className="mr-2" />
+                    <MdAutorenew
+                      size={14}
+                      color={primaryColor}
+                      className="mr-2"
+                    />
                     <span>Easy subscription management</span>
                   </div>
                 </div>
@@ -281,11 +304,15 @@ const SubscriptionPage: React.FC = () => {
                   style={{
                     backgroundColor: primaryColor,
                     borderColor: primaryColor,
+                    padding: "12px 32px",
+                    fontSize: "16px",
+                    fontWeight: "600",
+                    borderRadius: "8px",
                     boxShadow: `0 4px 12px ${primaryColor}25`,
                   }}
                 >
                   <div className="text-white d-flex align-items-center">
-                    <Hammer className="mr-2" size={14} />
+                    <FaPlus className="mr-2" size={14} />
                     Create your first subscription
                   </div>
                 </Button>
@@ -316,7 +343,7 @@ const SubscriptionPage: React.FC = () => {
         if (!showForm) {
           return (
             <Container fluid className="h-100 p-0">
-              <table className="table-primary">
+              <table className="invoice-table">
                 <thead>
                   <tr>
                     <th>Subscription Number</th>
@@ -337,7 +364,7 @@ const SubscriptionPage: React.FC = () => {
                       <td>{sub.customer_name}</td>
                       <td>{sub.plan_name}</td>
                       <td>
-                        <span className="status-badge">{sub.status}</span>
+                        <span className="status-open">{sub.status}</span>
                       </td>
                       <td>${sub.amount}</td>
                       <td>{sub.currency}</td>
@@ -353,7 +380,7 @@ const SubscriptionPage: React.FC = () => {
         }
 
         return (
-          <div className="form-container">
+          <div className="invoice-form">
             <SubscriptionCreateForm
               onSuccess={() => {
                 setShowForm(false);
