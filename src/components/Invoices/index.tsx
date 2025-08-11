@@ -51,7 +51,10 @@ const InvoicePage: React.FC = () => {
     setLoading(true);
     try {
       const res = await API.get("/invoices");
-      setInvoices(res.data || []);
+      const sortedData = (res.data || []).sort((a, b) => {
+        return new Date(b.created_at).getTime() - new Date(a.created_at).getTime();
+      });
+      setInvoices(sortedData);
     } catch (err) {
       setInvoices([]);
     } finally {
@@ -252,6 +255,18 @@ const InvoicePage: React.FC = () => {
       </div>
       <hr />
       {(() => {
+        if (showForm) {
+          return (
+            <div className="max-w-lg mx-auto px-7">
+              <InvoicesCreateForm
+                onSuccess={() => {
+                  setShowForm(false);
+                  fetchInvoices();
+                }}
+              />
+            </div>
+          )
+        }
         if (!loggedInUser?.stripe_account_id) {
           return (
             <div className="view-padding">
@@ -332,17 +347,6 @@ const InvoicePage: React.FC = () => {
             </div>
           );
         }
-
-        return (
-          <div className="max-w-lg mx-auto px-7">
-            <InvoicesCreateForm
-              onSuccess={() => {
-                setShowForm(false);
-                fetchInvoices();
-              }}
-            />
-          </div>
-        );
       })()}
     </>
   );

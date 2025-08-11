@@ -7,6 +7,7 @@ import { useState } from "react";
 import AsyncSelect from "react-select/async";
 import * as Yup from "yup";
 import { ErrorMessage } from "formik";
+import DatePicker from "../../shared-components/DatePicker";
 
 const initialValues = {
   user_id: "",
@@ -15,6 +16,7 @@ const initialValues = {
   description: "",
   due_date: "",
   status: "sent",
+  currency: "cad",
   subtotal: "",
   tax: "",
   total: "",
@@ -57,99 +59,6 @@ const InvoicesCreateForm = ({ onSuccess }: { onSuccess?: () => void }) => {
   const generateInvoiceNumber = () => {
     return Math.floor(100000 + Math.random() * 900000).toString();
   };
-
-  // Function to generate and download PDF
-  // const downloadInvoicePDF = (values: any) => {
-  //     setIsDownloading(true);
-  //     try {
-  //         const doc = new jsPDF();
-  //         const invoiceNumber = generateInvoiceNumber();
-  //         const today = new Date();
-  //         const invoiceDate = today.toLocaleDateString('en-GB');
-
-  //         // Calculate totals
-  //         const items = values.items.map((item: any) => ({
-  //             ...item,
-  //             total: Number(item.quantity) * Number(item.unit_price),
-  //         }));
-  //         const subtotal = items.reduce((sum: number, item: any) => sum + item.total, 0);
-  //         const tax = values.tax ? Number(values.tax) : 0;
-  //         const total = subtotal + tax;
-
-  //         // Header
-  //         doc.setFontSize(24);
-  //         doc.text('INVOICE', 20, 30);
-
-  //         // Invoice details
-  //         doc.setFontSize(12);
-  //         doc.text(`Invoice Number: ${invoiceNumber}`, 20, 50);
-  //         doc.text(`Date: ${invoiceDate}`, 20, 60);
-  //         doc.text(`Due Date: ${values.due_date || 'N/A'}`, 20, 70);
-
-  //         // Company logo placeholder
-  //         doc.setFillColor(255, 224, 102);
-  //         doc.rect(150, 20, 40, 40, 'F');
-  //         doc.setFontSize(20);
-  //         doc.text('🧾', 165, 45);
-
-  //         // Bill to section
-  //         doc.setFontSize(14);
-  //         doc.text('Bill To:', 20, 90);
-  //         doc.setFontSize(12);
-  //         doc.text(selectedUser?.label || 'N/A', 20, 100);
-
-  //         // Items table
-  //         const tableData = items.map((item: any) => [
-  //             item.item_name || 'N/A',
-  //             item.quantity.toString(),
-  //             `$${item.unit_price || 0}`,
-  //             `$${item.total.toFixed(2)}`
-  //         ]);
-
-  //         autoTable(doc, {
-  //             head: [['Description', 'Qty', 'Unit Price', 'Amount']],
-  //             body: tableData,
-  //             startY: 120,
-  //             styles: {
-  //                 fontSize: 10,
-  //                 cellPadding: 5,
-  //             },
-  //             headStyles: {
-  //                 fillColor: [66, 66, 66],
-  //                 textColor: 255,
-  //                 fontStyle: 'bold',
-  //             },
-  //         });
-
-  //         // Totals section
-  //         const finalY = (doc as any).lastAutoTable.finalY + 10;
-  //         doc.setFontSize(12);
-  //         doc.text(`Subtotal: $${subtotal.toFixed(2)}`, 140, finalY);
-  //         doc.text(`Tax: $${tax.toFixed(2)}`, 140, finalY + 10);
-  //         doc.setFontSize(14);
-  //         doc.setFont(undefined, 'bold');
-  //         doc.text(`Total: $${total.toFixed(2)}`, 140, finalY + 20);
-
-  //         // Description
-  //         if (values.description) {
-  //             doc.setFontSize(12);
-  //             doc.setFont(undefined, 'normal');
-  //             doc.text('Description:', 20, finalY + 40);
-  //             doc.setFontSize(10);
-  //             const splitDescription = doc.splitTextToSize(values.description, 170);
-  //             doc.text(splitDescription, 20, finalY + 50);
-  //         }
-
-  //         // Download the PDF
-  //         doc.save(`invoice-${invoiceNumber}.pdf`);
-  //         showMsgToast("Invoice PDF downloaded successfully");
-  //     } catch (error) {
-  //         showErrorToast("Failed to generate PDF");
-  //         console.error('PDF generation error:', error);
-  //     } finally {
-  //         setIsDownloading(false);
-  //     }
-  // };
 
   // Async load options for user search
   const loadUserOptions = async (inputValue: string) => {
@@ -328,8 +237,8 @@ const InvoicesCreateForm = ({ onSuccess }: { onSuccess?: () => void }) => {
           <div className="flex-1 min-w-[340px] max-w-[600px]">
             <Form>
               {/* Update the download button to use current form values */}
-              <div className="flex items-center justify-between mb-2">
-                <h2 className="mb-5">Recipient</h2>
+              <div className="flex items-center justify-between mb-2 py-5">
+                <h2 className="">Recipient</h2>
                 <div className="flex gap-2">
                   <Button
                     className="bg-gray-800 text-white border-0 rounded px-4 py-2 font-medium cursor-pointer text-base transition-colors hover:bg-gray-600"
@@ -594,26 +503,38 @@ const InvoicesCreateForm = ({ onSuccess }: { onSuccess?: () => void }) => {
                   )}
                 </div>
                 <div className="flex items-center justify-between w-full">
-                  <label className="text-gray-500 mb-0">Tax (%)</label>
-                  {values.tax ? values.tax : 0}
+                  <label className="text-gray-500 mb-0">Tax %</label>
+                  {(() => {
+                    const subtotal = values.items.reduce(
+                      (sum, item) =>
+                        sum + Number(item.quantity) * Number(item.unit_price),
+                      0
+                    );
+                    return values.tax ? (subtotal * Number(values.tax)) / 100 : 0;
+                  })()}
                 </div>
+
                 <div className="flex items-center justify-between w-full">
                   <label className="text-gray-500 mb-0">Total</label>
-                  {values.items.reduce(
-                    (sum, item) =>
-                      sum + Number(item.quantity) * Number(item.unit_price),
-                    0
-                  ) + (values.tax ? Number(values.tax) : 0)}
+                  {(() => {
+                    const subtotal = values.items.reduce(
+                      (sum, item) =>
+                        sum + Number(item.quantity) * Number(item.unit_price),
+                      0
+                    );
+                    const taxAmount = values.tax ? (subtotal * Number(values.tax)) / 100 : 0;
+                    return subtotal + taxAmount;
+                  })()}
+
                 </div>
               </div>
               <div className="mb-4">
-                <label className="block text-sm font-medium mb-1">
-                  Due Date
-                </label>
-                <Field
+                <DatePicker
+                  label="Due Date"
                   name="due_date"
-                  className="w-full py-2 px-2 border border-gray-300 rounded text-sm bg-white"
-                  placeholder="DD-MM-YYYY"
+                  setFieldValue={setFieldValue}
+                  pickerType="date"
+                  error={touched.due_date && errors.due_date ? errors.due_date : undefined}
                 />
               </div>
               <div className="mb-4">
