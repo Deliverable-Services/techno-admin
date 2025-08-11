@@ -16,6 +16,7 @@ module.exports = {
   			input: 'hsl(var(--input))',
 			blue:'var(--blue)',
 			warning:'var(--warning)',
+			sidebar:'var(--sidebar)',
 			success:'var(--success)',
 			info:'var(--info)',
 			danger:'var(--danger)',

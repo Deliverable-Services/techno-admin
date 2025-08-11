@@ -56,7 +56,7 @@ const NavLink = ({
       <li className="navLinkGroup" ref={menuRef}>
         {hasChildren ? (
           <div
-            className="navLink parent w-full text-black transition-all duration-300 ease-in text-[13px] font-medium px-[0.8rem] py-[0.4rem] flex items-center justify-between cursor-pointer hover:bg-[#fafafa] hover:font-semibold hover:text-[#252b37]"
+            className="navLink parent w-full text-black transition-all duration-300 ease-in text-[13px] font-medium px-[0.8rem] py-[0.4rem] flex items-center justify-between cursor-pointer rounded-lg hover:bg-[#fafafa] hover:font-semibold hover:text-[#252b37]"
             onClick={handleParentClick}
           >
             <div style={{ display: "flex", alignItems: "center" }}>

@@ -598,7 +598,7 @@ const App = () => {
 
   return (
     <IsDesktopContext.Provider value={isDesktop}>
-      <div className="App">
+      <div className="App text-[#1e2022] bg-sidebar flex">
         {showNavTopBar() ? (
           <NavBar isNavOpen={isNavOpen} setIsNavOpen={setIsNavOpen} />
         ) : (
@@ -617,7 +617,7 @@ const App = () => {
           ) : (
             ""
           )}
-          <div className="main-layout">
+          <div className="main-layout bg-white rounded-xl rounded-e-none mb-[50px] mt-16 w-full overflow-hidden overflow-y-auto min-h-[400px]">
             <Switch>
               <Route exact path="/">
                 <Redirect to="/dashboard" />
