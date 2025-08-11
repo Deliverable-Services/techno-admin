@@ -317,7 +317,7 @@ const NavBar = ({ isNavOpen, setIsNavOpen }: INavBar) => {
           </div>
         )}
 
-        <div className="all-links">
+        <div className="all-links px-4 overflow-auto">
           <OrganizationSwitcher
             organisations={organisations}
             selectedOrg={selectedOrg}
@@ -325,7 +325,7 @@ const NavBar = ({ isNavOpen, setIsNavOpen }: INavBar) => {
           />
 
           {/* Dashboard */}
-          <ul className="pt-3">
+          <ul className="pt-4">
             <Navlink
               title="Dashboard"
               path="/dashboard"

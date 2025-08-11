@@ -24,6 +24,7 @@ import {
 import { WebsiteAnalyticsChart, BrandGMBChart } from "./Chart";
 import PageHeading from "../../shared-components/PageHeading";
 import { Hammer } from "../ui/icon";
+import { Card, CardContent, CardFooter } from "../ui/card";
 
 const bookingFilter = {
   datefrom: moment().subtract(7, "days").format("YYYY-MM-DD"),
@@ -104,7 +105,7 @@ const Dashboard = () => {
 
   return (
     <>
-      <div className="view-padding d-flex justify-content-between align-items-center">
+      <div className="view-padding flex justify-between items-center">
         <PageHeading
           icon={<Hammer size={24} />}
           title="Dashboard"
@@ -112,8 +113,8 @@ const Dashboard = () => {
         />
 
         <div className="crm-users">
-          <div className="d-flex align-items-center justify-content-start">
-            <div className="d-flex align-items-center gap-2">
+          <div className="flex items-center justify-start">
+            <div className="flex items-center gap-2">
               <Hammer color={primaryColor} size={19} />
               <input
                 type="date"
@@ -149,78 +150,62 @@ const Dashboard = () => {
             gridTemplateColumns: "repeat( auto-fit, minmax(200px, 1fr) )",
             gap: "20px",
           }}
-          className="mb-4"
+          className="mb-5"
         >
           {selectedOrg?.store_type?.toLowerCase() === "crm" ? (
-            <div className="card hoverable w-100 shadow-sm">
-              <div className="card-body">
-                <div className="d-flex align-items-center mb-3">
+            <Card className="p-0 overflow-hidden">
+              <CardContent>
+                <div className="flex items-center mb-4">
                   <Hammer size={16} />
-                  <h5 className="mb-0 font-weight-bold ml-2">Leads</h5>
+                  <h5 className="mb-0 font-bold ml-2">Leads</h5>
                 </div>
 
-                <div className="d-flex align-items-center">
-                  <div className="flex-fill">
-                    <h4 className="mb-0 font-weight-bold text-warning">
+                <div className="flex items-center">
+                  <div className="flex-1">
+                    <h4 className="mb-0 font-bold text-warning">
                       {data?.leads?.active || 0}
                     </h4>
                     <span className="text-muted small">Active</span>
                   </div>
 
                   <div
-                    className="mx-3"
-                    style={{
-                      width: "1px",
-                      backgroundColor: "#dee2e6",
-                      height: "50px",
-                    }}
+                    className="mx-3 bg-[#dee2e6] w-[1px] h-[50px]"
                   ></div>
 
-                  <div className="flex-fill">
-                    <h4 className="mb-0 font-weight-bold text-info">
+                  <div className="flex-1">
+                    <h4 className="mb-0 font-bold text-info">
                       {data?.leads?.new || 0}
                     </h4>
                     <span className="text-muted small">New</span>
                   </div>
 
                   <div
-                    className="mx-3"
-                    style={{
-                      width: "1px",
-                      backgroundColor: "#dee2e6",
-                      height: "50px",
-                    }}
+                    className="mx-3 bg-[#dee2e6] w-[1px] h-[50px]"
                   ></div>
 
-                  <div className="flex-fill">
-                    <h4 className="mb-0 font-weight-bold text-success">
+                  <div className="flex-1">
+                    <h4 className="mb-0 font-bold text-success">
                       {data?.leads?.completed || 0}
                     </h4>
                     <span className="text-muted small">Completed</span>
                   </div>
                 </div>
-              </div>
-              <div
-                className="d-flex align-items-center justify-content-between p-2 px-4 border-top pointer"
-                style={{
-                  backgroundColor: "#f8f9fa",
-                  cursor: "pointer",
-                }}
-                onClick={() => history.push("/crm")}
-              >
+              </CardContent>
+              <CardFooter className="flex items-center justify-between border-t cursor-pointer w-full bg-[#f8f9fa]" onClick={() => history.push("/crm")}>
                 <span
-                  className="font-weight-bold text-primary"
+                  className="font-bold text-primary"
                   style={{ fontSize: "14px" }}
                 >
                   Go to CRM
                 </span>
                 <Hammer className="text-primary" />
-              </div>
-            </div>
+
+              </CardFooter>
+            </Card>
           ) : (
-            <div className="card hoverable w-100 shadow-sm">
-              <div className="card-body">
-                <div className="d-flex align-items-center mb-3">
+            <Card className="p-0 overflow-hidden">
+              <CardContent>
+                <div className="flex items-center mb-4">
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
                     width="16"
@@ -230,270 +215,219 @@ const Dashboard = () => {
                   >
                     <path d="M0 1.5A.5.5 0 0 1 .5 1H2a.5.5 0 0 1 .485.379L2.89 3H14.5a.5.5 0 0 1 .491.592l-1.5 8A.5.5 0 0 1 13 12H4a.5.5 0 0 1-.491-.408L2.01 3.607 1.61 2H.5a.5.5 0 0 1-.5-.5zM3.102 4l1.313 7h8.17l1.313-7H3.102zM5 12a2 2 0 1 0 0 4 2 2 0 0 0 0-4zm7 0a2 2 0 1 0 0 4 2 2 0 0 0 0-4zm-7 1a1 1 0 1 1 0 2 1 1 0 0 1 0-2zm7 0a1 1 0 1 1 0 2 1 1 0 0 1 0-2z" />
                   </svg>
-                  <h5 className="mb-0 font-weight-bold ml-2">Orders</h5>
+                  <h5 className="mb-0 font-bold ml-2">Orders</h5>
                 </div>
 
-                <div className="d-flex align-items-center">
-                  <div className="flex-fill">
-                    <h4 className="mb-0 font-weight-bold text-warning">
+                <div className="flex items-center">
+                  <div className="flex-1">
+                    <h4 className="mb-0 font-bold text-warning">
                       {data?.order || 0}
                     </h4>
                     <span className="text-muted small">Pending</span>
                   </div>
 
                   <div
-                    className="mx-3"
-                    style={{
-                      width: "1px",
-                      backgroundColor: "#dee2e6",
-                      height: "50px",
-                    }}
+                    className="mx-3 bg-[#dee2e6] w-[1px] h-[50px]"
                   ></div>
 
-                  <div className="flex-fill">
-                    <h4 className="mb-0 font-weight-bold text-info">
+                  <div className="flex-1">
+                    <h4 className="mb-0 font-bold text-info">
                       {data?.orderprev || 0}
                     </h4>
                     <span className="text-muted small">New</span>
                   </div>
 
                   <div
-                    className="mx-3"
-                    style={{
-                      width: "1px",
-                      backgroundColor: "#dee2e6",
-                      height: "50px",
-                    }}
+                    className="mx-3 bg-[#dee2e6] w-[1px] h-[50px]"
                   ></div>
 
-                  <div className="flex-fill">
-                    <h4 className="mb-0 font-weight-bold text-success">
+                  <div className="flex-1">
+                    <h4 className="mb-0 font-bold text-success">
                       {(data?.order || 0) + (data?.orderprev || 0)}
                     </h4>
                     <span className="text-muted small">Total</span>
                   </div>
                 </div>
-              </div>
+              </CardContent>
 
-              <div
-                className="d-flex align-items-center justify-content-between p-2 px-4 border-top pointer"
-                style={{
-                  backgroundColor: "#f8f9fa",
-                  cursor: "pointer",
-                }}
+              <CardFooter
+                className="flex items-center justify-between border-t cursor-pointer w-full bg-[#f8f9fa]"
                 onClick={() => history.push("/orders")}
               >
                 <span
-                  className="font-weight-bold text-primary"
+                  className="font-bold text-primary"
                   style={{ fontSize: "14px" }}
                 >
                   Go to Orders
                 </span>
                 <Hammer className="text-primary" />
-              </div>
-            </div>
+              </CardFooter>
+            </Card>
           )}
 
           {selectedOrg?.store_type?.toLowerCase() === "crm" && (
             <>
               {/* Customers Card for CRM */}
-              <div className="card hoverable w-100 shadow-sm">
-                <div className="card-body">
-                  <div className="d-flex align-items-center mb-3">
+              <Card className="p-0 overflow-hidden">
+                <CardContent>
+                  <div className="flex items-center mb-4">
                     <Hammer size={16} />
-                    <h5 className="mb-0 font-weight-bold ml-2">Customers</h5>
+                    <h5 className="mb-0 font-bold ml-2">Customers</h5>
                   </div>
 
-                  <div className="d-flex align-items-center">
-                    <div className="flex-fill">
-                      <h4 className="mb-0 font-weight-bold text-primary">
+                  <div className="flex items-center">
+                    <div className="flex-1">
+                      <h4 className="mb-0 font-bold text-primary">
                         {data?.customer?.customers || 0}
                       </h4>
                       <span className="text-muted small">Total</span>
                     </div>
 
                     <div
-                      className="mx-3"
-                      style={{
-                        width: "1px",
-                        backgroundColor: "#dee2e6",
-                        height: "50px",
-                      }}
+                      className="mx-3 bg-[#dee2e6] w-[1px] h-[50px]"
                     ></div>
 
-                    <div className="flex-fill">
-                      <h4 className="mb-0 font-weight-bold text-success">
+                    <div className="flex-1">
+                      <h4 className="mb-0 font-bold text-success">
                         {data?.customer?.new || 0}
                       </h4>
                       <span className="text-muted small">New</span>
                     </div>
                   </div>
-                </div>
-                <div
-                  className="d-flex align-items-center justify-content-between p-2 px-4 border-top pointer"
-                  style={{
-                    backgroundColor: "#f8f9fa",
-                    cursor: "pointer",
-                  }}
+                </CardContent>
+                <CardFooter
+                  className="flex items-center justify-between border-t cursor-pointer w-full bg-[#f8f9fa]"
                   onClick={() => history.push("/users")}
                 >
                   <span
-                    className="font-weight-bold text-primary"
+                    className="font-bold text-primary"
                     style={{ fontSize: "14px" }}
                   >
                     Go to Customers
                   </span>
                   <Hammer className="text-primary" />
-                </div>
-              </div>
+                </CardFooter>
+              </Card>
 
-              <div className="card hoverable w-100 shadow-sm">
-                <div className="card-body">
-                  <div className="d-flex align-items-center mb-3">
+              <Card className="p-0 overflow-hidden">
+                <CardContent>
+                  <div className="flex items-center mb-3">
                     <Hammer size={16} />
-                    <h5 className="mb-0 font-weight-bold ml-2">Invoices</h5>
+                    <h5 className="mb-0 font-bold ml-2">Invoices</h5>
                   </div>
 
-                  <div className="d-flex align-items-center">
+                  <div className="flex items-center">
                     <div className="flex-fill">
-                      <h4 className="mb-0 font-weight-bold text-warning">
+                      <h4 className="mb-0 font-bold text-warning">
                         {data?.invoices?.pending || 0}
                       </h4>
                       <span className="text-muted small">Pending</span>
                     </div>
 
                     <div
-                      className="mx-3"
-                      style={{
-                        width: "1px",
-                        backgroundColor: "#dee2e6",
-                        height: "50px",
-                      }}
+                      className="mx-3 bg-[#dee2e6] w-[1px] h-[50px]"
                     ></div>
 
-                    <div className="flex-fill">
-                      <h4 className="mb-0 font-weight-bold text-success">
+                    <div className="flex-1">
+                      <h4 className="mb-0 font-bold text-success">
                         {data?.invoices?.completed || 0}
                       </h4>
                       <span className="text-muted small">Paid</span>
                     </div>
 
                     <div
-                      className="mx-3"
-                      style={{
-                        width: "1px",
-                        backgroundColor: "#dee2e6",
-                        height: "50px",
-                      }}
+                      className="mx-3 bg-[#dee2e6] w-[1px] h-[50px]"
                     ></div>
 
-                    <div className="flex-fill">
-                      <h4 className="mb-0 font-weight-bold text-primary">
+                    <div className="flex-0">
+                      <h4 className="mb-0 font-bold text-primary">
                         {data?.invoices?.total || 0}
                       </h4>
                       <span className="text-muted small">Total</span>
                     </div>
                   </div>
-                </div>
-                <div
-                  className="d-flex align-items-center justify-content-between p-2 px-4 border-top pointer"
-                  style={{
-                    backgroundColor: "#f8f9fa",
-                    cursor: "pointer",
-                  }}
+                </CardContent>
+                <CardFooter
+                  className="flex items-center justify-between border-t cursor-pointer w-full bg-[#f8f9fa]"
                   onClick={() => history.push("/invoices")}
                 >
                   <span
-                    className="font-weight-bold text-primary"
+                    className="font-bold text-primary"
                     style={{ fontSize: "14px" }}
                   >
                     Go to Invoices
                   </span>
                   <Hammer className="text-primary" />
-                </div>
-              </div>
+                </CardFooter>
+              </Card>
 
               {/* Issues Card for CRM */}
-              <div className="card hoverable w-100 border-0 shadow-sm">
-                <div className="card-body">
-                  <div className="d-flex align-items-center mb-3">
+              <Card className="p-0 overflow-hidden">
+                <CardContent>
+                  <div className="flex items-center mb-3">
                     <Hammer size={16} />
-                    <h5 className="mb-0 font-weight-bold ml-2">Issues</h5>
+                    <h5 className="mb-0 font-bold ml-2">Issues</h5>
                   </div>
 
-                  <div className="d-flex align-items-center">
-                    <div className="flex-fill">
-                      <h4 className="mb-0 font-weight-bold text-danger">
+                  <div className="flex items-center">
+                    <div className="flex-1">
+                      <h4 className="mb-0 font-bold text-danger">
                         {data?.issues?.open || 0}
                       </h4>
                       <span className="text-muted small">Open</span>
                     </div>
 
                     <div
-                      className="mx-3"
-                      style={{
-                        width: "1px",
-                        backgroundColor: "#dee2e6",
-                        height: "50px",
-                      }}
+                      className="mx-3 bg-[#dee2e6] w-[1px] h-[50px]"
                     ></div>
 
-                    <div className="flex-fill">
-                      <h4 className="mb-0 font-weight-bold text-success">
+                    <div className="flex-1">
+                      <h4 className="mb-0 font-bold text-success">
                         {data?.issues?.close || 0}
                       </h4>
                       <span className="text-muted small">Closed</span>
                     </div>
 
                     <div
-                      className="mx-3"
-                      style={{
-                        width: "1px",
-                        backgroundColor: "#dee2e6",
-                        height: "50px",
-                      }}
+                      className="mx-3 bg-[#dee2e6] w-[1px] h-[50px]"
                     ></div>
 
-                    <div className="flex-fill">
-                      <h4 className="mb-0 font-weight-bold text-primary">
+                    <div className="flex-1">
+                      <h4 className="mb-0 font-bold text-primary">
                         {data?.issues?.total || 0}
                       </h4>
                       <span className="text-muted small">Total</span>
                     </div>
                   </div>
-                </div>
-                <div
-                  className="d-flex align-items-center justify-content-between p-2 px-4 border-top pointer"
-                  style={{
-                    backgroundColor: "#f8f9fa",
-                    cursor: "pointer",
-                  }}
+                </CardContent>
+                <CardFooter
+                  className="flex items-center justify-between border-t cursor-pointer w-full bg-[#f8f9fa]"
                   onClick={() => history.push("/issues")}
                 >
                   <span
-                    className="font-weight-bold text-primary"
+                    className="font-bold text-primary"
                     style={{ fontSize: "14px" }}
                   >
                     Go to Issues
                   </span>
                   <Hammer className="text-primary" />
-                </div>
-              </div>
+                </CardFooter>
+              </Card>
             </>
           )}
         </div>
 
         {data?.graphData && (
-          <div className="card w-100 mb-4">
-            <div className="card-header bg-gradient-primary text-white">
-              <div className="d-flex align-items-center justify-content-between">
+          <Card className="p-0 overflow-hidden">
+            <CardContent>
+              <div className="flex items-center justify-between">
                 <div>
-                  <h5 className="mb-3 font-weight-bold text-black">
+                  <h5 className="mb-3 font-bold text-black">
                     Performance Analytics
                   </h5>
                 </div>
               </div>
-            </div>
+            </CardContent>
             <div className="" style={{ height: 420 }}>
               <ResponsiveContainer width="100%" height="100%">
                 <ComposedChart
@@ -693,11 +627,11 @@ const Dashboard = () => {
                 </ComposedChart>
               </ResponsiveContainer>
             </div>
-          </div>
+          </Card>
         )}
 
-        <div className="dashboard-page w-100 mt-4">
-          <Container fluid className=" mt-0 pl-2 pr-0">
+        <div className="dashboard-page w-full mt-5">
+          <Container fluid className="mt-0 !px-0">
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mt-6">
               {/* Website Analytics Section */}
               <div className="bg-white rounded-2xl p-6 border border-gray-200">
@@ -790,7 +724,7 @@ const Dashboard = () => {
                     )}
                   </div>
                 </div>
-                <div className="social-icons">
+                <div className="social-icons flex items-center gap-4 p-2.5">
                   <Hammer />
                   <Hammer />
                   <Hammer />
