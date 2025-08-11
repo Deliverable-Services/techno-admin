@@ -1,5 +1,4 @@
 import { Formik, Form } from "formik";
-import { Button, Spinner } from "../ui/bootstrap-compat";
 import { AxiosError } from "axios";
 import { useMutation } from "react-query";
 import { useHistory } from "react-router-dom";
@@ -11,6 +10,9 @@ import { queryClient } from "../../utils/queryClient";
 import { InputField } from "../../shared-components/InputFeild";
 import profile from "../../assets/profile.svg";
 import useUserProfileStore from "../../hooks/useUserProfileStore";
+import { Label } from "../ui/label";
+import { Button } from "../ui/button";
+import { Spinner } from "../ui/spinner";
 
 const key = "profile";
 
@@ -100,12 +102,12 @@ const ProfileTab = () => {
             <div className="row">
               <div className="col-md-6">
                 <div className="mb-6">
-                  <label
+                  <Label
                     htmlFor="name"
                     className="block text-sm font-semibold text-gray-700 mb-1.5"
                   >
                     Full Name
-                  </label>
+                  </Label>
                   <InputField
                     name="name"
                     placeholder="Enter your full name"
@@ -115,12 +117,12 @@ const ProfileTab = () => {
               </div>
               <div className="col-md-6">
                 <div className="mb-6">
-                  <label
+                  <Label
                     htmlFor="email"
                     className="block text-sm font-semibold text-gray-700 mb-1.5"
                   >
                     Email Address
-                  </label>
+                  </Label>
                   <InputField
                     name="email"
                     placeholder="Enter your email address"
@@ -133,17 +135,18 @@ const ProfileTab = () => {
             <div className="row">
               <div className="col-md-6">
                 <div className="mb-6">
-                  <label
+                  <Label
                     htmlFor="phone"
                     className="block text-sm font-semibold text-gray-700 mb-1.5"
                   >
                     Phone Number
-                  </label>
+                  </Label>
                   <InputField
                     name="phone"
                     placeholder="Enter your phone number"
                     isDisabled
                     error={errors.phone}
+                    className="mb-0"
                   />
                   <small className="text-muted">
                     Phone number cannot be changed
@@ -229,11 +232,7 @@ const ProfileTab = () => {
                   {isImageLoading && (
                     <div className="mt-2">
                       <small className="text-muted">
-                        <Spinner
-                          animation="border"
-                          size="sm"
-                          className="me-2"
-                        />
+                        <Spinner size="sm" className="me-2" />
                         Uploading image...
                       </small>
                     </div>
@@ -244,22 +243,18 @@ const ProfileTab = () => {
 
             {/* Action Buttons */}
             <div className="d-flex justify-content-end gap-3 mt-4 pt-4 border-top">
-              <Button
-                variant="outline-primary"
-                type="button"
-                disabled={isLoading}
-              >
+              <Button variant="outline" type="button" disabled={isLoading}>
                 Cancel
               </Button>
               <Button
-                variant="primary"
+                // variant="primary"
                 type="submit"
                 disabled={isLoading}
                 className="px-4"
               >
                 {isLoading ? (
                   <>
-                    <Spinner animation="border" size="sm" className="me-2" />
+                    <Spinner size="sm" className="me-2" />
                     Saving...
                   </>
                 ) : (

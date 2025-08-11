@@ -1,7 +1,7 @@
 import { AxiosError } from "axios";
 import moment from "moment";
-import React, { useMemo, useState } from "react";
-import { Button, Container, Dropdown, Form, Nav } from "../ui/bootstrap-compat";
+import { useMemo, useState } from "react";
+import { Container, Dropdown, Form, Nav } from "../ui/bootstrap-compat";
 import { useMutation, useQuery } from "react-query";
 import { useHistory } from "react-router-dom";
 import { Cell } from "react-table";
@@ -25,7 +25,16 @@ import { useFlyout } from "../../hooks/useFlyout";
 import Flyout from "../../shared-components/Flyout";
 import NotificationCreateUpdateForm from "./NotificationCreateUpdateForm";
 import { Hammer } from "../ui/icon";
-import { BellRing } from 'lucide-react';
+import { Button } from "../ui/button";
+import { BellRing } from "lucide-react";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "./../ui/dropdown-menu";
 
 const key = "fcm-notification";
 const intitialFilter = {
@@ -135,14 +144,14 @@ const Notifications = () => {
         Header: "Actions",
         Cell: (data: Cell) => {
           return (
-            <div className="d-flex align-items-center justify-content-end gap-3">
+            <div className="flex items-center justify-end gap-3">
               <EditButton
                 onClick={() => {
                   _onEditClick(data.row.values.id);
                 }}
                 permissionReq="update_notification"
               />
-              <Dropdown className="ellipsis-dropdown">
+              <Dropdown className="ellipsis-dropdown relative">
                 <Dropdown.Toggle
                   variant="light"
                   size="sm"
@@ -241,60 +250,125 @@ const Notifications = () => {
                     </div>
                   }
                   filters={
-                    <Dropdown className="search-filters-div filter-dropdown mr-2">
-                      <Dropdown.Toggle as={Button} variant="primary">
-                        <Hammer /> Filters
-                      </Dropdown.Toggle>
-                      <Dropdown.Menu>
-                        <div className="filter-dropdown-heading d-flex justify-content-between w-100">
-                          <h4>Filter</h4>
-                          <div className="d-flex align-items-center justify-md-content-center">
-                            <Button
-                              variant={
-                                areTwoObjEqual(intitialFilter, filter)
-                                  ? "light"
-                                  : "primary"
-                              }
-                              style={{
-                                fontSize: 14,
-                              }}
-                              onClick={() => setFilter(intitialFilter)}
-                            >
-                              Reset Filters
-                            </Button>
+                    <>
+                      {/* <Dropdown className="search-filters-div filter-dropdown mr-2">
+                        <Dropdown.Toggle as={Button} variant="primary">
+                          <Hammer /> Filters
+                        </Dropdown.Toggle>
+                        <Dropdown.Menu>
+                          <div className="filter-dropdown-heading d-flex justify-content-between w-100">
+                            <h4>Filter</h4>
+                            <div className="d-flex align-items-center justify-md-content-center">
+                              <Button
+                                variant={
+                                  areTwoObjEqual(intitialFilter, filter)
+                                    ? "secondary"
+                                    : "default"
+                                }
+                                style={{
+                                  fontSize: 14,
+                                }}
+                                onClick={() => setFilter(intitialFilter)}
+                              >
+                                Reset Filters
+                              </Button>
+                            </div>
                           </div>
-                        </div>
-                        <div className="select-filter">
-                          <FilterSelect
-                            currentValue={filter.send_to}
-                            data={NotificationSendToCategories}
-                            label="Send To"
-                            idx="send_to"
-                            onFilterChange={_onFilterChange}
-                          />
-                          <Form.Group>
-                            <Form.Label className="text-muted">
-                              Scheduled At
-                            </Form.Label>
-                            <Form.Control
-                              type="date"
-                              value={filter.scheduled_at}
-                              onChange={(e) => {
-                                const value = moment(e.target.value).format(
-                                  "YYYY-MM-DD"
-                                );
-                                _onFilterChange("scheduled_at", value);
-                              }}
-                              style={{
-                                fontSize: 14,
-                                width: 150,
-                                height: 35,
-                              }}
+                          <div className="select-filter">
+                            <FilterSelect
+                              currentValue={filter.send_to}
+                              data={NotificationSendToCategories}
+                              label="Send To"
+                              idx="send_to"
+                              onFilterChange={_onFilterChange}
                             />
-                          </Form.Group>
-                        </div>
-                      </Dropdown.Menu>
-                    </Dropdown>
+                            <Form.Group>
+                              <Form.Label className="text-muted">
+                                Scheduled At
+                              </Form.Label>
+                              <Form.Control
+                                type="date"
+                                value={filter.scheduled_at}
+                                onChange={(e) => {
+                                  const value = moment(e.target.value).format(
+                                    "YYYY-MM-DD"
+                                  );
+                                  _onFilterChange("scheduled_at", value);
+                                }}
+                                style={{
+                                  fontSize: 14,
+                                  width: 150,
+                                  height: 35,
+                                }}
+                              />
+                            </Form.Group>
+                          </div>
+                        </Dropdown.Menu>
+                      </Dropdown> */}
+
+                      <DropdownMenu>
+                        <DropdownMenuTrigger>
+                          <Hammer /> Filters
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent>
+                          <DropdownMenuLabel>My Account</DropdownMenuLabel>
+                          <DropdownMenuSeparator />
+
+                          <div className="filter-dropdown-heading d-flex justify-content-between w-100">
+                            <h4>Filter</h4>
+                            <div className="d-flex align-items-center justify-md-content-center">
+                              <Button
+                                variant={
+                                  areTwoObjEqual(intitialFilter, filter)
+                                    ? "secondary"
+                                    : "default"
+                                }
+                                style={{
+                                  fontSize: 14,
+                                }}
+                                onClick={() => setFilter(intitialFilter)}
+                              >
+                                Reset Filters
+                              </Button>
+                            </div>
+                          </div>
+                          <div className="select-filter">
+                            <FilterSelect
+                              currentValue={filter.send_to}
+                              data={NotificationSendToCategories}
+                              label="Send To"
+                              idx="send_to"
+                              onFilterChange={_onFilterChange}
+                            />
+                            <Form.Group>
+                              <Form.Label className="text-muted">
+                                Scheduled At
+                              </Form.Label>
+                              <Form.Control
+                                type="date"
+                                value={filter.scheduled_at}
+                                onChange={(e) => {
+                                  const value = moment(e.target.value).format(
+                                    "YYYY-MM-DD"
+                                  );
+                                  _onFilterChange("scheduled_at", value);
+                                }}
+                                style={{
+                                  fontSize: 14,
+                                  width: 150,
+                                  height: 35,
+                                }}
+                              />
+                            </Form.Group>
+                          </div>
+
+                          <DropdownMenuItem>Profile</DropdownMenuItem>
+                          <DropdownMenuItem>Billing</DropdownMenuItem>
+                          <DropdownMenuItem>Team</DropdownMenuItem>
+                          <DropdownMenuItem>Subscription</DropdownMenuItem>
+                        </DropdownMenuContent>
+                      </DropdownMenu>
+                    </>
                   }
                   columns={columns}
                   setSelectedRows={setSelectedRows}
@@ -325,7 +399,7 @@ const Notifications = () => {
             <b>Delete {selectedRows.length} rows</b>
           </span>
           <Button
-            variant="danger"
+            variant="destructive"
             onClick={() => {
               mutate(selectedRows.map((i) => i.id));
             }}

@@ -154,10 +154,14 @@ export const Modal = ({
   };
 
   return (
-    <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4">
+    <div className="fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-[1000]">
+      <div
+        className="w-screen h-screen fixed top-0 left-0 bg-[#ababab61]"
+        onClick={onHide}
+      ></div>
       <div
         className={cn(
-          "bg-background rounded-lg shadow-lg w-full max-h-[90vh] overflow-auto",
+          "bg-background rounded-lg shadow-lg w-full max-h-[90vh] z-10 overflow-auto",
           sizeClasses[size] || "max-w-md"
         )}
       >
@@ -169,7 +173,10 @@ export const Modal = ({
 
 Modal.Header = ({ children, className, closeButton, ...props }: any) => (
   <div
-    className={cn("flex items-center justify-between p-6 border-b", className)}
+    className={cn(
+      "flex items-center justify-between p-6 border-b z-50",
+      className
+    )}
     {...props}
   >
     {children}

@@ -1,5 +1,4 @@
 import { Formik, Form, Field } from "formik";
-import { Button, Spinner } from "../ui/bootstrap-compat";
 import { useMutation, useQuery } from "react-query";
 import * as Yup from "yup";
 import API from "../../utils/API";
@@ -8,6 +7,9 @@ import { handleApiError } from "../../hooks/handleApiErrors";
 import { AxiosError } from "axios";
 import { useHistory } from "react-router-dom";
 import { queryClient } from "../../utils/queryClient";
+import { Spinner } from "../ui/spinner";
+import { Button } from "../ui/button";
+import { Label } from "../ui/label";
 
 const ValidationSchema = Yup.object().shape({
   primary_color: Yup.string().required("Primary color is required"),
@@ -71,7 +73,7 @@ const AppearanceTab = () => {
       <div className="right-content">
         <div className="profile-card d-flex flex-column align-items-center">
           {isLoading ? (
-            <Spinner className="mt-8" animation="border" />
+            <Spinner className="mt-8" />
           ) : (
             <Formik
               enableReinitialize
@@ -107,7 +109,7 @@ const AppearanceTab = () => {
               {({ values, errors, touched, isSubmitting }) => (
                 <Form className="w-100 mt-2">
                   <div className="border-div form-group w-100 mt-4 d-flex align-items-center">
-                    <label htmlFor="primary_color">Brand Primary Color</label>
+                    <Label htmlFor="primary_color">Brand Primary Color</Label>
                     <Field
                       type="color"
                       className="border border-gray-300 w-11 h-11 p-0 rounded-lg cursor-pointer"
@@ -124,9 +126,9 @@ const AppearanceTab = () => {
                     )}
                   </div>
                   <div className="border-div form-group w-100 mt-3 d-flex align-items-center">
-                    <label htmlFor="secondary_color">
+                    <Label htmlFor="secondary_color">
                       Brand Secondary Color
-                    </label>
+                    </Label>
                     <Field
                       type="color"
                       className="border border-gray-300 w-11 h-11 p-0 rounded-lg cursor-pointer"
@@ -143,7 +145,7 @@ const AppearanceTab = () => {
                     )}
                   </div>
                   <div className="border-div form-group w-100 mt-3 d-flex align-items-center">
-                    <label htmlFor="language">Preferences Language</label>
+                    <Label htmlFor="language">Preferences Language</Label>
                     <Field
                       as="select"
                       className="h-11 border border-gray-300 rounded-lg px-3.5 py-2.5 text-sm transition-colors focus:border-blue-600 focus:ring-4 focus:ring-blue-100 focus:outline-none bg-white"
@@ -162,7 +164,7 @@ const AppearanceTab = () => {
                     )}
                   </div>
                   <div className="border-div form-group w-100 mt-3 d-flex align-items-center">
-                    <label htmlFor="currency">Preferences Currency</label>
+                    <Label htmlFor="currency">Preferences Currency</Label>
                     <Field
                       as="select"
                       className="h-11 border border-gray-300 rounded-lg px-3.5 py-2.5 text-sm transition-colors focus:border-blue-600 focus:ring-4 focus:ring-blue-100 focus:outline-none bg-white"
@@ -186,7 +188,7 @@ const AppearanceTab = () => {
                     className="mt-3"
                   >
                     {isSubmitting || mutation.isLoading ? (
-                      <Spinner animation="border" size="sm" />
+                      <Spinner size="sm" />
                     ) : (
                       "Save"
                     )}

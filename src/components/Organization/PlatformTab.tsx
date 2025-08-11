@@ -1,14 +1,17 @@
 import { useState, useMemo } from "react";
 import { Formik, Form, Field } from "formik";
-import { Button, Spinner, Row, Col, Card } from "../ui/bootstrap-compat";
+import { AxiosError } from "axios";
 import { useMutation, useQuery } from "react-query";
 import * as Yup from "yup";
-import { useOrganisation } from "../../context/OrganisationContext";
 import API from "../../utils/API";
+import { Row, Col, Card } from "../ui/bootstrap-compat";
+import { useOrganisation } from "../../context/OrganisationContext";
 import { showMsgToast } from "../../utils/showMsgToast";
 import { handleApiError } from "../../hooks/handleApiErrors";
-import { AxiosError } from "axios";
 import { useHistory } from "react-router-dom";
+import { Label } from "../ui/label";
+import { Button } from "../ui/button";
+import { Spinner } from "../ui/spinner";
 
 const key = "configuration";
 
@@ -89,7 +92,7 @@ const PlatformTab = () => {
       <div className="right-content">
         <div className="profile-card d-flex flex-column align-items-center">
           {isLoading ? (
-            <Spinner className="mt-8" animation="border" />
+            <Spinner className="mt-8" />
           ) : (
             <Formik
               enableReinitialize
@@ -120,10 +123,10 @@ const PlatformTab = () => {
             >
               {({ values, errors, touched, isSubmitting, setFieldValue }) => (
                 <Form className="w-100 mt-2">
-                  <div className="border-b border-gray-200 mb-6 w-full mt-4 flex items-center">
-                    <label htmlFor="minimum-order-cart">
+                  <div className="border-div  border-gray-200 mb-6 w-full mt-4 flex items-center">
+                    <Label htmlFor="minimum-order-cart">
                       Minimum Order Cart
-                    </label>
+                    </Label>
                     <Field
                       type="number"
                       className="form-control input-div"
@@ -139,7 +142,7 @@ const PlatformTab = () => {
                       )}
                   </div>
                   <div className="border-div form-group w-100 mt-3 d-flex align-items-center">
-                    <label htmlFor="copyright-message">Copyright Message</label>
+                    <Label htmlFor="copyright-message">Copyright Message</Label>
                     <Field
                       type="text"
                       className="form-control input-div"
@@ -156,7 +159,7 @@ const PlatformTab = () => {
                   </div>
                   <div className="form-group w-100 mt-3">
                     <div className="d-flex align-items-center mb-4">
-                      <label className="me-3">Social Media Links</label>
+                      <Label className="me-3">Social Media Links</Label>
                       <select
                         className="form-control mr-2 form-custom"
                         style={{ maxWidth: "fit-content" }}
@@ -226,7 +229,7 @@ const PlatformTab = () => {
                     className="mt-3"
                   >
                     {isSubmitting || mutation.isLoading ? (
-                      <Spinner animation="border" size="sm" />
+                      <Spinner size="sm" />
                     ) : (
                       "Save"
                     )}

@@ -88,7 +88,7 @@ const OrganizationSwitcher: React.FC<OrganizationSwitcherProps> = ({
 
   return (
     <DropdownMenu>
-      <DropdownMenuTrigger asChild>
+      <DropdownMenuTrigger>
         <Button variant="outline" className="w-full justify-between">
           <div className="flex items-center gap-2">
             <div className="h-6 w-6 rounded-full bg-muted flex items-center justify-center overflow-hidden">
