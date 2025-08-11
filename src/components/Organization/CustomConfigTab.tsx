@@ -1,6 +1,6 @@
 import { AxiosError } from "axios";
-import React, { useMemo, useState } from "react";
-import { Modal, Button, Container } from "../ui/bootstrap-compat";
+import { useMemo, useState } from "react";
+import { Modal, Container } from "../ui/bootstrap-compat";
 import { useMutation, useQuery } from "react-query";
 import { useHistory } from "react-router-dom";
 import { Cell } from "react-table";
@@ -17,6 +17,14 @@ import { showMsgToast } from "../../utils/showMsgToast";
 import Restricted from "../../shared-components/Restricted";
 import ConfigCreateUpdateForm from "./ConfigCreateUpdate";
 import { Hammer } from "../ui/icon";
+import { Button } from "../ui/button";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+} from "../ui/dialog";
 
 const key = "configuration";
 
@@ -122,7 +130,7 @@ const CustomConfigTab = () => {
                 permissionReq="update_config"
               />
               <Button
-                variant="outline-danger"
+                variant="outline_danger"
                 className="d-flex align-items-center ml-2"
                 onClick={() => {
                   setSelectedDeleteId(data.row.values.id);
@@ -160,7 +168,6 @@ const CustomConfigTab = () => {
         </div>
         <Restricted to={"create_config"}>
           <Button
-            variant="primary"
             onClick={() => setModalShow(true)}
             size={"sm"}
             style={{
@@ -206,25 +213,21 @@ const CustomConfigTab = () => {
         )}
       </Container>
 
-      <Modal
-        show={modalShow}
-        onHide={_onModalHideClick}
-        size="lg"
-        aria-labelledby="contained-modal-title-vcenter"
-        centered
-      >
-        <Modal.Header closeButton>
-          <Modal.Title id="contained-modal-title-vcenter">
-            Custom Configurations
-          </Modal.Title>
-        </Modal.Header>
-        <Modal.Body>
+      <Dialog open={modalShow} onOpenChange={setModalShow} modal>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Custom Configurations</DialogTitle>
+            <DialogDescription>
+              Create custom configurations for you app
+            </DialogDescription>
+          </DialogHeader>
+
           <ConfigCreateUpdateForm
             id={selectedConfigId}
             onHideModal={_onModalHideClick}
           />
-        </Modal.Body>
-      </Modal>
+        </DialogContent>
+      </Dialog>
 
       <Modal show={deletePopup} onHide={() => setDeletePopup(false)}>
         <Modal.Header closeButton>
@@ -235,11 +238,11 @@ const CustomConfigTab = () => {
           be undone.
         </Modal.Body>
         <Modal.Footer>
-          <Button variant="bg-light" onClick={() => setDeletePopup(false)}>
+          <Button variant="outline" onClick={() => setDeletePopup(false)}>
             Close
           </Button>
           <Button
-            variant="danger"
+            variant="destructive"
             onClick={() => {
               if (selectedDeleteId) {
                 mutate([selectedDeleteId]);
@@ -259,7 +262,7 @@ const CustomConfigTab = () => {
             <b>Delete {selectedRows.length} rows</b>
           </span>
           <Button
-            variant="danger"
+            variant="destructive"
             onClick={() => {
               mutate(selectedRows.map((i) => i.id));
             }}

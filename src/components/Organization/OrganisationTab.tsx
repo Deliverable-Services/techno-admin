@@ -1,15 +1,17 @@
 import { Formik, Form, Field } from "formik";
-import { Button, Spinner } from "../ui/bootstrap-compat";
-import { showMsgToast } from "../../utils/showMsgToast";
-import useTokenStore from "../../hooks/useTokenStore";
-import API from "../../utils/API";
-import { handleApiError } from "../../hooks/handleApiErrors";
-import { queryClient } from "../../utils/queryClient";
 import { useMutation } from "react-query";
 import { AxiosError } from "axios";
-import * as Yup from "yup";
 import { useHistory } from "react-router-dom";
+import * as Yup from "yup";
+import API from "../../utils/API";
+import { showMsgToast } from "../../utils/showMsgToast";
+import useTokenStore from "../../hooks/useTokenStore";
+import { handleApiError } from "../../hooks/handleApiErrors";
+import { queryClient } from "../../utils/queryClient";
 import { useOrganisation } from "../../context/OrganisationContext";
+import { Label } from "../ui/label";
+import { Button } from "../ui/button";
+import { Spinner } from "../ui/spinner";
 
 const key = "organisations";
 
@@ -98,12 +100,12 @@ const OrganizationTab = () => {
             <div className="row">
               <div className="col-md-6">
                 <div className="mb-6">
-                  <label
+                  <Label
                     htmlFor="organizationName"
                     className="block text-sm font-semibold text-gray-700 mb-1.5"
                   >
                     Organization Name
-                  </label>
+                  </Label>
                   <Field
                     type="text"
                     className="h-11 border border-gray-300 rounded-lg px-3.5 py-2.5 text-sm transition-colors focus:border-blue-600 focus:ring-4 focus:ring-blue-100 focus:outline-none bg-white w-full"
@@ -120,12 +122,12 @@ const OrganizationTab = () => {
               </div>
               <div className="col-md-6">
                 <div className="mb-6">
-                  <label
+                  <Label
                     htmlFor="organizationEmail"
                     className="block text-sm font-semibold text-gray-700 mb-1.5"
                   >
                     Organization Email
-                  </label>
+                  </Label>
                   <Field
                     type="email"
                     className="h-11 border border-gray-300 rounded-lg px-3.5 py-2.5 text-sm transition-colors focus:border-blue-600 focus:ring-4 focus:ring-blue-100 focus:outline-none bg-white w-full"
@@ -144,9 +146,9 @@ const OrganizationTab = () => {
 
             {/* Organization Type Selection */}
             <div className="mb-6">
-              <label className="block text-sm font-semibold text-gray-700 mb-1.5">
+              <Label className="block text-sm font-semibold text-gray-700 mb-1.5">
                 Organization Type
-              </label>
+              </Label>
               <p className="text-gray-600 mb-3 text-sm">
                 Choose the type that best describes your organization
               </p>
@@ -256,22 +258,13 @@ const OrganizationTab = () => {
 
             {/* Action Buttons */}
             <div className="d-flex justify-content-end gap-3 mt-4 pt-4 border-top">
-              <Button
-                variant="outline-primary"
-                type="button"
-                disabled={isLoading}
-              >
+              <Button variant="outline" type="button" disabled={isLoading}>
                 Cancel
               </Button>
-              <Button
-                variant="primary"
-                type="submit"
-                disabled={isLoading}
-                className="px-4"
-              >
+              <Button type="submit" disabled={isLoading} className="px-4">
                 {isLoading ? (
                   <>
-                    <Spinner animation="border" size="sm" className="me-2" />
+                    <Spinner size="sm" className="me-2" />
                     Updating...
                   </>
                 ) : (

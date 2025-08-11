@@ -1,13 +1,15 @@
 import { Formik, Form, Field } from "formik";
-import { Button, Spinner } from "../ui/bootstrap-compat";
 import { useMutation, useQuery } from "react-query";
+import { useHistory } from "react-router-dom";
+import { AxiosError } from "axios";
 import * as Yup from "yup";
-import { useOrganisation } from "../../context/OrganisationContext";
 import API from "../../utils/API";
 import { showMsgToast } from "../../utils/showMsgToast";
 import { handleApiError } from "../../hooks/handleApiErrors";
-import { AxiosError } from "axios";
-import { useHistory } from "react-router-dom";
+import { useOrganisation } from "../../context/OrganisationContext";
+import { Label } from "../ui/label";
+import { Button } from "../ui/button";
+import { Spinner } from "../ui/spinner";
 
 const key = "configuration";
 
@@ -74,7 +76,7 @@ const WebsiteTab = () => {
         <div className="right-content">
           <div className="profile-card d-flex flex-column align-items-center">
             {isLoading ? (
-              <Spinner className="mt-8" animation="border" />
+              <Spinner className="mt-8" />
             ) : (
               <Formik
                 enableReinitialize
@@ -109,8 +111,8 @@ const WebsiteTab = () => {
               >
                 {({ values, errors, touched, isSubmitting, handleChange }) => (
                   <Form className="w-100 mt-2">
-                    <div className="border-b border-gray-200 mb-6 w-full mt-4 flex items-center">
-                      <label htmlFor="contact-email">Contact Email</label>
+                    <div className="border-div border-gray-200 mb-6 w-full mt-4 flex items-center">
+                      <Label htmlFor="contact-email">Contact Email</Label>
                       <Field
                         type="email"
                         className="form-control input-div"
@@ -125,7 +127,7 @@ const WebsiteTab = () => {
                       )}
                     </div>
                     <div className="border-div form-group w-100 mt-3 d-flex align-items-center">
-                      <label htmlFor="contact-phone">Contact Phone</label>
+                      <Label htmlFor="contact-phone">Contact Phone</Label>
                       <Field
                         type="text"
                         className="form-control input-div"
@@ -140,7 +142,7 @@ const WebsiteTab = () => {
                       )}
                     </div>
                     <div className="border-div form-group w-100 mt-3 d-flex align-items-center">
-                      <label htmlFor="contact-address">Contact Address</label>
+                      <Label htmlFor="contact-address">Contact Address</Label>
                       <Field
                         type="text"
                         className="form-control input-div"
@@ -161,7 +163,7 @@ const WebsiteTab = () => {
                       className="mt-3"
                     >
                       {isSubmitting || mutation.isLoading ? (
-                        <Spinner animation="border" size="sm" />
+                        <Spinner size="sm" />
                       ) : (
                         "Save"
                       )}

@@ -7,18 +7,21 @@ import PlatformTab from "./PlatformTab";
 import CustomConfigTab from "./CustomConfigTab";
 import DomainTab from "./DomainTab";
 import PageHeading from "../../shared-components/PageHeading";
-import { Nav } from "../ui/bootstrap-compat";
 import { Hammer } from "../ui/icon";
+import { Tabs, TabsList, TabsTrigger, TabsContent } from "../ui/tabs";
 
 const tabs = [
-  { key: "profile", label: "Profile" },
-  { key: "organization", label: "Organization" },
-  { key: "domains", label: "Domains" },
-  { key: "appearance", label: "Appearance" },
-  { key: "website", label: "Website Details" },
-  { key: "platform", label: "Platform Configurations" },
-  { key: "configurations", label: "Temp: Custom Config" },
-  { key: "integrations", label: "Integrations" },
+  { key: "profile", label: "Profile", content: <ProfileTab /> },
+  { key: "organization", label: "Organization", content: <OrganizationTab /> },
+  { key: "domains", label: "Domains", content: <DomainTab /> },
+  { key: "appearance", label: "Appearance", content: <AppearanceTab /> },
+  { key: "website", label: "Website", content: <WebsiteTab /> },
+  { key: "platform", label: "Platform", content: <PlatformTab /> },
+  {
+    key: "configurations",
+    label: "Configurations",
+    content: <CustomConfigTab />,
+  },
 ];
 
 const Organization: React.FC = () => {
@@ -38,30 +41,16 @@ const Organization: React.FC = () => {
       <hr />
 
       <div className="px-4 py-4">
-        <Nav
-          className="nav-tabs global-navs w-100"
-          variant="tabs"
-          activeKey={activeTab}
-          onSelect={(selectedKey) =>
-            setActiveTab(selectedKey || "organization")
-          }
-        >
+        <Tabs defaultValue={activeTab}>
+          <TabsList className="mb-2">
+            {tabs.map((tab) => (
+              <TabsTrigger value={tab.key}>{tab.label}</TabsTrigger>
+            ))}
+          </TabsList>
           {tabs.map((tab) => (
-            <Nav.Item key={tab.key}>
-              <Nav.Link eventKey={tab.key}>{tab.label}</Nav.Link>
-            </Nav.Item>
+            <TabsContent value={tab.key}>{tab.content}</TabsContent>
           ))}
-        </Nav>
-
-        <div className="mt-4 mx-2">
-          {activeTab === "profile" && <ProfileTab />}
-          {activeTab === "organization" && <OrganizationTab />}
-          {activeTab === "domains" && <DomainTab />}
-          {activeTab === "appearance" && <AppearanceTab />}
-          {activeTab === "website" && <WebsiteTab />}
-          {activeTab === "platform" && <PlatformTab />}
-          {activeTab === "configurations" && <CustomConfigTab />}
-        </div>
+        </Tabs>
       </div>
     </>
   );

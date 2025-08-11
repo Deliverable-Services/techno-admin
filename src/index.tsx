@@ -2,12 +2,14 @@ import React from "react";
 import { createRoot } from "react-dom/client";
 import "./css/App.css";
 import "./global.css";
+import "@radix-ui/themes/styles.css";
 import App from "./App";
 import { BrowserRouter } from "react-router-dom";
 
 import { QueryClientProvider } from "react-query";
 import { queryClient } from "./utils/queryClient";
 import { OrganisationProvider } from "./context/OrganisationContext";
+import { Theme } from "@radix-ui/themes";
 
 if (
   typeof process !== "undefined" &&
@@ -40,7 +42,9 @@ if (container) {
       <OrganisationProvider>
         <QueryClientProvider client={queryClient}>
           <BrowserRouter>
-            <App />
+            <Theme>
+              <App />
+            </Theme>
           </BrowserRouter>
         </QueryClientProvider>
       </OrganisationProvider>

@@ -1,8 +1,7 @@
 import { AxiosError } from "axios";
-// Removed bs-custom-file-input
 import { Form, Formik } from "formik";
 import { useEffect } from "react";
-import { Button, Col, Row, Spinner } from "../ui/bootstrap-compat";
+import { Col, Row } from "../ui/bootstrap-compat";
 import { useMutation } from "react-query";
 import { useHistory } from "react-router-dom";
 import { handleApiError } from "../../hooks/handleApiErrors";
@@ -14,6 +13,8 @@ import API from "../../utils/API";
 import { queryClient } from "../../utils/queryClient";
 import { showMsgToast } from "../../utils/showMsgToast";
 import PageHeading from "../../shared-components/PageHeading";
+import { Button } from "../ui/button";
+import { Spinner } from "../ui/spinner";
 
 const key = "configuration";
 
@@ -108,11 +109,7 @@ const ConfigCreateUpdateForm = ({ id, onHideModal }) => {
                           disabled={isLoading}
                           className="w-100"
                         >
-                          {isLoading ? (
-                            <Spinner animation="border" size="sm" />
-                          ) : (
-                            "Submit"
-                          )}
+                          {isLoading ? <Spinner size="sm" /> : "Submit"}
                         </Button>
                       </Restricted>
                     </Col>
