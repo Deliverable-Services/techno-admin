@@ -1,7 +1,14 @@
 import React, { ReactElement, useMemo, useState } from "react";
 import { DragDropContext, Draggable, Droppable } from "react-beautiful-dnd";
+import { Container, Dropdown, Table } from "react-bootstrap";
 import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
+import { AiOutlineSearch } from "react-icons/ai";
+import { MdFilterList, MdRefresh } from "react-icons/md";
+import { FaDatabase, FaSearch } from "react-icons/fa";
+import { IoMdArrowDropdown, IoMdArrowDropup } from "react-icons/io";
+import { BsLayoutTextSidebar } from "react-icons/bs";
+// import Checkbox from 'react-checkbox-component'
 import {
   TableState,
   useFilters,
@@ -11,36 +18,11 @@ import {
   useSortBy,
   useTable,
 } from "react-table";
+import { primaryColor } from "../utils/constants";
 import { useContext } from "react";
 import { IsDesktopContext } from "../context/IsDesktopContext";
 import useUserProfileStore from "../hooks/useUserProfileStore";
-import { Input } from "../components/ui/input";
-import { Card, CardContent } from "../components/ui/card";
-import { Button } from "../components/ui/button";
-import { Badge } from "../components/ui/badge";
-import { Checkbox } from "../components/ui/checkbox";
-import { Select } from "../components/ui/select";
-import {
-  Search,
-  Filter,
-  Settings,
-  ChevronUp,
-  ChevronDown,
-  Loader2,
-  SearchX,
-  Table,
-  MoreVertical,
-  Eye,
-  EyeOff,
-} from "lucide-react";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-  DropdownMenuSeparator,
-} from "../components/ui/dropdown-menu";
-import { cn } from "../lib/utils";
+
 interface Props {
   data: any;
   filters?: any;
@@ -81,43 +63,46 @@ function SearchInput({
 }: ISearchInput) {
   const count = preGlobalFilteredRows.length;
   const [value, setValue] = React.useState(searchValue);
+  // const onChange = useAsyncDebounce((value) => {
+  // setGlobalFilter(value || undefined);
+  // }, 200);
 
   return (
-    <div className="relative">
-      <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-      <Input
-        value={value || ""}
-        onChange={(e) => {
-          onSearchChange("q", e.target.value);
-          setValue(e.target.value);
-        }}
-        placeholder={placeholder ? placeholder : `Search ${count} records...`}
-        disabled={disabled}
-        className="pl-10 pr-4"
-      />
-      {value && (
-        <Button
-          variant="ghost"
-          size="sm"
-          className="absolute right-1 top-1/2 transform -translate-y-1/2 h-7 w-7 p-0"
-          onClick={() => {
-            onSearchChange("q", "");
-            setValue("");
-          }}
-        >
-          <SearchX className="h-4 w-4" />
-        </Button>
-      )}
-    </div>
+    <input
+      value={value || ""}
+      onChange={(e) => {
+        onSearchChange("q", e.target.value);
+        setValue(e.target.value);
+        // onChange(e.target.value);
+      }}
+      placeholder={placeholder ? placeholder : `Search ${count} records...`}
+      style={{ pointerEvents: disabled ? "none" : "auto" }}
+    />
   );
 }
 
-const IndeterminateCheckbox = React.forwardRef<
-  HTMLInputElement,
-  { indeterminate?: boolean } & React.InputHTMLAttributes<HTMLInputElement>
->(({ indeterminate, ...rest }, ref) => {
-  return <Checkbox ref={ref} indeterminate={indeterminate} {...rest} />;
-});
+const IndeterminateCheckbox = React.forwardRef(
+  ({ indeterminate, ...rest }: any, ref) => {
+    const defaultRef = React.useRef<HTMLDivElement>(null);
+    const resolvedRef = defaultRef || ref;
+
+    // React.useEffect(() => {
+    //   resolvedRef.current.indeterminate = indeterminate
+    // }, [resolvedRef, indeterminate])
+
+    return (
+      <>
+        <input
+          type="checkbox"
+          ref={resolvedRef}
+          {...rest}
+          name="row-check"
+          id="row-check"
+        />
+      </>
+    );
+  }
+);
 
 function ReactTable({
   data,
@@ -268,45 +253,30 @@ function ReactTable({
   };
 
   return (
-    <Card className="border-0 shadow-sm">
-      <CardContent className="p-0">
-        {/* Header Section */}
+    <div className="">
+      <div
+        className="d-flex justify-space-between align-items-center position-relative view-padding view-heading bg-grey-primary"
+        style={{
+          flexDirection: isDesktop ? "row" : "column-reverse",
+          marginBottom: "0 !important",
+        }}
+      >
+        {tabs && tabs}
         <div
-          className={cn(
-            "flex items-center justify-between p-4 border-b bg-muted/30",
-            isDesktop ? "flex-row" : "flex-col-reverse gap-4"
-          )}
+          className={`d-flex align-items-center ${
+            isDesktop ? "ml-auto" : "ml-unset"
+          }`}
         >
-          <div className="flex items-center gap-4">
-            {tabs && <div className="flex items-center gap-2">{tabs}</div>}
-
-            {/* Selected Rows Indicator */}
-            {formtatedSelectedRows.length > 0 && (
-              <Badge
-                variant="default"
-                className="bg-primary/10 text-primary hover:bg-primary/20"
-              >
-                <span className="font-medium">
-                  {formtatedSelectedRows.length} selected
-                </span>
-              </Badge>
-            )}
-          </div>
-
           <div
-            className={cn(
-              "flex items-center gap-3",
-              isDesktop ? "ml-auto" : "w-full"
-            )}
+            className="w-100"
+            style={{ minWidth: isDesktop ? 300 : "auto", marginRight: 8 }}
           >
-            {/* Search Input */}
             {showSearch && (
               <div
-                className={cn(
-                  "flex-1",
-                  isDesktop ? "min-w-[300px] max-w-[400px]" : "w-full"
-                )}
+                className="search-input global-card"
+                style={{ paddingInline: "10px" }}
               >
+                <AiOutlineSearch size={22} />
                 <SearchInput
                   preGlobalFilteredRows={preGlobalFilteredRows}
                   globalFilter={state.globalFilter}
@@ -318,269 +288,348 @@ function ReactTable({
                 />
               </div>
             )}
+          </div>
+          {filters && filters}
+          <div className="search-filters-div">
+            <Dropdown>
+              <Dropdown.Toggle
+                id="dropdown-basic"
+                className="filter-button m-0 p-0 manage-column d-flex align-items-center bg-transparent border-0 text-primary"
+              >
+                <BsLayoutTextSidebar className="mr-2" /> Columns
+              </Dropdown.Toggle>
 
-            {/* External Filters */}
-            {filters && (
-              <div className="flex items-center gap-2">{filters}</div>
-            )}
+              <Dropdown.Menu className="p-2 menu-dropdown">
+                {allColumns.map((column) => {
+                  column.disableGlobalFilter = !column.isVisible;
+                  return (
+                    <div
+                      key={column.id}
+                      className="custom-control custom-checkbox w-100 px-2 dropdown-item"
+                    >
+                      <input
+                        type="checkbox"
+                        {...column.getToggleHiddenProps()}
+                        className="d-none"
+                        id={column.id}
+                      />
 
-            {/* Column Visibility Dropdown */}
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <Button variant="outline" size="sm" className="h-9 px-3">
-                  <Settings className="h-4 w-4 mr-2" />
-                  View
-                  <ChevronDown className="h-4 w-4 ml-2" />
-                </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent className="w-[200px]">
-                <div className="p-2">
-                  <h4 className="font-medium text-sm mb-2 px-2">
-                    Toggle Columns
-                  </h4>
-                  {allColumns.map((column) => {
-                    column.disableGlobalFilter = !column.isVisible;
-                    return (
-                      <div
-                        key={column.id}
-                        className="flex items-center space-x-2 px-2 py-1.5 rounded-sm hover:bg-accent"
-                      >
-                        <Checkbox
+                      <div className="custom-control custom-checkbox ">
+                        <input
+                          type="checkbox"
+                          className="custom-control-input"
+                          id={column.id}
                           {...column.getToggleHiddenProps()}
-                          id={`column-${column.id}`}
                         />
+
                         <label
-                          htmlFor={`column-${column.id}`}
-                          className="text-sm font-medium cursor-pointer flex-1"
+                          className="custom-control-label"
+                          htmlFor={column.id}
                         >
-                          {String(column.Header)}
+                          <p style={{ whiteSpace: "nowrap" }}>
+                            {column.Header}
+                          </p>
                         </label>
                       </div>
-                    );
-                  })}
-                </div>
-              </DropdownMenuContent>
-            </DropdownMenu>
+                    </div>
+                  );
+                })}
+              </Dropdown.Menu>
+            </Dropdown>
           </div>
         </div>
+      </div>
 
-        {/* Table Section */}
-        <div className="relative overflow-hidden">
-          <DndProvider backend={HTML5Backend}>
-            <div className="overflow-x-auto">
-              <table className="w-full border-collapse" {...getTableProps()}>
-                <thead className="bg-muted/50 border-b">
-                  {/* Loading State */}
-                  {isDataLoading ? (
-                    <tr>
-                      <td
-                        colSpan={
-                          headerGroups[0]?.headers?.length || columns.length
-                        }
-                        className="text-center p-8 bg-muted/30 border-0"
-                      >
-                        <div className="flex flex-col items-center justify-center space-y-4">
-                          <div className="flex items-center space-x-3">
-                            <div className="relative">
-                              <Loader2 className="h-6 w-6 animate-spin text-primary" />
-                              <div className="absolute inset-0 rounded-full border-2 border-primary/20" />
-                            </div>
-                            <div className="flex flex-col items-start">
-                              <span className="text-sm font-medium text-foreground">
-                                Loading data...
-                              </span>
-                              <span className="text-xs text-muted-foreground">
-                                Please wait while we fetch the latest
-                                information
-                              </span>
-                            </div>
+      {/*-------------------- table---------------------  */}
+      <div className="">
+        <DndProvider backend={HTML5Backend}>
+          <div className="tableFixed position-relative">
+            <Table
+              className="table-fixed mb-0"
+              style={{ borderTop: "1px solid var(--border)" }}
+              {...getTableProps()}
+              responsive
+              hover
+              size="sm"
+            >
+              <thead className="bg-grey-primary">
+                {isDataLoading ? (
+                  <tr>
+                    <td
+                      colSpan={
+                        headerGroups[0]?.headers?.length || columns.length
+                      }
+                      className="text-center p-4"
+                      style={{
+                        backgroundColor: "#f8f9fa",
+                        border: "none",
+                        position: "relative",
+                      }}
+                    >
+                      <div className="d-flex flex-column align-items-center justify-content-center">
+                        <div
+                          style={{
+                            width: "200px",
+                            height: "2px",
+                            backgroundColor: "#e9ecef",
+                            borderRadius: "1px",
+                            overflow: "hidden",
+                            marginBottom: "10px",
+                          }}
+                        >
+                          <div
+                            style={{
+                              width: "100%",
+                              height: "100%",
+                              background: `linear-gradient(90deg, ${primaryColor}40, ${primaryColor}, ${primaryColor}40)`,
+                              animation:
+                                "loading-bar 1.5s ease-in-out infinite",
+                            }}
+                          />
+                        </div>
+
+                        <div className="d-flex align-items-center justify-content-center">
+                          <div
+                            className="d-flex align-items-center justify-content-center mr-2"
+                            style={{
+                              width: "20px",
+                              height: "20px",
+                              backgroundColor: "white",
+                              borderRadius: "50%",
+                              border: `2px solid ${primaryColor}20`,
+                              boxShadow: "0 2px 8px rgba(0,0,0,0.1)",
+                            }}
+                          >
+                            <FaDatabase size={12} color={primaryColor} />
                           </div>
 
-                          <div className="w-48 h-1 bg-muted rounded-full overflow-hidden">
-                            <div className="h-full bg-gradient-to-r from-primary/60 via-primary to-primary/60 animate-pulse" />
+                          <div className="d-flex align-items-center">
+                            <span
+                              className="text-muted font-weight-500"
+                              style={{ fontSize: "15px" }}
+                            >
+                              Refreshing table data...
+                            </span>
                           </div>
                         </div>
-                      </td>
-                    </tr>
-                  ) : null}
-                  {headerGroups.map((headerGroup) => (
+                      </div>
+                    </td>
+                  </tr>
+                ) : null}
+                {
+                  // Loop over the header rows
+                  headerGroups.map((headerGroup) => (
+                    // Apply the header row props
                     <tr {...headerGroup.getHeaderGroupProps()}>
-                      {headerGroup.headers.map((column) => (
-                        <th
-                          {...column.getHeaderProps(
-                            column.getSortByToggleProps()
-                          )}
-                          className={cn(
-                            "px-4 py-3 text-left text-sm font-medium text-muted-foreground tracking-wide",
-                            "hover:bg-muted/80 transition-colors cursor-pointer select-none",
-                            "border-r border-border/50 last:border-r-0"
-                          )}
-                        >
-                          <div className="flex items-center justify-between group">
-                            <span className="flex items-center gap-2">
-                              {column.render("Header")}
-                            </span>
-                            <div className="flex items-center">
-                              {column.canSort && (
-                                <div className="ml-1 flex flex-col">
-                                  {column.isSorted ? (
-                                    column.isSortedDesc ? (
-                                      <ChevronDown className="h-4 w-4 text-primary" />
-                                    ) : (
-                                      <ChevronUp className="h-4 w-4 text-primary" />
-                                    )
-                                  ) : (
-                                    <div className="flex flex-col opacity-50 group-hover:opacity-100 transition-opacity">
-                                      <ChevronUp className="h-3 w-3 -mb-1" />
-                                      <ChevronDown className="h-3 w-3" />
-                                    </div>
-                                  )}
-                                </div>
+                      {
+                        // Loop over the headers in each row
+                        headerGroup.headers.map((column) => {
+                          // Apply the header cell props
+                          return (
+                            <th
+                              {...column.getHeaderProps(
+                                column.getSortByToggleProps()
                               )}
-                            </div>
-                          </div>
-                        </th>
-                      ))}
+                            >
+                              {
+                                // Render the header
+                                column.render("Header")
+                              }
+                              <span>
+                                {column.isSorted ? (
+                                  column.isSortedDesc ? (
+                                    <IoMdArrowDropup />
+                                  ) : (
+                                    <IoMdArrowDropdown />
+                                  )
+                                ) : (
+                                  ""
+                                )}
+                              </span>
+                            </th>
+                          );
+                        })
+                      }
                     </tr>
-                  ))}
-                </thead>
-                <DragDropContext onDragEnd={handleDragEnd}>
-                  <Droppable droppableId="table-body">
-                    {(provided, snapshot) => (
-                      <tbody
-                        ref={provided.innerRef}
-                        {...provided.droppableProps}
-                        className="divide-y divide-border"
-                      >
-                        {rows.map((row, i) => {
-                          prepareRow(row);
+                  ))
+                }
+              </thead>
+              {/* Apply the table body props */}
+              <DragDropContext onDragEnd={handleDragEnd}>
+                <Droppable droppableId="table-body">
+                  {(provided, snapshot) => (
+                    <tbody ref={provided.innerRef} {...provided.droppableProps}>
+                      {rows.map((row, i) => {
+                        prepareRow(row);
 
-                          if (isDraggable)
-                            return (
-                              <Draggable
-                                draggableId={row.id}
-                                key={row.id}
-                                index={i}
-                              >
-                                {(provided, snapshot) => (
+                        if (isDraggable)
+                          return (
+                            <Draggable
+                              draggableId={row.id}
+                              key={row.id}
+                              index={i}
+                            >
+                              {(provided, snapshot) => {
+                                return (
                                   <DnDRow
                                     provided={provided}
                                     row={row}
                                     snapshot={snapshot}
                                   />
-                                )}
-                              </Draggable>
-                            );
-                          else return <Row key={row.id} row={row} />;
-                        })}
-                        {provided.placeholder}
-                      </tbody>
-                    )}
-                  </Droppable>
-                </DragDropContext>
-              </table>
-            </div>
-          </DndProvider>
-          {/* Empty State */}
-          {rows.length === 0 && !isDataLoading ? (
-            <div className="flex justify-center items-center py-16 px-4">
-              <div className="text-center max-w-md">
-                <div className="relative mb-6">
-                  <div className="w-24 h-24 mx-auto bg-muted/50 rounded-full flex items-center justify-center border-4 border-muted/30">
-                    <Table className="h-10 w-10 text-muted-foreground" />
+                                );
+                              }}
+                            </Draggable>
+                          );
+                        else return <Row row={row} />;
+                      })}
+                      {provided.placeholder}
+                    </tbody>
+                  )}
+                </Droppable>
+              </DragDropContext>
+              {/* {rows.length === 0 ?
+<Container fluid className="d-flex justify-content-center w-100 align-item-center">
+<span className="text-primary display-3">No data found</span>
+</Container>
+: ""} */}
+            </Table>
+            {/* {rows.length === 0 ? (
+              ""
+            ) : showRecords ? (
+              <div
+                className="d-flex gap-3 align-items-center justify-content-center"
+                style={{ position: "absolute", left: 10, bottom: "-40px" }}
+              >
+                <span className="text-muted" style={{ fontSize: "14px" }}>
+                  Records{" "}
+                </span>
+                <select
+                  className="text-primary font-weight-bold"
+                  style={{
+                    border: "none",
+                    marginRight: 5,
+                  }}
+                  value={pageSize}
+                  onChange={(e) => {
+                    const value = e.target.value;
+                    setPageSize(parseInt(value));
+                    onFilterChange("perPage", value);
+                  }}
+                >
+                  {RowsPerPage.map((item) => (
+                    <option key={item.id} value={item.id}>
+                      {item.name}
+                    </option>
+                  ))}
+                </select>
+              </div>
+            ) : null} */}
+          </div>
+        </DndProvider>
+        {rows.length === 0 ? (
+          <Container
+            fluid
+            className="d-flex justify-content-center"
+            style={{ marginTop: "60px", marginBottom: "60px" }}
+          >
+            <div
+              className="d-flex flex-column align-items-center text-center"
+              style={{ maxWidth: "450px" }}
+            >
+              <div className="position-relative mb-4">
+                <div
+                  className="d-flex align-items-center justify-content-center"
+                  style={{
+                    width: "100px",
+                    height: "100px",
+                    backgroundColor: "#f8f9fa",
+                    borderRadius: "50%",
+                    border: `3px solid ${primaryColor}20`,
+                  }}
+                >
+                  <FaDatabase size={40} color={primaryColor} />
+                </div>
+                <div
+                  className="position-absolute d-flex align-items-center justify-content-center"
+                  style={{
+                    width: "30px",
+                    height: "30px",
+                    backgroundColor: "#6c757d",
+                    borderRadius: "50%",
+                    bottom: "-2px",
+                    right: "-2px",
+                    border: "2px solid white",
+                  }}
+                >
+                  <FaSearch size={14} color="white" />
+                </div>
+              </div>
+
+              <h4
+                className="mb-3"
+                style={{
+                  fontWeight: "600",
+                  color: "#2c3e50",
+                  fontSize: "20px",
+                }}
+              >
+                No data found
+              </h4>
+
+              <p
+                className="text-muted mb-4"
+                style={{
+                  fontSize: "15px",
+                  lineHeight: "1.5",
+                  maxWidth: "380px",
+                }}
+              >
+                {state.globalFilter
+                  ? "No results match your current search criteria. Try adjusting your filters or search terms."
+                  : "There are no records to display at the moment. Data will appear here once it's added to the system."}
+              </p>
+
+              {state.globalFilter ? (
+                <div
+                  className="d-flex flex-column align-items-center mb-3"
+                  style={{ fontSize: "13px" }}
+                >
+                  <div className="d-flex align-items-center mb-2 text-muted">
+                    <MdRefresh
+                      size={14}
+                      color={primaryColor}
+                      className="mr-2"
+                    />
+                    <span>Clear search and filters</span>
                   </div>
-                  <div className="absolute -bottom-1 -right-1 w-8 h-8 bg-muted rounded-full flex items-center justify-center border-2 border-background">
-                    <SearchX className="h-4 w-4 text-muted-foreground" />
+                  <div className="d-flex align-items-center mb-2 text-muted">
+                    <FaSearch size={12} color={primaryColor} className="mr-2" />
+                    <span>Try different search terms</span>
+                  </div>
+                  <div className="d-flex align-items-center text-muted">
+                    <MdFilterList
+                      size={14}
+                      color={primaryColor}
+                      className="mr-2"
+                    />
+                    <span>Adjust filter criteria</span>
                   </div>
                 </div>
+              ) : null}
 
-                <h3 className="text-xl font-semibold text-foreground mb-3">
-                  No data found
-                </h3>
-
-                <p className="text-muted-foreground mb-6 text-sm leading-relaxed">
+              <div className="mt-2">
+                <small className="text-muted" style={{ opacity: 0.8 }}>
                   {state.globalFilter
-                    ? "No results match your current search criteria. Try adjusting your filters or search terms."
-                    : "There are no records to display at the moment. Data will appear here once it's added to the system."}
-                </p>
-
-                {state.globalFilter && (
-                  <div className="space-y-2 mb-6">
-                    <div className="flex items-center justify-center text-xs text-muted-foreground">
-                      <Search className="h-3 w-3 mr-2" />
-                      <span>Clear search and try again</span>
-                    </div>
-                    <div className="flex items-center justify-center text-xs text-muted-foreground">
-                      <Filter className="h-3 w-3 mr-2" />
-                      <span>Adjust your filter criteria</span>
-                    </div>
-                  </div>
-                )}
-
-                {state.globalFilter && (
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    onClick={() => {
-                      setGlobalFilter("");
-                      onFilterChange("q", "");
-                    }}
-                    className="mx-auto"
-                  >
-                    <SearchX className="h-4 w-4 mr-2" />
-                    Clear Search
-                  </Button>
-                )}
-
-                <div className="mt-4">
-                  <Badge variant="secondary" className="text-xs">
-                    {state.globalFilter
-                      ? `Searching for "${state.globalFilter}"`
-                      : "Ready for data"}
-                  </Badge>
-                </div>
+                    ? `Searching for "${state.globalFilter}"`
+                    : `Need help? Contact support`}
+                </small>
               </div>
             </div>
-          ) : null}
-
-          {/* Footer - Row Count */}
-          {rows.length > 0 && (
-            <div className="flex items-center justify-between p-3 border-t bg-muted/20">
-              <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                <Badge variant="outline" className="text-xs">
-                  {rows.length} {rows.length === 1 ? "row" : "rows"}
-                </Badge>
-                {formtatedSelectedRows.length > 0 && (
-                  <span className="text-xs">
-                    · {formtatedSelectedRows.length} selected
-                  </span>
-                )}
-              </div>
-
-              {showRecords && (
-                <div className="flex items-center gap-2 text-sm">
-                  <span className="text-muted-foreground">Rows per page:</span>
-                  <select
-                    value={pageSize.toString()}
-                    onChange={(e) => {
-                      const value = e.target.value;
-                      setPageSize(parseInt(value));
-                      onFilterChange("perPage", value);
-                    }}
-                    className="h-8 w-20 text-xs border border-border rounded-md px-2"
-                  >
-                    <option value="10">10</option>
-                    <option value="25">25</option>
-                    <option value="50">50</option>
-                    <option value="100">100</option>
-                  </select>
-                </div>
-              )}
-            </div>
-          )}
-        </div>
-      </CardContent>
-    </Card>
+          </Container>
+        ) : null}
+      </div>
+      {/* pagination  */}
+    </div>
   );
 }
 
@@ -590,18 +639,13 @@ const DnDRow = ({ provided, row, snapshot }: any) => (
     {...row.getRowProps()}
     {...provided.draggableProps}
     {...provided.dragHandleProps}
-    className={cn(
-      "hover:bg-muted/50 transition-colors",
-      snapshot.isDragging && "opacity-50 bg-muted/80 shadow-lg"
-    )}
-    style={provided.draggableProps.style}
+    style={{
+      ...provided.draggableProps.style,
+      opacity: snapshot.isDragging ? ".5" : "1",
+    }}
   >
-    {row.cells.map((cell: any) => (
-      <td
-        key={cell.column.id}
-        {...cell.getCellProps()}
-        className="px-4 py-3 text-sm text-foreground border-r border-border/50 last:border-r-0"
-      >
+    {row.cells.map((cell) => (
+      <td {...cell.getCellProps()} style={{ verticalAlign: "middle" }}>
         {cell.render("Cell", {
           dragHandleProps: provided.dragHandleProps,
           isSomethingDragging: snapshot.isDragging,
@@ -610,29 +654,21 @@ const DnDRow = ({ provided, row, snapshot }: any) => (
     ))}
   </tr>
 );
-
 const Row = ({ row }: any) => (
-  <tr
-    {...row.getRowProps()}
-    className="hover:bg-muted/50 transition-colors group"
-  >
-    {row.cells.map((cell: any) => (
-      <td
-        key={cell.column.id}
-        {...cell.getCellProps()}
-        className="px-4 py-3 text-sm text-foreground border-r border-border/50 last:border-r-0"
-      >
-        {cell.value ||
-        cell.column.id === "selection" ||
-        cell.column.id === "Actions" ? (
-          cell.render("Cell")
-        ) : (
-          <Badge variant="secondary" className="text-xs">
-            N/A
-          </Badge>
-        )}
-      </td>
-    ))}
+  <tr {...row.getRowProps()}>
+    {row.cells.map((cell) => {
+      return (
+        <td {...cell.getCellProps()} style={{ verticalAlign: "middle" }}>
+          {cell.value ||
+          cell.column.id === "selection" ||
+          cell.column.id === "Actions" ? (
+            cell.render("Cell")
+          ) : (
+            <span className="text-muted">NA</span>
+          )}
+        </td>
+      );
+    })}
   </tr>
 );
 

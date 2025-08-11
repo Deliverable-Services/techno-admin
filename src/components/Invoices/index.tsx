@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useMemo, useCallback } from "react";
-
+import "./invoice.css";
 import InvoicesCreateForm from "./InvoicesCreateForm";
 import API from "../../utils/API";
 import VerifingUserLoader from "../../shared-components/VerifingUserLoader";
@@ -9,11 +9,13 @@ import autoTable from "jspdf-autotable";
 import { showMsgToast } from "../../utils/showMsgToast";
 import { showErrorToast } from "../../utils/showErrorToast";
 import PageHeading from "../../shared-components/PageHeading";
-import { Container, Button } from "../ui/bootstrap-compat";
+import { FaStripe } from "react-icons/fa";
+import { Container, Button } from "react-bootstrap";
 import ReactTable from "../../shared-components/ReactTable";
 import { Cell } from "react-table";
-import { Hammer } from "../ui/icon";
+
 import { primaryColor } from "../../utils/constants";
+import { SiCivicrm } from "react-icons/si";
 
 interface Invoice {
   id: string;
@@ -83,7 +85,7 @@ const InvoicePage: React.FC = () => {
         Cell: (data: Cell) => {
           return (
             <button
-              className="bg-gray-100 text-gray-800 border-0 rounded px-4 py-2 font-medium cursor-pointer text-base ml-2"
+              className="secondary-btn"
               onClick={() => downloadInvoicePDF(data?.row?.values as any)}
               disabled={downloadingInvoices[data?.row?.values?.id]}
               style={{
@@ -239,7 +241,7 @@ const InvoicePage: React.FC = () => {
     <>
       <div className="view-padding">
         <PageHeading
-          icon={<Hammer size={24} />}
+          icon={<SiCivicrm size={24} />}
           title="Invoices"
           description="Raise invoices to your customers with one click"
           onClick={_onCreateClick}
@@ -253,7 +255,7 @@ const InvoicePage: React.FC = () => {
           return (
             <div className="view-padding">
               <div className="d-flex flex-column align-items-center text-center">
-                <Hammer size={80} color={primaryColor} className="mb-4" />
+                <FaStripe size={80} color={primaryColor} className="mb-4" />
                 <h3 className="mb-3">Get started with Billings</h3>
                 <p className="text-muted mb-4" style={{ maxWidth: "400px" }}>
                   To start using billing you need to create your Stripe account
@@ -263,7 +265,7 @@ const InvoicePage: React.FC = () => {
                   variant="primary"
                   onClick={handleCreateStripeAccount}
                   size="lg"
-                  className="bg-gray-800 text-white border-0 rounded px-4 py-2 font-medium cursor-pointer text-base transition-colors hover:bg-gray-600"
+                  className="primary-btn"
                   style={{
                     backgroundColor: primaryColor,
                     borderColor: primaryColor,
@@ -273,7 +275,7 @@ const InvoicePage: React.FC = () => {
                   }}
                 >
                   <div className="text-white d-flex align-items-center">
-                    <Hammer className="mr-2" />
+                    <FaStripe className="mr-2" />
                     Create Stripe Account
                   </div>
                 </Button>
@@ -283,7 +285,7 @@ const InvoicePage: React.FC = () => {
         }
         if (loading) {
           return (
-            <div className="text-center my-20">
+            <div className="invoice-empty">
               <p>Loading...</p>
             </div>
           );
@@ -291,15 +293,12 @@ const InvoicePage: React.FC = () => {
 
         if (!invoices.length) {
           return (
-            <div className="text-center my-20">
-              <h4 className="text-xl mb-0">Send your first invoice</h4>
-              <p className="text-xl text-gray-500 mb-4">
+            <div className="invoice-empty">
+              <h4>Send your first invoice</h4>
+              <p>
                 This is where you can see invoice and their associated status
               </p>
-              <button
-                className="bg-gray-800 text-white border-0 rounded px-4 py-2 font-medium cursor-pointer text-base transition-colors hover:bg-gray-600"
-                onClick={handleCreate}
-              >
+              <button className="primary-btn" onClick={handleCreate}>
                 + Create invoice
               </button>
             </div>
@@ -331,7 +330,7 @@ const InvoicePage: React.FC = () => {
         }
 
         return (
-          <div className="max-w-lg mx-auto px-7">
+          <div className="invoice-form">
             <InvoicesCreateForm
               onSuccess={() => {
                 setShowForm(false);

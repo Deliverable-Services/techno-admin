@@ -1,10 +1,12 @@
 import { AxiosError } from "axios";
 import { Form, Formik } from "formik";
 import { useState } from "react";
-import { Button, Spinner } from "./ui/bootstrap-compat";
+import { Button, Spinner } from "react-bootstrap";
 import { useMutation } from "react-query";
 import { useHistory } from "react-router";
 import * as Yup from "yup";
+import { FaLock, FaArrowLeft } from "react-icons/fa";
+import { MdSecurity, MdVerifiedUser } from "react-icons/md";
 import { primaryColor } from "../utils/constants";
 
 import { InputField } from "../shared-components/InputFeild";
@@ -16,7 +18,6 @@ import { useOrganisation } from "../context/OrganisationContext";
 import API from "../utils/API";
 import { showErrorToast } from "../utils/showErrorToast";
 import { showMsgToast } from "../utils/showMsgToast";
-import { Hammer } from "./ui/icon";
 
 const LoginSchema = Yup.object().shape({
   phone: Yup.string().required("Phone number required"),
@@ -129,7 +130,7 @@ const LoginFlow = () => {
           style={{ position: "relative", zIndex: 2 }}
         >
           <div
-            className="w-100 px-5 py-5 login-wrapper text-center"
+            className="organization-main w-100 px-5 py-5 login-wrapper text-center"
             style={{
               maxWidth: "500px",
               backgroundColor: "rgba(255, 255, 255, 0.95)",
@@ -200,7 +201,7 @@ const LoginFlow = () => {
                       setStep("login");
                     }}
                   >
-                    <Hammer size={12} className="mr-1" />
+                    <FaLock size={12} className="mr-1" />
                     Login
                   </button>
                   <button
@@ -220,7 +221,7 @@ const LoginFlow = () => {
                     }}
                     onClick={() => setActiveTab("signup")}
                   >
-                    <Hammer size={12} className="mr-1" />
+                    <MdVerifiedUser size={12} className="mr-1" />
                     Sign Up
                   </button>
                 </div>
@@ -338,7 +339,7 @@ const LoginFlow = () => {
                         </div>
                       ) : (
                         <div className="d-flex align-items-center justify-content-center">
-                          <Hammer size={16} className="mr-2" />
+                          <MdSecurity size={16} className="mr-2" />
                           Get Secure Code
                         </div>
                       )}
@@ -430,7 +431,7 @@ const LoginFlow = () => {
                           </div>
                         ) : (
                           <div className="d-flex align-items-center justify-content-center">
-                            <Hammer size={16} className="mr-2" />
+                            <MdVerifiedUser size={16} className="mr-2" />
                             Continue
                           </div>
                         )}
@@ -474,7 +475,7 @@ const LoginFlow = () => {
                           }}
                           onClick={() => setStep("login")}
                         >
-                          <Hammer size={12} className="mr-2" />
+                          <FaArrowLeft size={12} className="mr-2" />
                           Change Phone Number
                         </button>
                       </div>

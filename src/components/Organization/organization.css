@@ -1,0 +1,266 @@
+/* Organization Settings Page Styles */
+
+/* Main Container */
+.organization-main {
+  background-color: var(--sidebar);
+}
+
+/* Tab Content Container */
+.organization-main .global-card {
+  min-height: 500px;
+  transition: all 0.3s ease;
+}
+
+/* Form Layout Improvements */
+.organization-main .form-group {
+  margin-bottom: 1.5rem;
+}
+
+.organization-main .form-group label {
+  font-weight: 600;
+  font-size: 14px;
+  color: #344054;
+  margin-bottom: 6px;
+  display: block;
+}
+
+.organization-main input,
+.organization-main select,
+.organization-main textarea {
+  height: 44px;
+  border: 1px solid #d0d5dd;
+  border-radius: 8px;
+  padding: 10px 14px;
+  font-size: 14px;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+  background-color: #fff;
+}
+
+.organization-main input:focus,
+.organization-main select:focus,
+.organization-main textarea:focus {
+  border-color: #0b64fe;
+  box-shadow: 0px 1px 2px rgba(16, 24, 40, 0.05),
+    0px 0px 0px 4px rgba(11, 100, 254, 0.1);
+  outline: none;
+}
+
+.organization-main textarea {
+  height: auto;
+  min-height: 100px;
+  resize: vertical;
+}
+
+/* Section Headers */
+.organization-main .section-header {
+  border-bottom: 1px solid #e4e7ec;
+  padding-bottom: 16px;
+  margin-bottom: 24px;
+}
+
+.organization-main .section-header h4 {
+  font-size: 18px;
+  font-weight: 600;
+  color: #101828;
+  margin-bottom: 4px;
+}
+
+.organization-main .section-header p {
+  font-size: 14px;
+  color: #667085;
+  margin-bottom: 0;
+}
+
+/* Upload Container */
+.upload-container {
+  border: 2px dashed #d0d5dd;
+  background: #f9fafb;
+  border-radius: 12px;
+  min-height: 126px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  transition: all 0.2s ease;
+  cursor: pointer;
+}
+
+.upload-container:hover {
+  border-color: #0b64fe;
+  background: #f8faff;
+}
+
+.upload-container.has-file {
+  border-color: #0b64fe;
+  background: #f8faff;
+}
+
+/* Color Input */
+.organization-main input.color {
+  border: 1px solid #d0d5dd;
+  width: 44px;
+  height: 44px;
+  padding: 0;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+/* Button Styling */
+.organization-main .btn {
+  font-weight: 500;
+  border-radius: 8px;
+  padding: 10px 16px;
+  font-size: 14px;
+  transition: all 0.2s ease;
+}
+
+.organization-main .btn-primary {
+  background-color: #0b64fe;
+  border-color: #0b64fe;
+}
+
+.organization-main .btn-primary:hover {
+  background-color: #0052cc;
+  border-color: #0052cc;
+}
+
+.organization-main .btn-outline-primary {
+  color: #0b64fe;
+  border-color: #0b64fe;
+}
+
+.organization-main .btn-outline-primary:hover {
+  background-color: #0b64fe;
+  border-color: #0b64fe;
+}
+
+/* Card Styling */
+.organization-main .card img {
+  width: 100%;
+  height: 140px;
+  object-fit: cover;
+  border-radius: 8px;
+}
+
+/* Status Indicators */
+.selected {
+  box-shadow: 0 0 15px rgba(11, 100, 254, 0.3);
+}
+
+.border-primary {
+  border: 2px solid #0b64fe !important;
+}
+
+.border-success {
+  border: 2px solid #12b76a !important;
+}
+
+.border-crm {
+  border: 2px solid #0b64fe !important;
+}
+
+.active-dot {
+  width: 16px;
+  height: 16px;
+  position: absolute;
+  bottom: 8px;
+  right: 8px;
+  background: #0b64fe;
+  border-radius: 50%;
+  border: 2px solid white;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* Responsive Design */
+@media (max-width: 992px) {
+  .organization-main .global-navs {
+    max-width: 100%;
+    overflow-x: auto;
+    scrollbar-width: none; /* Firefox */
+    -ms-overflow-style: none; /* IE and Edge */
+  }
+
+  .organization-main .global-navs::-webkit-scrollbar {
+    display: none; /* Chrome, Safari and Opera */
+  }
+}
+
+@media (max-width: 768px) {
+  .organization-main {
+    padding-left: 0.75rem !important;
+    padding-right: 0.75rem !important;
+  }
+
+  .organization-main .global-card {
+    padding: 1.5rem !important;
+    min-height: 400px;
+  }
+
+  .organization-main .form-group label {
+    font-size: 13px;
+  }
+
+  .organization-main input,
+  .organization-main select,
+  .organization-main textarea {
+    font-size: 16px; /* Prevents zoom on iOS */
+  }
+
+  .upload-container {
+    min-height: 100px;
+  }
+
+  /* Stack form elements on mobile */
+  .organization-main .row .col-md-6 {
+    margin-bottom: 1rem;
+  }
+
+  /* Responsive button layout */
+  .organization-main .d-flex.justify-content-end {
+    flex-direction: column;
+    gap: 0.5rem !important;
+  }
+
+  .organization-main .d-flex.justify-content-end .btn {
+    width: 100%;
+  }
+
+  /* Profile photo section responsive */
+  .organization-main .d-flex.align-items-start.gap-4 {
+    flex-direction: column;
+    gap: 1rem !important;
+  }
+
+  .organization-main .upload-container {
+    max-width: 100% !important;
+  }
+}
+
+@media (max-width: 576px) {
+  .organization-main .section-header h4 {
+    font-size: 16px;
+  }
+
+  .organization-main .section-header p {
+    font-size: 13px;
+  }
+
+  .organization-main .global-navs.nav-tabs .nav-link {
+    font-size: 0.8em;
+    padding: 4px 8px;
+  }
+
+  /* Single column on very small screens */
+  .organization-main .row.g-4 .col-md-6 {
+    margin-bottom: 1.5rem;
+  }
+}
+
+/* Utility Classes */
+.fs-12 {
+  font-size: 12px;
+}
+
+.mt-8 {
+  margin-top: 8rem;
+}

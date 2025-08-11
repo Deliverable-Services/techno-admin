@@ -1,7 +1,7 @@
 import React from "react";
-import { Button } from "../components/ui/button";
+import { Button } from "react-bootstrap";
+import { AiFillEye } from "react-icons/ai";
 import Restricted from "./Restricted";
-import { Hammer } from "../components/ui/icon";
 
 interface Props {
   onClick: () => void;
@@ -15,11 +15,11 @@ const ViewButton = (props: Props) => {
     <div>
       <Restricted to={props.permissionReq} fallBackUI={NotAvailable}>
         <Button
-          variant="outline"
+          variant="outline-primary"
           onClick={props.onClick}
-          className="flex items-center"
+          className="d-flex align-items-center"
         >
-          <Hammer size={16} className="mr-1" />
+          <AiFillEye size={16} className="mr-1" />
           View
         </Button>
       </Restricted>

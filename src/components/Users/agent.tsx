@@ -1,6 +1,12 @@
 import { AxiosError } from "axios";
 import { useMemo, useState } from "react";
-import { Button, Container, Dropdown, Modal } from "../ui/bootstrap-compat";
+import {
+  Button,
+  Container,
+  Dropdown,
+  Modal,
+} from "react-bootstrap";
+import { BiSad } from "react-icons/bi";
 import { useMutation, useQuery } from "react-query";
 import { useHistory } from "react-router-dom";
 import { Cell } from "react-table";
@@ -21,7 +27,9 @@ import { isActiveArray } from "../../utils/arrays";
 import { primaryColor } from "../../utils/constants";
 import { queryClient } from "../../utils/queryClient";
 import { showMsgToast } from "../../utils/showMsgToast";
-import { Hammer } from "../ui/icon";
+import { AiFillDelete } from "react-icons/ai";
+import { FaUserSecret } from "react-icons/fa";
+import { BsFunnel } from "react-icons/bs";
 interface IFilter {
   role: string | null;
 }
@@ -149,7 +157,7 @@ const Agents = () => {
                 }}
                 style={{ padding: "0.25rem 0.5rem" }}
               >
-                <Hammer size={16} className="mr-1" /> Delete
+                <AiFillDelete size={16} className="mr-1" /> Delete
               </Button>
             </div>
           );
@@ -163,7 +171,7 @@ const Agents = () => {
     return (
       <Container fluid className="d-flex justify-content-center display-3">
         <div className="d-flex flex-column align-items-center">
-          <Hammer color={primaryColor} />
+          <BiSad color={primaryColor} />
           <span className="text-primary display-3">Something went wrong</span>
         </div>
       </Container>
@@ -176,7 +184,7 @@ const Agents = () => {
         <PageHeading
           title="Agents"
           description="Create and manage agents for your workflow"
-          icon={<Hammer size={24} />}
+          icon={<FaUserSecret size={24} />}
           onClick={_onCreateClick}
           totalRecords={data?.total}
           permissionReq="create_user"
@@ -196,7 +204,7 @@ const Agents = () => {
                   filters={
                     <Dropdown className="search-filters-div filter-dropdown mr-2">
                       <Dropdown.Toggle as={Button} variant="primary">
-                        <Hammer /> Filters
+                        <BsFunnel /> Filters
                       </Dropdown.Toggle>
                       <Dropdown.Menu>
                         <div className="filter-dropdown-heading d-flex justify-content-between w-100">

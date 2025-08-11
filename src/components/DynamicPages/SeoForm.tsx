@@ -1,5 +1,5 @@
 import { Formik, Form } from "formik";
-import { Button, Col, Container, Row, Spinner } from "../ui/bootstrap-compat";
+import { Button, Col, Container, Row, Spinner } from "react-bootstrap";
 import PageHeading from "../../shared-components/PageHeading";
 import { InputField } from "../../shared-components/InputFeild";
 import Restricted from "../../shared-components/Restricted";

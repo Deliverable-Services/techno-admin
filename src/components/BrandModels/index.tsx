@@ -1,6 +1,7 @@
 import { AxiosError } from "axios";
 import { useMemo, useState } from "react";
-import { Button, Container, Dropdown, Nav } from "../ui/bootstrap-compat";
+import { Button, Container, Dropdown, Nav } from "react-bootstrap";
+import { BiSad } from "react-icons/bi";
 import { useMutation, useQuery } from "react-query";
 import { useHistory } from "react-router-dom";
 import { Cell } from "react-table";
@@ -21,7 +22,8 @@ import { areTwoObjEqual } from "../../utils/areTwoObjEqual";
 import { config, primaryColor } from "../../utils/constants";
 import { queryClient } from "../../utils/queryClient";
 import { showMsgToast } from "../../utils/showMsgToast";
-import { Hammer } from "../ui/icon";
+import { BsFunnel } from "react-icons/bs";
+import { IoLogoModelS } from "react-icons/io";
 
 const key = "brand-models";
 
@@ -194,7 +196,7 @@ const BrandModels = () => {
     return (
       <Container fluid className="d-flex justify-content-center display-3">
         <div className="d-flex flex-column align-items-center">
-          <Hammer color={primaryColor} />
+          <BiSad color={primaryColor} />
           <span className="text-primary display-3">Something went wrong</span>
         </div>
       </Container>
@@ -205,7 +207,7 @@ const BrandModels = () => {
     <>
       <Container fluid className="component-wrapper view-padding">
         <PageHeading
-          icon={<Hammer />}
+          icon={<IoLogoModelS />}
           title="Products"
           onClick={_onCreateClick}
           totalRecords={data?.total}
@@ -222,82 +224,64 @@ const BrandModels = () => {
                 {!error && (
                   <ReactTable
                     data={data?.data}
-                    tabs={
-                      <div className="d-flex justify-content-between">
-                        {!isLoading && (
-                          <Nav
-                            className="global-navs"
-                            variant="tabs"
-                            activeKey={filter.active}
-                            onSelect={(selectedKey) =>
-                              _onFilterChange("active", selectedKey)
-                            }
+                    tabs={<div className="d-flex justify-content-between">
+                      {!isLoading && (
+                        <Nav className="global-navs" variant="tabs" activeKey={filter.active} onSelect={(selectedKey) => _onFilterChange('active', selectedKey)}>
+                          <Nav.Item>
+                            <Nav.Link eventKey="">All ({data?.data?.length || 0})</Nav.Link>
+                          </Nav.Item>
+
+                          <Nav.Item>
+                            <Nav.Link eventKey="active">
+                              Active ({data?.data?.filter(item => item.status === '1').length || 0})
+                            </Nav.Link>
+                          </Nav.Item>
+
+                          <Nav.Item>
+                            <Nav.Link eventKey="inactive">
+                              Expired ({data?.data?.filter(item => item.status === '0').length || 0})
+                            </Nav.Link>
+                          </Nav.Item>
+                        </Nav>
+                      )}
+                    </div>}
+                    filters={<Dropdown className="filter-dropdown">
+                      <Dropdown.Toggle as={Button} variant="primary">
+                        <BsFunnel />
+                      </Dropdown.Toggle>
+                      <Dropdown.Menu>
+                        <div className="filter-dropdown-heading d-flex justify-content-between w-100">
+                          <h4>Filter</h4>
+                          <div
+                            className="d-flex align-items-center justify-md-content-center"
                           >
-                            <Nav.Item>
-                              <Nav.Link eventKey="">
-                                All ({data?.data?.length || 0})
-                              </Nav.Link>
-                            </Nav.Item>
-
-                            <Nav.Item>
-                              <Nav.Link eventKey="active">
-                                Active (
-                                {data?.data?.filter(
-                                  (item) => item.status === "1"
-                                ).length || 0}
-                                )
-                              </Nav.Link>
-                            </Nav.Item>
-
-                            <Nav.Item>
-                              <Nav.Link eventKey="inactive">
-                                Expired (
-                                {data?.data?.filter(
-                                  (item) => item.status === "0"
-                                ).length || 0}
-                                )
-                              </Nav.Link>
-                            </Nav.Item>
-                          </Nav>
-                        )}
-                      </div>
-                    }
-                    filters={
-                      <Dropdown className="filter-dropdown">
-                        <Dropdown.Toggle as={Button} variant="primary">
-                          <Hammer />
-                        </Dropdown.Toggle>
-                        <Dropdown.Menu>
-                          <div className="filter-dropdown-heading d-flex justify-content-between w-100">
-                            <h4>Filter</h4>
-                            <div className="d-flex align-items-center justify-md-content-center">
-                              <Button
-                                onClick={() => setFilter(intitialFilter)}
-                                variant={
-                                  areTwoObjEqual(intitialFilter, filter)
-                                    ? "light"
-                                    : "primary"
-                                }
-                                style={{
-                                  fontSize: 14,
-                                }}
-                              >
-                                Reset Filters
-                              </Button>
-                            </div>
+                            <Button
+                              onClick={() => setFilter(intitialFilter)}
+                              variant={
+                                areTwoObjEqual(intitialFilter, filter)
+                                  ? "light"
+                                  : "primary"
+                              }
+                              style={{
+                                fontSize: 14,
+                              }}
+                            >
+                              Reset Filters
+                            </Button>
                           </div>
-                          <div className="select-filter">
-                            <FilterSelect
-                              currentValue={filter.brand_id}
-                              data={!isBrandsLoading && Brands.data}
-                              label="Brands"
-                              idx="brand_id"
-                              onFilterChange={_onFilterChange}
-                            />
-                          </div>
-                        </Dropdown.Menu>
-                      </Dropdown>
-                    }
+                        </div>
+                        <div className="select-filter">
+                          <FilterSelect
+                            currentValue={filter.brand_id}
+                            data={!isBrandsLoading && Brands.data}
+                            label="Brands"
+                            idx="brand_id"
+                            onFilterChange={_onFilterChange}
+                          />
+                        </div>
+
+                      </Dropdown.Menu>
+                    </Dropdown>}
                     columns={columns}
                     setSelectedRows={setSelectedRows}
                     filter={filter}

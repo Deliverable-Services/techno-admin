@@ -1,9 +1,9 @@
 import { AxiosError } from "axios";
-// Replaced braft-editor; using a simple textarea for now.
-type EditorState = string;
+import BraftEditor, { EditorState } from "braft-editor";
 import React, { useMemo, useState } from "react";
 import { useEffect } from "react";
-import { Modal, Button, Container, Dropdown } from "../ui/bootstrap-compat";
+import { Modal, Button, Container, Dropdown } from "react-bootstrap";
+import { BiSad } from "react-icons/bi";
 import { useMutation, useQuery } from "react-query";
 import { useHistory } from "react-router-dom";
 import { handleApiError } from "../../hooks/handleApiErrors";
@@ -19,7 +19,8 @@ import { showMsgToast } from "../../utils/showMsgToast";
 import StaticPageCreateForm from "./StaticPageCreateUpdateForm";
 import ReactTable from "../../shared-components/ReactTable";
 import { Cell } from "react-table";
-import { Hammer } from "../ui/icon";
+import { BsThreeDotsVertical } from "react-icons/bs";
+import { AiFillDelete } from "react-icons/ai";
 
 const key = "staticPages";
 
@@ -109,7 +110,7 @@ const StaticPages = () => {
                   className="p-1 border-0 shadow-none"
                   id={`dropdown-${data.row.values.id}`}
                 >
-                  <Hammer size={18} />
+                  <BsThreeDotsVertical size={18} />
                 </Dropdown.Toggle>
 
                 <Dropdown.Menu className="menu-dropdown">
@@ -120,7 +121,7 @@ const StaticPages = () => {
                     }}
                     className="text-danger"
                   >
-                    <Hammer size={16} className="me-1" />
+                    <AiFillDelete size={16} className="me-1" />
                     Delete
                   </Dropdown.Item>
                 </Dropdown.Menu>
@@ -162,7 +163,7 @@ const StaticPages = () => {
     return (
       <Container fluid className="d-flex justify-content-center display-3">
         <div className="d-flex flex-column align-items-center">
-          <Hammer color={primaryColor} />
+          <BiSad color={primaryColor} />
           <span className="text-primary display-3">Something went wrong</span>
         </div>
       </Container>
@@ -244,10 +245,10 @@ const StaticPages = () => {
 const PageContainer = ({ page, selectedTitle }) => {
   const history = useHistory();
   const isRestricted = useUserProfileStore((state) => state.isRestricted);
-  const [contentDetails, setContentDetials] = useState<EditorState>("");
+  const [contentDetails, setContentDetials] = useState<EditorState>();
 
   useEffect(() => {
-    if (page) setContentDetials(page.content || "");
+    if (page) setContentDetials(BraftEditor.createEditorState(page.content));
   }, [page]);
 
   const { mutate, isLoading: isUpdatedLoading } = useMutation(updatePageData, {
@@ -272,8 +273,9 @@ const PageContainer = ({ page, selectedTitle }) => {
     }
   );
 
-  const handleSave = (content: string, pagedata: any) => {
+  const handleSave = (editorState: EditorState, pagedata: any) => {
     if (isRestricted("update_staticpage")) return;
+    const content = editorState.toHTML();
     const formdata = {
       ...pagedata,
       content,
@@ -332,21 +334,16 @@ const PageContainer = ({ page, selectedTitle }) => {
             {isUpdatedLoading ? (
               <IsLoading />
             ) : (
-              <div className="bg-light rounded p-2">
-                <textarea
-                  className="form-control"
-                  style={{ minHeight: 300 }}
+              <div className="bg-light rounded">
+                <BraftEditor
                   value={contentDetails}
-                  onChange={(e) => setContentDetials(e.target.value)}
-                  onKeyDown={(e) => {
-                    if (
-                      (e.ctrlKey || e.metaKey) &&
-                      e.key.toLowerCase() === "s"
-                    ) {
-                      e.preventDefault();
-                      handleSave(contentDetails, page);
-                    }
-                  }}
+                  onSave={(editorState: EditorState) =>
+                    handleSave(editorState, page)
+                  }
+                  onChange={(editorState: EditorState) =>
+                    setContentDetials(editorState)
+                  }
+                  language="en"
                 />
               </div>
             )}

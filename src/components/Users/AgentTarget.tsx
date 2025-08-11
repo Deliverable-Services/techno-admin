@@ -1,6 +1,7 @@
 import { AxiosError } from "axios";
 import React, { useMemo, useState } from "react";
-import { Container } from "../ui/bootstrap-compat";
+import { Container } from "react-bootstrap";
+import { BiSad } from "react-icons/bi";
 import { useQuery } from "react-query";
 import { useHistory, useLocation } from "react-router-dom";
 import { Cell } from "react-table";
@@ -11,7 +12,6 @@ import PageHeading from "../../shared-components/PageHeading";
 import TablePagination from "../../shared-components/Pagination";
 import ReactTable from "../../shared-components/ReactTable";
 import { primaryColor } from "../../utils/constants";
-import { Hammer } from "../ui/icon";
 
 const key = "create-target";
 
@@ -96,7 +96,7 @@ const AgentTargets = () => {
     return (
       <Container fluid className="d-flex justify-content-center display-3">
         <div className="d-flex flex-column align-items-center">
-          <Hammer color={primaryColor} />
+          <BiSad color={primaryColor} />
           <span className="text-primary display-3">Something went wrong</span>
         </div>
       </Container>

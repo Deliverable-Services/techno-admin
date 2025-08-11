@@ -1,10 +1,10 @@
 import React from "react";
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "../ui/modal";
+import { Modal } from "react-bootstrap";
 
 interface CommonModalProps {
   title: string;
   modalShow: boolean;
-  onModalHideClick: () => void;
+  onModalHideClick:  () => void;
   children: JSX.Element;
 }
 
@@ -15,16 +15,19 @@ export const CommonModal = ({
   children,
 }: CommonModalProps) => {
   return (
-    <Dialog
-      open={modalShow}
-      onOpenChange={(open) => !open && onModalHideClick()}
+    <Modal
+      show={modalShow}
+      onHide={onModalHideClick}
+      size="lg"
+      aria-labelledby="contained-modal-title-vcenter"
+      centered
     >
-      <DialogContent className="sm:max-w-xl">
-        <DialogHeader>
-          <DialogTitle>{title}</DialogTitle>
-        </DialogHeader>
-        <div>{children}</div>
-      </DialogContent>
-    </Dialog>
+      <Modal.Header closeButton>
+        <Modal.Title id="contained-modal-title-vcenter">
+          {title}
+        </Modal.Title>
+      </Modal.Header>
+      <Modal.Body>{children}</Modal.Body>
+    </Modal>
   );
 };

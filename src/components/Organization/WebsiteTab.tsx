@@ -1,5 +1,5 @@
 import { Formik, Form, Field } from "formik";
-import { Button, Spinner } from "../ui/bootstrap-compat";
+import { Button, Spinner } from "react-bootstrap";
 import { useMutation, useQuery } from "react-query";
 import * as Yup from "yup";
 import { useOrganisation } from "../../context/OrganisationContext";
@@ -109,7 +109,7 @@ const WebsiteTab = () => {
               >
                 {({ values, errors, touched, isSubmitting, handleChange }) => (
                   <Form className="w-100 mt-2">
-                    <div className="border-b border-gray-200 mb-6 w-full mt-4 flex items-center">
+                    <div className="border-div form-group w-100 mt-4 d-flex align-items-center">
                       <label htmlFor="contact-email">Contact Email</label>
                       <Field
                         type="email"
@@ -120,7 +120,7 @@ const WebsiteTab = () => {
                       />
                       {errors["contact-email"] && touched["contact-email"] && (
                         <div className="text-danger ms-2">
-                          {String(errors["contact-email"])}
+                          {errors["contact-email"]}
                         </div>
                       )}
                     </div>
@@ -135,7 +135,7 @@ const WebsiteTab = () => {
                       />
                       {errors["contact-phone"] && touched["contact-phone"] && (
                         <div className="text-danger ms-2">
-                          {String(errors["contact-phone"])}
+                          {errors["contact-phone"]}
                         </div>
                       )}
                     </div>
@@ -151,7 +151,7 @@ const WebsiteTab = () => {
                       {errors["contact-address"] &&
                         touched["contact-address"] && (
                           <div className="text-danger ms-2">
-                            {String(errors["contact-address"])}
+                            {errors["contact-address"]}
                           </div>
                         )}
                     </div>

@@ -5,13 +5,12 @@ import { useDrop } from "react-dnd";
 import { Lead } from "./types";
 import LeadCard from "./LeadCard";
 import {
-  Calendar,
-  Truck,
-  CheckCircle,
-  CreditCard,
-  Circle,
-  CircleDot,
-} from "../../components/ui/icon";
+  FaCalendarCheck,
+  FaTruckMoving,
+  FaCheckCircle,
+  FaCreditCard,
+} from "react-icons/fa";
+import { BsDiamond, BsDiamondHalf } from "react-icons/bs";
 
 interface Props {
   title: string;
@@ -22,12 +21,12 @@ interface Props {
 }
 
 const statusIcons: { [key: string]: JSX.Element } = {
-  NEW: <Circle className="text-orange mr-2" />,
-  SCHEDULED: <Calendar className="text-secondary mr-2" />,
-  EN_ROUTE: <Truck className="text-warning mr-2" />,
-  IN_PROGRESS: <CircleDot className="text-blue mr-2" />,
-  COMPLETED: <CheckCircle className="text-green mr-2" />,
-  PAID: <CreditCard className="text-blue-dark mr-2" />,
+  NEW: <BsDiamond className="text-orange mr-2" />,
+  SCHEDULED: <FaCalendarCheck className="text-secondary mr-2" />,
+  EN_ROUTE: <FaTruckMoving className="text-warning mr-2" />,
+  IN_PROGRESS: <BsDiamondHalf className="text-blue mr-2" />,
+  COMPLETED: <FaCheckCircle className="text-green mr-2" />,
+  PAID: <FaCreditCard className="text-blue-dark mr-2" />,
 };
 
 const Column: React.FC<Props> = ({

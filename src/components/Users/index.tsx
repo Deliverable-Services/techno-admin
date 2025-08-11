@@ -1,9 +1,10 @@
 import { AxiosError } from "axios";
 import { useMemo, useState } from "react";
-import { Button, Container, Dropdown, Modal } from "../ui/bootstrap-compat";
+import { Button, Container, Dropdown, Modal } from "react-bootstrap";
 import UserCreateUpdateForm from "./UsersCreateUpdateForm";
 import Flyout from "../../shared-components/Flyout";
 import { useFlyout } from "../../hooks/useFlyout";
+import { BiSad } from "react-icons/bi";
 import { useMutation, useQuery } from "react-query";
 import { useHistory } from "react-router-dom";
 import { Cell } from "react-table";
@@ -24,7 +25,9 @@ import { isActiveArray } from "../../utils/arrays";
 import { primaryColor } from "../../utils/constants";
 import { queryClient } from "../../utils/queryClient";
 import { showMsgToast } from "../../utils/showMsgToast";
-import { Hammer } from "../ui/icon";
+import { AiFillDelete } from "react-icons/ai";
+import { BsFunnel, BsThreeDotsVertical } from "react-icons/bs";
+import { ImUsers } from "react-icons/im";
 
 const key = "users";
 
@@ -158,7 +161,7 @@ const Users = () => {
                   className="p-1 border-0 shadow-none"
                   id={`dropdown-${data.row.values.id}`}
                 >
-                  <Hammer size={18} />
+                  <BsThreeDotsVertical size={18} />
                 </Dropdown.Toggle>
 
                 <Dropdown.Menu className="menu-dropdown">
@@ -169,7 +172,7 @@ const Users = () => {
                     }}
                     className="text-danger"
                   >
-                    <Hammer size={16} className="me-1" />
+                    <AiFillDelete size={16} className="me-1" />
                     Delete
                   </Dropdown.Item>
                 </Dropdown.Menu>
@@ -186,7 +189,7 @@ const Users = () => {
     <>
       <div className="view-padding">
         <PageHeading
-          icon={<Hammer size={24} />}
+          icon={<ImUsers size={24} />}
           description="Create and manage customers"
           title="Customers"
           onClick={_onCreateClick}
@@ -209,7 +212,7 @@ const Users = () => {
               className="d-flex justify-content-center display-3"
             >
               <div className="d-flex flex-column align-items-center">
-                <Hammer color={primaryColor} />
+                <BiSad color={primaryColor} />
                 <span className="text-primary display-3">
                   Something went wrong
                 </span>
@@ -225,7 +228,7 @@ const Users = () => {
               filters={
                 <Dropdown className="filter-dropdown search-filters-div mr-2">
                   <Dropdown.Toggle as={Button} variant="primary">
-                    <Hammer /> Filters
+                    <BsFunnel /> Filters
                   </Dropdown.Toggle>
                   <Dropdown.Menu>
                     <div className="filter-dropdown-heading d-flex justify-content-between w-100">

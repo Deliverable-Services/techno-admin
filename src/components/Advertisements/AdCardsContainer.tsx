@@ -1,6 +1,8 @@
 import moment from "moment";
 import React from "react";
-import { Card, Col, Container, Dropdown, Row } from "../ui/bootstrap-compat";
+import { Card, Col, Container, Dropdown, Row } from "react-bootstrap";
+import { AiFillDelete, AiFillEdit } from "react-icons/ai";
+import { BiSad } from "react-icons/bi";
 import { QueryFunction, useQuery } from "react-query";
 import { useHistory } from "react-router-dom";
 import IsActiveBadge from "../../shared-components/IsActiveBadge";
@@ -9,7 +11,6 @@ import API from "../../utils/API";
 import { config, primaryColor, secondaryColor } from "../../utils/constants";
 import { types } from "./AdvertisementTypes";
 import useCurrentAdTypeSelectedStore from "./useCurrentAdTypeSelectedStore";
-import { Hammer } from "../ui/icon";
 
 interface Props {
   setSelectedRowId: React.Dispatch<React.SetStateAction<string>>;
@@ -90,7 +91,7 @@ const LatestAd: React.FC<Props> = ({ setDeletePopup, setSelectedRowId }) => {
                             _onEditClick(ad.id);
                           }}
                         >
-                          <Hammer color={secondaryColor} size={24} />
+                          <AiFillEdit color={secondaryColor} size={24} />
                         </button>
                         <button
                           className="ml-2"
@@ -99,7 +100,7 @@ const LatestAd: React.FC<Props> = ({ setDeletePopup, setSelectedRowId }) => {
                             setDeletePopup(true);
                           }}
                         >
-                          <Hammer color="red" size={24} />
+                          <AiFillDelete color="red" size={24} />
                         </button>
                       </div>
                     </div>
@@ -147,7 +148,7 @@ const LatestAd: React.FC<Props> = ({ setDeletePopup, setSelectedRowId }) => {
               className="d-flex justify-content-center display-3"
             >
               <div className="d-flex flex-column align-items-center">
-                <Hammer color={primaryColor} />
+                <BiSad color={primaryColor} />
                 <span className="text-primary display-3">No data found</span>
               </div>
             </Container>

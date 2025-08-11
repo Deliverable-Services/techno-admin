@@ -1,5 +1,5 @@
 import { Formik, Form } from "formik";
-import { Button, Col, Row, Spinner } from "../ui/bootstrap-compat";
+import { Button, Col, Row, Spinner } from "react-bootstrap";
 import * as Yup from "yup";
 import { AxiosError } from "axios";
 import API from "../../utils/API";

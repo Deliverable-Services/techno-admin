@@ -1,9 +1,9 @@
 import { AxiosError } from "axios";
-// Removed bs-custom-file-input
+import bsCustomFileInput from "bs-custom-file-input";
 import { Form, Formik } from "formik";
 import moment from "moment";
 import { useEffect } from "react";
-import { Alert, Button, Col, Row, Spinner } from "../ui/bootstrap-compat";
+import { Alert, Button, Col, Row, Spinner } from "react-bootstrap";
 import { useMutation } from "react-query";
 import { useHistory, useLocation } from "react-router-dom";
 import { handleApiError } from "../../hooks/handleApiErrors";
@@ -43,7 +43,7 @@ const AdvertisementCreateUpdateForm = () => {
   const { state } = useLocation();
   const id = state ? (state as any).id : null;
   useEffect(() => {
-    // no-op
+    bsCustomFileInput.init();
   }, []);
 
   const { data, isLoading: dataLoading } = useGetSingleQuery({ id, key });

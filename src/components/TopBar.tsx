@@ -1,9 +1,10 @@
 import { useContext } from "react";
-import { Container } from "../components/ui/grid";
+import { Container } from "react-bootstrap";
+import { GiHamburgerMenu } from "react-icons/gi";
 import { IsDesktopContext } from "../context/IsDesktopContext";
 import Logo from "../shared-components/Logo";
 import { INavBar } from "../types/interface";
-import { Hammer } from "./ui/icon";
+import { BsBell } from "react-icons/bs";
 
 const TopBar = ({ isNavOpen, setIsNavOpen }: INavBar) => {
   const isDesktop = useContext(IsDesktopContext);
@@ -21,7 +22,7 @@ const TopBar = ({ isNavOpen, setIsNavOpen }: INavBar) => {
     >
       {isDesktop ? (
         <div className="menu-hamburger" style={{ cursor: "pointer" }}>
-          <Hammer size={28} onClick={openNavBar} />
+          <GiHamburgerMenu size={28} onClick={openNavBar} />
         </div>
       ) : null}
 
@@ -36,7 +37,7 @@ const TopBar = ({ isNavOpen, setIsNavOpen }: INavBar) => {
         }
       >
         <div className="notification">
-          <Hammer size={20} />
+          <BsBell size={20} />
           <div className="circle bg-primary text-white d-flex  justify-content-center">
             <p>
               <b>1</b>

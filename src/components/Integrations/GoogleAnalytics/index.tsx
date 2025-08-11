@@ -11,6 +11,11 @@ import {
   CartesianGrid,
   Legend,
 } from "recharts";
+import WorldMap from "react-world-map";
+import { GiShadowFollower } from "react-icons/gi";
+import { RiUserFollowFill } from "react-icons/ri";
+import { IoStatsChart } from "react-icons/io5";
+import { MdAllInclusive } from "react-icons/md";
 import googleAnalyticsService, {
   GoogleAnalyticsConnectorStatus,
   GoogleAnalyticsAccount,
@@ -22,7 +27,8 @@ import googleAnalyticsService, {
 import { useOrganisation } from "../../../context/OrganisationContext";
 import { showMsgToast } from "../../../utils/showMsgToast";
 // import "./google-analytics.css";
-import { Hammer } from "../../ui/icon";
+import { FaExternalLinkAlt, FaSync } from "react-icons/fa";
+import { AiOutlineDisconnect } from "react-icons/ai";
 
 const GoogleAnalytics = () => {
   const { selectedOrg: organisation } = useOrganisation();
@@ -410,25 +416,25 @@ const GoogleAnalytics = () => {
           label: "Total Users",
           value: "0",
           change: "",
-          icon: <Hammer />,
+          icon: <MdAllInclusive />,
         },
         {
           label: "Sessions",
           value: "0",
           change: "",
-          icon: <Hammer />,
+          icon: <GiShadowFollower />,
         },
         {
           label: "Page Views",
           value: "0",
           change: "",
-          icon: <Hammer />,
+          icon: <RiUserFollowFill />,
         },
         {
           label: "Active Users",
           value: realTimeData?.rows?.[0]?.metricValues?.[0]?.value || "0",
           change: "",
-          icon: <Hammer />,
+          icon: <IoStatsChart />,
         },
       ];
     }
@@ -452,25 +458,25 @@ const GoogleAnalytics = () => {
         label: "Total Users",
         value: totalUsers.toLocaleString(),
         change: "",
-        icon: <Hammer />,
+        icon: <MdAllInclusive />,
       },
       {
         label: "Sessions",
         value: totalSessions.toLocaleString(),
         change: "",
-        icon: <Hammer />,
+        icon: <GiShadowFollower />,
       },
       {
         label: "Page Views",
         value: totalPageViews.toLocaleString(),
         change: "",
-        icon: <Hammer />,
+        icon: <RiUserFollowFill />,
       },
       {
         label: "Active Users",
         value: activeUsers,
         change: "",
-        icon: <Hammer />,
+        icon: <IoStatsChart />,
       },
     ];
   };
@@ -636,7 +642,7 @@ const GoogleAnalytics = () => {
             {loading ? (
               <i className="fas fa-spinner fa-spin me-2"></i>
             ) : (
-              <Hammer className="h-4 w-4 me-2" />
+              <FaExternalLinkAlt className="h-4 w-4 me-2" />
             )}
             Connect Google Analytics
           </button>
@@ -675,14 +681,14 @@ const GoogleAnalytics = () => {
             disabled={loading}
             title="Refresh Data"
           >
-            <Hammer className={`h-4 w-4 ${loading ? "animate-spin" : ""}`} />
+            <FaSync className={`h-4 w-4 ${loading ? "animate-spin" : ""}`} />
           </button>
           <button
             className="btn btn-outline-danger btn-sm"
             onClick={handleDisconnect}
             disabled={loading}
           >
-            <Hammer className="h-4 w-4 me-1" />
+            <AiOutlineDisconnect className="h-4 w-4 me-1" />
             Disconnect
           </button>
         </div>
@@ -917,23 +923,13 @@ const GoogleAnalytics = () => {
               </div>
             </div>
             <div style={{ height: 300 }} className="g-map pt-3">
-              <div className="card card-g border-0 p-3">
-                <div className="global-card">
-                  <h6 className="font-weight-bold mb-3 g-card-heading">
-                    Top Countries (simplified)
-                  </h6>
-                  <div className="space-y-2">
-                    {getTopCountriesData()
-                      .slice(0, 8)
-                      .map((c, i) => (
-                        <div key={i} className="d-flex justify-content-between">
-                          <span>{c.country}</span>
-                          <span className="badge badge-primary">{c.users}</span>
-                        </div>
-                      ))}
-                  </div>
-                </div>
-              </div>
+              <WorldMap
+                color="red"
+                valuePrefix="Audience: "
+                size="responsive"
+                selected="us"
+                data={getWorldMapData()}
+              />
             </div>
           </div>
         </div>

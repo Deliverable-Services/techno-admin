@@ -1,0 +1,18 @@
+.navContainer {
+    padding: 10px 20px;
+    background-color: white;
+    border-top-width: 1px;
+    border-color: black;
+    position: fixed;
+    bottom: 0px;
+    min-width: 100%;
+    border-top: 1px solid #E9E7EA;
+    z-index: 100000000000000000;
+    
+}
+.navItemsCont {
+    display: flex;
+    flex-direction: row;
+    gap: 15px;
+    justify-content: space-between;
+}

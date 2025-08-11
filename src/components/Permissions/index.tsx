@@ -2,7 +2,8 @@
 
 import { AxiosError } from "axios";
 import { useMemo, useState } from "react";
-import { Button, Container, Dropdown, Nav } from "../ui/bootstrap-compat";
+import { Button, Container, Dropdown, Nav } from "react-bootstrap";
+import { BiSad } from "react-icons/bi";
 import { useMutation, useQuery } from "react-query";
 import { useHistory } from "react-router-dom";
 import { Cell } from "react-table";
@@ -19,7 +20,8 @@ import { queryClient } from "../../utils/queryClient";
 import { showMsgToast } from "../../utils/showMsgToast";
 import { CommonModal } from "../CommonPopup/CommonModal";
 import PermissionsCreateUpdateForm from "./PermissoinsCreateUpdateForm";
-import { Hammer } from "../ui/icon";
+import { BsThreeDotsVertical } from "react-icons/bs";
+import { AiFillDelete } from "react-icons/ai";
 
 const key = "get-all-permission";
 
@@ -160,12 +162,12 @@ const Permissions = () => {
                   className="p-1 border-0 shadow-none"
                   id={`dropdown-${data.row.values.id}`}
                 >
-                  <Hammer size={18} />
+                  <BsThreeDotsVertical size={18} />
                 </Dropdown.Toggle>
 
                 <Dropdown.Menu className="menu-dropdown">
                   <Dropdown.Item className="text-danger">
-                    <Hammer size={16} className="me-1" />
+                    <AiFillDelete size={16} className="me-1" />
                     Delete
                   </Dropdown.Item>
                 </Dropdown.Menu>
@@ -214,7 +216,7 @@ const Permissions = () => {
     return (
       <Container fluid className="d-flex justify-content-center display-3">
         <div className="d-flex flex-column align-items-center">
-          <Hammer color={primaryColor} />
+          <BiSad color={primaryColor} />
           <span className="text-primary display-3">Something went wrong</span>
         </div>
       </Container>
@@ -227,7 +229,7 @@ const Permissions = () => {
     return (
       <Container fluid className="d-flex justify-content-center display-3">
         <div className="d-flex flex-column align-items-center">
-          <Hammer color={primaryColor} />
+          <BiSad color={primaryColor} />
           <span className="text-primary display-3">Something went wrong</span>
         </div>
       </Container>

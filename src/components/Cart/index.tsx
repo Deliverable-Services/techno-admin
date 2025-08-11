@@ -1,6 +1,7 @@
 import { AxiosError } from "axios";
 import { useMemo, useState } from "react";
-import { Button, Container, Dropdown, Nav } from "../ui/bootstrap-compat";
+import { Button, Container, Dropdown, Nav } from "react-bootstrap";
+import { BiSad } from "react-icons/bi";
 import { useQuery } from "react-query";
 import { useHistory } from "react-router-dom";
 import { Cell } from "react-table";
@@ -19,8 +20,8 @@ import TableLink from "../../shared-components/TableLink";
 import { areTwoObjEqual } from "../../utils/areTwoObjEqual";
 import { OrderType } from "../../utils/arrays";
 import { primaryColor } from "../../utils/constants";
+import { BsEye, BsFunnel } from "react-icons/bs";
 // import UpdateCreateForm from "./FaqsCreateUpdateForm"
-import { Hammer } from "../ui/icon";
 
 const key = "bookings";
 const intitialFilter = {
@@ -163,10 +164,7 @@ const InsideCart = () => {
         Cell: (data: Cell) => {
           return (
             <div className="d-flex justify-content-end">
-              <Hammer
-                style={{ cursor: "pointer" }}
-                onClick={() => history.push(`/orders/${data.row.values.id}`)}
-              />
+              <BsEye style={{ cursor: "pointer" }} onClick={() => history.push(`/orders/${data.row.values.id}`)} />
             </div>
           );
         },
@@ -179,7 +177,7 @@ const InsideCart = () => {
     return (
       <Container fluid className="d-flex justify-content-center display-3">
         <div className="d-flex flex-column align-items-center">
-          <Hammer color={primaryColor} />
+          <BiSad color={primaryColor} />
           <span className="text-primary display-3">Something went wrong</span>
         </div>
       </Container>
@@ -189,11 +187,7 @@ const InsideCart = () => {
   return (
     <>
       <div className="view-padding">
-        <PageHeading
-          title="Inside Cart"
-          description="Track all your payments at once glance"
-          totalRecords={data?.total}
-        />
+        <PageHeading title="Inside Cart" description="Track all your payments at once glance" totalRecords={data?.total} />
       </div>
       <hr />
 
@@ -271,7 +265,7 @@ const InsideCart = () => {
                     filters={
                       <Dropdown className="search-filters-div filter-dropdown mr-2">
                         <Dropdown.Toggle as={Button} variant="primary">
-                          <Hammer className="mr-2" />
+                          <BsFunnel className="mr-2" />
                           Filters
                         </Dropdown.Toggle>
                         <Dropdown.Menu>

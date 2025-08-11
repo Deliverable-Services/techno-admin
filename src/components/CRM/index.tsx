@@ -3,7 +3,7 @@ import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
 import Column from "./Column";
 import { Lead } from "./types";
-
+import "./crm-board.css";
 import LeadDrawer from "./LeadDrawer";
 import { useMutation, useQuery } from "react-query";
 import { AxiosError } from "axios";
@@ -14,22 +14,106 @@ import { showMsgToast } from "../../utils/showMsgToast";
 import { showErrorToast } from "../../utils/showErrorToast";
 import { queryClient } from "../../utils/queryClient";
 import PageHeading from "../../shared-components/PageHeading";
-import { Users2 } from "../../components/ui/icon";
-import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
+import { SiCivicrm } from "react-icons/si";
 
 const key = "leads";
 const membersKey = "users";
 
-// Utility function to get user initials
-const getInitials = (fullName: string) => {
-  if (!fullName) return "U";
+interface UserAvatarProps {
+  profilePic?: string;
+  name?: string;
+  className?: string;
+}
 
-  const names = fullName.trim().split(" ");
-  if (names.length === 1) {
-    return names[0].charAt(0).toUpperCase();
+const UserAvatar: React.FC<UserAvatarProps> = ({
+  profilePic,
+  name,
+  className,
+}) => {
+  const [showFallback, setShowFallback] = useState<boolean>(!profilePic);
+
+  const handleImageError = () => {
+    setShowFallback(true);
+  };
+
+  const getInitials = (fullName: string) => {
+    if (!fullName) return "U";
+
+    const names = fullName.trim().split(" ");
+    if (names.length === 1) {
+      return names[0].charAt(0).toUpperCase();
+    }
+
+    return (
+      names[0].charAt(0) + names[names.length - 1].charAt(0)
+    ).toUpperCase();
+  };
+
+  const getBackgroundColor = (name: string) => {
+    const colors = [
+      "#7e56da",
+      "#ffd76a",
+      "#7bbfff",
+      "#ff6b6b",
+      "#51cf66",
+      "#ffa726",
+      "#42a5f5",
+      "#ab47bc",
+      "#26c6da",
+      "#ffca28",
+    ];
+
+    if (!name) return colors[0];
+
+    const hash = name.split("").reduce((acc, char) => {
+      return char.charCodeAt(0) + ((acc << 5) - acc);
+    }, 0);
+
+    return colors[Math.abs(hash) % colors.length];
+  };
+
+  useEffect(() => {
+    if (profilePic) {
+      setShowFallback(false);
+    } else {
+      setShowFallback(true);
+    }
+  }, [profilePic]);
+
+  if (!profilePic || showFallback) {
+    return (
+      <div
+        className={`d-flex align-items-center justify-content-center text-white ${
+          className || ""
+        }`}
+        style={{
+          backgroundColor: getBackgroundColor(name || "User"),
+          borderRadius: "50%",
+          fontSize: "12px",
+          fontWeight: "bold",
+          width: "30px",
+          height: "30px",
+        }}
+      >
+        {getInitials(name || "User")}
+      </div>
+    );
   }
 
-  return (names[0].charAt(0) + names[names.length - 1].charAt(0)).toUpperCase();
+  return (
+    <img
+      src={profilePic}
+      alt={name || "User"}
+      className={className}
+      onError={handleImageError}
+      style={{
+        borderRadius: "50%",
+        width: "30px",
+        height: "30px",
+        objectFit: "cover",
+      }}
+    />
+  );
 };
 
 const statusMap: { [key in string]: string } = {
@@ -109,7 +193,7 @@ const Index: React.FC = () => {
     <>
       <div className="view-padding d-flex justify-content-between align-items-center">
         <PageHeading
-          icon={<Users2 size={24} />}
+          icon={<SiCivicrm size={24} />}
           title="CRM"
           description="Manage all ongoing leads"
           onClick={_onCreateClick}
@@ -117,33 +201,28 @@ const Index: React.FC = () => {
           permissionReq="create_lead"
         />
 
-        <div className="*:data-[slot=avatar]:ring-background flex -space-x-2 *:data-[slot=avatar]:ring-2 *:data-[slot=avatar]:grayscale">
+        <div className="crm-users">
           {membersList?.data.slice(0, 3).map((member, index) => (
-            <Avatar key={index} className="h-8 w-8" data-slot="avatar">
-              <AvatarImage
-                src={member?.user?.profile_pic}
-                alt={member?.name || "User"}
-              />
-              <AvatarFallback className="text-xs font-bold">
-                {getInitials(member?.name || "User")}
-              </AvatarFallback>
-            </Avatar>
+            <UserAvatar
+              key={index}
+              profilePic={member?.user?.profile_pic}
+              name={member?.name}
+              className="crm-avatar"
+            />
           ))}
 
           {membersList?.data.length > 3 && (
-            <Avatar className="h-8 w-8 bg-gray-300" data-slot="avatar">
-              <AvatarFallback className="text-xs font-bold">
-                +{membersList.data.length - 3}
-              </AvatarFallback>
-            </Avatar>
+            <span className="crm-avatar crm-avatar-extra">
+              +{membersList.data.length - 3}
+            </span>
           )}
         </div>
       </div>
       <hr />
 
       <DndProvider backend={HTML5Backend}>
-        <div className="overflow-x-auto pb-5">
-          <div className="flex gap-0 min-w-max">
+        <div className="crm-board-overflow">
+          <div className="row no-gutters crm-board">
             {Object.keys(statusMap).map((key) => {
               const typedKey = key as string;
               return (
