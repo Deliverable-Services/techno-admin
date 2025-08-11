@@ -14,6 +14,12 @@ module.exports = {
   		colors: {
   			border: 'hsl(var(--border))',
   			input: 'hsl(var(--input))',
+			blue:'var(--blue)',
+			warning:'var(--warning)',
+			success:'var(--success)',
+			info:'var(--info)',
+			danger:'var(--danger)',
+			muted:'var(--text-muted)',
   			ring: 'hsl(var(--ring))',
   			background: 'hsl(var(--background))',
   			foreground: 'hsl(var(--foreground))',

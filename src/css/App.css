@@ -11633,7 +11633,7 @@ a.text-secondary:focus {
 }
 
 .text-success {
-  color: #31d67b !important;
+  color: var(--success) !important;
 }
 
 a.text-success:hover,
@@ -11642,7 +11642,7 @@ a.text-success:focus {
 }
 
 .text-info {
-  color: #17a2b8 !important;
+  color: var(--info) !important;
 }
 
 a.text-info:hover,
@@ -11651,7 +11651,7 @@ a.text-info:focus {
 }
 
 .text-warning {
-  color: #ffc107 !important;
+  color: var(--warning) !important;
 }
 
 a.text-warning:hover,
@@ -11660,7 +11660,7 @@ a.text-warning:focus {
 }
 
 .text-danger {
-  color: #dc3545 !important;
+  color: var(--danger) !important;
 }
 
 a.text-danger:hover,
@@ -11709,7 +11709,7 @@ a.text-text-muted:focus {
 }
 
 .text-muted {
-  color: #667085 !important;
+  color: var(--text-muted) !important;
 }
 
 .text-black-50 {
@@ -11909,43 +11909,10 @@ nav p {
   font-weight: 700;
 }
 
-nav .navLink {
-  width: 100%;
-  color: #000;
-  -webkit-transition: all 0.3s ease;
-  transition: all 0.3s ease;
-  font-size: 0.8125rem;
-  font-weight: 500;
-  padding: 5px 20px;
-  letter-spacing: 0px;
-  border-left: 4px solid transparent;
-  display: flex;
-  align-items: center;
-}
-
 nav .navLink svg {
   margin-right: 8px;
   height: 16px;
   width: 16px;
-}
-
-.all-links {
-  padding: 0 16px;
-  overflow: auto;
-}
-nav .navLink {
-  padding: 0.4rem 0.8rem;
-  border-left: 0;
-}
-nav .navLink.active,
-nav .navLink:hover {
-  background: #fafafa;
-  font-weight: 600;
-  color: #252b37;
-  border-radius: 8px;
-  border-left: 0;
-  -webkit-transition: all 0.3s ease;
-  transition: all 0.3s ease;
 }
 
 nav::-webkit-scrollbar {
@@ -13155,20 +13122,6 @@ li.navLink.my-1 svg path {
 .bg-global {
   background-color: var(--body) !important;
 }
-
-.icon-bg {
-  background-color: rgba(11, 100, 254, 0.2);
-  padding: 15px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: 50px;
-  width: 54px;
-  height: 54px;
-}
-.icon-bg .icon-color {
-  color: var(--blue);
-}
 .rounded-border {
   border-radius: 0.75rem !important;
 }
@@ -13182,13 +13135,6 @@ li.navLink.my-1 svg path {
 .hover-move {
   font-size: 14px;
   font-weight: 600;
-}
-
-.social-icons {
-  display: flex;
-  align-items: center;
-  gap: 16px;
-  padding: 10px 9px;
 }
 .social-icons svg {
   width: 30px;

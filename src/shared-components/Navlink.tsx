@@ -56,14 +56,8 @@ const NavLink = ({
       <li className="navLinkGroup" ref={menuRef}>
         {hasChildren ? (
           <div
-            className="navLink parent"
+            className="navLink parent w-full text-black transition-all duration-300 ease-in text-[13px] font-medium px-[0.8rem] py-[0.4rem] flex items-center justify-between cursor-pointer hover:bg-[#fafafa] hover:font-semibold hover:text-[#252b37]"
             onClick={handleParentClick}
-            style={{
-              cursor: "pointer",
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "space-between",
-            }}
           >
             <div style={{ display: "flex", alignItems: "center" }}>
               {icon} {title}
@@ -80,9 +74,7 @@ const NavLink = ({
         ) : (
           <Link to={path || "#"}>
             <li
-              className={
-                pathname.includes(path || "") ? "navLink active" : "navLink"
-              }
+              className={`w-full text-black transition-all duration-300 ease-in text-[13px] rounded-lg font-medium px-[0.8rem] py-[0.4rem] flex items-center hover:bg-[#fafafa] hover:font-semibold hover:text-[#252b37] ${pathname.includes(path || "") ? "navLink active bg-[#fafafa] font-semibold text-[#252b37]" : "navLink"}`}
               onClick={onClick}
             >
               {icon} {title}
@@ -96,11 +88,7 @@ const NavLink = ({
               <Restricted to={child.permissionReq} key={child.title}>
                 <Link to={child.path || "#"}>
                   <li
-                    className={
-                      pathname.includes(child.path || "")
-                        ? "navLink subLink active"
-                        : "navLink subLink"
-                    }
+                    className={`w-full text-black transition-all duration-300 ease-in text-[13px] rounded-lg font-medium px-[0.8rem] py-[0.4rem] flex items-center hover:bg-[#fafafa] hover:font-semibold hover:text-[#252b37] ${pathname.includes(child.path || "") ? "navLink subLink active bg-[#fafafa] font-semibold text-[#252b37]" : "navLink subLink"}`}
                     onClick={onClick}
                   >
                     {child.icon} {child.title}

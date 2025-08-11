@@ -23,11 +23,11 @@ const PageHeading: React.FC<Props> = ({
   btnText,
 }) => {
   return (
-    <div className="d-flex justify-content-between align-items-center">
-      <p className="d-flex align-items-center gap-12">
+    <div className="flex justify-between items-center">
+      <p className="flex items-center gap-3">
         {icon && (
-          <span className="icon-bg">
-            <span className="icon-color">{icon}</span>
+          <span className="icon-bg bg-[#0b64fe33] p-[15px] size-[54px] rounded-[50px] flex items-center justify-center">
+            <span className="icon-color text-blue">{icon}</span>
           </span>
         )}
         <div>
@@ -54,7 +54,7 @@ const PageHeading: React.FC<Props> = ({
               borderColor: "var(--primary-color)",
             }}
           >
-            <div className="text-white d-flex align-items-center">
+            <div className="text-white flex items-center">
               <Hammer size={18} />
               <p className="mb-0 ml-1">{btnText || "Create"}</p>
             </div>
