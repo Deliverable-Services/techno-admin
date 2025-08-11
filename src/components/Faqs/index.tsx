@@ -20,6 +20,9 @@ import { showMsgToast } from "../../utils/showMsgToast";
 import { FaQuestionCircle } from "react-icons/fa";
 import { BsThreeDotsVertical } from "react-icons/bs";
 import { AiFillDelete } from "react-icons/ai";
+import { useFlyout } from "../../hooks/useFlyout";
+import FaqCreateUpdateForm from "./FaqsCreateUpdateForm";
+import Flyout from "../../shared-components/Flyout";
 
 const key = "faqs";
 
@@ -37,7 +40,7 @@ const Faqs = () => {
   const history = useHistory();
   const [selectedRows, setSelectedRows] = useState([]);
   const [filter, setFilter] = useState(intitialFilter);
-  console.log(selectedRows.map((item) => item.id));
+  const { isOpen: showFlyout, openFlyout, closeFlyout } = useFlyout();
   const { data, isLoading, isFetching, error } = useQuery<any>(
     [key, , filter],
     {
@@ -58,7 +61,8 @@ const Faqs = () => {
   });
 
   const _onCreateClick = () => {
-    history.push("/faqs/create-edit");
+    // history.push("/faqs/create-edit");
+    openFlyout();
   };
   const _onEditClick = (id: string) => {
     history.push("/faqs/create-edit", { id });
@@ -265,6 +269,15 @@ const Faqs = () => {
           </Button>
         </div>
       )}
+      <Flyout
+        isOpen={showFlyout}
+        onClose={closeFlyout}
+        title={"Create Faq"}
+        cancelText="Cancel"
+        width="800px"
+      >
+        <FaqCreateUpdateForm />
+      </Flyout>
     </>
   );
 };

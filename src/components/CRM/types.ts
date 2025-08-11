@@ -1,5 +1,3 @@
-// File: components/CRM/types.ts
-
 export interface Comment {
   id: string;
   lead_id: number;
@@ -21,7 +19,7 @@ export interface Task {
   status: string;
   tags: string[];
   comments: Comment[];
-} 
+}
 
 export interface User {
   id: number;
@@ -54,22 +52,19 @@ export interface Lead {
   message: string | null;
   zipcode: string;
   page: string;
-  status: 'NEW' | string;
+  status: "NEW" | string;
   extra: any;
   organisation_id: number | null;
   assignee: number;
+  user_id: number | null;
   created_at: string;
   updated_at: string;
-  city: string,
-  country: string,
-  full_address: string,
-  website: string,
-  gender: string,
+  city: string;
+  country: string;
+  full_address: string;
+  website: string;
+  gender: string;
   user: User;
   service: any;
   comments: Comment[];
 }
-
-
-
-

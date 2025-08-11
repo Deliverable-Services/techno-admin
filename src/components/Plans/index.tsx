@@ -1,12 +1,11 @@
 import { AxiosError } from "axios";
 import { useMemo, useState } from "react";
-import { Button, Col, Container, Dropdown, Nav, Row } from "react-bootstrap";
+import { Button, Container, Dropdown, Nav } from "react-bootstrap";
 import { BiSad } from "react-icons/bi";
 import { useMutation, useQuery } from "react-query";
 import { useHistory } from "react-router-dom";
 import { Cell } from "react-table";
 import { handleApiError } from "../../hooks/handleApiErrors";
-import BreadCrumb from "../../shared-components/BreadCrumb";
 import CreatedUpdatedAt from "../../shared-components/CreatedUpdatedAt";
 import EditButton from "../../shared-components/EditButton";
 import FilterSelect from "../../shared-components/FilterSelect";
@@ -24,6 +23,9 @@ import { queryClient } from "../../utils/queryClient";
 import { showMsgToast } from "../../utils/showMsgToast";
 import { FaRegLightbulb } from "react-icons/fa";
 import { BsFunnel } from "react-icons/bs";
+import { useFlyout } from "../../hooks/useFlyout";
+import Flyout from "../../shared-components/Flyout";
+import PlanCreateUpdateForm from "./PlansCreateUpdateForm";
 
 const key = "plans";
 
@@ -43,9 +45,8 @@ const intitialFilter = {
 const Plans = () => {
   const history = useHistory();
   const [selectedRows, setSelectedRows] = useState([]);
-  console.log(selectedRows.map((item) => item.id));
   const [filter, setFilter] = useState(intitialFilter);
-  console.log({ filter });
+  const { isOpen: showFlyout, openFlyout, closeFlyout } = useFlyout();
   const { data, isLoading, isFetching, error } = useQuery<any>(
     [key, , filter],
     {
@@ -70,7 +71,8 @@ const Plans = () => {
   });
 
   const _onCreateClick = () => {
-    history.push("/plans/create-edit");
+    // history.push("/plans/create-edit");
+    openFlyout();
   };
   const _onEditClick = (id: string) => {
     history.push("/plans/create-edit", { id });
@@ -314,6 +316,16 @@ const Plans = () => {
           </Button>
         </div>
       )}
+
+      <Flyout
+        isOpen={showFlyout}
+        onClose={closeFlyout}
+        title={"Create Plans"}
+        cancelText="Cancel"
+        width="800px"
+      >
+        <PlanCreateUpdateForm />
+      </Flyout>
     </>
   );
 };

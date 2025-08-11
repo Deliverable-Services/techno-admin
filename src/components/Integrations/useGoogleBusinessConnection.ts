@@ -1,14 +1,10 @@
-import React from "react";
 import { useQuery } from "react-query";
-import fivetranService from "../services/fivetranService";
-import useUserProfileStore from "./useUserProfileStore";
+import fivetranService from "../../services/fivetranService";
+import useUserProfileStore from "../../hooks/useUserProfileStore";
 
 export const useGoogleBusinessConnection = () => {
   const loggedInUser = useUserProfileStore((state) => state.user);
-
-  // Try multiple ways to get organisation ID for compatibility
-  const organisationId =
-    loggedInUser?.organisations?.[0]?.id;
+  const organisationId = loggedInUser?.organisations?.[0]?.id;
 
   const {
     data: status,
@@ -20,12 +16,11 @@ export const useGoogleBusinessConnection = () => {
     {
       enabled: !!organisationId,
       retry: false,
-      refetchOnWindowFocus: true, // Enable refetch on focus
-      staleTime: 0, // Always fetch fresh data
+      refetchOnWindowFocus: true,
+      staleTime: 0,
       cacheTime: 1 * 60 * 1000, // 1 minute cache
       refetchInterval: 30 * 1000, // Refetch every 30 seconds
       onError: (error: any) => {
-        // Ignore 404 errors - if service is not connected, this will throw 404
         if (error?.response?.status !== 404) {
           console.error("Error checking Google Business connection:", error);
         }
@@ -33,16 +28,14 @@ export const useGoogleBusinessConnection = () => {
     }
   );
 
-  // More flexible connection detection - connected if OAuth completed OR fully connected
   const isConnected =
-    status?.connected ||
-    status?.oauth_completed ||
-    (status?.status && ["connected", "pending"].includes(status.status));
-
+    status?.connected &&
+    status?.has_valid_token !== false &&
+    status?.status === "connected";
   return {
     isConnected: isConnected || false,
     isLoading,
     connectionStatus: status?.status || "not_configured",
-    refetch, // Expose refetch function
+    refetch,
   };
 };

@@ -68,7 +68,6 @@ const Transactions = () => {
   );
 
   const _onOrderClick = (id: string) => {
-    console.log({ id });
     if (!id) return;
     history.push(`/orders/${id}`);
   };
@@ -110,7 +109,6 @@ const Transactions = () => {
         Header: "Order",
         accessor: "order.ref_id",
         Cell: (data: Cell) => {
-          console.log({ data });
           return (
             <p
               className="text-darkGray m-0"

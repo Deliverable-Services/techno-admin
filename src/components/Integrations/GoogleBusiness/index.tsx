@@ -1,21 +1,19 @@
 import React, { useState } from "react";
 import { Container, Row, Col, Card, Tabs, Tab, Button } from "react-bootstrap";
-import { useGoogleBusinessIntegration } from "../../hooks/useGoogleBusinessIntegration";
-import useUserProfileStore from "../../hooks/useUserProfileStore";
-import BackButton from "../../shared-components/BackButton";
+import { useGoogleBusinessIntegration } from "../useGoogleBusinessIntegration";
+import useUserProfileStore from "../../../hooks/useUserProfileStore";
+import BackButton from "../../../shared-components/BackButton";
 import BusinessProfileTab from "./BusinessProfileTab";
 import ReviewsTab from "./ReviewsTab";
 import ImagesTab from "./ImagesTab";
-import { GoogleBusinessProfile } from "../Integrations";
-import IsLoading from "../../shared-components/isLoading";
+import IsLoading from "../../../shared-components/isLoading";
 
 const GoogleBusinessDashboard: React.FC = () => {
   const [activeTab, setActiveTab] = useState("profile");
   const loggedInUser = useUserProfileStore((state) => state.user);
 
   // Use same organization ID logic as sidebar
-  const organisationId =
-    loggedInUser?.organisations?.[0]?.id;
+  const organisationId = loggedInUser?.organisations?.[0]?.id;
 
   const { isConnected, isLoading, connectionStatus } =
     useGoogleBusinessIntegration({
@@ -89,12 +87,12 @@ const GoogleBusinessDashboard: React.FC = () => {
             <div className="text-muted small g-badage">
               <i className="fas fa-check-circle text-success me-2"></i>
               Connected to Google Business Profile
-              <span className="ms-2 badge bg-secondary">{connectionStatus}</span>
+              <span className="ms-2 badge bg-secondary">
+                {connectionStatus}
+              </span>
             </div>
           </div>
         </div>
-
-
       </div>
 
       {/* Demo Data Notice */}

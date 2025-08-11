@@ -1,6 +1,6 @@
 import { AxiosError } from "axios";
 import { useMemo, useState } from "react";
-import { Button, Container, Nav } from "react-bootstrap";
+import { Button, Container, Dropdown, Nav } from "react-bootstrap";
 import { BiCopy, BiSad } from "react-icons/bi";
 import { useMutation, useQuery } from "react-query";
 import { useHistory } from "react-router-dom";
@@ -16,11 +16,10 @@ import API from "../../utils/API";
 import { primaryColor } from "../../utils/constants";
 import { queryClient } from "../../utils/queryClient";
 import { showMsgToast } from "../../utils/showMsgToast";
-import ViewButton from "../../shared-components/ViewButton";
-import BreadCrumb from "../../shared-components/BreadCrumb";
 import { AiFillDelete } from "react-icons/ai";
 import { CommonModal } from "../CommonPopup/CommonModal";
 import DynamicPageCreateUpdateForm from "./DynamicPageCreateUpdateForm";
+import { BsEye, BsThreeDotsVertical } from "react-icons/bs";
 
 const key = "pages";
 
@@ -43,7 +42,6 @@ const DynamicPages = () => {
 
   const [selectedRows, setSelectedRows] = useState([]);
   const [modalShow, setModalShow] = useState(false);
-  console.log(selectedRows.map((item) => item.id));
   const [filter, setFilter] = useState(intitialFilter);
 
   const {
@@ -57,7 +55,6 @@ const DynamicPages = () => {
     },
   });
 
-  // console.log("pageData", pageData);
   pageData?.data?.map((page, i) => {
     page["isArchived"] = i === pageData.data.length - 1 ? true : false;
   });
@@ -167,39 +164,51 @@ const DynamicPages = () => {
         Cell: (data: Cell) => {
           if (data.row.values.isArchived) return null;
           return (
-            <div className="d-flex align-items-center gap-3">
-              <ViewButton
-                onClick={() => {
-                  _onViewClick(data.row.values.id);
-                }}
-                permissionReq="update_service"
-              />
+            <div className="d-flex align-items-center justify-content-end gap-3">
               <EditButton
                 onClick={() => {
                   _onEditClick(data.row.values.id);
                 }}
                 permissionReq="update_service"
               />
-              <Button
-                variant="outline-primary"
-                className="d-flex align-items-center"
-                onClick={() => {
-                  mutateCopy(data.row.values.id);
-                }}
-                style={{ padding: "0.25rem 0.5rem" }}
-              >
-                <BiCopy size={16} className="mr-1" /> Duplicate
-              </Button>
-              <Button
-                variant="outline-danger"
-                className="d-flex align-items-center"
-                onClick={() => {
-                  mutateDelete(data.row.values.id);
-                }}
-                style={{ padding: "0.25rem 0.5rem" }}
-              >
-                <AiFillDelete size={16} className="mr-1" /> Delete
-              </Button>
+              <Dropdown className="ellipsis-dropdown">
+                <Dropdown.Toggle
+                  variant="light"
+                  size="sm"
+                  className="p-1 border-0 shadow-none"
+                  id={`dropdown-${data.row.values.id}`}
+                >
+                  <BsThreeDotsVertical size={18} />
+                </Dropdown.Toggle>
+
+                <Dropdown.Menu className="menu-dropdown">
+                  <Dropdown.Item
+                    onClick={() => {
+                      _onViewClick(data.row.values.id);
+                    }}
+                  >
+                    <BsEye size={16} className="me-1" />
+                    View
+                  </Dropdown.Item>
+                  <Dropdown.Item
+                    onClick={() => {
+                      mutateCopy(data.row.values.id);
+                    }}
+                  >
+                    <BiCopy size={16} className="me-1" />
+                    Duplicate
+                  </Dropdown.Item>
+                  <Dropdown.Item
+                    onClick={() => {
+                      mutateDelete(data.row.values.id);
+                    }}
+                    className="text-danger"
+                  >
+                    <AiFillDelete size={16} className="me-1" />
+                    Delete
+                  </Dropdown.Item>
+                </Dropdown.Menu>
+              </Dropdown>
             </div>
           );
         },

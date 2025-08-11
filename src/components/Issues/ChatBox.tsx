@@ -1,7 +1,7 @@
 import { AxiosError } from "axios";
 import { Form, Formik } from "formik";
 import moment from "moment";
-import React, { useEffect } from "react";
+import React from "react";
 import { Container } from "react-bootstrap";
 import { RiSendPlane2Fill } from "react-icons/ri";
 import { useMutation } from "react-query";
@@ -11,7 +11,6 @@ import useUserProfileStore from "../../hooks/useUserProfileStore";
 import API from "../../utils/API";
 import { primaryColor } from "../../utils/constants";
 import { queryClient } from "../../utils/queryClient";
-import { showMsgToast } from "../../utils/showMsgToast";
 
 const key = "tickets";
 

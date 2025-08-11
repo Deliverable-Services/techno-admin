@@ -1,5 +1,4 @@
 import { Container, Spinner } from "react-bootstrap";
-import { FaBan } from "react-icons/fa";
 import { Route } from "react-router-dom";
 import useUserProfileStore from "../hooks/useUserProfileStore";
 import { useOrganisation } from "../context/OrganisationContext";

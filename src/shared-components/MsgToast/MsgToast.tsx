@@ -1,6 +1,5 @@
-import { Alert, Toast } from 'react-bootstrap'
+import { Alert } from 'react-bootstrap'
 import { useMsgToastStore } from './useMsgToastStore'
-import { ImCross } from 'react-icons/im';
 
 interface Props {
 

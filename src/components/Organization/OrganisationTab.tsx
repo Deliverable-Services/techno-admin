@@ -1,6 +1,5 @@
 import { Formik, Form, Field } from "formik";
-import Select from "react-select";
-import { Button, Col, Row, Spinner } from "react-bootstrap";
+import { Button, Spinner } from "react-bootstrap";
 import { showMsgToast } from "../../utils/showMsgToast";
 import useTokenStore from "../../hooks/useTokenStore";
 import API from "../../utils/API";
@@ -73,164 +72,235 @@ const OrganizationTab = () => {
   });
 
   return (
-    <>
-      <div className="tab-header mt-3">
-        <h4>Update Your Organization</h4>
+    <div>
+      {/* Section Header */}
+      <div className="section-header">
+        <h4>Organization Settings</h4>
+        <p>Update your organization details and preferences.</p>
       </div>
-      <div>
-        <div className="right-content">
-          <div className="profile-card d-flex flex-column align-items-center">
-            <Formik
-              enableReinitialize
-              initialValues={initialValues}
-              validationSchema={ValidationSchema}
-              onSubmit={(values) => {
-                mutate(values);
-              }}
-            >
-              {({ values, errors, touched, setFieldValue }) => (
-                <Form className="w-100 mt-2">
-                  <div className="border-div form-group w-100 mt-0 d-flex align-items-center">
-                    <label htmlFor="organizationName">Organisation Name</label>
-                    <div className="w-100">
-                      <Field
-                        type="text"
-                        className="form-control input-div"
-                        id="organizationName"
-                        name="organizationName"
-                        placeholder="Enter organisation name"
-                      />
-                      {errors.organizationName && touched.organizationName && (
-                        <div className="text-danger fs-12 ms-2">
-                          {errors.organizationName}
-                        </div>
-                      )}
+
+      {/* Form Content */}
+      <Formik
+        enableReinitialize
+        initialValues={initialValues}
+        validationSchema={ValidationSchema}
+        onSubmit={(values) => {
+          mutate(values);
+        }}
+      >
+        {({ values, errors, touched, setFieldValue }) => (
+          <Form>
+            {/* Basic Information */}
+            <div className="row">
+              <div className="col-md-6">
+                <div className="form-group">
+                  <label htmlFor="organizationName">Organization Name</label>
+                  <Field
+                    type="text"
+                    className="form-control"
+                    id="organizationName"
+                    name="organizationName"
+                    placeholder="Enter organization name"
+                  />
+                  {errors.organizationName && touched.organizationName && (
+                    <div className="text-danger fs-12 mt-1">
+                      {errors.organizationName}
                     </div>
-                  </div>
-                  <div className="border-div form-group w-100 mt-3 d-flex align-items-center">
-                    <label htmlFor="organizationEmail">
-                      Organisation Email
-                    </label>
-                    <div className="w-100">
-                      <Field
-                        type="email"
-                        className="form-control input-div"
-                        id="organizationEmail"
-                        name="organizationEmail"
-                        placeholder="Enter organisation email"
-                      />
-                      {errors.organizationEmail &&
-                        touched.organizationEmail && (
-                          <div className="text-danger fs-12 ms-2">
-                            {errors.organizationEmail}
+                  )}
+                </div>
+              </div>
+              <div className="col-md-6">
+                <div className="form-group">
+                  <label htmlFor="organizationEmail">Organization Email</label>
+                  <Field
+                    type="email"
+                    className="form-control"
+                    id="organizationEmail"
+                    name="organizationEmail"
+                    placeholder="Enter organization email"
+                  />
+                  {errors.organizationEmail && touched.organizationEmail && (
+                    <div className="text-danger fs-12 mt-1">
+                      {errors.organizationEmail}
+                    </div>
+                  )}
+                </div>
+              </div>
+            </div>
+
+            {/* Organization Type Selection */}
+            <div className="form-group">
+              <label>Organization Type</label>
+              <p className="text-muted mb-3" style={{ fontSize: "14px" }}>
+                Choose the type that best describes your organization
+              </p>
+
+              <div className="row g-4">
+                {/* CRM Option */}
+                <div className="col-md-6">
+                  <div
+                    className={`card h-100 border-2 ${
+                      values.storeType === "crm"
+                        ? "border-primary selected"
+                        : "border-light"
+                    }`}
+                    onClick={() => setFieldValue("storeType", "crm")}
+                    style={{ cursor: "pointer", transition: "all 0.2s ease" }}
+                  >
+                    <img
+                      src="https://miro.medium.com/v2/resize:fit:1400/1*TR-8mgpp0_X5P0ZbB6XYfQ.jpeg"
+                      className="card-img-top"
+                      alt="CRM"
+                      style={{ height: "180px", objectFit: "cover" }}
+                    />
+                    <div className="card-body position-relative">
+                      <div className="d-flex align-items-center justify-content-between mb-2">
+                        <h5
+                          className="card-title mb-0 text-primary"
+                          style={{ fontSize: "16px", fontWeight: "600" }}
+                        >
+                          CRM System
+                        </h5>
+                        {values.storeType === "crm" && (
+                          <div
+                            style={{
+                              width: "20px",
+                              height: "20px",
+                              backgroundColor: "#0b64fe",
+                              borderRadius: "50%",
+                              display: "flex",
+                              alignItems: "center",
+                              justifyContent: "center",
+                            }}
+                          >
+                            <svg
+                              width="12"
+                              height="12"
+                              viewBox="0 0 12 12"
+                              fill="none"
+                            >
+                              <path
+                                d="M10 3L4.5 8.5L2 6"
+                                stroke="white"
+                                strokeWidth="2"
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                              />
+                            </svg>
                           </div>
                         )}
+                      </div>
+                      <p
+                        className="card-text text-muted"
+                        style={{ fontSize: "14px" }}
+                      >
+                        Manage leads, sales, and customer relationships with
+                        advanced CRM tools.
+                      </p>
                     </div>
                   </div>
-                  <div className="border-div form-group w-100 mt-3 d-flex">
-                    <label htmlFor="organizationSlug">
-                      Organisation Preference
-                    </label>
-                    <div className="row" style={{ gap: "30px" }}>
-                      {/* CRM */}
-                      <div
-                        className="position-relative"
-                        style={{ width: "250px" }}
-                      >
-                        <div
-                          className={`card mb-4 ${
-                            values.storeType === "crm"
-                              ? "border-crm selected"
-                              : ""
-                          }`}
-                          onClick={() => setFieldValue("storeType", "crm")}
-                          style={{ cursor: "pointer" }}
+                </div>
+
+                {/* Ecommerce Option */}
+                <div className="col-md-6">
+                  <div
+                    className={`card h-100 border-2 ${
+                      values.storeType === "ecommerce"
+                        ? "border-primary selected"
+                        : "border-light"
+                    }`}
+                    onClick={() => setFieldValue("storeType", "ecommerce")}
+                    style={{ cursor: "pointer", transition: "all 0.2s ease" }}
+                  >
+                    <img
+                      src="https://s3.envato.com/files/101016168/2a.UCM-CRM-dashboard-desktop.png"
+                      className="card-img-top"
+                      alt="Ecommerce"
+                      style={{ height: "180px", objectFit: "cover" }}
+                    />
+                    <div className="card-body position-relative">
+                      <div className="d-flex align-items-center justify-content-between mb-2">
+                        <h5
+                          className="card-title mb-0"
+                          style={{ fontSize: "16px", fontWeight: "600" }}
                         >
-                          <img
-                            src="https://miro.medium.com/v2/resize:fit:1400/1*TR-8mgpp0_X5P0ZbB6XYfQ.jpeg"
-                            className="card-img-top"
-                            alt="CRM"
-                          />
-                          {values.storeType === "crm" && (
-                            <div className="active-dot"></div>
-                          )}
-                        </div>
-                        <div className="position-relative">
-                          <h5
-                            className="card-title text-primary"
-                            style={{ fontSize: "16px" }}
+                          E-commerce
+                        </h5>
+                        {values.storeType === "ecommerce" && (
+                          <div
+                            style={{
+                              width: "20px",
+                              height: "20px",
+                              backgroundColor: "#0b64fe",
+                              borderRadius: "50%",
+                              display: "flex",
+                              alignItems: "center",
+                              justifyContent: "center",
+                            }}
                           >
-                            CRM
-                          </h5>
-                          <p style={{ fontSize: "14px" }}>
-                            Manage leads, sales, and customer relationships.
-                          </p>
-                        </div>
-                      </div>
-                      {/* Ecommerce */}
-                      <div
-                        className="position-relative"
-                        style={{ width: "250px" }}
-                      >
-                        <div
-                          className={`card mb-4 shadow ${
-                            values.storeType === "ecommerce"
-                              ? "border-crm selected"
-                              : ""
-                          }`}
-                          onClick={() =>
-                            setFieldValue("storeType", "ecommerce")
-                          }
-                          style={{ cursor: "pointer" }}
-                        >
-                          <img
-                            src="https://s3.envato.com/files/101016168/2a.UCM-CRM-dashboard-desktop.png"
-                            className="card-img-top"
-                            alt="Ecommerce"
-                          />
-                          {values.storeType === "ecommerce" && (
-                            <div className="active-dot"></div>
-                          )}
-                        </div>
-                        <div className="text-left">
-                          <h5
-                            className="card-title"
-                            style={{ fontSize: "16px" }}
-                          >
-                            Ecommerce
-                          </h5>
-                          <p style={{ fontSize: "14px" }}>
-                            Control your online store, products, and orders.
-                          </p>
-                        </div>
-                      </div>
-                    </div>
-                    {errors.storeType && touched.storeType && (
-                      <div className="text-danger ms-2">{errors.storeType}</div>
-                    )}
-                  </div>
-                  <Row className="d-flex justify-content-start">
-                    <Col md="2">
-                      <Button
-                        type="submit"
-                        disabled={isLoading}
-                        className="w-100"
-                      >
-                        {isLoading ? (
-                          <Spinner animation="border" size="sm" />
-                        ) : (
-                          "Save"
+                            <svg
+                              width="12"
+                              height="12"
+                              viewBox="0 0 12 12"
+                              fill="none"
+                            >
+                              <path
+                                d="M10 3L4.5 8.5L2 6"
+                                stroke="white"
+                                strokeWidth="2"
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                              />
+                            </svg>
+                          </div>
                         )}
-                      </Button>
-                    </Col>
-                  </Row>
-                </Form>
+                      </div>
+                      <p
+                        className="card-text text-muted"
+                        style={{ fontSize: "14px" }}
+                      >
+                        Control your online store, manage products, and track
+                        orders efficiently.
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {errors.storeType && touched.storeType && (
+                <div className="text-danger fs-12 mt-2">{errors.storeType}</div>
               )}
-            </Formik>
-          </div>
-        </div>
-      </div>
-    </>
+            </div>
+
+            {/* Action Buttons */}
+            <div className="d-flex justify-content-end gap-3 mt-4 pt-4 border-top">
+              <Button
+                variant="outline-primary"
+                type="button"
+                disabled={isLoading}
+              >
+                Cancel
+              </Button>
+              <Button
+                variant="primary"
+                type="submit"
+                disabled={isLoading}
+                className="px-4"
+              >
+                {isLoading ? (
+                  <>
+                    <Spinner animation="border" size="sm" className="me-2" />
+                    Updating...
+                  </>
+                ) : (
+                  "Save Changes"
+                )}
+              </Button>
+            </div>
+          </Form>
+        )}
+      </Formik>
+    </div>
   );
 };
 

@@ -3,12 +3,11 @@ import bsCustomFileInput from "bs-custom-file-input";
 import { Form, Formik } from "formik";
 import moment from "moment";
 import { useEffect } from "react";
-import { Alert, Button, Col, Row, Spinner } from "react-bootstrap";
+import { Button, Col, Row, Spinner } from "react-bootstrap";
 import { useMutation } from "react-query";
 import { useHistory, useLocation } from "react-router-dom";
 import { handleApiError } from "../../hooks/handleApiErrors";
 import useGetSingleQuery from "../../hooks/useGetSingleQuery";
-import BackButton from "../../shared-components/BackButton";
 import DatePicker from "../../shared-components/DatePicker";
 import { InputField } from "../../shared-components/InputFeild";
 import IsLoading from "../../shared-components/isLoading";
@@ -63,14 +62,12 @@ const CouponCreateUpdateForm = () => {
 
   const apiData = data && (data as any);
 
-  console.log("apiData", apiData);
-
   if (dataLoading) return <IsLoading />;
 
   return (
     <>
       <div className="card view-padding p-2 d-flex mt-3">
-        <BackButton title="Coupons" />
+        {/* <BackButton title="Coupons" /> */}
         <Row className="rounded">
           <Col className="mx-auto">
             <Formik
@@ -159,7 +156,7 @@ const CouponCreateUpdateForm = () => {
                     setFieldValue={setFieldValue}
                   />
                   <Row className="d-flex justify-content-center">
-                    <Col md="6">
+                    <Col md="12">
                       <Restricted to={id ? "update_coupon" : "create_coupon"}>
                         <Button
                           type="submit"

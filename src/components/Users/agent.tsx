@@ -1,6 +1,11 @@
 import { AxiosError } from "axios";
 import { useMemo, useState } from "react";
-import { Button, Col, Container, Dropdown, Modal, Row, Spinner } from "react-bootstrap";
+import {
+  Button,
+  Container,
+  Dropdown,
+  Modal,
+} from "react-bootstrap";
 import { BiSad } from "react-icons/bi";
 import { useMutation, useQuery } from "react-query";
 import { useHistory } from "react-router-dom";
@@ -48,7 +53,6 @@ const Agents = () => {
   const [selectedDeleteId, setSelectedDeleteId] = useState<string | null>(null);
   const [selectedRows, setSelectedRows] = useState([]);
   const [filter, setFilter] = useState(intitialFilter);
-  console.log(selectedRows.map((item) => item.id));
   const [page, setPage] = useState<number>(1);
   const [role, setRole] = useState("");
 
@@ -262,7 +266,8 @@ const Agents = () => {
           <Modal.Title>Are you sure?</Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          Do you really want to delete this agent? This process cannot be undone.
+          Do you really want to delete this agent? This process cannot be
+          undone.
         </Modal.Body>
         <Modal.Footer>
           <Button variant="bg-light" onClick={() => setDeletePopup(false)}>

@@ -2,7 +2,7 @@
 
 import { AxiosError } from "axios";
 import bsCustomFileInput from "bs-custom-file-input";
-import { FieldArray, Form, Formik } from "formik";
+import { Form, Formik } from "formik";
 import { useEffect } from "react";
 import { Button, Col, Row, Spinner } from "react-bootstrap";
 import { useMutation, useQuery } from "react-query";
@@ -73,7 +73,6 @@ const RevokePermission = () => {
                   : {}
               }
               onSubmit={(values) => {
-                console.log({ values });
                 mutate({ formdata: values, id });
               }}
             >

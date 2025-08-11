@@ -1,3 +1,5 @@
+// create edit
+
 import { AxiosError } from "axios";
 import bsCustomFileInput from "bs-custom-file-input";
 import { Form, Formik } from "formik";
@@ -7,12 +9,10 @@ import { useMutation } from "react-query";
 import { useHistory, useLocation } from "react-router-dom";
 import { handleApiError } from "../../hooks/handleApiErrors";
 import useGetSingleQuery from "../../hooks/useGetSingleQuery";
-import BackButton from "../../shared-components/BackButton";
 import { InputField } from "../../shared-components/InputFeild";
 import IsLoading from "../../shared-components/isLoading";
 import Restricted from "../../shared-components/Restricted";
 import API from "../../utils/API";
-import { isActiveArray } from "../../utils/arrays";
 import { queryClient } from "../../utils/queryClient";
 import { showMsgToast } from "../../utils/showMsgToast";
 
@@ -65,7 +65,7 @@ const CarTypesCreateUpdateForm = () => {
   return (
     <>
       <div className="card view-padding p-2 d-flex mt-3">
-        <BackButton title={title} />
+        {/* <BackButton title={title} /> */}
 
         <Row className="rounded">
           <Col className="mx-auto">
@@ -78,7 +78,7 @@ const CarTypesCreateUpdateForm = () => {
             >
               {({ setFieldValue }) => (
                 <Form>
-                  <div className="form-container ">
+                  <div className=" ">
                     <InputField
                       name="name"
                       placeholder="Name"
@@ -88,7 +88,7 @@ const CarTypesCreateUpdateForm = () => {
                   </div>
 
                   <Row className="d-flex justify-content-start">
-                    <Col md="2">
+                    <Col md="12">
                       <Restricted
                         to={
                           id ? "update_brandmodelType" : "create_brandmodelType"

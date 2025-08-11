@@ -1,6 +1,11 @@
 import { AxiosError } from "axios";
 import { useMemo, useState } from "react";
-import { Button, Col, Container, Dropdown, Modal, Row, Spinner } from "react-bootstrap";
+import {
+  Button,
+  Container,
+  Dropdown,
+  Modal,
+} from "react-bootstrap";
 import { BiSad } from "react-icons/bi";
 import { useMutation, useQuery } from "react-query";
 import { useHistory } from "react-router-dom";
@@ -50,7 +55,6 @@ const Admins = () => {
   const [selectedDeleteId, setSelectedDeleteId] = useState<string | null>(null);
   const [selectedRows, setSelectedRows] = useState([]);
   const [filter, setFilter] = useState(intitialFilter);
-  console.log(selectedRows.map((item) => item.id));
   const [modalShow, setModalShow] = useState(false);
   const [page, setPage] = useState<number>(1);
   const [role, setRole] = useState("");
@@ -189,11 +193,15 @@ const Admins = () => {
 
   const _toggleModal = () => {
     setModalShow(!modalShow);
-  }
+  };
 
   return (
     <>
-      <CommonModal modalShow={modalShow} onModalHideClick={_toggleModal} title="Create New Team Member">
+      <CommonModal
+        modalShow={modalShow}
+        onModalHideClick={_toggleModal}
+        title="Create New Team Member"
+      >
         <UserCreateUpdateForm toggleModal={_toggleModal} />
       </CommonModal>
       <div className="view-padding">
@@ -217,43 +225,43 @@ const Admins = () => {
                 <>
                   <ReactTable
                     data={data?.data}
-                    filters={<Dropdown className="search-filters-div filter-dropdown mr-2">
-                      <Dropdown.Toggle as={Button} variant="primary">
-                        <BsFunnel /> Filters
-                      </Dropdown.Toggle>
-                      <Dropdown.Menu>
-                        <div className="filter-dropdown-heading d-flex justify-content-between w-100">
-                          <h4>Filter</h4>
-                          <div
-                            className="d-flex align-items-center justify-md-content-center"
-                          >
-                            <Button
-                              variant={
-                                areTwoObjEqual(intitialFilter, filter)
-                                  ? "light"
-                                  : "primary"
-                              }
-                              style={{
-                                fontSize: 14,
-                              }}
-                              onClick={() => setFilter(intitialFilter)}
-                            >
-                              Reset Filters
-                            </Button>
+                    filters={
+                      <Dropdown className="search-filters-div filter-dropdown mr-2">
+                        <Dropdown.Toggle as={Button} variant="primary">
+                          <BsFunnel /> Filters
+                        </Dropdown.Toggle>
+                        <Dropdown.Menu>
+                          <div className="filter-dropdown-heading d-flex justify-content-between w-100">
+                            <h4>Filter</h4>
+                            <div className="d-flex align-items-center justify-md-content-center">
+                              <Button
+                                variant={
+                                  areTwoObjEqual(intitialFilter, filter)
+                                    ? "light"
+                                    : "primary"
+                                }
+                                style={{
+                                  fontSize: 14,
+                                }}
+                                onClick={() => setFilter(intitialFilter)}
+                              >
+                                Reset Filters
+                              </Button>
+                            </div>
                           </div>
-                        </div>
-                        <div className="select-filter">
-                          <FilterSelect
-                            currentValue={filter.disabled}
-                            data={isActiveArray}
-                            label="Disabled Users?"
-                            idx="disabled"
-                            onFilterChange={_onFilterChange}
-                            defaultSelectTitle="Show All"
-                          />
-                        </div>
-                      </Dropdown.Menu>
-                    </Dropdown>}
+                          <div className="select-filter">
+                            <FilterSelect
+                              currentValue={filter.disabled}
+                              data={isActiveArray}
+                              label="Disabled Users?"
+                              idx="disabled"
+                              onFilterChange={_onFilterChange}
+                              defaultSelectTitle="Show All"
+                            />
+                          </div>
+                        </Dropdown.Menu>
+                      </Dropdown>
+                    }
                     columns={columns}
                     setSelectedRows={setSelectedRows}
                     filter={filter}

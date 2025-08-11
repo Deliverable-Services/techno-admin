@@ -7,16 +7,12 @@ import { useMutation, useQuery } from "react-query";
 import { useHistory, useLocation } from "react-router-dom";
 import { handleApiError } from "../../hooks/handleApiErrors";
 import useGetSingleQuery from "../../hooks/useGetSingleQuery";
-import BackButton from "../../shared-components/BackButton";
 import { InputField } from "../../shared-components/InputFeild";
 import IsLoading from "../../shared-components/isLoading";
 import TextEditor from "../../shared-components/TextEditor";
 import API from "../../utils/API";
-import { isActiveArray } from "../../utils/arrays";
 import { queryClient } from "../../utils/queryClient";
 import { showMsgToast } from "../../utils/showMsgToast";
-import SelectSearch, { SelectSearchOption } from "react-select-search";
-import Users from "../Users";
 import Restricted from "../../shared-components/Restricted";
 
 const key = "testimonial";
@@ -76,7 +72,7 @@ const TestimonialCreateUpdateForm = () => {
   return (
     <>
       <div className="card view-padding p-2 d-flex mt-3">
-        <BackButton title={title} />
+        {/* <BackButton title={title} /> */}
         {/* <div className="text-primary">
           <div className="d-flex justify-content-between">
             <div
@@ -102,7 +98,6 @@ const TestimonialCreateUpdateForm = () => {
 
                 if (picture) formdata.append("picture", picture);
 
-                console.log({ formdata });
                 mutate({ formdata, id });
               }}
             >
@@ -132,7 +127,7 @@ const TestimonialCreateUpdateForm = () => {
                   </Row>
 
                   <Row className="d-flex justify-content-start">
-                    <Col md="2">
+                    <Col md="12">
                       <Restricted
                         to={id ? "update_testimonial" : "create_testimonial"}
                       >

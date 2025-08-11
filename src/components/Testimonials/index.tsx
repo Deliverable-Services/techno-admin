@@ -19,6 +19,9 @@ import { showMsgToast } from "../../utils/showMsgToast";
 import { AiFillDelete, AiFillIdcard } from "react-icons/ai";
 import { queryClient } from "../../utils/queryClient";
 import { BsThreeDotsVertical } from "react-icons/bs";
+import { useFlyout } from "../../hooks/useFlyout";
+import Flyout from "../../shared-components/Flyout";
+import TestimonialCreateUpdateForm from "./TestimonialCreateUpdateForm";
 
 const key = "testimonial";
 
@@ -37,8 +40,8 @@ const intitialFilter = {
 const Testimonial = () => {
   const history = useHistory();
   const [selectedRows, setSelectedRows] = useState([]);
-  console.log(selectedRows.map((item) => item.id));
   const [filter, setFilter] = useState(intitialFilter);
+  const { isOpen: showFlyout, openFlyout, closeFlyout } = useFlyout();
   const { data, isLoading, isFetching, error } = useQuery<any>(
     [key, , filter],
     {
@@ -59,7 +62,8 @@ const Testimonial = () => {
   });
 
   const _onCreateClick = () => {
-    history.push("/testimonials/create-edit");
+    // history.push("/testimonials/create-edit");
+    openFlyout();
   };
   const _onEditClick = (id: string) => {
     history.push("/testimonials/create-edit", { id });
@@ -254,6 +258,15 @@ const Testimonial = () => {
           </Button>
         </div>
       )}
+      <Flyout
+        isOpen={showFlyout}
+        onClose={closeFlyout}
+        title={"Create Testimonial"}
+        cancelText="Cancel"
+        width="800px"
+      >
+        <TestimonialCreateUpdateForm />
+      </Flyout>
     </>
   );
 };

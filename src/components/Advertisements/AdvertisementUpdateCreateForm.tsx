@@ -8,7 +8,6 @@ import { useMutation } from "react-query";
 import { useHistory, useLocation } from "react-router-dom";
 import { handleApiError } from "../../hooks/handleApiErrors";
 import useGetSingleQuery from "../../hooks/useGetSingleQuery";
-import BackButton from "../../shared-components/BackButton";
 import DatePicker from "../../shared-components/DatePicker";
 import { InputField } from "../../shared-components/InputFeild";
 import IsLoading from "../../shared-components/isLoading";
@@ -70,7 +69,7 @@ const AdvertisementCreateUpdateForm = () => {
   return (
     <>
       <div className="card view-padding p-2 d-flex mt-3">
-        <BackButton title="Banners" />
+        {/* <BackButton title="Banners" /> */}
         <Row className="rounded">
           <Col className="mx-auto">
             <Formik
@@ -169,7 +168,7 @@ const AdvertisementCreateUpdateForm = () => {
                     />
                   </div>
                   <Row className="d-flex justify-content-start">
-                    <Col md="2">
+                    <Col md="12">
                       <Restricted to={id ? "update_banner" : "create_banner"}>
                         <Button
                           type="submit"

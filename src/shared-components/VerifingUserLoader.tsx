@@ -1,7 +1,7 @@
 import React from "react";
 import { Container } from "react-bootstrap";
 import { FaShieldAlt, FaUserCheck, FaLock } from "react-icons/fa";
-import { MdSecurity, MdVerifiedUser } from "react-icons/md";
+import { MdVerifiedUser } from "react-icons/md";
 import { primaryColor } from "../utils/constants";
 
 const VerifingUserLoader = () => {

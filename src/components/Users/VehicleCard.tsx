@@ -1,7 +1,5 @@
 import React from "react";
-import { Badge } from "react-bootstrap";
 import CustomBadge from "../../shared-components/CustomBadge";
-import IsActiveBadge from "../../shared-components/IsActiveBadge";
 
 interface Props {
   vehicle: any;

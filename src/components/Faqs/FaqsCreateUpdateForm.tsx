@@ -1,14 +1,12 @@
 import { AxiosError } from "axios";
 import bsCustomFileInput from "bs-custom-file-input";
-import { error } from "console";
 import { Form, Formik } from "formik";
 import { useEffect } from "react";
-import { Alert, Button, Col, Row, Spinner } from "react-bootstrap";
+import { Button, Col, Row, Spinner } from "react-bootstrap";
 import { useMutation } from "react-query";
 import { useHistory, useLocation } from "react-router-dom";
 import { handleApiError } from "../../hooks/handleApiErrors";
 import useGetSingleQuery from "../../hooks/useGetSingleQuery";
-import BackButton from "../../shared-components/BackButton";
 import { InputField } from "../../shared-components/InputFeild";
 import IsLoading from "../../shared-components/isLoading";
 import Restricted from "../../shared-components/Restricted";
@@ -65,7 +63,7 @@ const FaqCreateUpdateForm = () => {
   return (
     <>
       <div className="card view-padding p-2 d-flex mt-3">
-        <BackButton title="Faqs" />
+        {/* <BackButton title="Faqs" /> */}
         <Row className="rounded">
           <Col className="mx-auto">
             <Formik
@@ -110,7 +108,7 @@ const FaqCreateUpdateForm = () => {
                   {/* <InputField name="is_active" placeholder="isActive" label="Is Active?" /> */}
 
                   <Row className="d-flex justify-content-start">
-                    <Col md="2">
+                    <Col md="12">
                       <Restricted to={id ? "update_faq" : "create_faq"}>
                         <Button
                           type="submit"

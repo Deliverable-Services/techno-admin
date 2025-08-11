@@ -49,7 +49,6 @@ const Users = () => {
   const [selectedDeleteId, setSelectedDeleteId] = useState<string | null>(null);
   const [selectedRows, setSelectedRows] = useState([]);
   const [filter, setFilter] = useState(intitialFilter);
-  console.log(selectedRows.map((item) => item.id));
   const [page, setPage] = useState<number>(1);
   const [role, setRole] = useState("");
   const { isOpen: showFlyout, openFlyout, closeFlyout } = useFlyout();
@@ -90,9 +89,9 @@ const Users = () => {
   };
 
   const _onEditClick = (id: string, role: string) => {
-    history.push("/users/create-edit", { id, role });
+    // history.push("/users/create-edit", { id, role });
+    openFlyout();
   };
-
 
   const columns = useMemo(
     () => [
@@ -330,7 +329,7 @@ const Users = () => {
       <Flyout
         isOpen={showFlyout}
         onClose={closeFlyout}
-        title={selectedUserId ? 'Edit User' : 'Create User'}
+        title={selectedUserId ? "Edit User" : "Create User"}
         cancelText="Cancel"
       >
         <UserCreateUpdateForm

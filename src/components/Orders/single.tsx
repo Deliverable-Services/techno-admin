@@ -3,7 +3,7 @@ import moment from "moment";
 import React, { useState } from "react";
 import { Button, Col, Container, Form, Row } from "react-bootstrap";
 import { AiFillPlusSquare } from "react-icons/ai";
-import { BiArrowFromRight, BiDownload, BiSad } from "react-icons/bi";
+import { BiDownload, BiSad } from "react-icons/bi";
 import { GoArrowLeft } from "react-icons/go";
 import { useMutation, useQuery } from "react-query";
 import { useHistory, useParams } from "react-router-dom";

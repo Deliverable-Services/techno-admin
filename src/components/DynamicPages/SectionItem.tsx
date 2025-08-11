@@ -1,5 +1,5 @@
 import { useDrag } from "react-dnd";
-import { BiGridVertical, BiTrash } from "react-icons/bi";
+import { BiGridVertical } from "react-icons/bi";
 import API from "../../utils/API";
 
 const SectionItem = ({ section }) => {

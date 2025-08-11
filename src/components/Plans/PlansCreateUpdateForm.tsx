@@ -2,15 +2,13 @@ import { AxiosError } from "axios";
 import bsCustomFileInput from "bs-custom-file-input";
 import { FieldArray, Form, Formik } from "formik";
 import { useEffect } from "react";
-import { Button, Col, Container, Row, Spinner } from "react-bootstrap";
+import { Button, Col, Row, Spinner } from "react-bootstrap";
 import { useMutation, useQuery } from "react-query";
 import { useHistory, useLocation } from "react-router-dom";
 import { handleApiError } from "../../hooks/handleApiErrors";
 import useGetSingleQuery from "../../hooks/useGetSingleQuery";
-import BackButton from "../../shared-components/BackButton";
 import { InputField } from "../../shared-components/InputFeild";
 import IsLoading from "../../shared-components/isLoading";
-import PageHeading from "../../shared-components/PageHeading";
 import TextEditor from "../../shared-components/TextEditor";
 import API from "../../utils/API";
 import { isActiveArray } from "../../utils/arrays";
@@ -97,7 +95,7 @@ const PlanCreateUpdateForm = () => {
   return (
     <>
       <div className="card view-padding p-2 d-flex mt-3">
-        <BackButton title="Plans" />
+        {/* <BackButton title="Plans" /> */}
         <Row className="rounded">
           <Col className="mx-auto">
             <Formik
@@ -231,7 +229,7 @@ const PlanCreateUpdateForm = () => {
                     </Col>
                   </Row>
                   <Row className="d-flex justify-content-start">
-                    <Col md="2">
+                    <Col md="12">
                       <Restricted to={id ? "update_plan" : "create_plan"}>
                         <Button
                           type="submit"

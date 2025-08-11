@@ -2,16 +2,14 @@ import { AxiosError } from "axios";
 import bsCustomFileInput from "bs-custom-file-input";
 import { Form, Formik } from "formik";
 import { useEffect, useState } from "react";
-import { Alert, Button, Col, Row, Spinner } from "react-bootstrap";
+import { Button, Col, Row, Spinner } from "react-bootstrap";
 import { useMutation, useQuery } from "react-query";
 import { useHistory, useLocation } from "react-router-dom";
 import { handleApiError } from "../../hooks/handleApiErrors";
 import useGetSingleQuery from "../../hooks/useGetSingleQuery";
-import BackButton from "../../shared-components/BackButton";
 import { InputField } from "../../shared-components/InputFeild";
 import IsLoading from "../../shared-components/isLoading";
 import API from "../../utils/API";
-import { isActiveArray } from "../../utils/arrays";
 import { queryClient } from "../../utils/queryClient";
 import { showMsgToast } from "../../utils/showMsgToast";
 import * as Yup from "yup";
@@ -69,7 +67,6 @@ const UserBasics = ({ toggleModal }: UserBasicsProps) => {
     if (isRolesLoading) return;
 
     // if (!Roles || Roles.length === 0) return;
-    console.log("are we running ");
     const r = [];
     Roles?.data?.forEach((role) => {
       r.push({ id: role.name.toLowerCase(), name: role.name.toUpperCase() });
@@ -101,7 +98,6 @@ const UserBasics = ({ toggleModal }: UserBasicsProps) => {
             enableReinitialize
             initialValues={apiData || { role }}
             onSubmit={(values) => {
-              console.log(values);
               const { profile_pic, ...rest } = values;
               const formdata = new FormData();
               for (let k in rest) formdata.append(k, rest[k]);

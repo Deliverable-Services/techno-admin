@@ -11,7 +11,6 @@ import { useHistory, useLocation } from "react-router-dom";
 import { Cell } from "react-table";
 import { handleApiError } from "../../hooks/handleApiErrors";
 import useGetSingleQuery from "../../hooks/useGetSingleQuery";
-import BackButton from "../../shared-components/BackButton";
 import CustomBadge from "../../shared-components/CustomBadge";
 import DatePicker from "../../shared-components/DatePicker";
 import { InputField } from "../../shared-components/InputFeild";
@@ -20,7 +19,6 @@ import IsLoading from "../../shared-components/isLoading";
 import TablePagination from "../../shared-components/Pagination";
 import ReactTable from "../../shared-components/ReactTable";
 import Restricted from "../../shared-components/Restricted";
-import TextEditor from "../../shared-components/TextEditor";
 import API from "../../utils/API";
 import { NotificationSendToCategories } from "../../utils/arrays";
 import { primaryColor } from "../../utils/constants";
@@ -59,7 +57,6 @@ const NotificationCreateUpdateForm = () => {
   //   any
   // > | null>(null);
 
-  console.log({ selectedRows });
   const [filter, setFilter] = useState(intitialFilter);
   useEffect(() => {
     bsCustomFileInput.init();
@@ -145,211 +142,215 @@ const NotificationCreateUpdateForm = () => {
 
   return (
     <>
-      <div className="view-padding view-heading">
-        <PageHeading
-          title="Create New Notification"
-          customButton={
-            <Restricted to={id ? "update_notification" : "create_notification"}>
-              <Button type="submit" disabled={isLoading}>
-                {isLoading ? (
-                  <Spinner animation="border" size="sm" />
-                ) : (
-                  <div className="text-white d-flex align-items-center">
-                    <AiOutlinePlus size={18} />
-                    <span className="mb-0 ml-1">Create</span>
-                  </div>
-                )}
-              </Button>
-            </Restricted>
-          }
-        />
-      </div>
-      <hr />
-      <div className="view-padding">
-        <Row className="rounded">
-          <Col className="mx-auto">
-            <Formik
-              enableReinitialize
-              initialValues={
-                apiData
-                  ? { ...apiData, is_sms: apiData?.is_sms ? "1" : "0" }
-                  : { is_sms: "0" }
-              }
-              onSubmit={(values) => {
-                const { is_sms, send_to, ...rest } = values;
-                const formdata = {
-                  ...rest,
-                  users: selectedRows.map((i) => i.id),
-                };
-
-                if (send_to !== "custom") formdata["send_to"] = send_to;
-
-                if (is_sms === "1") {
-                  formdata["is_sms"] = is_sms;
-                  formdata["channels"] = ["sms"];
-                } else {
-                  formdata["channels"] = ["pushnotification"];
+      <div className="card">
+        <div className="view-padding view-heading">
+          <PageHeading
+            title="Create New Notification"
+            customButton={
+              <Restricted
+                to={id ? "update_notification" : "create_notification"}
+              >
+                <Button type="submit" disabled={isLoading}>
+                  {isLoading ? (
+                    <Spinner animation="border" size="sm" />
+                  ) : (
+                    <div className="text-white d-flex align-items-center">
+                      <AiOutlinePlus size={18} />
+                      <span className="mb-0 ml-1">Create</span>
+                    </div>
+                  )}
+                </Button>
+              </Restricted>
+            }
+          />
+        </div>
+        <hr />
+        <div className="view-padding">
+          <Row className="rounded">
+            <Col className="mx-auto">
+              <Formik
+                enableReinitialize
+                initialValues={
+                  apiData
+                    ? { ...apiData, is_sms: apiData?.is_sms ? "1" : "0" }
+                    : { is_sms: "0" }
                 }
+                onSubmit={(values) => {
+                  const { is_sms, send_to, ...rest } = values;
+                  const formdata = {
+                    ...rest,
+                    users: selectedRows.map((i) => i.id),
+                  };
 
-                if (!values?.scheduled_at)
-                  formdata["scheduled_at"] = moment().format(
-                    "YYYY-MM-DD hh:mm:ss"
-                  );
-                mutate({ formdata, id });
-              }}
-            >
-              {({ setFieldValue, values }) => (
-                <Form>
-                  <div className="d-flex">
-                    <label className="d-flex align-items-center">
-                      <Field type="radio" name="is_sms" value="1" />
-                      <p className="m-0 mx-2 lead">
-                        <span className="mx-1">
-                          <MdTextsms />
-                        </span>
-                        SMS
-                      </p>
-                    </label>
-                    <label className="d-flex align-items-center ml-4">
-                      <Field type="radio" name="is_sms" value="0" />
-                      <p className="m-0 mx-2 lead">
-                        <span className="mx-1">
-                          <MdNotificationsActive />
-                        </span>
-                        Notification
-                      </p>
-                    </label>
-                    <label className="d-flex align-items-center ml-4">
-                      <Field type="radio" name="is_sms" value="0" />
-                      <p className="m-0 mx-2 lead">
-                        <span className="mx-1">
-                          <MdEmail />
-                        </span>
-                        Email
-                      </p>
-                    </label>
-                  </div>
+                  if (send_to !== "custom") formdata["send_to"] = send_to;
 
-                  <div className="form-container">
-                    <InputField
-                      name="title"
-                      placeholder="Title"
-                      label="Title"
-                      required
-                    />
-                    <InputField
-                      as="select"
-                      selectData={NotificationSendToCategories}
-                      name="send_to"
-                      label="Send to ?"
-                      placeholder="Choose user category"
-                    />
-                    {values.is_sms === "0" && (
+                  if (is_sms === "1") {
+                    formdata["is_sms"] = is_sms;
+                    formdata["channels"] = ["sms"];
+                  } else {
+                    formdata["channels"] = ["pushnotification"];
+                  }
+
+                  if (!values?.scheduled_at)
+                    formdata["scheduled_at"] = moment().format(
+                      "YYYY-MM-DD hh:mm:ss"
+                    );
+                  mutate({ formdata, id });
+                }}
+              >
+                {({ setFieldValue, values }) => (
+                  <Form>
+                    <div className="d-flex">
+                      <label className="d-flex align-items-center">
+                        <Field type="radio" name="is_sms" value="1" />
+                        <p className="m-0 mx-2 lead">
+                          <span className="mx-1">
+                            <MdTextsms />
+                          </span>
+                          SMS
+                        </p>
+                      </label>
+                      <label className="d-flex align-items-center ml-4">
+                        <Field type="radio" name="is_sms" value="0" />
+                        <p className="m-0 mx-2 lead">
+                          <span className="mx-1">
+                            <MdNotificationsActive />
+                          </span>
+                          Notification
+                        </p>
+                      </label>
+                      <label className="d-flex align-items-center ml-4">
+                        <Field type="radio" name="is_sms" value="0" />
+                        <p className="m-0 mx-2 lead">
+                          <span className="mx-1">
+                            <MdEmail />
+                          </span>
+                          Email
+                        </p>
+                      </label>
+                    </div>
+
+                    <div className="form-container">
                       <InputField
-                        name="description"
-                        placeholder="Description"
-                        label="Description"
-                        as="textarea"
+                        name="title"
+                        placeholder="Title"
+                        label="Title"
                         required
                       />
-                    )}
-                  </div>
-                  <Row>
-                    <Col md={12} xl={12}>
+                      <InputField
+                        as="select"
+                        selectData={NotificationSendToCategories}
+                        name="send_to"
+                        label="Send to ?"
+                        placeholder="Choose user category"
+                      />
                       {values.is_sms === "0" && (
-                        <h4 className="font-weight-bold d-flex align-items-center ">
-                          <RiTimerFill size={24} /> <span> Schedule</span>
-                        </h4>
+                        <InputField
+                          name="description"
+                          placeholder="Description"
+                          label="Description"
+                          as="textarea"
+                          required
+                        />
                       )}
-                      {values.is_sms === "0" && !id && (
-                        <div className="navigation-tab mt-3">
-                          <button
-                            type="button"
-                            className={
-                              !isScheduleOpen ? "text-primary" : "text-muted"
-                            }
-                            style={{
-                              borderBottom: !isScheduleOpen
-                                ? ` 2px solid ${primaryColor}`
-                                : "",
-                            }}
-                            onClick={_closeSchedulTab}
-                          >
-                            <b>Now</b>
-                          </button>
-                          <button
-                            type="button"
-                            className={`${
-                              isScheduleOpen ? "text-primary" : "text-muted"
-                            } ml-2`}
-                            style={{
-                              borderBottom: isScheduleOpen
-                                ? ` 2px solid ${primaryColor}`
-                                : "",
-                            }}
-                            onClick={_openSchedulTab}
-                          >
-                            <b>Schedule</b>
-                          </button>
-                        </div>
-                      )}
-                      {values.is_sms === "0" && (
-                        <div className="display-for-schedule mt-2">
-                          {!isScheduleOpen ? (
-                            <div className="py-3">
-                              <p>Notification will be send now</p>
-                            </div>
-                          ) : (
-                            <div
-                              style={{
-                                width: "200px",
-                              }}
-                            >
-                              <DatePicker
-                                name="scheduled_at"
-                                setFieldValue={setFieldValue}
-                                label="Data\time"
-                              />
-                            </div>
-                          )}
-                        </div>
-                      )}
-                    </Col>
-                    {values?.send_to === "custom" && (
+                    </div>
+                    <Row>
                       <Col md={12} xl={12}>
-                        {!error && !isUsersLoading && Users && (
-                          <>
-                            <ReactTable
-                              data={Users?.data}
-                              columns={columns}
-                              setSelectedRows={setSelectedRows}
-                              filter={filter}
-                              onFilterChange={_onFilterChange}
-                              isDataLoading={isFetching}
-                              // initialState={{
-                              //   selectedRowIds: selectedRowIds
-                              //     ? selectedRowIds[filter.page]
-                              //     : [],
-                              // }}
-                              deletePermissionReq="read_user"
-                            />
-                            <TablePagination
-                              currentPage={Users?.current_page}
-                              lastPage={Users?.last_page}
-                              setPage={_onFilterChange}
-                              hasNextPage={!!Users?.next_page_url}
-                              hasPrevPage={!!Users?.prev_page_url}
-                            />
-                          </>
+                        {values.is_sms === "0" && (
+                          <h4 className="font-weight-bold d-flex align-items-center ">
+                            <RiTimerFill size={24} /> <span> Schedule</span>
+                          </h4>
+                        )}
+                        {values.is_sms === "0" && !id && (
+                          <div className="navigation-tab mt-3">
+                            <button
+                              type="button"
+                              className={
+                                !isScheduleOpen ? "text-primary" : "text-muted"
+                              }
+                              style={{
+                                borderBottom: !isScheduleOpen
+                                  ? ` 2px solid ${primaryColor}`
+                                  : "",
+                              }}
+                              onClick={_closeSchedulTab}
+                            >
+                              <b>Now</b>
+                            </button>
+                            <button
+                              type="button"
+                              className={`${
+                                isScheduleOpen ? "text-primary" : "text-muted"
+                              } ml-2`}
+                              style={{
+                                borderBottom: isScheduleOpen
+                                  ? ` 2px solid ${primaryColor}`
+                                  : "",
+                              }}
+                              onClick={_openSchedulTab}
+                            >
+                              <b>Schedule</b>
+                            </button>
+                          </div>
+                        )}
+                        {values.is_sms === "0" && (
+                          <div className="display-for-schedule mt-2">
+                            {!isScheduleOpen ? (
+                              <div className="py-3">
+                                <p>Notification will be send now</p>
+                              </div>
+                            ) : (
+                              <div
+                                style={{
+                                  width: "200px",
+                                }}
+                              >
+                                <DatePicker
+                                  name="scheduled_at"
+                                  setFieldValue={setFieldValue}
+                                  label="Data\time"
+                                />
+                              </div>
+                            )}
+                          </div>
                         )}
                       </Col>
-                    )}
-                  </Row>
-                </Form>
-              )}
-            </Formik>
-          </Col>
-        </Row>
+                      {values?.send_to === "custom" && (
+                        <Col md={12} xl={12}>
+                          {!error && !isUsersLoading && Users && (
+                            <>
+                              <ReactTable
+                                data={Users?.data}
+                                columns={columns}
+                                setSelectedRows={setSelectedRows}
+                                filter={filter}
+                                onFilterChange={_onFilterChange}
+                                isDataLoading={isFetching}
+                                // initialState={{
+                                //   selectedRowIds: selectedRowIds
+                                //     ? selectedRowIds[filter.page]
+                                //     : [],
+                                // }}
+                                deletePermissionReq="read_user"
+                              />
+                              <TablePagination
+                                currentPage={Users?.current_page}
+                                lastPage={Users?.last_page}
+                                setPage={_onFilterChange}
+                                hasNextPage={!!Users?.next_page_url}
+                                hasPrevPage={!!Users?.prev_page_url}
+                              />
+                            </>
+                          )}
+                        </Col>
+                      )}
+                    </Row>
+                  </Form>
+                )}
+              </Formik>
+            </Col>
+          </Row>
+        </div>
       </div>
     </>
   );

@@ -12,8 +12,8 @@ import {
 import { useQuery } from "react-query";
 import googleBusinessService, {
   BusinessImage,
-} from "../../services/googleBusinessService";
-import IsLoading from "../../shared-components/isLoading";
+} from "../../../services/googleBusinessService";
+import IsLoading from "../../../shared-components/isLoading";
 import moment from "moment";
 
 interface ImagesTabProps {
@@ -328,7 +328,9 @@ const ImagesTab: React.FC<ImagesTabProps> = ({ organisationId }) => {
                     <strong className="d-block text-muted small mb-1">
                       IMAGE TYPE
                     </strong>
-                    <Badge variant={getImageTypeBadge(selectedImage.image_type)}>
+                    <Badge
+                      variant={getImageTypeBadge(selectedImage.image_type)}
+                    >
                       {selectedImage.image_type}
                     </Badge>
                   </div>

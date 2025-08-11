@@ -10,6 +10,8 @@ export interface GoogleAnalyticsConnectorStatus {
   accounts_count?: number;
   oauth_completed?: boolean;
   fivetran_error?: string | null;
+  selected_account?: string;
+  selected_property?: string;
   latest_sync?: {
     status: string;
     started_at: string;
@@ -141,7 +143,29 @@ class GoogleAnalyticsService {
         account_name: accountName,
       },
     });
-    return response.data;
+    // Normalize propertyId for GA Admin API responses that use name like 'properties/123'
+    const raw = response.data || [];
+    return raw.map((p: any) => ({
+      ...p,
+      propertyId:
+        p.propertyId ||
+        (p.name ? p.name.replace("properties/", "") : p.propertyId),
+    }));
+  }
+
+  async getAllAccessibleProperties(
+    organisationId: number
+  ): Promise<GoogleAnalyticsProperty[]> {
+    const response = await API.get(`/google-analytics/properties/search`, {
+      params: { organisation_id: organisationId },
+    });
+    const raw = response.data || [];
+    return raw.map((p: any) => ({
+      ...p,
+      propertyId:
+        p.propertyId ||
+        (p.name ? p.name.replace("properties/", "") : p.propertyId),
+    }));
   }
 
   /**
@@ -200,6 +224,21 @@ class GoogleAnalyticsService {
         property_id: propertyId,
         ...options,
       },
+    });
+    return response.data;
+  }
+
+  /**
+   * Persist selected account/property for connector
+   */
+  async updateSelection(
+    organisationId: number,
+    { accountName, propertyId }: { accountName?: string; propertyId?: string }
+  ): Promise<{ message: string }> {
+    const response = await API.put(`/google-analytics/selection`, {
+      organisation_id: organisationId,
+      account_name: accountName,
+      property_id: propertyId,
     });
     return response.data;
   }

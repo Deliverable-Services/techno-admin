@@ -7,7 +7,6 @@ import { useMutation } from "react-query";
 import { useHistory, useLocation } from "react-router-dom";
 import { handleApiError } from "../../hooks/handleApiErrors";
 import useGetSingleQuery from "../../hooks/useGetSingleQuery";
-import useUserProfileStore from "../../hooks/useUserProfileStore";
 import BackButton from "../../shared-components/BackButton";
 import { InputField } from "../../shared-components/InputFeild";
 import IsLoading from "../../shared-components/isLoading";
@@ -86,7 +85,6 @@ const BrandsCreateUpdateForm = () => {
               enableReinitialize
               initialValues={apiData || { is_active: "1" }}
               onSubmit={(values) => {
-                console.log({ values });
                 const { logo, ...rest } = values;
                 const formdata = new FormData();
                 for (let k in rest) formdata.append(k, rest[k]);

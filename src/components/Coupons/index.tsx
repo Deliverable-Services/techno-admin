@@ -1,13 +1,11 @@
 import { AxiosError } from "axios";
 import { useMemo, useState } from "react";
-import { Button, Col, Container, Dropdown, Nav, Row } from "react-bootstrap";
-import { AiFillEdit } from "react-icons/ai";
+import { Button, Container, Dropdown, Nav } from "react-bootstrap";
 import { BiSad } from "react-icons/bi";
 import { useMutation, useQuery } from "react-query";
-import { Switch, useHistory } from "react-router-dom";
+import { useHistory } from "react-router-dom";
 import { Cell } from "react-table";
 import { handleApiError } from "../../hooks/handleApiErrors";
-import BreadCrumb from "../../shared-components/BreadCrumb";
 import CreatedUpdatedAt from "../../shared-components/CreatedUpdatedAt";
 import CustomBadge from "../../shared-components/CustomBadge";
 import EditButton from "../../shared-components/EditButton";
@@ -19,12 +17,15 @@ import TablePagination from "../../shared-components/Pagination";
 import ReactTable from "../../shared-components/ReactTable";
 import API from "../../utils/API";
 import { areTwoObjEqual } from "../../utils/areTwoObjEqual";
-import { conditionType, isActiveArray } from "../../utils/arrays";
-import { primaryColor, secondaryColor } from "../../utils/constants";
+import { conditionType } from "../../utils/arrays";
+import { primaryColor } from "../../utils/constants";
 import { queryClient } from "../../utils/queryClient";
 import { showMsgToast } from "../../utils/showMsgToast";
 import { RiCoupon3Line } from "react-icons/ri";
 import { BsFunnel } from "react-icons/bs";
+import { useFlyout } from "../../hooks/useFlyout";
+import Flyout from "../../shared-components/Flyout";
+import CouponCreateUpdateForm from "./CouponsCreateUpdateForm";
 
 const key = "coupons";
 
@@ -42,9 +43,8 @@ const intitialFilter = {
 const Coupons = () => {
   const history = useHistory();
   const [selectedRows, setSelectedRows] = useState([]);
-  console.log(selectedRows.map((item) => item.id));
   const [filter, setFilter] = useState(intitialFilter);
-  console.log({ filter });
+  const { isOpen: showFlyout, openFlyout, closeFlyout } = useFlyout();
   const { data, isLoading, isFetching, error } = useQuery<any>(
     [key, , filter],
     {
@@ -65,7 +65,8 @@ const Coupons = () => {
   });
 
   const _onCreateClick = () => {
-    history.push("/coupons/create-edit");
+    // history.push("/coupons/create-edit");
+    openFlyout();
   };
   const _onEditClick = (id: string) => {
     history.push("/coupons/create-edit", { id });
@@ -302,6 +303,16 @@ const Coupons = () => {
           </Button>
         </div>
       )}
+
+      <Flyout
+        isOpen={showFlyout}
+        onClose={closeFlyout}
+        title={"Create Coupons"}
+        cancelText="Cancel"
+        width="800px"
+      >
+        <CouponCreateUpdateForm />
+      </Flyout>
     </>
   );
 };

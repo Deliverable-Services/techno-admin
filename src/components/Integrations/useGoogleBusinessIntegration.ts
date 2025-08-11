@@ -4,10 +4,10 @@ import { useHistory } from "react-router-dom";
 import { AxiosError } from "axios";
 import fivetranService, {
   FivetranConnectorStatus,
-} from "../services/fivetranService";
-import { showMsgToast } from "../utils/showMsgToast";
-import { showErrorToast } from "../utils/showErrorToast";
-import { handleApiError } from "./handleApiErrors";
+} from "../../services/fivetranService";
+import { showMsgToast } from "../../utils/showMsgToast";
+import { showErrorToast } from "../../utils/showErrorToast";
+import { handleApiError } from "../../hooks/handleApiErrors";
 
 interface UseGoogleBusinessIntegrationProps {
   organisationId?: number;

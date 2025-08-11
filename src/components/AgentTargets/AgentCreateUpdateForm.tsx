@@ -8,7 +8,6 @@ import { useMutation, useQuery } from "react-query";
 import { useHistory, useLocation } from "react-router-dom";
 import { handleApiError } from "../../hooks/handleApiErrors";
 import useGetSingleQuery from "../../hooks/useGetSingleQuery";
-import BackButton from "../../shared-components/BackButton";
 import { InputField } from "../../shared-components/InputFeild";
 import IsLoading from "../../shared-components/isLoading";
 import Restricted from "../../shared-components/Restricted";
@@ -73,7 +72,7 @@ const TargetCreateUpdateForm = () => {
   return (
     <>
       <div className="card view-padding p-2 d-flex mt-3">
-        <BackButton title={title} />
+        {/* <BackButton title={title} /> */}
         <Row className="rounded">
           <Col className="mx-auto">
             <Formik
@@ -88,7 +87,6 @@ const TargetCreateUpdateForm = () => {
                   : { agent_id: agentId }
               }
               onSubmit={(values) => {
-                console.log({ values });
                 mutate({ formdata: values, id });
               }}
             >
@@ -126,7 +124,7 @@ const TargetCreateUpdateForm = () => {
                   </div>
 
                   <Row className="d-flex justify-content-start">
-                    <Col md="2">
+                    <Col md="12">
                       <Restricted
                         to={id ? "update_agenttarget" : "create_agenttarget"}
                       >

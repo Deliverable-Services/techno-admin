@@ -6,7 +6,6 @@ import { useMutation, useQuery } from "react-query";
 import { useHistory } from "react-router-dom";
 import { Cell, TableState } from "react-table";
 import { handleApiError } from "../../hooks/handleApiErrors";
-import BreadCrumb from "../../shared-components/BreadCrumb";
 import CreatedUpdatedAt from "../../shared-components/CreatedUpdatedAt";
 import EditButton from "../../shared-components/EditButton";
 import IsActiveBadge from "../../shared-components/IsActiveBadge";
@@ -20,6 +19,9 @@ import { queryClient } from "../../utils/queryClient";
 import { showErrorToast } from "../../utils/showErrorToast";
 import { showMsgToast } from "../../utils/showMsgToast";
 import { FaDiceFour } from "react-icons/fa";
+import { useFlyout } from "../../hooks/useFlyout";
+import Flyout from "../../shared-components/Flyout";
+import CategoriesCreateUpdateForm from "./CategoriesCreateUpdateForm";
 
 const key = "categories";
 
@@ -69,6 +71,7 @@ const Categories = () => {
   const [selectedRows, setSelectedRows] = useState([]);
   const [filter, setFilter] = useState(intitialFilter);
   const [isDraggable, setIsDraggable] = useState(false);
+  const { isOpen: showFlyout, openFlyout, closeFlyout } = useFlyout();
   const handleChange = (nextChecked) => {
     setIsDraggable(nextChecked);
   };
@@ -92,7 +95,8 @@ const Categories = () => {
   });
 
   const _onCreateClick = () => {
-    history.push("/categories/create-edit");
+    // history.push("/categories/create-edit");
+    openFlyout();
   };
   const _onEditClick = (id: string) => {
     history.push("/categories/create-edit", { id });
@@ -311,6 +315,15 @@ const Categories = () => {
           </Button>
         </div>
       )}
+      <Flyout
+        isOpen={showFlyout}
+        onClose={closeFlyout}
+        title={'Create Categories'}
+        cancelText="Cancel"
+      >
+        <CategoriesCreateUpdateForm
+        />
+      </Flyout>
     </>
   );
 };

@@ -187,7 +187,6 @@ export const useAuthManager = (): AuthState => {
     }
 
     // Token is invalid, try to refresh
-    console.log("Token invalid, attempting refresh...");
     const newToken = await refreshToken(currentToken);
 
     if (newToken) {
@@ -205,7 +204,6 @@ export const useAuthManager = (): AuthState => {
     }
 
     // Both original token and refresh failed - logout
-    console.log("Authentication failed, logging out...");
     clearAuthData();
     setAuthState({
       isAuthenticated: false,
@@ -235,7 +233,10 @@ export const useAuthManager = (): AuthState => {
           return Promise.reject(error);
         }
 
-        if (error.response?.status === 401 && !(originalRequest as any)._retry) {
+        if (
+          error.response?.status === 401 &&
+          !(originalRequest as any)._retry
+        ) {
           (originalRequest as any)._retry = true;
 
           const isLoginPage =

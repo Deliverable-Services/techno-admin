@@ -1,17 +1,16 @@
+// issue form 
+
 import { AxiosError } from "axios";
 import bsCustomFileInput from "bs-custom-file-input";
 import { Form, Formik } from "formik";
 import { useEffect } from "react";
-import { Alert, Button, Col, Row, Spinner } from "react-bootstrap";
+import { Button, Col, Row, Spinner } from "react-bootstrap";
 import { useMutation, useQuery } from "react-query";
-import { useHistory, useLocation } from "react-router-dom";
+import { useHistory } from "react-router-dom";
 import { handleApiError } from "../../hooks/handleApiErrors";
-import useGetSingleQuery from "../../hooks/useGetSingleQuery";
-import BackButton from "../../shared-components/BackButton";
 import { InputField } from "../../shared-components/InputFeild";
-import IsLoading from "../../shared-components/isLoading";
 import API from "../../utils/API";
-import { isActiveArray, IssueRelatedTo, IssueStatus } from "../../utils/arrays";
+import { IssueRelatedTo } from "../../utils/arrays";
 import { queryClient } from "../../utils/queryClient";
 import { showMsgToast } from "../../utils/showMsgToast";
 
@@ -76,7 +75,7 @@ const IssuesCreateForm = ({ onHideModal }) => {
             }}
           >
             {({ setFieldValue }) => (
-              <Form>
+              <Form className="w-100 flyout-form">
                 <Row>
                   <Col md={12}>
                     <InputField
@@ -126,7 +125,7 @@ const IssuesCreateForm = ({ onHideModal }) => {
                   </Col>
                 </Row>
                 <Row className="d-flex justify-content-start">
-                  <Col md="2">
+                  <Col md="12">
                     <Button
                       type="submit"
                       disabled={isLoading}
