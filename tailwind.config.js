@@ -14,8 +14,11 @@ module.exports = {
   		colors: {
   			border: 'hsl(var(--border))',
   			input: 'hsl(var(--input))',
+			black:'var(--black)',
+			'gray-color':'var(--gray-color)',
 			blue:'var(--blue)',
 			warning:'var(--warning)',
+			sidebar:'var(--sidebar)',
 			success:'var(--success)',
 			info:'var(--info)',
 			danger:'var(--danger)',

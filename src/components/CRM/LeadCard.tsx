@@ -5,6 +5,7 @@ import { useDrag } from "react-dnd";
 import { Lead } from "./types";
 import { MessageCircle, Paperclip, Calendar } from "../../components/ui/icon";
 import moment from "moment";
+import { Card, CardContent } from "../ui/card";
 
 interface UserAvatarProps {
   profilePic?: string;
@@ -73,9 +74,8 @@ const UserAvatar: React.FC<UserAvatarProps> = ({
   if (!profilePic || showFallback) {
     return (
       <div
-        className={`flex items-center justify-center text-white rounded-full font-bold ${
-          className || ""
-        }`}
+        className={`flex items-center justify-center text-white rounded-full font-bold ${className || ""
+          }`}
         style={{
           backgroundColor,
           fontSize: `${size * 0.4}px`,
@@ -127,16 +127,16 @@ const LeadCard: React.FC<Props> = ({ lead }) => {
   };
 
   return (
-    <div
+    <Card
       ref={drag}
-      className="card shadow-sm mb-3 pointer lead-card"
+      className="card shadow-sm mb-3 cursor-pointer lead-card p-0"
       style={{
         opacity: isDragging ? 0.5 : 1,
         border: "4px solid #eb5757",
       }}
     >
-      <div className="card-body p-3">
-        <div className="d-flex justify-content-between align-items-center mb-2">
+      <CardContent>
+        <div className="flex justify-between items-center mb-2">
           <span className="text-muted small">
             {formattedDate(lead.created_at)}
           </span>
@@ -161,10 +161,10 @@ const LeadCard: React.FC<Props> = ({ lead }) => {
           </span>
         </div>
 
-        <h6 className="font-weight-bold mb-1 text-dark">{lead.name}</h6>
+        <h6 className="font-bold mb-1 text-dark">{lead.name}</h6>
 
         <p
-          className="text-muted small mb-2 d-flex align-items-center"
+          className="text-muted small mb-2 flex items-center"
           style={{
             display: "-webkit-box",
             WebkitLineClamp: 2,
@@ -178,14 +178,10 @@ const LeadCard: React.FC<Props> = ({ lead }) => {
         >
           {lead.message}
         </p>
-        <div className="d-inline-flex align-items-center mb-2">
+        <div className="inline-flex items-center mb-2">
           <span
-            className="small px-2 py-1"
-            style={{
-              backgroundColor: "#f0f0f0",
-              borderRadius: "12px",
-              fontSize: "11px",
-            }}
+            className="small px-2 py-1 flex items-center text-[11px] rounded-xl bg-[#f0f0f0]"
+
           >
             <Calendar className="mr-1 text-muted" />
             Last Updated At:{" "}
@@ -196,7 +192,7 @@ const LeadCard: React.FC<Props> = ({ lead }) => {
         </div>
 
         {/* Bottom Row: Avatar · Comment Count · Attachment Count */}
-        <div className="d-flex justify-content-between align-items-center border-top pt-2 mt-2">
+        <div className="flex justify-between items-center border-t pt-2 mt-2">
           {/* Assignee Image */}
           <UserAvatar
             profilePic={lead.user?.profile_pic}
@@ -206,19 +202,19 @@ const LeadCard: React.FC<Props> = ({ lead }) => {
           />
 
           {/* Comment & Attachments */}
-          <div className="d-flex align-items-center text-muted small">
-            <div className="d-flex align-items-center mr-3">
+          <div className="flex items-center text-muted small">
+            <div className="flex items-center mr-3">
               <MessageCircle className="mr-1" />
               {lead?.comments?.length || 0}
             </div>
-            <div className="d-flex align-items-center">
+            <div className="flex items-center">
               <Paperclip className="mr-1" />
               {lead?.extra?.attachments || 0}
             </div>
           </div>
         </div>
-      </div>
-    </div>
+      </CardContent>
+    </Card>
   );
 };
 

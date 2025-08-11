@@ -12,7 +12,7 @@ import { handleApiError } from "../hooks/handleApiErrors";
 import API from "../utils/API";
 import { useHistory } from "react-router-dom";
 import { Hammer } from "./ui/icon";
-import { Triangle, Clock, LayoutGrid, Rotate3d, LetterText, Building, BellRing, UserStar, ShieldCheck,  CircleQuestionMark, Banknote, ReceiptText, UserRoundPlus, CreditCard, Users, CircleAlert, HeartPulse, VectorSquare, Building2, Globe, Ticket , Image } from 'lucide-react';
+import { Triangle, Clock, LayoutGrid, Rotate3d, LetterText, Building, BellRing, UserStar, ShieldCheck, CircleQuestionMark, Banknote, ReceiptText, UserRoundPlus, CreditCard, Users, CircleAlert, HeartPulse, VectorSquare, Building2, Globe, Ticket, Image } from 'lucide-react';
 
 
 // === Main Navigation Sections ===
@@ -26,7 +26,7 @@ const mainLinks: Array<INavLink> = [
   },
   {
     title: "Leads",
-    icon:<Triangle />,
+    icon: <Triangle />,
     permissionReq: "read_bookingslot",
     children: [
       {
@@ -58,7 +58,7 @@ const mainLinks: Array<INavLink> = [
       {
         title: "Subscriptions",
         path: "/subscriptions",
-        icon:<UserRoundPlus />,
+        icon: <UserRoundPlus />,
         permissionReq: "read_subscription",
       },
       {
@@ -90,7 +90,7 @@ const mainLinks: Array<INavLink> = [
   {
     title: "Services",
     path: "/services",
-    icon:<HeartPulse />,
+    icon: <HeartPulse />,
     permissionReq: "read_bookingslot",
     children: [
       {
@@ -102,7 +102,7 @@ const mainLinks: Array<INavLink> = [
       {
         title: "Categories",
         path: "/categories",
-        icon:<VectorSquare />,
+        icon: <VectorSquare />,
         permissionReq: "read_category",
       },
       {
@@ -311,14 +311,14 @@ const NavBar = ({ isNavOpen, setIsNavOpen }: INavBar) => {
 
   return (
     <>
-      <nav className={isNavOpen ? "active pb-0" : ""}>
+      <nav className={`flex flex-col justify-start overflow-auto py-4 px-0 z-10 top-0 left-0 bottom-0 h-screen bg-sidebar transition-all duration-300 ease-in-out ${isNavOpen ? "active pb-0" : ""}`}>
         {isDesktop && (
-          <div className="d-flex justify-content-between align-items-center">
+          <div className="flex justify-between items-center">
             <Logo />
           </div>
         )}
 
-        <div className="all-links px-4 overflow-auto">
+        <div className="all-links px-4 overflow-auto mt-2">
           <OrganizationSwitcher
             organisations={organisations}
             selectedOrg={selectedOrg}
@@ -326,7 +326,7 @@ const NavBar = ({ isNavOpen, setIsNavOpen }: INavBar) => {
           />
 
           {/* Dashboard */}
-          <ul className="pt-4">
+          <ul className="pt-4 mb-4">
             <Navlink
               title="Dashboard"
               path="/dashboard"
@@ -341,7 +341,7 @@ const NavBar = ({ isNavOpen, setIsNavOpen }: INavBar) => {
 
           {/* Sections */}
           <p className="text-muted mb-2">MAIN</p>
-          <ul>
+          <ul className="mb-4">
             {filteredMainLinks.map((link) => (
               <Navlink
                 key={link.title}
@@ -354,7 +354,7 @@ const NavBar = ({ isNavOpen, setIsNavOpen }: INavBar) => {
             ))}
           </ul>
           <p className="text-muted mb-2">CONFIGURATIONS</p>
-          <ul>
+          <ul className="mb-4">
             {filteredOrganisationLinks.map((link) => (
               <Navlink
                 key={link.title}
@@ -370,7 +370,7 @@ const NavBar = ({ isNavOpen, setIsNavOpen }: INavBar) => {
           {filteredGoogleLinks.length > 0 && (
             <>
               <p className="text-muted mb-2">Integrations</p>
-              <ul>
+              <ul className="mb-4">
                 {filteredGoogleLinks.map((link) => (
                   <Navlink
                     key={link.title}
