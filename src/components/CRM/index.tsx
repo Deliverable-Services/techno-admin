@@ -109,7 +109,7 @@ const Index: React.FC = () => {
 
   return (
     <>
-      <div className="view-padding d-flex justify-content-between align-items-center">
+      <div className="view-padding flex justify-between items-center">
         <PageHeading
           icon={<Triangle size={24} />}
           title="CRM"

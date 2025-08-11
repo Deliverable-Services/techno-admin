@@ -11611,9 +11611,6 @@ span.status-indicator {
   color: #fff !important;
 }
 
-.text-primary {
-  color: #181d27 !important;
-}
 /* .text-darkGray {
   color: #181d27 !important;
 } */
@@ -11978,10 +11975,6 @@ td {
 
 th {
   white-space: nowrap;
-}
-
-.text-primary {
-  color: #0b64fe;
 }
 
 .text-black {

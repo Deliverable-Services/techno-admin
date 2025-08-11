@@ -47,26 +47,20 @@ const Column: React.FC<Props> = ({
   const Icon = statusIcons[status];
 
   return (
-    <div className="col-md-3 p-2 col-sm-2 ticket-width" ref={drop}>
-      <div className="rounded shadow-sm ticket-main-div postiion-relative">
+    <div className="p-2 ticket-width" ref={drop}>
+      <div className="rounded shadow-sm ticket-main-div relative">
         <div
-          className="d-flex align-items-center p-3 gap-3"
-          style={{
-            position: "sticky",
-            top: "0px",
-            zIndex: 5,
-            backgroundColor: "#fafafa",
-          }}
+          className="flex items-center p-3 gap-3 sticky top-0 z-50 bg-[#fafafa]"
         >
-          <h6 className="mb-0 font-weight-bold text-uppercase text-primary text-capitalize d-flex align-items-center">
+          <h6 className="mb-0 font-bold text-primary capitalize flex items-center">
             {Icon} {title}
           </h6>
           <span className="badge badge-light">{leads?.length} Leads</span>
         </div>
 
         <div
-          className="p-3"
-          style={{ maxHeight: "calc(100vh - 280px)", overflow: "auto" }}
+          className="p-3 overflow-auto"
+          style={{ maxHeight: "calc(100vh - 280px)" }}
         >
           {leads?.map((lead) => (
             <div key={lead.id} onClick={() => onCardClick(lead.id)}>

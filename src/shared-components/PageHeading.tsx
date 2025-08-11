@@ -34,14 +34,14 @@ const PageHeading: React.FC<Props> = ({
         )}
         <div>
           <div>
-            <span className="page-title">{title}</span>
+            <span className="page-title text-black text-[22px] leading-8 font-semibold">{title}</span>
             {totalRecords ? (
               <small style={{ fontSize: 14, marginLeft: 5 }}>
                 ({totalRecords})
               </small>
             ) : null}
           </div>
-          <span className="page-description">{description}</span>
+          <span className="page-description text-gray-color text-sm font-normal">{description}</span>
         </div>
       </p>
 

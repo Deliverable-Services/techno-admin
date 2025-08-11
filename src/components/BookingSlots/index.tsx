@@ -170,7 +170,7 @@ const Meetings = () => {
       <hr />
 
       <Container fluid className="card component-wrapper view-padding">
-        <Container fluid className="h-100 p-0">
+        <Container fluid className="h-full p-0">
           {isLoading ? (
             <IsLoading />
           ) : (
