@@ -1,7 +1,6 @@
 import moment from "moment";
 import React, { useState } from "react";
-import { Col, Container, Form, Row } from "react-bootstrap";
-import { BiSad } from "react-icons/bi";
+import { Col, Container, Form, Row } from "../ui/bootstrap-compat";
 import { useMutation } from "react-query";
 import { useHistory, useParams } from "react-router-dom";
 import useGetSingleQuery from "../../hooks/useGetSingleQuery";
@@ -14,6 +13,7 @@ import { primaryColor } from "../../utils/constants";
 import { queryClient } from "../../utils/queryClient";
 import { showMsgToast } from "../../utils/showMsgToast";
 import ChatBox from "./ChatBox";
+import { Hammer } from "../ui/icon";
 
 const key = "tickets";
 const dateFormat = "DD MMMM YY (hh:mm a)";
@@ -91,7 +91,7 @@ const SingleIssue = () => {
     return (
       <Container fluid className="d-flex justify-content-center display-3">
         <div className="d-flex flex-column align-items-center">
-          <BiSad color={primaryColor} />
+          <Hammer color={primaryColor} />
           <span className="text-primary display-3">Something went wrong</span>
         </div>
       </Container>

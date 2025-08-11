@@ -1,7 +1,6 @@
 import { AxiosError } from "axios";
 import React, { useMemo, useState } from "react";
-import { Button, Container, Nav } from "react-bootstrap";
-import { BiSad } from "react-icons/bi";
+import { Button, Container, Nav } from "../ui/bootstrap-compat";
 import { useMutation, useQuery } from "react-query";
 import { useHistory } from "react-router-dom";
 import { Cell } from "react-table";
@@ -18,7 +17,7 @@ import API from "../../utils/API";
 import { config, primaryColor } from "../../utils/constants";
 import { queryClient } from "../../utils/queryClient";
 import { showMsgToast } from "../../utils/showMsgToast";
-import { SiBrandfolder } from "react-icons/si";
+import { Hammer } from "../ui/icon";
 
 const key = "brands";
 
@@ -147,7 +146,7 @@ const Brands = () => {
     return (
       <Container fluid className="d-flex justify-content-center display-3">
         <div className="d-flex flex-column align-items-center">
-          <BiSad color={primaryColor} />
+          <Hammer color={primaryColor} />
           <span className="text-primary display-3">Something went wrong</span>
         </div>
       </Container>
@@ -158,7 +157,7 @@ const Brands = () => {
     <>
       <Container fluid className="component-wrapper view-padding">
         <PageHeading
-          icon={<SiBrandfolder />}
+          icon={<Hammer />}
           title="Brands"
           onClick={_onCreateClick}
           totalRecords={data?.total}

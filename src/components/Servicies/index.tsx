@@ -1,7 +1,6 @@
 import { AxiosError } from "axios";
 import { useMemo, useState } from "react";
-import { Button, Container } from "react-bootstrap";
-import { BiSad } from "react-icons/bi";
+import { Button, Container } from "../ui/bootstrap-compat";
 import { useMutation, useQuery } from "react-query";
 import { useHistory } from "react-router-dom";
 import { Cell } from "react-table";
@@ -18,10 +17,10 @@ import API from "../../utils/API";
 import { primaryColor } from "../../utils/constants";
 import { queryClient } from "../../utils/queryClient";
 import { showMsgToast } from "../../utils/showMsgToast";
-import { RiServiceFill } from "react-icons/ri";
 import { useFlyout } from "../../hooks/useFlyout";
 import Flyout from "../../shared-components/Flyout";
 import ServicesCreateUpdateForm from "./ServiciesCreateUpdateForm";
+import { Hammer } from "../ui/icon";
 
 const key = "services";
 
@@ -140,7 +139,7 @@ const Services = () => {
     return (
       <Container fluid className="d-flex justify-content-center display-3">
         <div className="d-flex flex-column align-items-center">
-          <BiSad color={primaryColor} />
+          <Hammer color={primaryColor} />
           <span className="text-primary display-3">Something went wrong</span>
         </div>
       </Container>
@@ -151,7 +150,7 @@ const Services = () => {
     <>
       <div className="view-padding">
         <PageHeading
-          icon={<RiServiceFill size={24} />}
+          icon={<Hammer size={24} />}
           description="Create and manage service"
           title="Services"
           onClick={_onCreateClick}

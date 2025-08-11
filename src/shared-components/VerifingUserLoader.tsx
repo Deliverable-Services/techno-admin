@@ -1,8 +1,7 @@
 import React from "react";
-import { Container } from "react-bootstrap";
-import { FaShieldAlt, FaUserCheck, FaLock } from "react-icons/fa";
-import { MdVerifiedUser } from "react-icons/md";
+import { Container } from "../components/ui/grid";
 import { primaryColor } from "../utils/constants";
+import { Hammer } from "../components/ui/icon";
 
 const VerifingUserLoader = () => {
   return (
@@ -69,7 +68,7 @@ const VerifingUserLoader = () => {
               animation: "pulse-glow 2s ease-in-out infinite",
             }}
           >
-            <FaShieldAlt size={40} color="white" />
+            <Hammer size={40} color="white" />
           </div>
 
           <div
@@ -85,7 +84,7 @@ const VerifingUserLoader = () => {
               animation: "bounce-in 1s ease-out 0.5s both",
             }}
           >
-            <MdVerifiedUser size={14} color="white" />
+            <Hammer size={14} color="white" />
           </div>
 
           <div
@@ -101,7 +100,7 @@ const VerifingUserLoader = () => {
               animation: "bounce-in 1s ease-out 1s both",
             }}
           >
-            <FaLock size={10} color="white" />
+            <Hammer size={10} color="white" />
           </div>
 
           <div
@@ -117,7 +116,7 @@ const VerifingUserLoader = () => {
               animation: "bounce-in 1s ease-out 1.5s both",
             }}
           >
-            <FaUserCheck size={12} color="white" />
+            <Hammer size={12} color="white" />
           </div>
         </div>
 

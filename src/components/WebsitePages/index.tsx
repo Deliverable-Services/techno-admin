@@ -1,10 +1,10 @@
 import { useState, useEffect } from "react";
-import { Nav } from "react-bootstrap";
+import { Nav } from "../ui/bootstrap-compat";
 import { useHistory, useLocation } from "react-router-dom";
 import PageHeading from "../../shared-components/PageHeading";
 import StaticPages from "../StaticPages";
 import DynamicPages from "../DynamicPages";
-import { RiGlobalLine } from "react-icons/ri";
+import { Hammer } from "../ui/icon";
 
 const intitialFilter = {
   q: "",
@@ -53,7 +53,11 @@ const WebsitePages = () => {
   return (
     <>
       <div className="view-padding">
-        <PageHeading icon={<RiGlobalLine size={24} />} title="Website Pages" description="Create and manage website pages" />
+        <PageHeading
+          icon={<Hammer size={24} />}
+          title="Website Pages"
+          description="Create and manage website pages"
+        />
       </div>
       <hr />
       <div className="h-100 mt-2">

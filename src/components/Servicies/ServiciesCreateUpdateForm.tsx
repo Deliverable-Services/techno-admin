@@ -1,15 +1,8 @@
 import { AxiosError } from "axios";
-import bsCustomFileInput from "bs-custom-file-input";
+// Removed bs-custom-file-input
 import { Form, Formik } from "formik";
 import { useEffect } from "react";
-import {
-  Button,
-  Col,
-  Row,
-  Spinner,
-  Form as BForm,
-} from "react-bootstrap";
-import { FaTrash } from "react-icons/fa";
+import { Button, Col, Row, Spinner, Form as BForm } from "../ui/bootstrap-compat";
 import { useMutation, useQuery } from "react-query";
 import { useHistory, useLocation } from "react-router-dom";
 import { handleApiError } from "../../hooks/handleApiErrors";
@@ -23,6 +16,7 @@ import API from "../../utils/API";
 import { isActiveArray } from "../../utils/arrays";
 import { queryClient } from "../../utils/queryClient";
 import { showMsgToast } from "../../utils/showMsgToast";
+import { Hammer } from "../ui/icon";
 
 const key = "services";
 
@@ -54,9 +48,7 @@ const ServicesCreateUpdateForm = () => {
   const { state } = useLocation();
   const id = state ? (state as any).id : null;
   const history = useHistory();
-  useEffect(() => {
-    bsCustomFileInput.init();
-  }, []);
+  useEffect(() => {}, []);
   const { data, isLoading: dataLoading } = useGetSingleQuery({ id, key });
   const { data: categories, isLoading: isCategoriesLoading } =
     useQuery("categories");
@@ -98,7 +90,7 @@ const ServicesCreateUpdateForm = () => {
     let values = {
       ...apiData,
       enablePayment: apiData?.enablePayment || false,
-      paymentAmount: apiData?.paymentAmount || ""
+      paymentAmount: apiData?.paymentAmount || "",
     };
     CarType?.data?.map((car) => {
       const obj = apiData.brand_type_services.find(
@@ -120,13 +112,18 @@ const ServicesCreateUpdateForm = () => {
           <Col className="mx-auto">
             <Formik
               enableReinitialize
-              initialValues={apiData ? formIntialValues() : {
-                enablePayment: false,
-                paymentAmount: ""
-              }}
+              initialValues={
+                apiData
+                  ? formIntialValues()
+                  : {
+                      enablePayment: false,
+                      paymentAmount: "",
+                    }
+              }
               onSubmit={(values) => {
                 const formdata = new FormData();
-                const { image, images, enablePayment, paymentAmount, ...rest } = values;
+                const { image, images, enablePayment, paymentAmount, ...rest } =
+                  values;
                 for (let k in rest) formdata.append(k, rest[k]);
 
                 for (let k in images) formdata.append("images[]", images[k]);
@@ -197,10 +194,13 @@ const ServicesCreateUpdateForm = () => {
 
                     {/* Payment Checkbox and Input Field */}
                     <BForm.Group style={{ marginBottom: "0px" }}>
-                      <div className="d-flex align-items-center" style={{ gap: "5px", marginBottom: "4px" }}>
+                      <div
+                        className="d-flex align-items-center"
+                        style={{ gap: "5px", marginBottom: "4px" }}
+                      >
                         <input
                           type="checkbox"
-                          style={{ width: '15px', height: '15px' }}
+                          style={{ width: "15px", height: "15px" }}
                           id="enablePayment"
                           checked={values.enablePayment || false}
                           onChange={(e) => {
@@ -210,7 +210,9 @@ const ServicesCreateUpdateForm = () => {
                             }
                           }}
                         />
-                        <BForm.Label htmlFor="enablePayment" className="mb-0">Payment</BForm.Label>
+                        <BForm.Label htmlFor="enablePayment" className="mb-0">
+                          Payment
+                        </BForm.Label>
                       </div>
                       {values.enablePayment && (
                         <InputField
@@ -221,8 +223,6 @@ const ServicesCreateUpdateForm = () => {
                         />
                       )}
                     </BForm.Group>
-
-
                   </div>
                   {/* <Container fluid className="p-0">
                     <PageHeading title="Prices" />
@@ -369,7 +369,7 @@ const ServicesCreateUpdateForm = () => {
                                         setFieldValue("images", values.images);
                                       }}
                                     >
-                                      <FaTrash />
+                                      <Hammer />
                                     </div>
                                   </div>
                                 </div>

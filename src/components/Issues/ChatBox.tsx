@@ -2,8 +2,7 @@ import { AxiosError } from "axios";
 import { Form, Formik } from "formik";
 import moment from "moment";
 import React from "react";
-import { Container } from "react-bootstrap";
-import { RiSendPlane2Fill } from "react-icons/ri";
+import { Container } from "../ui/bootstrap-compat";
 import { useMutation } from "react-query";
 import { useHistory } from "react-router-dom";
 import { handleApiError } from "../../hooks/handleApiErrors";
@@ -11,6 +10,7 @@ import useUserProfileStore from "../../hooks/useUserProfileStore";
 import API from "../../utils/API";
 import { primaryColor } from "../../utils/constants";
 import { queryClient } from "../../utils/queryClient";
+import { Hammer } from "../ui/icon";
 
 const key = "tickets";
 
@@ -205,7 +205,7 @@ const ChatBox = ({
                       onChange={handleChange}
                     />
                     <button type="submit">
-                      <RiSendPlane2Fill color={primaryColor} size={24} />
+                      <Hammer color={primaryColor} size={24} />
                     </button>
                   </div>
                 </Form>

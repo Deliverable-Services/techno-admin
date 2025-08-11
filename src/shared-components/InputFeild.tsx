@@ -1,6 +1,6 @@
 import React, { ChangeEvent, ElementType, InputHTMLAttributes } from "react";
 import { useField } from "formik";
-import { Form } from "react-bootstrap";
+import { Form } from "../components/ui/bootstrap-compat";
 import TableImage from "./TableImage";
 import { DefaultInputHeight } from "../utils/constants";
 
@@ -56,11 +56,10 @@ export const InputField: React.FC<InputFieldProps> = ({
       <Form.Group>
         {label ? <Form.Label htmlFor={field.name}>{label}</Form.Label> : null}
         {isFile ? (
-          <Form.File
+          <Form.Control
+            type="file"
             name={field.name + "[]"}
             id="custom-file"
-            label="Choose file"
-            custom
             onChange={(e: ChangeEvent) => {
               const input = (e.currentTarget as HTMLInputElement).files;
               if (input && setFieldValue) {

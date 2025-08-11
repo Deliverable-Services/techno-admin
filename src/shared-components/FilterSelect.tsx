@@ -1,5 +1,5 @@
 import React from "react";
-import { Form } from "react-bootstrap";
+import { Form } from "../components/ui/bootstrap-compat";
 
 interface Props {
   onFilterChange: (idx: string, value: any) => void;

@@ -1,57 +1,38 @@
-import { BsClock, BsShieldLock } from "react-icons/bs";
-import {
-  FaAddressCard,
-  FaDiceFour,
-  FaMoneyCheck,
-  FaQuestionCircle,
-} from "react-icons/fa";
-import { ImUsers } from "react-icons/im";
-import { MdKeyboardArrowRight } from "react-icons/md";
-import "./index.css";
 import { useHistory } from "react-router-dom";
-import { GoIssueOpened } from "react-icons/go";
-import { IoLogoModelS } from "react-icons/io";
-import { SiBrandfolder } from "react-icons/si";
-import {
-  RiAdminFill,
-  RiAdvertisementFill,
-  RiGlobalLine,
-  RiNotification2Line,
-} from "react-icons/ri";
-import { AiFillIdcard, AiFillSetting } from "react-icons/ai";
-import { BiLogOut } from "react-icons/bi";
+
 import { useMutation } from "react-query";
 import API from "../../utils/API";
 import useTokenStore from "../../hooks/useTokenStore";
 import useUserProfileStore from "../../hooks/useUserProfileStore";
 import { EditAccountCard } from "./EditAccountCard";
+import { Hammer } from "../ui/icon";
 
 const sections = [
   {
     title: "Leads & Customers",
     items: [
       {
-        icon: <BsClock />,
+        icon: <Hammer />,
         name: "Bookings",
         linkTo: "/crm-bookings",
       },
       {
-        icon: <ImUsers />,
+        icon: <Hammer />,
         name: "Customers",
         linkTo: "/users",
       },
       {
-        icon: <FaAddressCard />,
+        icon: <Hammer />,
         name: "Subscriptions",
         linkTo: "/subscriptions",
       },
       {
-        icon: <FaMoneyCheck />,
+        icon: <Hammer />,
         name: "Transactions",
         linkTo: "/transactions",
       },
       {
-        icon: <GoIssueOpened />,
+        icon: <Hammer />,
         name: "Help Center",
         linkTo: "/issues",
       },
@@ -61,17 +42,17 @@ const sections = [
     title: "Products & Services",
     items: [
       {
-        icon: <IoLogoModelS />,
+        icon: <Hammer />,
         name: "Products",
         linkTo: "/products",
       },
       {
-        icon: <SiBrandfolder />,
+        icon: <Hammer />,
         name: "Product Brands",
         linkTo: "/product-brands",
       },
       {
-        icon: <FaDiceFour />,
+        icon: <Hammer />,
         name: "Categories",
         linkTo: "/categories",
       },
@@ -81,17 +62,17 @@ const sections = [
     title: "Products & Services",
     items: [
       {
-        icon: <IoLogoModelS />,
+        icon: <Hammer />,
         name: "Products",
         linkTo: "/products",
       },
       {
-        icon: <SiBrandfolder />,
+        icon: <Hammer />,
         name: "Product Brands",
         linkTo: "/product-brands",
       },
       {
-        icon: <FaDiceFour />,
+        icon: <Hammer />,
         name: "Categories",
         linkTo: "/categories",
       },
@@ -101,22 +82,22 @@ const sections = [
     title: "Websites & Pages",
     items: [
       {
-        icon: <FaQuestionCircle />,
+        icon: <Hammer />,
         name: "Faqs",
         linkTo: "/faqs",
       },
       {
-        icon: <RiAdvertisementFill />,
+        icon: <Hammer />,
         name: "Banners",
         linkTo: "/advertisements",
       },
       {
-        icon: <AiFillIdcard />,
+        icon: <Hammer />,
         name: "Testimonials",
         linkTo: "/testimonials",
       },
       {
-        icon: <RiGlobalLine />,
+        icon: <Hammer />,
         name: "Website Pages",
         linkTo: "/website-pages",
       },
@@ -126,29 +107,29 @@ const sections = [
     title: "ORGANIZATION & SETTINGS",
     items: [
       {
-        icon: <RiAdminFill />,
+        icon: <Hammer />,
         name: "Team Members",
         linkTo: "/team-members",
       },
       {
-        icon: <BsShieldLock />,
+        icon: <Hammer />,
         name: "Roles & Permissions",
         linkTo: "/permissions",
       },
       {
-        icon: <AiFillSetting />,
+        icon: <Hammer />,
         name: "Configurations",
         linkTo: "/configurations",
       },
       {
-        icon: <RiGlobalLine />,
+        icon: <Hammer />,
         name: "Organization",
         linkTo: "/organization",
       },
       {
         name: "Notification/Sms",
         linkTo: "/notifications",
-        icon: <RiNotification2Line />,
+        icon: <Hammer />,
       },
     ],
   },
@@ -177,35 +158,38 @@ export const MoreScreen = () => {
   });
 
   return (
-    <div className="sections-container m-3">
+    <div className="flex flex-col gap-3 pb-10 m-3">
       <EditAccountCard />
       {sections?.map((item, index) => (
-        <div className="section-container" key={index + 1}>
-          <p className="section-heading">{item?.title}</p>
-          <div className="items-container">
+        <div className="flex flex-col gap-2" key={index + 1}>
+          <p className="text-lg font-semibold pl-1">{item?.title}</p>
+          <div className="flex flex-col gap-7 p-6 rounded-2xl bg-white border border-gray-200 shadow-sm">
             {item?.items?.map((item, index) => (
               <div
-                className="item-container"
+                className="flex flex-row justify-between cursor-pointer"
                 key={index + 1}
                 onClick={() => history.push(item?.linkTo)}
               >
-                <div className="item-left-container">
+                <div className="flex flex-row gap-3 items-center">
                   {item?.icon}
-                  <p className="item-title">{item?.name}</p>
+                  <p className="text-base font-medium">{item?.name}</p>
                 </div>
                 <div>
-                  <MdKeyboardArrowRight />
+                  <Hammer />
                 </div>
               </div>
             ))}
           </div>
         </div>
       ))}
-      <div className="items-container">
-        <div className="item-container" onClick={() => mutate()}>
-          <div className="item-left-container">
-            <BiLogOut className="mr-2" />
-            <p className="item-title">Log Out</p>
+      <div className="flex flex-col gap-7 p-6 rounded-2xl bg-white border border-gray-200 shadow-sm">
+        <div
+          className="flex flex-row justify-between cursor-pointer"
+          onClick={() => mutate()}
+        >
+          <div className="flex flex-row gap-3 items-center">
+            <Hammer className="mr-2" />
+            <p className="text-base font-medium">Log Out</p>
           </div>
         </div>
       </div>

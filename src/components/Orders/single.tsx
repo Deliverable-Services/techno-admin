@@ -1,10 +1,7 @@
 import { AxiosError } from "axios";
 import moment from "moment";
 import React, { useState } from "react";
-import { Button, Col, Container, Form, Row } from "react-bootstrap";
-import { AiFillPlusSquare } from "react-icons/ai";
-import { BiDownload, BiSad } from "react-icons/bi";
-import { GoArrowLeft } from "react-icons/go";
+import { Button, Col, Container, Form, Row } from "../ui/bootstrap-compat";
 import { useMutation, useQuery } from "react-query";
 import { useHistory, useParams } from "react-router-dom";
 import Map from "../../components/Map";
@@ -20,15 +17,18 @@ import { queryClient } from "../../utils/queryClient";
 import renderHTML from "../../utils/renderHTML";
 import { showErrorToast } from "../../utils/showErrorToast";
 import { showMsgToast } from "../../utils/showMsgToast";
-import ProgressBar from "./ProgressBar";
+// replaced legacy ProgressBar with shadcn progress
+import { Progress } from "../ui/progress";
 import { config } from "../../utils/constants";
+import { Hammer } from "../ui/icon";
 
 const key = "bookings";
 const dateFormat = "DD MMMM YY (hh:mm a)";
 
-
 function saveAsFile(blog, filename = "jobcard.pdf") {
-  const url = window.URL.createObjectURL(new Blob([blog], { type: "octet/stream" }));
+  const url = window.URL.createObjectURL(
+    new Blob([blog], { type: "octet/stream" })
+  );
   const link = document.createElement("a");
   link.href = url;
   link.setAttribute("download", filename);
@@ -36,7 +36,6 @@ function saveAsFile(blog, filename = "jobcard.pdf") {
   link.click();
   link.remove();
 }
-
 
 const assignAgent = ({
   formdata,
@@ -198,7 +197,7 @@ const SingleOrder = () => {
     return (
       <Container fluid className="d-flex justify-content-center display-3">
         <div className="d-flex flex-column align-items-center">
-          <BiSad color={primaryColor} />
+          <Hammer color={primaryColor} />
           <span className="text-primary display-3">Something went wrong</span>
         </div>
       </Container>
@@ -207,16 +206,19 @@ const SingleOrder = () => {
   // console.log(data);
   return (
     <Container fluid className="component-wrapper px-0 py-2">
-      <Button className="ml-2 back-btn" onClick={() => history.goBack()} size="sm">
+      <Button
+        className="ml-2 back-btn"
+        onClick={() => history.goBack()}
+        size="sm"
+      >
         <div className="d-flex align-items-center">
-          <GoArrowLeft /> <p className="ml-1 mb-0">Back</p>
+          <Hammer /> <p className="ml-1 mb-0">Back</p>
         </div>
       </Button>
       <Container
         fluid
         className="d-flex justify-content-between py-2 flex-column flex-md-row"
       >
-
         <div className="d-flex align-md-items-center flex-column flex-md-row">
           <div className="d-flex align-items-center mb-1 mb-md-0">
             <p className=" mb-0">Order</p>
@@ -242,9 +244,15 @@ const SingleOrder = () => {
               <p className="text-white m-0">Downloading...</p>
             ) : (
               <div className=" d-flex align-items-center text-white gap-3">
-                <BiDownload size={18} />
+                <Hammer size={18} />
 
-                <a target="_blank" href={config.adminApiBaseUrl + "job-card-pdf/" + id} rel="noreferrer">Job Card</a>
+                <a
+                  target="_blank"
+                  href={config.adminApiBaseUrl + "job-card-pdf/" + id}
+                  rel="noreferrer"
+                >
+                  Job Card
+                </a>
               </div>
             )}
           </Button>
@@ -259,7 +267,7 @@ const SingleOrder = () => {
                 <p className="text-white m-0">Downloading...</p>
               ) : (
                 <div className=" d-flex align-items-center text-white gap-3">
-                  <BiDownload size={18} />
+                  <Hammer size={18} />
 
                   <p className="mb-0 ml-1">Invoice</p>
                 </div>
@@ -273,13 +281,10 @@ const SingleOrder = () => {
               onClick={() => _onCreateIssueClick()}
             >
               <div className="d-flex text-white align-items-center">
-                <AiFillPlusSquare size={18} />{" "}
-                <p className="mb-0 ml-1">Issue</p>
+                <Hammer size={18} /> <p className="mb-0 ml-1">Issue</p>
               </div>
             </Button>
           </Restricted>
-
-
         </div>
       </Container>
 
@@ -290,7 +295,37 @@ const SingleOrder = () => {
       )}
 
       <div className="w-75 mx-auto">
-        <ProgressBar orderStatus={data?.status} />
+        {(() => {
+          const steps = [
+            "confirmed",
+            "reached",
+            "picked",
+            "transit",
+            "processing",
+            "fulfilled",
+          ] as const;
+          const idx = steps.indexOf((data?.status || "").toLowerCase() as any);
+          const percent = idx >= 0 ? ((idx + 1) / steps.length) * 100 : 0;
+          return (
+            <div>
+              <div className="mb-2 flex justify-between text-xs text-muted-foreground">
+                {steps.map((s) => (
+                  <span
+                    key={s}
+                    className={`capitalize ${
+                      s === (data?.status || "").toLowerCase()
+                        ? "text-primary font-semibold"
+                        : ""
+                    }`}
+                  >
+                    {s}
+                  </span>
+                ))}
+              </div>
+              <Progress value={percent} />
+            </div>
+          );
+        })()}
       </div>
 
       <div className="dashboard-page w-100">

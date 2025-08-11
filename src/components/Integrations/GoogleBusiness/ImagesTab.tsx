@@ -8,7 +8,7 @@ import {
   Badge,
   Pagination,
   Alert,
-} from "react-bootstrap";
+} from "../../ui/bootstrap-compat";
 import { useQuery } from "react-query";
 import googleBusinessService, {
   BusinessImage,
@@ -99,7 +99,7 @@ const ImagesTab: React.FC<ImagesTabProps> = ({ organisationId }) => {
               <i className="fas fa-images me-2 text-primary"></i>
               Business Images
               {imagesData?.total && (
-                <Badge variant="secondary" className="ms-2">
+                <Badge bg="secondary" className="ms-2">
                   {imagesData.total} total
                 </Badge>
               )}
@@ -182,7 +182,7 @@ const ImagesTab: React.FC<ImagesTabProps> = ({ organisationId }) => {
 
                   {/* Image Type Badge */}
                   <Badge
-                    variant={getImageTypeBadge(image.image_type)}
+                    bg={getImageTypeBadge(image.image_type)}
                     className="position-absolute top-0 start-0 m-2"
                   >
                     <i
@@ -328,9 +328,7 @@ const ImagesTab: React.FC<ImagesTabProps> = ({ organisationId }) => {
                     <strong className="d-block text-muted small mb-1">
                       IMAGE TYPE
                     </strong>
-                    <Badge
-                      variant={getImageTypeBadge(selectedImage.image_type)}
-                    >
+                    <Badge bg={getImageTypeBadge(selectedImage.image_type)}>
                       {selectedImage.image_type}
                     </Badge>
                   </div>

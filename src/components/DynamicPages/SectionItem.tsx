@@ -1,6 +1,6 @@
 import { useDrag } from "react-dnd";
-import { BiGridVertical } from "react-icons/bi";
 import API from "../../utils/API";
+import { Hammer } from "../ui/icon";
 
 const SectionItem = ({ section }) => {
   const [, drag] = useDrag(() => ({
@@ -22,7 +22,7 @@ const SectionItem = ({ section }) => {
             className="rounded-lg"
           />
           <div className="text-black-50">
-            <BiGridVertical size={16} />
+            <Hammer size={16} />
           </div>
         </div>
 

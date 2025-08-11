@@ -1,8 +1,8 @@
 import { AxiosError } from "axios";
-import bsCustomFileInput from "bs-custom-file-input";
+// Removed bs-custom-file-input
 import { FieldArray, Form, Formik } from "formik";
 import { useEffect } from "react";
-import { Button, Col, Row, Spinner } from "react-bootstrap";
+import { Button, Col, Row, Spinner } from "../ui/bootstrap-compat";
 import { useMutation, useQuery } from "react-query";
 import { useHistory, useLocation } from "react-router-dom";
 import { handleApiError } from "../../hooks/handleApiErrors";
@@ -16,7 +16,7 @@ import { queryClient } from "../../utils/queryClient";
 import { showMsgToast } from "../../utils/showMsgToast";
 import ImagesContainer from "../../shared-components/ImagesContainer";
 import Restricted from "../../shared-components/Restricted";
-import { FaTrash } from "react-icons/fa";
+import { Hammer } from "../ui/icon";
 
 const key = "plans";
 
@@ -47,9 +47,7 @@ const PlanCreateUpdateForm = () => {
   const history = useHistory();
   const { state } = useLocation();
   const id = state ? (state as any).id : null;
-  useEffect(() => {
-    bsCustomFileInput.init();
-  }, []);
+  useEffect(() => {}, []);
 
   const { data: categories, isLoading: isCategoriesLoading } = useQuery<any>([
     "categories",
@@ -345,7 +343,7 @@ const PlanCreateUpdateForm = () => {
                                           );
                                         }}
                                       >
-                                        <FaTrash />
+                                        <Hammer />
                                       </div>
                                     </div>
                                   </div>

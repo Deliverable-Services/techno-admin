@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Button, Container, Modal, Spinner } from "react-bootstrap";
+import { Button, Container, Modal, Spinner } from "../ui/bootstrap-compat";
 import FullCalendar from "@fullcalendar/react";
 import dayGridPlugin from "@fullcalendar/daygrid";
 import timeGridPlugin from "@fullcalendar/timegrid";
@@ -11,21 +11,19 @@ import moment from "moment";
 import dayjs from "dayjs";
 import API from "../../utils/API";
 import { CommonModal } from "../CommonPopup/CommonModal";
-import "./meeting.css";
-import "./calendar-overrides.css";
 import PageHeading from "../../shared-components/PageHeading";
 import { handleApiError } from "../../hooks/handleApiErrors";
 import { AxiosError } from "axios";
 import { useHistory } from "react-router-dom";
 import { queryClient } from "../../utils/queryClient";
 import { showMsgToast } from "../../utils/showMsgToast";
-import { BsClock } from "react-icons/bs";
 import { useFlyout } from "../../hooks/useFlyout";
 import Flyout from "../../shared-components/Flyout";
 // import SlotCreateUpdateForm from "./BookingSlotsCreateUpdateForm";
 import IsLoading from "../../shared-components/isLoading";
 import MeetingDetails from "./MeetingDetails";
 import CreateUpdateMeeting from "./CreateUpdateMeeting";
+import { Hammer } from "../ui/icon";
 
 const key = "meetings";
 
@@ -158,7 +156,7 @@ const Meetings = () => {
     <>
       <div className="view-padding">
         <PageHeading
-          icon={<BsClock size={24} />}
+          icon={<Hammer size={24} />}
           title="Meetings"
           description="Manage all booked meetings from here"
           onClick={_onCreateClick}

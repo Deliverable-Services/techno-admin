@@ -1,11 +1,8 @@
 import { AxiosError } from "axios";
-import bsCustomFileInput from "bs-custom-file-input";
 import { Field, Form, Formik } from "formik";
 import moment from "moment";
 import { useEffect, useMemo, useState } from "react";
-import { Button, Col, Row, Spinner } from "react-bootstrap";
-import { MdEmail, MdNotificationsActive, MdTextsms } from "react-icons/md";
-import { RiTimerFill } from "react-icons/ri";
+import { Button, Col, Row, Spinner } from "../ui/bootstrap-compat";
 import { useMutation, useQuery } from "react-query";
 import { useHistory, useLocation } from "react-router-dom";
 import { Cell } from "react-table";
@@ -25,7 +22,7 @@ import { primaryColor } from "../../utils/constants";
 import { queryClient } from "../../utils/queryClient";
 import { showMsgToast } from "../../utils/showMsgToast";
 import PageHeading from "../../shared-components/PageHeading";
-import { AiOutlinePlus } from "react-icons/ai";
+import { Hammer } from "../ui/icon";
 
 const key = "fcm-notification";
 
@@ -58,9 +55,7 @@ const NotificationCreateUpdateForm = () => {
   // > | null>(null);
 
   const [filter, setFilter] = useState(intitialFilter);
-  useEffect(() => {
-    bsCustomFileInput.init();
-  }, []);
+  useEffect(() => {}, []);
   const { data, isLoading: dataLoading } = useGetSingleQuery({ id, key });
 
   const {
@@ -155,7 +150,7 @@ const NotificationCreateUpdateForm = () => {
                     <Spinner animation="border" size="sm" />
                   ) : (
                     <div className="text-white d-flex align-items-center">
-                      <AiOutlinePlus size={18} />
+                      <Hammer size={18} />
                       <span className="mb-0 ml-1">Create</span>
                     </div>
                   )}
@@ -205,7 +200,7 @@ const NotificationCreateUpdateForm = () => {
                         <Field type="radio" name="is_sms" value="1" />
                         <p className="m-0 mx-2 lead">
                           <span className="mx-1">
-                            <MdTextsms />
+                            <Hammer />
                           </span>
                           SMS
                         </p>
@@ -214,7 +209,7 @@ const NotificationCreateUpdateForm = () => {
                         <Field type="radio" name="is_sms" value="0" />
                         <p className="m-0 mx-2 lead">
                           <span className="mx-1">
-                            <MdNotificationsActive />
+                            <Hammer />
                           </span>
                           Notification
                         </p>
@@ -223,7 +218,7 @@ const NotificationCreateUpdateForm = () => {
                         <Field type="radio" name="is_sms" value="0" />
                         <p className="m-0 mx-2 lead">
                           <span className="mx-1">
-                            <MdEmail />
+                            <Hammer />
                           </span>
                           Email
                         </p>
@@ -258,7 +253,7 @@ const NotificationCreateUpdateForm = () => {
                       <Col md={12} xl={12}>
                         {values.is_sms === "0" && (
                           <h4 className="font-weight-bold d-flex align-items-center ">
-                            <RiTimerFill size={24} /> <span> Schedule</span>
+                            <Hammer size={24} /> <span> Schedule</span>
                           </h4>
                         )}
                         {values.is_sms === "0" && !id && (

@@ -1,10 +1,10 @@
-// issue form 
+// issue form
 
 import { AxiosError } from "axios";
-import bsCustomFileInput from "bs-custom-file-input";
+// Removed bs-custom-file-input
 import { Form, Formik } from "formik";
 import { useEffect } from "react";
-import { Button, Col, Row, Spinner } from "react-bootstrap";
+import { Button, Col, Row, Spinner } from "../ui/bootstrap-compat";
 import { useMutation, useQuery } from "react-query";
 import { useHistory } from "react-router-dom";
 import { handleApiError } from "../../hooks/handleApiErrors";
@@ -25,9 +25,7 @@ const createTicket = ({ formdata }: { formdata: any }) => {
 const IssuesCreateForm = ({ onHideModal }) => {
   // const { state } = useLocation();
   const history = useHistory();
-  useEffect(() => {
-    bsCustomFileInput.init();
-  }, []);
+  useEffect(() => {}, []);
 
   const { data: customersList } = useQuery<any>(
     [`users?role=customer&perPage=1000`, ,],

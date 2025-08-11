@@ -11919,6 +11919,8 @@ nav .navLink {
   padding: 5px 20px;
   letter-spacing: 0px;
   border-left: 4px solid transparent;
+  display: flex;
+  align-items: center;
 }
 
 nav .navLink svg {
@@ -12203,27 +12205,23 @@ th {
 .tab-btn-row {
   display: -ms-grid;
   display: grid;
-  -ms-grid-columns: (1fr) [3];
+  /* legacy ms-grid removed: -ms-grid-columns */
   grid-template-columns: repeat(3, 1fr);
   gap: 0.5rem;
 }
 
 @media (min-width: 800px) {
   .tab-btn-row {
-    -ms-grid-columns: (1fr) [5];
+    /* legacy ms-grid removed: -ms-grid-columns */
     grid-template-columns: repeat(5, 1fr);
   }
 }
 
 @media (min-width: 1280px) {
   .tab-btn-row {
-    -ms-grid-columns: (1fr) [6];
+    /* legacy ms-grid removed: -ms-grid-columns */
     grid-template-columns: repeat(6, 1fr);
   }
-}
-
-.react-bootstrap-table table {
-  table-layout: auto;
 }
 
 .tab-link {

@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Button, Col, Container, Row } from "react-bootstrap";
+import { Button, Col, Container, Row } from "../ui/bootstrap-compat";
 import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
 
@@ -8,7 +8,6 @@ import BackButton from "../../shared-components/BackButton";
 import PageHeading from "../../shared-components/PageHeading";
 import { handleApiError } from "../../hooks/handleApiErrors";
 import { useHistory, useParams } from "react-router-dom";
-import { BiSave } from "react-icons/bi";
 import { AxiosError } from "axios";
 import { useMutation, useQuery } from "react-query";
 import moment from "moment";
@@ -17,6 +16,7 @@ import { showMsgToast } from "../../utils/showMsgToast";
 import PageCanvas from "./PageCanvas";
 import SectionItem from "./SectionItem";
 import { queryClient } from "../../utils/queryClient";
+import { Hammer } from "../ui/icon";
 
 const sectionsKey = "sections";
 const pagesKey = "pages";
@@ -363,7 +363,7 @@ const ViewWebsite = () => {
               onClick={() => _onSavePageSection(currentPageSectionsData)}
             >
               <div className="text-white d-flex align-items-center">
-                <BiSave size={18} /> <p className="mb-0">Save</p>
+                <Hammer size={18} /> <p className="mb-0">Save</p>
               </div>
             </Button>
           )}

@@ -1,5 +1,8 @@
 import React from "react";
-import { Card, Badge, Button } from "react-bootstrap";
+import { Card, CardContent } from "../ui/card";
+import { Badge } from "../ui/badge";
+import { Button } from "../ui/button";
+import { Spinner } from "../ui/spinner";
 import { useHistory } from "react-router-dom";
 import { useGoogleBusinessIntegration } from "./useGoogleBusinessIntegration";
 import useUserProfileStore from "../../hooks/useUserProfileStore";
@@ -43,7 +46,7 @@ const IntegrationsWidget: React.FC = () => {
 
   return (
     <Card className="h-100">
-      <Card.Body>
+      <CardContent>
         <div className="d-flex justify-content-between align-items-start">
           <div>
             <h6 className="card-title mb-2">
@@ -58,7 +61,7 @@ const IntegrationsWidget: React.FC = () => {
             </div>
           </div>
           <Button
-            variant="outline-primary"
+            variant="outline"
             size="sm"
             onClick={() => history.push("/integrations")}
           >
@@ -73,12 +76,7 @@ const IntegrationsWidget: React.FC = () => {
               <span className="small">Google Business Profile</span>
             </div>
             {isGoogleLoading ? (
-              <div
-                className="spinner-border spinner-border-sm text-muted"
-                role="status"
-              >
-                <span className="sr-only">Loading...</span>
-              </div>
+              <Spinner size="sm" className="text-muted" />
             ) : (
               getStatusBadge(googleStatus, isGoogleConnected)
             )}
@@ -109,7 +107,7 @@ const IntegrationsWidget: React.FC = () => {
             </small>
           </div>
         )}
-      </Card.Body>
+      </CardContent>
     </Card>
   );
 };

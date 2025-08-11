@@ -1,8 +1,6 @@
 import { AxiosError } from "axios";
 import React from "react";
-import { Col, Container, Row } from "react-bootstrap";
-import { BsFillTrashFill } from "react-icons/bs";
-import { MdRemoveShoppingCart } from "react-icons/md";
+import { Col, Container, Row } from "../components/ui/bootstrap-compat";
 import { useMutation } from "react-query";
 import { useHistory } from "react-router-dom";
 import { handleApiError } from "../hooks/handleApiErrors";
@@ -10,6 +8,7 @@ import API from "../utils/API";
 import { config } from "../utils/constants";
 import { queryClient } from "../utils/queryClient";
 import { showMsgToast } from "../utils/showMsgToast";
+import { Hammer } from "../components/ui/icon";
 
 type Folder = "services" | "plans";
 
@@ -42,7 +41,7 @@ const ImagesContainer = ({ images, folder }: Props) => {
     return (
       <Container fluid className="d-flex justify-content-center display-3">
         <div className="d-flex flex-column align-items-center pt-3 pb-3">
-          <MdRemoveShoppingCart color="#000" size={60} />
+          <Hammer color="#000" size={60} />
           <h4 className="text-black font-weight-bold mt-2">No Images found</h4>
         </div>
       </Container>
@@ -71,7 +70,7 @@ const ImagesContainer = ({ images, folder }: Props) => {
                 }}
               >
                 <button type="button" className="p-0">
-                  <BsFillTrashFill color="#fff" size={14} />
+                  <Hammer color="#fff" size={14} />
                 </button>
               </div>
               <img

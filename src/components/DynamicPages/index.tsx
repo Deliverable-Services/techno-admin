@@ -1,7 +1,6 @@
 import { AxiosError } from "axios";
 import { useMemo, useState } from "react";
-import { Button, Container, Dropdown, Nav } from "react-bootstrap";
-import { BiCopy, BiSad } from "react-icons/bi";
+import { Button, Container, Dropdown, Nav } from "../ui/bootstrap-compat";
 import { useMutation, useQuery } from "react-query";
 import { useHistory } from "react-router-dom";
 import { Cell } from "react-table";
@@ -16,10 +15,9 @@ import API from "../../utils/API";
 import { primaryColor } from "../../utils/constants";
 import { queryClient } from "../../utils/queryClient";
 import { showMsgToast } from "../../utils/showMsgToast";
-import { AiFillDelete } from "react-icons/ai";
 import { CommonModal } from "../CommonPopup/CommonModal";
 import DynamicPageCreateUpdateForm from "./DynamicPageCreateUpdateForm";
-import { BsEye, BsThreeDotsVertical } from "react-icons/bs";
+import { Hammer } from "../ui/icon";
 
 const key = "pages";
 
@@ -178,7 +176,7 @@ const DynamicPages = () => {
                   className="p-1 border-0 shadow-none"
                   id={`dropdown-${data.row.values.id}`}
                 >
-                  <BsThreeDotsVertical size={18} />
+                  <Hammer size={18} />
                 </Dropdown.Toggle>
 
                 <Dropdown.Menu className="menu-dropdown">
@@ -187,7 +185,7 @@ const DynamicPages = () => {
                       _onViewClick(data.row.values.id);
                     }}
                   >
-                    <BsEye size={16} className="me-1" />
+                    <Hammer size={16} className="me-1" />
                     View
                   </Dropdown.Item>
                   <Dropdown.Item
@@ -195,7 +193,7 @@ const DynamicPages = () => {
                       mutateCopy(data.row.values.id);
                     }}
                   >
-                    <BiCopy size={16} className="me-1" />
+                    <Hammer size={16} className="me-1" />
                     Duplicate
                   </Dropdown.Item>
                   <Dropdown.Item
@@ -204,7 +202,7 @@ const DynamicPages = () => {
                     }}
                     className="text-danger"
                   >
-                    <AiFillDelete size={16} className="me-1" />
+                    <Hammer size={16} className="me-1" />
                     Delete
                   </Dropdown.Item>
                 </Dropdown.Menu>
@@ -233,7 +231,7 @@ const DynamicPages = () => {
     return (
       <Container fluid className="d-flex justify-content-center display-3">
         <div className="d-flex flex-column align-items-center">
-          <BiSad color={primaryColor} />
+          <Hammer color={primaryColor} />
           <span className="text-primary display-3">Something went wrong</span>
         </div>
       </Container>

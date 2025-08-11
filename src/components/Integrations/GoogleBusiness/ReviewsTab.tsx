@@ -9,7 +9,7 @@ import {
   Alert,
   Badge,
   Pagination,
-} from "react-bootstrap";
+} from "../../ui/bootstrap-compat";
 import { useQuery, useMutation, useQueryClient } from "react-query";
 import googleBusinessService, {
   BusinessReview,
@@ -137,7 +137,7 @@ const ReviewsTab: React.FC<ReviewsTabProps> = ({ organisationId }) => {
             <h4>
               <i className="fas fa-star me-2 text-warning"></i>
               Customer Reviews
-              <Badge variant="secondary" className="ms-2">
+              <Badge bg="secondary" className="ms-2">
                 {totalReviews} total
               </Badge>
             </h4>
@@ -234,9 +234,7 @@ const ReviewsTab: React.FC<ReviewsTabProps> = ({ organisationId }) => {
                             <span className="me-2">
                               {renderStars(review.rating)}
                             </span>
-                            <Badge
-                              variant={getReviewBadgeVariant(review.rating)}
-                            >
+                            <Badge bg={getReviewBadgeVariant(review.rating)}>
                               {review.rating}/5
                             </Badge>
                           </div>

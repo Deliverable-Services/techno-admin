@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import "./organization.css"; // Optional custom styles
 import ProfileTab from "./ProfileTab";
 import OrganizationTab from "./OrganisationTab";
 import AppearanceTab from "./AppearanceTab";
@@ -8,8 +7,8 @@ import PlatformTab from "./PlatformTab";
 import CustomConfigTab from "./CustomConfigTab";
 import DomainTab from "./DomainTab";
 import PageHeading from "../../shared-components/PageHeading";
-import { GrOrganization } from "react-icons/gr";
-import { Nav } from "react-bootstrap";
+import { Nav } from "../ui/bootstrap-compat";
+import { Hammer } from "../ui/icon";
 
 const tabs = [
   { key: "profile", label: "Profile" },
@@ -30,7 +29,7 @@ const Organization: React.FC = () => {
       {/* Header Section */}
       <div className="view-padding d-flex justify-content-between align-items-center">
         <PageHeading
-          icon={<GrOrganization size={24} />}
+          icon={<Hammer size={24} />}
           title="Organization Settings"
           description="Configure and manage your organization preferences"
           permissionReq="create_lead"

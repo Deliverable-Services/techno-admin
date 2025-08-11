@@ -1,7 +1,6 @@
 import { AxiosError } from "axios";
 import { useMemo, useState } from "react";
-import { Button, Container, Dropdown, Nav } from "react-bootstrap";
-import { BiSad } from "react-icons/bi";
+import { Button, Container, Dropdown, Nav } from "../ui/bootstrap-compat";
 import { useMutation, useQuery } from "react-query";
 import { useHistory } from "react-router-dom";
 import { Cell } from "react-table";
@@ -21,11 +20,10 @@ import { InsideCart, isActiveArray } from "../../utils/arrays";
 import { primaryColor } from "../../utils/constants";
 import { queryClient } from "../../utils/queryClient";
 import { showMsgToast } from "../../utils/showMsgToast";
-import { FaRegLightbulb } from "react-icons/fa";
-import { BsFunnel } from "react-icons/bs";
 import { useFlyout } from "../../hooks/useFlyout";
 import Flyout from "../../shared-components/Flyout";
 import PlanCreateUpdateForm from "./PlansCreateUpdateForm";
+import { Hammer } from "../ui/icon";
 
 const key = "plans";
 
@@ -161,7 +159,7 @@ const Plans = () => {
     return (
       <Container fluid className="d-flex justify-content-center display-3">
         <div className="d-flex flex-column align-items-center">
-          <BiSad color={primaryColor} />
+          <Hammer color={primaryColor} />
           <span className="text-primary display-3">Something went wrong</span>
         </div>
       </Container>
@@ -174,7 +172,7 @@ const Plans = () => {
         <PageHeading
           title="Plans"
           description="Create and manage plan"
-          icon={<FaRegLightbulb size={24} />}
+          icon={<Hammer size={24} />}
           onClick={_onCreateClick}
           totalRecords={data?.total}
           permissionReq="create_plan"
@@ -229,7 +227,7 @@ const Plans = () => {
                   filters={
                     <Dropdown className="search-filters-div filter-dropdown mr-2">
                       <Dropdown.Toggle as={Button} variant="primary">
-                        <BsFunnel /> Filters
+                        <Hammer /> Filters
                       </Dropdown.Toggle>
                       <Dropdown.Menu>
                         <div className="filter-dropdown-heading d-flex justify-content-between w-100">

@@ -1,34 +1,5 @@
 import { useContext, useState } from "react";
-import {
-  FaBoxes,
-  FaDiceFour,
-  FaQuestionCircle,
-  FaRegLightbulb,
-  FaMoneyCheck,
-  FaUserSecret,
-  FaGoogle,
-  FaRegMoneyBillAlt,
-} from "react-icons/fa";
-import { GoIssueOpened } from "react-icons/go";
-import { IoLogoModelS, IoMdAnalytics } from "react-icons/io";
-import { GiModernCity, GiOnTarget } from "react-icons/gi";
-import {
-  RiAdminFill,
-  RiAdvertisementFill,
-  RiCoupon3Line,
-  RiDashboardFill,
-  RiGlobalLine,
-  RiNotification2Line,
-  RiServiceFill,
-} from "react-icons/ri";
 import OrganizationSwitcher from "./OrganizationSwitcher";
-import { SiBrandfolder, SiCivicrm } from "react-icons/si";
-import { MdShoppingCart } from "react-icons/md";
-import { ImUsers } from "react-icons/im";
-import { AiFillIdcard } from "react-icons/ai";
-import { BsClock, BsShieldLock } from "react-icons/bs";
-import { GrOrganization } from "react-icons/gr";
-
 import { IsDesktopContext } from "../context/IsDesktopContext";
 import { useGoogleBusinessConnection } from "./Integrations/useGoogleBusinessConnection";
 import { useGoogleAnalyticsConnection } from "./Integrations/useGoogleAnalyticsConnection";
@@ -42,101 +13,101 @@ import Overlay from "../shared-components/Overlay";
 import { handleApiError } from "../hooks/handleApiErrors";
 import API from "../utils/API";
 import { useHistory } from "react-router-dom";
-
+import { Hammer } from "./ui/icon";
 // === Main Navigation Sections ===
 // # TODO: Fix all the permissions and introduce the list in the permissions table
 const mainLinks: Array<INavLink> = [
   {
     title: "Orders",
     path: "/orders",
-    icon: <FaBoxes />,
+    icon: <Hammer />,
     permissionReq: "read_booking",
   },
   {
     title: "Leads",
-    icon: <SiCivicrm />,
+    icon: <Hammer />,
     permissionReq: "read_bookingslot",
     children: [
       {
         title: "CRM",
         path: "/crm",
         permissionReq: "read_subscription",
-        icon: <SiCivicrm />,
+        icon: <Hammer />,
       },
       {
         title: "Meetings",
         path: "/meetings",
         permissionReq: "read_booking",
-        icon: <BsClock />,
+        icon: <Hammer />,
       },
     ],
   },
   {
     title: "Billings",
-    icon: <FaRegMoneyBillAlt />,
+    icon: <Hammer />,
     path: "/invoices",
     permissionReq: "read_bookingslot",
     children: [
       {
         title: "Invoices",
         path: "/invoices",
-        icon: <SiCivicrm />,
+        icon: <Hammer />,
         permissionReq: "read_city",
       },
       {
         title: "Subscriptions",
         path: "/subscriptions",
-        icon: <SiCivicrm />,
+        icon: <Hammer />,
         permissionReq: "read_subscription",
       },
       {
         title: "Transactions",
         path: "/transactions",
         permissionReq: "read_transaction",
-        icon: <FaMoneyCheck />,
+        icon: <Hammer />,
       },
     ],
   },
   {
     title: "Cart",
     path: "/cart",
-    icon: <MdShoppingCart />,
+    icon: <Hammer />,
     permissionReq: "read_booking",
   },
   {
     title: "Customers",
     path: "/users",
-    icon: <ImUsers />,
+    icon: <Hammer />,
     permissionReq: "read_user",
   },
   {
     title: "Support Tickets",
     path: "/issues",
-    icon: <GoIssueOpened />,
+    icon: <Hammer />,
     permissionReq: "read_ticket",
   },
   {
     title: "Services",
     path: "/services",
-    icon: <RiServiceFill />,
+    icon: <Hammer />,
     permissionReq: "read_bookingslot",
     children: [
       {
         title: "Services",
         path: "/services",
-        icon: <RiServiceFill />,
+        icon: <Hammer />,
         permissionReq: "read_service",
       },
       {
         title: "Categories",
         path: "/categories",
-        icon: <FaDiceFour />,
+        icon: <Hammer />,
         permissionReq: "read_category",
       },
       {
         title: "Servicable Cities",
         path: "/cities",
-        icon: <GiModernCity />,
+        icon: <Hammer />,
         permissionReq: "read_city",
       },
     ],
@@ -144,25 +115,25 @@ const mainLinks: Array<INavLink> = [
   {
     title: "Products",
     path: "/products",
-    icon: <RiServiceFill />,
+    icon: <Hammer />,
     permissionReq: "read_bookingslot",
     children: [
       {
         title: "Products",
         path: "/products",
-        icon: <IoLogoModelS />,
+        icon: <Hammer />,
         permissionReq: "read_brandmodel",
       },
       {
         title: "Brands",
         path: "/product-brands",
-        icon: <SiBrandfolder />,
+        icon: <Hammer />,
         permissionReq: "read_brand",
       },
       {
         title: "Variants",
         path: "/product-variants",
-        icon: <IoLogoModelS />,
+        icon: <Hammer />,
         permissionReq: "read_brandmodel",
       },
     ],
@@ -170,43 +141,43 @@ const mainLinks: Array<INavLink> = [
   {
     title: "Plans",
     path: "/plans",
-    icon: <FaRegLightbulb />,
+    icon: <Hammer />,
     permissionReq: "read_plan",
   },
   {
     title: "Website",
     path: "/website-pages",
-    icon: <RiGlobalLine />,
+    icon: <Hammer />,
     permissionReq: "read_bookingslot",
     children: [
       {
         title: "Pages",
         path: "/website-pages",
-        icon: <RiGlobalLine />,
+        icon: <Hammer />,
         permissionReq: "read_staticpage",
       },
       {
         title: "Faqs",
         path: "/faqs",
-        icon: <FaQuestionCircle />,
+        icon: <Hammer />,
         permissionReq: "read_faq",
       },
       {
         title: "Coupons",
         path: "/coupons",
-        icon: <RiCoupon3Line />,
+        icon: <Hammer />,
         permissionReq: "read_coupon",
       },
       {
         title: "Banners",
         path: "/advertisements",
-        icon: <RiAdvertisementFill />,
+        icon: <Hammer />,
         permissionReq: "read_banner",
       },
       {
         title: "Testimonials",
         path: "/testimonials",
-        icon: <AiFillIdcard />,
+        icon: <Hammer />,
         permissionReq: "read_testimonial",
       },
     ],
@@ -217,37 +188,37 @@ const organisationLinks: Array<INavLink> = [
   {
     title: "Team Members",
     path: "/team-members",
-    icon: <RiAdminFill />,
+    icon: <Hammer />,
     permissionReq: "read_user",
   },
   {
     title: "Agents",
     path: "/agent",
-    icon: <FaUserSecret />,
+    icon: <Hammer />,
     permissionReq: "read_user",
   },
   {
     title: "Agent Targets",
     path: "/agent-targets",
-    icon: <GiOnTarget />,
+    icon: <Hammer />,
     permissionReq: "read_agenttarget",
   },
   {
     title: "Roles & Permissions",
     path: "/permissions",
-    icon: <BsShieldLock />,
+    icon: <Hammer />,
     permissionReq: "read_permission",
   },
   {
     title: "Organization",
     path: "/organization",
-    icon: <GrOrganization />,
+    icon: <Hammer />,
     permissionReq: "read_city",
   },
   {
     title: "Workflow Notifications",
     path: "/notifications",
-    icon: <RiNotification2Line />,
+    icon: <Hammer />,
     permissionReq: "read_notification",
   },
 ];
@@ -257,18 +228,18 @@ const googleLinks: Array<INavLink> = [
     title: "Integrations",
     path: "/enable-integrations",
     permissionReq: "read_notification",
-    icon: <IoMdAnalytics />,
+    icon: <Hammer />,
   },
   {
     title: "Google Analytics",
     path: "/google-analytics",
     permissionReq: "read_agenttarget",
-    icon: <IoMdAnalytics />,
+    icon: <Hammer />,
   },
   {
     title: "Google Business",
     path: "/google-business",
-    icon: <FaGoogle />,
+    icon: <Hammer />,
     permissionReq: "read_dashboard",
   },
 ];
@@ -359,7 +330,7 @@ const NavBar = ({ isNavOpen, setIsNavOpen }: INavBar) => {
               title="Dashboard"
               path="/dashboard"
               onClick={closeNavBar}
-              icon={<RiDashboardFill />}
+              icon={<Hammer />}
               isNavOpen={isNavOpen}
               permissionReq="read_dashboard"
               activeMenu={activeMenu}

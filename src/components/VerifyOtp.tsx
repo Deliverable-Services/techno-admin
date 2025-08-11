@@ -1,12 +1,11 @@
 import { AxiosError } from "axios";
 import { Form, Formik } from "formik";
-import { Button, Container, Spinner } from "react-bootstrap";
+import { Button, Container, Spinner } from "./ui/bootstrap-compat";
 import { useMutation } from "react-query";
 import { useHistory } from "react-router";
 import { useLocation } from "react-router-dom";
 import * as Yup from "yup";
 
-import { MdVerifiedUser, MdSecurity } from "react-icons/md";
 import { primaryColor } from "../utils/constants";
 import { handleApiError } from "../hooks/handleApiErrors";
 import useTokenStore from "../hooks/useTokenStore";
@@ -15,6 +14,7 @@ import OtpInput from "../shared-components/OtpInput";
 import API from "../utils/API";
 import { showErrorToast } from "../utils/showErrorToast";
 import { showMsgToast } from "../utils/showMsgToast";
+import { Hammer } from "./ui/icon";
 
 interface Props {}
 
@@ -152,11 +152,7 @@ const VerifyOtp = (props: Props) => {
                         border: `1px solid ${primaryColor}20`,
                       }}
                     >
-                      <MdSecurity
-                        size={14}
-                        color={primaryColor}
-                        className="mr-1"
-                      />
+                      <Hammer size={14} color={primaryColor} className="mr-1" />
                       <small
                         style={{
                           color: primaryColor,
@@ -240,7 +236,7 @@ const VerifyOtp = (props: Props) => {
                       </div>
                     ) : (
                       <div className="d-flex align-items-center justify-content-center">
-                        <MdVerifiedUser size={18} className="mr-2" />
+                        <Hammer size={18} className="mr-2" />
                         <span>Verify & Continue</span>
                       </div>
                     )}

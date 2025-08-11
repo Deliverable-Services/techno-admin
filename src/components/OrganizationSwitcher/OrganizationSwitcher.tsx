@@ -1,13 +1,18 @@
-import React, { useState, useRef, useEffect } from "react";
+import React from "react";
 import { Organisation } from "../../types/interface";
-import { IoChevronDown, IoCheckmark } from "react-icons/io5";
-import { HiOfficeBuilding } from "react-icons/hi";
-import { BiLogOut, BiEdit } from "react-icons/bi";
 import { useMutation } from "react-query";
 import useTokenStore from "../../hooks/useTokenStore";
 import useUserProfileStore from "../../hooks/useUserProfileStore";
 import API from "../../utils/API";
-import "./OrganizationSwitcher.css";
+import { ChevronDown, Check, User, X } from "../ui/icon";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "../ui/dropdown-menu";
+import { Button } from "../ui/button";
 
 interface OrganizationSwitcherProps {
   organisations: Organisation[];
@@ -20,30 +25,9 @@ const OrganizationSwitcher: React.FC<OrganizationSwitcherProps> = ({
   selectedOrg,
   onSelect,
 }) => {
-  const [isOpen, setIsOpen] = useState(false);
-  const dropdownRef = useRef<HTMLDivElement>(null);
   const user = useUserProfileStore((state) => state.user);
   const removeToken = useTokenStore((state) => state.removeToken);
   const removeUser = useUserProfileStore((state) => state.removeUser);
-
-  useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-      if (
-        dropdownRef.current &&
-        !dropdownRef.current.contains(event.target as Node)
-      ) {
-        setIsOpen(false);
-      }
-    };
-
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => document.removeEventListener("mousedown", handleClickOutside);
-  }, []);
-
-  const handleSelect = (org: Organisation) => {
-    onSelect(org);
-    setIsOpen(false);
-  };
 
   const getInitials = (name: string) => {
     return name
@@ -85,7 +69,13 @@ const OrganizationSwitcher: React.FC<OrganizationSwitcherProps> = ({
   const renderUserAvatar = () => {
     const url = (user as any)?.profile_pic;
     if (url) {
-      return <img src={url} alt={(user as any)?.name || "User"} />;
+      return (
+        <img
+          src={url}
+          alt={(user as any)?.name || "User"}
+          className="h-full w-full object-cover"
+        />
+      );
     }
     const initials = ((user as any)?.name || "U")
       .split(" ")
@@ -93,134 +83,121 @@ const OrganizationSwitcher: React.FC<OrganizationSwitcherProps> = ({
       .join("")
       .toUpperCase()
       .slice(0, 2);
-    return <div className="org-avatar-placeholder">{initials}</div>;
+    return <span className="text-sm font-medium">{initials}</span>;
   };
 
   return (
-    <div className="organization-switcher mt-2" ref={dropdownRef}>
-      <div
-        className={`org-switcher-trigger ${isOpen ? "open" : ""}`}
-        onClick={() => setIsOpen(!isOpen)}
-      >
-        <div className="org-switcher-selected">
-          <div className="org-avatar">
-            {selectedOrg?.logo ? (
-              <img src={selectedOrg.logo} alt={selectedOrg.name} />
-            ) : (
-              <div className="org-avatar-placeholder">
-                {selectedOrg ? (
-                  getInitials(selectedOrg.name)
-                ) : (
-                  <HiOfficeBuilding />
-                )}
-              </div>
-            )}
-          </div>
-          <div className="org-info">
-            <div className="org-name">
-              {selectedOrg?.name || "Select Organisation"}
+    <DropdownMenu>
+      <DropdownMenuTrigger asChild>
+        <Button variant="outline" className="w-full justify-between">
+          <div className="flex items-center gap-2">
+            <div className="h-6 w-6 rounded-full bg-muted flex items-center justify-center overflow-hidden">
+              {selectedOrg?.logo ? (
+                <img
+                  src={selectedOrg.logo}
+                  alt={selectedOrg.name}
+                  className="h-full w-full object-cover"
+                />
+              ) : (
+                <span className="text-xs font-medium">
+                  {selectedOrg ? getInitials(selectedOrg.name) : "?"}
+                </span>
+              )}
             </div>
-            {selectedOrg?.pivot?.role && (
-              <div
-                className="org-role"
-                style={{ color: getRoleBadgeColor(selectedOrg.pivot.role) }}
-              >
-                {selectedOrg.pivot.role}
-              </div>
-            )}
+            <div className="flex flex-col items-start">
+              <span className="font-medium">
+                {selectedOrg?.name || "Select Organisation"}
+              </span>
+              {selectedOrg?.pivot?.role && (
+                <span
+                  className="text-xs"
+                  style={{ color: getRoleBadgeColor(selectedOrg.pivot.role) }}
+                >
+                  {selectedOrg.pivot.role}
+                </span>
+              )}
+            </div>
           </div>
-        </div>
-        <IoChevronDown className={`chevron ${isOpen ? "rotated" : ""}`} />
-      </div>
+          <ChevronDown className="h-4 w-4 opacity-50" />
+        </Button>
+      </DropdownMenuTrigger>
 
-      {isOpen && (
-        <div className="org-switcher-dropdown">
-          <div className="org-dropdown-content">
-            {organisations.map((org) => (
-              <div
-                key={org.id}
-                className={`org-option ${
-                  selectedOrg?.id === org.id ? "selected" : ""
-                }`}
-                onClick={() => handleSelect(org)}
-              >
-                <div className="org-option-content">
-                  <div className="org-avatar">
-                    {org.logo ? (
-                      <img src={org.logo} alt={org.name} />
-                    ) : (
-                      <div className="org-avatar-placeholder">
-                        {getInitials(org.name)}
-                      </div>
-                    )}
-                  </div>
-                  <div className="org-info">
-                    <div className="org-name">{org.name}</div>
-                    <div className="org-details">
-                      {org.pivot?.role && (
-                        <span
-                          className="org-role-badge"
-                          style={{
-                            backgroundColor:
-                              getRoleBadgeColor(org.pivot.role) + "20",
-                            color: getRoleBadgeColor(org.pivot.role),
-                          }}
-                        >
-                          {org.pivot.role}
-                        </span>
-                      )}
-                      <span className="org-type">{org.store_type}</span>
-                    </div>
-                  </div>
-                </div>
-                {selectedOrg?.id === org.id && (
-                  <IoCheckmark className="checkmark" />
+      <DropdownMenuContent className="w-80">
+        {organisations.map((org) => (
+          <DropdownMenuItem
+            key={org.id}
+            onClick={() => onSelect(org)}
+            className="flex items-center justify-between p-3"
+          >
+            <div className="flex items-center gap-3">
+              <div className="h-8 w-8 rounded-full bg-muted flex items-center justify-center overflow-hidden">
+                {org.logo ? (
+                  <img
+                    src={org.logo}
+                    alt={org.name}
+                    className="h-full w-full object-cover"
+                  />
+                ) : (
+                  <span className="text-sm font-medium">
+                    {getInitials(org.name)}
+                  </span>
                 )}
               </div>
-            ))}
-
-            {/* Divider */}
-            <div className="org-divider" />
-
-            {/* Profile Row */}
-            <a href="/profile" className="org-option profile-row">
-              <div className="org-option-content">
-                <div className="org-avatar">{renderUserAvatar()}</div>
-                <div className="org-info">
-                  <div className="org-name">
-                    {(user as any)?.name || "User"}
-                  </div>
-                  <div className="org-details">
-                    {(user as any)?.email || ""}
-                  </div>
+              <div className="flex flex-col">
+                <span className="font-medium">{org.name}</span>
+                <div className="flex gap-2 text-sm text-muted-foreground">
+                  {org.pivot?.role && (
+                    <span
+                      className="px-1.5 py-0.5 rounded text-xs"
+                      style={{
+                        backgroundColor:
+                          getRoleBadgeColor(org.pivot.role) + "20",
+                        color: getRoleBadgeColor(org.pivot.role),
+                      }}
+                    >
+                      {org.pivot.role}
+                    </span>
+                  )}
+                  <span>{org.store_type}</span>
                 </div>
               </div>
-              <BiEdit className="action-icon" title="Edit profile" />
-            </a>
+            </div>
+            {selectedOrg?.id === org.id && <Check className="h-4 w-4" />}
+          </DropdownMenuItem>
+        ))}
 
-            {/* Logout Row */}
-            <button
-              type="button"
-              className="org-option logout-row"
-              onClick={() => logoutMutate()}
-            >
-              <div className="org-option-content">
-                <div className="org-avatar">
-                  <div className="org-avatar-placeholder">
-                    <BiLogOut />
-                  </div>
-                </div>
-                <div className="org-info">
-                  <div className="org-name">
-                    {isLogoutLoading ? "Logging out..." : "Log out"}
-                  </div>
-                </div>
-              </div>
-            </button>
+        <DropdownMenuSeparator />
+
+        <DropdownMenuItem asChild>
+          <a href="/profile" className="flex items-center gap-3 p-3">
+            <div className="h-8 w-8 rounded-full bg-muted flex items-center justify-center overflow-hidden">
+              {renderUserAvatar()}
+            </div>
+            <div className="flex flex-col">
+              <span className="font-medium">
+                {(user as any)?.name || "User"}
+              </span>
+              <span className="text-sm text-muted-foreground">
+                {(user as any)?.email || ""}
+              </span>
+            </div>
+            <User className="h-4 w-4 ml-auto" />
+          </a>
+        </DropdownMenuItem>
+
+        <DropdownMenuItem
+          onClick={() => logoutMutate()}
+          className="flex items-center gap-3 p-3"
+        >
+          <div className="h-8 w-8 rounded-full bg-muted flex items-center justify-center">
+            <X className="h-4 w-4" />
           </div>
-        </div>
-      )}
-    </div>
+          <span className="font-medium">
+            {isLogoutLoading ? "Logging out..." : "Log out"}
+          </span>
+        </DropdownMenuItem>
+      </DropdownMenuContent>
+    </DropdownMenu>
   );
 };
 

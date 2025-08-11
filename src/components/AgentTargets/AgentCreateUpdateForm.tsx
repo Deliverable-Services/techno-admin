@@ -1,9 +1,9 @@
 import { AxiosError } from "axios";
-import bsCustomFileInput from "bs-custom-file-input";
+// Removed bs-custom-file-input
 import { Form, Formik } from "formik";
 import moment from "moment";
 import { useEffect } from "react";
-import { Button, Col, Row, Spinner } from "react-bootstrap";
+import { Button, Col, Row, Spinner } from "../ui/bootstrap-compat";
 import { useMutation, useQuery } from "react-query";
 import { useHistory, useLocation } from "react-router-dom";
 import { handleApiError } from "../../hooks/handleApiErrors";
@@ -37,9 +37,7 @@ const TargetCreateUpdateForm = () => {
   const history = useHistory();
   const id = state ? (state as any).id : null;
   const agentId = state ? (state as any).agent_id : null;
-  useEffect(() => {
-    bsCustomFileInput.init();
-  }, []);
+  useEffect(() => {}, []);
   const { data, isLoading: dataLoading } = useGetSingleQuery({ id, key });
   const { mutate, isLoading } = useMutation(createUpdataTarget, {
     onSuccess: () => {
