@@ -7,7 +7,7 @@ import PlatformTab from "./PlatformTab";
 import CustomConfigTab from "./CustomConfigTab";
 import DomainTab from "./DomainTab";
 import PageHeading from "../../shared-components/PageHeading";
-import { Nav } from "react-bootstrap";
+import { Nav } from "../ui/bootstrap-compat";
 import { Hammer } from "../ui/icon";
 
 const tabs = [

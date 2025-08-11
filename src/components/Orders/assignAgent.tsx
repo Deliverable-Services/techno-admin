@@ -1,6 +1,6 @@
 import { Form, Formik } from "formik";
 import React from "react";
-import { Alert, Button, Col, Container, Row, Spinner } from "react-bootstrap";
+import { Alert, Button, Col, Container, Row, Spinner } from "../ui/bootstrap-compat";
 import { useMutation, useQuery } from "react-query";
 import { useHistory, useParams } from "react-router-dom";
 import { InputField } from "../../shared-components/InputFeild";

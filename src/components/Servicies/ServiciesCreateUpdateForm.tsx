@@ -2,7 +2,7 @@ import { AxiosError } from "axios";
 // Removed bs-custom-file-input
 import { Form, Formik } from "formik";
 import { useEffect } from "react";
-import { Button, Col, Row, Spinner, Form as BForm } from "react-bootstrap";
+import { Button, Col, Row, Spinner, Form as BForm } from "../ui/bootstrap-compat";
 import { useMutation, useQuery } from "react-query";
 import { useHistory, useLocation } from "react-router-dom";
 import { handleApiError } from "../../hooks/handleApiErrors";

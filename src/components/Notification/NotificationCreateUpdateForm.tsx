@@ -2,7 +2,7 @@ import { AxiosError } from "axios";
 import { Field, Form, Formik } from "formik";
 import moment from "moment";
 import { useEffect, useMemo, useState } from "react";
-import { Button, Col, Row, Spinner } from "react-bootstrap";
+import { Button, Col, Row, Spinner } from "../ui/bootstrap-compat";
 import { useMutation, useQuery } from "react-query";
 import { useHistory, useLocation } from "react-router-dom";
 import { Cell } from "react-table";

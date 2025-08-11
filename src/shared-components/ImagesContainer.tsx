@@ -1,6 +1,6 @@
 import { AxiosError } from "axios";
 import React from "react";
-import { Col, Container, Row } from "react-bootstrap";
+import { Col, Container, Row } from "../components/ui/bootstrap-compat";
 import { useMutation } from "react-query";
 import { useHistory } from "react-router-dom";
 import { handleApiError } from "../hooks/handleApiErrors";

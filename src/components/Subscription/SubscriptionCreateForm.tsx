@@ -1,5 +1,5 @@
 import { Formik, Form, Field, FieldArray } from "formik";
-import { Button } from "react-bootstrap";
+import { Button } from "../ui/bootstrap-compat";
 import API from "../../utils/API";
 import { showMsgToast } from "../../utils/showMsgToast";
 import { showErrorToast } from "../../utils/showErrorToast";

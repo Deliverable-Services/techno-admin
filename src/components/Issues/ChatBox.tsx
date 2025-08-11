@@ -2,7 +2,7 @@ import { AxiosError } from "axios";
 import { Form, Formik } from "formik";
 import moment from "moment";
 import React from "react";
-import { Container } from "react-bootstrap";
+import { Container } from "../ui/bootstrap-compat";
 import { useMutation } from "react-query";
 import { useHistory } from "react-router-dom";
 import { handleApiError } from "../../hooks/handleApiErrors";

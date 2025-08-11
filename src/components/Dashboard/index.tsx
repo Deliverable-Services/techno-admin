@@ -1,7 +1,7 @@
 import { AxiosError } from "axios";
 import moment from "moment";
 import React, { useState } from "react";
-import { Container } from "react-bootstrap";
+import { Container } from "../ui/bootstrap-compat";
 type FocusedInputShape = "startDate" | "endDate" | null;
 
 import { useQuery } from "react-query";

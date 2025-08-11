@@ -9,7 +9,7 @@ import {
   Alert,
   Badge,
   Pagination,
-} from "react-bootstrap";
+} from "../../ui/bootstrap-compat";
 import { useQuery, useMutation, useQueryClient } from "react-query";
 import googleBusinessService, {
   BusinessReview,

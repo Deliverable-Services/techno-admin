@@ -4,7 +4,7 @@ import VerifingUserLoader from "../../shared-components/VerifingUserLoader";
 import useUserProfileStore from "../../hooks/useUserProfileStore";
 import SubscriptionCreateForm from "./SubscriptionCreateForm";
 import PageHeading from "../../shared-components/PageHeading";
-import { Container, Button } from "react-bootstrap";
+import { Container, Button } from "../ui/bootstrap-compat";
 import { showErrorToast } from "../../utils/showErrorToast";
 import { primaryColor } from "../../utils/constants";
 import { Hammer } from "../ui/icon";

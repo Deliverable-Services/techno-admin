@@ -1,5 +1,4 @@
 import React, { useState, useEffect, useCallback } from "react";
-// Replaced react-bootstrap with shadcn/ui and Tailwind
 import { Container, Row, Col } from "../ui/grid";
 import { Card, CardContent } from "../ui/card";
 import { Badge } from "../ui/badge";

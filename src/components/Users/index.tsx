@@ -1,6 +1,6 @@
 import { AxiosError } from "axios";
 import { useMemo, useState } from "react";
-import { Button, Container, Dropdown, Modal } from "react-bootstrap";
+import { Button, Container, Dropdown, Modal } from "../ui/bootstrap-compat";
 import UserCreateUpdateForm from "./UsersCreateUpdateForm";
 import Flyout from "../../shared-components/Flyout";
 import { useFlyout } from "../../hooks/useFlyout";

@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Row, Col, Card, Badge, Modal, Image, Button } from "react-bootstrap";
+import { Row, Col, Card, Badge, Modal, Image, Button } from "../../ui/bootstrap-compat";
 import { Hammer } from "../../ui/icon";
 
 const dummyPhotos = [

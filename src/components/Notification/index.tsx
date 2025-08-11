@@ -1,7 +1,7 @@
 import { AxiosError } from "axios";
 import moment from "moment";
 import React, { useMemo, useState } from "react";
-import { Button, Container, Dropdown, Form, Nav } from "react-bootstrap";
+import { Button, Container, Dropdown, Form, Nav } from "../ui/bootstrap-compat";
 import { useMutation, useQuery } from "react-query";
 import { useHistory } from "react-router-dom";
 import { Cell } from "react-table";

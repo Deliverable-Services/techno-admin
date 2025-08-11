@@ -1,6 +1,6 @@
 import moment from "moment";
 import React, { useState } from "react";
-import { Col, Container, Form, Row } from "react-bootstrap";
+import { Col, Container, Form, Row } from "../ui/bootstrap-compat";
 import { useMutation } from "react-query";
 import { useHistory, useParams } from "react-router-dom";
 import useGetSingleQuery from "../../hooks/useGetSingleQuery";

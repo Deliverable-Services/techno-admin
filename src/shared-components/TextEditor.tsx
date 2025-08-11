@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 // Replaced braft-editor with a simple textarea for now
 import { useField } from "formik";
-import { Container } from "react-bootstrap";
+import { Container } from "../components/ui/bootstrap-compat";
 interface Props {
   label: string;
   name: string;

@@ -1,7 +1,12 @@
 import { AxiosError } from "axios";
 import moment from "moment";
 import React from "react";
-import { Row, Col, Container, Spinner } from "react-bootstrap";
+import {
+  Row,
+  Col,
+  Container,
+  Spinner,
+} from "../components/ui/bootstrap-compat";
 import { useMutation } from "react-query";
 import { useHistory } from "react-router-dom";
 import { handleApiError } from "../hooks/handleApiErrors";

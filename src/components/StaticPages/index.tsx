@@ -3,7 +3,7 @@ import { AxiosError } from "axios";
 type EditorState = string;
 import React, { useMemo, useState } from "react";
 import { useEffect } from "react";
-import { Modal, Button, Container, Dropdown } from "react-bootstrap";
+import { Modal, Button, Container, Dropdown } from "../ui/bootstrap-compat";
 import { useMutation, useQuery } from "react-query";
 import { useHistory } from "react-router-dom";
 import { handleApiError } from "../../hooks/handleApiErrors";

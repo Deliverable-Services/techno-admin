@@ -1,5 +1,5 @@
 import dayjs from "dayjs";
-import { Col, Row, Badge } from "react-bootstrap";
+import { Col, Row, Badge } from "../ui/bootstrap-compat";
 import { Hammer } from "../ui/icon";
 
 const MeetingDetails = ({ meeting, onDelete, onEdit, toggleFlyout }) => {

@@ -8,7 +8,7 @@ import {
   Button,
   Form,
   Dropdown,
-} from "react-bootstrap";
+} from "../ui/bootstrap-compat";
 
 import { Hammer } from "../ui/icon";
 

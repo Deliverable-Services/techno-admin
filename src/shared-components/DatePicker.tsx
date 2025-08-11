@@ -1,7 +1,7 @@
 import { useField } from "formik";
 import moment from "moment";
 import React, { useState } from "react";
-import { Form } from "react-bootstrap";
+import { Form } from "../components/ui/bootstrap-compat";
 import { DefaultInputHeight } from "../utils/constants";
 
 interface Props {

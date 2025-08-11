@@ -1,5 +1,5 @@
 import { Formik, Form, Field } from "formik";
-import { Button, Spinner } from "react-bootstrap";
+import { Button, Spinner } from "../ui/bootstrap-compat";
 import { showMsgToast } from "../../utils/showMsgToast";
 import useTokenStore from "../../hooks/useTokenStore";
 import API from "../../utils/API";

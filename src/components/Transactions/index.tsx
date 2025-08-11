@@ -1,5 +1,5 @@
 import { useMemo, useState } from "react";
-import { Button, Container, Nav, Dropdown } from "react-bootstrap";
+import { Button, Container, Nav, Dropdown } from "../ui/bootstrap-compat";
 import { useHistory } from "react-router-dom";
 import { Cell } from "react-table";
 import useTransactionStoreFilter, {

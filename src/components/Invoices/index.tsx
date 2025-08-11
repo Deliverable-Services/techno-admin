@@ -9,7 +9,7 @@ import autoTable from "jspdf-autotable";
 import { showMsgToast } from "../../utils/showMsgToast";
 import { showErrorToast } from "../../utils/showErrorToast";
 import PageHeading from "../../shared-components/PageHeading";
-import { Container, Button } from "react-bootstrap";
+import { Container, Button } from "../ui/bootstrap-compat";
 import ReactTable from "../../shared-components/ReactTable";
 import { Cell } from "react-table";
 import { Hammer } from "../ui/icon";

@@ -1,5 +1,5 @@
 import { Formik, Form } from "formik";
-import { Button, Spinner } from "react-bootstrap";
+import { Button, Spinner } from "../ui/bootstrap-compat";
 import { AxiosError } from "axios";
 import { useMutation } from "react-query";
 import { useHistory } from "react-router-dom";

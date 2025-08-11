@@ -1,5 +1,5 @@
 import { Formik, Form, Field } from "formik";
-import { Button, Spinner } from "react-bootstrap";
+import { Button, Spinner } from "../ui/bootstrap-compat";
 import { useMutation, useQuery } from "react-query";
 import * as Yup from "yup";
 import { useOrganisation } from "../../context/OrganisationContext";

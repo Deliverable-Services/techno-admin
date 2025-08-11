@@ -1,6 +1,6 @@
 import moment from "moment";
 import React from "react";
-import { Card, Col, Container, Dropdown, Row } from "react-bootstrap";
+import { Card, Col, Container, Dropdown, Row } from "../ui/bootstrap-compat";
 import { QueryFunction, useQuery } from "react-query";
 import { useHistory } from "react-router-dom";
 import IsActiveBadge from "../../shared-components/IsActiveBadge";

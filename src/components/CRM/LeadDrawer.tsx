@@ -32,7 +32,7 @@ import {
   CircleDot,
 } from "../../components/ui/icon";
 
-import { Dropdown, Button, Form, Card, Badge } from "react-bootstrap";
+import { Dropdown, Button, Form, Card, Badge } from "../ui/bootstrap-compat";
 // Using Dropdown for assignee as well
 import { queryClient } from "../../utils/queryClient";
 

@@ -1,6 +1,6 @@
 import { AxiosError } from "axios";
 import React, { useMemo, useState } from "react";
-import { Container } from "react-bootstrap";
+import { Container } from "../ui/bootstrap-compat";
 import { useQuery } from "react-query";
 import { useHistory, useLocation } from "react-router-dom";
 import { Cell } from "react-table";

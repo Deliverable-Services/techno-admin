@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Nav } from "react-bootstrap";
+import { Nav } from "../ui/bootstrap-compat";
 import { useHistory, useLocation } from "react-router-dom";
 import PageHeading from "../../shared-components/PageHeading";
 import StaticPages from "../StaticPages";

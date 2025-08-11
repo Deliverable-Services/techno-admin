@@ -560,20 +560,20 @@ function ReactTable({
               {showRecords && (
                 <div className="flex items-center gap-2 text-sm">
                   <span className="text-muted-foreground">Rows per page:</span>
-                  <Select
+                  <select
                     value={pageSize.toString()}
                     onChange={(e) => {
                       const value = e.target.value;
                       setPageSize(parseInt(value));
                       onFilterChange("perPage", value);
                     }}
-                    className="h-8 w-20 text-xs"
+                    className="h-8 w-20 text-xs border border-border rounded-md px-2"
                   >
                     <option value="10">10</option>
                     <option value="25">25</option>
                     <option value="50">50</option>
                     <option value="100">100</option>
-                  </Select>
+                  </select>
                 </div>
               )}
             </div>

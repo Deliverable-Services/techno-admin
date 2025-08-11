@@ -1,5 +1,5 @@
 import { Formik, Form } from "formik";
-import { Button, Col, Container, Row, Spinner } from "react-bootstrap";
+import { Button, Col, Container, Row, Spinner } from "../ui/bootstrap-compat";
 import useUserProfileStore from "../../hooks/useUserProfileStore";
 import { InputField } from "../../shared-components/InputFeild";
 import { config } from "../../utils/constants";

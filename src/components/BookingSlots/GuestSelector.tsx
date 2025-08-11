@@ -6,7 +6,7 @@ import {
   ListGroup,
   InputGroup,
   Spinner,
-} from "react-bootstrap";
+} from "../ui/bootstrap-compat";
 import { X, User, UserPlus } from "../../components/ui/icon";
 import API from "../../utils/API";
 

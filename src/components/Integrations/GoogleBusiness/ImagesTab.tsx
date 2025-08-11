@@ -8,7 +8,7 @@ import {
   Badge,
   Pagination,
   Alert,
-} from "react-bootstrap";
+} from "../../ui/bootstrap-compat";
 import { useQuery } from "react-query";
 import googleBusinessService, {
   BusinessImage,

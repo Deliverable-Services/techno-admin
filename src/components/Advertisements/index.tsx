@@ -1,6 +1,6 @@
 import { AxiosError } from "axios";
 import { useMemo, useState } from "react";
-import { Button, Container, Dropdown, Nav } from "react-bootstrap";
+import { Button, Container, Dropdown, Nav } from "../ui/bootstrap-compat";
 import { QueryFunction, useMutation, useQuery } from "react-query";
 import { useHistory } from "react-router-dom";
 

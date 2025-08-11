@@ -3,7 +3,7 @@ import { AxiosError } from "axios";
 import { Form, Formik } from "formik";
 import moment from "moment";
 import { useEffect } from "react";
-import { Button, Col, Row, Spinner } from "react-bootstrap";
+import { Button, Col, Row, Spinner } from "../ui/bootstrap-compat";
 import { useMutation } from "react-query";
 import { useHistory, useLocation } from "react-router-dom";
 import { handleApiError } from "../../hooks/handleApiErrors";

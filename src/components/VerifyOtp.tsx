@@ -1,6 +1,6 @@
 import { AxiosError } from "axios";
 import { Form, Formik } from "formik";
-import { Button, Container, Spinner } from "react-bootstrap";
+import { Button, Container, Spinner } from "./ui/bootstrap-compat";
 import { useMutation } from "react-query";
 import { useHistory } from "react-router";
 import { useLocation } from "react-router-dom";
