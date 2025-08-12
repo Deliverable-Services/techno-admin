@@ -17,6 +17,7 @@ import API from "../../utils/API";
 import { conditionType, isActiveArray } from "../../utils/arrays";
 import { queryClient } from "../../utils/queryClient";
 import { showMsgToast } from "../../utils/showMsgToast";
+import TiptapTextEditor from "../../shared-components/Tiptap/TiptapTextEditor";
 const key = "coupons";
 
 const createUpdataCoupons = ({
@@ -142,15 +143,15 @@ const CouponCreateUpdateForm = () => {
                       placeholder="Choose is active"
                     />
                   </div>
-                  <TextEditor
+                  <TiptapTextEditor
                     name="description"
-                    label="Description"
+                    // label="Description"
                     setFieldValue={setFieldValue}
                   />
 
-                  <TextEditor
+                  <TiptapTextEditor
                     name="terms"
-                    label="Terms"
+                    // label="Terms"
                     setFieldValue={setFieldValue}
                   />
                   <Row className="d-flex justify-content-center">

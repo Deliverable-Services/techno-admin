@@ -24,7 +24,10 @@ import { showMsgToast } from "../../utils/showMsgToast";
 import { CommonModal } from "../CommonPopup/CommonModal";
 import UserCreateUpdateForm from "./UsersCreateUpdateForm";
 import { Hammer } from "../ui/icon";
-import { UserStar } from 'lucide-react';
+import { UserStar, Funnel } from 'lucide-react';
+import { DropdownMenu, DropdownMenuContent, DropdownMenuTrigger } from "../ui/dropdown-menu";
+
+
 
 interface IFilter {
   role: string | null;
@@ -220,41 +223,45 @@ const Admins = () => {
                   <ReactTable
                     data={data?.data}
                     filters={
-                      <Dropdown className="search-filters-div filter-dropdown mr-2">
-                        <Dropdown.Toggle as={Button} variant="primary">
-                          <Hammer /> Filters
-                        </Dropdown.Toggle>
-                        <Dropdown.Menu>
-                          <div className="filter-dropdown-heading d-flex justify-content-between w-100">
-                            <h4>Filter</h4>
-                            <div className="d-flex align-items-center justify-md-content-center">
-                              <Button
-                                variant={
-                                  areTwoObjEqual(intitialFilter, filter)
-                                    ? "light"
-                                    : "primary"
-                                }
-                                style={{
-                                  fontSize: 14,
-                                }}
-                                onClick={() => setFilter(intitialFilter)}
-                              >
-                                Reset Filters
-                              </Button>
+                      <>
+                        <DropdownMenu >
+                          <DropdownMenuTrigger className="w-full flex filter-dropdown p-2  items-center justify-between rounded-lg py-1 px-3 !border-[#dee2e6] border h-[36px] border-secondary">
+                            <span className="flex items-center justify-between gap-2 w-full">
+                              <Funnel size={14} /> Filters
+                            </span>
+                          </DropdownMenuTrigger>
+                          <DropdownMenuContent className="w-[400px] p-3">
+                            <div className="filter-dropdown-heading d-flex justify-content-between w-100">
+                              <h4>Filter</h4>
+                              <div className="d-flex align-items-center justify-md-content-center">
+                                <Button
+                                  variant={
+                                    areTwoObjEqual(intitialFilter, filter)
+                                      ? "light"
+                                      : "primary"
+                                  }
+                                  style={{
+                                    fontSize: 14,
+                                  }}
+                                  onClick={() => setFilter(intitialFilter)}
+                                >
+                                  Reset Filters
+                                </Button>
+                              </div>
                             </div>
-                          </div>
-                          <div className="select-filter">
-                            <FilterSelect
-                              currentValue={filter.disabled}
-                              data={isActiveArray}
-                              label="Disabled Users?"
-                              idx="disabled"
-                              onFilterChange={_onFilterChange}
-                              defaultSelectTitle="Show All"
-                            />
-                          </div>
-                        </Dropdown.Menu>
-                      </Dropdown>
+                            <div className="select-filter">
+                              <FilterSelect
+                                currentValue={filter.disabled}
+                                data={isActiveArray}
+                                label="Disabled Users?"
+                                idx="disabled"
+                                onFilterChange={_onFilterChange}
+                                defaultSelectTitle="Show All"
+                              />
+                            </div>
+                          </DropdownMenuContent>
+                        </DropdownMenu>
+                      </>
                     }
                     columns={columns}
                     setSelectedRows={setSelectedRows}

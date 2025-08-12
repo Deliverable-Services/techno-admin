@@ -12,7 +12,7 @@ import { handleApiError } from "../hooks/handleApiErrors";
 import API from "../utils/API";
 import { useHistory } from "react-router-dom";
 import { Hammer } from "./ui/icon";
-import { Triangle, Clock, LayoutGrid, Rotate3d, LetterText, Building, BellRing, UserStar, ShieldCheck, CircleQuestionMark, Banknote, ReceiptText, UserRoundPlus, CreditCard, Users, CircleAlert, HeartPulse, VectorSquare, Building2, Globe, Ticket, Image } from 'lucide-react';
+import { Triangle, Clock, Target, PackageSearch, HatGlasses, Lightbulb, SwatchBook, Tag, LayoutGrid, ShoppingCart, Boxes, Rotate3d, LetterText, Building, BellRing, UserStar, ShieldCheck, CircleQuestionMark, Banknote, ReceiptText, UserRoundPlus, CreditCard, Users, CircleAlert, HeartPulse, VectorSquare, Building2, Globe, Ticket, Image } from 'lucide-react';
 
 
 // === Main Navigation Sections ===
@@ -21,7 +21,7 @@ const mainLinks: Array<INavLink> = [
   {
     title: "Orders",
     path: "/orders",
-    icon: <Hammer />,
+    icon: <Boxes />,
     permissionReq: "read_booking",
   },
   {
@@ -72,7 +72,7 @@ const mainLinks: Array<INavLink> = [
   {
     title: "Cart",
     path: "/cart",
-    icon: <Hammer />,
+    icon: <ShoppingCart />,
     permissionReq: "read_booking",
   },
   {
@@ -116,25 +116,25 @@ const mainLinks: Array<INavLink> = [
   {
     title: "Products",
     path: "/products",
-    icon: <Hammer />,
+    icon: <PackageSearch />,
     permissionReq: "read_bookingslot",
     children: [
       {
         title: "Products",
         path: "/products",
-        icon: <Hammer />,
+        icon: <PackageSearch />,
         permissionReq: "read_brandmodel",
       },
       {
         title: "Brands",
         path: "/product-brands",
-        icon: <Hammer />,
+        icon: <Tag />,
         permissionReq: "read_brand",
       },
       {
         title: "Variants",
         path: "/product-variants",
-        icon: <Hammer />,
+        icon: <SwatchBook />,
         permissionReq: "read_brandmodel",
       },
     ],
@@ -142,7 +142,7 @@ const mainLinks: Array<INavLink> = [
   {
     title: "Plans",
     path: "/plans",
-    icon: <Hammer />,
+    icon: <Lightbulb />,
     permissionReq: "read_plan",
   },
   {
@@ -195,13 +195,13 @@ const organisationLinks: Array<INavLink> = [
   {
     title: "Agents",
     path: "/agent",
-    icon: <Hammer />,
+    icon: <HatGlasses />,
     permissionReq: "read_user",
   },
   {
     title: "Agent Targets",
     path: "/agent-targets",
-    icon: <Hammer />,
+    icon: <Target />,
     permissionReq: "read_agenttarget",
   },
   {
