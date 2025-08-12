@@ -24,6 +24,8 @@ import { useFlyout } from "../../hooks/useFlyout";
 import Flyout from "../../shared-components/Flyout";
 import PlanCreateUpdateForm from "./PlansCreateUpdateForm";
 import { Hammer } from "../ui/icon";
+import { Lightbulb } from 'lucide-react';
+
 
 const key = "plans";
 
@@ -172,7 +174,7 @@ const Plans = () => {
         <PageHeading
           title="Plans"
           description="Create and manage plan"
-          icon={<Hammer size={24} />}
+          icon={<Lightbulb size={24} />}
           onClick={_onCreateClick}
           totalRecords={data?.total}
           permissionReq="create_plan"

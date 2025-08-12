@@ -251,12 +251,12 @@ const Notifications = () => {
                   }
                   filters={
                     <DropdownMenu>
-                      <DropdownMenuTrigger>
-                        <div className="flex gap-1">
-                          <Hammer /> Filters
-                        </div>
+                      <DropdownMenuTrigger className="w-full flex filter-dropdown p-2  items-center justify-between rounded-lg py-1 px-3 !border-[#dee2e6] border h-[36px] border-secondary">
+                        <span className="flex items-center justify-between gap-2 w-full">
+                          <Funnel size={14} /> Filters
+                        </span>
                       </DropdownMenuTrigger>
-                      <DropdownMenuContent>
+                      <DropdownMenuContent  className="w-[400px] p-3">
                         <DropdownMenuLabel>
                           <div className="flex gap-4 items-center justify-between">
                             My Account

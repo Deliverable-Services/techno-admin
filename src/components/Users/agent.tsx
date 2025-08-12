@@ -22,7 +22,7 @@ import { primaryColor } from "../../utils/constants";
 import { queryClient } from "../../utils/queryClient";
 import { showMsgToast } from "../../utils/showMsgToast";
 import { Hammer } from "../ui/icon";
-import { Funnel } from 'lucide-react';
+import { Funnel, HatGlasses } from 'lucide-react';
 
 interface IFilter {
   role: string | null;
@@ -178,7 +178,7 @@ const Agents = () => {
         <PageHeading
           title="Agents"
           description="Create and manage agents for your workflow"
-          icon={<Hammer size={24} />}
+          icon={<HatGlasses size={24} />}
           onClick={_onCreateClick}
           totalRecords={data?.total}
           permissionReq="create_user"
