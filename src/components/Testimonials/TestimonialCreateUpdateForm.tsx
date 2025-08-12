@@ -14,7 +14,7 @@ import API from "../../utils/API";
 import { queryClient } from "../../utils/queryClient";
 import { showMsgToast } from "../../utils/showMsgToast";
 import Restricted from "../../shared-components/Restricted";
-import TiptapTextEditor from "../../shared-components/TiptapTextEditor";
+import TiptapTextEditor from "../../shared-components/Tiptap/TiptapTextEditor";
 
 const key = "testimonial";
 

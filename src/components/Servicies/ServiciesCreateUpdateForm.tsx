@@ -23,7 +23,7 @@ import { isActiveArray } from "../../utils/arrays";
 import { queryClient } from "../../utils/queryClient";
 import { showMsgToast } from "../../utils/showMsgToast";
 import { Hammer } from "../ui/icon";
-import TiptapTextEditor from "../../shared-components/TiptapTextEditor";
+import TiptapTextEditor from "../../shared-components/Tiptap/TiptapTextEditor";
 
 const key = "services";
 
@@ -116,7 +116,7 @@ const ServicesCreateUpdateForm = () => {
       <div className="card view-padding p-2 d-flex mt-3">
         {/* <BackButton title="Services" /> */}
         <Row className="rounded">
-          <Col className="mx-auto">
+          <Col className="mx-auto w-full">
             <Formik
               enableReinitialize
               initialValues={

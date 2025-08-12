@@ -10,7 +10,7 @@ import useGetSingleQuery from "../../hooks/useGetSingleQuery";
 import BackButton from "../../shared-components/BackButton";
 import { InputField } from "../../shared-components/InputFeild";
 import IsLoading from "../../shared-components/isLoading";
-import TiptapTextEditor from "../../shared-components/TiptapTextEditor";
+import TiptapTextEditor from "../../shared-components/Tiptap/TiptapTextEditor";
 import API from "../../utils/API";
 import { queryClient } from "../../utils/queryClient";
 import { showMsgToast } from "../../utils/showMsgToast";

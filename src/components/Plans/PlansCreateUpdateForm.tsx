@@ -17,7 +17,7 @@ import { showMsgToast } from "../../utils/showMsgToast";
 import ImagesContainer from "../../shared-components/ImagesContainer";
 import Restricted from "../../shared-components/Restricted";
 import { Hammer } from "../ui/icon";
-import TiptapTextEditor from "../../shared-components/TiptapTextEditor";
+import TiptapTextEditor from "../../shared-components/Tiptap/TiptapTextEditor";
 
 const key = "plans";
 
