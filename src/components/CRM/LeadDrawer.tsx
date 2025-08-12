@@ -35,6 +35,7 @@ import {
 import { Dropdown, Button, Form, Card, Badge } from "../ui/bootstrap-compat";
 // Using Dropdown for assignee as well
 import { queryClient } from "../../utils/queryClient";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from "../ui/dropdown-menu";
 
 const key = "leads";
 
@@ -400,18 +401,18 @@ const LeadDrawer: React.FC<Props> = ({ lead, onClose }) => {
   ];
 
   const statusIcons: { [key: string]: JSX.Element } = {
-    NEW: <Circle className="text-orange mr-2" />,
-    SCHEDULED: <Calendar className="text-secondary mr-2" />,
-    EN_ROUTE: <Truck className="text-warning mr-2" />,
-    IN_PROGRESS: <CircleDot className="text-blue mr-2" />,
-    COMPLETED: <CheckCircle className="text-green mr-2" />,
-    PAID: <CreditCard className="text-blue-dark mr-2" />,
+    NEW: <Circle size={16} className="text-orange" />,
+    SCHEDULED: <Calendar size={16} className="text-secondary" />,
+    EN_ROUTE: <Truck size={16} className="text-warning" />,
+    IN_PROGRESS: <CircleDot size={16} className="text-blue" />,
+    COMPLETED: <CheckCircle size={16} className="text-success" />,
+    PAID: <CreditCard size={16} className="text-blue-dark" />,
   };
 
   const renderStatus = (value: string) => {
     const opt = statusOptions.find((o) => o.value === value);
     return (
-      <span className="d-flex align-items-center gap-2">
+      <span className="flex items-center gap-2">
         {statusIcons[value]}
         <span>{opt?.label || value}</span>
       </span>
@@ -491,40 +492,40 @@ const LeadDrawer: React.FC<Props> = ({ lead, onClose }) => {
   return (
     <>
       <div
-        className="fixed inset-0 bg-black bg-opacity-50 z-50 backdrop-blur-sm"
+        className="fixed inset-0 bg-[#00000080] z-50 backdrop-blur-sm"
         onClick={onClose}
       />
-      <div className="fixed top-0 right-0 w-[90vw] max-w-[1400px] h-screen bg-white z-[51] flex flex-col shadow-[-4px_0_20px_rgba(0,0,0,0.15)] animate-[slideInRight_0.3s_ease-out]">
+      <div className="lead-drawer fixed top-0 right-0 w-[90vw] max-w-[1400px] h-screen bg-white z-[51] flex flex-col shadow-[-4px_0_20px_rgba(0,0,0,0.15)] animate-[slideInRight_0.3s_ease-out]">
         {/* Main Content */}
         <div className="flex-1 flex overflow-hidden">
           <div className="w-[400px] border-r border-gray-200 bg-white">
             <div className="h-full overflow-y-auto p-6">
-              <div className="d-flex justify-content-between align-items-center">
+              <div className="flex justify-between items-center mb-4">
                 <button
                   type="button"
-                  className="text-blue-600 no-underline font-medium flex items-center gap-2 mb-4 hover:text-blue-800 transition-colors"
+                  className="text-[#0b64fe] text-sm no-underline font-medium flex items-center gap-2 hover:text-blue-800 transition-colors"
                   onClick={onClose}
                 >
                   <ArrowLeft />
                   Back to leads
                 </button>
                 <div>
-                  <span>
-                    <MoreVertical />
+                  <span className="flex items-center gap-1">
+                    <MoreVertical size={16} />
                     More
                   </span>
                 </div>
               </div>
 
-              <div className="d-flex align-items-center justify-content-start gap-12">
+              <div className="flex items-center justify-start gap-3">
                 <img
                   src={`https://ui-avatars.com/api/?name=${details.name}&size=80&background=667eea&color=fff&font-size=0.4&bold=true`}
                   alt={details.name}
-                  className="w-20 h-20 rounded-full object-cover border-3 border-white shadow-lg"
+                  className="w-20 h-20 rounded-full object-cover border-[3px] border-solid !border-white shadow-lg"
                 />
 
-                <div className="d-flex flex-column gap-0">
-                  <h4 className="mb-0">{details.name}</h4>
+                <div className="flex flex-col gap-0">
+                  <h4 className="mb-0 font-medium text-2xl">{details.name}</h4>
                   <span className="text-muted">{details.email}</span>
                 </div>
               </div>
@@ -535,7 +536,7 @@ const LeadDrawer: React.FC<Props> = ({ lead, onClose }) => {
                   type="button"
                 >
                   <div className="text-lg border border-gray-300 h-10 w-10 flex items-center justify-center rounded-full">
-                    <Mail />
+                    <Mail size={16} />
                   </div>
                   <span className="text-sm font-medium">Email</span>
                 </button>
@@ -544,7 +545,7 @@ const LeadDrawer: React.FC<Props> = ({ lead, onClose }) => {
                   type="button"
                 >
                   <div className="text-lg border border-gray-300 h-10 w-10 flex items-center justify-center rounded-full">
-                    <MessageSquare />
+                    <MessageSquare size={16} />
                   </div>
                   <span className="text-sm font-medium">SMS</span>
                 </button>
@@ -553,7 +554,7 @@ const LeadDrawer: React.FC<Props> = ({ lead, onClose }) => {
                   type="button"
                 >
                   <div className="text-lg border border-gray-300 h-10 w-10 flex items-center justify-center rounded-full">
-                    <Calendar />
+                    <Calendar size={16} />
                   </div>
                   <span className="text-sm font-medium">Meeting</span>
                 </button>
@@ -562,7 +563,7 @@ const LeadDrawer: React.FC<Props> = ({ lead, onClose }) => {
                   type="button"
                 >
                   <div className="text-lg border border-gray-300 h-10 w-10 flex items-center justify-center rounded-full">
-                    <Calendar />
+                    <Calendar size={16} />
                   </div>
                   <span className="text-sm font-medium">Reminder</span>
                 </button>
@@ -573,7 +574,7 @@ const LeadDrawer: React.FC<Props> = ({ lead, onClose }) => {
                 {details.user_id ? (
                   <Button
                     variant="info"
-                    className="w-100"
+                    className="w-full"
                     onClick={handleViewCustomer}
                   >
                     <User className="me-2" />
@@ -582,7 +583,7 @@ const LeadDrawer: React.FC<Props> = ({ lead, onClose }) => {
                 ) : (
                   <Button
                     variant="success"
-                    className="w-100"
+                    className="w-full text-black bg-success"
                     onClick={handleConvertToCustomer}
                     disabled={isConverting}
                   >
@@ -606,52 +607,42 @@ const LeadDrawer: React.FC<Props> = ({ lead, onClose }) => {
                 )}
               </div>
               {/* Status Updater - full width with icon */}
-              <div className="mb-3 mt-3 d-flex align-items-center gap-4">
+              <div className="mb-3 mt-3 flex items-center gap-4">
                 <span>Status: </span>
-                <Dropdown
-                  onSelect={(eventKey) => handleChangeStatus(String(eventKey))}
-                  className="w-100"
-                >
-                  <Dropdown.Toggle
-                    size="sm"
-                    variant="outline"
-                    className="w-100 d-flex align-items-center justify-content-between border-secondary"
-                    disabled={isStatusUpdating}
-                  >
-                    <span className="d-flex align-items-center justify-content-between gap-2 w-100">
+                <DropdownMenu>
+                  <DropdownMenuTrigger className="w-full flex items-center justify-between rounded-lg py-1 px-2 border border-secondary"
+                    disabled={isStatusUpdating}>
+                    <span className="flex items-center justify-between gap-2 w-full">
                       {renderStatus(leadStatus)}
-                      <ChevronDown className="text-muted" />
+                      <ChevronDown size={16} className="text-muted" />
                     </span>
-                  </Dropdown.Toggle>
-                  <Dropdown.Menu className="w-100">
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent className="w-full">
                     {statusOptions.map((s) => (
-                      <Dropdown.Item
-                        eventKey={s.value}
+                      <DropdownMenuItem
                         key={s.value}
-                        active={s.value === leadStatus}
-                        className="d-flex align-items-center gap-2"
+                        onClick={() => handleChangeStatus(s.value)}
+                        className="flex items-center gap-2"
                       >
                         {renderStatus(s.value)}
-                      </Dropdown.Item>
+                      </DropdownMenuItem>
                     ))}
-                  </Dropdown.Menu>
-                </Dropdown>
+                  </DropdownMenuContent>
+                </DropdownMenu>
               </div>
               {/* Navigation Tabs */}
               <div className="mb-4">
-                <div className="d-flex border-bottom">
+                <div className="flex border-b">
                   <span
-                    className={`btn btn-link text-decoration-none px-3 py-2 ${
-                      leftTab === "about" ? "text-primary" : "text-muted"
-                    }`}
+                    className={`cursor-pointer px-3 py-2 ${leftTab === "about" ? "text-primary" : "text-muted"
+                      }`}
                     onClick={() => setLeftTab("about")}
                   >
                     About account
                   </span>
                   <span
-                    className={`btn btn-link text-decoration-none px-3 py-2 ${
-                      leftTab === "address" ? "text-primary" : "text-muted"
-                    }`}
+                    className={`cursor-pointer px-3 py-2 ${leftTab === "address" ? "text-primary" : "text-muted"
+                      }`}
                     onClick={() => setLeftTab("address")}
                   >
                     Address info
@@ -662,15 +653,15 @@ const LeadDrawer: React.FC<Props> = ({ lead, onClose }) => {
               {leftTab === "about" && (
                 <>
                   {/* Contact Information */}
-                  <div className="info-section">
-                    <h6>
-                      <User className="icon" />
+                  <div className="info-section mb-8">
+                    <h6 className="text-gray-700 flex items-center text-sm font-semibold gap-2 mb-4">
+                      <User size={16} className="text-description text-base" />
                       Contact Information
                     </h6>
-                    <div className="info-item">
-                      <span className="info-label">Name</span>
+                    <div className="info-item flex items-center justify-between border-b border-[#f1f3f4] py-3">
+                      <span className="info-label text-[13px] text-[#667085] font-medium">Name</span>
                       <span
-                        className="info-value d-flex align-items-center gap-2"
+                        className="info-value flex items-center gap-2 text-gray-700 text-sm font-medium overflow-hidden text-right whitespace-nowrap text-ellipsis"
                         style={{ maxWidth: 260 }}
                       >
                         {editing.name ? (
@@ -682,7 +673,7 @@ const LeadDrawer: React.FC<Props> = ({ lead, onClose }) => {
                               className="form-control form-control-sm"
                             />
                             <button
-                              className="btn btn-sm btn-success"
+                              className="py-1 px-2 rounded-lg bg-success"
                               onClick={() => saveField("name")}
                             >
                               <Check />
@@ -694,19 +685,19 @@ const LeadDrawer: React.FC<Props> = ({ lead, onClose }) => {
                               {details.name}
                             </span>
                             <button
-                              className="btn btn-link p-0"
+                              className="text-secondary p-0"
                               onClick={() => startEdit("name")}
                             >
-                              <Edit />
+                              <Edit size={16} />
                             </button>
                           </>
                         )}
                       </span>
                     </div>
-                    <div className="info-item">
-                      <span className="info-label">Email</span>
+                    <div className="info-item flex items-center justify-between border-b border-[#f1f3f4] py-3">
+                      <span className="info-label text-[13px] text-[#667085] font-medium">Email</span>
                       <span
-                        className="info-value d-flex align-items-center gap-2"
+                        className="info-value flex items-center gap-2 text-gray-700 text-sm font-medium overflow-hidden text-right whitespace-nowrap text-ellipsis"
                         style={{ maxWidth: 260 }}
                       >
                         {editing.email ? (
@@ -718,10 +709,10 @@ const LeadDrawer: React.FC<Props> = ({ lead, onClose }) => {
                               className="form-control form-control-sm"
                             />
                             <button
-                              className="btn btn-sm btn-success"
+                              className="py-1 px-2 rounded-lg bg-success"
                               onClick={() => saveField("email")}
                             >
-                              <Check />
+                              <Check size={16} />
                             </button>
                           </>
                         ) : (
@@ -730,19 +721,19 @@ const LeadDrawer: React.FC<Props> = ({ lead, onClose }) => {
                               {details.email}
                             </span>
                             <button
-                              className="btn btn-link p-0"
+                              className="p-0 text-secondary"
                               onClick={() => startEdit("email")}
                             >
-                              <Edit />
+                              <Edit size={16} />
                             </button>
                           </>
                         )}
                       </span>
                     </div>
-                    <div className="info-item">
-                      <span className="info-label">Phone number</span>
+                    <div className="info-item flex items-center justify-between border-b border-[#f1f3f4] py-3">
+                      <span className="info-label text-[13px] text-[#667085] font-medium">Phone number</span>
                       <span
-                        className="info-value d-flex align-items-center gap-2"
+                        className="info-value flex items-center gap-2 text-gray-700 text-sm font-medium overflow-hidden text-right whitespace-nowrap text-ellipsis"
                         style={{ maxWidth: 220 }}
                       >
                         {editing.phone ? (
@@ -754,10 +745,10 @@ const LeadDrawer: React.FC<Props> = ({ lead, onClose }) => {
                               className="form-control form-control-sm"
                             />
                             <button
-                              className="btn btn-sm btn-success"
+                              className="py-1 px-2 rounded-lg bg-success"
                               onClick={() => saveField("phone")}
                             >
-                              <Check />
+                              <Check size={16} />
                             </button>
                           </>
                         ) : (
@@ -766,36 +757,28 @@ const LeadDrawer: React.FC<Props> = ({ lead, onClose }) => {
                               {details.phone}
                             </span>
                             <button
-                              className="btn btn-link p-0"
+                              className="p-0 text-secondary"
                               onClick={() => startEdit("phone")}
                             >
-                              <Edit />
+                              <Edit size={16} />
                             </button>
                           </>
                         )}
                       </span>
                     </div>
-                    <div className="info-item">
-                      <span className="info-label">Assigned to</span>
-                      <span className="info-value" style={{ maxWidth: 320 }}>
-                        <Dropdown
-                          onSelect={(eventKey) =>
-                            handleAssignById(String(eventKey))
-                          }
-                        >
-                          <Dropdown.Toggle
-                            size="sm"
-                            variant="outline-secondary"
-                            className="w-100 d-flex align-items-center justify-content-between"
-                          >
-                            <span className="d-flex align-items-center gap-2">
+                    <div className="info-item flex items-center justify-between border-b border-[#f1f3f4] py-3">
+                      <span className="info-label text-[13px] text-[#667085] font-medium">Assigned to</span>
+                      <span className="info-value flex items-center gap-2 text-gray-700 text-sm font-medium overflow-hidden text-right whitespace-nowrap text-ellipsis" style={{ maxWidth: 320 }}>
+                        <DropdownMenu>
+                          <DropdownMenuTrigger className="w-full flex items-center justify-between rounded-lg py-1 px-2 border border-secondary">
+                            <span className="flex items-center gap-2">
                               {assignedMember ? (
                                 <>
                                   <img
                                     src={resolveAvatar(
                                       assignedMember?.name,
                                       assignedMember?.profile_pic ||
-                                        assignedMember?.user?.profile_pic
+                                      assignedMember?.user?.profile_pic
                                     )}
                                     alt={assignedMember?.name}
                                     style={{
@@ -813,19 +796,21 @@ const LeadDrawer: React.FC<Props> = ({ lead, onClose }) => {
                                 <span className="text-muted">Unassigned</span>
                               )}
                             </span>
-                            <ChevronDown className="text-muted" />
-                          </Dropdown.Toggle>
-                          <Dropdown.Menu className="w-100">
-                            <Dropdown.Item eventKey="" active={!assignedMember}>
+                            <ChevronDown size={16} className="text-muted" />
+                          </DropdownMenuTrigger>
+                          <DropdownMenuContent className="w-full">
+                            <DropdownMenuItem
+                              onClick={() => handleAssignById("")}
+                              className="flex items-center gap-2"
+                            >
                               <span className="text-muted">Unassigned</span>
-                            </Dropdown.Item>
+                            </DropdownMenuItem>
                             {(((membersList as any)?.data ?? []) as any[]).map(
                               (m: any) => (
-                                <Dropdown.Item
-                                  eventKey={String(m.id)}
+                                <DropdownMenuItem
                                   key={m.id}
-                                  active={assignedMember?.id === m.id}
-                                  className="d-flex align-items-center gap-2"
+                                  onClick={() => handleAssignById(String(m.id))}
+                                  className="flex items-center gap-2"
                                 >
                                   <img
                                     src={resolveAvatar(
@@ -841,17 +826,17 @@ const LeadDrawer: React.FC<Props> = ({ lead, onClose }) => {
                                     }}
                                   />
                                   <span>{m.name}</span>
-                                </Dropdown.Item>
+                                </DropdownMenuItem>
                               )
                             )}
-                          </Dropdown.Menu>
-                        </Dropdown>
+                          </DropdownMenuContent>
+                        </DropdownMenu>
                       </span>
                     </div>
-                    <div className="info-item">
-                      <span className="info-label">Job title</span>
+                    <div className="info-item flex items-center justify-between border-b border-[#f1f34] py-3">
+                      <span className="info-label text-[13px] text-[#667085] font-medium">Job title</span>
                       <span
-                        className="info-value d-flex align-items-center gap-2"
+                        className="info-value flex items-center gap-2 text-gray-700 text-sm font-medium overflow-hidden text-right whitespace-nowrap text-ellipsis"
                         style={{ maxWidth: 220 }}
                       >
                         {editing.jobTitle ? (
@@ -863,10 +848,10 @@ const LeadDrawer: React.FC<Props> = ({ lead, onClose }) => {
                               className="form-control form-control-sm"
                             />
                             <button
-                              className="btn btn-sm btn-success"
+                              className="py-1 px-2 rounded-lg bg-success"
                               onClick={() => saveField("jobTitle")}
                             >
-                              <Check />
+                              <Check size={16} />
                             </button>
                           </>
                         ) : (
@@ -875,19 +860,19 @@ const LeadDrawer: React.FC<Props> = ({ lead, onClose }) => {
                               {details.jobTitle}
                             </span>
                             <button
-                              className="btn btn-link p-0"
+                              className="p-0 text-secondary"
                               onClick={() => startEdit("jobTitle")}
                             >
-                              <Edit />
+                              <Edit size={16} />
                             </button>
                           </>
                         )}
                       </span>
                     </div>
-                    <div className="info-item">
-                      <span className="info-label">Gender</span>
+                    <div className="info-item flex items-center justify-between border-b border-[#f1f34] py-3">
+                      <span className="info-label text-[13px] text-[#667085] font-medium">Gender</span>
                       <span
-                        className="info-value d-flex align-items-center gap-2"
+                        className="info-value flex items-center gap-2 text-gray-700 text-sm font-medium overflow-hidden text-right whitespace-nowrap text-ellipsis"
                         style={{ maxWidth: 220 }}
                       >
                         {editing.gender ? (
@@ -908,10 +893,10 @@ const LeadDrawer: React.FC<Props> = ({ lead, onClose }) => {
                               <option value="other">Other</option>
                             </select>
                             <button
-                              className="btn btn-sm btn-success"
+                              className="py-1 px-2 rounded-lg bg-success"
                               onClick={() => saveField("gender")}
                             >
-                              <Check />
+                              <Check size={16} />
                             </button>
                           </>
                         ) : (
@@ -920,31 +905,31 @@ const LeadDrawer: React.FC<Props> = ({ lead, onClose }) => {
                               {details.gender}
                             </span>
                             <button
-                              className="btn btn-link p-0"
+                              className="p-0 text-secondary"
                               onClick={() => startEdit("gender")}
                             >
-                              <Edit />
+                              <Edit size={16} />
                             </button>
                           </>
                         )}
                       </span>
                     </div>
-                    <div className="info-item">
-                      <span className="info-label">Last contacted</span>
-                      <span className="info-value">-</span>
+                    <div className="info-item flex items-center justify-between border-b border-[#f1f34] py-3">
+                      <span className="info-label text-[13px] text-[#667085] font-medium">Last contacted</span>
+                      <span className="info-value text-gray-700 text-sm font-medium overflow-hidden text-right whitespace-nowrap text-ellipsis" style={{ maxWidth: 220 }}>-</span>
                     </div>
                   </div>
 
                   {/* Company Information */}
                   <div className="info-section">
-                    <h6>
-                      <Building className="icon" />
+                    <h6 className="text-gray-700 flex items-center text-sm font-semibold gap-2 mb-4">
+                      <Building size={16} className="text-description" />
                       Company Information
                     </h6>
-                    <div className="info-item">
-                      <span className="info-label">Company name</span>
+                    <div className="info-item flex items-center justify-between border-b border-[#f1f34] py-3">
+                      <span className="info-label text-[13px] text-[#667085] font-medium">Company name</span>
                       <span
-                        className="info-value d-flex align-items-center gap-2"
+                        className="info-value flex items-center gap-2 text-gray-700 text-sm font-medium overflow-hidden text-right whitespace-nowrap text-ellipsis"
                         style={{ maxWidth: 220 }}
                       >
                         {editing.company ? (
@@ -956,10 +941,10 @@ const LeadDrawer: React.FC<Props> = ({ lead, onClose }) => {
                               className="form-control form-control-sm"
                             />
                             <button
-                              className="btn btn-sm btn-success"
+                              className="py-1 px-2 rounded-lg bg-success"
                               onClick={() => saveField("company")}
                             >
-                              <Check />
+                              <Check size={16} />
                             </button>
                           </>
                         ) : (
@@ -968,19 +953,19 @@ const LeadDrawer: React.FC<Props> = ({ lead, onClose }) => {
                               {details.company}
                             </span>
                             <button
-                              className="btn btn-link p-0"
+                              className="p-0 text-secondary"
                               onClick={() => startEdit("company")}
                             >
-                              <Edit />
+                              <Edit size={16} />
                             </button>
                           </>
                         )}
                       </span>
                     </div>
-                    <div className="info-item">
-                      <span className="info-label">Website</span>
+                    <div className="info-item flex items-center justify-between border-b border-[#f1f34] py-3">
+                      <span className="info-label text-[13px] text-[#667085] font-medium">Website</span>
                       <span
-                        className="info-value d-flex align-items-center gap-2"
+                        className="info-value flex items-center gap-2 text-gray-700 text-sm font-medium overflow-hidden text-right whitespace-nowrap text-ellipsis"
                         style={{ maxWidth: 260 }}
                       >
                         {editing.website ? (
@@ -993,10 +978,10 @@ const LeadDrawer: React.FC<Props> = ({ lead, onClose }) => {
                               className="form-control form-control-sm"
                             />
                             <button
-                              className="btn btn-sm btn-success"
+                              className="py-1 px-2 rounded-lg bg-success"
                               onClick={() => saveField("website")}
                             >
-                              <Check />
+                              <Check size={16} />
                             </button>
                           </>
                         ) : (
@@ -1005,37 +990,37 @@ const LeadDrawer: React.FC<Props> = ({ lead, onClose }) => {
                               {details.website || "-"}
                             </span>
                             <button
-                              className="btn btn-link p-0"
+                              className="p-0 text-secondary"
                               onClick={() => startEdit("website")}
                             >
-                              <Edit />
+                              <Edit size={16} />
                             </button>
                           </>
                         )}
                       </span>
                     </div>
-                    <div className="info-item">
-                      <span className="info-label">Instagram account</span>
-                      <span className="info-value">{details.instagram}</span>
+                    <div className="info-item flex items-center justify-between border-b border-[#f1f34] py-3">
+                      <span className="info-label text-[13px] text-[#667085] font-medium">Instagram account</span>
+                      <span className="info-value text-gray-700 text-sm font-medium overflow-hidden text-right whitespace-nowrap text-ellipsis" style={{ maxWidth: 220 }}>{details.instagram}</span>
                     </div>
-                    <div className="info-item">
-                      <span className="info-label">Tiktok account</span>
-                      <span className="info-value">{details.tiktok}</span>
+                    <div className="info-item flex items-center justify-between border-b border-[#f1f34] py-3">
+                      <span className="info-label text-[13px] text-[#667085] font-medium">Tiktok account</span>
+                      <span className="info-value text-gray-700 text-sm font-medium overflow-hidden text-right whitespace-nowrap text-ellipsis" style={{ maxWidth: 220 }}>{details.tiktok}</span>
                     </div>
                   </div>
                 </>
               )}
 
               {leftTab === "address" && (
-                <div className="info-section">
-                  <h6>
-                    <MapPin className="icon" />
+                <div className="info-section mb-8">
+                  <h6 className="text-gray-700 flex items-center text-sm font-semibold gap-2 mb-4">
+                    <MapPin size={16} className="text-description" />
                     Address Information
                   </h6>
-                  <div className="info-item">
-                    <span className="info-label">Full address</span>
+                  <div className="info-item flex items-center justify-between border-b border-[#f1f34] py-3">
+                    <span className="info-label text-[13px] text-[#667085] font-medium">Full address</span>
                     <span
-                      className="info-value d-flex align-items-center gap-2"
+                      className="info-value flex items-center gap-2 text-gray-700 text-sm font-medium overflow-hidden text-right whitespace-nowrap text-ellipsis"
                       style={{ maxWidth: 260 }}
                     >
                       {editing.full_address ? (
@@ -1047,10 +1032,10 @@ const LeadDrawer: React.FC<Props> = ({ lead, onClose }) => {
                             className="form-control form-control-sm"
                           />
                           <button
-                            className="btn btn-sm btn-success"
+                            className="py-1 px-2 rounded-lg bg-success"
                             onClick={() => saveField("full_address")}
                           >
-                            <Check />
+                            <Check size={16} />
                           </button>
                         </>
                       ) : (
@@ -1059,19 +1044,19 @@ const LeadDrawer: React.FC<Props> = ({ lead, onClose }) => {
                             {details.full_address}
                           </span>
                           <button
-                            className="btn btn-link p-0"
+                            className="p-0 text-secondary"
                             onClick={() => startEdit("full_address")}
                           >
-                            <Edit />
+                            <Edit size={16} />
                           </button>
                         </>
                       )}
                     </span>
                   </div>
-                  <div className="info-item">
-                    <span className="info-label">City</span>
+                  <div className="info-item flex items-center justify-between border-b border-[#f1f34] py-3">
+                    <span className="info-label text-[13px] text-[#667085] font-medium">City</span>
                     <span
-                      className="info-value d-flex align-items-center gap-2"
+                      className="info-value flex items-center gap-2 text-gray-700 text-sm font-medium overflow-hidden text-right whitespace-nowrap text-ellipsis"
                       style={{ maxWidth: 200 }}
                     >
                       {editing.city ? (
@@ -1083,29 +1068,29 @@ const LeadDrawer: React.FC<Props> = ({ lead, onClose }) => {
                             className="form-control form-control-sm"
                           />
                           <button
-                            className="btn btn-sm btn-success"
+                            className="py-1 px-2 rounded-lg bg-success"
                             onClick={() => saveField("city")}
                           >
-                            <Check />
+                            <Check size={16} />
                           </button>
                         </>
                       ) : (
                         <>
                           <span className="text-truncate">{details.city}</span>
                           <button
-                            className="btn btn-link p-0"
+                            className="p-0 text-secondary"
                             onClick={() => startEdit("city")}
                           >
-                            <Edit />
+                            <Edit size={16} />
                           </button>
                         </>
                       )}
                     </span>
                   </div>
-                  <div className="info-item">
-                    <span className="info-label">Country</span>
+                  <div className="info-item flex items-center justify-between border-b border-[#f1f34] py-3">
+                    <span className="info-label text-[13px] text-[#667085] font-medium">Country</span>
                     <span
-                      className="info-value d-flex align-items-center gap-2"
+                      className="info-value flex items-center gap-2 text-gray-700 text-sm font-medium overflow-hidden text-right whitespace-nowrap text-ellipsis"
                       style={{ maxWidth: 200 }}
                     >
                       {editing.country ? (
@@ -1117,10 +1102,10 @@ const LeadDrawer: React.FC<Props> = ({ lead, onClose }) => {
                             className="form-control form-control-sm"
                           />
                           <button
-                            className="btn btn-sm btn-success"
+                            className="py-1 px-2 rounded-lg bg-success"
                             onClick={() => saveField("country")}
                           >
-                            <Check />
+                            <Check size={16} />
                           </button>
                         </>
                       ) : (
@@ -1129,19 +1114,19 @@ const LeadDrawer: React.FC<Props> = ({ lead, onClose }) => {
                             {details.country}
                           </span>
                           <button
-                            className="btn btn-link p-0"
+                            className="p-0 text-secondary"
                             onClick={() => startEdit("country")}
                           >
-                            <Edit />
+                            <Edit size={16} />
                           </button>
                         </>
                       )}
                     </span>
                   </div>
-                  <div className="info-item">
-                    <span className="info-label">Zipcode</span>
+                  <div className="info-item flex items-center justify-between border-b border-[#f1f34] py-3">
+                    <span className="info-label text-[13px] text-[#667085] font-medium">Zipcode</span>
                     <span
-                      className="info-value d-flex align-items-center gap-2"
+                      className="info-value flex items-center gap-2 text-gray-700 text-sm font-medium overflow-hidden text-right whitespace-nowrap text-ellipsis"
                       style={{ maxWidth: 160 }}
                     >
                       {editing.zipcode ? (
@@ -1153,10 +1138,10 @@ const LeadDrawer: React.FC<Props> = ({ lead, onClose }) => {
                             className="form-control form-control-sm"
                           />
                           <button
-                            className="btn btn-sm btn-success"
+                            className="py-1 px-2 rounded-lg bg-success"
                             onClick={() => saveField("zipcode")}
                           >
-                            <Check />
+                            <Check size={16} />
                           </button>
                         </>
                       ) : (
@@ -1165,10 +1150,10 @@ const LeadDrawer: React.FC<Props> = ({ lead, onClose }) => {
                             {details.zipcode}
                           </span>
                           <button
-                            className="btn btn-link p-0"
+                            className="p-0 text-secondary"
                             onClick={() => startEdit("zipcode")}
                           >
-                            <Edit />
+                            <Edit size={16} />
                           </button>
                         </>
                       )}
@@ -1184,21 +1169,19 @@ const LeadDrawer: React.FC<Props> = ({ lead, onClose }) => {
             <div className="p-5 border-b border-gray-200 bg-gray-50">
               <div className="flex gap-8 mb-4">
                 <div
-                  className={`py-2 cursor-pointer border-b-2 transition-all duration-200 font-medium ${
-                    midTab === "overview"
-                      ? "text-blue-600 border-blue-600"
-                      : "text-gray-600 border-transparent"
-                  }`}
+                  className={`py-2 cursor-pointer border-b-2 transition-all duration-200 font-medium ${midTab === "overview"
+                    ? "text-secondary border-secondary"
+                    : "text-gray-600 border-transparent"
+                    }`}
                   onClick={() => setMidTab("overview")}
                 >
                   Customer Journey
                 </div>
                 <div
-                  className={`py-2 cursor-pointer border-b-2 transition-all duration-200 font-medium ${
-                    midTab === "activities"
-                      ? "text-blue-600 border-blue-600"
-                      : "text-gray-600 border-transparent"
-                  }`}
+                  className={`py-2 cursor-pointer border-b-2 transition-all duration-200 font-medium ${midTab === "activities"
+                    ? "text-blue-600 border-blue-600"
+                    : "text-gray-600 border-transparent"
+                    }`}
                   onClick={() => setMidTab("activities")}
                 >
                   Notes
@@ -1209,15 +1192,15 @@ const LeadDrawer: React.FC<Props> = ({ lead, onClose }) => {
             <div className="p-6 h-full overflow-y-auto">
               {midTab === "overview" ? (
                 // User Journey Timeline
-                <div className="activity-timeline">
+                <div className="activity-timeline pl-[30px] relative">
                   {activityLogs.length === 0 ? (
                     <div className="text-center text-muted py-4">
                       No activity logs found
                     </div>
                   ) : (
                     activityLogs.map((log) => (
-                      <div key={log.id} className="timeline-item">
-                        <div className="timeline-icon">
+                      <div key={log.id} className="timeline-item border-l-2 border-[#e5e7eb] ml-2.5 pb-5 pl-5 relative">
+                        <div className="timeline-icon flex items-center justify-center bg-[#667eea] border-2 border-whit text-white rounded-full shadow-sm text-[8px] size-6 overflow-hidden absolute top-0 -left-3">
                           <img
                             src={resolveAvatar(
                               log.user?.name || "System",
@@ -1231,11 +1214,11 @@ const LeadDrawer: React.FC<Props> = ({ lead, onClose }) => {
                             }}
                           />
                         </div>
-                        <div className="timeline-content-wrapper">
-                          <div className="timeline-header">
-                            <div className="d-flex align-items-center gap-2 mb-1">
+                        <div className="timeline-content-wrapper bg-[#f9fafb] border-[#e5e7eb] rounded-lg border py-3 px-4">
+                          <div className="timeline-header mb-1 bg-[#fafbfc] border-[#e9ecef] py-5 px-6">
+                            <div className="flex items-center gap-2 mb-1">
                               <strong>{log.user?.name || "System"}</strong>
-                              <span className="timeline-action">
+                              <span className="timeline-action text-[#6b7280]">
                                 {log.action === "created" &&
                                   " created this lead"}
                                 {log.action === "updated" &&
@@ -1244,7 +1227,7 @@ const LeadDrawer: React.FC<Props> = ({ lead, onClose }) => {
                                   " deleted this lead"}
                               </span>
                             </div>
-                            <div className="timeline-time text-muted small">
+                            <div className="timeline-time text-muted text-xs">
                               {log.formatted_time} •{" "}
                               {log.created_at &&
                                 new Date(log.created_at).toLocaleDateString()}
@@ -1257,8 +1240,8 @@ const LeadDrawer: React.FC<Props> = ({ lead, onClose }) => {
                 </div>
               ) : (
                 // Notes Section
-                <div className="notes-section">
-                  <div className="add-note-section mb-3">
+                <div className="notes-section flex flex-col h-full">
+                  <div className="add-note-section mb-3 border-b border-[#e5e7eb] pb-4">
                     <Form.Group>
                       <Form.Control
                         as="textarea"
@@ -1284,37 +1267,37 @@ const LeadDrawer: React.FC<Props> = ({ lead, onClose }) => {
                     </Form.Group>
                   </div>
 
-                  <div className="notes-list">
+                  <div className="notes-list flex-1 overflow-y-auto pt-4">
                     {comments.length === 0 ? (
                       <div className="text-center text-muted py-4">
                         No notes yet. Add your first note above.
                       </div>
                     ) : (
                       comments.map((comment) => (
-                        <div key={comment.id} className="note-item">
-                          <div className="note-header">
-                            <div className="d-flex align-items-center gap-2">
+                        <div key={comment.id} className="note-item bg-white border border-[#e5e7eb] rounded-lg p-4 mb-4">
+                          <div className="note-header flex justify-between mb-3">
+                            <div className="flex items-center gap-2">
                               <img
                                 src={resolveAvatar(
                                   comment.username || "User",
                                   comment.avatar
                                 )}
                                 alt={comment.username}
-                                className="note-avatar"
+                                className="note-avatar rounded-full size-8 object-cover"
                               />
                               <div>
                                 <strong>{comment.username || "User"}</strong>
                                 <div className="text-muted small">
                                   {comment.created_at
                                     ? new Date(
-                                        comment.created_at
-                                      ).toLocaleString()
+                                      comment.created_at
+                                    ).toLocaleString()
                                     : "Just now"}
                                 </div>
                               </div>
                             </div>
                             {comment.user_id === loggedInUser.id && (
-                              <div className="note-actions">
+                              <div className="note-actions flex items-center justify-between mt-3 pt-3">
                                 {editingCommentId === comment.id ? (
                                   <>
                                     <Button
@@ -1388,9 +1371,9 @@ const LeadDrawer: React.FC<Props> = ({ lead, onClose }) => {
           <div className="w-[350px] border-l border-gray-200 bg-white">
             <div className="h-full overflow-y-auto p-6">
               {/* Invoices Section */}
-              <div className="entity-section mb-4">
-                <h6 className="d-flex align-items-center gap-2 mb-3">
-                  <FileInvoice className="text-primary" />
+              <div className="entity-section mb-4 border-b border-[#e5e7eb] pb-6">
+                <h6 className="flex items-center gap-2 mb-4 text-gray-700 text-sm font-semibold">
+                  <FileInvoice className="text-primary" size={16} />
                   <span>Invoices ({invoices.length})</span>
                 </h6>
                 {invoices.length === 0 ? (
@@ -1404,7 +1387,7 @@ const LeadDrawer: React.FC<Props> = ({ lead, onClose }) => {
                         onClick={() => handleInvoiceClick(invoice.id)}
                       >
                         <Card.Body className="p-3">
-                          <div className="d-flex justify-content-between align-items-start mb-2">
+                          <div className="flex justify-between items-start mb-2">
                             <div>
                               <h6 className="mb-1">
                                 #{invoice.invoice_number}
@@ -1417,7 +1400,7 @@ const LeadDrawer: React.FC<Props> = ({ lead, onClose }) => {
                               {invoice.status}
                             </Badge>
                           </div>
-                          <div className="d-flex justify-content-between align-items-center">
+                          <div className="flex justify-between items-center">
                             <span className="fw-bold text-success">
                               {invoice.formatted_total}
                             </span>
@@ -1440,7 +1423,7 @@ const LeadDrawer: React.FC<Props> = ({ lead, onClose }) => {
 
               {/* Support Tickets Section */}
               <div className="entity-section mb-4">
-                <h6 className="d-flex align-items-center gap-2 mb-3">
+                <h6 className="flex items-center gap-2 mb-3">
                   <MessageCircle className="text-info" />
                   <span>Support Tickets ({tickets.length})</span>
                 </h6>
@@ -1457,7 +1440,7 @@ const LeadDrawer: React.FC<Props> = ({ lead, onClose }) => {
                         onClick={() => handleTicketClick(ticket.id)}
                       >
                         <Card.Body className="p-3">
-                          <div className="d-flex justify-content-between align-items-start mb-2">
+                          <div className="flex justify-between items-start mb-2">
                             <div>
                               <h6 className="mb-1">{ticket.title}</h6>
                               <p className="mb-1 text-muted small">
@@ -1468,7 +1451,7 @@ const LeadDrawer: React.FC<Props> = ({ lead, onClose }) => {
                               {ticket.status}
                             </Badge>
                           </div>
-                          <div className="d-flex justify-content-between align-items-center">
+                          <div className="flex justify-between items-center">
                             <span className="text-muted small">
                               {ticket.messages_count} message(s)
                             </span>
@@ -1493,7 +1476,7 @@ const LeadDrawer: React.FC<Props> = ({ lead, onClose }) => {
 
               {/* Meetings Section */}
               <div className="entity-section mb-4">
-                <h6 className="d-flex align-items-center gap-2 mb-3">
+                <h6 className="flex items-center gap-2 mb-3">
                   <Calendar className="text-warning" />
                   <span>Meetings ({meetings.length})</span>
                 </h6>
@@ -1508,7 +1491,7 @@ const LeadDrawer: React.FC<Props> = ({ lead, onClose }) => {
                         onClick={() => handleMeetingClick(meeting.id)}
                       >
                         <Card.Body className="p-3">
-                          <div className="d-flex justify-content-between align-items-start mb-2">
+                          <div className="flex justify-between items-start mb-2">
                             <div>
                               <h6 className="mb-1">{meeting.title}</h6>
                               <p className="mb-1 text-muted small">
@@ -1520,7 +1503,7 @@ const LeadDrawer: React.FC<Props> = ({ lead, onClose }) => {
                             </Badge>
                           </div>
                           {meeting.location && (
-                            <div className="d-flex align-items-center gap-1 mb-1">
+                            <div className="flex items-center gap-1 mb-1">
                               <MapPin className="text-muted" size={14} />
                               <span className="text-muted small">
                                 {meeting.location}
