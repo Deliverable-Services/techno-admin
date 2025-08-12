@@ -1,12 +1,19 @@
-import { Container, Pagination } from "../components/ui/bootstrap-compat";
+import {
+  Pagination,
+  PaginationContent,
+  PaginationItem,
+  PaginationPrevious,
+  PaginationNext,
+  PaginationLink,
+  PaginationEllipsis,
+} from "../components/ui/pagination";
 
 interface Props {
   currentPage: number;
   lastPage: number;
   hasPrevPage: boolean;
   hasNextPage: boolean;
-  // setPage: (idx: string, value: any) => void;
-  setPage: any;
+  setPage: (key: any, value: any) => void;
 }
 
 const TablePagination = ({
@@ -16,22 +23,83 @@ const TablePagination = ({
   hasPrevPage,
   lastPage,
 }: Props) => {
+  // Generate a small list of visible pages
+  const getPageNumbers = () => {
+    const pages: number[] = [];
+    const maxVisible = 3; // Adjust if needed
+
+    let start = Math.max(1, currentPage - 1);
+    let end = Math.min(lastPage, currentPage + 1);
+
+    if (currentPage === 1) {
+      end = Math.min(lastPage, start + (maxVisible - 1));
+    }
+    if (currentPage === lastPage) {
+      start = Math.max(1, lastPage - (maxVisible - 1));
+    }
+
+    for (let i = start; i <= end; i++) {
+      pages.push(i);
+    }
+
+    return pages;
+  };
+
   return (
-    <Container fluid className="d-flex justify-content-end align-items-center">
+    <div className="flex justify-end items-center">
       <Pagination>
-        <Pagination.First onClick={() => setPage("page", 1)} />
-        {hasPrevPage && (
-          <Pagination.Prev onClick={() => setPage("page", currentPage - 1)} />
-        )}
-        <Pagination.Item active>
-          <span className="text-secondary">{currentPage}</span>
-        </Pagination.Item>
-        {hasNextPage && (
-          <Pagination.Next onClick={() => setPage("page", currentPage + 1)} />
-        )}
-        <Pagination.Last onClick={() => setPage("page", lastPage)} />
+        <PaginationContent>
+          {/* Previous Button */}
+          {hasPrevPage && (
+            <PaginationItem>
+              <PaginationPrevious
+                href="#"
+                onClick={(e) => {
+                  e.preventDefault();
+                  setPage("page", currentPage - 1);
+                }}
+              />
+            </PaginationItem>
+          )}
+
+          {/* Page Numbers */}
+          {getPageNumbers().map((page) => (
+            <PaginationItem key={page}>
+              <PaginationLink
+                href="#"
+                isActive={page === currentPage}
+                onClick={(e) => {
+                  e.preventDefault();
+                  setPage("page", page);
+                }}
+              >
+                {page}
+              </PaginationLink>
+            </PaginationItem>
+          ))}
+
+          {/* Ellipsis if needed */}
+          {currentPage < lastPage - 1 && (
+            <PaginationItem>
+              <PaginationEllipsis />
+            </PaginationItem>
+          )}
+
+          {/* Next Button */}
+          {hasNextPage && (
+            <PaginationItem>
+              <PaginationNext
+                href="#"
+                onClick={(e) => {
+                  e.preventDefault();
+                  setPage("page", currentPage + 1);
+                }}
+              />
+            </PaginationItem>
+          )}
+        </PaginationContent>
       </Pagination>
-    </Container>
+    </div>
   );
 };
 

@@ -14,6 +14,7 @@ import API from "../../utils/API";
 import { queryClient } from "../../utils/queryClient";
 import { showMsgToast } from "../../utils/showMsgToast";
 import Restricted from "../../shared-components/Restricted";
+import TiptapTextEditor from "../../shared-components/TiptapTextEditor";
 
 const key = "testimonial";
 
@@ -116,9 +117,9 @@ const TestimonialCreateUpdateForm = () => {
                   </div>
                   <Row>
                     <Col md={12} xl={12}>
-                      <TextEditor
+                      <TiptapTextEditor
                         name="description"
-                        label="Description"
+                        // label="Description"
                         setFieldValue={setFieldValue}
                       />
                     </Col>

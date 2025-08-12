@@ -1,5 +1,4 @@
 import { AxiosError } from "axios";
-// Replaced braft-editor; using a simple textarea for now.
 type EditorState = string;
 import React, { useMemo, useState } from "react";
 import { useEffect } from "react";
@@ -31,7 +30,7 @@ const deletePage = (id: any) => {
 };
 
 const intitialFilter = {
-  role: "customer",
+  role: "",
   q: "",
   page: null,
   perPage: 25,

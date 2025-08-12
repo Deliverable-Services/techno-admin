@@ -15,6 +15,7 @@ import API from "../../utils/API";
 import { isActiveArray } from "../../utils/arrays";
 import { queryClient } from "../../utils/queryClient";
 import { showMsgToast } from "../../utils/showMsgToast";
+import TiptapTextEditor from "../../shared-components/TiptapTextEditor";
 
 const key = "faqs";
 
@@ -96,9 +97,9 @@ const FaqCreateUpdateForm = () => {
                   </div>
                   <Row>
                     <Col md={12} xl={12}>
-                      <TextEditor
+                      <TiptapTextEditor
                         name="description"
-                        label="Description"
+                        // label="Description"
                         setFieldValue={setFieldValue}
                       />
                     </Col>

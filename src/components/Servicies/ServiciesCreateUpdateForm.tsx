@@ -2,7 +2,13 @@ import { AxiosError } from "axios";
 // Removed bs-custom-file-input
 import { Form, Formik } from "formik";
 import { useEffect } from "react";
-import { Button, Col, Row, Spinner, Form as BForm } from "../ui/bootstrap-compat";
+import {
+  Button,
+  Col,
+  Row,
+  Spinner,
+  Form as BForm,
+} from "../ui/bootstrap-compat";
 import { useMutation, useQuery } from "react-query";
 import { useHistory, useLocation } from "react-router-dom";
 import { handleApiError } from "../../hooks/handleApiErrors";
@@ -17,6 +23,7 @@ import { isActiveArray } from "../../utils/arrays";
 import { queryClient } from "../../utils/queryClient";
 import { showMsgToast } from "../../utils/showMsgToast";
 import { Hammer } from "../ui/icon";
+import TiptapTextEditor from "../../shared-components/TiptapTextEditor";
 
 const key = "services";
 
@@ -251,9 +258,9 @@ const ServicesCreateUpdateForm = () => {
                       )}
                     />
                   </Container> */}
-                  <TextEditor
+                  <TiptapTextEditor
                     name="details"
-                    label="Details"
+                    // label="Details"
                     setFieldValue={setFieldValue}
                   />
                   <Row className="d-flex justify-content-start">
