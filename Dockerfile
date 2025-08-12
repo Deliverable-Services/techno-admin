@@ -1,39 +1,23 @@
-# Build stage
-FROM node:18-alpine AS build
+# Use an official Node runtime as a parent image
+FROM node:20-alpine
 
+# Set the working directory to /app
 WORKDIR /app
 
-# Copy package files
-COPY package*.json ./
+# Copy the package.json and package-lock.json to the working directory
+COPY ./package*.json ./
 
-# Install dependencies
-RUN npm ci
+# Install the dependencies
+RUN npm install
 
-# Copy source code
+# Copy the remaining application files to the working directory
 COPY . .
 
-# Build the app
+# Build the application
 RUN npm run build
 
-# Production stage
-FROM node:18-alpine
-
-WORKDIR /app
-
-# Copy package files
-COPY package*.json ./
-
-# Install all dependencies (needed for npm run start)
-RUN npm ci
-
-# Copy built app
-COPY --from=build /app/build ./build
-
-# Copy public folder for static assets
-COPY --from=build /app/public ./public
-
-# Expose port 3000
+# Expose port 3000 for the application
 EXPOSE 3000
 
-# Start the app
-CMD ["npm", "run", "start"]
+# Start the application
+CMD [ "npm", "run", "start" ]
