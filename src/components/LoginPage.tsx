@@ -17,6 +17,7 @@ import API from "../utils/API";
 import { showErrorToast } from "../utils/showErrorToast";
 import { showMsgToast } from "../utils/showMsgToast";
 import { Hammer } from "./ui/icon";
+import { Lock, ShieldCheck, ShieldEllipsis} from 'lucide-react';
 
 const LoginSchema = Yup.object().shape({
   phone: Yup.string().required("Phone number required"),
@@ -200,8 +201,9 @@ const LoginFlow = () => {
                       setStep("login");
                     }}
                   >
-                    <Hammer size={12} className="mr-1" />
+                    <Lock size={12} className="mr-1" />
                     Login
+                 
                   </button>
                   <button
                     className={`btn ${
@@ -220,7 +222,7 @@ const LoginFlow = () => {
                     }}
                     onClick={() => setActiveTab("signup")}
                   >
-                    <Hammer size={12} className="mr-1" />
+                    <ShieldCheck size={12} className="mr-1" />
                     Sign Up
                   </button>
                 </div>
@@ -338,8 +340,9 @@ const LoginFlow = () => {
                         </div>
                       ) : (
                         <div className="d-flex align-items-center justify-content-center">
-                          <Hammer size={16} className="mr-2" />
+                          <ShieldEllipsis size={16} className="mr-2" />
                           Get Secure Code
+                          
                         </div>
                       )}
                     </Button>

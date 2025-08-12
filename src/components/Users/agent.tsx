@@ -22,6 +22,8 @@ import { primaryColor } from "../../utils/constants";
 import { queryClient } from "../../utils/queryClient";
 import { showMsgToast } from "../../utils/showMsgToast";
 import { Hammer } from "../ui/icon";
+import { Funnel } from 'lucide-react';
+
 interface IFilter {
   role: string | null;
 }
@@ -196,7 +198,7 @@ const Agents = () => {
                   filters={
                     <Dropdown className="search-filters-div filter-dropdown mr-2">
                       <Dropdown.Toggle as={Button} variant="primary">
-                        <Hammer /> Filters
+                        <Funnel /> Filters
                       </Dropdown.Toggle>
                       <Dropdown.Menu>
                         <div className="filter-dropdown-heading d-flex justify-content-between w-100">

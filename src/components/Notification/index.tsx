@@ -26,7 +26,7 @@ import Flyout from "../../shared-components/Flyout";
 import NotificationCreateUpdateForm from "./NotificationCreateUpdateForm";
 import { Hammer } from "../ui/icon";
 import { Button } from "../ui/button";
-import { BellRing } from "lucide-react";
+import { BellRing, Funnel } from "lucide-react";
 import {
   DropdownMenu,
   DropdownMenuContent,

@@ -18,7 +18,8 @@ import { primaryColor } from "../../utils/constants";
 import { showErrorToast } from "../../utils/showErrorToast";
 import { useQuery } from "react-query";
 import { Hammer } from "../ui/icon";
-import { CreditCard } from 'lucide-react';
+import { CreditCard, Funnel, Frown } from 'lucide-react';
+
 
 
 const key = "transactions";
@@ -174,7 +175,7 @@ const Transactions = () => {
                 className="d-flex justify-content-center display-3"
               >
                 <div className="d-flex flex-column align-items-center">
-                  <Hammer color={primaryColor} />
+                  <Frown color={primaryColor} />
                   <span className="text-primary display-3">
                     Something went wrong
                   </span>
@@ -232,7 +233,7 @@ const Transactions = () => {
                 filters={
                   <Dropdown className="search-filters-div filter-dropdown mr-2">
                     <Dropdown.Toggle as={Button} variant="primary">
-                      <Hammer className="mr-2" />
+                      <Funnel className="mr-2" />
                       Filters
                     </Dropdown.Toggle>
                     <Dropdown.Menu>

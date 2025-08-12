@@ -26,6 +26,7 @@ import { queryClient } from "../../utils/queryClient";
 import { showMsgToast } from "../../utils/showMsgToast";
 import { Hammer } from "../ui/icon";
 import { UsersRound } from 'lucide-react';
+import { Funnel, Frown } from 'lucide-react';
 
 
 const key = "users";
@@ -211,7 +212,7 @@ const Users = () => {
               className="d-flex justify-content-center display-3"
             >
               <div className="d-flex flex-column align-items-center">
-                <Hammer color={primaryColor} />
+                <Frown color={primaryColor} />
                 <span className="text-primary display-3">
                   Something went wrong
                 </span>
@@ -227,7 +228,8 @@ const Users = () => {
               filters={
                 <Dropdown className="filter-dropdown search-filters-div mr-2">
                   <Dropdown.Toggle as={Button} variant="primary">
-                    <Hammer /> Filters
+                    <Funnel /> Filters
+                    
                   </Dropdown.Toggle>
                   <Dropdown.Menu>
                     <div className="filter-dropdown-heading d-flex justify-content-between w-100">

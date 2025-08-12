@@ -10,7 +10,7 @@ import { handleApiError } from "../../hooks/handleApiErrors";
 import IsLoading from "../../shared-components/isLoading";
 import { useOrganisation } from "../../context/OrganisationContext";
 import { primaryColor } from "../../utils/constants";
-import { LayoutGrid } from 'lucide-react';
+import { LayoutGrid, ReceiptText } from 'lucide-react';
 
 import {
   ResponsiveContainer,
@@ -120,7 +120,7 @@ const Dashboard = () => {
         <div className="crm-users">
           <div className="flex items-center justify-start">
             <div className="flex items-center gap-2">
-              <Hammer color={primaryColor} size={19} />
+              {/* <Hammer color={primaryColor} size={19} /> */}
               <input
                 type="date"
                 value={filter.startDate}
@@ -311,14 +311,15 @@ const Dashboard = () => {
                     >
                       Go to Customers
                     </span>
-                    <Hammer className="text-primary" />
+                    <MoveRight className="text-primary" />
                   </CardFooter >
                 </Card >
 
                 <Card className="p-0 overflow-hidden">
                   <CardContent>
                     <div className="flex items-center mb-3">
-                      <MoveRight size={16} />
+                      <ReceiptText size={16} />
+                    
                       <h5 className="mb-0 font-bold ml-2">Invoices</h5>
                     </div>
 
@@ -363,7 +364,7 @@ const Dashboard = () => {
                     >
                       Go to Invoices
                     </span>
-                    <Hammer className="text-primary" />
+                    <MoveRight className="text-primary" />
                   </CardFooter >
                 </Card >
 
@@ -371,8 +372,9 @@ const Dashboard = () => {
                 < Card className="p-0 overflow-hidden" >
                   <CardContent>
                     <div className="flex items-center mb-3">
-                      <MoveRight size={16} />
+                      <Bug size={16} />
                       <h5 className="mb-0 font-bold ml-2">Issues</h5>
+                      
                     </div>
 
                     <div className="flex items-center">

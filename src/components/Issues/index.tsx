@@ -20,7 +20,7 @@ import { showErrorToast } from "../../utils/showErrorToast";
 import IssuesCreateForm from "./IssuesCreateForm";
 import Flyout from "../../shared-components/Flyout"; // ✅ Import your shared Flyout
 import { Hammer } from "../ui/icon";
-import { CircleAlert } from 'lucide-react';
+import { CircleAlert, Funnel, Eye } from 'lucide-react';
 
 
 const key = "tickets";
@@ -171,7 +171,7 @@ const Issues = () => {
         Cell: (data: Cell) => {
           return (
             <div className="d-flex align-items-center justify-content-end">
-              <Hammer
+              <Eye
                 className="cursor-pointer"
                 onClick={() => history.push(`/issues/${data.row.values.id}`)}
               />
@@ -258,7 +258,7 @@ const Issues = () => {
                 filters={
                   <Dropdown className="search-filters-div filter-dropdown mr-2">
                     <Dropdown.Toggle as={Button} variant="primary">
-                      <Hammer /> Filters
+                      <Funnel /> Filters
                     </Dropdown.Toggle>
                     <Dropdown.Menu>
                       <div className="filter-dropdown-heading d-flex justify-content-between w-100">
