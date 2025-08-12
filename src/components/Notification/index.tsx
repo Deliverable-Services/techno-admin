@@ -35,6 +35,9 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "./../ui/dropdown-menu";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "../ui/tabs";
+import { DatePicker } from "../ui/date";
+import { Label } from "../ui/label";
 
 const key = "fcm-notification";
 const intitialFilter = {
@@ -180,6 +183,11 @@ const Notifications = () => {
     []
   );
 
+  const _onDateFilterChange = (newDate) => {
+    const value = moment(newDate).format("YYYY-MM-DD");
+    _onFilterChange("scheduled_at", value);
+  };
+
   if (!data && (!isLoading || !isFetching)) {
     return (
       <Container fluid className="d-flex justify-content-center display-3">
@@ -215,160 +223,107 @@ const Notifications = () => {
                   data={data?.data}
                   tabs={
                     <div className="d-flex justify-content-between">
-                      <Nav
-                        className="global-navs"
-                        variant="tabs"
-                        activeKey={filter.sent}
-                        onSelect={(selectedKey) =>
+                      <Tabs
+                        onValueChange={(selectedKey) =>
                           _onFilterChange("sent", selectedKey)
                         }
+                        defaultValue={filter.sent}
                       >
-                        <Nav.Item>
-                          <Nav.Link eventKey="">
+                        <TabsList className="mb-2">
+                          <TabsTrigger value="" key={""}>
                             All ({data?.data?.length || 0})
-                          </Nav.Link>
-                        </Nav.Item>
-
-                        <Nav.Item>
-                          <Nav.Link eventKey="1">
+                          </TabsTrigger>
+                          <TabsTrigger value="1" key="1">
                             Sent (
                             {data?.data?.filter((item) => item.status === "1")
                               .length || 0}
-                            )
-                          </Nav.Link>
-                        </Nav.Item>
-
-                        <Nav.Item>
-                          <Nav.Link eventKey="0">
+                            ){" "}
+                          </TabsTrigger>
+                          <TabsTrigger value="0" key="0">
                             Not Sent (
                             {data?.data?.filter((item) => item.status === "0")
                               .length || 0}
-                            )
-                          </Nav.Link>
-                        </Nav.Item>
-                      </Nav>
+                            ){" "}
+                          </TabsTrigger>
+                        </TabsList>
+                      </Tabs>
                     </div>
                   }
                   filters={
-                    <>
-                      {/* <Dropdown className="search-filters-div filter-dropdown mr-2">
-                        <Dropdown.Toggle as={Button} variant="primary">
+                    <DropdownMenu>
+                      <DropdownMenuTrigger>
+                        <div className="flex gap-1">
                           <Hammer /> Filters
-                        </Dropdown.Toggle>
-                        <Dropdown.Menu>
-                          <div className="filter-dropdown-heading d-flex justify-content-between w-100">
-                            <h4>Filter</h4>
-                            <div className="d-flex align-items-center justify-md-content-center">
-                              <Button
-                                variant={
-                                  areTwoObjEqual(intitialFilter, filter)
-                                    ? "secondary"
-                                    : "default"
-                                }
-                                style={{
-                                  fontSize: 14,
-                                }}
-                                onClick={() => setFilter(intitialFilter)}
-                              >
-                                Reset Filters
-                              </Button>
-                            </div>
+                        </div>
+                      </DropdownMenuTrigger>
+                      <DropdownMenuContent>
+                        <DropdownMenuLabel>
+                          <div className="flex gap-4 items-center justify-between">
+                            My Account
+                            <Button
+                              variant={
+                                areTwoObjEqual(intitialFilter, filter)
+                                  ? "outline"
+                                  : "default"
+                              }
+                              style={{
+                                fontSize: 14,
+                              }}
+                              onClick={() => setFilter(intitialFilter)}
+                            >
+                              Reset Filters
+                            </Button>
                           </div>
-                          <div className="select-filter">
+                        </DropdownMenuLabel>
+                        <DropdownMenuSeparator />
+
+                        <div className="select-filter p-2 pb-0">
+                          <div className="mb-2">
                             <FilterSelect
                               currentValue={filter.send_to}
                               data={NotificationSendToCategories}
                               label="Send To"
                               idx="send_to"
                               onFilterChange={_onFilterChange}
+                              className="w-full"
                             />
-                            <Form.Group>
-                              <Form.Label className="text-muted">
-                                Scheduled At
-                              </Form.Label>
-                              <Form.Control
-                                type="date"
-                                value={filter.scheduled_at}
-                                onChange={(e) => {
-                                  const value = moment(e.target.value).format(
-                                    "YYYY-MM-DD"
-                                  );
-                                  _onFilterChange("scheduled_at", value);
-                                }}
-                                style={{
-                                  fontSize: 14,
-                                  width: 150,
-                                  height: 35,
-                                }}
-                              />
-                            </Form.Group>
                           </div>
-                        </Dropdown.Menu>
-                      </Dropdown> */}
 
-                      <DropdownMenu>
-                        <DropdownMenuTrigger>
-                          <Hammer /> Filters
-                        </DropdownMenuTrigger>
-                        <DropdownMenuContent>
-                          <DropdownMenuLabel>My Account</DropdownMenuLabel>
-                          <DropdownMenuSeparator />
+                          {/* <Form.Group> */}
+                          <div>
+                            <Label className="text-muted">Scheduled At</Label>
 
-                          <div className="filter-dropdown-heading d-flex justify-content-between w-100">
-                            <h4>Filter</h4>
-                            <div className="d-flex align-items-center justify-md-content-center">
-                              <Button
-                                variant={
-                                  areTwoObjEqual(intitialFilter, filter)
-                                    ? "secondary"
-                                    : "default"
-                                }
-                                style={{
-                                  fontSize: 14,
-                                }}
-                                onClick={() => setFilter(intitialFilter)}
-                              >
-                                Reset Filters
-                              </Button>
-                            </div>
-                          </div>
-                          <div className="select-filter">
-                            <FilterSelect
-                              currentValue={filter.send_to}
-                              data={NotificationSendToCategories}
-                              label="Send To"
-                              idx="send_to"
-                              onFilterChange={_onFilterChange}
+                            <DatePicker
+                              defaultDate={filter.scheduled_at}
+                              _onFilterChange={_onDateFilterChange}
+                              placeholder="Pick a date"
                             />
-                            <Form.Group>
-                              <Form.Label className="text-muted">
-                                Scheduled At
-                              </Form.Label>
-                              <Form.Control
-                                type="date"
-                                value={filter.scheduled_at}
-                                onChange={(e) => {
-                                  const value = moment(e.target.value).format(
-                                    "YYYY-MM-DD"
-                                  );
-                                  _onFilterChange("scheduled_at", value);
-                                }}
-                                style={{
-                                  fontSize: 14,
-                                  width: 150,
-                                  height: 35,
-                                }}
-                              />
-                            </Form.Group>
                           </div>
 
-                          <DropdownMenuItem>Profile</DropdownMenuItem>
-                          <DropdownMenuItem>Billing</DropdownMenuItem>
-                          <DropdownMenuItem>Team</DropdownMenuItem>
-                          <DropdownMenuItem>Subscription</DropdownMenuItem>
-                        </DropdownMenuContent>
-                      </DropdownMenu>
-                    </>
+                          {/* <Form.Control
+                              type="date"
+                              value={filter.scheduled_at}
+                              onChange={(e) => {
+                                const value = moment(e.target.value).format(
+                                  "YYYY-MM-DD"
+                                );
+                                _onFilterChange("scheduled_at", value);
+                              }}
+                              style={{
+                                fontSize: 14,
+                                width: 150,
+                                height: 35,
+                              }}
+                            /> */}
+                          {/* </Form.Group> */}
+                        </div>
+
+                        <DropdownMenuItem>Profile</DropdownMenuItem>
+                        <DropdownMenuItem>Billing</DropdownMenuItem>
+                        <DropdownMenuItem>Team</DropdownMenuItem>
+                        <DropdownMenuItem>Subscription</DropdownMenuItem>
+                      </DropdownMenuContent>
+                    </DropdownMenu>
                   }
                   columns={columns}
                   setSelectedRows={setSelectedRows}

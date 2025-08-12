@@ -10,10 +10,11 @@ import useGetSingleQuery from "../../hooks/useGetSingleQuery";
 import BackButton from "../../shared-components/BackButton";
 import { InputField } from "../../shared-components/InputFeild";
 import IsLoading from "../../shared-components/isLoading";
-import TextEditor from "../../shared-components/TextEditor";
+import TiptapTextEditor from "../../shared-components/TiptapTextEditor";
 import API from "../../utils/API";
 import { queryClient } from "../../utils/queryClient";
 import { showMsgToast } from "../../utils/showMsgToast";
+
 const key = "staticPages";
 
 const createUpdataStaticPages = ({
@@ -104,9 +105,9 @@ const StaticPageCreateForm = ({ onHideModal }) => {
                   {!id && (
                     <Row>
                       <Col md={12} xl={12}>
-                        <TextEditor
+                        <TiptapTextEditor
                           name="content"
-                          label="Content"
+                          // value={data.content}
                           setFieldValue={setFieldValue}
                         />
                       </Col>

@@ -17,6 +17,7 @@ import { showMsgToast } from "../../utils/showMsgToast";
 import ImagesContainer from "../../shared-components/ImagesContainer";
 import Restricted from "../../shared-components/Restricted";
 import { Hammer } from "../ui/icon";
+import TiptapTextEditor from "../../shared-components/TiptapTextEditor";
 
 const key = "plans";
 
@@ -219,9 +220,9 @@ const PlanCreateUpdateForm = () => {
                       />
                     </Col>
                     <Col xl={12} sm={12}>
-                      <TextEditor
+                      <TiptapTextEditor
                         name="description"
-                        label="Description"
+                        // label="Description"
                         setFieldValue={setFieldValue}
                       />
                     </Col>
