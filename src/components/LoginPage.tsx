@@ -17,10 +17,10 @@ import API from "../utils/API";
 import { showErrorToast } from "../utils/showErrorToast";
 import { showMsgToast } from "../utils/showMsgToast";
 import { Hammer } from "./ui/icon";
-import { Lock, ShieldCheck, ShieldEllipsis} from 'lucide-react';
+import { Lock, ShieldCheck, ShieldEllipsis } from "lucide-react";
 
 const LoginSchema = Yup.object().shape({
-  phone: Yup.string().required("Phone number required"),
+  email: Yup.string().email("Invalid email").required("Email is required"),
 });
 
 const VerifySchema = Yup.object().shape({
@@ -41,7 +41,7 @@ const LoginFlow = () => {
   const history = useHistory();
   const [activeTab, setActiveTab] = useState<"login" | "signup">("login");
   const [step, setStep] = useState<"login" | "otp">("login");
-  const [phone, setPhone] = useState("");
+  const [email, setEmail] = useState("");
   const [countryCode, setCountryCode] = useState("+91");
 
   const setToken = useTokenStore((state) => state.setToken);
@@ -166,7 +166,7 @@ const LoginFlow = () => {
                     marginBottom: "24px",
                   }}
                 >
-                  Enter your phone number to receive the secure one-time code.
+                  Enter your email id to receive the secure one-time code.
                 </p>
               </div>
             )}
@@ -203,7 +203,6 @@ const LoginFlow = () => {
                   >
                     <Lock size={12} className="mr-1" />
                     Login
-                 
                   </button>
                   <button
                     className={`btn ${
@@ -231,24 +230,21 @@ const LoginFlow = () => {
 
             {activeTab === "login" && step === "login" && (
               <Formik
-                initialValues={{ phone: "7018064278" }}
+                initialValues={{ email: "" }}
                 onSubmit={(values) => {
                   const formData = new FormData();
-                  formData.append("phone", `${countryCode}${values.phone}`);
-                  formData.append(
-                    "organisation_id",
-                    `${countryCode}${values.phone}`
-                  );
-                  setPhone(`${countryCode}${values.phone}`);
+                  formData.append("email", values.email);
+                  formData.append("organisation_id", "");
+                  setEmail(values.email);
                   sendOtpMutate(formData);
                 }}
-                validationSchema={LoginSchema}
+                validationSchema={LoginSchema} // Update schema to validate email instead of phone
               >
                 {({ errors }) => (
                   <Form>
                     <div className="mb-3 text-left">
                       <label
-                        htmlFor="phone"
+                        htmlFor="email"
                         className="form-label"
                         style={{
                           fontSize: "14px",
@@ -257,7 +253,7 @@ const LoginFlow = () => {
                           marginBottom: "8px",
                         }}
                       >
-                        Enter Registered Phone Number
+                        Enter Registered Email Address
                       </label>
                       <div
                         className="d-flex"
@@ -269,27 +265,11 @@ const LoginFlow = () => {
                           backgroundColor: "white",
                         }}
                       >
-                        <select
-                          className="form-select"
-                          style={{
-                            maxWidth: 100,
-                            border: "none",
-                            height: 48,
-                            backgroundColor: "#f8f9fa",
-                            fontSize: "14px",
-                            fontWeight: "500",
-                          }}
-                          value={countryCode}
-                          onChange={(e) => setCountryCode(e.target.value)}
-                        >
-                          <option value="+91">🇮🇳 +91</option>
-                          <option value="+1">🇺🇸 +1</option>
-                        </select>
                         <span style={{ flex: 1, height: "48px" }}>
                           <InputField
-                            name="phone"
-                            placeholder="Enter your phone number"
-                            type="text"
+                            name="email"
+                            placeholder="Enter your email address"
+                            type="email"
                             style={{
                               border: "none",
                               height: "48px",
@@ -299,7 +279,7 @@ const LoginFlow = () => {
                           />
                         </span>
                       </div>
-                      {errors.phone && (
+                      {errors.email && (
                         <small
                           className="text-danger"
                           style={{
@@ -308,11 +288,11 @@ const LoginFlow = () => {
                             display: "block",
                           }}
                         >
-                          {errors.phone}
+                          {errors.email}
                         </small>
                       )}
                     </div>
-                    {/* Enhanced Submit Button */}{" "}
+
                     <Button
                       type="submit"
                       className="btn btn-block"
@@ -342,7 +322,6 @@ const LoginFlow = () => {
                         <div className="d-flex align-items-center justify-content-center">
                           <ShieldEllipsis size={16} className="mr-2" />
                           Get Secure Code
-                          
                         </div>
                       )}
                     </Button>
@@ -351,7 +330,6 @@ const LoginFlow = () => {
               </Formik>
             )}
 
-            {/* === ENHANCED OTP FORM === */}
             {activeTab === "login" && step === "otp" && (
               <div>
                 <div className="text-center mb-4">
@@ -374,7 +352,7 @@ const LoginFlow = () => {
                       marginBottom: 0,
                     }}
                   >
-                    {phone}
+                    {email}
                   </span>
                 </div>
 
@@ -382,7 +360,7 @@ const LoginFlow = () => {
                   initialValues={{ otp: "" }}
                   onSubmit={(values) => {
                     const formData = new FormData();
-                    formData.append("phone", phone);
+                    formData.append("email", email);
                     formData.append("otp", values.otp);
                     verifyOtpMutate(formData);
                   }}
@@ -397,7 +375,7 @@ const LoginFlow = () => {
                             setFieldValue("otp", otp);
                             // Auto-submit when OTP is complete
                             const formData = new FormData();
-                            formData.append("phone", phone);
+                            formData.append("email", email);
                             formData.append("otp", otp);
                             verifyOtpMutate(formData);
                           }}
@@ -457,7 +435,7 @@ const LoginFlow = () => {
                           }}
                           onClick={() => {
                             const formData = new FormData();
-                            formData.append("phone", phone);
+                            formData.append("email", email);
                             resendOtpMutate(formData);
                           }}
                         >
@@ -465,7 +443,6 @@ const LoginFlow = () => {
                         </button>
                       </div>
 
-                      {/* Back button with icon */}
                       <div className="text-center">
                         <button
                           type="button"
