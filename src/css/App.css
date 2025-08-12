@@ -13245,3 +13245,23 @@ li.navLink.my-1 svg path {
 .menu-hamburger {
   rotate: 90deg;
 }
+.lead-drawer {
+    animation: slideInRight .3s ease-out;
+}
+@keyframes slideInRight {
+  0% {
+    transform: translateX(100%);
+}
+100% {
+    transform: translateX(0);
+}
+}
+
+@keyframes slideInFromTopRight {
+  0% {
+    transform: translate(100%, -100%);
+  }
+  100% {
+    transform: translate(0, 0);
+  }
+}

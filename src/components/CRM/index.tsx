@@ -14,7 +14,6 @@ import { showMsgToast } from "../../utils/showMsgToast";
 import { showErrorToast } from "../../utils/showErrorToast";
 import { queryClient } from "../../utils/queryClient";
 import PageHeading from "../../shared-components/PageHeading";
-import { Users2 } from "../../components/ui/icon";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 import { Triangle } from 'lucide-react';
 
