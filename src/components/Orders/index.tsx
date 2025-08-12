@@ -330,7 +330,7 @@ const Orders = () => {
                       </div>
                     }
                     filters={
-                      <Dropdown className="search-filters-div filter-dropdown mr-2">
+                      <Dropdown className="">
                         <Dropdown.Toggle as={Button} variant="primary">
                           <Hammer /> Filters
                         </Dropdown.Toggle>

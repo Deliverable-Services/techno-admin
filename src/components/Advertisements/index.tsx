@@ -25,7 +25,7 @@ import { useFlyout } from "../../hooks/useFlyout";
 import Flyout from "../../shared-components/Flyout";
 import AdvertisementCreateUpdateForm from "./AdvertisementUpdateCreateForm";
 import { Hammer } from "../ui/icon";
-import { Image } from 'lucide-react';
+import { Image, Funnel } from 'lucide-react';
 
 const key = "banners/list";
 
@@ -286,7 +286,7 @@ const Advertisements = () => {
                     filters={
                       <Dropdown className="search-filters-div filter-dropdown mr-2">
                         <Dropdown.Toggle as={Button} variant="primary">
-                          <Hammer /> Filters
+                          <Funnel /> Filters
                         </Dropdown.Toggle>
                         <Dropdown.Menu>
                           <div className="filter-dropdown-heading d-flex justify-content-between w-100">

@@ -20,7 +20,7 @@ import { useFlyout } from "../../hooks/useFlyout";
 import FaqCreateUpdateForm from "./FaqsCreateUpdateForm";
 import Flyout from "../../shared-components/Flyout";
 import { Hammer } from "../ui/icon";
-import { CircleQuestionMark } from 'lucide-react';
+import { CircleQuestionMark, Frown } from 'lucide-react';
 
 const key = "faqs";
 
@@ -179,9 +179,10 @@ const Faqs = () => {
               className="d-flex justify-content-center display-3"
             >
               <div className="d-flex flex-column align-items-center">
-                <Hammer color={primaryColor} />
+                <Frown color={primaryColor} />
                 <span className="text-primary display-3">
                   Something went wrong
+                  
                 </span>
               </div>
             </Container>

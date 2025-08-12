@@ -12,7 +12,8 @@ import googleAnalyticsService, {
 } from "../../services/googleAnalyticsService";
 import { showMsgToast } from "../../utils/showMsgToast";
 import PageHeading from "../../shared-components/PageHeading";
-import { Rotate3d } from 'lucide-react';
+                  <Radio className="animate-spin mr-2" size={16} />
+import { Rotate3d, Cable, Gem, OctagonX, SquareChartGantt, Radio, BanknoteArrowUp, Grid2x2Check, RefreshCcw, ChartLine, LoaderCircle } from 'lucide-react';
 
 import { Hammer } from "../ui/icon";
 
@@ -356,7 +357,7 @@ const IntegrationsPage: React.FC = () => {
               <div className="flex items-center gap-2">
                 {integration.connected ? (
                   <Badge className="flex items-center gap-1" variant="success">
-                    <Hammer size={14} />
+                    <Cable size={14} />
                     Connected
                   </Badge>
                 ) : integration.comingSoon ? (
@@ -364,23 +365,26 @@ const IntegrationsPage: React.FC = () => {
                     className="flex items-center gap-1"
                     variant="secondary"
                   >
-                    <Hammer size={14} />
+                    <Gem size={14} />
                     Coming Soon
+                   
                   </Badge>
                 ) : (
                   <Badge
                     className="flex items-center gap-1"
                     variant="secondary"
                   >
-                    <Hammer size={14} />
+                    <OctagonX size={14} />
                     Not Connected
+                   
                   </Badge>
                 )}
               </div>
             </div>
           </div>
           {integration.loading && (
-            <Hammer className="text-primary animate-spin" size={20} />
+            <LoaderCircle className="text-primary animate-spin" size={20} />
+            
           )}
         </div>
 
@@ -415,7 +419,7 @@ const IntegrationsPage: React.FC = () => {
         <div className="mt-auto">
           {integration.comingSoon ? (
             <Button variant="outline" disabled className="w-full">
-              <Hammer size={16} className="mr-2" />
+              <Gem size={16} className="mr-2" />
               Coming Soon
             </Button>
           ) : integration.isManual ? (
@@ -436,7 +440,7 @@ const IntegrationsPage: React.FC = () => {
           ) : integration.connected ? (
             <div className="flex gap-2">
               <Button variant="outline" size="sm" className="flex-1">
-                <Hammer size={16} className="mr-1" />
+                <SquareChartGantt size={16} className="mr-1" />
                 Manage
               </Button>
               <Button
@@ -457,13 +461,15 @@ const IntegrationsPage: React.FC = () => {
             >
               {integration.loading ? (
                 <>
-                  <Hammer className="animate-spin mr-2" size={16} />
+                  <Radio className="animate-spin mr-2" size={16} />
                   Connecting...
+                  
                 </>
               ) : (
                 <>
-                  <Hammer size={16} className="mr-2" />
+                  <Cable size={16} className="mr-2" />
                   Connect {integration.name}
+                
                 </>
               )}
             </Button>
@@ -493,7 +499,8 @@ const IntegrationsPage: React.FC = () => {
               <Card className="text-center h-full transition-transform duration-200 ease-in-out hover:scale-105">
                 <CardContent className="py-4">
                   <div className="text-primary mb-2">
-                    <Hammer size={32} />
+                    <Cable size={32} />
+                    
                   </div>
                   <h4 className="mb-1">
                     {integrationCategories.reduce(
@@ -513,7 +520,8 @@ const IntegrationsPage: React.FC = () => {
               <Card className="text-center h-full transition-transform duration-200 ease-in-out hover:scale-105">
                 <CardContent className="py-4">
                   <div className="text-yellow-500 mb-2">
-                    <Hammer size={32} />
+                    <BanknoteArrowUp size={32} />
+                    
                   </div>
                   <h4 className="mb-1">
                     {integrationCategories.reduce(
@@ -533,7 +541,8 @@ const IntegrationsPage: React.FC = () => {
               <Card className="text-center h-full transition-transform duration-200 ease-in-out hover:scale-105">
                 <CardContent className="py-4">
                   <div className="text-blue-500 mb-2">
-                    <Hammer size={32} />
+                    <Grid2x2Check size={32} />
+                    
                   </div>
                   <h4 className="mb-1">
                     {integrationCategories.reduce(
@@ -551,7 +560,8 @@ const IntegrationsPage: React.FC = () => {
               <Card className="text-center h-full transition-transform duration-200 ease-in-out hover:scale-105">
                 <CardContent className="py-4">
                   <div className="text-green-500 mb-2">
-                    <Hammer size={32} />
+                    <RefreshCcw size={32} />
+                    
                   </div>
                   <h4 className="mb-1">Auto</h4>
                   <small className="text-muted-foreground font-semibold">
@@ -568,7 +578,7 @@ const IntegrationsPage: React.FC = () => {
               <div className="flex items-center mb-4">
                 <div className="mr-3">
                   <div className="rounded-full flex items-center justify-center bg-gray-900 w-12 h-12">
-                    <Hammer size={24} className="text-white" />
+                    <ChartLine size={24} className="text-white" />
                   </div>
                 </div>
                 <div>

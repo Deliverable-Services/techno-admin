@@ -24,7 +24,9 @@ import { showMsgToast } from "../../utils/showMsgToast";
 import { CommonModal } from "../CommonPopup/CommonModal";
 import UserCreateUpdateForm from "./UsersCreateUpdateForm";
 import { Hammer } from "../ui/icon";
-import { UserStar } from 'lucide-react';
+import { UserStar, Funnel } from 'lucide-react';
+
+
 
 interface IFilter {
   role: string | null;
@@ -222,7 +224,7 @@ const Admins = () => {
                     filters={
                       <Dropdown className="search-filters-div filter-dropdown mr-2">
                         <Dropdown.Toggle as={Button} variant="primary">
-                          <Hammer /> Filters
+                          <Funnel /> Filters
                         </Dropdown.Toggle>
                         <Dropdown.Menu>
                           <div className="filter-dropdown-heading d-flex justify-content-between w-100">

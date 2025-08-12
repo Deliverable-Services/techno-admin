@@ -21,6 +21,8 @@ import { OrderType } from "../../utils/arrays";
 import { primaryColor } from "../../utils/constants";
 // import UpdateCreateForm from "./FaqsCreateUpdateForm"
 import { Hammer } from "../ui/icon";
+import { Funnel } from 'lucide-react';
+
 
 const key = "bookings";
 const intitialFilter = {
@@ -271,7 +273,7 @@ const InsideCart = () => {
                     filters={
                       <Dropdown className="search-filters-div filter-dropdown mr-2">
                         <Dropdown.Toggle as={Button} variant="primary">
-                          <Hammer className="mr-2" />
+                          <Funnel className="mr-2" />
                           Filters
                         </Dropdown.Toggle>
                         <Dropdown.Menu>
