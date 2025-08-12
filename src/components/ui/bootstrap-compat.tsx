@@ -162,7 +162,7 @@ export const Modal = ({
       <div
         className={cn(
           "bg-background rounded-lg shadow-lg w-full max-h-[90vh] z-10 overflow-auto",
-          sizeClasses[size] || "max-w-md"
+          sizeClasses[size] || "max-w-lg"
         )}
       >
         {children}

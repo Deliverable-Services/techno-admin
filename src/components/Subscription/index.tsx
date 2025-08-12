@@ -43,10 +43,12 @@ const SubscriptionPage: React.FC = () => {
     setLoading(true);
     try {
       const res = await API.get("/subscriptions");
-      const rawData = res.data?.data?.data || [];
+      const sortedData = (res.data?.data?.data || []).sort((a: any, b: any) => {
+        return new Date(b.created_at).getTime() - new Date(a.created_at).getTime();
+      });
 
       // Map API data into table-friendly format
-      const formatted = rawData.map((item: any) => ({
+      const formatted = sortedData.map((item: any) => ({
         id: item.id,
         customer: `${item.user?.name || ""} (${item.user?.email || ""})`,
         plan_name: item.name,

@@ -145,13 +145,13 @@ const SubscriptionCreateForm = ({ onSuccess }: { onSuccess?: () => void }) => {
             </div>
 
             {/* Currency */}
-            <div className="form-group w-full">
+            {/* <div className="form-group w-full">
               <label className="form-label">Currency</label>
               <Field as="select" name="billing_cycle_currency" className="form-control">
                 <option value="USD">USD</option>
                 <option value="EUR">EUR</option>
               </Field>
-            </div>
+            </div> */}
 
             {/* Items */}
             <FieldArray name="items">

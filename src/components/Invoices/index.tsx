@@ -13,7 +13,6 @@ import { Container, Button } from "../ui/bootstrap-compat";
 import ReactTable from "../../shared-components/ReactTable";
 import { Cell } from "react-table";
 import { Hammer } from "../ui/icon";
-import { Plus } from 'lucide-react';
 import { primaryColor } from "../../utils/constants";
 import { ReceiptText } from 'lucide-react';
 
@@ -218,8 +217,7 @@ const InvoicePage: React.FC = () => {
   if (isProcessingCode) {
     return (
       <div style={{ display: "flex", justifyContent: "center" }}>
-        {" "}
-        <VerifingUserLoader />{" "}
+        <VerifingUserLoader />
       </div>
     );
   }
@@ -314,12 +312,11 @@ const InvoicePage: React.FC = () => {
               <p className="text-xl text-gray-500 mb-4">
                 This is where you can see invoice and their associated status
               </p>
-              <button
-                className="bg-gray-800 text-white border-0 rounded px-4 py-2 font-medium cursor-pointer text-base transition-colors hover:bg-gray-600"
+              <Button
                 onClick={handleCreate}
               >
                 + Create invoice
-              </button>
+              </Button>
             </div>
           );
         }
