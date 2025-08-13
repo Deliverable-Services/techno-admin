@@ -53,28 +53,32 @@ const NavLink = ({
 
   return (
     <Restricted to={permissionReq}>
-      <li className="navLinkGroup" ref={menuRef}>
+      <li className="flex flex-col gap-1" ref={menuRef}>
         {hasChildren ? (
           <div
-            className="navLink parent w-full text-black transition-all duration-300 ease-in text-[13px] font-medium px-[0.8rem] py-[0.4rem] flex items-center justify-between cursor-pointer rounded-lg hover:bg-[#fafafa] hover:font-semibold hover:text-[#252b37]"
+            className="w-full text-gray-900 transition-all duration-300 ease-in text-[13px] font-medium px-3 py-1.5 flex items-center justify-between cursor-pointer rounded-lg hover:bg-[#fafafa] hover:text-[#252b37]"
             onClick={handleParentClick}
           >
-            <div style={{ display: "flex", alignItems: "center" }}>
+            <div className="flex items-center gap-2">
               {icon} {title}
             </div>
-            <ChevronDown 
+            <ChevronDown
               style={{
                 transition: "transform 0.3s ease",
                 transform: isOpen ? "rotate(180deg)" : "rotate(0deg)",
                 marginLeft: "8px",
-                fontSize: "14px",
               }}
+              className="w-4 h-4"
             />
           </div>
         ) : (
           <Link to={path || "#"}>
             <li
-              className={`w-full text-black transition-all duration-300 ease-in text-[13px] rounded-lg font-medium px-[0.8rem] py-[0.4rem] flex items-center hover:bg-[#fafafa] hover:font-semibold hover:text-[#252b37] ${pathname.includes(path || "") ? "navLink active bg-[#fafafa] font-semibold text-[#252b37]" : "navLink"}`}
+              className={`w-full text-gray-900 transition-all duration-300 ease-in text-[13px] rounded-lg font-medium px-3 py-1.5 flex items-center hover:bg-[#fafafa] ${
+                pathname.includes(path || "")
+                  ? "navLink active bg-[#fafafa]"
+                  : "navLink"
+              }`}
               onClick={onClick}
             >
               {icon} {title}
@@ -83,12 +87,16 @@ const NavLink = ({
         )}
 
         {hasChildren && isOpen && (
-          <ul className="submenu" style={{ marginLeft: "24px" }}>
+          <ul className="ml-3">
             {children.map((child) => (
               <Restricted to={child.permissionReq} key={child.title}>
                 <Link to={child.path || "#"}>
                   <li
-                    className={`w-full text-black transition-all duration-300 ease-in text-[13px] rounded-lg font-medium px-[0.8rem] py-[0.4rem] flex items-center hover:bg-[#fafafa] hover:font-semibold hover:text-[#252b37] ${pathname.includes(child.path || "") ? "navLink subLink active bg-[#fafafa] font-semibold text-[#252b37]" : "navLink subLink"}`}
+                    className={`w-full text-black transition-all duration-300 ease-in text-[13px] rounded-lg font-medium px-[0.8rem] py-[0.4rem] flex items-center hover:bg-[#fafafa] ${
+                      pathname.includes(child.path || "")
+                        ? "navLink subLink active bg-[#fafafa]"
+                        : "navLink subLink"
+                    }`}
                     onClick={onClick}
                   >
                     {child.icon} {child.title}

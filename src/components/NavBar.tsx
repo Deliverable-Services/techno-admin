@@ -51,94 +51,94 @@ const mainLinks: Array<INavLink> = [
   {
     title: "Orders",
     path: "/orders",
-    icon: <Boxes />,
+    icon: <Boxes className="w-4 h-4" />,
     permissionReq: "read_booking",
   },
   {
     title: "Leads",
-    icon: <Triangle />,
+    icon: <Triangle className="w-4 h-4" />,
     permissionReq: "read_bookingslot",
     children: [
       {
         title: "CRM",
         path: "/crm",
         permissionReq: "read_subscription",
-        icon: <Triangle />,
+        icon: <Triangle className="w-4 h-4" />,
       },
       {
         title: "Meetings",
         path: "/meetings",
         permissionReq: "read_booking",
-        icon: <Clock />,
+        icon: <Clock className="w-4 h-4" />,
       },
     ],
   },
   {
     title: "Billings",
-    icon: <Banknote />,
+    icon: <Banknote className="w-4 h-4" />,
     path: "/invoices",
     permissionReq: "read_bookingslot",
     children: [
       {
         title: "Invoices",
         path: "/invoices",
-        icon: <ReceiptText />,
+        icon: <ReceiptText className="w-4 h-4" />,
         permissionReq: "read_city",
       },
       {
         title: "Subscriptions",
         path: "/subscriptions",
-        icon: <UserRoundPlus />,
+        icon: <UserRoundPlus className="w-4 h-4" />,
         permissionReq: "read_subscription",
       },
       {
         title: "Transactions",
         path: "/transactions",
         permissionReq: "read_transaction",
-        icon: <CreditCard />,
+        icon: <CreditCard className="w-4 h-4" />,
       },
     ],
   },
   {
     title: "Cart",
     path: "/cart",
-    icon: <ShoppingCart />,
+    icon: <ShoppingCart className="w-4 h-4" />,
     permissionReq: "read_booking",
   },
   {
     title: "Customers",
     path: "/users",
-    icon: <Users />,
+    icon: <Users className="w-4 h-4" />,
     permissionReq: "read_user",
   },
   {
     title: "Support Tickets",
     path: "/issues",
-    icon: <CircleAlert />,
+    icon: <CircleAlert className="w-4 h-4" />,
     permissionReq: "read_ticket",
   },
   {
     title: "Services",
     path: "/services",
-    icon: <HeartPulse />,
+    icon: <HeartPulse className="w-4 h-4" />,
     permissionReq: "read_bookingslot",
     children: [
       {
         title: "Services",
         path: "/services",
-        icon: <HeartPulse />,
+        icon: <HeartPulse className="w-4 h-4" />,
         permissionReq: "read_service",
       },
       {
         title: "Categories",
         path: "/categories",
-        icon: <VectorSquare />,
+        icon: <VectorSquare className="w-4 h-4" />,
         permissionReq: "read_category",
       },
       {
         title: "Servicable Cities",
         path: "/cities",
-        icon: <Building2 />,
+        icon: <Building2 className="w-4 h-4" />,
         permissionReq: "read_city",
       },
     ],
@@ -146,25 +146,25 @@ const mainLinks: Array<INavLink> = [
   {
     title: "Products",
     path: "/products",
-    icon: <PackageSearch />,
+    icon: <PackageSearch className="w-4 h-4" />,
     permissionReq: "read_bookingslot",
     children: [
       {
         title: "Products",
         path: "/products",
-        icon: <PackageSearch />,
+        icon: <PackageSearch className="w-4 h-4" />,
         permissionReq: "read_brandmodel",
       },
       {
         title: "Brands",
         path: "/product-brands",
-        icon: <Tag />,
+        icon: <Tag className="w-4 h-4" />,
         permissionReq: "read_brand",
       },
       {
         title: "Variants",
         path: "/product-variants",
-        icon: <SwatchBook />,
+        icon: <SwatchBook className="w-4 h-4" />,
         permissionReq: "read_brandmodel",
       },
     ],
@@ -172,43 +172,43 @@ const mainLinks: Array<INavLink> = [
   {
     title: "Plans",
     path: "/plans",
-    icon: <Lightbulb />,
+    icon: <Lightbulb className="w-4 h-4" />,
     permissionReq: "read_plan",
   },
   {
     title: "Website",
     path: "/website-pages",
-    icon: <Globe />,
+    icon: <Globe className="w-4 h-4" />,
     permissionReq: "read_bookingslot",
     children: [
       {
         title: "Pages",
         path: "/website-pages",
-        icon: <Globe />,
+        icon: <Globe className="w-4 h-4" />,
         permissionReq: "read_staticpage",
       },
       {
         title: "Faqs",
         path: "/faqs",
-        icon: <CircleQuestionMark />,
+        icon: <CircleQuestionMark className="w-4 h-4" />,
         permissionReq: "read_faq",
       },
       {
         title: "Coupons",
         path: "/coupons",
-        icon: <Ticket />,
+        icon: <Ticket className="w-4 h-4" />,
         permissionReq: "read_coupon",
       },
       {
         title: "Banners",
         path: "/advertisements",
-        icon: <Image />,
+        icon: <Image className="w-4 h-4" />,
         permissionReq: "read_banner",
       },
       {
         title: "Testimonials",
         path: "/testimonials",
-        icon: <LetterText />,
+        icon: <LetterText className="w-4 h-4" />,
         permissionReq: "read_testimonial",
       },
     ],
@@ -219,37 +219,37 @@ const organisationLinks: Array<INavLink> = [
   {
     title: "Team Members",
     path: "/team-members",
-    icon: <UserStar />,
+    icon: <UserStar className="w-4 h-4" />,
     permissionReq: "read_user",
   },
   {
     title: "Agents",
     path: "/agent",
-    icon: <HatGlasses />,
+    icon: <HatGlasses className="w-4 h-4" />,
     permissionReq: "read_user",
   },
   {
     title: "Agent Targets",
     path: "/agent-targets",
-    icon: <Target />,
+    icon: <Target className="w-4 h-4" />,
     permissionReq: "read_agenttarget",
   },
   {
     title: "Roles & Permissions",
     path: "/permissions",
-    icon: <ShieldCheck />,
+    icon: <ShieldCheck className="w-4 h-4" />,
     permissionReq: "read_permission",
   },
   {
     title: "Organization",
     path: "/organization",
-    icon: <Building />,
+    icon: <Building className="w-4 h-4" />,
     permissionReq: "read_city",
   },
   {
     title: "Workflow Notifications",
     path: "/notifications",
-    icon: <BellRing />,
+    icon: <BellRing className="w-4 h-4" />,
     permissionReq: "read_notification",
   },
 ];
@@ -259,18 +259,18 @@ const googleLinks: Array<INavLink> = [
     title: "Integrations",
     path: "/enable-integrations",
     permissionReq: "read_notification",
-    icon: <Rotate3d />,
+    icon: <Rotate3d className="w-4 h-4" />,
   },
   {
     title: "Google Analytics",
     path: "/google-analytics",
     permissionReq: "read_agenttarget",
-    icon: <Hammer />,
+    icon: <Hammer className="w-4 h-4" />,
   },
   {
     title: "Google Business",
     path: "/google-business",
-    icon: <Hammer />,
+    icon: <Hammer className="w-4 h-4" />,
     permissionReq: "read_dashboard",
   },
 ];
@@ -356,9 +356,20 @@ const NavBar = ({ isNavOpen, setIsNavOpen }: INavBar) => {
   return (
     <>
       <nav
-        className={`flex flex-col justify-start overflow-auto py-4 px-0 z-10 top-0 left-0 bottom-0 h-screen bg-sidebar transition-all duration-300 ease-in-out ${
-          isNavOpen ? "active pb-0" : ""
-        }`}
+        className={`
+          flex flex-col justify-start overflow-auto py-2 px-0 bg-sidebar h-screen
+          transition-transform duration-300 ease-in-out
+          ${
+            isDesktop
+              ? `fixed top-0 left-0 w-[250px] z-10 ${
+                  isNavOpen ? "translate-x-0" : "-translate-x-full"
+                }`
+              : `fixed inset-y-0 left-0 w-[250px] z-40 ${
+                  isNavOpen ? "translate-x-0" : "-translate-x-full"
+                }`
+          }
+          ${isNavOpen ? "active pb-0" : ""}
+        `}
       >
         {isDesktop && (
           <div className="flex justify-between items-center">
@@ -366,7 +377,7 @@ const NavBar = ({ isNavOpen, setIsNavOpen }: INavBar) => {
           </div>
         )}
 
-        <div className="all-links px-4 overflow-auto mt-2">
+        <div className="all-links px-3 overflow-auto mt-2">
           <OrganizationSwitcher
             organisations={organisations}
             selectedOrg={selectedOrg}
@@ -374,22 +385,17 @@ const NavBar = ({ isNavOpen, setIsNavOpen }: INavBar) => {
           />
 
           {/* Dashboard */}
-          <ul className="pt-4 mb-4">
+          <ul className="pt-3 mb-4">
             <Navlink
               title="Dashboard"
               path="/dashboard"
               onClick={closeNavBar}
-              icon={<LayoutGrid />}
+              icon={<LayoutGrid className="w-4 h-4" />}
               isNavOpen={isNavOpen}
               permissionReq="read_dashboard"
               activeMenu={activeMenu}
               setActiveMenu={setActiveMenu}
             />
-          </ul>
-
-          {/* Sections */}
-          <p className="text-muted mb-2">MAIN</p>
-          <ul className="mb-4">
             {filteredMainLinks.map((link) => (
               <Navlink
                 key={link.title}
@@ -401,8 +407,8 @@ const NavBar = ({ isNavOpen, setIsNavOpen }: INavBar) => {
               />
             ))}
           </ul>
-          <p className="text-muted mb-2">CONFIGURATIONS</p>
-          <ul className="mb-4">
+          <p className="text-xs text-muted font-medium">CONFIGURATIONS</p>
+          <ul className="mb-4 mt-2">
             {filteredOrganisationLinks.map((link) => (
               <Navlink
                 key={link.title}
