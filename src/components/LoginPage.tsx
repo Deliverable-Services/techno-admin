@@ -28,12 +28,12 @@ const VerifySchema = Yup.object().shape({
 });
 
 const sendOtp = (formData: FormData) =>
-  API.post(`auth/send-otp`, formData, {
+  API.post(`auth/send-otp-email`, formData, {
     headers: { "Content-Type": "multipart/form-data" },
   });
 
 const verifyOtp = (formData: FormData) =>
-  API.post(`auth/verify-otp`, formData, {
+  API.post(`auth/verify-otp-email`, formData, {
     headers: { "Content-Type": "multipart/form-data" },
   });
 
@@ -455,7 +455,7 @@ const LoginFlow = () => {
                           onClick={() => setStep("login")}
                         >
                           <Hammer size={12} className="mr-2" />
-                          Change Phone Number
+                          Change Email Id
                         </button>
                       </div>
                     </Form>
