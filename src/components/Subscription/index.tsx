@@ -7,14 +7,10 @@ import PageHeading from "../../shared-components/PageHeading";
 import { Container, Button } from "../ui/bootstrap-compat";
 import { showErrorToast } from "../../utils/showErrorToast";
 import { primaryColor } from "../../utils/constants";
-import { Plus, CalendarDays, Repeat, CreditCard, RefreshCw, Triangle } from 'lucide-react';
+import { Plus, RefreshCw } from 'lucide-react';
 import { Hammer } from "../ui/icon";
 import { Play } from 'lucide-react';
 import { UserRoundPlus } from 'lucide-react';
-
-
-
-
 import ReactTable from "../../shared-components/ReactTable";
 interface Subscription {
   id: string;
@@ -39,6 +35,7 @@ const SubscriptionPage: React.FC = () => {
   const handleCreate = () => {
     setShowForm(true);
   };
+
   const fetchSubscriptions = useCallback(async () => {
     setLoading(true);
     try {
@@ -129,7 +126,7 @@ const SubscriptionPage: React.FC = () => {
     () => [
       {
         Header: "Customer",
-        accessor: "customer", // name + email in one cell
+        accessor: "customer",
       },
       {
         Header: "Plan Name",
@@ -162,7 +159,7 @@ const SubscriptionPage: React.FC = () => {
 
   if (isProcessingCode) {
     return (
-      <div style={{ display: "flex", justifyContent: "center" }}>
+      <div className="flex justify-center">
         <VerifingUserLoader />
       </div>
     );
@@ -200,7 +197,7 @@ const SubscriptionPage: React.FC = () => {
               <div className="flex flex-col items-center text-center">
                 <Hammer size={80} color={primaryColor} className="mb-4" />
                 <h3 className="mb-3">Get started with Subscriptions</h3>
-                <p className="text-muted mb-4" style={{ maxWidth: "400px" }}>
+                <p className="text-muted mb-4 max-w-[400px]">
                   To start using subscriptions you need to create your Stripe
                   account by clicking on Create Stripe button below
                 </p>
@@ -227,8 +224,7 @@ const SubscriptionPage: React.FC = () => {
           return (
             <Container
               fluid
-              className="flex justify-center"
-              style={{ marginTop: "100px", marginBottom: "100px" }}
+              className="flex justify-center my-[100px]"
             >
               <div className="flex flex-col items-center text-center">
                 <div
@@ -332,9 +328,9 @@ const SubscriptionPage: React.FC = () => {
                 {/* Secondary action */}
                 <div className="mt-3">
                   <small className="text-muted">
-                    Need help?{" "}
+                    Need help?
                     <button
-                      className="btn btn-link p-0 no-underline text-inherit font-inherit"
+                      className="p-0 decoration-none text-inherit font-inherit"
                       style={{ color: primaryColor }}
                       onClick={() => console.log("Open documentation")}
                     >
@@ -350,7 +346,7 @@ const SubscriptionPage: React.FC = () => {
         if (!showForm) {
           return (
             <div className="card">
-              <Container fluid className="h-100 p-0 ">
+              <div className="h-full p-0">
                 <div className="mt-3" />
                 <ReactTable
                   data={subscriptions}
@@ -366,7 +362,7 @@ const SubscriptionPage: React.FC = () => {
                   }}
                   deletePermissionReq="delete_user"
                 />
-              </Container>
+              </div>
             </div>
           );
         }

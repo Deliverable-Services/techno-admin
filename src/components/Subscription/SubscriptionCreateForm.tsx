@@ -177,9 +177,8 @@ const SubscriptionCreateForm = ({ onSuccess }: { onSuccess?: () => void }) => {
                   {values.items.map((item, idx) => (
                     <div
                       key={idx}
+                      className="py-2.5 "
                       style={{
-                        paddingBottom: "10px",
-                        paddingTop: "10px",
                         borderBottom:
                           values.items.length !== 1 ? "1px solid #e7eaf3" : "none",
                       }}
@@ -197,7 +196,7 @@ const SubscriptionCreateForm = ({ onSuccess }: { onSuccess?: () => void }) => {
                       />
 
                       <div
-                        style={{ marginBottom: "8px", marginTop: "12px" }}
+                        className="my-2"
                       >
                         {/* Quantity */}
                         <div className="flex items-center gap-3 mb-3 w-full">

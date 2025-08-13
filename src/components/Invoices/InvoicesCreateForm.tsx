@@ -1,13 +1,15 @@
 import { Formik, Form, Field, FieldArray } from "formik";
-import { Button, Modal } from "../ui/bootstrap-compat";
+import { Modal } from "../ui/bootstrap-compat";
 import API from "../../utils/API";
 import { showMsgToast } from "../../utils/showMsgToast";
 import { showErrorToast } from "../../utils/showErrorToast";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import AsyncSelect from "react-select/async";
 import * as Yup from "yup";
 import { ErrorMessage } from "formik";
 import DatePicker from "../../shared-components/DatePicker";
+import { Button } from "../ui/button";
+import { motion, AnimatePresence } from "framer-motion";
 
 const initialValues = {
   user_id: "",
@@ -46,10 +48,8 @@ const InvoicesCreateForm = ({ onSuccess }: { onSuccess?: () => void }) => {
     value: string;
   } | null>(null);
   const [showPreview, setShowPreview] = useState(false);
+  const [showDrawer, setShowDrawer] = useState(false);
   const [itemSuggestions, setItemSuggestions] = useState<{ [key: number]: any[] }>({});
-
-  // const [isDownloading, setIsDownloading] = useState(false);
-
   const generateInvoiceNumber = () => {
     return Math.floor(100000 + Math.random() * 900000).toString();
   };
@@ -244,7 +244,6 @@ const InvoicesCreateForm = ({ onSuccess }: { onSuccess?: () => void }) => {
             setSelectedUser(null);
             if (onSuccess) onSuccess();
           } catch (err: any) {
-            console.log(err, "::::")
             showErrorToast(err?.message || "Failed to create invoice");
           } finally {
             setSubmitting(false);
@@ -503,7 +502,6 @@ const InvoicesCreateForm = ({ onSuccess }: { onSuccess?: () => void }) => {
                             </ErrorMessage>
                           </div>
                           <Button
-                            variant="danger"
                             onClick={() => remove(idx)}
                             disabled={values.items.length === 1}
                           >
@@ -551,111 +549,6 @@ const InvoicesCreateForm = ({ onSuccess }: { onSuccess?: () => void }) => {
                   </div>
                 )}
               </div>
-              {/* <div>
-                <div className="my-2 flex items-center gap-2">
-                  <label className="flex items-center gap-2">
-                    <Field type="checkbox" name="payAt" />
-                    <p className="m-0">Schedule At</p>
-                  </label>
-                </div>
-                {values.payAt && (
-                  <div>
-                    <div className="mb-4 w-full">
-                      <label className="block text-sm font-medium mb-1">
-                        Billing period
-                      </label>
-                      <Field
-                        as="select"
-                        name="billing_period"
-                        className="w-full py-2 px-2 border border-gray-300 rounded text-sm bg-white"
-                      >
-                        <option value="weekly">Weekly</option>
-                        <option value="monthly">Monthly</option>
-                        <option value="quarterly">Quarterly</option>
-                        <option value="yearly">Yearly</option>
-                        <option value="custom">Custom</option>
-                      </Field>
-                    </div>
-
-                    {values.billing_period === "custom" && (
-                      <div className="mb-4 w-full">
-                        <label className="block text-sm font-medium mb-1">
-                          Custom billing period (days)
-                        </label>
-                        <Field
-                          name="custom_billing_period"
-                          className="w-full py-2 px-2 border border-gray-300 rounded text-sm bg-white"
-                          type="number"
-                          min="1"
-                          placeholder="Enter number of days"
-                        />
-                      </div>
-                    )}
-
-                    <div className="flex justify-between w-full gap-5">
-                      <div className="mb-4 w-full">
-                        <label className="block text-sm font-medium mb-1">
-                          Start date
-                        </label>
-                        <Field
-                          as="select"
-                          name="start_date"
-                          className="w-full py-2 px-2 border border-gray-300 rounded text-sm bg-white"
-                        >
-                          <option value="immediately">Immediately</option>
-                          <option value="next_week">Next Week</option>
-                          <option value="next_month">Next Month</option>
-                          <option value="custom_start">Custom Date</option>
-                        </Field>
-                      </div>
-                      <div className="mb-4 w-full">
-                        <label className="block text-sm font-medium mb-1">
-                          End date
-                        </label>
-                        <Field
-                          as="select"
-                          name="end_date"
-                          className="w-full py-2 px-2 border border-gray-300 rounded text-sm bg-white"
-                        >
-                          <option value="none">None</option>
-                          <option value="after_3_months">After 3 Months</option>
-                          <option value="after_6_months">After 6 Months</option>
-                          <option value="after_1_year">After 1 Year</option>
-                          <option value="custom_end">Custom Date</option>
-                        </Field>
-                      </div>
-                    </div>
-
-                    {values.start_date === "custom_start" && (
-                      <div className="mb-4 w-full">
-                        <label className="block text-sm font-medium mb-1">
-                          Custom start date
-                        </label>
-                        <Field
-                          name="custom_start_date"
-                          className="w-full py-2 px-2 border border-gray-300 rounded text-sm bg-white"
-                          type="date"
-                        />
-                      </div>
-                    )}
-
-                    {values.end_date === "custom_end" && (
-                      <div className="mb-4 w-full">
-                        <label className="block text-sm font-medium mb-1">
-                          Custom end date
-                        </label>
-                        <Field
-                          name="custom_end_date"
-                          className="w-full py-2 px-2 border border-gray-300 rounded text-sm bg-white"
-                          type="date"
-                        />
-                      </div>
-                    )}
-                  </div>
-                )}
-              </div> */}
-
-
               <div className="border border-gray-200 rounded-lg p-2 mb-2">
                 <div className="flex items-center justify-between w-full">
                   <label className="text-gray-500 mb-0">Subtotal</label>

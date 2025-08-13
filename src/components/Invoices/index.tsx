@@ -9,7 +9,7 @@ import autoTable from "jspdf-autotable";
 import { showMsgToast } from "../../utils/showMsgToast";
 import { showErrorToast } from "../../utils/showErrorToast";
 import PageHeading from "../../shared-components/PageHeading";
-import { Container, Button } from "../ui/bootstrap-compat";
+import { Button } from "../ui/bootstrap-compat";
 import ReactTable from "../../shared-components/ReactTable";
 import { Cell } from "react-table";
 import { Hammer } from "../ui/icon";
@@ -216,7 +216,7 @@ const InvoicePage: React.FC = () => {
 
   if (isProcessingCode) {
     return (
-      <div style={{ display: "flex", justifyContent: "center" }}>
+      <div className="flex justify-center">
         <VerifingUserLoader />
       </div>
     );
@@ -268,10 +268,10 @@ const InvoicePage: React.FC = () => {
         if (!loggedInUser?.stripe_account_id) {
           return (
             <div className="view-padding">
-              <div className="d-flex flex-column align-items-center text-center">
+              <div className="flex flex-col items-center text-center">
                 <Hammer size={80} color={primaryColor} className="mb-4" />
                 <h3 className="mb-3">Get started with Billings</h3>
-                <p className="text-muted mb-4" style={{ maxWidth: "400px" }}>
+                <p className="text-muted mb-4 max-w-[400px]">
                   To start using billing you need to create your Stripe account
                   by clicking on Create Stripe button below
                 </p>
@@ -324,7 +324,7 @@ const InvoicePage: React.FC = () => {
         if (!showForm) {
           return (
             <div className="card">
-              <Container fluid className="h-100 p-0 ">
+              <div className="h-full p-0">
                 <div className="mt-3" />
                 <ReactTable
                   data={invoices}
@@ -340,7 +340,7 @@ const InvoicePage: React.FC = () => {
                   }}
                   deletePermissionReq="delete_user"
                 />
-              </Container>
+              </div>
             </div>
           );
         }
