@@ -14,7 +14,7 @@ export const Container: React.FC<ContainerProps> = ({
     <div
       className={cn(
         fluid
-          ? "w-full px-4 sm:px-6 lg:px-8"
+          ? "w-full px-4  sm:px-6 lg:px-8"
           : "mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8",
         className
       )}
@@ -26,7 +26,7 @@ export const Container: React.FC<ContainerProps> = ({
 type RowProps = React.HTMLAttributes<HTMLDivElement>;
 
 export const Row: React.FC<RowProps> = ({ className, ...props }) => {
-  return <div className={cn("flex flex-wrap -mx-2", className)} {...props} />;
+  return <div className={cn("flex  -mx-2", className)} {...props} />;
 };
 
 type ColSizes = 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12 | "auto";

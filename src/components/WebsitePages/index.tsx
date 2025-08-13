@@ -1,11 +1,9 @@
 import { useState, useEffect } from "react";
-import { Nav } from "../ui/bootstrap-compat";
 import { useHistory, useLocation } from "react-router-dom";
 import PageHeading from "../../shared-components/PageHeading";
 import StaticPages from "../StaticPages";
 import DynamicPages from "../DynamicPages";
-import { Hammer } from "../ui/icon";
-import { Globe } from 'lucide-react';
+import { Globe } from "lucide-react";
 
 const intitialFilter = {
   q: "",
@@ -30,7 +28,7 @@ const WebsitePages = () => {
     active: getTabFromQuery(),
   });
 
-  // Sync tab with URL query param on mount and when location changes
+  // Sync tab with URL query param
   useEffect(() => {
     const tab = getTabFromQuery();
     setFilter((prev) => ({
@@ -53,31 +51,46 @@ const WebsitePages = () => {
 
   return (
     <>
-      <div className="view-padding">
+      <div className="p-4">
         <PageHeading
           icon={<Globe size={24} />}
           title="Website Pages"
           description="Create and manage website pages"
         />
       </div>
-      <hr />
-      <div className="h-100 mt-2">
-        <div className="d-flex justify-content-between pl-3 pb-3 mt-3">
-          <Nav
-            className="global-navs"
-            variant="tabs"
-            activeKey={filter.active}
-            onSelect={(selectedKey) => _onFilterChange("active", selectedKey)}
-          >
-            <Nav.Item>
-              <Nav.Link eventKey="static">Static</Nav.Link>
-            </Nav.Item>
-            <Nav.Item>
-              <Nav.Link eventKey="dynamic">Dynamic</Nav.Link>
-            </Nav.Item>
-          </Nav>
+      <hr className="border-gray-200" />
+
+      <div className="h-full mt-4">
+        {/* Tab Navigation */}
+        <div className="px-4 pb-3 mt-3 border-b border-gray-200">
+          <div className="flex space-x-6">
+            <button
+              onClick={() => _onFilterChange("active", "static")}
+              className={`pb-2 text-sm font-medium transition-colors border-b-2 ${
+                filter.active === "static"
+                  ? "border-blue-500 text-blue-600"
+                  : "border-transparent text-gray-500 hover:text-gray-700"
+              }`}
+            >
+              Static
+            </button>
+            <button
+              onClick={() => _onFilterChange("active", "dynamic")}
+              className={`pb-2 text-sm font-medium transition-colors border-b-2 ${
+                filter.active === "dynamic"
+                  ? "border-blue-500 text-blue-600"
+                  : "border-transparent text-gray-500 hover:text-gray-700"
+              }`}
+            >
+              Dynamic
+            </button>
+          </div>
         </div>
-        {filter.active === "static" ? <StaticPages /> : <DynamicPages />}
+
+        {/* Tab Content */}
+        <div className="p-4">
+          {filter.active === "static" ? <StaticPages /> : <DynamicPages />}
+        </div>
       </div>
     </>
   );

@@ -1,6 +1,5 @@
 import { AxiosError } from "axios";
 import { useMemo, useState } from "react";
-import { Button, Container, Dropdown, Modal } from "../ui/bootstrap-compat";
 import UserCreateUpdateForm from "./UsersCreateUpdateForm";
 import Flyout from "../../shared-components/Flyout";
 import { useFlyout } from "../../hooks/useFlyout";
@@ -24,11 +23,8 @@ import { isActiveArray } from "../../utils/arrays";
 import { primaryColor } from "../../utils/constants";
 import { queryClient } from "../../utils/queryClient";
 import { showMsgToast } from "../../utils/showMsgToast";
-import { Hammer } from "../ui/icon";
-import { UsersRound } from 'lucide-react';
-import { Funnel, Frown } from 'lucide-react';
+import { UsersRound, Funnel, Frown, EllipsisVertical, Trash2 } from 'lucide-react';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuTrigger } from "../ui/dropdown-menu";
-
 
 const key = "users";
 
@@ -50,7 +46,6 @@ const Users = () => {
   const [selectedDeleteId, setSelectedDeleteId] = useState<string | null>(null);
   const [selectedRows, setSelectedRows] = useState([]);
   const [filter, setFilter] = useState(intitialFilter);
-  const [page, setPage] = useState<number>(1);
   const [role, setRole] = useState("");
   const { isOpen: showFlyout, openFlyout, closeFlyout } = useFlyout();
   const [selectedUserId, setSelectedUserId] = useState<string | null>(null);
@@ -74,13 +69,9 @@ const Users = () => {
       handleApiError(error, history);
     },
   });
+
   const _onFilterChange = (idx: string, value: any) => {
-    setFilter((prev) => {
-      return {
-        ...prev,
-        [idx]: value,
-      };
-    });
+    setFilter((prev) => ({ ...prev, [idx]: value }));
   };
 
   const _onCreateClick = () => {
@@ -90,16 +81,12 @@ const Users = () => {
   };
 
   const _onEditClick = (id: string, role: string) => {
-    // history.push("/users/create-edit", { id, role });
     openFlyout();
   };
 
   const columns = useMemo(
     () => [
-      {
-        Header: "#Id",
-        accessor: "id", //accessor is the "key" in the data
-      },
+      { Header: "#Id", accessor: "id" },
       {
         Header: "Profile Pic",
         accessor: "profile_pic",
@@ -107,18 +94,9 @@ const Users = () => {
           <TableImage folder="profile_pic" file={data.row.values.profile_pic} />
         ),
       },
-      {
-        Header: "Name",
-        accessor: "name",
-      },
-      {
-        Header: "Phone",
-        accessor: "phone",
-      },
-      {
-        Header: "Email",
-        accessor: "email",
-      },
+      { Header: "Name", accessor: "name" },
+      { Header: "Phone", accessor: "phone" },
+      { Header: "Email", accessor: "email" },
       {
         Header: "Role",
         accessor: "role",
@@ -126,61 +104,47 @@ const Users = () => {
           <CustomBadge variant="primary" title={data.row.values.role} />
         ),
       },
+      { Header: "Wallet Balance", accessor: "wallets.balance" },
       {
-        Header: "Wallet Balance",
-        accessor: "wallets.balance",
-      },
-      {
-        Header: " Disabled?",
+        Header: "Disabled?",
         accessor: "disabled",
-        Cell: (data: Cell) => {
-          return <IsActiveBadge value={data.row.values.disabled} />;
-        },
+        Cell: (data: Cell) => <IsActiveBadge value={data.row.values.disabled} />,
       },
       {
         Header: "Created At",
         accessor: "created_at",
-        Cell: (data: Cell) => {
-          return <CreatedUpdatedAt date={data.row.values.created_at} />;
-        },
+        Cell: (data: Cell) => (
+          <CreatedUpdatedAt date={data.row.values.created_at} />
+        ),
       },
       {
         Header: "Actions",
-        Cell: (data: Cell) => {
-          return (
-            <div className="d-flex align-items-center justify-content-end gap-3">
-              <EditButton
-                onClick={() => {
-                  _onEditClick(data.row.values.id, data.row.values.role);
-                }}
-                permissionReq="update_notification"
-              />
-              <Dropdown className="ellipsis-dropdown">
-                <Dropdown.Toggle
-                  variant="light"
-                  size="sm"
-                  className="p-1 border-0 shadow-none"
-                  id={`dropdown-${data.row.values.id}`}
+        Cell: (data: Cell) => (
+          <div className="flex items-center justify-end gap-3">
+            <EditButton
+              onClick={() => _onEditClick(data.row.values.id, data.row.values.role)}
+              permissionReq="update_notification"
+            />
+            <DropdownMenu>
+              <DropdownMenuTrigger className="p-1 border-0 shadow-none">
+                <EllipsisVertical size={18} />
+                
+              </DropdownMenuTrigger>
+              <DropdownMenuContent className="p-2 w-40">
+                <button
+                  onClick={() => {
+                    setSelectedDeleteId(data.row.values.id);
+                    setDeletePopup(true);
+                  }}
+                  className="flex items-center text-red-500 hover:bg-red-50 px-2 py-1 rounded"
                 >
-                  <Hammer size={18} />
-                </Dropdown.Toggle>
-
-                <Dropdown.Menu className="menu-dropdown">
-                  <Dropdown.Item
-                    onClick={() => {
-                      setSelectedDeleteId(data.row.values.id);
-                      setDeletePopup(true);
-                    }}
-                    className="text-danger"
-                  >
-                    <Hammer size={16} className="me-1" />
-                    Delete
-                  </Dropdown.Item>
-                </Dropdown.Menu>
-              </Dropdown>
-            </div>
-          );
-        },
+                  <Trash2 size={16} className="mr-1" /> Delete
+                
+                </button>
+              </DropdownMenuContent>
+            </DropdownMenu>
+          </div>
+        ),
       },
     ],
     []
@@ -188,7 +152,7 @@ const Users = () => {
 
   return (
     <>
-      <div className="view-padding">
+      <div className="p-4">
         <PageHeading
           icon={<UsersRound size={24} />}
           description="Create and manage customers"
@@ -199,26 +163,21 @@ const Users = () => {
           permissionReq="create_user"
         />
       </div>
-      <hr />
+      <hr className="my-4" />
 
       {(() => {
-        if (isLoading || isFetching) {
-          return <IsLoading />;
-        }
+        if (isLoading || isFetching) return <IsLoading />;
 
         if (error || (!data && (!isLoading || !isFetching))) {
           return (
-            <Container
-              fluid
-              className="d-flex justify-content-center display-3"
-            >
-              <div className="d-flex flex-column align-items-center">
+            <div className="w-full px-4 flex justify-center text-3xl">
+              <div className="flex flex-col items-center">
                 <Frown color={primaryColor} />
-                <span className="text-primary display-3">
+                <span className="text-primary text-3xl">
                   Something went wrong
                 </span>
               </div>
-            </Container>
+            </div>
           );
         }
 
@@ -227,46 +186,38 @@ const Users = () => {
             <ReactTable
               data={data?.data}
               filters={
-                <>
-                  <DropdownMenu>
-                    <DropdownMenuTrigger className="w-full flex filter-dropdown p-2  items-center justify-between rounded-lg py-1 px-3 !border-[#dee2e6] border h-[36px] border-secondary"
-                    >
-                      <span className="flex items-center justify-between gap-2 w-full">
-                        <Funnel size={14} /> Filters
-                      </span>
-                    </DropdownMenuTrigger>
-                    <DropdownMenuContent className="w-[400px] p-3">
-                      <div className="filter-dropdown-heading d-flex justify-content-between w-full">
-                        <h4>Filter</h4>
-                        <div className="d-flex align-items-center justify-md-content-center">
-                          <Button
-                            variant={
-                              areTwoObjEqual(intitialFilter, filter)
-                                ? "light"
-                                : "primary"
-                            }
-                            style={{
-                              fontSize: 14,
-                            }}
-                            onClick={() => setFilter(intitialFilter)}
-                          >
-                            Reset Filters
-                          </Button>
-                        </div>
-                      </div>
-                      <div className="select-filter">
-                        <FilterSelect
-                          currentValue={filter.disabled}
-                          data={isActiveArray}
-                          label="Disabled Users?"
-                          idx="disabled"
-                          onFilterChange={_onFilterChange}
-                          defaultSelectTitle="Show All"
-                        />
-                      </div>
-                    </DropdownMenuContent>
-                  </DropdownMenu>
-                </>
+                <DropdownMenu>
+                  <DropdownMenuTrigger className="w-full flex items-center justify-between border border-gray-300 h-9 rounded px-3">
+                    <span className="flex items-center gap-2 w-full">
+                      <Funnel size={14} /> Filters
+                    </span>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent className="w-[400px] p-3">
+                    <div className="flex justify-between w-full">
+                      <h4>Filter</h4>
+                      <button
+                        className={`text-sm px-3 py-1 rounded ${
+                          areTwoObjEqual(intitialFilter, filter)
+                            ? "bg-gray-200 text-gray-700"
+                            : "bg-blue-500 text-white"
+                        }`}
+                        onClick={() => setFilter(intitialFilter)}
+                      >
+                        Reset Filters
+                      </button>
+                    </div>
+                    <div className="mt-2">
+                      <FilterSelect
+                        currentValue={filter.disabled}
+                        data={isActiveArray}
+                        label="Disabled Users?"
+                        idx="disabled"
+                        onFilterChange={_onFilterChange}
+                        defaultSelectTitle="Show All"
+                      />
+                    </div>
+                  </DropdownMenuContent>
+                </DropdownMenu>
               }
               columns={columns}
               setSelectedRows={setSelectedRows}
@@ -276,7 +227,7 @@ const Users = () => {
               searchPlaceHolder="Search using name, phone, email"
               deletePermissionReq="delete_user"
             />
-            {data?.data?.length > 0 ? (
+            {data?.data?.length > 0 && (
               <TablePagination
                 currentPage={data?.current_page}
                 lastPage={data?.last_page}
@@ -284,51 +235,62 @@ const Users = () => {
                 hasNextPage={!!data?.next_page_url}
                 hasPrevPage={!!data?.prev_page_url}
               />
-            ) : null}
+            )}
           </>
         );
       })()}
 
-      <Modal show={deletePopup} onHide={() => setDeletePopup(false)}>
-        <Modal.Header closeButton>
-          <Modal.Title>Are you sure?</Modal.Title>
-        </Modal.Header>
-        <Modal.Body>
-          Do you really want to delete this user? This process cannot be undone.
-        </Modal.Body>
-        <Modal.Footer>
-          <Button variant="bg-light" onClick={() => setDeletePopup(false)}>
-            Close
-          </Button>
-          <Button
-            variant="danger"
-            onClick={() => {
-              if (selectedDeleteId) {
-                mutate([selectedDeleteId]);
-                setDeletePopup(false);
-                setSelectedDeleteId(null);
-              }
-            }}
-            disabled={isDeleteLoading}
-          >
-            {isDeleteLoading ? "Loading..." : "Delete"}
-          </Button>
-        </Modal.Footer>
-      </Modal>
+      {deletePopup && (
+        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+          <div className="bg-white rounded-lg shadow-lg w-full max-w-md">
+            <div className="flex justify-between items-center p-4 border-b">
+              <h3 className="text-lg font-semibold">Are you sure?</h3>
+              <button
+                className="text-gray-500 hover:text-gray-700"
+                onClick={() => setDeletePopup(false)}
+              >
+                ✕
+              </button>
+            </div>
+            <div className="p-4">
+              Do you really want to delete this user? This process cannot be undone.
+            </div>
+            <div className="flex justify-end gap-2 p-4 border-t">
+              <button
+                className="px-4 py-2 bg-gray-200 rounded hover:bg-gray-300"
+                onClick={() => setDeletePopup(false)}
+              >
+                Close
+              </button>
+              <button
+                className="px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700"
+                onClick={() => {
+                  if (selectedDeleteId) {
+                    mutate([selectedDeleteId]);
+                    setDeletePopup(false);
+                    setSelectedDeleteId(null);
+                  }
+                }}
+                disabled={isDeleteLoading}
+              >
+                {isDeleteLoading ? "Loading..." : "Delete"}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
 
       {selectedRows.length > 0 && (
-        <div className="delete-button rounded">
+        <div className="fixed bottom-4 right-4 bg-white border rounded shadow-lg p-3 flex items-center gap-4">
           <span>
             <b>Delete {selectedRows.length} rows</b>
           </span>
-          <Button
-            variant="danger"
-            onClick={() => {
-              mutate(selectedRows.map((i) => i.id));
-            }}
+          <button
+            className="px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700"
+            onClick={() => mutate(selectedRows.map((i) => i.id))}
           >
             {isDeleteLoading ? "Loading..." : "Delete"}
-          </Button>
+          </button>
         </div>
       )}
 
