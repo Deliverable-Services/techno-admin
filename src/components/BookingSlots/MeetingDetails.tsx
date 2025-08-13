@@ -24,7 +24,7 @@ const MeetingDetails = ({ meeting, onDelete, onEdit, toggleFlyout }) => {
     <>
       <Row className="rounded">
         <Col className="mx-auto">
-          <div className="w-full p-3 max-w-md p-6 rounded-lg shadow-md border bg-white">
+          <div className="w-full max-w-md p-6 rounded-lg shadow-md border bg-white">
             <div className="d-flex justify-content-end gap-4">
               <button
                 className="bg-white border p-1 rounded-lg"
@@ -120,8 +120,8 @@ const MeetingDetails = ({ meeting, onDelete, onEdit, toggleFlyout }) => {
                                 guest.guest_type === "lead"
                                   ? "warning"
                                   : guest.guest_type === "customer"
-                                  ? "success"
-                                  : "primary"
+                                    ? "success"
+                                    : "primary"
                               }
                               className="ms-2"
                             >

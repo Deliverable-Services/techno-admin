@@ -13,7 +13,6 @@ import { Container, Button } from "../ui/bootstrap-compat";
 import ReactTable from "../../shared-components/ReactTable";
 import { Cell } from "react-table";
 import { Hammer } from "../ui/icon";
-import { Plus } from 'lucide-react';
 import { primaryColor } from "../../utils/constants";
 import { ReceiptText } from 'lucide-react';
 
@@ -51,7 +50,10 @@ const InvoicePage: React.FC = () => {
     setLoading(true);
     try {
       const res = await API.get("/invoices");
-      setInvoices(res.data || []);
+      const sortedData = (res.data || []).sort((a, b) => {
+        return new Date(b.created_at).getTime() - new Date(a.created_at).getTime();
+      });
+      setInvoices(sortedData);
     } catch (err) {
       setInvoices([]);
     } finally {
@@ -215,8 +217,7 @@ const InvoicePage: React.FC = () => {
   if (isProcessingCode) {
     return (
       <div style={{ display: "flex", justifyContent: "center" }}>
-        {" "}
-        <VerifingUserLoader />{" "}
+        <VerifingUserLoader />
       </div>
     );
   }
@@ -252,6 +253,18 @@ const InvoicePage: React.FC = () => {
       </div>
       <hr />
       {(() => {
+        if (showForm) {
+          return (
+            <div className="max-w-lg mx-auto px-7">
+              <InvoicesCreateForm
+                onSuccess={() => {
+                  setShowForm(false);
+                  fetchInvoices();
+                }}
+              />
+            </div>
+          )
+        }
         if (!loggedInUser?.stripe_account_id) {
           return (
             <div className="view-padding">
@@ -299,12 +312,11 @@ const InvoicePage: React.FC = () => {
               <p className="text-xl text-gray-500 mb-4">
                 This is where you can see invoice and their associated status
               </p>
-              <button
-                className="bg-gray-800 text-white border-0 rounded px-4 py-2 font-medium cursor-pointer text-base transition-colors hover:bg-gray-600"
+              <Button
                 onClick={handleCreate}
               >
                 + Create invoice
-              </button>
+              </Button>
             </div>
           );
         }
@@ -332,17 +344,6 @@ const InvoicePage: React.FC = () => {
             </div>
           );
         }
-
-        return (
-          <div className="max-w-lg mx-auto px-7">
-            <InvoicesCreateForm
-              onSuccess={() => {
-                setShowForm(false);
-                fetchInvoices();
-              }}
-            />
-          </div>
-        );
       })()}
     </>
   );

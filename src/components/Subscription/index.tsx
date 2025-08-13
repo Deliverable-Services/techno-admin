@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect, useCallback, useMemo } from "react";
 import API from "../../utils/API";
 import VerifingUserLoader from "../../shared-components/VerifingUserLoader";
 import useUserProfileStore from "../../hooks/useUserProfileStore";
@@ -15,6 +15,7 @@ import { UserRoundPlus } from 'lucide-react';
 
 
 
+import ReactTable from "../../shared-components/ReactTable";
 interface Subscription {
   id: string;
   customer_name: string;
@@ -38,18 +39,34 @@ const SubscriptionPage: React.FC = () => {
   const handleCreate = () => {
     setShowForm(true);
   };
-
   const fetchSubscriptions = useCallback(async () => {
     setLoading(true);
     try {
       const res = await API.get("/subscriptions");
-      setSubscriptions(res.data || []);
+      const sortedData = (res.data?.data?.data || []).sort((a: any, b: any) => {
+        return new Date(b.created_at).getTime() - new Date(a.created_at).getTime();
+      });
+
+      // Map API data into table-friendly format
+      const formatted = sortedData.map((item: any) => ({
+        id: item.id,
+        customer: `${item.user?.name || ""} (${item.user?.email || ""})`,
+        plan_name: item.name,
+        status: item.status,
+        amount: item.billing_cycle_amount,
+        currency: item.billing_cycle_currency,
+        interval: item.billing_cycle,
+        // next_billing_date: item.next_billing_date,
+      }));
+
+      setSubscriptions(formatted);
     } catch (err) {
       setSubscriptions([]);
     } finally {
       setLoading(false);
     }
   }, []);
+
 
   const handleCode = useCallback(
     async (code: string) => {
@@ -107,6 +124,42 @@ const SubscriptionPage: React.FC = () => {
     setShowForm(true);
   };
 
+
+  const columns = useMemo(
+    () => [
+      {
+        Header: "Customer",
+        accessor: "customer", // name + email in one cell
+      },
+      {
+        Header: "Plan Name",
+        accessor: "plan_name",
+      },
+      {
+        Header: "Status",
+        accessor: "status",
+      },
+      {
+        Header: "Amount",
+        accessor: "amount",
+      },
+      {
+        Header: "Currency",
+        accessor: "currency",
+      },
+      {
+        Header: "Interval",
+        accessor: "interval",
+      },
+      // {
+      //   Header: "Next Billing Date",
+      //   accessor: "next_billing_date",
+      // },
+    ],
+    []
+  );
+
+
   if (isProcessingCode) {
     return (
       <div style={{ display: "flex", justifyContent: "center" }}>
@@ -129,10 +182,22 @@ const SubscriptionPage: React.FC = () => {
       </div>
       <hr />
       {(() => {
+        if (showForm) {
+          return (
+            <div className="form-container">
+              <SubscriptionCreateForm
+                onSuccess={() => {
+                  setShowForm(false);
+                  fetchSubscriptions();
+                }}
+              />
+            </div>
+          );
+        }
         if (!loggedInUser?.stripe_account_id) {
           return (
             <div className="view-padding">
-              <div className="d-flex flex-column align-items-center text-center">
+              <div className="flex flex-col items-center text-center">
                 <Hammer size={80} color={primaryColor} className="mb-4" />
                 <h3 className="mb-3">Get started with Subscriptions</h3>
                 <p className="text-muted mb-4" style={{ maxWidth: "400px" }}>
@@ -149,7 +214,7 @@ const SubscriptionPage: React.FC = () => {
                     borderColor: primaryColor,
                   }}
                 >
-                  <div className="text-white d-flex align-items-center">
+                  <div className="text-white flex items-center">
                     <Hammer className="mr-2" />
                     Create Stripe Account
                   </div>
@@ -162,29 +227,21 @@ const SubscriptionPage: React.FC = () => {
           return (
             <Container
               fluid
-              className="d-flex justify-content-center"
+              className="flex justify-center"
               style={{ marginTop: "100px", marginBottom: "100px" }}
             >
-              <div className="d-flex flex-column align-items-center text-center">
+              <div className="flex flex-col items-center text-center">
                 <div
-                  className="d-flex align-items-center justify-content-center mb-3"
-                  style={{
-                    width: "80px",
-                    height: "80px",
-                    backgroundColor: "#f8f9fa",
-                    borderRadius: "50%",
-                    border: `2px solid ${primaryColor}20`,
-                  }}
+                  className={`flex items-center justify-center mb-3 w-20 h-20 bg-[#f8f9fa] rounded-full border-2 border-[${primaryColor}20]`}
                 >
                   <Hammer size={35} color={primaryColor} />
                 </div>
-                <h5 className="text-muted mb-2" style={{ fontWeight: "500" }}>
+                <h5 className="text-muted mb-2 font-medium">
                   Loading subscriptions...
                 </h5>
                 <div
-                  className="spinner-border text-primary"
+                  className="spinner-border !text-[#0B64FE]"
                   role="status"
-                  style={{ color: primaryColor + " !important" }}
                 >
                   <span className="sr-only">Loading...</span>
                 </div>
@@ -197,64 +254,37 @@ const SubscriptionPage: React.FC = () => {
           return (
             <Container
               fluid
-              className="d-flex justify-content-center"
-              style={{ marginTop: "60px", marginBottom: "60px" }}
+              className="flex justify-center my-[60px]"
             >
               <div
-                className="d-flex flex-column align-items-center text-center"
-                style={{ maxWidth: "500px" }}
+                className="flex flex-col items-center text-center max-w-[500px]"
               >
                 {/* Icon Stack */}
-                <div className="position-relative mb-4">
+                <div className="relative mb-4">
                   <div
-                    className="d-flex align-items-center justify-content-center"
-                    style={{
-                      width: "120px",
-                      height: "120px",
-                      backgroundColor: "#f8f9fa",
-                      borderRadius: "50%",
-                      border: `3px solid ${primaryColor}20`,
-                    }}
+                    className={`flex items-center justify-center w-[120px] h-[120px] bg-[#f8f9fa] rounded-[50%] border-2 border-[${primaryColor}20]`}
                   >
                     <Play size={50} color={primaryColor} />
                   </div>
                   <div
-                    className="position-absolute d-flex align-items-center justify-content-center"
-                    style={{
-                      width: "35px",
-                      height: "35px",
-                      backgroundColor: primaryColor,
-                      borderRadius: "50%",
-                      bottom: "-5px",
-                      right: "-5px",
-                      border: "3px solid white",
-                    }}
+                    className="absolute flex items-center justify-center w-[35px] h-[35px] rounded-full -bottom-[5px] -right-[5px] border-[3px] border-white"
+                    style={{ backgroundColor: primaryColor }}
                   >
                     <RefreshCw size={18} color="white" />
-                    
+
                   </div>
                 </div>
 
                 {/* Title */}
                 <h3
-                  className="mb-3"
-                  style={{
-                    fontWeight: "600",
-                    color: "#2c3e50",
-                    fontSize: "24px",
-                  }}
+                  className="mb-3 text-[#2c3e50] font-semibold text-2xl"
                 >
                   No subscriptions yet
                 </h3>
 
                 {/* Description */}
                 <p
-                  className="text-muted mb-4"
-                  style={{
-                    fontSize: "16px",
-                    lineHeight: "1.6",
-                    maxWidth: "400px",
-                  }}
+                  className="text-muted mb-4 text-base max-w-[400px]"
                 >
                   Create recurring billing plans for your customers. Set up
                   automatic payments and manage subscription lifecycles with
@@ -263,22 +293,21 @@ const SubscriptionPage: React.FC = () => {
 
                 {/* Features List */}
                 <div
-                  className="d-flex flex-column align-items-start mb-4"
-                  style={{ fontSize: "14px" }}
+                  className="flex flex-col items-start mb-4 text-sm"
                 >
-                  <div className="d-flex align-items-center mb-2 text-muted">
-                    <CalendarDays size={14} color={primaryColor} className="mr-2" />
+                  <div className="flex items-center mb-2 text-muted">
+                    <Hammer size={14} color={primaryColor} className="mr-2" />
                     <span>Automated recurring billing</span>
-                    
+
                   </div>
-                  <div className="d-flex align-items-center mb-2 text-muted">
-                    <CreditCard size={14} color={primaryColor} className="mr-2" />
+                  <div className="flex items-center mb-2 text-muted">
+                    <Hammer size={14} color={primaryColor} className="mr-2" />
                     <span>Flexible pricing plans</span>
                   </div>
-                  <div className="d-flex align-items-center mb-2 text-muted">
-                    <Repeat size={14} color={primaryColor} className="mr-2" />
+                  <div className="flex items-center mb-2 text-muted">
+                    <Hammer size={14} color={primaryColor} className="mr-2" />
                     <span>Easy subscription management</span>
-                    
+
                   </div>
                 </div>
 
@@ -305,13 +334,8 @@ const SubscriptionPage: React.FC = () => {
                   <small className="text-muted">
                     Need help?{" "}
                     <button
-                      className="btn btn-link p-0"
-                      style={{
-                        color: primaryColor,
-                        textDecoration: "none",
-                        fontSize: "inherit",
-                        fontWeight: "inherit",
-                      }}
+                      className="btn btn-link p-0 no-underline text-inherit font-inherit"
+                      style={{ color: primaryColor }}
                       onClick={() => console.log("Open documentation")}
                     >
                       View documentation
@@ -325,53 +349,28 @@ const SubscriptionPage: React.FC = () => {
 
         if (!showForm) {
           return (
-            <Container fluid className="h-100 p-0">
-              <table className="table-primary">
-                <thead>
-                  <tr>
-                    <th>Subscription Number</th>
-                    <th>Customer</th>
-                    <th>Plan</th>
-                    <th>Status</th>
-                    <th>Amount</th>
-                    <th>Currency</th>
-                    <th>Interval</th>
-                    <th>Next Billing</th>
-                    <th>Actions</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {subscriptions.map((sub) => (
-                    <tr key={sub.id}>
-                      <td>{sub.subscription_number}</td>
-                      <td>{sub.customer_name}</td>
-                      <td>{sub.plan_name}</td>
-                      <td>
-                        <span className="status-badge">{sub.status}</span>
-                      </td>
-                      <td>${sub.amount}</td>
-                      <td>{sub.currency}</td>
-                      <td>{sub.interval}</td>
-                      <td>{sub.next_billing_date}</td>
-                      <td>{/* Add action buttons here if needed */}</td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </Container>
+            <div className="card">
+              <Container fluid className="h-100 p-0 ">
+                <div className="mt-3" />
+                <ReactTable
+                  data={subscriptions}
+                  columns={columns}
+                  showSearch={false}
+                  showRecords={false}
+                  filter={{
+                    role: "customer",
+                    q: "",
+                    page: null,
+                    perPage: 25,
+                    disabled: "",
+                  }}
+                  deletePermissionReq="delete_user"
+                />
+              </Container>
+            </div>
           );
         }
 
-        return (
-          <div className="form-container">
-            <SubscriptionCreateForm
-              onSuccess={() => {
-                setShowForm(false);
-                fetchSubscriptions();
-              }}
-            />
-          </div>
-        );
       })()}
     </>
   );
