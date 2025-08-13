@@ -12,8 +12,38 @@ import { handleApiError } from "../hooks/handleApiErrors";
 import API from "../utils/API";
 import { useHistory } from "react-router-dom";
 import { Hammer } from "./ui/icon";
-import { Triangle, Clock, Target, PackageSearch, HatGlasses, Lightbulb, SwatchBook, Tag, LayoutGrid, ShoppingCart, Boxes, Rotate3d, LetterText, Building, BellRing, UserStar, ShieldCheck, CircleQuestionMark, Banknote, ReceiptText, UserRoundPlus, CreditCard, Users, CircleAlert, HeartPulse, VectorSquare, Building2, Globe, Ticket, Image } from 'lucide-react';
-
+import {
+  Triangle,
+  Clock,
+  Target,
+  PackageSearch,
+  HatGlasses,
+  Lightbulb,
+  SwatchBook,
+  Tag,
+  LayoutGrid,
+  ShoppingCart,
+  Boxes,
+  Rotate3d,
+  LetterText,
+  Building,
+  BellRing,
+  UserStar,
+  ShieldCheck,
+  CircleQuestionMark,
+  Banknote,
+  ReceiptText,
+  UserRoundPlus,
+  CreditCard,
+  Users,
+  CircleAlert,
+  HeartPulse,
+  VectorSquare,
+  Building2,
+  Globe,
+  Ticket,
+  Image,
+} from "lucide-react";
 
 // === Main Navigation Sections ===
 // # TODO: Fix all the permissions and introduce the list in the permissions table
@@ -280,12 +310,26 @@ const NavBar = ({ isNavOpen, setIsNavOpen }: INavBar) => {
 
   const storeType = selectedOrg?.store_type.toLowerCase();
 
-  const filterLinks = (links: INavLink[]) =>
-    links.filter((link) =>
-      storeType === "ecommerce"
-        ? !hiddenRoutesForEcommerce.includes(link.path!)
-        : !hiddenRoutesForCRM.includes(link.path!)
-    );
+  const filterLinks = (links: INavLink[]): INavLink[] => {
+    const hiddenRoutes =
+      storeType === "ecommerce" ? hiddenRoutesForEcommerce : hiddenRoutesForCRM;
+
+    return links
+      .filter((link) => !hiddenRoutes.includes(link.path || ""))
+      .map((link) => {
+        if (link.children) {
+          const filteredChildren = filterLinks(link.children);
+          return { ...link, children: filteredChildren };
+        }
+        return link;
+      })
+      .filter((link) => {
+        if (!link.path && (!link.children || link.children.length === 0)) {
+          return false;
+        }
+        return true;
+      });
+  };
 
   const filteredMainLinks = filterLinks(mainLinks);
   const filteredOrganisationLinks = filterLinks(organisationLinks);
@@ -311,7 +355,11 @@ const NavBar = ({ isNavOpen, setIsNavOpen }: INavBar) => {
 
   return (
     <>
-      <nav className={`flex flex-col justify-start overflow-auto py-4 px-0 z-10 top-0 left-0 bottom-0 h-screen bg-sidebar transition-all duration-300 ease-in-out ${isNavOpen ? "active pb-0" : ""}`}>
+      <nav
+        className={`flex flex-col justify-start overflow-auto py-4 px-0 z-10 top-0 left-0 bottom-0 h-screen bg-sidebar transition-all duration-300 ease-in-out ${
+          isNavOpen ? "active pb-0" : ""
+        }`}
+      >
         {isDesktop && (
           <div className="flex justify-between items-center">
             <Logo />
