@@ -324,14 +324,6 @@ function MenuBar({ editor }: { editor: Editor }) {
       <div className="menubar-separator"></div>
 
       <div className="menubar-group">
-        <button className="menubar-button theme-button" title="Toggle Theme">
-          <SunIcon />
-        </button>
-      </div>
-
-      <div className="menubar-separator"></div>
-
-      <div className="menubar-group">
         <button
           onClick={() => editor.chain().focus().setTextAlign("left").run()}
           className={`menubar-button ${

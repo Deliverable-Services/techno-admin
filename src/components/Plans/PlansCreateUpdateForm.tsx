@@ -9,7 +9,6 @@ import { handleApiError } from "../../hooks/handleApiErrors";
 import useGetSingleQuery from "../../hooks/useGetSingleQuery";
 import { InputField } from "../../shared-components/InputFeild";
 import IsLoading from "../../shared-components/isLoading";
-import TextEditor from "../../shared-components/TextEditor";
 import API from "../../utils/API";
 import { isActiveArray } from "../../utils/arrays";
 import { queryClient } from "../../utils/queryClient";
@@ -17,7 +16,10 @@ import { showMsgToast } from "../../utils/showMsgToast";
 import ImagesContainer from "../../shared-components/ImagesContainer";
 import Restricted from "../../shared-components/Restricted";
 import { Hammer } from "../ui/icon";
-import TiptapTextEditor from "../../shared-components/Tiptap/TiptapTextEditor";
+import { Label } from "../ui/label";
+import EditorJsEditor, {
+  editorInitialValues,
+} from "../../shared-components/WYSIWIG/Editor";
 
 const key = "plans";
 
@@ -104,19 +106,30 @@ const PlanCreateUpdateForm = () => {
                   ? {
                       ...apiData,
                       services: apiData?.allowed_services.map((s) => s.id),
+                      description: editorInitialValues(apiData.description),
                     }
-                  : { is_active: 1 }
+                  : {
+                      is_active: 1,
+                      description: {
+                        blocks: [{ type: "paragraph", data: { text: "" } }],
+                      },
+                    }
               }
               onSubmit={(values) => {
-                const { image, services, images, ...rest } = values;
+                const { image, services, images, description, ...rest } =
+                  values;
                 const formdata = new FormData();
 
                 for (let k in rest) formdata.append(k, rest[k]);
-
                 for (let k in services)
                   formdata.append("services[]", services[k]);
 
                 if (image) formdata.append("image", image);
+                if (description)
+                  formdata.append(
+                    "description",
+                    JSON.stringify(description || {})
+                  );
 
                 mutate({ formdata, id });
               }}
@@ -219,14 +232,16 @@ const PlanCreateUpdateForm = () => {
                         )}
                       />
                     </Col>
-                    <Col xl={12} sm={12}>
-                      <TiptapTextEditor
-                        name="description"
-                        // label="Description"
-                        setFieldValue={setFieldValue}
-                      />
-                    </Col>
                   </Row>
+
+                  <Label htmlFor="planEditor" className="mt-4">
+                    Description
+                  </Label>
+                  <EditorJsEditor
+                    holderId="planEditor"
+                    data={values.description}
+                    onChange={(data) => setFieldValue("description", data)}
+                  />
                   <Row className="d-flex justify-content-start">
                     <Col md="12">
                       <Restricted to={id ? "update_plan" : "create_plan"}>

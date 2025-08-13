@@ -17,13 +17,13 @@ import ImagesContainer from "../../shared-components/ImagesContainer";
 import { InputField } from "../../shared-components/InputFeild";
 import IsLoading from "../../shared-components/isLoading";
 import Restricted from "../../shared-components/Restricted";
-import TextEditor from "../../shared-components/TextEditor";
 import API from "../../utils/API";
 import { isActiveArray } from "../../utils/arrays";
 import { queryClient } from "../../utils/queryClient";
 import { showMsgToast } from "../../utils/showMsgToast";
 import { Hammer } from "../ui/icon";
-import TiptapTextEditor from "../../shared-components/Tiptap/TiptapTextEditor";
+import EditorJsEditor from "../../shared-components/WYSIWIG/Editor";
+import { Label } from "../ui/label";
 
 const key = "services";
 
@@ -121,16 +121,64 @@ const ServicesCreateUpdateForm = () => {
               enableReinitialize
               initialValues={
                 apiData
-                  ? formIntialValues()
+                  ? {
+                      ...formIntialValues(),
+                      // details must be an object for EditorJS
+                      details: (() => {
+                        const val = apiData.details;
+                        if (!val)
+                          return {
+                            blocks: [{ type: "paragraph", data: { text: "" } }],
+                          };
+                        if (typeof val === "string") {
+                          try {
+                            const parsed = JSON.parse(val);
+                            return parsed && Array.isArray(parsed.blocks)
+                              ? parsed
+                              : {
+                                  blocks: [
+                                    { type: "paragraph", data: { text: "" } },
+                                  ],
+                                };
+                          } catch {
+                            return {
+                              blocks: [
+                                { type: "paragraph", data: { text: "" } },
+                              ],
+                            };
+                          }
+                        }
+                        return val && Array.isArray(val.blocks)
+                          ? val
+                          : {
+                              blocks: [
+                                { type: "paragraph", data: { text: "" } },
+                              ],
+                            };
+                      })(),
+                    }
                   : {
                       enablePayment: false,
                       paymentAmount: "",
+                      // valid empty EditorJS document
+                      details: {
+                        blocks: [{ type: "paragraph", data: { text: "" } }],
+                      },
                     }
               }
               onSubmit={(values) => {
                 const formdata = new FormData();
-                const { image, images, enablePayment, paymentAmount, ...rest } =
-                  values;
+                const {
+                  image,
+                  images,
+                  enablePayment,
+                  paymentAmount,
+                  details,
+                  ...rest
+                } = values;
+
+                formdata.append("details", JSON.stringify(details || {})); // stringify here
+
                 for (let k in rest) formdata.append(k, rest[k]);
 
                 for (let k in images) formdata.append("images[]", images[k]);
@@ -258,11 +306,14 @@ const ServicesCreateUpdateForm = () => {
                       )}
                     />
                   </Container> */}
-                  <TiptapTextEditor
-                    name="details"
-                    // label="Details"
-                    setFieldValue={setFieldValue}
+
+                  <Label htmlFor="termsEditor">Description</Label>
+                  <EditorJsEditor
+                    holderId="serviceEditor"
+                    data={values.details}
+                    onChange={(data) => setFieldValue("details", data)}
                   />
+
                   <Row className="d-flex justify-content-start">
                     <Col md="12">
                       <Restricted to={id ? "update_service" : "create_service"}>

@@ -9,12 +9,14 @@ import { handleApiError } from "../../hooks/handleApiErrors";
 import useGetSingleQuery from "../../hooks/useGetSingleQuery";
 import { InputField } from "../../shared-components/InputFeild";
 import IsLoading from "../../shared-components/isLoading";
-import TextEditor from "../../shared-components/TextEditor";
 import API from "../../utils/API";
 import { queryClient } from "../../utils/queryClient";
 import { showMsgToast } from "../../utils/showMsgToast";
 import Restricted from "../../shared-components/Restricted";
-import TiptapTextEditor from "../../shared-components/Tiptap/TiptapTextEditor";
+import { Label } from "../ui/label";
+import EditorJsEditor, {
+  editorInitialValues,
+} from "../../shared-components/WYSIWIG/Editor";
 
 const key = "testimonial";
 
@@ -89,18 +91,34 @@ const TestimonialCreateUpdateForm = () => {
           <Col className="mx-auto">
             <Formik
               enableReinitialize
-              initialValues={apiData || {}}
+              initialValues={
+                apiData
+                  ? {
+                      ...apiData,
+                      description: editorInitialValues(apiData.description),
+                    }
+                  : {
+                      description: {
+                        blocks: [{ type: "paragraph", data: { text: "" } }],
+                      },
+                    }
+              }
               onSubmit={(values) => {
-                const { picture, user_id, ...rest } = values;
+                const { picture, user_id, description, ...rest } = values;
                 const formdata = new FormData();
                 for (let k in rest) formdata.append(k, rest[k]);
 
                 if (picture) formdata.append("picture", picture);
+                if (description)
+                  formdata.append(
+                    "description",
+                    JSON.stringify(description || {})
+                  );
 
                 mutate({ formdata, id });
               }}
             >
-              {({ setFieldValue }) => (
+              {({ setFieldValue, values }) => (
                 <Form>
                   <div className="form-container ">
                     <InputField name="name" placeholder="Name" label="Name" />
@@ -115,15 +133,13 @@ const TestimonialCreateUpdateForm = () => {
                       setFieldValue={setFieldValue}
                     />
                   </div>
-                  <Row>
-                    <Col md={12} xl={12}>
-                      <TiptapTextEditor
-                        name="description"
-                        // label="Description"
-                        setFieldValue={setFieldValue}
-                      />
-                    </Col>
-                  </Row>
+
+                  <Label htmlFor="testimonialEditor">Description</Label>
+                  <EditorJsEditor
+                    holderId="testimonialEditor"
+                    data={values.description}
+                    onChange={(data) => setFieldValue("description", data)}
+                  />
 
                   <Row className="d-flex justify-content-start">
                     <Col md="12">

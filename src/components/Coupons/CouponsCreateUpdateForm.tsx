@@ -12,12 +12,14 @@ import DatePicker from "../../shared-components/DatePicker";
 import { InputField } from "../../shared-components/InputFeild";
 import IsLoading from "../../shared-components/isLoading";
 import Restricted from "../../shared-components/Restricted";
-import TextEditor from "../../shared-components/TextEditor";
 import API from "../../utils/API";
 import { conditionType, isActiveArray } from "../../utils/arrays";
 import { queryClient } from "../../utils/queryClient";
 import { showMsgToast } from "../../utils/showMsgToast";
-import TiptapTextEditor from "../../shared-components/Tiptap/TiptapTextEditor";
+import EditorJsEditor, {
+  editorInitialValues,
+} from "../../shared-components/WYSIWIG/Editor";
+import { Label } from "../ui/label";
 const key = "coupons";
 
 const createUpdataCoupons = ({
@@ -72,16 +74,42 @@ const CouponCreateUpdateForm = () => {
             <Formik
               enableReinitialize
               initialValues={
-                apiData || {
-                  valid_to: moment().format("YYYY-MM-DD hh:mm:ss"),
-                  valid_from: moment().format("YYYY-MM-DD hh:mm:ss"),
-                }
+                apiData
+                  ? {
+                      ...apiData,
+                      description: editorInitialValues(apiData.description),
+                      terms: editorInitialValues(apiData.terms),
+                    }
+                  : {
+                      valid_to: moment().format("YYYY-MM-DD hh:mm:ss"),
+                      valid_from: moment().format("YYYY-MM-DD hh:mm:ss"),
+                      description: {
+                        blocks: [{ type: "paragraph", data: { text: "" } }],
+                      },
+                      terms: {
+                        blocks: [{ type: "paragraph", data: { text: "" } }],
+                      },
+                    }
               }
               onSubmit={(values) => {
-                mutate({ formdata: values, id });
+                const formdata = new FormData();
+                Object.keys(values)?.map((key) => {
+                  if (key !== "description" && key !== "terms")
+                    formdata.append(key, values[key]);
+                });
+                formdata.append(
+                  "description",
+                  JSON.stringify(values.terms || {})
+                );
+                formdata.append(
+                  "terms",
+                  JSON.stringify(values.description || {})
+                );
+
+                mutate({ formdata, id });
               }}
             >
-              {({ setFieldValue }) => (
+              {({ setFieldValue, values }) => (
                 <Form>
                   <div className="form-container  py-2 ">
                     <InputField
@@ -143,17 +171,23 @@ const CouponCreateUpdateForm = () => {
                       placeholder="Choose is active"
                     />
                   </div>
-                  <TiptapTextEditor
-                    name="description"
-                    // label="Description"
-                    setFieldValue={setFieldValue}
+
+                  <Label htmlFor="couponEditor">Description</Label>
+                  <EditorJsEditor
+                    holderId="couponEditor"
+                    data={values.description}
+                    onChange={(data) => setFieldValue("description", data)}
                   />
 
-                  <TiptapTextEditor
-                    name="terms"
-                    // label="Terms"
-                    setFieldValue={setFieldValue}
+                  <Label htmlFor="termsEditor" className="mt-4">
+                    Terms
+                  </Label>
+                  <EditorJsEditor
+                    holderId="termsEditor"
+                    data={values.terms}
+                    onChange={(data) => setFieldValue("terms", data)}
                   />
+
                   <Row className="d-flex justify-content-center">
                     <Col md="12">
                       <Restricted to={id ? "update_coupon" : "create_coupon"}>

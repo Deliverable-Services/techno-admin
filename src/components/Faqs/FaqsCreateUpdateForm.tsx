@@ -10,12 +10,14 @@ import useGetSingleQuery from "../../hooks/useGetSingleQuery";
 import { InputField } from "../../shared-components/InputFeild";
 import IsLoading from "../../shared-components/isLoading";
 import Restricted from "../../shared-components/Restricted";
-import TextEditor from "../../shared-components/TextEditor";
 import API from "../../utils/API";
 import { isActiveArray } from "../../utils/arrays";
 import { queryClient } from "../../utils/queryClient";
 import { showMsgToast } from "../../utils/showMsgToast";
-import TiptapTextEditor from "../../shared-components/Tiptap/TiptapTextEditor";
+import { Label } from "../ui/label";
+import EditorJsEditor, {
+  editorInitialValues,
+} from "../../shared-components/WYSIWIG/Editor";
 
 const key = "faqs";
 
@@ -61,23 +63,38 @@ const FaqCreateUpdateForm = () => {
 
   return (
     <>
-      <div className="card view-padding p-2 d-flex mt-3">
+      <div className="card view-padding p-2 flex mt-3">
         {/* <BackButton title="Faqs" /> */}
         <Row className="rounded">
           <Col className="mx-auto">
             <Formik
               enableReinitialize
-              initialValues={apiData || { is_active: 1 }}
+              initialValues={
+                apiData
+                  ? {
+                      ...apiData,
+                      description: editorInitialValues(apiData.description),
+                    }
+                  : {
+                      is_active: 1,
+                      description: {
+                        blocks: [{ type: "paragraph", data: { text: "" } }],
+                      },
+                    }
+              }
               onSubmit={(values) => {
                 const formdata = new FormData();
                 formdata.append("title", values.title);
-                formdata.append("description", values.description);
                 formdata.append("is_active", values.is_active);
+                formdata.append(
+                  "description",
+                  JSON.stringify(values.description || {})
+                );
 
                 mutate({ formdata, id });
               }}
             >
-              {({ setFieldValue }) => (
+              {({ setFieldValue, values }) => (
                 <Form>
                   <div className="form-container ">
                     <InputField
@@ -95,15 +112,14 @@ const FaqCreateUpdateForm = () => {
                       selectData={isActiveArray}
                     />
                   </div>
-                  <Row>
-                    <Col md={12} xl={12}>
-                      <TiptapTextEditor
-                        name="description"
-                        // label="Description"
-                        setFieldValue={setFieldValue}
-                      />
-                    </Col>
-                  </Row>
+
+                  <Label htmlFor="faqEditor">Description</Label>
+                  <EditorJsEditor
+                    holderId="faqEditor"
+                    data={values.description}
+                    onChange={(data) => setFieldValue("description", data)}
+                  />
+
                   {/* <InputField name="is_active" placeholder="isActive" label="Is Active?" /> */}
 
                   <Row className="d-flex justify-content-start">

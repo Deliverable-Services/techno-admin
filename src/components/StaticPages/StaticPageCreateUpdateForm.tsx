@@ -10,10 +10,13 @@ import useGetSingleQuery from "../../hooks/useGetSingleQuery";
 import BackButton from "../../shared-components/BackButton";
 import { InputField } from "../../shared-components/InputFeild";
 import IsLoading from "../../shared-components/isLoading";
-import TiptapTextEditor from "../../shared-components/Tiptap/TiptapTextEditor";
 import API from "../../utils/API";
 import { queryClient } from "../../utils/queryClient";
 import { showMsgToast } from "../../utils/showMsgToast";
+import { Label } from "../ui/label";
+import EditorJsEditor, {
+  editorInitialValues,
+} from "../../shared-components/WYSIWIG/Editor";
 
 const key = "staticPages";
 
@@ -72,12 +75,31 @@ const StaticPageCreateForm = ({ onHideModal }) => {
           <Col className="mx-auto">
             <Formik
               enableReinitialize
-              initialValues={apiData || {}}
+              initialValues={
+                apiData
+                  ? {
+                      ...apiData,
+                      content: editorInitialValues(apiData.content),
+                    }
+                  : {
+                      content: {
+                        blocks: [{ type: "paragraph", data: { text: "" } }],
+                      },
+                    }
+              }
               onSubmit={(values) => {
-                mutate({ formdata: values, id });
+                const formdata = new FormData();
+                Object.keys(values)?.map((key) => {
+                  if (key !== "content") formdata.append(key, values[key]);
+                });
+                formdata.append(
+                  "content",
+                  JSON.stringify(values.content || {})
+                );
+                mutate({ formdata, id });
               }}
             >
-              {({ setFieldValue }) => (
+              {({ setFieldValue, values }) => (
                 <Form>
                   <div className="form-container  py-2 ">
                     <InputField
@@ -105,10 +127,11 @@ const StaticPageCreateForm = ({ onHideModal }) => {
                   {!id && (
                     <Row>
                       <Col md={12} xl={12}>
-                        <TiptapTextEditor
-                          name="content"
-                          // value={data.content}
-                          setFieldValue={setFieldValue}
+                        <Label htmlFor="contentlEditor">Content</Label>
+                        <EditorJsEditor
+                          holderId="contentlEditor"
+                          data={values.content}
+                          onChange={(data) => setFieldValue("content", data)}
                         />
                       </Col>
                     </Row>
