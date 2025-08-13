@@ -93,7 +93,7 @@ function SearchInput({
         }}
         placeholder={placeholder ? placeholder : `Search ${count} records...`}
         disabled={disabled}
-        className="pl-10 pr-4"
+        className="!pl-[30px] pr-4"
       />
       {value && (
         <Button
@@ -304,7 +304,7 @@ function ReactTable({
               <div
                 className={cn(
                   "flex-1",
-                  isDesktop ? "min-w-[300px] max-w-[400px]" : "w-full"
+                  isDesktop ? "min-w-[340px] max-w-[400px]" : "w-full"
                 )}
               >
                 <SearchInput
@@ -620,7 +620,7 @@ const Row = ({ row }: any) => (
       <td
         key={cell.column.id}
         {...cell.getCellProps()}
-        className="px-4  text-sm text-foreground border-r border-border/50 last:border-r-0"
+        className="px-4  py-3 text-sm text-foreground border-r border-border/50 last:border-r-0"
       >
         {cell.value ||
         cell.column.id === "selection" ||

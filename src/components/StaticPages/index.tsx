@@ -1,8 +1,6 @@
 import { AxiosError } from "axios";
 type EditorState = string;
-import React, { useMemo, useState } from "react";
-import { useEffect } from "react";
-import { Modal, Button, Container, Dropdown } from "../ui/bootstrap-compat";
+import React, { useMemo, useState, useEffect } from "react";
 import { useMutation, useQuery } from "react-query";
 import { useHistory } from "react-router-dom";
 import { handleApiError } from "../../hooks/handleApiErrors";
@@ -19,6 +17,8 @@ import StaticPageCreateForm from "./StaticPageCreateUpdateForm";
 import ReactTable from "../../shared-components/ReactTable";
 import { Cell } from "react-table";
 import { Hammer } from "../ui/icon";
+import { Trash2 } from 'lucide-react';
+
 
 const key = "staticPages";
 
@@ -57,7 +57,7 @@ const StaticPages = () => {
     deletePage,
     {
       onSuccess: () => {
-        showMsgToast("Page  deleted successfully");
+        showMsgToast("Page deleted successfully");
         setTimeout(() => queryClient.invalidateQueries(key), 500);
       },
       onError: (error: AxiosError) => {
@@ -72,58 +72,46 @@ const StaticPages = () => {
 
   const columns = useMemo(
     () => [
-      {
-        Header: "#Id",
-        accessor: "id", //accessor is the "key" in the data
-      },
-      {
-        Header: "Name",
-        accessor: "title",
-      },
-      {
-        Header: "Description",
-        accessor: "description",
-      },
-      {
-        Header: "URL",
-        accessor: "url",
-      },
-      {
-        Header: "Organization Id",
-        accessor: "organisation_id",
-      },
+      { Header: "#Id", accessor: "id" },
+      { Header: "Name", accessor: "title" },
+      { Header: "Description", accessor: "description" },
+      { Header: "URL", accessor: "url" },
+      { Header: "Organization Id", accessor: "organisation_id" },
       {
         Header: "Actions",
         Cell: (data: Cell) => {
+          const [open, setOpen] = useState(false);
           return (
-            <div className="d-flex align-items-center justify-content-end gap-3">
+            <div className="flex items-center justify-end gap-3">
               <EditButton
                 onClick={() => _onEditClick(data?.row?.values?.id)}
                 permissionReq="update_banner"
               />
-              <Dropdown className="ellipsis-dropdown">
-                <Dropdown.Toggle
-                  variant="light"
-                  size="sm"
-                  className="p-1 border-0 shadow-none"
+              {/* Tailwind Dropdown */}
+              <div className="relative">
+                <button
+                  onClick={() => setOpen(!open)}
+                  className="p-1 bg-transparent border-0 shadow-none"
                   id={`dropdown-${data.row.values.id}`}
                 >
-                  <Hammer size={18} />
-                </Dropdown.Toggle>
-
-                <Dropdown.Menu className="menu-dropdown">
-                  <Dropdown.Item
-                    onClick={() => {
-                      setSelectedDeleteId(data?.row?.values?.id);
-                      setDeletePopup(true);
-                    }}
-                    className="text-danger"
-                  >
-                    <Hammer size={16} className="me-1" />
-                    Delete
-                  </Dropdown.Item>
-                </Dropdown.Menu>
-              </Dropdown>
+                  <Trash2 size={18} />
+                </button>
+                {open && (
+                  <div className="absolute right-0 mt-2 w-40 bg-white rounded-md shadow-lg ring-1 ring-black ring-opacity-5 z-[999]">
+                    <button
+                      onClick={() => {
+                        setSelectedDeleteId(data?.row?.values?.id);
+                        setDeletePopup(true);
+                        setOpen(false);
+                      }}
+                      className="flex items-center w-full px-3 py-2 text-sm text-red-600 hover:bg-red-50"
+                    >
+                      <Trash2 size={16} className="mr-2" />
+                      Delete
+                    </button>
+                  </div>
+                )}
+              </div>
             </div>
           );
         },
@@ -133,38 +121,29 @@ const StaticPages = () => {
   );
 
   useEffect(() => {
-    if (isLoading || isFetching) return;
-    if (!data) return;
-
-    setTitles(data?.data.map((p) => p.title));
+    if (!isLoading && !isFetching && data) {
+      setTitles(data?.data.map((p) => p.title));
+    }
   }, [data, isLoading, isFetching]);
+
   useEffect(() => {
     if (titles.length > 0) {
       setSelectedTitle(titles[0]);
     }
   }, [titles.length]);
 
-  const _onModalHideClick = () => {
-    setModalShow(false);
-  };
-
   const _onFilterChange = (idx: string, value: any) => {
-    setFilter((prev) => {
-      return {
-        ...prev,
-        [idx]: value,
-      };
-    });
+    setFilter((prev) => ({ ...prev, [idx]: value }));
   };
 
   if (!data && (!isLoading || !isFetching)) {
     return (
-      <Container fluid className="d-flex justify-content-center display-3">
-        <div className="d-flex flex-column align-items-center">
+      <div className="flex justify-center text-5xl">
+        <div className="flex flex-col items-center">
           <Hammer color={primaryColor} />
-          <span className="text-primary display-3">Something went wrong</span>
+          <span className="text-primary text-5xl">Something went wrong</span>
         </div>
-      </Container>
+      </div>
     );
   }
 
@@ -172,44 +151,55 @@ const StaticPages = () => {
 
   return (
     <>
-      <Modal show={deletePopup} onHide={() => setDeletePopup(false)}>
-        <Modal.Header closeButton>
-          <Modal.Title>Are you sure?</Modal.Title>
-        </Modal.Header>
-        <Modal.Body>
-          Do you really want to delete this user? This process cannot be undone.
-        </Modal.Body>
-        <Modal.Footer>
-          <Button variant="bg-light" onClick={() => setDeletePopup(false)}>
-            Close
-          </Button>
-          <Button
-            variant="danger"
-            onClick={() => {
-              if (selectedDeleteId) {
-                _onDeletePage(selectedDeleteId);
-                setDeletePopup(false);
-                setSelectedDeleteId(null);
-              }
-            }}
-            disabled={isDeleteLoading}
-          >
-            {isDeleteLoading ? "Loading..." : "Delete"}
-          </Button>
-        </Modal.Footer>
-      </Modal>
-      <Container fluid className="component-wrapper view-padding">
+      {/* Delete Modal */}
+      {deletePopup && (
+        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+          <div className="bg-white rounded-lg shadow-lg w-full max-w-md">
+            <div className="flex justify-between items-center border-b p-4">
+              <h2 className="text-lg font-semibold">Are you sure?</h2>
+              <button onClick={() => setDeletePopup(false)}>✕</button>
+            </div>
+            <div className="p-4">
+              Do you really want to delete this user? This process cannot be undone.
+            </div>
+            <div className="flex justify-end gap-2 border-t p-4">
+              <button
+                onClick={() => setDeletePopup(false)}
+                className="px-4 py-2 bg-gray-200 rounded"
+              >
+                Close
+              </button>
+              <button
+                onClick={() => {
+                  if (selectedDeleteId) {
+                    _onDeletePage(selectedDeleteId);
+                    setDeletePopup(false);
+                    setSelectedDeleteId(null);
+                  }
+                }}
+                disabled={isDeleteLoading}
+                className="px-4 py-2 bg-red-600 text-white rounded disabled:opacity-50"
+              >
+                {isDeleteLoading ? "Loading..." : "Delete"}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      <div className="w-full px-4">
         <PageHeading
           title="Static Pages"
           onClick={() => setModalShow(true)}
           permissionReq="create_staticpage"
         />
         {!isRestricted("update_staticpage") && (
-          <p className="small text-muted">
+          <p className="text-sm text-gray-500">
             Press "Ctrl+S" inside editor to save content
           </p>
         )}
-      </Container>
+      </div>
+
       <ReactTable
         data={data?.data}
         columns={columns}
@@ -220,22 +210,20 @@ const StaticPages = () => {
         deletePermissionReq="delete_banner"
       />
 
-      <Modal
-        show={modalShow}
-        onHide={_onModalHideClick}
-        size="lg"
-        aria-labelledby="contained-modal-title-vcenter"
-        centered
-      >
-        <Modal.Header closeButton>
-          <Modal.Title id="contained-modal-title-vcenter">
-            Create Static Page
-          </Modal.Title>
-        </Modal.Header>
-        <Modal.Body>
-          <StaticPageCreateForm onHideModal={_onModalHideClick} />
-        </Modal.Body>
-      </Modal>
+      {/* Create Modal */}
+      {modalShow && (
+        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+          <div className="bg-white rounded-lg shadow-lg w-full max-w-2xl">
+            <div className="flex justify-between items-center border-b p-4">
+              <h2 className="text-lg font-semibold">Create Static Page</h2>
+              <button onClick={() => setModalShow(false)}>✕</button>
+            </div>
+            <div className="p-4">
+              <StaticPageCreateForm onHideModal={() => setModalShow(false)} />
+            </div>
+          </div>
+        </div>
+      )}
     </>
   );
 };
@@ -258,11 +246,12 @@ const PageContainer = ({ page, selectedTitle }) => {
       handleApiError(error, history);
     },
   });
+
   const { mutate: mutateDelete, isLoading: isDeleteLoading } = useMutation(
     deletePage,
     {
       onSuccess: () => {
-        showMsgToast("Page  deleted successfully");
+        showMsgToast("Page deleted successfully");
         setTimeout(() => queryClient.invalidateQueries(key), 500);
       },
       onError: (error: AxiosError) => {
@@ -273,86 +262,67 @@ const PageContainer = ({ page, selectedTitle }) => {
 
   const handleSave = (content: string, pagedata: any) => {
     if (isRestricted("update_staticpage")) return;
-    const formdata = {
-      ...pagedata,
-      content,
-    };
-    mutate({ formdata, id: pagedata.id });
+    mutate({ formdata: { ...pagedata, content }, id: pagedata.id });
   };
+
   const _onDeletePage = (pageId: any) => {
     mutateDelete(pageId);
   };
 
   return (
-    <>
-      <Container
-        fluid
-        className="p-0 mb-3"
-        style={{ display: selectedTitle === page.title ? "block" : "none" }}
+    <div
+      className="p-0 mb-3"
+      style={{ display: selectedTitle === page.title ? "block" : "none" }}
+    >
+      <div
+        className={`flex justify-between ${
+          !isDesktop ? "flex-col items-start gap-10" : "items-center"
+        }`}
       >
-        <div className="">
-          <div
-            className={`card-title d-flex justify-content-between ${
-              !isDesktop
-                ? "flex-column align-items-start gap-10"
-                : "align-items-center"
-            }`}
-          >
-            <p className="text-black px-2 lead font-weight-bold">
-              {page.title}
-            </p>
-            <div className="d-flex align-items-center">
-              <Restricted to="update_staticpage">
-                <Button
-                  size="sm"
-                  className="mr-2"
-                  onClick={() => handleSave(contentDetails, page)}
-                  disabled={isUpdatedLoading}
-                >
-                  {isUpdatedLoading ? "Loading..." : "Save Changes"}
-                </Button>
-              </Restricted>
-              <Restricted to="delete_staticpage">
-                <Button
-                  size="sm"
-                  className="mr-2"
-                  variant="danger"
-                  onClick={() => _onDeletePage(page.id)}
-                  disabled={isDeleteLoading}
-                >
-                  {isDeleteLoading ? "Loading..." : "Delete page"}
-                </Button>
-              </Restricted>
-              {/* <EditButton onClick={() => _onEditPageClick(page.id)} /> */}
-            </div>
-          </div>
-          <p className="text-muted px-2">{page.description}</p>
-          <div className="mx-auto">
-            {isUpdatedLoading ? (
-              <IsLoading />
-            ) : (
-              <div className="bg-light rounded p-2">
-                <textarea
-                  className="form-control"
-                  style={{ minHeight: 300 }}
-                  value={contentDetails}
-                  onChange={(e) => setContentDetials(e.target.value)}
-                  onKeyDown={(e) => {
-                    if (
-                      (e.ctrlKey || e.metaKey) &&
-                      e.key.toLowerCase() === "s"
-                    ) {
-                      e.preventDefault();
-                      handleSave(contentDetails, page);
-                    }
-                  }}
-                />
-              </div>
-            )}
-          </div>
+        <p className="text-black px-2 text-lg font-bold">{page.title}</p>
+        <div className="flex items-center">
+          <Restricted to="update_staticpage">
+            <button
+              className="mr-2 px-3 py-1 bg-blue-600 text-white rounded"
+              onClick={() => handleSave(contentDetails, page)}
+              disabled={isUpdatedLoading}
+            >
+              {isUpdatedLoading ? "Loading..." : "Save Changes"}
+            </button>
+          </Restricted>
+          <Restricted to="delete_staticpage">
+            <button
+              className="mr-2 px-3 py-1 bg-red-600 text-white rounded"
+              onClick={() => _onDeletePage(page.id)}
+              disabled={isDeleteLoading}
+            >
+              {isDeleteLoading ? "Loading..." : "Delete page"}
+            </button>
+          </Restricted>
         </div>
-      </Container>
-    </>
+      </div>
+      <p className="text-gray-500 px-2">{page.description}</p>
+      <div className="mx-auto">
+        {isUpdatedLoading ? (
+          <IsLoading />
+        ) : (
+          <div className="bg-gray-100 rounded p-2">
+            <textarea
+              className="w-full border rounded p-2"
+              style={{ minHeight: 300 }}
+              value={contentDetails}
+              onChange={(e) => setContentDetials(e.target.value)}
+              onKeyDown={(e) => {
+                if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === "s") {
+                  e.preventDefault();
+                  handleSave(contentDetails, page);
+                }
+              }}
+            />
+          </div>
+        )}
+      </div>
+    </div>
   );
 };
 

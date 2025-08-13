@@ -492,7 +492,7 @@ const IntegrationsPage: React.FC = () => {
         </div>
         <hr />
 
-        <div className="px-4">
+        <div className="px-4 pt-4">
           {/* Stats Overview */}
           <Row className="mb-5">
             <Col md={3}>

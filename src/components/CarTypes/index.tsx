@@ -108,7 +108,7 @@ const CarTypes = () => {
                 }}
                 permissionReq="update_brandmodelType"
               />
-              <Dropdown className="ellipsis-dropdown">
+              <Dropdown className="ellipsis-dropdown ">
                 <Dropdown.Toggle
                   variant="light"
                   size="sm"
