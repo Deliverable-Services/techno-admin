@@ -5,6 +5,8 @@ import Logo from "../shared-components/Logo";
 import { INavBar } from "../types/interface";
 import { Hammer } from "./ui/icon";
 import { Tally3 } from 'lucide-react';
+import { Bell } from 'lucide-react';
+
 
 
 const TopBar = ({ isNavOpen, setIsNavOpen }: INavBar) => {
@@ -39,7 +41,7 @@ const TopBar = ({ isNavOpen, setIsNavOpen }: INavBar) => {
         }
       >
         <div className="notification">
-          <Hammer size={20} />
+          <Bell size={20} />
           <div className="circle bg-primary text-white d-flex  justify-content-center">
             <p>
               <b>1</b>

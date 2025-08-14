@@ -1,3 +1,5 @@
+// App.tsx
+
 import { useEffect, useState } from "react";
 import { Redirect, Route, Switch, useLocation } from "react-router-dom";
 import useAuthManager from "./hooks/useAuthManager";
@@ -617,7 +619,7 @@ const App = () => {
           ) : (
             ""
           )}
-          <div className="main-layout bg-white rounded-xl rounded-e-none mb-[50px] mt-16 w-full overflow-hidden overflow-y-auto min-h-[400px]">
+          <div className="main-layout bg-white  rounded-e-none w-full overflow-hidden overflow-y-auto min-h-[400px]">
             <Switch>
               <Route exact path="/">
                 <Redirect to="/dashboard" />

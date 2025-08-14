@@ -17,13 +17,13 @@ const EditButton = (props: Props) => {
     <div>
       <Restricted to={props.permissionReq} fallBackUI={NotAvailable}>
         <Button
-          variant="outline"
+
           onClick={props.onClick}
-          className="flex items-center edit-btn"
+          className="flex items-center edit-btn gap-0 p-0 m-0 bg-transparent"
         >
-          <Pencil size={16} className="mr-1" />
+          <Pencil className="mr-1 !w-[12px] !h-[12px] !underline-offset-1 !underline" />
           Edit
-          
+
         </Button>
       </Restricted>
     </div>
