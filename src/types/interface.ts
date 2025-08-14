@@ -50,11 +50,13 @@ export type User = {
   email: string | null;
   email_verified_at: string | null;
   id: number;
+  primary_organisation_id: string;
   name: string | null;
   otp: string | null;
   otp_generated_at: string | null;
   password: string | null;
   phone: string | null;
+  primary_organisation: any;
   two_factor_recovery_codes: string | null;
   two_factor_secret: string | null;
   updated_at: string | null;

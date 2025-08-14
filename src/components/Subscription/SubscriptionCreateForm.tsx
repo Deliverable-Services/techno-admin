@@ -78,9 +78,7 @@ const SubscriptionCreateForm = ({ onSuccess }: { onSuccess?: () => void }) => {
             items,
           };
 
-          await API.post("/subscriptions", payload, {
-            headers: { "Content-Type": "application/json" },
-          });
+          await API.post("/subscriptions", payload);
 
           showMsgToast("Subscription created successfully");
           resetForm();
@@ -93,7 +91,7 @@ const SubscriptionCreateForm = ({ onSuccess }: { onSuccess?: () => void }) => {
         }
       }}
     >
-      {({ values, isSubmitting, setFieldValue, setFieldTouched, validateField, touched, errors }) => (
+      {({ values, isSubmitting, setFieldValue, touched, errors }) => (
         <div className="flex-[1_1_350px] min-w-[340px] max-w-[600px]">
           <Form>
             {/* Recipient */}
@@ -228,7 +226,7 @@ const SubscriptionCreateForm = ({ onSuccess }: { onSuccess?: () => void }) => {
                         </div>
 
                         {/* Item Type */}
-                        <div>
+                        {/* <div>
                           <Field
                             as="select"
                             name={`items[${idx}].item_type`}
@@ -242,7 +240,7 @@ const SubscriptionCreateForm = ({ onSuccess }: { onSuccess?: () => void }) => {
                             component="div"
                             className="text-red-500 text-xs"
                           />
-                        </div>
+                        </div> */}
                         <div className="mt-3 flex justify-end">
                           <Button
                             variant="danger"
