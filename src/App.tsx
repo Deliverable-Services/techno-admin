@@ -78,6 +78,7 @@ import {
   GoogleAnalytics,
   GoogleBusinessDashboard,
 } from "./components/Integrations";
+import SeoConfig from "./components/Seo/SeoConfig";
 
 const App = () => {
   const [isDesktop, setIsDesktop] = useState<boolean>(false);
@@ -590,6 +591,13 @@ const App = () => {
       exact: true,
       isPrivate: true,
       permissionReq: "read_user",
+    },
+    {
+      path: "/seo",
+      component: SeoConfig,
+      exact: true,
+      isPrivate: true,
+      permissionReq: "read_seo",
     },
     // - public routes
     { path: "/login", component: LoginPage, exact: true },

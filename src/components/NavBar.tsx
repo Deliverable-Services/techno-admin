@@ -43,6 +43,7 @@ import {
   Globe,
   Ticket,
   Image,
+  ToolCase,
 } from "lucide-react";
 
 // === Main Navigation Sections ===
@@ -181,6 +182,12 @@ const mainLinks: Array<INavLink> = [
     icon: <Globe className="w-4 h-4" />,
     permissionReq: "read_bookingslot",
     children: [
+      {
+        title: "Seo",
+        path: "/seo",
+        icon: <ToolCase className="w-4 h-4" />,
+        permissionReq: "read_seo",
+      },
       {
         title: "Pages",
         path: "/website-pages",

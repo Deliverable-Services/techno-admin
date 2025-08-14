@@ -5,6 +5,7 @@ import useUserProfileStore from "./useUserProfileStore";
 import API from "../utils/API";
 import { AxiosError } from "axios";
 import { config } from "../utils/constants";
+import { useOrganisation } from "../context/OrganisationContext";
 
 interface AuthState {
   isAuthenticated: boolean;
@@ -28,6 +29,7 @@ export const useAuthManager = (): AuthState => {
   const setUserPermissions = useUserProfileStore(
     (state) => state.setUserPermssions
   );
+  const { setSelectedOrg } = useOrganisation();
 
   const isRefreshing = useRef(false);
   const refreshPromise = useRef<Promise<string | null> | null>(null);
@@ -39,6 +41,7 @@ export const useAuthManager = (): AuthState => {
     removeToken();
     setUser(null);
     setUserPermissions([]);
+    setSelectedOrg(null);
 
     // Clear browser cache if available
     if ("caches" in window) {
@@ -79,6 +82,9 @@ export const useAuthManager = (): AuthState => {
         // Token is valid, set user data
         setUser(response.data.user);
         setUserPermissions(response.data.permissions || []);
+        setSelectedOrg(
+          response.data.organisation || response.data.user?.primary_organisation
+        );
 
         // Ensure token is in store if it's not already there
         if (!token) {
