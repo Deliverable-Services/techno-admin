@@ -19,6 +19,7 @@ import { showErrorToast } from "../../utils/showErrorToast";
 import { useQuery } from "react-query";
 import { Hammer } from "../ui/icon";
 import { CreditCard, Funnel, Frown } from 'lucide-react';
+import { DropdownMenu, DropdownMenuContent, DropdownMenuTrigger } from "../ui/dropdown-menu";
 
 
 
@@ -231,54 +232,57 @@ const Transactions = () => {
                   </div>
                 }
                 filters={
-                  <Dropdown className="search-filters-div filter-dropdown mr-2">
-                    <Dropdown.Toggle as={Button} variant="primary">
-                      <Funnel className="mr-2" />
-                      Filters
-                    </Dropdown.Toggle>
-                    <Dropdown.Menu>
-                      <div className="filter-dropdown-heading d-flex justify-content-between w-100">
-                        <h4>Filter</h4>
-                        <div className="d-flex align-items-center justify-md-content-center">
-                          <Button
-                            onClick={() => resetFilter()}
-                            variant={
-                              areTwoObjEqual(
-                                {
-                                  ...intitialFilter,
-                                  ...INITIAL_FILTER,
-                                },
-                                { ...localFilter, ...filter }
-                              )
-                                ? "light"
-                                : "primary"
-                            }
-                            style={{
-                              fontSize: 14,
-                            }}
-                          >
-                            Reset Filters
-                          </Button>
+                  <>
+                    <DropdownMenu>
+                      <DropdownMenuTrigger className="w-full flex filter-dropdown p-2  items-center justify-between rounded-lg py-1 px-3 !border-[#dee2e6] border h-[36px] border-secondary">
+                        <span className="flex items-center justify-between gap-2 w-full">
+                          <Funnel size={14} /> Filters
+                        </span>
+                      </DropdownMenuTrigger>
+                      <DropdownMenuContent  className="w-[400px] p-3">
+                        <div className="filter-dropdown-heading d-flex justify-content-between w-100">
+                          <h4>Filter</h4>
+                          <div className="d-flex align-items-center justify-md-content-center">
+                            <Button
+                              onClick={() => resetFilter()}
+                              variant={
+                                areTwoObjEqual(
+                                  {
+                                    ...intitialFilter,
+                                    ...INITIAL_FILTER,
+                                  },
+                                  { ...localFilter, ...filter }
+                                )
+                                  ? "light"
+                                  : "primary"
+                              }
+                              style={{
+                                fontSize: 14,
+                              }}
+                            >
+                              Reset Filters
+                            </Button>
+                          </div>
                         </div>
-                      </div>
-                      <div className="select-filter">
-                        <FilterSelect
-                          currentValue={filter.user_id}
-                          data={!isCustomerLoading && Customers.data}
-                          label="Customers"
-                          idx="user_id"
-                          onFilterChange={onFilterChange}
-                        />
-                        <FilterSelect
-                          currentValue={filter.payment_method}
-                          data={PaymentMethods}
-                          label="Payment Method"
-                          idx="payment_method"
-                          onFilterChange={onFilterChange}
-                        />
-                      </div>
-                    </Dropdown.Menu>
-                  </Dropdown>
+                        <div className="select-filter">
+                          <FilterSelect
+                            currentValue={filter.user_id}
+                            data={!isCustomerLoading && Customers.data}
+                            label="Customers"
+                            idx="user_id"
+                            onFilterChange={onFilterChange}
+                          />
+                          <FilterSelect
+                            currentValue={filter.payment_method}
+                            data={PaymentMethods}
+                            label="Payment Method"
+                            idx="payment_method"
+                            onFilterChange={onFilterChange}
+                          />
+                        </div>
+                      </DropdownMenuContent>
+                    </DropdownMenu >
+                  </>
                 }
                 columns={columns}
                 setSelectedRows={setSelectedRows}
@@ -302,14 +306,16 @@ const Transactions = () => {
           );
         })()}
       </>
-      {selectedRows.length > 0 && (
-        <div className="delete-button rounded">
-          <span>
-            <b>Delete {selectedRows.length} rows</b>
-          </span>
-          <Button variant="danger">Delete</Button>
-        </div>
-      )}
+      {
+        selectedRows.length > 0 && (
+          <div className="delete-button rounded">
+            <span>
+              <b>Delete {selectedRows.length} rows</b>
+            </span>
+            <Button variant="danger">Delete</Button>
+          </div>
+        )
+      }
     </>
   );
 };

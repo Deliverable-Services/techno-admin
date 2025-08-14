@@ -1,7 +1,6 @@
 import { AxiosError } from "axios";
 import moment from "moment";
 import React, { useState } from "react";
-import { Container } from "../ui/bootstrap-compat";
 type FocusedInputShape = "startDate" | "endDate" | null;
 
 import { useQuery } from "react-query";
@@ -9,9 +8,6 @@ import { useHistory } from "react-router-dom";
 import { handleApiError } from "../../hooks/handleApiErrors";
 import IsLoading from "../../shared-components/isLoading";
 import { useOrganisation } from "../../context/OrganisationContext";
-import { primaryColor } from "../../utils/constants";
-import { LayoutGrid, ReceiptText } from 'lucide-react';
-
 import {
   ResponsiveContainer,
   ComposedChart,
@@ -24,11 +20,30 @@ import {
   Legend,
 } from "recharts";
 import { WebsiteAnalyticsChart, BrandGMBChart } from "./Chart";
-import PageHeading from "../../shared-components/PageHeading";
-import { Hammer } from "../ui/icon";
-import { Card, CardContent, CardFooter } from "../ui/card";
-import { Triangle, Users, NotepadText, Bug, MoveRight, Instagram, Facebook, Youtube } from 'lucide-react';
-
+import {
+  Card,
+  CardContent,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "../ui/card";
+import { Button } from "../ui/button";
+import { Badge } from "../ui/badge";
+import { Separator } from "../ui/separator";
+import {
+  LayoutGrid,
+  ReceiptText,
+  Triangle,
+  Users,
+  Bug,
+  ArrowRight,
+  Instagram,
+  Facebook,
+  Youtube,
+  ShoppingCart,
+  TrendingUp,
+  Calendar,
+} from "lucide-react";
 
 const bookingFilter = {
   datefrom: moment().subtract(7, "days").format("YYYY-MM-DD"),
@@ -108,336 +123,272 @@ const Dashboard = () => {
   // }
 
   return (
-    <>
-      <div className="view-padding flex justify-between items-center">
-        <PageHeading
-          icon={<LayoutGrid size={24} />}
-          title="Dashboard"
-          description="Quick glance of your platform"
-
-        />
-
-        <div className="crm-users">
-          <div className="flex items-center justify-start">
-            <div className="flex items-center gap-2">
-              {/* <Hammer color={primaryColor} size={19} /> */}
-              <input
-                type="date"
-                value={filter.startDate}
-                onChange={(e) => {
-                  _onFilterChange("datefrom", e.target.value);
-                  _onFilterChange("startDate", e.target.value);
-                }}
-                className="form-control"
-                style={{ width: 160 }}
-              />
-              <span>to</span>
-              <input
-                type="date"
-                value={filter.endDate}
-                onChange={(e) => {
-                  _onFilterChange("dateto", e.target.value);
-                  _onFilterChange("endDate", e.target.value);
-                }}
-                className="form-control"
-                style={{ width: 160 }}
-              />
-            </div>
+    <div className="p-6 space-y-6">
+      {/* Header Section */}
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+        <div className="space-y-1">
+          <div className="flex items-center gap-2">
+            <LayoutGrid className="h-6 w-6 text-primary" />
+            <h1 className="text-2xl font-bold tracking-tight">Dashboard</h1>
           </div>
+          <p className="text-muted-foreground">
+            Quick glance of your platform performance
+          </p>
+        </div>
+
+        <div className="flex items-center gap-2">
+          <Calendar className="h-4 w-4 text-muted-foreground" />
+          <input
+            type="date"
+            value={filter.startDate}
+            onChange={(e) => {
+              _onFilterChange("datefrom", e.target.value);
+              _onFilterChange("startDate", e.target.value);
+            }}
+            className="flex h-9 w-40 rounded-md border border-input bg-background px-3 py-1 text-sm shadow-sm transition-colors placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring"
+          />
+          <span className="text-sm text-muted-foreground">to</span>
+          <input
+            type="date"
+            value={filter.endDate}
+            onChange={(e) => {
+              _onFilterChange("dateto", e.target.value);
+              _onFilterChange("endDate", e.target.value);
+            }}
+            className="flex h-9 w-40 rounded-md border border-input bg-background px-3 py-1 text-sm shadow-sm transition-colors placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring"
+          />
         </div>
       </div>
-      <hr />
 
-      <div className="view-padding">
-        <div
-          style={{
-            display: "grid",
-            gridTemplateColumns: "repeat( auto-fit, minmax(200px, 1fr) )",
-            gap: "20px",
-          }}
-          className="mb-5"
-        >
-          {selectedOrg?.store_type?.toLowerCase() === "crm" ? (
-            <Card className="p-0 overflow-hidden">
-              <CardContent>
-                <div className="flex items-center mb-4">
-                  <Triangle size={16} />
-                  <h5 className="mb-0 font-bold ml-2">Leads</h5>
-                </div>
-
-                <div className="flex items-center">
-                  <div className="flex-1">
-                    <h4 className="mb-0 font-bold text-warning">
-                      {data?.leads?.active || 0}
-                    </h4>
-                    <span className="text-muted small">Active</span>
-                  </div>
-
-                  <div
-                    className="mx-3 bg-[#dee2e6] w-[1px] h-[50px]"
-                  ></div>
-
-                  <div className="flex-1">
-                    <h4 className="mb-0 font-bold text-info">
-                      {data?.leads?.new || 0}
-                    </h4>
-                    <span className="text-muted small">New</span>
-                  </div>
-
-                  <div
-                    className="mx-3 bg-[#dee2e6] w-[1px] h-[50px]"
-                  ></div>
-
-                  <div className="flex-1">
-                    <h4 className="mb-0 font-bold text-success">
-                      {data?.leads?.completed || 0}
-                    </h4>
-                    <span className="text-muted small">Completed</span>
-                  </div>
-                </div>
-              </CardContent>
-              <CardFooter className="flex items-center justify-between border-t cursor-pointer w-full bg-[#f8f9fa]" onClick={() => history.push("/crm")}>
-                <span
-                  className="font-bold text-primary"
-                  style={{ fontSize: "14px" }}
-                >
-                  Go to CRM
-                </span>
-                <MoveRight className="text-primary" />
-
-              </CardFooter >
-            </Card >
-          ) : (
-            <Card className="p-0 overflow-hidden">
-              <CardContent>
-                <div className="flex items-center mb-4">
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="16"
-                    height="16"
-                    fill="currentColor"
-                    viewBox="0 0 16 16"
-                  >
-                    <path d="M0 1.5A.5.5 0 0 1 .5 1H2a.5.5 0 0 1 .485.379L2.89 3H14.5a.5.5 0 0 1 .491.592l-1.5 8A.5.5 0 0 1 13 12H4a.5.5 0 0 1-.491-.408L2.01 3.607 1.61 2H.5a.5.5 0 0 1-.5-.5zM3.102 4l1.313 7h8.17l1.313-7H3.102zM5 12a2 2 0 1 0 0 4 2 2 0 0 0 0-4zm7 0a2 2 0 1 0 0 4 2 2 0 0 0 0-4zm-7 1a1 1 0 1 1 0 2 1 1 0 0 1 0-2zm7 0a1 1 0 1 1 0 2 1 1 0 0 1 0-2z" />
-                  </svg>
-                  <h5 className="mb-0 font-bold ml-2">Orders</h5>
-                </div>
-
-                <div className="flex items-center">
-                  <div className="flex-1">
-                    <h4 className="mb-0 font-bold text-warning">
-                      {data?.order || 0}
-                    </h4>
-                    <span className="text-muted small">Pending</span>
-                  </div>
-
-                  <div
-                    className="mx-3 bg-[#dee2e6] w-[1px] h-[50px]"
-                  ></div>
-
-                  <div className="flex-1">
-                    <h4 className="mb-0 font-bold text-info">
-                      {data?.orderprev || 0}
-                    </h4>
-                    <span className="text-muted small">New</span>
-                  </div>
-
-                  <div
-                    className="mx-3 bg-[#dee2e6] w-[1px] h-[50px]"
-                  ></div>
-
-                  <div className="flex-1">
-                    <h4 className="mb-0 font-bold text-success">
-                      {(data?.order || 0) + (data?.orderprev || 0)}
-                    </h4>
-                    <span className="text-muted small">Total</span>
-                  </div>
-                </div>
-              </CardContent>
-
-              <CardFooter
-                className="flex items-center justify-between border-t cursor-pointer w-full bg-[#f8f9fa]"
-                onClick={() => history.push("/orders")}
-              >
-                <span
-                  className="font-bold text-primary"
-                  style={{ fontSize: "14px" }}
-                >
-                  Go to Orders
-                </span>
-                <Hammer className="text-primary" />
-              </CardFooter>
-            </Card>
-          )}
-
-          {
-            selectedOrg?.store_type?.toLowerCase() === "crm" && (
-              <>
-                {/* Customers Card for CRM */}
-                <Card className="p-0 overflow-hidden">
-                  <CardContent>
-                    <div className="flex items-center mb-4">
-                      <Users size={16} />
-                      <h5 className="mb-0 font-bold ml-2">Customers</h5>
-                    </div>
-
-                    <div className="flex items-center">
-                      <div className="flex-1">
-                        <h4 className="mb-0 font-bold text-primary">
-                          {data?.customer?.customers || 0}
-                        </h4>
-                        <span className="text-muted small">Total</span>
-                      </div>
-
-                      <div
-                        className="mx-3 bg-[#dee2e6] w-[1px] h-[50px]"
-                      ></div>
-
-                      <div className="flex-1">
-                        <h4 className="mb-0 font-bold text-success">
-                          {data?.customer?.new || 0}
-                        </h4>
-                        <span className="text-muted small">New</span>
-                      </div>
-                    </div>
-                  </CardContent>
-                  <CardFooter
-                    className="flex items-center justify-between border-t cursor-pointer w-full bg-[#f8f9fa]"
-                    onClick={() => history.push("/users")}
-                  >
-                    <span
-                      className="font-bold text-primary"
-                      style={{ fontSize: "14px" }}
-                    >
-                      Go to Customers
-                    </span>
-                    <MoveRight className="text-primary" />
-                  </CardFooter >
-                </Card >
-
-                <Card className="p-0 overflow-hidden">
-                  <CardContent>
-                    <div className="flex items-center mb-3">
-                      <ReceiptText size={16} />
-                    
-                      <h5 className="mb-0 font-bold ml-2">Invoices</h5>
-                    </div>
-
-                    <div className="flex items-center">
-                      <div className="flex-fill">
-                        <h4 className="mb-0 font-bold text-warning">
-                          {data?.invoices?.pending || 0}
-                        </h4>
-                        <span className="text-muted small">Pending</span>
-                      </div>
-
-                      <div
-                        className="mx-3 bg-[#dee2e6] w-[1px] h-[50px]"
-                      ></div>
-
-                      <div className="flex-1">
-                        <h4 className="mb-0 font-bold text-success">
-                          {data?.invoices?.completed || 0}
-                        </h4>
-                        <span className="text-muted small">Paid</span>
-                      </div>
-
-                      <div
-                        className="mx-3 bg-[#dee2e6] w-[1px] h-[50px]"
-                      ></div>
-
-                      <div className="flex-0">
-                        <h4 className="mb-0 font-bold text-primary">
-                          {data?.invoices?.total || 0}
-                        </h4>
-                        <span className="text-muted small">Total</span>
-                      </div>
-                    </div>
-                  </CardContent>
-                  <CardFooter
-                    className="flex items-center justify-between border-t cursor-pointer w-full bg-[#f8f9fa]"
-                    onClick={() => history.push("/invoices")}
-                  >
-                    <span
-                      className="font-bold text-primary"
-                      style={{ fontSize: "14px" }}
-                    >
-                      Go to Invoices
-                    </span>
-                    <MoveRight className="text-primary" />
-                  </CardFooter >
-                </Card >
-
-                {/* Issues Card for CRM */}
-                < Card className="p-0 overflow-hidden" >
-                  <CardContent>
-                    <div className="flex items-center mb-3">
-                      <Bug size={16} />
-                      <h5 className="mb-0 font-bold ml-2">Issues</h5>
-                      
-                    </div>
-
-                    <div className="flex items-center">
-                      <div className="flex-1">
-                        <h4 className="mb-0 font-bold text-danger">
-                          {data?.issues?.open || 0}
-                        </h4>
-                        <span className="text-muted small">Open</span>
-                      </div>
-
-                      <div
-                        className="mx-3 bg-[#dee2e6] w-[1px] h-[50px]"
-                      ></div>
-
-                      <div className="flex-1">
-                        <h4 className="mb-0 font-bold text-success">
-                          {data?.issues?.close || 0}
-                        </h4>
-                        <span className="text-muted small">Closed</span>
-                      </div>
-
-                      <div
-                        className="mx-3 bg-[#dee2e6] w-[1px] h-[50px]"
-                      ></div>
-
-                      <div className="flex-1">
-                        <h4 className="mb-0 font-bold text-primary">
-                          {data?.issues?.total || 0}
-                        </h4>
-                        <span className="text-muted small">Total</span>
-                      </div>
-                    </div>
-                  </CardContent>
-                  <CardFooter
-                    className="flex items-center justify-between border-t cursor-pointer w-full bg-[#f8f9fa]"
-                    onClick={() => history.push("/issues")}
-                  >
-                    <span
-                      className="font-bold text-primary"
-                      style={{ fontSize: "14px" }}
-                    >
-                      Go to Issues
-                    </span>
-                    <MoveRight className="text-primary" />
-                  </CardFooter >
-                </Card >
-              </>
-            )
-          }
-        </div >
-
-        {data?.graphData && (
-          <Card className="p-0 overflow-hidden">
+      {/* Stats Cards */}
+      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+        {selectedOrg?.store_type?.toLowerCase() === "crm" ? (
+          <Card className="col-span-full">
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+              <CardTitle className="text-base font-medium flex items-center gap-2">
+                <Triangle className="h-4 w-4 text-orange-500" />
+                Leads
+              </CardTitle>
+              <TrendingUp className="h-4 w-4 text-muted-foreground" />
+            </CardHeader>
             <CardContent>
-              <div className="flex items-center justify-between">
-                <div>
-                  <h5 className="mb-3 font-bold text-black">
-                    Performance Analytics
-                  </h5>
+              <div className="grid grid-cols-3 gap-4">
+                <div className="text-center">
+                  <div className="text-2xl font-bold text-orange-500">
+                    {data?.leads?.active || 0}
+                  </div>
+                  <p className="text-xs text-muted-foreground">Active</p>
+                </div>
+                <div className="text-center">
+                  <div className="text-2xl font-bold text-blue-500">
+                    {data?.leads?.new || 0}
+                  </div>
+                  <p className="text-xs text-muted-foreground">New</p>
+                </div>
+                <div className="text-center">
+                  <div className="text-2xl font-bold text-green-500">
+                    {data?.leads?.completed || 0}
+                  </div>
+                  <p className="text-xs text-muted-foreground">Completed</p>
                 </div>
               </div>
             </CardContent>
-            <div className="" style={{ height: 420 }}>
+            <CardFooter className="border-t bg-muted/50">
+              <Button
+                variant="ghost"
+                className="w-full justify-between"
+                onClick={() => history.push("/crm")}
+              >
+                Go to CRM
+                <ArrowRight className="h-4 w-4" />
+              </Button>
+            </CardFooter>
+          </Card>
+        ) : (
+          <Card className="col-span-full">
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+              <CardTitle className="text-base font-medium flex items-center gap-2">
+                <ShoppingCart className="h-4 w-4 text-purple-500" />
+                Orders
+              </CardTitle>
+              <TrendingUp className="h-4 w-4 text-muted-foreground" />
+            </CardHeader>
+            <CardContent>
+              <div className="grid grid-cols-3 gap-4">
+                <div className="text-center">
+                  <div className="text-2xl font-bold text-orange-500">
+                    {data?.order || 0}
+                  </div>
+                  <p className="text-xs text-muted-foreground">Pending</p>
+                </div>
+                <div className="text-center">
+                  <div className="text-2xl font-bold text-blue-500">
+                    {data?.orderprev || 0}
+                  </div>
+                  <p className="text-xs text-muted-foreground">New</p>
+                </div>
+                <div className="text-center">
+                  <div className="text-2xl font-bold text-green-500">
+                    {(data?.order || 0) + (data?.orderprev || 0)}
+                  </div>
+                  <p className="text-xs text-muted-foreground">Total</p>
+                </div>
+              </div>
+            </CardContent>
+            <CardFooter className="border-t bg-muted/50">
+              <Button
+                variant="ghost"
+                className="w-full justify-between"
+                onClick={() => history.push("/orders")}
+              >
+                Go to Orders
+                <ArrowRight className="h-4 w-4" />
+              </Button>
+            </CardFooter>
+          </Card>
+        )}
+
+        {selectedOrg?.store_type?.toLowerCase() === "crm" && (
+          <>
+            {/* Customers Card for CRM */}
+            <Card>
+              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                <CardTitle className="text-sm font-medium">Customers</CardTitle>
+                <Users className="h-4 w-4 text-muted-foreground" />
+              </CardHeader>
+              <CardContent>
+                <div className="text-2xl font-bold">
+                  {data?.customer?.customers || 0}
+                </div>
+                <p className="text-xs text-muted-foreground">
+                  +{data?.customer?.new || 0} new this period
+                </p>
+              </CardContent>
+              <CardFooter className="border-t bg-muted/50 p-0">
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  className="w-full h-8 justify-between"
+                  onClick={() => history.push("/users")}
+                >
+                  View customers
+                  <ArrowRight className="h-3 w-3" />
+                </Button>
+              </CardFooter>
+            </Card>
+
+            <Card>
+              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                <CardTitle className="text-sm font-medium">Invoices</CardTitle>
+                <ReceiptText className="h-4 w-4 text-muted-foreground" />
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-3">
+                  <div className="flex items-center justify-between">
+                    <span className="text-sm text-muted-foreground">
+                      Pending
+                    </span>
+                    <Badge
+                      variant="outline"
+                      className="text-orange-600 border-orange-200"
+                    >
+                      {data?.invoices?.pending || 0}
+                    </Badge>
+                  </div>
+                  <div className="flex items-center justify-between">
+                    <span className="text-sm text-muted-foreground">Paid</span>
+                    <Badge
+                      variant="outline"
+                      className="text-green-600 border-green-200"
+                    >
+                      {data?.invoices?.completed || 0}
+                    </Badge>
+                  </div>
+                  <Separator />
+                  <div className="flex items-center justify-between">
+                    <span className="text-sm font-medium">Total</span>
+                    <span className="text-lg font-bold">
+                      {data?.invoices?.total || 0}
+                    </span>
+                  </div>
+                </div>
+              </CardContent>
+              <CardFooter className="border-t bg-muted/50 p-0">
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  className="w-full h-8 justify-between"
+                  onClick={() => history.push("/invoices")}
+                >
+                  View invoices
+                  <ArrowRight className="h-3 w-3" />
+                </Button>
+              </CardFooter>
+            </Card>
+
+            {/* Issues Card for CRM */}
+            <Card>
+              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                <CardTitle className="text-sm font-medium">
+                  Support Issues
+                </CardTitle>
+                <Bug className="h-4 w-4 text-muted-foreground" />
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-3">
+                  <div className="flex items-center justify-between">
+                    <span className="text-sm text-muted-foreground">Open</span>
+                    <Badge variant="destructive">
+                      {data?.issues?.open || 0}
+                    </Badge>
+                  </div>
+                  <div className="flex items-center justify-between">
+                    <span className="text-sm text-muted-foreground">
+                      Closed
+                    </span>
+                    <Badge
+                      variant="outline"
+                      className="text-green-600 border-green-200"
+                    >
+                      {data?.issues?.close || 0}
+                    </Badge>
+                  </div>
+                  <Separator />
+                  <div className="flex items-center justify-between">
+                    <span className="text-sm font-medium">Total</span>
+                    <span className="text-lg font-bold">
+                      {data?.issues?.total || 0}
+                    </span>
+                  </div>
+                </div>
+              </CardContent>
+              <CardFooter className="border-t bg-muted/50 p-0">
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  className="w-full h-8 justify-between"
+                  onClick={() => history.push("/issues")}
+                >
+                  View issues
+                  <ArrowRight className="h-3 w-3" />
+                </Button>
+              </CardFooter>
+            </Card>
+          </>
+        )}
+      </div>
+
+      {/* Performance Analytics Chart */}
+      {data?.graphData && (
+        <Card>
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              <TrendingUp className="h-5 w-5" />
+              Performance Analytics
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="h-[400px] w-full">
               <ResponsiveContainer width="100%" height="100%">
                 <ComposedChart
                   data={data.graphData}
@@ -636,114 +587,102 @@ const Dashboard = () => {
                 </ComposedChart>
               </ResponsiveContainer>
             </div>
-          </Card>
-        )}
+          </CardContent>
+        </Card>
+      )}
 
-        <div className="dashboard-page w-full mt-5">
-          <Container fluid className="mt-0 !px-0">
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mt-6">
-              {/* Website Analytics Section */}
-              <div className="bg-white rounded-2xl p-6 border border-gray-200">
-                <div className="mb-5">
-                  <h3 className="text-lg font-semibold text-gray-800 m-0 p-0">
-                    Website Analytics
-                  </h3>
-                </div>
-
-                <div className="flex gap-4 mb-6 flex-wrap">
-                  <div className="flex-1 min-w-[120px] md:min-w-[100px] lg:min-w-[120px] p-4 md:p-3 lg:p-4 bg-slate-50 rounded-xl border border-slate-200 text-center">
-                    <div className="text-xs font-medium text-slate-500 mb-1 uppercase tracking-wide">
-                      Active Users
-                    </div>
-                    <div className="text-2xl md:text-xl lg:text-2xl font-bold text-gray-800 leading-tight">
-                      24
-                    </div>
-                  </div>
-                  <div className="flex-1 min-w-[120px] md:min-w-[100px] lg:min-w-[120px] p-4 md:p-3 lg:p-4 bg-slate-50 rounded-xl border border-slate-200 text-center">
-                    <div className="text-xs font-medium text-slate-500 mb-1 uppercase tracking-wide">
-                      New users
-                    </div>
-                    <div className="text-2xl md:text-xl lg:text-2xl font-bold text-gray-800 leading-tight">
-                      500
-                    </div>
-                  </div>
-                  <div className="flex-1 min-w-[120px] md:min-w-[100px] lg:min-w-[120px] p-4 md:p-3 lg:p-4 bg-slate-50 rounded-xl border border-slate-200 text-center">
-                    <div className="text-xs font-medium text-slate-500 mb-1 uppercase tracking-wide">
-                      Alltime users
-                    </div>
-                    <div className="text-2xl md:text-xl lg:text-2xl font-bold text-gray-800 leading-tight">
-                      5.4K
-                    </div>
-                  </div>
-                </div>
-
-                <div className="bg-white rounded-xl p-4 border border-slate-200">
-                  <div className="h-[280px] md:h-[240px] lg:h-[280px] w-full">
-                    {isBookingAnalyticsLoading ? (
-                      <IsLoading />
-                    ) : (
-                      <WebsiteAnalyticsChart
-                        data={defaultData}
-                        xAxisDataKey="date"
-                        dataKey="order"
-                      />
-                    )}
-                  </div>
-                </div>
+      {/* Analytics Grid */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        {/* Website Analytics Section */}
+        <Card>
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              <TrendingUp className="h-5 w-5" />
+              Website Analytics
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-6">
+            <div className="grid grid-cols-3 gap-4">
+              <div className="space-y-2">
+                <p className="text-xs font-medium text-muted-foreground uppercase tracking-wide">
+                  Active Users
+                </p>
+                <p className="text-2xl font-bold">24</p>
               </div>
-
-              {/* Brand & GMB Section */}
-              <div className="bg-white rounded-2xl p-6 border border-gray-200">
-                <div className="mb-5">
-                  <h3 className="text-lg font-semibold text-gray-800 m-0 p-0">
-                    Brand & GMB
-                  </h3>
-                </div>
-
-                <div className="flex gap-4 mb-6 flex-wrap">
-                  <div className="flex-1 min-w-[120px] md:min-w-[100px] lg:min-w-[120px] p-4 md:p-3 lg:p-4 bg-slate-50 rounded-xl border border-slate-200 text-center">
-                    <div className="text-xs font-medium text-slate-500 mb-1 uppercase tracking-wide">
-                      Reviews
-                    </div>
-                    <div className="text-2xl md:text-xl lg:text-2xl font-bold text-gray-800 leading-tight">
-                      5
-                    </div>
-                  </div>
-                  <div className="flex-1 min-w-[120px] md:min-w-[100px] lg:min-w-[120px] p-4 md:p-3 lg:p-4 bg-slate-50 rounded-xl border border-slate-200 text-center">
-                    <div className="text-xs font-medium text-slate-500 mb-1 uppercase tracking-wide">
-                      Comments
-                    </div>
-                    <div className="text-2xl md:text-xl lg:text-2xl font-bold text-gray-800 leading-tight">
-                      20
-                    </div>
-                  </div>
-                </div>
-
-                <div className="bg-white rounded-xl p-4 border border-slate-200">
-                  <div className="h-[280px] md:h-[240px] lg:h-[280px] w-full">
-                    {isRevenueAnalyticsLoading ? (
-                      <IsLoading />
-                    ) : (
-                      <BrandGMBChart
-                        data={defaultDataSingle}
-                        xAxisDataKey="date"
-                        dataKey1="total_amount"
-                        dataKey2="discount_amount"
-                      />
-                    )}
-                  </div>
-                </div>
-                <div className="social-icons flex items-center gap-4 p-2.5">
-                  <Instagram />
-                  <Facebook />
-                  <Youtube />
-                </div>
+              <div className="space-y-2">
+                <p className="text-xs font-medium text-muted-foreground uppercase tracking-wide">
+                  New Users
+                </p>
+                <p className="text-2xl font-bold">500</p>
               </div>
-            </div >
-          </Container >
-        </div >
-      </div >
-    </>
+              <div className="space-y-2">
+                <p className="text-xs font-medium text-muted-foreground uppercase tracking-wide">
+                  All Time
+                </p>
+                <p className="text-2xl font-bold">5.4K</p>
+              </div>
+            </div>
+
+            <div className="h-[280px] w-full">
+              {isBookingAnalyticsLoading ? (
+                <IsLoading />
+              ) : (
+                <WebsiteAnalyticsChart
+                  data={defaultData}
+                  xAxisDataKey="date"
+                  dataKey="order"
+                />
+              )}
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* Brand & GMB Section */}
+        <Card>
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              <TrendingUp className="h-5 w-5" />
+              Brand & GMB
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-6">
+            <div className="grid grid-cols-2 gap-4">
+              <div className="space-y-2">
+                <p className="text-xs font-medium text-muted-foreground uppercase tracking-wide">
+                  Reviews
+                </p>
+                <p className="text-2xl font-bold">5</p>
+              </div>
+              <div className="space-y-2">
+                <p className="text-xs font-medium text-muted-foreground uppercase tracking-wide">
+                  Comments
+                </p>
+                <p className="text-2xl font-bold">20</p>
+              </div>
+            </div>
+
+            <div className="h-[280px] w-full">
+              {isRevenueAnalyticsLoading ? (
+                <IsLoading />
+              ) : (
+                <BrandGMBChart
+                  data={defaultDataSingle}
+                  xAxisDataKey="date"
+                  dataKey1="total_amount"
+                  dataKey2="discount_amount"
+                />
+              )}
+            </div>
+
+            <div className="flex items-center justify-center gap-4 pt-4 border-t">
+              <Instagram className="h-5 w-5 text-pink-500" />
+              <Facebook className="h-5 w-5 text-blue-600" />
+              <Youtube className="h-5 w-5 text-red-500" />
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+    </div>
   );
 };
 

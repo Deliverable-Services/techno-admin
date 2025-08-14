@@ -22,7 +22,8 @@ import { primaryColor } from "../../utils/constants";
 import { queryClient } from "../../utils/queryClient";
 import { showMsgToast } from "../../utils/showMsgToast";
 import PageHeading from "../../shared-components/PageHeading";
-import { Hammer } from "../ui/icon";
+import { MessageSquareText, Bell, Mail, Timer, Plus } from 'lucide-react';
+
 
 const key = "fcm-notification";
 
@@ -150,7 +151,7 @@ const NotificationCreateUpdateForm = () => {
                     <Spinner animation="border" size="sm" />
                   ) : (
                     <div className="text-white d-flex align-items-center">
-                      <Hammer size={18} />
+                      <Plus size={18} />
                       <span className="mb-0 ml-1">Create</span>
                     </div>
                   )}
@@ -200,7 +201,8 @@ const NotificationCreateUpdateForm = () => {
                         <Field type="radio" name="is_sms" value="1" />
                         <p className="m-0 mx-2 lead">
                           <span className="mx-1">
-                            <Hammer />
+                            <MessageSquareText />
+                            
                           </span>
                           SMS
                         </p>
@@ -209,7 +211,7 @@ const NotificationCreateUpdateForm = () => {
                         <Field type="radio" name="is_sms" value="0" />
                         <p className="m-0 mx-2 lead">
                           <span className="mx-1">
-                            <Hammer />
+                            <Bell />
                           </span>
                           Notification
                         </p>
@@ -218,7 +220,7 @@ const NotificationCreateUpdateForm = () => {
                         <Field type="radio" name="is_sms" value="0" />
                         <p className="m-0 mx-2 lead">
                           <span className="mx-1">
-                            <Hammer />
+                            <Mail />
                           </span>
                           Email
                         </p>
@@ -253,7 +255,7 @@ const NotificationCreateUpdateForm = () => {
                       <Col md={12} xl={12}>
                         {values.is_sms === "0" && (
                           <h4 className="font-weight-bold d-flex align-items-center ">
-                            <Hammer size={24} /> <span> Schedule</span>
+                            <Timer size={24} /> <span> Schedule</span>
                           </h4>
                         )}
                         {values.is_sms === "0" && !id && (

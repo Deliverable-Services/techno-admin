@@ -11880,14 +11880,14 @@ nav.active {
   transform: translateX(0);
 }
 
-nav p {
+/* nav p {
   color: #0b64fe;
   letter-spacing: 0.5px;
   font-size: 0.7rem;
   padding: 0 1rem;
   text-transform: uppercase;
   font-weight: 700;
-}
+} */
 
 nav .navLink svg {
   margin-right: 8px;
@@ -13246,15 +13246,15 @@ li.navLink.my-1 svg path {
   rotate: 90deg;
 }
 .lead-drawer {
-    animation: slideInRight .3s ease-out;
+  animation: slideInRight 0.3s ease-out;
 }
 @keyframes slideInRight {
   0% {
     transform: translateX(100%);
-}
-100% {
+  }
+  100% {
     transform: translateX(0);
-}
+  }
 }
 
 @keyframes slideInFromTopRight {

@@ -1,7 +1,9 @@
 import React from "react";
 import { Button } from "../components/ui/button";
 import Restricted from "./Restricted";
-import { Hammer } from "../components/ui/icon";
+import { Pencil } from 'lucide-react';
+
+
 
 interface Props {
   onClick: () => void;
@@ -19,8 +21,9 @@ const EditButton = (props: Props) => {
           onClick={props.onClick}
           className="flex items-center edit-btn"
         >
-          <Hammer size={16} className="mr-1" />
+          <Pencil size={16} className="mr-1" />
           Edit
+          
         </Button>
       </Restricted>
     </div>
