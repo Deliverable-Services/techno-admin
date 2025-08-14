@@ -55,8 +55,6 @@ const InvoicesCreateForm = ({ onSuccess }: { onSuccess?: () => void }) => {
     return Math.floor(100000 + Math.random() * 900000).toString();
   };
 
-  const activeOrg = loggedInUser?.organisations?.filter((f) => f?.pivot?.is_primary)
-
 
   // Async load options for user search
   const loadUserOptions = async (inputValue: string) => {
@@ -187,7 +185,7 @@ const InvoicesCreateForm = ({ onSuccess }: { onSuccess?: () => void }) => {
                               <div className="mb-4 flex justify-between items-center">
                                 <div>
                                   <p className="text-gray-500">From</p>
-                                  <p>{activeOrg?.[0]?.name}</p>
+                                  <p>{loggedInUser?.primary_organisation?.name}</p>
                                 </div>
                                 <div>
                                   <p className="text-gray-500">Billed to:</p>
@@ -249,9 +247,9 @@ const InvoicesCreateForm = ({ onSuccess }: { onSuccess?: () => void }) => {
 
                           return (
                             <div className="my-3">
-                              <p className="mb-10 font-sans font-medium text-lg">You have received a new invoice from {activeOrg?.[0]?.name}</p>
-                              <p className="mb-4 font-sans font-medium text-sm">Hi {activeOrg?.[0]?.name},</p>
-                              <p className="mb-4 font-sans font-medium text-sm">You have received a new invoice from {activeOrg?.[0]?.name}. To see invoice details, see the attached PDF. To make a payment, click on the button below.</p>
+                              <p className="mb-10 font-sans font-medium text-lg">You have received a new invoice from {loggedInUser?.primary_organisation?.name}</p>
+                              <p className="mb-4 font-sans font-medium text-sm">Hi {loggedInUser?.primary_organisation?.name},</p>
+                              <p className="mb-4 font-sans font-medium text-sm">You have received a new invoice from {loggedInUser?.primary_organisation?.name}. To see invoice details, see the attached PDF. To make a payment, click on the button below.</p>
                               <Button>Pay Invoice</Button>
                             </div>
                           )
