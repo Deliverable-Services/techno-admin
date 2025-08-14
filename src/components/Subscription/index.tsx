@@ -4,7 +4,6 @@ import VerifingUserLoader from "../../shared-components/VerifingUserLoader";
 import useUserProfileStore from "../../hooks/useUserProfileStore";
 import SubscriptionCreateForm from "./SubscriptionCreateForm";
 import PageHeading from "../../shared-components/PageHeading";
-import { Container, Button } from "../ui/bootstrap-compat";
 import { showErrorToast } from "../../utils/showErrorToast";
 import { primaryColor } from "../../utils/constants";
 import { Plus, RefreshCw } from 'lucide-react';
@@ -12,9 +11,11 @@ import { Hammer } from "../ui/icon";
 import { Play } from 'lucide-react';
 import { UserRoundPlus } from 'lucide-react';
 import ReactTable from "../../shared-components/ReactTable";
+import { Button } from "@radix-ui/themes";
 interface Subscription {
   id: string;
   customer_name: string;
+  customer_email: string;
   plan_name: string;
   status: string;
   amount: string;
@@ -44,18 +45,21 @@ const SubscriptionPage: React.FC = () => {
         return new Date(b.created_at).getTime() - new Date(a.created_at).getTime();
       });
 
-      // Map API data into table-friendly format
-      const formatted = sortedData.map((item: any) => ({
-        id: item.id,
-        customer: `${item.user?.name || ""} (${item.user?.email || ""})`,
-        plan_name: item.name,
-        status: item.status,
-        amount: item.billing_cycle_amount,
-        currency: item.billing_cycle_currency,
-        interval: item.billing_cycle,
-        // next_billing_date: item.next_billing_date,
-      }));
-
+      const formatted = sortedData.map((item: any) => {
+        const name = item.user?.name || "";
+        const email = item.user?.email || "";
+        return {
+          id: item.id.toString(),
+          customer_name: name,
+          customer_email: email,
+          plan_name: item.name,
+          status: item.status,
+          amount: item.billing_cycle_amount,
+          currency: item.billing_cycle_currency,
+          interval: item.billing_cycle,
+          // next_billing_date: item.next_billing_date,
+        };
+      });
       setSubscriptions(formatted);
     } catch (err) {
       setSubscriptions([]);
@@ -125,8 +129,12 @@ const SubscriptionPage: React.FC = () => {
   const columns = useMemo(
     () => [
       {
-        Header: "Customer",
-        accessor: "customer",
+        Header: "Customer Name",
+        accessor: "customer_name",
+      },
+      {
+        Header: "Customer Email",
+        accessor: "customer_email",
       },
       {
         Header: "Plan Name",
@@ -148,13 +156,10 @@ const SubscriptionPage: React.FC = () => {
         Header: "Interval",
         accessor: "interval",
       },
-      // {
-      //   Header: "Next Billing Date",
-      //   accessor: "next_billing_date",
-      // },
     ],
     []
   );
+
 
 
   if (isProcessingCode) {
@@ -170,9 +175,9 @@ const SubscriptionPage: React.FC = () => {
       <div className="view-padding">
         <PageHeading
           icon={<UserRoundPlus size={24} />}
-          title="Subscriptions"
+          title='Subscriptions'
           description="Raise recurring invoices to your customers with one click"
-          onClick={_onCreateClick}
+          onClick={!showForm ? _onCreateClick : undefined}
           btnText="Create Subscription"
           permissionReq="create_bookingslot"
         />
@@ -202,9 +207,7 @@ const SubscriptionPage: React.FC = () => {
                   account by clicking on Create Stripe button below
                 </p>
                 <Button
-                  variant="primary"
                   onClick={handleCreateStripeAccount}
-                  size="lg"
                   className="primary-btn"
                   style={{
                     backgroundColor: primaryColor,
@@ -222,8 +225,7 @@ const SubscriptionPage: React.FC = () => {
         }
         if (loading) {
           return (
-            <Container
-              fluid
+            <div
               className="flex justify-center my-[100px]"
             >
               <div className="flex flex-col items-center text-center">
@@ -242,14 +244,13 @@ const SubscriptionPage: React.FC = () => {
                   <span className="sr-only">Loading...</span>
                 </div>
               </div>
-            </Container>
+            </div>
           );
         }
 
         if (!subscriptions.length) {
           return (
-            <Container
-              fluid
+            <div
               className="flex justify-center my-[60px]"
             >
               <div
@@ -309,9 +310,7 @@ const SubscriptionPage: React.FC = () => {
 
                 {/* CTA Button */}
                 <Button
-                  variant="primary"
                   onClick={handleCreate}
-                  size="lg"
                   className="primary-btn"
                   style={{
                     backgroundColor: primaryColor,
@@ -339,30 +338,28 @@ const SubscriptionPage: React.FC = () => {
                   </small>
                 </div>
               </div>
-            </Container>
+            </div>
           );
         }
 
         if (!showForm) {
           return (
             <div className="card">
-              <div className="h-full p-0">
-                <div className="mt-3" />
-                <ReactTable
-                  data={subscriptions}
-                  columns={columns}
-                  showSearch={false}
-                  showRecords={false}
-                  filter={{
-                    role: "customer",
-                    q: "",
-                    page: null,
-                    perPage: 25,
-                    disabled: "",
-                  }}
-                  deletePermissionReq="delete_user"
-                />
-              </div>
+              <ReactTable
+                data={subscriptions}
+                columns={columns}
+                showSearch={false}
+                showRecords={false}
+                isSelectable={false}
+                filter={{
+                  role: "customer",
+                  q: "",
+                  page: null,
+                  perPage: 25,
+                  disabled: "",
+                }}
+                deletePermissionReq="delete_user"
+              />
             </div>
           );
         }

@@ -246,7 +246,7 @@ const InvoicePage: React.FC = () => {
           icon={<ReceiptText size={24} />}
           title="Invoices"
           description="Raise invoices to your customers with one click"
-          onClick={_onCreateClick}
+          onClick={!showForm ? _onCreateClick : undefined}
           btnText="Create Invoice"
           permissionReq="create_bookingslot"
         />
@@ -255,7 +255,7 @@ const InvoicePage: React.FC = () => {
       {(() => {
         if (showForm) {
           return (
-            <div className="max-w-lg mx-auto px-7">
+            <div>
               <InvoicesCreateForm
                 onSuccess={() => {
                   setShowForm(false);
@@ -324,23 +324,21 @@ const InvoicePage: React.FC = () => {
         if (!showForm) {
           return (
             <div className="card">
-              <div className="h-full p-0">
-                <div className="mt-3" />
-                <ReactTable
-                  data={invoices}
-                  columns={columns}
-                  showSearch={false}
-                  showRecords={false}
-                  filter={{
-                    role: "customer",
-                    q: "",
-                    page: null,
-                    perPage: 25,
-                    disabled: "",
-                  }}
-                  deletePermissionReq="delete_user"
-                />
-              </div>
+              <ReactTable
+                data={invoices}
+                columns={columns}
+                showSearch={false}
+                showRecords={false}
+                isSelectable={false}
+                filter={{
+                  role: "customer",
+                  q: "",
+                  page: null,
+                  perPage: 25,
+                  disabled: "",
+                }}
+                deletePermissionReq="delete_user"
+              />
             </div>
           );
         }
