@@ -62,7 +62,7 @@ const SubscriptionCreateForm = ({ onSuccess }: { onSuccess?: () => void }) => {
     <Formik
       initialValues={initialValues}
       validationSchema={validationSchema}
-      onSubmit={async (values, { setSubmitting, resetForm }) => {
+      onSubmit={async (values, { setSubmitting, resetForm, }) => {
         try {
           const items = values.items.map((item) => ({
             ...item,
@@ -93,19 +93,13 @@ const SubscriptionCreateForm = ({ onSuccess }: { onSuccess?: () => void }) => {
         }
       }}
     >
-      {({ values, isSubmitting, setFieldValue, setFieldTouched, touched, errors }) => (
+      {({ values, isSubmitting, setFieldValue, setFieldTouched, validateField, touched, errors }) => (
         <div className="flex-[1_1_350px] min-w-[340px] max-w-[600px]">
           <Form>
             {/* Recipient */}
-            <div className="flex items-center justify-between my-4">
+            <div className="my-4">
               <h2 >Recipient</h2>
-              <Button
-                type="submit"
-                disabled={isSubmitting}
-                className="primary-btn"
-              >
-                {isSubmitting ? "Saving..." : "Save Subscription"}
-              </Button>
+
             </div>
             <div className="form-group">
               <AsyncSelect
@@ -116,9 +110,7 @@ const SubscriptionCreateForm = ({ onSuccess }: { onSuccess?: () => void }) => {
                 onChange={(option) => {
                   setSelectedUser(option);
                   setFieldValue("user_id", option ? option.value : "");
-                  setFieldTouched("user_id", true, true);
                 }}
-                onBlur={() => setFieldTouched("user_id", true, true)}
                 placeholder="Search user by name or email..."
                 isClearable
               />
@@ -126,6 +118,7 @@ const SubscriptionCreateForm = ({ onSuccess }: { onSuccess?: () => void }) => {
                 <div className="error-message">{errors.user_id}</div>
               )}
             </div>
+
 
             {/* Subscription Name */}
             <div className="form-group">
@@ -177,12 +170,11 @@ const SubscriptionCreateForm = ({ onSuccess }: { onSuccess?: () => void }) => {
                   {values.items.map((item, idx) => (
                     <div
                       key={idx}
-                      style={{
-                        paddingBottom: "10px",
-                        paddingTop: "10px",
-                        borderBottom:
-                          values.items.length !== 1 ? "1px solid #e7eaf3" : "none",
-                      }}
+                      className="py-2.5 "
+                    // style={{
+                    //   borderBottom:
+                    //     values.items.length !== 1 ? "1px solid #e7eaf3" : "none",
+                    // }}
                     >
                       {/* Item Name */}
                       <Field
@@ -197,10 +189,10 @@ const SubscriptionCreateForm = ({ onSuccess }: { onSuccess?: () => void }) => {
                       />
 
                       <div
-                        style={{ marginBottom: "8px", marginTop: "12px" }}
+                        className="my-2"
                       >
                         {/* Quantity */}
-                        <div className="flex items-center gap-3 mb-3 w-full">
+                        <div className="flex my-2 gap-3 mb-3 w-full">
                           <div>
                             <Field
                               name={`items[${idx}].quantity`}
@@ -268,7 +260,15 @@ const SubscriptionCreateForm = ({ onSuccess }: { onSuccess?: () => void }) => {
                 </div>
               )}
             </FieldArray>
-
+            <div className="flex justify-end my-4">
+              <Button
+                type="submit"
+                disabled={isSubmitting}
+                className="primary-btn"
+              >
+                {isSubmitting ? "Saving..." : "Save Subscription"}
+              </Button>
+            </div>
           </Form>
         </div>
       )}

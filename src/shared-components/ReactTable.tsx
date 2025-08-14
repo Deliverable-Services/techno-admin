@@ -600,7 +600,7 @@ const DnDRow = ({ provided, row, snapshot }: any) => (
       <td
         key={cell.column.id}
         {...cell.getCellProps()}
-        className="px-4  text-sm text-foreground border-r border-border/50 last:border-r-0"
+        className="px-4 py-3 text-sm text-foreground border-r border-border/50 last:border-r-0"
       >
         {cell.render("Cell", {
           dragHandleProps: provided.dragHandleProps,
@@ -621,10 +621,11 @@ const Row = ({ row }: any) => (
         key={cell.column.id}
         {...cell.getCellProps()}
         className="px-4  py-3 text-sm text-foreground border-r border-border/50 last:border-r-0"
+
       >
         {cell.value ||
-        cell.column.id === "selection" ||
-        cell.column.id === "Actions" ? (
+          cell.column.id === "selection" ||
+          cell.column.id === "Actions" ? (
           cell.render("Cell")
         ) : (
           <Badge variant="secondary" className="text-xs">

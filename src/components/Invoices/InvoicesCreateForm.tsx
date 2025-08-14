@@ -1,13 +1,15 @@
 import { Formik, Form, Field, FieldArray } from "formik";
-import { Button, Modal } from "../ui/bootstrap-compat";
 import API from "../../utils/API";
 import { showMsgToast } from "../../utils/showMsgToast";
 import { showErrorToast } from "../../utils/showErrorToast";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import AsyncSelect from "react-select/async";
 import * as Yup from "yup";
 import { ErrorMessage } from "formik";
 import DatePicker from "../../shared-components/DatePicker";
+import { Button } from "../ui/button";
+import { Switch } from "../ui/switch";
+import useUserProfileStore from "../../hooks/useUserProfileStore";
 
 const initialValues = {
   user_id: "",
@@ -45,14 +47,16 @@ const InvoicesCreateForm = ({ onSuccess }: { onSuccess?: () => void }) => {
     label: string;
     value: string;
   } | null>(null);
-  const [showPreview, setShowPreview] = useState(false);
+  const [showDrawer, setShowDrawer] = useState(false);
+  const loggedInUser = useUserProfileStore((state) => state.user);
+  const [activeTab, setActiveTab] = useState('INVOICE')
   const [itemSuggestions, setItemSuggestions] = useState<{ [key: number]: any[] }>({});
-
-  // const [isDownloading, setIsDownloading] = useState(false);
-
   const generateInvoiceNumber = () => {
     return Math.floor(100000 + Math.random() * 900000).toString();
   };
+
+  const activeOrg = loggedInUser?.organisations?.filter((f) => f?.pivot?.is_primary)
+
 
   // Async load options for user search
   const loadUserOptions = async (inputValue: string) => {
@@ -84,131 +88,8 @@ const InvoicesCreateForm = ({ onSuccess }: { onSuccess?: () => void }) => {
     }
   };
 
-
-
   return (
     <>
-      <Formik
-        initialValues={initialValues}
-        validationSchema={validationSchema}
-        onSubmit={() => { }}
-      >
-        {({ values }) => (
-          <>
-            <Modal
-              show={showPreview}
-              onHide={() => setShowPreview(false)}
-              style={{ margin: "0 auto" }}
-              centered
-            >
-              <Modal.Header closeButton>
-                <Modal.Title>Invoice Preview</Modal.Title>
-              </Modal.Header>
-              <Modal.Body>
-                {(() => {
-                  const subtotal = values.items.reduce(
-                    (sum, item) =>
-                      sum + Number(item.quantity || 0) * Number(item.unit_price || 0),
-                    0
-                  );
-                  const taxAmount =
-                    values.addTax && values.tax
-                      ? (subtotal * Number(values.tax)) / 100
-                      : 0;
-                  const total = subtotal + taxAmount;
-
-                  return (
-                    <div className="border border-gray-300 rounded-xl p-8 bg-white shadow-md max-w-full">
-                      {/* Invoice Header */}
-                      <div className="flex justify-between items-start">
-                        <div>
-                          <h2>Invoice</h2>
-                          <div className="text-gray-500 text-sm mt-4">
-                            <div>
-                              Invoice number <span>{generateInvoiceNumber()}</span>
-                            </div>
-                            <div>
-                              Issue date{" "}
-                              <span>{new Date().toLocaleDateString("en-GB")}</span>
-                            </div>
-                          </div>
-                        </div>
-                        <div>
-                          <div className="w-10 h-10 bg-yellow-200 rounded-lg flex items-center justify-center">
-                            <span role="img" aria-label="logo">🧾</span>
-                          </div>
-                        </div>
-                      </div>
-
-                      {/* Billed To */}
-                      <div className="flex justify-between mt-8 mb-4">
-                        <div>
-                          <div className="text-gray-500 text-sm">Billed to</div>
-                          <div className="invoice-billed-to-name">
-                            {selectedUser?.label || "-"}
-                          </div>
-                        </div>
-                      </div>
-
-                      {/* Items Table */}
-                      <table className="w-full border-collapse mb-6">
-                        <thead>
-                          <tr className="border-b border-gray-300">
-                            <th className="text-left p-2">Item</th>
-                            <th className="text-right p-2">Qty</th>
-                            <th className="text-right p-2">Unit price</th>
-                            <th className="text-right p-2">Amount</th>
-                          </tr>
-                        </thead>
-                        <tbody>
-                          {values.items.map((item, idx) => (
-                            <tr key={idx}>
-                              <td className="text-left p-2">{item.item_name || "-"}</td>
-                              <td className="text-right p-2">{item.quantity || 0}</td>
-                              <td className="text-right p-2">
-                                ${Number(item.unit_price || 0).toFixed(2)}
-                              </td>
-                              <td className="text-right p-2">
-                                ${(Number(item.quantity || 0) * Number(item.unit_price || 0)).toFixed(2)}
-                              </td>
-                            </tr>
-                          ))}
-                        </tbody>
-                      </table>
-
-                      {/* Totals */}
-                      <div className="max-w-xs ml-auto">
-                        <div className="flex justify-between text-sm mb-1">
-                          <span>Subtotal</span>
-                          <span>${subtotal.toFixed(2)}</span>
-                        </div>
-                        {values.addTax && (
-                          <div className="flex justify-between text-sm mb-1">
-                            <span>Tax ({values.tax || 0}%)</span>
-                            <span>${taxAmount.toFixed(2)}</span>
-                          </div>
-                        )}
-                        <div className="flex justify-between text-sm font-bold">
-                          <span>Total</span>
-                          <span>${total.toFixed(2)}</span>
-                        </div>
-                      </div>
-                    </div>
-                  );
-                })()}
-              </Modal.Body>
-              <Modal.Footer>
-                <Button variant="secondary" onClick={() => setShowPreview(false)}>
-                  Close
-                </Button>
-              </Modal.Footer>
-            </Modal>
-          </>
-        )}
-      </Formik>
-
-
-
       <Formik
         initialValues={initialValues}
         validationSchema={validationSchema}
@@ -244,7 +125,6 @@ const InvoicesCreateForm = ({ onSuccess }: { onSuccess?: () => void }) => {
             setSelectedUser(null);
             if (onSuccess) onSuccess();
           } catch (err: any) {
-            console.log(err, "::::")
             showErrorToast(err?.message || "Failed to create invoice");
           } finally {
             setSubmitting(false);
@@ -259,464 +139,369 @@ const InvoicesCreateForm = ({ onSuccess }: { onSuccess?: () => void }) => {
           touched,
           errors,
         }) => (
-          <div className="flex-1 min-w-[340px] max-w-[600px]">
+          <div className={` ${!showDrawer ? 'max-w-lg mx-auto' : 'max-w-full ml-14'}  px-7 `}>
             <Form>
               {/* Update the download button to use current form values */}
-              <div className="flex items-center justify-between mb-2 py-5">
-                <h2 className="">Recipient</h2>
-                <div className="flex gap-2">
-                  <Button
-                    onClick={(e: any) => {
-                      e.preventDefault()
-                      setShowPreview(true)
-                    }}
-                  >
-                    Preview Invoice
-                  </Button>
-                </div>
-              </div>
 
-              <>
-                {/* Invoice Preview Modal (now inside so we have access to values) */}
-                <Modal
-                  show={showPreview}
-                  onHide={() => setShowPreview(false)}
-                  style={{ margin: "0 auto" }}
-                  centered
-                >
-                  <Modal.Header closeButton>
-                    <Modal.Title>Invoice Preview</Modal.Title>
-                  </Modal.Header>
-                  <Modal.Body>
-                    {(() => {
-                      const subtotal = values.items.reduce(
-                        (sum, item) =>
-                          sum + Number(item.quantity || 0) * Number(item.unit_price || 0),
-                        0
-                      );
-                      const taxAmount =
-                        values.addTax && values.tax
-                          ? (subtotal * Number(values.tax)) / 100
-                          : 0;
-                      const total = subtotal + taxAmount;
+              <div className="flex flex-row-reverse items-start justify-between py-5">
 
-                      return (
-                        <div className="border border-gray-300 rounded-xl p-8 bg-white shadow-md max-w-full">
-                          {/* Invoice Header */}
-                          <div className="flex justify-between items-start">
-                            <div>
-                              <h2>Invoice</h2>
-                              <div className="text-gray-500 text-sm mt-4">
-                                <div>
-                                  Invoice number <span>{generateInvoiceNumber()}</span>
-                                </div>
-                                <div>
-                                  Issue date{" "}
-                                  <span>{new Date().toLocaleDateString("en-GB")}</span>
-                                </div>
-                              </div>
-                            </div>
-                            <div>
-                              <div className="w-10 h-10 bg-yellow-200 rounded-lg flex items-center justify-center">
-                                <span role="img" aria-label="logo">🧾</span>
-                              </div>
-                            </div>
-                          </div>
+                {showDrawer &&
+                  <div className="w-[43%] mb-2">
+                    <div className="flex items-center gap-3 cursor-pointer mb-3 px-3 py-1.5 rounded-lg bg-[#fafafc] w-fit">
+                      <p className={`font-sans font-medium text-base px-4 py-0.5
+                         ${activeTab === 'INVOICE' ? "text-[#2E2E2E] bg-[#e6e7e8] rounded-sm" : 'text-[#959595]'}`}
+                        onClick={() => setActiveTab('INVOICE')}>Invoice</p>
 
-                          {/* Billed To */}
-                          <div className="flex justify-between mt-8 mb-4">
-                            <div>
-                              <div className="text-gray-500 text-sm">Billed to</div>
-                              <div className="invoice-billed-to-name">
-                                {selectedUser?.label || "-"}
-                              </div>
-                            </div>
-                          </div>
-
-                          {/* Items Table */}
-                          <table className="w-full border-collapse mb-6">
-                            <thead>
-                              <tr className="border-b border-gray-300">
-                                <th className="text-left p-2">Item</th>
-                                <th className="text-right p-2">Qty</th>
-                                <th className="text-right p-2">Unit price</th>
-                                <th className="text-right p-2">Amount</th>
-                              </tr>
-                            </thead>
-                            <tbody>
-                              {values.items.map((item, idx) => (
-                                <tr key={idx}>
-                                  <td className="text-left p-2">{item.item_name || "-"}</td>
-                                  <td className="text-right p-2">{item.quantity || 0}</td>
-                                  <td className="text-right p-2">
-                                    ${Number(item.unit_price || 0).toFixed(2)}
-                                  </td>
-                                  <td className="text-right p-2">
-                                    ${(Number(item.quantity || 0) * Number(item.unit_price || 0)).toFixed(2)}
-                                  </td>
-                                </tr>
-                              ))}
-                            </tbody>
-                          </table>
-
-                          {/* Totals */}
-                          <div className="max-w-xs ml-auto">
-                            <div className="flex justify-between text-sm mb-1">
-                              <span>Subtotal</span>
-                              <span>${subtotal.toFixed(2)}</span>
-                            </div>
-                            {values.addTax && (
-                              <div className="flex justify-between text-sm mb-1">
-                                <span>Tax ({values.tax || 0}%)</span>
-                                <span>${taxAmount.toFixed(2)}</span>
-                              </div>
-                            )}
-                            <div className="flex justify-between text-sm font-bold">
-                              <span>Total</span>
-                              <span>${total.toFixed(2)}</span>
-                            </div>
-                          </div>
-                        </div>
-                      );
-                    })()}
-                  </Modal.Body>
-                  <Modal.Footer>
-                    <Button onClick={() => setShowPreview(false)}>
-                      Close
-                    </Button>
-                  </Modal.Footer>
-                </Modal>
-              </>
-
-              <div className="mb-4">
-                <AsyncSelect
-                  cacheOptions
-                  loadOptions={loadUserOptions}
-                  defaultOptions
-                  value={selectedUser}
-                  onChange={(option) => {
-                    setSelectedUser(option);
-                    setFieldValue("user_id", option ? option.value : "");
-                    setFieldTouched("user_id", true, true);
-                  }}
-                  onBlur={() => setFieldTouched("user_id", true, true)}
-                  placeholder="Search user by name or email..."
-                  isClearable
-                />
-                {touched.user_id && errors.user_id && (
-                  <div className="text-red-500 text-xs">{errors.user_id}</div>
-                )}
-              </div>
-
-              <FieldArray name="items">
-                {({ push, remove }) => (
-                  <div>
-                    <label>Items</label>
-                    {values.items.map((item, idx) => (
-                      <div
-                        className="pb-2 pt-2"
-                        key={idx}
-                        style={{
-                          borderBottom:
-                            values.items.length !== 1
-                              ? "1px solid #e7eaf3"
-                              : "none",
-                        }}
-                      >
-                        <div className="relative">
-                          <Field
-                            name={`items[${idx}].item_name`}
-                            className="w-full py-2 px-2 border border-gray-300 rounded text-sm bg-white"
-                            placeholder="Item Name"
-                            onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-                              const value = e.target.value;
-                              setFieldValue(`items[${idx}].item_name`, value);
-                              setFieldValue(`items[${idx}].service_id`, null);
-                              fetchServices(value, idx);
-                            }}
-                            autoComplete="off"
-                          />
-
-                          {/* Dropdown suggestions */}
-                          {itemSuggestions[idx]?.length > 0 && (
-                            <div className="absolute z-10 bg-white border border-gray-300 rounded mt-1 w-full max-h-40 overflow-auto">
-                              {itemSuggestions[idx].map((service, sIdx) => (
-                                <div
-                                  key={sIdx}
-                                  className="px-2 py-1 cursor-pointer hover:bg-gray-100"
-                                  onClick={() => {
-                                    setFieldValue(`items[${idx}].item_name`, service.name);
-                                    setFieldValue(`items[${idx}].unit_price`, service.price || "");
-                                    setFieldValue(`items[${idx}].service_id`, service.id);
-                                    setItemSuggestions((prev) => ({ ...prev, [idx]: [] }));
-                                  }}
-                                >
-                                  {service.name}
-                                </div>
-                              ))}
-                            </div>
-                          )}
-                        </div>
-
-                        {/* Error for item name */}
-                        <ErrorMessage name={`items[${idx}].item_name`}>
-                          {(msg) => (
-                            <div className="text-red-500 text-xs">{msg}</div>
-                          )}
-                        </ErrorMessage>
-                        <div className="flex gap-2 mb-2 mt-3">
-                          <div>
-                            <Field
-                              name={`items[${idx}].quantity`}
-                              className="flex-1 py-2 px-2 border border-gray-300 rounded text-sm bg-white"
-                              placeholder="Qty"
-                              type="number"
-                              min="1"
-                              step="1"
-                            />
-                            {/* Error for quantity */}
-                            <ErrorMessage name={`items[${idx}].quantity`}>
-                              {(msg) => (
-                                <div className="text-red-500 text-xs">
-                                  {msg}
-                                </div>
-                              )}
-                            </ErrorMessage>
-                          </div>
-
-                          <div>
-                            <Field
-                              name={`items[${idx}].unit_price`}
-                              className="flex-1 py-2 px-2 border border-gray-300 rounded text-sm bg-white"
-                              placeholder="Unit Price"
-                              type="number"
-                              min="0"
-                              step="0.01"
-                            />
-                            {/* Error for unit price */}
-                            <ErrorMessage name={`items[${idx}].unit_price`}>
-                              {(msg) => (
-                                <div className="text-red-500 text-xs">
-                                  {msg}
-                                </div>
-                              )}
-                            </ErrorMessage>
-                          </div>
-                          <Button
-                            variant="danger"
-                            onClick={() => remove(idx)}
-                            disabled={values.items.length === 1}
-                          >
-                            -
-                          </Button>
-                        </div>
-                      </div>
-                    ))}
-                    <Button
-                      className="mb-4 mt-2 bg-black text-white cursor-pointer"
-                      onClick={() =>
-                        push({
-                          item_name: "",
-                          quantity: 1,
-                          unit_price: "",
-                          total: "",
-                        })
-                      }
+                      <p className={`font-sans font-medium text-base px-4 py-0.5
+                        ${activeTab === 'EMAIL' ? "text-[#2E2E2E] bg-[#e6e7e8] rounded-sm" : 'text-[#959595]'}`}
+                        onClick={() => setActiveTab('EMAIL')}>Email</p>
+                    </div>
+                    <div
+                      className='h-auto py-2.5 px-4 rounded-xl shadow-sm  bg-white border'
                     >
-                      + Add Item
-                    </Button>
+                      <div>
+                        <div className="mt-2 mb-4">
+                          <h2 className="text-lg font-bold">{`${activeTab === 'INVOICE' ? "Invoice" : 'Email'}`} </h2>
+                        </div>
+                        {activeTab === 'INVOICE' && (() => {
+
+                          const subtotal = values.items.reduce(
+                            (sum, item) => sum + Number(item.quantity || 0) * Number(item.unit_price || 0),
+                            0
+                          );
+                          const taxAmount =
+                            values.addTax && values.tax
+                              ? (subtotal * Number(values.tax)) / 100
+                              : 0;
+                          const total = subtotal + taxAmount;
+
+                          return (
+                            <div>
+                              {/* Header */}
+                              <div className="mb-4">
+                                <p>Invoice number: {generateInvoiceNumber()}</p>
+                                <p>Issue date: {new Date().toLocaleDateString("en-GB")}</p>
+                              </div>
+
+                              {/* Billed To */}
+                              <div className="mb-4 flex justify-between items-center">
+                                <div>
+                                  <p className="text-gray-500">From</p>
+                                  <p>{activeOrg?.[0]?.name}</p>
+                                </div>
+                                <div>
+                                  <p className="text-gray-500">Billed to:</p>
+                                  {/* <p>{selectedUser?.label || "-"}</p> */}
+                                  <p>{selectedUser?.label?.replace(/\s*\(.*?\)/, "")}</p>
+                                  <p className="text-gray-600">
+                                    {selectedUser?.label?.match(/\(([^)]+)\)/)?.[1]}
+                                  </p>
+                                </div>
+                              </div>
+
+                              {/* Items Table */}
+                              <table className="w-full border-collapse mb-4">
+                                <thead>
+                                  <tr className="border-b pb-3">
+                                    <th className="text-left p-2">Item</th>
+                                    <th className="text-right p-2">Qty</th>
+                                    <th className="text-right p-2">Price</th>
+                                    <th className="text-right p-2">Amount</th>
+                                  </tr>
+                                </thead>
+                                <tbody>
+                                  {values.items.map((item, idx) => (
+                                    <tr key={idx}>
+                                      <td className="p-2">{item.item_name || "-"}</td>
+                                      <td className="p-2 text-right">{item.quantity || 0}</td>
+                                      <td className="p-2 text-right">${Number(item.unit_price || 0).toFixed(2)}</td>
+                                      <td className="p-2 text-right">
+                                        ${(Number(item.quantity || 0) * Number(item.unit_price || 0)).toFixed(2)}
+                                      </td>
+                                    </tr>
+                                  ))}
+                                </tbody>
+                              </table>
+
+                              {/* Totals */}
+                              <div className="border-t pt-2">
+                                <div className="flex justify-between my-2">
+                                  <span>Subtotal</span>
+                                  <span>${subtotal.toFixed(2)}</span>
+                                </div>
+                                {values.addTax && (
+                                  <div className="flex justify-between mb-2">
+                                    <span>Tax ({values.tax || 0}%)</span>
+                                    <span>${taxAmount.toFixed(2)}</span>
+                                  </div>
+                                )}
+                                <div className="flex justify-between font-bold mb-2">
+                                  <span>Total</span>
+                                  <span>${total.toFixed(2)}</span>
+                                </div>
+                              </div>
+                            </div>
+                          )
+                        })()
+                        }
+
+                        {activeTab === 'EMAIL' && (() => {
+
+                          return (
+                            <div className="my-3">
+                              <p className="mb-10 font-sans font-medium text-lg">You have received a new invoice from {activeOrg?.[0]?.name}</p>
+                              <p className="mb-4 font-sans font-medium text-sm">Hi {activeOrg?.[0]?.name},</p>
+                              <p className="mb-4 font-sans font-medium text-sm">You have received a new invoice from {activeOrg?.[0]?.name}. To see invoice details, see the attached PDF. To make a payment, click on the button below.</p>
+                              <Button>Pay Invoice</Button>
+                            </div>
+                          )
+                        })()
+                        }
+
+                      </div>
+                    </div>
                   </div>
-                )}
-              </FieldArray>
-              {/* AddTax Checkbox */}
-              <div style={{ width: "100%" }}>
-                <div className="my-2 flex items-center gap-2">
-                  <label className="flex items-center gap-2">
-                    <Field type="checkbox" name="addTax" onChange={(e: any) => {
-                      const checked = e.target.checked;
-                      setFieldValue("addTax", checked);
-                      if (!checked) {
-                        setFieldValue("tax", "");
-                      }
-                    }} />
-                    <p className="m-0">Add Tax %</p>
-                  </label>
-                </div>
-                {values.addTax && (
-                  <div className="mb-4 w-full">
+
+                }
+
+                <div className={`${showDrawer ? 'w-1/2' : 'w-full'}`}>
+                  <div className="flex items-center justify-between mb-4">
+                    <h2 className="">Recipient</h2>
+                    <div className="flex gap-2">
+                      <div className="flex items-center space-x-2">
+                        <Switch
+                          checked={showDrawer}
+                          onCheckedChange={(checked) => setShowDrawer(checked)}
+                        />
+                        <label className="text-sm font-medium">Preview Invoice</label>
+                      </div>
+                    </div>
+                  </div>
+                  <div className="mb-4">
+                    <AsyncSelect
+                      cacheOptions
+                      loadOptions={loadUserOptions}
+                      defaultOptions
+                      value={selectedUser}
+                      onChange={(option) => {
+                        setSelectedUser(option);
+                        setFieldValue("user_id", option ? option.value : "");
+                        setFieldTouched("user_id", true, true);
+                      }}
+                      onBlur={() => setFieldTouched("user_id", true, true)}
+                      placeholder="Search user by name or email..."
+                      isClearable
+                    />
+                    {touched.user_id && errors.user_id && (
+                      <div className="text-red-500 text-xs">{errors.user_id}</div>
+                    )}
+                  </div>
+
+                  <FieldArray name="items">
+                    {({ push, remove }) => (
+                      <div>
+                        <label>Items</label>
+                        {values.items.map((item, idx) => (
+                          <div
+                            className="pb-2 pt-2"
+                            key={idx}
+                            style={{
+                              borderBottom:
+                                values.items.length !== 1
+                                  ? "1px solid #e7eaf3"
+                                  : "none",
+                            }}
+                          >
+                            <div className="relative">
+                              <Field
+                                name={`items[${idx}].item_name`}
+                                className="w-full py-2 px-2 border border-gray-300 rounded text-sm bg-white"
+                                placeholder="Item Name"
+                                onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                                  const value = e.target.value;
+                                  setFieldValue(`items[${idx}].item_name`, value);
+                                  setFieldValue(`items[${idx}].service_id`, null);
+                                  fetchServices(value, idx);
+                                }}
+                                autoComplete="off"
+                              />
+
+                              {/* Dropdown suggestions */}
+                              {itemSuggestions[idx]?.length > 0 && (
+                                <div className="absolute z-10 bg-white border border-gray-300 rounded mt-1 w-full max-h-40 overflow-auto">
+                                  {itemSuggestions[idx].map((service, sIdx) => (
+                                    <div
+                                      key={sIdx}
+                                      className="px-2 py-1 cursor-pointer hover:bg-gray-100"
+                                      onClick={() => {
+                                        setFieldValue(`items[${idx}].item_name`, service.name);
+                                        setFieldValue(`items[${idx}].unit_price`, service.price || "");
+                                        setFieldValue(`items[${idx}].service_id`, service.id);
+                                        setItemSuggestions((prev) => ({ ...prev, [idx]: [] }));
+                                      }}
+                                    >
+                                      {service.name}
+                                    </div>
+                                  ))}
+                                </div>
+                              )}
+                            </div>
+
+                            {/* Error for item name */}
+                            <ErrorMessage name={`items[${idx}].item_name`}>
+                              {(msg) => (
+                                <div className="text-red-500 text-xs">{msg}</div>
+                              )}
+                            </ErrorMessage>
+                            <div className="flex gap-2 mb-2 mt-3">
+                              <div>
+                                <Field
+                                  name={`items[${idx}].quantity`}
+                                  className="flex-1 py-2 px-2 border border-gray-300 rounded text-sm bg-white"
+                                  placeholder="Qty"
+                                  type="number"
+                                  min="1"
+                                  step="1"
+                                />
+                                {/* Error for quantity */}
+                                <ErrorMessage name={`items[${idx}].quantity`}>
+                                  {(msg) => (
+                                    <div className="text-red-500 text-xs">
+                                      {msg}
+                                    </div>
+                                  )}
+                                </ErrorMessage>
+                              </div>
+
+                              <div>
+                                <Field
+                                  name={`items[${idx}].unit_price`}
+                                  className="flex-1 py-2 px-2 border border-gray-300 rounded text-sm bg-white"
+                                  placeholder="Unit Price"
+                                  type="number"
+                                  min="0"
+                                  step="0.01"
+                                />
+                                {/* Error for unit price */}
+                                <ErrorMessage name={`items[${idx}].unit_price`}>
+                                  {(msg) => (
+                                    <div className="text-red-500 text-xs">
+                                      {msg}
+                                    </div>
+                                  )}
+                                </ErrorMessage>
+                              </div>
+                              <Button
+                                onClick={() => remove(idx)}
+                                disabled={values.items.length === 1}
+                              >
+                                -
+                              </Button>
+                            </div>
+                          </div>
+                        ))}
+                        <Button
+                          className="mb-4 mt-2 bg-black text-white cursor-pointer"
+                          onClick={() =>
+                            push({
+                              item_name: "",
+                              quantity: 1,
+                              unit_price: "",
+                              total: "",
+                            })
+                          }
+                        >
+                          + Add Item
+                        </Button>
+                      </div>
+                    )}
+                  </FieldArray>
+                  {/* AddTax Checkbox */}
+                  <div style={{ width: "100%" }}>
+                    <div className="my-2 flex items-center gap-2">
+                      <label className="flex items-center gap-2">
+                        <Field type="checkbox" name="addTax" onChange={(e: any) => {
+                          const checked = e.target.checked;
+                          setFieldValue("addTax", checked);
+                          if (!checked) {
+                            setFieldValue("tax", "");
+                          }
+                        }} />
+                        <p className="m-0">Add Tax %</p>
+                      </label>
+                    </div>
+                    {values.addTax && (
+                      <div className="mb-4 w-full">
+                        <Field
+                          name="tax"
+                          className="w-full py-2 px-2 border border-gray-300 rounded text-sm bg-white"
+                        />
+                      </div>
+                    )}
+                  </div>
+                  <div className="border border-gray-200 rounded-lg p-2 mb-2">
+                    <div className="flex items-center justify-between w-full">
+                      <label className="text-gray-500 mb-0">Subtotal</label>
+                      {values.items.reduce(
+                        (sum, item) =>
+                          sum + Number(item.quantity) * Number(item.unit_price),
+                        0
+                      )}
+                    </div>
+                    {values?.tax && <div className="flex items-center justify-between w-full">
+                      <label className="text-gray-500 mb-0">Tax %</label>
+                      {(() => {
+                        const subtotal = values.items.reduce(
+                          (sum, item) =>
+                            sum + Number(item.quantity) * Number(item.unit_price),
+                          0
+                        );
+                        return values.tax ? (subtotal * Number(values.tax)) / 100 : 0;
+                      })()}
+                    </div>}
+
+                    <div className="flex items-center justify-between w-full">
+                      <label className="text-gray-500 mb-0">Total</label>
+                      {(() => {
+                        const subtotal = values.items.reduce(
+                          (sum, item) =>
+                            sum + Number(item.quantity) * Number(item.unit_price),
+                          0
+                        );
+                        const taxAmount = values.tax ? (subtotal * Number(values.tax)) / 100 : 0;
+                        return subtotal + taxAmount;
+                      })()}
+
+                    </div>
+                  </div>
+                  <div className="mb-4">
+                    <DatePicker
+                      label="Due Date"
+                      name="due_date"
+                      setFieldValue={setFieldValue}
+                      pickerType="date"
+                      error={touched.due_date && errors.due_date ? errors.due_date : undefined}
+                    />
+                  </div>
+                  <div className="mb-4">
+                    <label className="block text-sm font-medium mb-1">
+                      Description
+                    </label>
                     <Field
-                      name="tax"
+                      name="description"
+                      as="textarea"
                       className="w-full py-2 px-2 border border-gray-300 rounded text-sm bg-white"
                     />
                   </div>
-                )}
-              </div>
-              {/* <div>
-                <div className="my-2 flex items-center gap-2">
-                  <label className="flex items-center gap-2">
-                    <Field type="checkbox" name="payAt" />
-                    <p className="m-0">Schedule At</p>
-                  </label>
-                </div>
-                {values.payAt && (
-                  <div>
-                    <div className="mb-4 w-full">
-                      <label className="block text-sm font-medium mb-1">
-                        Billing period
-                      </label>
-                      <Field
-                        as="select"
-                        name="billing_period"
-                        className="w-full py-2 px-2 border border-gray-300 rounded text-sm bg-white"
-                      >
-                        <option value="weekly">Weekly</option>
-                        <option value="monthly">Monthly</option>
-                        <option value="quarterly">Quarterly</option>
-                        <option value="yearly">Yearly</option>
-                        <option value="custom">Custom</option>
-                      </Field>
-                    </div>
-
-                    {values.billing_period === "custom" && (
-                      <div className="mb-4 w-full">
-                        <label className="block text-sm font-medium mb-1">
-                          Custom billing period (days)
-                        </label>
-                        <Field
-                          name="custom_billing_period"
-                          className="w-full py-2 px-2 border border-gray-300 rounded text-sm bg-white"
-                          type="number"
-                          min="1"
-                          placeholder="Enter number of days"
-                        />
-                      </div>
-                    )}
-
-                    <div className="flex justify-between w-full gap-5">
-                      <div className="mb-4 w-full">
-                        <label className="block text-sm font-medium mb-1">
-                          Start date
-                        </label>
-                        <Field
-                          as="select"
-                          name="start_date"
-                          className="w-full py-2 px-2 border border-gray-300 rounded text-sm bg-white"
-                        >
-                          <option value="immediately">Immediately</option>
-                          <option value="next_week">Next Week</option>
-                          <option value="next_month">Next Month</option>
-                          <option value="custom_start">Custom Date</option>
-                        </Field>
-                      </div>
-                      <div className="mb-4 w-full">
-                        <label className="block text-sm font-medium mb-1">
-                          End date
-                        </label>
-                        <Field
-                          as="select"
-                          name="end_date"
-                          className="w-full py-2 px-2 border border-gray-300 rounded text-sm bg-white"
-                        >
-                          <option value="none">None</option>
-                          <option value="after_3_months">After 3 Months</option>
-                          <option value="after_6_months">After 6 Months</option>
-                          <option value="after_1_year">After 1 Year</option>
-                          <option value="custom_end">Custom Date</option>
-                        </Field>
-                      </div>
-                    </div>
-
-                    {values.start_date === "custom_start" && (
-                      <div className="mb-4 w-full">
-                        <label className="block text-sm font-medium mb-1">
-                          Custom start date
-                        </label>
-                        <Field
-                          name="custom_start_date"
-                          className="w-full py-2 px-2 border border-gray-300 rounded text-sm bg-white"
-                          type="date"
-                        />
-                      </div>
-                    )}
-
-                    {values.end_date === "custom_end" && (
-                      <div className="mb-4 w-full">
-                        <label className="block text-sm font-medium mb-1">
-                          Custom end date
-                        </label>
-                        <Field
-                          name="custom_end_date"
-                          className="w-full py-2 px-2 border border-gray-300 rounded text-sm bg-white"
-                          type="date"
-                        />
-                      </div>
-                    )}
+                  <div className="mb-4 flex justify-end">
+                    <Button
+                      type="submit"
+                      disabled={isSubmitting}
+                    >
+                      {isSubmitting ? "Saving..." : "Save Invoice"}
+                    </Button>
                   </div>
-                )}
-              </div> */}
-
-
-              <div className="border border-gray-200 rounded-lg p-2 mb-2">
-                <div className="flex items-center justify-between w-full">
-                  <label className="text-gray-500 mb-0">Subtotal</label>
-                  {values.items.reduce(
-                    (sum, item) =>
-                      sum + Number(item.quantity) * Number(item.unit_price),
-                    0
-                  )}
                 </div>
-                {values?.tax && <div className="flex items-center justify-between w-full">
-                  <label className="text-gray-500 mb-0">Tax %</label>
-                  {(() => {
-                    const subtotal = values.items.reduce(
-                      (sum, item) =>
-                        sum + Number(item.quantity) * Number(item.unit_price),
-                      0
-                    );
-                    return values.tax ? (subtotal * Number(values.tax)) / 100 : 0;
-                  })()}
-                </div>}
-
-                <div className="flex items-center justify-between w-full">
-                  <label className="text-gray-500 mb-0">Total</label>
-                  {(() => {
-                    const subtotal = values.items.reduce(
-                      (sum, item) =>
-                        sum + Number(item.quantity) * Number(item.unit_price),
-                      0
-                    );
-                    const taxAmount = values.tax ? (subtotal * Number(values.tax)) / 100 : 0;
-                    return subtotal + taxAmount;
-                  })()}
-
-                </div>
-              </div>
-              <div className="mb-4">
-                <DatePicker
-                  label="Due Date"
-                  name="due_date"
-                  setFieldValue={setFieldValue}
-                  pickerType="date"
-                  error={touched.due_date && errors.due_date ? errors.due_date : undefined}
-                />
-              </div>
-              <div className="mb-4">
-                <label className="block text-sm font-medium mb-1">
-                  Description
-                </label>
-                <Field
-                  name="description"
-                  as="textarea"
-                  className="w-full py-2 px-2 border border-gray-300 rounded text-sm bg-white"
-                />
-              </div>
-              <div className="mb-4 flex justify-end">
-                <Button
-                  type="submit"
-                  disabled={isSubmitting}
-                >
-                  {isSubmitting ? "Saving..." : "Save Invoice"}
-                </Button>
               </div>
             </Form>
           </div>
