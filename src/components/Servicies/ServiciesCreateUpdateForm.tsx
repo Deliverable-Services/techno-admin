@@ -1,7 +1,7 @@
 import { AxiosError } from "axios";
 // Removed bs-custom-file-input
 import { Form, Formik } from "formik";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import {
   Button,
   Col,
@@ -24,6 +24,8 @@ import { showMsgToast } from "../../utils/showMsgToast";
 import { Hammer } from "../ui/icon";
 import EditorJsEditor from "../../shared-components/WYSIWIG/Editor";
 import { Label } from "../ui/label";
+import LexicalEditor from "../../shared-components/LexicalEditor/LexicalEditor";
+import Editor from "../../shared-components/LexicalEditor/LexicalEditor";
 
 const key = "services";
 
@@ -308,10 +310,16 @@ const ServicesCreateUpdateForm = () => {
                   </Container> */}
 
                   <Label htmlFor="termsEditor">Description</Label>
-                  <EditorJsEditor
-                    holderId="serviceEditor"
-                    data={values.details}
-                    onChange={(data) => setFieldValue("details", data)}
+
+                  <Editor
+                    value={values.details}
+                    onChange={(data) => {
+                      if (
+                        JSON.stringify(values.details) !== JSON.stringify(data)
+                      ) {
+                        setFieldValue("details", data);
+                      }
+                    }}
                   />
 
                   <Row className="d-flex justify-content-start">
