@@ -211,7 +211,7 @@ const Issues = () => {
                 tabs={
                   <div className="flex justify-between">
                     {!isLoading && (
-                      <div className="flex space-x-4 border-b border-gray-200 global-navs nav nav-tabs">
+                      <div className="flex gap-2 bg-white border border-[#eee] border-[var(--border)] rounded-[12px] flex-nowrap max-w-[640px] overflow-auto py-[6px] px-2 whitespace-nowrap shadow-[0_15px_32px_0_#0000000d,0_59px_59px_0_#0000000a,0_132px_79px_0_#00000008,0_234px_94px_0_#00000003,0_366px_103px_0_#0000]">
                         {[
                           { key: "", label: `All (${data?.data?.length || 0})` },
                           {
@@ -238,8 +238,8 @@ const Issues = () => {
                             }
                             className={`px-3 py-2 text-sm font-medium ${
                               filter.status === tab.key
-                                ? "border-b-2 border-primary text-primary"
-                                : "text-gray-500 hover:text-gray-700"
+                                ? "bg-blue-500 bg-[#0b64fe1a] border border-[#007bff] border-[var(--blue)] !rounded-[8px] shadow-[0_15px_32px_0_#0000000d,0_59px_59px_0_#0000000a,0_132px_79px_0_#00000008,0_234px_94px_0_#00000003,0_366px_103px_0_#0000] text-[#007bff] text-[var(--blue)] cursor-pointer"
+                                : ""
                             }`}
                           >
                             {tab.label}

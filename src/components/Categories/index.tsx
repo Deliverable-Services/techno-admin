@@ -1,7 +1,5 @@
 import { AxiosError } from "axios";
 import { useMemo, useState, useCallback } from "react";
-import { Container, Row } from "../../components/ui/grid";
-import { Button } from "../../components/ui/button";
 import { useMutation, useQuery } from "react-query";
 import { useHistory } from "react-router-dom";
 import { Cell } from "react-table";
@@ -22,15 +20,12 @@ import { useFlyout } from "../../hooks/useFlyout";
 import Flyout from "../../shared-components/Flyout";
 import CategoriesCreateUpdateForm from "./CategoriesCreateUpdateForm";
 import { Hammer } from "../ui/icon";
-import { VectorSquare } from 'lucide-react';
-
+import { VectorSquare } from "lucide-react";
 
 const key = "categories";
 
 const deleteCategories = (id: Array<any>) => {
-  return API.post(`${key}/delete`, {
-    id,
-  });
+  return API.post(`${key}/delete`, { id });
 };
 
 const updateOrder = async (id: string, destinationIndex: any, row: any) => {
@@ -43,7 +38,6 @@ const updateOrder = async (id: string, destinationIndex: any, row: any) => {
     const { data } = await API.post(`${key}/${id}`, formdata, {
       headers: { "Content-Type": "multipart/form-data" },
     });
-
     if (data) {
       showMsgToast("Successfully updated order");
       queryClient.invalidateQueries(key);
@@ -53,14 +47,6 @@ const updateOrder = async (id: string, destinationIndex: any, row: any) => {
   }
 };
 
-// const initialTableState: Partial<TableState<object>> = {
-//   sortBy: [
-//     {
-//       id: "order",
-//       desc: false,
-//     },
-//   ],
-// };
 const intitialFilter = {
   q: "",
   page: null,
@@ -72,15 +58,11 @@ const Categories = () => {
   const history = useHistory();
   const [selectedRows, setSelectedRows] = useState([]);
   const [filter, setFilter] = useState(intitialFilter);
-  const [isDraggable, _setIsDraggable] = useState(false);
+  const [isDraggable] = useState(false);
   const { isOpen: showFlyout, openFlyout, closeFlyout } = useFlyout();
-  // const handleChange = (nextChecked) => {
-  //   setIsDraggable(nextChecked);
-  // };
+
   const { data, isLoading, isFetching, error } = useQuery<any>([key, filter], {
-    onError: (error: AxiosError) => {
-      handleApiError(error, history);
-    },
+    onError: (error: AxiosError) => handleApiError(error, history),
   });
 
   const { mutate, isLoading: isDeleteLoading } = useMutation(deleteCategories, {
@@ -88,92 +70,60 @@ const Categories = () => {
       queryClient.invalidateQueries(key);
       showMsgToast("Categories deleted successfully");
     },
-    onError: (error: AxiosError) => {
-      handleApiError(error, history);
-    },
+    onError: (error: AxiosError) => handleApiError(error, history),
   });
 
-  const _onCreateClick = () => {
-    // history.push("/categories/create-edit");
-    openFlyout();
-  };
+  const _onCreateClick = () => openFlyout();
   const _onEditClick = useCallback(
-    (id: string) => {
-      history.push("/categories/create-edit", { id });
-    },
+    (id: string) => history.push("/categories/create-edit", { id }),
     [history]
   );
-  const _onUrlClick = (_data: Cell) => {
-    window.open(config.clientWebUrl);
-  };
+  const _onUrlClick = (_data: Cell) => window.open(config.clientWebUrl);
 
   const _onFilterChange = (idx: string, value: any) => {
-    setFilter((prev) => ({
-      ...prev,
-      [idx]: value,
-    }));
+    setFilter((prev) => ({ ...prev, [idx]: value }));
   };
+
   const columns = useMemo(
     () => [
-      {
-        Header: "#Id",
-        accessor: "id", //accessor is the "key" in the data
-      },
-      {
-        Header: "Name",
-        accessor: "name",
-      },
+      { Header: "#Id", accessor: "id" },
+      { Header: "Name", accessor: "name" },
       {
         Header: "Url",
         accessor: "url",
         Cell: (data: Cell) => (
           <p
-            className="text-darkGray m-0"
-            style={{ cursor: "pointer" }}
+            className="text-gray-600 cursor-pointer m-0"
             onClick={() => _onUrlClick(data)}
           >
             {data.row.values.url}
           </p>
         ),
       },
-      {
-        Header: "Order",
-        accessor: "order",
-        isSortedDesc: true,
-      },
+      { Header: "Order", accessor: "order", isSortedDesc: true },
       {
         Header: "Is Active?",
         accessor: "is_active",
-        Cell: (data: Cell) => {
-          return <IsActiveBadge value={data.row.values.is_active} />;
-        },
+        Cell: (data: Cell) => <IsActiveBadge value={data.row.values.is_active} />,
       },
       {
         Header: "Created At",
         accessor: "created_at",
-        Cell: (data: Cell) => {
-          return <CreatedUpdatedAt date={data.row.values.created_at} />;
-        },
+        Cell: (data: Cell) => <CreatedUpdatedAt date={data.row.values.created_at} />,
       },
       {
         Header: "Updated At",
         accessor: "updated_at",
-        Cell: (data: Cell) => {
-          return <CreatedUpdatedAt date={data.row.values.updated_at} />;
-        },
+        Cell: (data: Cell) => <CreatedUpdatedAt date={data.row.values.updated_at} />,
       },
       {
         Header: "Actions",
-        Cell: (data: Cell) => {
-          return (
-            <EditButton
-              onClick={() => {
-                _onEditClick(data.row.values.id);
-              }}
-              permissionReq="update_category"
-            />
-          );
-        },
+        Cell: (data: Cell) => (
+          <EditButton
+            onClick={() => _onEditClick(data.row.values.id)}
+            permissionReq="update_category"
+          />
+        ),
       },
     ],
     [_onEditClick]
@@ -181,18 +131,18 @@ const Categories = () => {
 
   if (!data && (!isLoading || !isFetching)) {
     return (
-      <Container fluid className="d-flex justify-content-center display-3">
-        <div className="d-flex flex-column align-items-center">
+      <div className="flex justify-center items-center text-3xl">
+        <div className="flex flex-col items-center">
           <Hammer color={primaryColor} />
-          <span className="text-primary display-3">Something went wrong</span>
+          <span className="text-primary text-3xl">Something went wrong</span>
         </div>
-      </Container>
+      </div>
     );
   }
 
   return (
     <>
-      <div className="view-padding">
+      <div className="p-4">
         <PageHeading
           icon={<VectorSquare size={24} />}
           description="Create and manage categories"
@@ -203,149 +153,94 @@ const Categories = () => {
         />
       </div>
       <hr />
-      <div className="">
-        <div className="h-100 p-0">
-          {isLoading ? (
-            <IsLoading />
-          ) : (
-            <>
-              {!error && (
-                <>
-                  <Container className="pt-3">
-                    <Row className="select-filter d-flex ">
-                      {/* <Col md="auto">
-                        <div className=" d-flex align-items-center "
-                          style={{
-                            height: 30
-                          }}
-                        >
-                          <span className="text-muted mr-2">IsDraggable?</span>
-                          <Switch
-                            checked={isDraggable}
-                            onChange={handleChange}
-                            className="react-switch"
-                            onColor={primaryColor}
-                            uncheckedIcon={false}
-                            checkedIcon={false}
-                            height={20}
-                          />
+      <div className="h-full p-0">
+        {isLoading ? (
+          <IsLoading />
+        ) : (
+          <>
+            {!error && (
+              <>
+                <div className="pt-3 flex flex-wrap gap-2">
+                  {/* filter buttons */}
+                </div>
 
+                <ReactTable
+                  data={data?.data}
+                  tabs={
+                    <div className="flex justify-between items-center w-full">
+                      {!isLoading && (
+                        <div className="flex gap-2 bg-white border border-[#eee] border-[var(--border)] rounded-[12px] flex-nowrap max-w-[640px] overflow-auto py-[6px] px-2 whitespace-nowrap shadow-[0_15px_32px_0_#0000000d,0_59px_59px_0_#0000000a,0_132px_79px_0_#00000008,0_234px_94px_0_#00000003,0_366px_103px_0_#0000]">
+                          <button
+                            className={`px-3 py-1 text-sm rounded ${
+                              filter.active === "" ? "bg-[#0b64fe1a] border border-[#007bff] border-[var(--blue)] !rounded-[8px] shadow-[0_15px_32px_0_#0000000d,0_59px_59px_0_#0000000a,0_132px_79px_0_#00000008,0_234px_94px_0_#00000003,0_366px_103px_0_#0000] text-[#007bff] text-[var(--blue)] cursor-pointer" : ""
+                            }`}
+                            onClick={() => _onFilterChange("active", "")}
+                          >
+                            All ({data?.data?.length || 0})
+                          </button>
+                          <button
+                            className={`px-3 py-1 text-sm rounded ${
+                              filter.active === "active"
+                                ? "bg-blue-500 bg-[#0b64fe1a] border border-[#007bff] border-[var(--blue)] !rounded-[8px] shadow-[0_15px_32px_0_#0000000d,0_59px_59px_0_#0000000a,0_132px_79px_0_#00000008,0_234px_94px_0_#00000003,0_366px_103px_0_#0000] text-[#007bff] text-[var(--blue)] cursor-pointer"
+                                : ""
+                            }`}
+                            onClick={() => _onFilterChange("active", "active")}
+                          >
+                            Active (
+                            {data?.data?.filter((item: any) => item.status === "1").length || 0})
+                          </button>
+                          <button
+                            className={`px-3 py-1 text-sm rounded ${
+                              filter.active === "notActive"
+                                ? "bg-blue-500 bg-[#0b64fe1a] border border-[#007bff] border-[var(--blue)] !rounded-[8px] shadow-[0_15px_32px_0_#0000000d,0_59px_59px_0_#0000000a,0_132px_79px_0_#00000008,0_234px_94px_0_#00000003,0_366px_103px_0_#0000] text-[#007bff] text-[var(--blue)] cursor-pointer"
+                                : ""
+                            }`}
+                            onClick={() => _onFilterChange("active", "notActive")}
+                          >
+                            Not Active (
+                            {data?.data?.filter((item: any) => item.status === "0").length || 0})
+                          </button>
                         </div>
-                      </Col> */}
-                      {/* <Col
-                        md="auto"
-                        className="d-flex align-items-center  justify-content-center"
-                      >
-                        <Button
-                          variant="light"
-
-                          style={{
-                            backgroundColor: "#eee",
-                            fontSize: 14,
-                          }}
-
-                          onClick={() => setFilter(intitialFilter)}
-                        >
-                          Reset Filters
-                        </Button>
-                      </Col> */}
-                    </Row>
-                  </Container>
-
-                  <ReactTable
-                    data={data?.data}
-                    tabs={
-                      <div className="flex justify-between items-center w-full">
-                        {!isLoading && (
-                          <div className="flex gap-2">
-                            <Button
-                              variant={
-                                filter.active === "" ? "default" : "secondary"
-                              }
-                              size="sm"
-                              onClick={() => _onFilterChange("active", "")}
-                            >
-                              All ({data?.data?.length || 0})
-                            </Button>
-                            <Button
-                              variant={
-                                filter.active === "active"
-                                  ? "default"
-                                  : "secondary"
-                              }
-                              size="sm"
-                              onClick={() =>
-                                _onFilterChange("active", "active")
-                              }
-                            >
-                              Active (
-                              {data?.data?.filter(
-                                (item: any) => item.status === "1"
-                              ).length || 0}
-                              )
-                            </Button>
-                            <Button
-                              variant={
-                                filter.active === "notActive"
-                                  ? "default"
-                                  : "secondary"
-                              }
-                              size="sm"
-                              onClick={() =>
-                                _onFilterChange("active", "notActive")
-                              }
-                            >
-                              Not Active (
-                              {data?.data?.filter(
-                                (item: any) => item.status === "0"
-                              ).length || 0}
-                              )
-                            </Button>
-                          </div>
-                        )}
-                      </div>
-                    }
-                    columns={columns}
-                    setSelectedRows={setSelectedRows}
-                    filter={filter}
-                    onFilterChange={_onFilterChange}
-                    isDataLoading={isFetching}
-                    isDraggable={isDraggable}
-                    updateOrder={updateOrder}
-                    searchPlaceHolder="Search using name, url"
-                    deletePermissionReq="delete_category"
-                  />
-                </>
-              )}
-              {!error && data?.data?.length > 0 ? (
-                <TablePagination
-                  currentPage={data?.current_page}
-                  lastPage={data?.last_page}
-                  setPage={_onFilterChange}
-                  hasNextPage={!!data?.next_page_url}
-                  hasPrevPage={!!data?.prev_page_url}
+                      )}
+                    </div>
+                  }
+                  columns={columns}
+                  setSelectedRows={setSelectedRows}
+                  filter={filter}
+                  onFilterChange={_onFilterChange}
+                  isDataLoading={isFetching}
+                  isDraggable={isDraggable}
+                  updateOrder={updateOrder}
+                  searchPlaceHolder="Search using name, url"
+                  deletePermissionReq="delete_category"
                 />
-              ) : null}{" "}
-            </>
-          )}
-        </div>
+              </>
+            )}
+            {!error && data?.data?.length > 0 && (
+              <TablePagination
+                currentPage={data?.current_page}
+                lastPage={data?.last_page}
+                setPage={_onFilterChange}
+                hasNextPage={!!data?.next_page_url}
+                hasPrevPage={!!data?.prev_page_url}
+              />
+            )}
+          </>
+        )}
       </div>
 
       {selectedRows.length > 0 && (
-        <div className="delete-button rounded">
-          <span>
-            <b>Delete {selectedRows.length} rows</b>
-          </span>
-          <Button
-            variant="destructive"
-            onClick={() => {
-              mutate(selectedRows.map((i) => i.id));
-            }}
+        <div className="fixed bottom-0 left-0 right-0 bg-white shadow-lg p-4 flex justify-between items-center">
+          <span className="font-bold">Delete {selectedRows.length} rows</span>
+          <button
+            className="bg-red-500 text-white px-4 py-2 rounded"
+            onClick={() => mutate(selectedRows.map((i) => i.id))}
           >
             {isDeleteLoading ? "Loading..." : "Delete"}
-          </Button>
+          </button>
         </div>
       )}
+
       <Flyout
         isOpen={showFlyout}
         onClose={closeFlyout}

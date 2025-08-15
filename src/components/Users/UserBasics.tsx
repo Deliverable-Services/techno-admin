@@ -1,9 +1,8 @@
 import { AxiosError } from "axios";
-// Removed bs-custom-file-input
 import { Form, Formik } from "formik";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { Button, Col, Row, Spinner } from "../ui/bootstrap-compat";
-import { useMutation, useQuery } from "react-query";
+import { useMutation } from "react-query";
 import { useHistory, useLocation } from "react-router-dom";
 import { handleApiError } from "../../hooks/handleApiErrors";
 import useGetSingleQuery from "../../hooks/useGetSingleQuery";
@@ -16,6 +15,7 @@ import * as Yup from "yup";
 import Restricted from "../../shared-components/Restricted";
 
 const key = "users";
+
 const ValidationSchema = Yup.object().shape({
   phone: Yup.string()
     .nullable()
@@ -35,7 +35,6 @@ const createUpdateUser = ({
       headers: { "Content-Type": "multipart/form-data" },
     });
   }
-
   return API.post(`${key}/${id}`, formdata, {
     headers: { "Content-Type": "multipart/form-data" },
   });
@@ -44,35 +43,16 @@ const createUpdateUser = ({
 interface UserBasicsProps {
   toggleModal: () => void;
 }
+
 const UserBasics = ({ toggleModal }: UserBasicsProps) => {
   const { state } = useLocation();
   const history = useHistory();
   const id = state ? (state as any).id : null;
-  const role = state ? (state as any).role : null;
-  const [allRoles, setAllRoles] = useState([]);
-  useEffect(() => {}, []);
+  const role = "customer"; // Always set to customer
+
   const { data, isLoading: dataLoading } = useGetSingleQuery({ id, key });
-  const { data: Roles, isLoading: isRolesLoading } = useQuery<any>(
-    ["get-all-roles", , {}],
-    {
-      onError: (error: AxiosError) => {
-        handleApiError(error, history);
-      },
-    }
-  );
 
-  useEffect(() => {
-    if (isRolesLoading) return;
-
-    // if (!Roles || Roles.length === 0) return;
-    const r = [];
-    Roles?.data?.forEach((role) => {
-      r.push({ id: role.name.toLowerCase(), name: role.name.toUpperCase() });
-    });
-    setAllRoles([...r]);
-  }, [Roles, isRolesLoading]);
-
-  const { mutate, isLoading, error, status } = useMutation(createUpdateUser, {
+  const { mutate, isLoading } = useMutation(createUpdateUser, {
     onSuccess: () => {
       setTimeout(() => queryClient.invalidateQueries(key), 500);
       if (id) return showMsgToast("User updated successfully");
@@ -99,9 +79,7 @@ const UserBasics = ({ toggleModal }: UserBasicsProps) => {
               const { profile_pic, ...rest } = values;
               const formdata = new FormData();
               for (let k in rest) formdata.append(k, rest[k]);
-
               if (profile_pic) formdata.append("profile_pic", profile_pic);
-
               mutate({ formdata, id });
             }}
             validationSchema={ValidationSchema}
@@ -128,13 +106,16 @@ const UserBasics = ({ toggleModal }: UserBasicsProps) => {
                     label="Email"
                     required
                   />
+
+                  {/* Role - Only Customer */}
                   <InputField
                     as="select"
-                    selectData={allRoles}
+                    selectData={[{ id: "customer", name: "CUSTOMER" }]}
                     name="role"
                     label="Role"
-                    placeholder="Role"
+                    defaultValue="customer"
                   />
+
                   <InputField
                     name="profile_pic"
                     placeholder="Profile Pic"
@@ -171,6 +152,3 @@ const UserBasics = ({ toggleModal }: UserBasicsProps) => {
 };
 
 export default UserBasics;
-function phoneRegExp(phoneRegExp: any, arg1: string) {
-  throw new Error("Function not implemented.");
-}

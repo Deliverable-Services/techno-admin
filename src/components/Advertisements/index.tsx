@@ -1,9 +1,7 @@
 import { AxiosError } from "axios";
 import { useMemo, useState } from "react";
-import { Button, Container, Dropdown, Nav } from "../ui/bootstrap-compat";
 import { QueryFunction, useMutation, useQuery } from "react-query";
 import { useHistory } from "react-router-dom";
-
 import { Cell } from "react-table";
 import { handleApiError } from "../../hooks/handleApiErrors";
 
@@ -25,14 +23,19 @@ import { useFlyout } from "../../hooks/useFlyout";
 import Flyout from "../../shared-components/Flyout";
 import AdvertisementCreateUpdateForm from "./AdvertisementUpdateCreateForm";
 import { Hammer } from "../ui/icon";
-import { Image, Funnel } from 'lucide-react';
-import { DropdownMenu, DropdownMenuContent, DropdownMenuTrigger } from "../ui/dropdown-menu";
+import { Image, Funnel } from "lucide-react";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuTrigger,
+} from "../ui/dropdown-menu";
 
 const key = "banners/list";
 
 const deleteAd = (id: Array<any>) => {
   return API.post(`banners/delete`, { id });
 };
+
 const initialFilter = {
   type: "offer",
   q: "",
@@ -42,25 +45,21 @@ const initialFilter = {
 };
 
 const getBanners: QueryFunction = async ({ queryKey }) => {
-  const params = {};
+  const params: Record<string, any> = {};
   //@ts-ignore
   for (let k in queryKey[2]) {
     if (queryKey[2][k]) params[k] = queryKey[2][k];
   }
-
   const r = await API.get(
     `${queryKey[0]}/${(queryKey[1] as string).toLowerCase()}`,
-    {
-      params,
-    }
+    { params }
   );
-
   return await r.data;
 };
 
 const Advertisements = () => {
   const history = useHistory();
-  const [selectedRows, setSelectedRows] = useState([]);
+  const [selectedRows, setSelectedRows] = useState<any[]>([]);
   const [isDraggable, setIsDraggable] = useState(false);
   const [filter, setFilter] = useState(initialFilter);
   const { isOpen: showFlyout, openFlyout, closeFlyout } = useFlyout();
@@ -69,9 +68,7 @@ const Advertisements = () => {
     [key, filter.type, filter],
     getBanners,
     {
-      onError: (error: AxiosError) => {
-        handleApiError(error, history);
-      },
+      onError: (error: AxiosError) => handleApiError(error, history),
     }
   );
 
@@ -80,23 +77,17 @@ const Advertisements = () => {
       queryClient.invalidateQueries(key);
       showMsgToast("Banner(s) deleted successfully");
     },
-    onError: (error: AxiosError) => {
-      handleApiError(error, history);
-    },
+    onError: (error: AxiosError) => handleApiError(error, history),
   });
+
   const _onFilterChange = (idx: string, value: any) => {
-    setFilter((prev) => {
-      return {
-        ...prev,
-        [idx]: value,
-      };
-    });
+    setFilter((prev) => ({ ...prev, [idx]: value }));
   };
 
   const _onCreateClick = () => {
-    // history.push("/advertisements/create-edit");
     openFlyout();
   };
+
   const _onEditClick = (id: string) => {
     history.push("/advertisements/create-edit", { id });
   };
@@ -107,10 +98,7 @@ const Advertisements = () => {
 
   const columns = useMemo(
     () => [
-      {
-        Header: "#Id",
-        accessor: "id", //accessor is the "key" in the data
-      },
+      { Header: "#Id", accessor: "id" },
       {
         Header: "Image",
         accessor: "image",
@@ -118,12 +106,7 @@ const Advertisements = () => {
           <img
             src={`${config.baseUploadUrl}banners/${data.row.values.image}`}
             alt={String(data.row.values.image)}
-            style={{
-              width: "100px",
-              height: "50px",
-              objectFit: "cover",
-              cursor: "pointer",
-            }}
+            className="w-[100px] h-[50px] object-cover cursor-pointer"
             onClick={() =>
               window.open(
                 `${config.baseUploadUrl}banners/${data.row.values.image}`,
@@ -133,74 +116,53 @@ const Advertisements = () => {
           />
         ),
       },
-      {
-        Header: "Name",
-        accessor: "name",
-      },
+      { Header: "Name", accessor: "name" },
       {
         Header: "Page url",
         accessor: "deeplink",
         Cell: (data: Cell) => (
           <p
-            className="text-darkGray m-0"
-            style={{ cursor: "pointer" }}
+            className="text-gray-600 m-0 cursor-pointer"
             onClick={() => _onDeepLinkClick(data)}
           >
             {data.row.values.deeplink}
           </p>
         ),
       },
+      { Header: "Order", accessor: "order" },
       {
-        Header: "Order",
-        accessor: "order",
-      },
-      {
-        Header: " Is Active?",
+        Header: "Is Active?",
         accessor: "is_active",
-        Cell: (data: Cell) => {
-          return <IsActiveBadge value={data.row.values.is_active} />;
-        },
+        Cell: (data: Cell) => <IsActiveBadge value={data.row.values.is_active} />,
       },
       {
         Header: "Valid from",
         accessor: "valid_from",
-        Cell: (data: Cell) => {
-          return <CreatedUpdatedAt date={data.row.values.valid_from} />;
-        },
+        Cell: (data: Cell) => <CreatedUpdatedAt date={data.row.values.valid_from} />,
       },
       {
         Header: "Valid To",
         accessor: "valid_to",
-        Cell: (data: Cell) => {
-          return <CreatedUpdatedAt date={data.row.values.valid_to} />;
-        },
+        Cell: (data: Cell) => <CreatedUpdatedAt date={data.row.values.valid_to} />,
       },
       {
         Header: "Created At",
         accessor: "created_at",
-        Cell: (data: Cell) => {
-          return <CreatedUpdatedAt date={data.row.values.created_at} />;
-        },
+        Cell: (data: Cell) => <CreatedUpdatedAt date={data.row.values.created_at} />,
       },
       {
         Header: "Updated At",
         accessor: "updated_at",
-        Cell: (data: Cell) => {
-          return <CreatedUpdatedAt date={data.row.values.updated_at} />;
-        },
+        Cell: (data: Cell) => <CreatedUpdatedAt date={data.row.values.updated_at} />,
       },
       {
         Header: "Actions",
-        Cell: (data: Cell) => {
-          return (
-            <EditButton
-              onClick={() => {
-                _onEditClick(data.row.values.id);
-              }}
-              permissionReq="update_banner"
-            />
-          );
-        },
+        Cell: (data: Cell) => (
+          <EditButton
+            onClick={() => _onEditClick(data.row.values.id)}
+            permissionReq="update_banner"
+          />
+        ),
       },
     ],
     [_onEditClick]
@@ -208,164 +170,132 @@ const Advertisements = () => {
 
   if (!data && (!isLoading || !isFetching)) {
     return (
-      <Container fluid className="d-flex justify-content-center display-3">
-        <div className="d-flex flex-column align-items-center">
-          <Hammer color={primaryColor} />
-          <span className="text-primary display-3">Something went wrong</span>
-        </div>
-      </Container>
+      <div className="flex justify-center items-center h-screen flex-col">
+        <Hammer color={primaryColor} />
+        <span className="text-primary text-3xl">Something went wrong</span>
+      </div>
     );
   }
 
   return (
     <>
-      <div className="view-padding">
+      <div className="p-4">
         <PageHeading
           title="Banners"
           description="Create and manage banners"
           icon={<Image size={24} />}
-          onClick={() => _onCreateClick()}
+          onClick={_onCreateClick}
           totalRecords={data?.total}
           permissionReq="create_banner"
         />
       </div>
       <hr />
 
-      <div className="">
-        <div className="h-100 p-0">
-          {isLoading ? (
-            <IsLoading />
-          ) : (
-            <>
-              {!error && (
-                <>
-                  <div className="mt-3" />
-                  <ReactTable
-                    tabs={
-                      <div className="d-flex justify-content-between">
-                        {(!isLoading || !isFetching) && (
-                          <Nav
-                            className="global-navs"
-                            variant="tabs"
-                            activeKey={filter.type}
-                            onSelect={(selectedKey) =>
-                              _onFilterChange("type", selectedKey)
-                            }
-                          >
-                            <Nav.Item>
-                              <Nav.Link eventKey="offer">
-                                Offer (
-                                {data?.data?.filter(
-                                  (item) => item.status === "offer"
-                                ).length || 0}
-                                )
-                              </Nav.Link>
-                            </Nav.Item>
-                            <Nav.Item>
-                              <Nav.Link eventKey="latest">
-                                Latest (
-                                {data?.data?.filter(
-                                  (item) => item.status === "latest"
-                                ).length || 0}
-                                )
-                              </Nav.Link>
-                            </Nav.Item>
+      <div className="p-4">
+        {isLoading ? (
+          <IsLoading />
+        ) : (
+          <>
+            {!error && (
+              <>
+                {/* Tabs */}
+                <div className="flex justify-between mt-3">
+                  {(!isLoading || !isFetching) && (
+                    <div className="flex gap-2 bg-white px-2 border border-[#eee] !max-w-max border-[var(--border)] rounded-[12px] flex-nowrap max-w-[640px] overflow-auto py-[6px] px-2 whitespace-nowrap shadow-[0_15px_32px_0_#0000000d,0_59px_59px_0_#0000000a,0_132px_79px_0_#00000008,0_234px_94px_0_#00000003,0_366px_103px_0_#0000]">
+                      {["offer", "latest", "trending"].map((type) => (
+                        <button
+                          key={type}
+                          className={`px-4 py-2 text-sm font-medium border-b-2 ${
+                            filter.type === type
+                              ? "bg-[#0b64fe1a] border border-[#007bff] border-[var(--blue)] !rounded-[8px] shadow-[0_15px_32px_0_#0000000d,0_59px_59px_0_#0000000a,0_132px_79px_0_#00000008,0_234px_94px_0_#00000003,0_366px_103px_0_#0000] text-[#007bff] text-[var(--blue)] cursor-pointer"
+                              : ""
+                          }`}
+                          onClick={() => _onFilterChange("type", type)}
+                        >
+                          {type.charAt(0).toUpperCase() + type.slice(1)} (
+                          {data?.data?.filter((item) => item.status === type).length || 0}
+                          )
+                        </button>
+                      ))}
+                    </div>
+                  )}
+                </div>
 
-                            <Nav.Item>
-                              <Nav.Link eventKey="trending">
-                                Trending (
-                                {data?.data?.filter(
-                                  (item) => item.status === "trending"
-                                ).length || 0}
-                                )
-                              </Nav.Link>
-                            </Nav.Item>
-                          </Nav>
-                        )}
-                      </div>
-                    }
-                    filters={
-                      <>
-                        <DropdownMenu>
-                          <DropdownMenuTrigger className="w-full flex filter-dropdown p-2  items-center justify-between rounded-lg py-1 px-3 !border-[#dee2e6] border h-[36px] border-secondary">
-                            <span className="flex items-center justify-between gap-2 w-full">
-                              <Funnel size={14} /> Filters
-                            </span>
-                          </DropdownMenuTrigger>
-                          <DropdownMenuContent  className="w-[400px] p-3">
-                            <div className="filter-dropdown-heading d-flex justify-content-between w-100">
-                              <h4>Filter</h4>
-                              <div className="d-flex align-items-center justify-md-content-center">
-                                <Button
-                                  variant={
-                                    areTwoObjEqual(initialFilter, filter)
-                                      ? "light"
-                                      : "primary"
-                                  }
-                                  style={{
-                                    fontSize: 14,
-                                  }}
-                                  onClick={() => setFilter(initialFilter)}
-                                >
-                                  Reset Filters
-                                </Button>
-                              </div>
-                            </div>
-                            <div className="select-filter">
-                              <FilterSelect
-                                currentValue={filter.active}
-                                data={isActiveArray}
-                                label="Is Active?"
-                                idx="active"
-                                onFilterChange={_onFilterChange}
-                                defaultSelectTitle="Show All"
-                              />
-                            </div>
-                          </DropdownMenuContent>
-                        </DropdownMenu>
-                      </>
-                    }
-                    data={data.data}
-                    columns={columns}
-                    setSelectedRows={setSelectedRows}
-                    onFilterChange={_onFilterChange}
-                    filter={filter}
-                    isDataLoading={isFetching}
-                    isDraggable={isDraggable}
-                    searchPlaceHolder="Search using name"
-                    deletePermissionReq="delete_banner"
-                  />
-                </>
-              )}
-              {!error && data?.data?.length > 0 ? (
-                <TablePagination
-                  currentPage={data?.current_page}
-                  lastPage={data?.last_page}
-                  setPage={_onFilterChange}
-                  hasNextPage={!!data?.next_page_url}
-                  hasPrevPage={!!data?.prev_page_url}
+                {/* Table */}
+                <ReactTable
+                  tabs={null}
+                  filters={
+                    <DropdownMenu>
+                      <DropdownMenuTrigger className="w-full flex p-2 items-center justify-between rounded-lg border border-gray-300 h-9">
+                        <span className="flex items-center gap-2 w-full">
+                          <Funnel size={14} /> Filters
+                        </span>
+                      </DropdownMenuTrigger>
+                      <DropdownMenuContent className="w-[400px] p-3">
+                        <div className="flex justify-between w-full">
+                          <h4>Filter</h4>
+                          <button
+                            className={`px-3 py-1 text-sm rounded ${
+                              areTwoObjEqual(initialFilter, filter)
+                                ? "bg-gray-200 text-gray-700"
+                                : "bg-blue-500 text-white"
+                            }`}
+                            onClick={() => setFilter(initialFilter)}
+                          >
+                            Reset Filters
+                          </button>
+                        </div>
+                        <div className="mt-3">
+                          <FilterSelect
+                            currentValue={filter.active}
+                            data={isActiveArray}
+                            label="Is Active?"
+                            idx="active"
+                            onFilterChange={_onFilterChange}
+                            defaultSelectTitle="Show All"
+                          />
+                        </div>
+                      </DropdownMenuContent>
+                    </DropdownMenu>
+                  }
+                  data={data.data}
+                  columns={columns}
+                  setSelectedRows={setSelectedRows}
+                  onFilterChange={_onFilterChange}
+                  filter={filter}
+                  isDataLoading={isFetching}
+                  isDraggable={isDraggable}
+                  searchPlaceHolder="Search using name"
+                  deletePermissionReq="delete_banner"
                 />
-              ) : null}{" "}
-            </>
-          )}
-        </div>
+              </>
+            )}
+
+            {!error && data?.data?.length > 0 && (
+              <TablePagination
+                currentPage={data?.current_page}
+                lastPage={data?.last_page}
+                setPage={_onFilterChange}
+                hasNextPage={!!data?.next_page_url}
+                hasPrevPage={!!data?.prev_page_url}
+              />
+            )}
+          </>
+        )}
       </div>
 
       {selectedRows.length > 0 && (
-        <div className="delete-button rounded">
-          <span>
-            <b>Delete {selectedRows.length} rows</b>
-          </span>
-          <Button
-            variant="danger"
-            onClick={() => {
-              mutate(selectedRows.map((i) => i.id));
-            }}
+        <div className="fixed bottom-4 left-4 bg-white shadow-lg border border-gray-200 rounded-lg p-4 flex items-center gap-4">
+          <span className="font-bold">Delete {selectedRows.length} rows</span>
+          <button
+            className="bg-red-500 hover:bg-red-600 text-white px-4 py-1 rounded"
+            onClick={() => mutate(selectedRows.map((i) => i.id))}
           >
             {isDeleteLoading ? "Loading..." : "Delete"}
-          </Button>
+          </button>
         </div>
       )}
+
       <Flyout
         isOpen={showFlyout}
         onClose={closeFlyout}

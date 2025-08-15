@@ -56,41 +56,36 @@ const ServicesCreateUpdateForm = () => {
   const id = state ? (state as any).id : null;
   const history = useHistory();
   useEffect(() => {}, []);
+
   const { data, isLoading: dataLoading } = useGetSingleQuery({ id, key });
   const { data: categories, isLoading: isCategoriesLoading } =
     useQuery("categories");
-  const { mutate, isLoading, error, status } = useMutation(
-    createUpdataServices,
-    {
-      onSuccess: () => {
-        setTimeout(() => queryClient.invalidateQueries(key), 500);
-        if (id) return showMsgToast("Service updated successfully");
-        showMsgToast("Service created successfully");
-        history.replace("/services");
-      },
-      onError: (error: AxiosError) => {
-        handleApiError(error, history);
-      },
-    }
-  );
-
-  const { data: CarType, isLoading: isCarTypeLoading } = useQuery<any>([
-    "brand-model-type",
-  ]);
-  const {
-    mutate: mutateImages,
-    isLoading: isServicesImageLoading,
-    error: imagesError,
-    status: imagesMutationStatus,
-  } = useMutation(addServicesImages, {
+  const { mutate, isLoading } = useMutation(createUpdataServices, {
     onSuccess: () => {
       setTimeout(() => queryClient.invalidateQueries(key), 500);
-      showMsgToast("Services images added successfully");
+      if (id) return showMsgToast("Service updated successfully");
+      showMsgToast("Service created successfully");
+      history.replace("/services");
     },
     onError: (error: AxiosError) => {
       handleApiError(error, history);
     },
   });
+
+  const { data: CarType, isLoading: isCarTypeLoading } = useQuery<any>([
+    "brand-model-type",
+  ]);
+  const { mutate: mutateImages, isLoading: isServicesImageLoading } =
+    useMutation(addServicesImages, {
+      onSuccess: () => {
+        setTimeout(() => queryClient.invalidateQueries(key), 500);
+        showMsgToast("Services images added successfully");
+      },
+      onError: (error: AxiosError) => {
+        handleApiError(error, history);
+      },
+    });
+
   const apiData = data && (data as any);
 
   const formIntialValues = () => {
@@ -98,6 +93,7 @@ const ServicesCreateUpdateForm = () => {
       ...apiData,
       enablePayment: apiData?.enablePayment || false,
       paymentAmount: apiData?.paymentAmount || "",
+      is_active: apiData?.is_active ?? "1", // default to Yes if null/undefined
     };
     CarType?.data?.map((car) => {
       const obj = apiData.brand_type_services.find(
@@ -105,7 +101,6 @@ const ServicesCreateUpdateForm = () => {
       );
       if (obj) values[car.id] = obj.price;
     });
-
     return values;
   };
 
@@ -114,53 +109,17 @@ const ServicesCreateUpdateForm = () => {
   return (
     <>
       <div className="card view-padding p-2 d-flex mt-3">
-        {/* <BackButton title="Services" /> */}
         <Row className="rounded">
           <Col className="mx-auto w-full">
             <Formik
               enableReinitialize
               initialValues={
                 apiData
-                  ? {
-                      ...formIntialValues(),
-                      // details must be an object for EditorJS
-                      details: (() => {
-                        const val = apiData.details;
-                        if (!val)
-                          return {
-                            blocks: [{ type: "paragraph", data: { text: "" } }],
-                          };
-                        if (typeof val === "string") {
-                          try {
-                            const parsed = JSON.parse(val);
-                            return parsed && Array.isArray(parsed.blocks)
-                              ? parsed
-                              : {
-                                  blocks: [
-                                    { type: "paragraph", data: { text: "" } },
-                                  ],
-                                };
-                          } catch {
-                            return {
-                              blocks: [
-                                { type: "paragraph", data: { text: "" } },
-                              ],
-                            };
-                          }
-                        }
-                        return val && Array.isArray(val.blocks)
-                          ? val
-                          : {
-                              blocks: [
-                                { type: "paragraph", data: { text: "" } },
-                              ],
-                            };
-                      })(),
-                    }
+                  ? formIntialValues()
                   : {
                       enablePayment: false,
                       paymentAmount: "",
-                      // valid empty EditorJS document
+                      is_active: "1", // Yes by default when creating
                       details: {
                         blocks: [{ type: "paragraph", data: { text: "" } }],
                       },
@@ -177,14 +136,13 @@ const ServicesCreateUpdateForm = () => {
                   ...rest
                 } = values;
 
-                formdata.append("details", JSON.stringify(details || {})); // stringify here
+                formdata.append("details", JSON.stringify(details || {}));
 
                 for (let k in rest) formdata.append(k, rest[k]);
 
                 for (let k in images) formdata.append("images[]", images[k]);
                 if (image) formdata.append("image", image);
 
-                // Add payment data if checkbox is checked
                 if (enablePayment) {
                   formdata.append("enablePayment", "1");
                   formdata.append("paymentAmount", paymentAmount);
@@ -202,26 +160,19 @@ const ServicesCreateUpdateForm = () => {
             >
               {({ setFieldValue, values }) => (
                 <Form>
-                  <div className="form-container  py-2 ">
+                  <div className="form-container py-2">
                     <InputField
                       name="name"
                       placeholder="Name"
                       label="Name"
                       required
                     />
-
                     <InputField
                       name="url"
                       placeholder="Url"
                       label="Url"
                       required
                     />
-                    {/* <InputField
-                      name="price"
-                      placeholder="Price"
-                      label="Price"
-                      type="number"
-                    /> */}
                     <InputField
                       name="category_id"
                       placeholder="Category"
@@ -241,13 +192,12 @@ const ServicesCreateUpdateForm = () => {
                     <InputField
                       name="image"
                       placeholder="image"
-                      label="Choose Service  Featured Image"
+                      label="Choose Service Featured Image"
                       isFile
                       folder="services"
                       setFieldValue={setFieldValue}
                     />
 
-                    {/* Payment Checkbox and Input Field */}
                     <BForm.Group style={{ marginBottom: "0px" }}>
                       <div
                         className="d-flex align-items-center"
@@ -279,33 +229,6 @@ const ServicesCreateUpdateForm = () => {
                       )}
                     </BForm.Group>
                   </div>
-                  {/* <Container fluid className="p-0">
-                    <PageHeading title="Prices" />
-
-                    <FieldArray
-                      name="pricearray"
-                      render={(arrayHelpers) => (
-                        <div className="form-container py-2">
-                          {!isCarTypeLoading
-                            ? CarType?.data?.map((p) => (
-                                <BForm.Group key={`${p.id}`}>
-                                  <BForm.Label htmlFor={p.name}>
-                                    {p.name.toUpperCase()}
-                                  </BForm.Label>
-                                  <Field
-                                    name={`${p.id}`}
-                                    as={BForm.Control}
-                                    placeholder={`Enter ${p.name} price`}
-                                    required
-                                    type="number"
-                                  />
-                                </BForm.Group>
-                              ))
-                            : null}
-                        </div>
-                      )}
-                    />
-                  </Container> */}
 
                   <Label htmlFor="termsEditor">Description</Label>
                   <EditorJsEditor
@@ -364,7 +287,6 @@ const ServicesCreateUpdateForm = () => {
                       images.forEach((e: any) => {
                         formdata.append("images[]", e);
                       });
-
                       formdata.append("id", id);
                       mutateImages({ formdata });
                       resetForm({ values: { images: null } });
@@ -373,7 +295,7 @@ const ServicesCreateUpdateForm = () => {
                     {({ setFieldValue, values }) => (
                       <Form>
                         <div
-                          className="w-100 d-flex align-items-start "
+                          className="w-100 d-flex align-items-start"
                           style={{ minWidth: "250px" }}
                         >
                           <label className="d-block w-100">
@@ -403,11 +325,8 @@ const ServicesCreateUpdateForm = () => {
                         <Row className="mb-2">
                           {values.images &&
                             values.images.map((e: any, i: number) => (
-                              <Col md={6} className="mb-2">
-                                <div
-                                  className="d-flex align-items-center"
-                                  key={i}
-                                >
+                              <Col md={6} className="mb-2" key={i}>
+                                <div className="d-flex align-items-center">
                                   <div className="mr-2">
                                     <img
                                       src={URL.createObjectURL(e)}
