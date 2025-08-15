@@ -67,10 +67,10 @@ const InvoicePage: React.FC = () => {
         Header: "Invoice Number",
         accessor: "invoice_number", //accessor is the "key" in the data
       },
-      {
-        Header: "Status",
-        accessor: "status",
-      },
+      // {
+      //   Header: "Status",
+      //   accessor: "status",
+      // },
       {
         Header: "Currency",
         accessor: "currency",

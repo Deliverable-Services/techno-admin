@@ -2,7 +2,7 @@ import { Formik, Form, Field, FieldArray } from "formik";
 import API from "../../utils/API";
 import { showMsgToast } from "../../utils/showMsgToast";
 import { showErrorToast } from "../../utils/showErrorToast";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import AsyncSelect from "react-select/async";
 import * as Yup from "yup";
 import { ErrorMessage } from "formik";
@@ -54,37 +54,66 @@ const InvoicesCreateForm = ({ onSuccess }: { onSuccess?: () => void }) => {
   const generateInvoiceNumber = () => {
     return Math.floor(100000 + Math.random() * 900000).toString();
   };
+  const [allUsers, setAllUsers] = useState([]);
+
+  useEffect(() => {
+    const fetchAllUsers = async () => {
+      try {
+        const res = await API.get("/users", { params: { perPage: 40 } });
+        const options = (res.data?.data || []).map((user: any) => ({
+          label: user.name + (user.email ? ` (${user.email})` : ""),
+          value: user.id,
+        }));
+        setAllUsers(options);
+      } catch (err) {
+        console.error(err);
+      }
+    };
+    fetchAllUsers();
+  }, []);
 
 
-  // Async load options for user search
+
   const loadUserOptions = async (inputValue: string) => {
-    if (!inputValue) return [];
     try {
       const res = await API.get("/users", {
-        params: { q: inputValue, perPage: 10 },
+        params: { q: inputValue || "", perPage: 10 }, // empty string fetches all
       });
       return (res.data?.data || []).map((user: any) => ({
         label: user.name + (user.email ? ` (${user.email})` : ""),
         value: user.id,
       }));
-    } catch {
+    } catch (error) {
+      console.error(error);
       return [];
     }
   };
 
 
-  const fetchServices = async (q: string, idx: number) => {
-    if (!q) {
-      setItemSuggestions((prev) => ({ ...prev, [idx]: [] }));
-      return;
-    }
+
+  const fetchServices = async (searchText: string, idx: number) => {
     try {
-      const res = await API.get("/services", { params: { q } });
-      setItemSuggestions((prev) => ({ ...prev, [idx]: res?.data?.data || [] }));
-    } catch (error) {
-      console.error(error);
+      const res = await API.get("/services", {
+        params: { q: searchText || "", perPage: 20 },
+      });
+
+      const services = (res.data?.data || []).map((srv: any) => ({
+        id: srv.id,
+        name: srv.name,
+        price: srv.price || "",
+      }));
+
+      const customOption = { id: "__custom__", name: "Custom Item", price: "" };
+
+      setItemSuggestions((prev) => ({
+        ...prev,
+        [idx]: [customOption, ...services],
+      }));
+    } catch (err) {
+      console.error(err);
     }
   };
+
 
   return (
     <>
@@ -177,7 +206,7 @@ const InvoicesCreateForm = ({ onSuccess }: { onSuccess?: () => void }) => {
                             <div>
                               {/* Header */}
                               <div className="mb-4">
-                                <p>Invoice number: {generateInvoiceNumber()}</p>
+                                <p>Invoice number: -</p>
                                 <p>Issue date: {new Date().toLocaleDateString("en-GB")}</p>
                               </div>
 
@@ -244,13 +273,61 @@ const InvoicesCreateForm = ({ onSuccess }: { onSuccess?: () => void }) => {
                         }
 
                         {activeTab === 'EMAIL' && (() => {
-
+                          const subtotal = values.items.reduce(
+                            (sum, item) => sum + Number(item.quantity || 0) * Number(item.unit_price || 0),
+                            0
+                          );
+                          const taxAmount =
+                            values.addTax && values.tax
+                              ? (subtotal * Number(values.tax)) / 100
+                              : 0;
+                          const total = subtotal + taxAmount;
                           return (
                             <div className="my-3">
                               <p className="mb-10 font-sans font-medium text-lg">You have received a new invoice from {loggedInUser?.primary_organisation?.name}</p>
                               <p className="mb-4 font-sans font-medium text-sm">Hi {loggedInUser?.primary_organisation?.name},</p>
                               <p className="mb-4 font-sans font-medium text-sm">You have received a new invoice from {loggedInUser?.primary_organisation?.name}. To see invoice details, see the attached PDF. To make a payment, click on the button below.</p>
-                              <Button>Pay Invoice</Button>
+                              <table className="w-full border-collapse mb-4">
+                                <thead>
+                                  <tr className="border-b pb-3">
+                                    <th className="text-left p-2">Item</th>
+                                    <th className="text-right p-2">Qty</th>
+                                    <th className="text-right p-2">Price</th>
+                                    <th className="text-right p-2">Amount</th>
+                                  </tr>
+                                </thead>
+                                <tbody>
+                                  {values.items.map((item, idx) => (
+                                    <tr key={idx}>
+                                      <td className="p-2">{item.item_name || "-"}</td>
+                                      <td className="p-2 text-right">{item.quantity || 0}</td>
+                                      <td className="p-2 text-right">${Number(item.unit_price || 0).toFixed(2)}</td>
+                                      <td className="p-2 text-right">
+                                        ${(Number(item.quantity || 0) * Number(item.unit_price || 0)).toFixed(2)}
+                                      </td>
+                                    </tr>
+                                  ))}
+                                </tbody>
+                              </table>
+
+                              {/* Totals */}
+                              <div className="border-t pt-2">
+                                <div className="flex justify-between my-2">
+                                  <span>Subtotal</span>
+                                  <span>${subtotal.toFixed(2)}</span>
+                                </div>
+                                {values.addTax && (
+                                  <div className="flex justify-between mb-2">
+                                    <span>Tax ({values.tax || 0}%)</span>
+                                    <span>${taxAmount.toFixed(2)}</span>
+                                  </div>
+                                )}
+                                <div className="flex justify-between font-bold mb-2">
+                                  <span>Total</span>
+                                  <span>${total.toFixed(2)}</span>
+                                </div>
+                              </div>
+                              <Button className="mt-4" type="button">Pay Invoice</Button>
                             </div>
                           )
                         })()
@@ -279,7 +356,7 @@ const InvoicesCreateForm = ({ onSuccess }: { onSuccess?: () => void }) => {
                     <AsyncSelect
                       cacheOptions
                       loadOptions={loadUserOptions}
-                      defaultOptions
+                      defaultOptions={allUsers}
                       value={selectedUser}
                       onChange={(option) => {
                         setSelectedUser(option);
@@ -324,18 +401,22 @@ const InvoicesCreateForm = ({ onSuccess }: { onSuccess?: () => void }) => {
                                 autoComplete="off"
                               />
 
-                              {/* Dropdown suggestions */}
                               {itemSuggestions[idx]?.length > 0 && (
-                                <div className="absolute z-10 bg-white border border-gray-300 rounded mt-1 w-full max-h-40 overflow-auto">
+                                <div className="absolute z-10 bg-white border border-gray-300 !border-t-0 rounded w-full max-h-40 overflow-auto">
                                   {itemSuggestions[idx].map((service, sIdx) => (
                                     <div
                                       key={sIdx}
-                                      className="px-2 py-1 cursor-pointer hover:bg-gray-100"
+                                      className="px-2 py-1 font-sans font-normal text-base cursor-pointer hover:bg-gray-100"
                                       onClick={() => {
-                                        setFieldValue(`items[${idx}].item_name`, service.name);
-                                        setFieldValue(`items[${idx}].unit_price`, service.price || "");
-                                        setFieldValue(`items[${idx}].service_id`, service.id);
-                                        setItemSuggestions((prev) => ({ ...prev, [idx]: [] }));
+                                        if (service.id === "__custom__") {
+                                          setFieldValue(`items[${idx}].service_id`, null);
+                                          setItemSuggestions((prev) => ({ ...prev, [idx]: [] }));
+                                        } else {
+                                          setFieldValue(`items[${idx}].item_name`, service.name);
+                                          setFieldValue(`items[${idx}].unit_price`, service.price);
+                                          setFieldValue(`items[${idx}].service_id`, service.id);
+                                          setItemSuggestions((prev) => ({ ...prev, [idx]: [] }));
+                                        }
                                       }}
                                     >
                                       {service.name}
@@ -343,6 +424,7 @@ const InvoicesCreateForm = ({ onSuccess }: { onSuccess?: () => void }) => {
                                   ))}
                                 </div>
                               )}
+
                             </div>
 
                             {/* Error for item name */}
@@ -372,22 +454,25 @@ const InvoicesCreateForm = ({ onSuccess }: { onSuccess?: () => void }) => {
                               </div>
 
                               <div>
-                                <Field
+                                <div className="flex gap-1 border rounded-md">
+                                  <span className="inline-flex items-center pl-2  text-sm">
+                                    $
+                                  </span>
+                                  <Field
+                                    name={`items[${idx}].unit_price`}
+                                    className="form-control pl-0 !border-0 !focus:shadow-none !focus:ring-0"
+                                    placeholder="Unit Price"
+                                    type="number"
+                                    min="0"
+                                    step="1"
+                                  />
+
+                                </div>
+                                <ErrorMessage
                                   name={`items[${idx}].unit_price`}
-                                  className="flex-1 py-2 px-2 border border-gray-300 rounded text-sm bg-white"
-                                  placeholder="Unit Price"
-                                  type="number"
-                                  min="0"
-                                  step="0.01"
+                                  component="div"
+                                  className="text-red-500 text-xs"
                                 />
-                                {/* Error for unit price */}
-                                <ErrorMessage name={`items[${idx}].unit_price`}>
-                                  {(msg) => (
-                                    <div className="text-red-500 text-xs">
-                                      {msg}
-                                    </div>
-                                  )}
-                                </ErrorMessage>
                               </div>
                               <Button
                                 onClick={() => remove(idx)}
@@ -429,10 +514,15 @@ const InvoicesCreateForm = ({ onSuccess }: { onSuccess?: () => void }) => {
                       </label>
                     </div>
                     {values.addTax && (
-                      <div className="mb-4 w-full">
+                      <div className="flex border rounded-md overflow-hidden mb-4">
+                        <span className="inline-flex items-center pl-2  text-sm">
+                          $
+                        </span>
                         <Field
                           name="tax"
-                          className="w-full py-2 px-2 border border-gray-300 rounded text-sm bg-white"
+                          className="form-control !border-0 
+                                    [&:focus]:!border-0 [&:focus]:!shadow-none [&:focus]:!ring-0 [&:focus]:outline-none
+                                    [&:focus-visible]:!border-0 [&:focus-visible]:!shadow-none [&:focus-visible]:!ring-0 [&:focus-visible]:outline-none"
                         />
                       </div>
                     )}
@@ -440,15 +530,15 @@ const InvoicesCreateForm = ({ onSuccess }: { onSuccess?: () => void }) => {
                   <div className="border border-gray-200 rounded-lg p-2 mb-2">
                     <div className="flex items-center justify-between w-full">
                       <label className="text-gray-500 mb-0">Subtotal</label>
-                      {values.items.reduce(
+                      ${values.items.reduce(
                         (sum, item) =>
                           sum + Number(item.quantity) * Number(item.unit_price),
                         0
                       )}
                     </div>
                     {values?.tax && <div className="flex items-center justify-between w-full">
-                      <label className="text-gray-500 mb-0">Tax %</label>
-                      {(() => {
+                      <label className="text-gray-500 mb-0">Tax ({values.tax || 0}%)</label>
+                      ${(() => {
                         const subtotal = values.items.reduce(
                           (sum, item) =>
                             sum + Number(item.quantity) * Number(item.unit_price),
@@ -460,7 +550,7 @@ const InvoicesCreateForm = ({ onSuccess }: { onSuccess?: () => void }) => {
 
                     <div className="flex items-center justify-between w-full">
                       <label className="text-gray-500 mb-0">Total</label>
-                      {(() => {
+                      ${(() => {
                         const subtotal = values.items.reduce(
                           (sum, item) =>
                             sum + Number(item.quantity) * Number(item.unit_price),
@@ -477,6 +567,7 @@ const InvoicesCreateForm = ({ onSuccess }: { onSuccess?: () => void }) => {
                       label="Due Date"
                       name="due_date"
                       setFieldValue={setFieldValue}
+                      disablePastDates={true}
                       pickerType="date"
                       error={touched.due_date && errors.due_date ? errors.due_date : undefined}
                     />
