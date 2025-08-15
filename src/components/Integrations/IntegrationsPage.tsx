@@ -6,39 +6,100 @@ import { Button } from "../ui/button";
 import { Input } from "../ui/input";
 import { useOrganisation } from "../../context/OrganisationContext";
 import { GoogleBusinessProfile } from "./index";
-import { useQueryClient } from "react-query";
+import { useQuery, useQueryClient } from "react-query";
 import googleAnalyticsService, {
   GoogleAnalyticsConnectorStatus,
 } from "../../services/googleAnalyticsService";
 import { showMsgToast } from "../../utils/showMsgToast";
 import PageHeading from "../../shared-components/PageHeading";
-                  <Radio className="animate-spin mr-2" size={16} />
-import { Rotate3d, Cable, Gem, OctagonX, SquareChartGantt, Radio, BanknoteArrowUp, Grid2x2Check, RefreshCcw, ChartLine, LoaderCircle } from 'lucide-react';
+<Radio className="animate-spin mr-2" size={16} />;
+import {
+  Rotate3d,
+  Cable,
+  Gem,
+  OctagonX,
+  SquareChartGantt,
+  Radio,
+  BanknoteArrowUp,
+  Grid2x2Check,
+  RefreshCcw,
+  ChartLine,
+  LoaderCircle,
+} from "lucide-react";
 
-import { Hammer } from "../ui/icon";
+import { handleApiError } from "../../hooks/handleApiErrors";
+import API from "../../utils/API";
+import { AxiosError } from "axios";
+import { useHistory } from "react-router-dom";
+
+interface FormDataInterface {
+  googleAnalyticsId?: string;
+  gtmTagId?: string;
+  yandexMetricsId?: string;
+}
+
+const key = "configuration";
+
+// Update existing config
+const updateConfig = async (config) => {
+  const formdata = new FormData();
+  Object.entries(config).forEach(([k, v]) => {
+    if (k !== "id") formdata.append(k, String(v));
+  });
+  return API.post(`configuration/${config.id}`, formdata, {
+    headers: { "Content-Type": "multipart/form-data" },
+  });
+};
+
+// Create new config
+const createConfig = async (config) => {
+  const formdata = new FormData();
+  Object.entries(config).forEach(([k, v]) => {
+    formdata.append(k, String(v));
+  });
+  return API.post(`configuration`, formdata, {
+    headers: { "Content-Type": "multipart/form-data" },
+  });
+};
 
 const IntegrationsPage: React.FC = () => {
-  const { selectedOrg } = useOrganisation();
+  const history = useHistory();
   const queryClient = useQueryClient();
+  const { selectedOrg } = useOrganisation();
   const [googleAnalyticsStatus, setGoogleAnalyticsStatus] =
     useState<GoogleAnalyticsConnectorStatus | null>(null);
   const [loading, setLoading] = useState(false);
-  const [formData, setFormData] = useState({
-    gtmTagId: "",
-  });
+  const [formValues, setFormValues] = useState<FormDataInterface | null>(null);
+
+  const analyticsKeys = ["googleAnalyticsId", "gtmTagId", "yandexMetricsId"];
+  const { data: configData, isLoading } = useQuery(
+    [`${key}-website`, selectedOrg?.id],
+    () =>
+      API.get(`${key}?perPage=100&type=website&org_id=${selectedOrg?.id}`).then(
+        (res) => res.data
+      ),
+    {
+      enabled: !!selectedOrg?.id,
+      onError: (error: AxiosError) => handleApiError(error, history),
+    }
+  );
+
+  const configs = configData?.data || [];
+  useEffect(() => {
+    if (configs && configs.length > 0) {
+      const initialValues: any = analyticsKeys.reduce((acc, keyName) => {
+        acc[keyName] = configs.find((d) => d.key === keyName)?.value || "";
+        return acc;
+      }, {});
+      setFormValues(initialValues);
+    }
+  }, [configs]);
 
   // Function to refresh connection status
   const handleConnectionChange = () => {
     queryClient.invalidateQueries(["google-business-connection-status"]);
     queryClient.invalidateQueries(["google-business-status"]);
     queryClient.invalidateQueries(["google-analytics-status"]);
-  };
-
-  const handleInputChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
-  ) => {
-    const { name, value } = e.target;
-    setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
   const loadGoogleAnalyticsStatus = useCallback(async () => {
@@ -121,6 +182,38 @@ const IntegrationsPage: React.FC = () => {
     }
   };
 
+  const handleChange = (keyName, value) => {
+    setFormValues((prev) => ({
+      ...prev,
+      [keyName]: value,
+    }));
+  };
+
+  const handleSave = async (keyName: string, value: string) => {
+    try {
+      const existing = configs.find((c) => c.key === keyName);
+
+      if (existing) {
+        if (existing.value !== value) {
+          await updateConfig({ ...existing, value: formValues[keyName] });
+          showMsgToast(`${keyName} updated!`);
+        } else {
+          showMsgToast(`No changes for ${keyName}`);
+        }
+      } else {
+        await createConfig({
+          key: keyName,
+          value: formValues[keyName],
+          type: "website",
+          org_id: selectedOrg.id,
+        });
+        showMsgToast(`${keyName} created!`);
+      }
+    } catch (err) {
+      handleApiError(err);
+    }
+  };
+
   // Define integration types
   interface Integration {
     name: string;
@@ -135,7 +228,6 @@ const IntegrationsPage: React.FC = () => {
     formField?: {
       value: string;
       placeholder: string;
-      onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
       name: string;
     };
     isComponent?: boolean;
@@ -182,6 +274,12 @@ const IntegrationsPage: React.FC = () => {
             </svg>
           ),
           connected: !!googleAnalyticsStatus?.connected,
+          isManual: true,
+          formField: {
+            value: formValues?.googleAnalyticsId,
+            placeholder: "G-XXXXXXX",
+            name: "googleAnalyticsId",
+          },
           loading: loading,
           onConnect: handleGoogleAnalyticsConnect,
           onDisconnect: handleGoogleAnalyticsDisconnect,
@@ -201,12 +299,11 @@ const IntegrationsPage: React.FC = () => {
               style={{ fontSize: "40px", color: "#4285F4" }}
             ></i>
           ),
-          connected: !!formData.gtmTagId,
+          connected: !!formValues?.gtmTagId,
           isManual: true,
           formField: {
-            value: formData.gtmTagId,
+            value: formValues?.gtmTagId,
             placeholder: "GTM-XXXXXXX",
-            onChange: handleInputChange,
             name: "gtmTagId",
           },
           features: [
@@ -214,6 +311,30 @@ const IntegrationsPage: React.FC = () => {
             "Event tracking",
             "Conversion tracking",
             "Marketing pixels",
+          ],
+        },
+        {
+          name: "Yandex Metrics",
+          description:
+            "Find anything: webpages, images, music, goods, and more",
+          icon: (
+            <i
+              className="fab fa-yandex"
+              style={{ fontSize: "40px", color: "#4285F4" }}
+            ></i>
+          ),
+          connected: !!formValues?.yandexMetricsId,
+          isManual: true,
+          formField: {
+            value: formValues?.yandexMetricsId,
+            placeholder: "123-XXXXXXX",
+            name: "yandexMetricsId",
+          },
+          features: [
+            "Site-Specific Searches",
+            "Date-Based Sorting and Filtering",
+            "Precise Word and Phrase Searching",
+            "Regional and Language-Specific Searches",
           ],
         },
       ],
@@ -367,7 +488,6 @@ const IntegrationsPage: React.FC = () => {
                   >
                     <Gem size={14} />
                     Coming Soon
-                   
                   </Badge>
                 ) : (
                   <Badge
@@ -376,7 +496,6 @@ const IntegrationsPage: React.FC = () => {
                   >
                     <OctagonX size={14} />
                     Not Connected
-                   
                   </Badge>
                 )}
               </div>
@@ -384,7 +503,6 @@ const IntegrationsPage: React.FC = () => {
           </div>
           {integration.loading && (
             <LoaderCircle className="text-primary animate-spin" size={20} />
-            
           )}
         </div>
 
@@ -427,11 +545,22 @@ const IntegrationsPage: React.FC = () => {
               <Input
                 type="text"
                 placeholder={integration.formField.placeholder}
-                value={integration.formField.value}
-                onChange={integration.formField.onChange}
+                value={formValues?.[integration.formField.name] || ""}
+                onChange={(e) =>
+                  handleChange(integration.formField.name, e.target.value)
+                }
                 name={integration.formField.name}
               />
-              <Button variant="default" size="sm">
+              <Button
+                variant="default"
+                size="sm"
+                onClick={() =>
+                  handleSave(
+                    integration.formField.name,
+                    integration.formField.value
+                  )
+                }
+              >
                 Save
               </Button>
             </div>
@@ -463,13 +592,11 @@ const IntegrationsPage: React.FC = () => {
                 <>
                   <Radio className="animate-spin mr-2" size={16} />
                   Connecting...
-                  
                 </>
               ) : (
                 <>
                   <Cable size={16} className="mr-2" />
                   Connect {integration.name}
-                
                 </>
               )}
             </Button>
@@ -500,7 +627,6 @@ const IntegrationsPage: React.FC = () => {
                 <CardContent className="py-4">
                   <div className="text-primary mb-2">
                     <Cable size={32} />
-                    
                   </div>
                   <h4 className="mb-1">
                     {integrationCategories.reduce(
@@ -521,7 +647,6 @@ const IntegrationsPage: React.FC = () => {
                 <CardContent className="py-4">
                   <div className="text-yellow-500 mb-2">
                     <BanknoteArrowUp size={32} />
-                    
                   </div>
                   <h4 className="mb-1">
                     {integrationCategories.reduce(
@@ -542,7 +667,6 @@ const IntegrationsPage: React.FC = () => {
                 <CardContent className="py-4">
                   <div className="text-blue-500 mb-2">
                     <Grid2x2Check size={32} />
-                    
                   </div>
                   <h4 className="mb-1">
                     {integrationCategories.reduce(
@@ -561,7 +685,6 @@ const IntegrationsPage: React.FC = () => {
                 <CardContent className="py-4">
                   <div className="text-green-500 mb-2">
                     <RefreshCcw size={32} />
-                    
                   </div>
                   <h4 className="mb-1">Auto</h4>
                   <small className="text-muted-foreground font-semibold">

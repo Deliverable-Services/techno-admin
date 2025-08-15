@@ -51,10 +51,23 @@ const seoKeys = [
   "seo_canonical_url",
   "seo_site_language",
   "seo_favicon",
-  "seo_schema_jsonld",
+  "seo_schema_json",
+  "script_before_head",
+  "script_after_head",
+  "script_before_body",
+  "script_after_body",
 ];
 
 const metaImages = ["seo_og_image", "seo_favicon"];
+const typeTextarea = [
+  "seo_meta_description",
+  "seo_og_description",
+  "seo_schema_json",
+  "script_before_head",
+  "script_after_head",
+  "script_before_body",
+  "script_after_body",
+];
 
 const SeoConfig = () => {
   const history = useHistory();
@@ -63,9 +76,9 @@ const SeoConfig = () => {
   const { data: configData, isLoading } = useQuery(
     [`${key}-website`, selectedOrg?.id],
     () =>
-      API.get(
-        `${key}?per_page=100&type=website&org_id=${selectedOrg?.id}`
-      ).then((res) => res.data),
+      API.get(`${key}?perPage=100&type=website&org_id=${selectedOrg?.id}`).then(
+        (res) => res.data
+      ),
     {
       enabled: !!selectedOrg?.id,
       onError: (error: AxiosError) => handleApiError(error, history),
@@ -212,6 +225,11 @@ const SeoConfig = () => {
                       ) : (
                         <Field
                           type="text"
+                          as={
+                            typeTextarea?.includes(seoKey)
+                              ? "textarea"
+                              : "input"
+                          }
                           className="form-control input-div"
                           id={seoKey}
                           name={seoKey}
