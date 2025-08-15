@@ -9,6 +9,7 @@ interface Props {
   name: string;
   error?: string;
   pickerType?: string;
+  disablePastDates?: boolean;
   setFieldValue: (
     field: string,
     value: any,
@@ -20,6 +21,7 @@ const DatePicker: React.FC<Props> = ({
   label,
   name,
   error,
+  disablePastDates = false,
   pickerType = "datetime-local",
   setFieldValue,
   ...props
@@ -45,6 +47,11 @@ const DatePicker: React.FC<Props> = ({
             style={{
               height: DefaultInputHeight,
             }}
+            min={
+              disablePastDates
+                ? moment().format(pickerType === "date" ? "YYYY-MM-DD" : "YYYY-MM-DDTHH:mm")
+                : undefined
+            }
           />
         }
         {error && <Form.Text className="text-danger">{error}</Form.Text>}

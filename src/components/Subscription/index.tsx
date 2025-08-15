@@ -140,18 +140,18 @@ const SubscriptionPage: React.FC = () => {
         Header: "Plan Name",
         accessor: "plan_name",
       },
-      {
-        Header: "Status",
-        accessor: "status",
-      },
+      // {
+      //   Header: "Status",
+      //   accessor: "status",
+      // },
       {
         Header: "Amount",
         accessor: "amount",
       },
-      {
-        Header: "Currency",
-        accessor: "currency",
-      },
+      // {
+      //   Header: "Currency",
+      //   accessor: "currency",
+      // },
       {
         Header: "Interval",
         accessor: "interval",
@@ -186,7 +186,7 @@ const SubscriptionPage: React.FC = () => {
       {(() => {
         if (showForm) {
           return (
-            <div className="form-container">
+            <div className="">
               <SubscriptionCreateForm
                 onSuccess={() => {
                   setShowForm(false);
