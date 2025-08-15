@@ -143,7 +143,7 @@ const LoginFlow = () => {
             <img
               src="/assets/logo.svg"
               alt="Logo"
-              style={{ width: 120, marginBottom: 30, height: "auto" }}
+              style={{ width: 120, marginBottom: 45, height: "auto", margin: "auto" }}
             />
 
             {step === "login" && (
@@ -182,7 +182,7 @@ const LoginFlow = () => {
                   }}
                 >
                   <button
-                    className={`btn ${
+                    className={`btn flex items-center gap-2 ${
                       activeTab === "login" ? "btn-primary" : "btn-light"
                     }`}
                     style={{
@@ -205,7 +205,7 @@ const LoginFlow = () => {
                     Login
                   </button>
                   <button
-                    className={`btn ${
+                    className={`btn flex items-center gap-2 ${
                       activeTab === "signup" ? "btn-primary" : "btn-light"
                     }`}
                     style={{

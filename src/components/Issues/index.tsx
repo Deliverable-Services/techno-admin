@@ -1,7 +1,6 @@
 import { AxiosError } from "axios";
 import moment from "moment";
 import { useMemo, useState } from "react";
-import { Button, Container, Dropdown, Form, Nav } from "../ui/bootstrap-compat";
 import { useQuery } from "react-query";
 import { useHistory } from "react-router-dom";
 import { Cell } from "react-table";
@@ -18,11 +17,14 @@ import { IssueRelatedTo } from "../../utils/arrays";
 import { primaryColor } from "../../utils/constants";
 import { showErrorToast } from "../../utils/showErrorToast";
 import IssuesCreateForm from "./IssuesCreateForm";
-import Flyout from "../../shared-components/Flyout"; // ✅ Import your shared Flyout
+import Flyout from "../../shared-components/Flyout";
 import { Hammer } from "../ui/icon";
-import { CircleAlert, Funnel, Eye } from 'lucide-react';
-import { DropdownMenu, DropdownMenuContent, DropdownMenuTrigger } from "../ui/dropdown-menu";
-
+import { CircleAlert, Funnel, Eye } from "lucide-react";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuTrigger,
+} from "../ui/dropdown-menu";
 
 const key = "tickets";
 const intitialFilter = {
@@ -45,7 +47,7 @@ const Issues = () => {
     [key, , filter],
     {
       onError: (err: any) => {
-        showErrorToast(err.response.data.message);
+        showErrorToast(err.response?.data?.message || "Error fetching tickets");
       },
     }
   );
@@ -96,22 +98,10 @@ const Issues = () => {
 
   const columns = useMemo(
     () => [
-      {
-        Header: "#Id",
-        accessor: "id",
-      },
-      {
-        Header: "Title",
-        accessor: "title",
-      },
-      {
-        Header: "Reference Id",
-        accessor: "ref_id",
-      },
-      {
-        Header: "Related to",
-        accessor: "related_to",
-      },
+      { Header: "#Id", accessor: "id" },
+      { Header: "Title", accessor: "title" },
+      { Header: "Reference Id", accessor: "ref_id" },
+      { Header: "Related to", accessor: "related_to" },
       {
         Header: "Issue Status",
         accessor: "status",
@@ -124,8 +114,7 @@ const Issues = () => {
           if ((data.row.original as any).user_id)
             return (
               <p
-                className="text-darkGray m-0"
-                style={{ cursor: "pointer" }}
+                className="text-gray-700 m-0 cursor-pointer"
                 onClick={() => _onUserClick((data.row.original as any).user_id)}
               >
                 {data.row.values["user.name"]}
@@ -141,8 +130,7 @@ const Issues = () => {
           if ((data.row.original as any).order_id)
             return (
               <p
-                className="text-darkGray m-0"
-                style={{ cursor: "pointer" }}
+                className="text-gray-700 m-0 cursor-pointer"
                 onClick={() =>
                   _onOrderClick((data.row.original as any).order_id)
                 }
@@ -171,7 +159,7 @@ const Issues = () => {
         Header: "Actions",
         Cell: (data: Cell) => {
           return (
-            <div className="d-flex align-items-center justify-content-end">
+            <div className="flex items-center justify-end">
               <Eye
                 className="cursor-pointer"
                 onClick={() => history.push(`/issues/${data.row.values.id}`)}
@@ -186,18 +174,20 @@ const Issues = () => {
 
   if (!data && (!isLoading || !isFetching)) {
     return (
-      <Container fluid className="d-flex justify-content-center display-3">
-        <div className="d-flex flex-column align-items-center">
+      <div className="flex justify-center text-5xl w-full mt-10">
+        <div className="flex flex-col items-center">
           <Hammer color={primaryColor} />
-          <span className="text-primary display-3">Something went wrong</span>
+          <span className="text-primary text-3xl font-semibold">
+            Something went wrong
+          </span>
         </div>
-      </Container>
+      </div>
     );
   }
 
   return (
     <>
-      <div className="view-padding">
+      <div className="px-4 py-2">
         <PageHeading
           icon={<CircleAlert size={24} />}
           description="Create and manage tickets"
@@ -209,7 +199,7 @@ const Issues = () => {
       </div>
       <hr />
 
-      <div className="h-100 p-0">
+      <div className="h-full p-0">
         {isLoading ? (
           <IsLoading />
         ) : (
@@ -219,71 +209,69 @@ const Issues = () => {
               <ReactTable
                 data={data?.data}
                 tabs={
-                  <div className="d-flex justify-content-between">
+                  <div className="flex justify-between">
                     {!isLoading && (
-                      <Nav
-                        className="global-navs"
-                        variant="tabs"
-                        activeKey={filter.status}
-                        onSelect={(selectedKey) =>
-                          _onFilterChange("status", selectedKey)
-                        }
-                      >
-                        <Nav.Item>
-                          <Nav.Link eventKey="">
-                            All ({data?.data?.length || 0})
-                          </Nav.Link>
-                        </Nav.Item>
-                        <Nav.Item>
-                          <Nav.Link eventKey="active">
-                            Active (
-                            {data?.data?.filter(
-                              (item) => item.status === "active"
-                            ).length || 0}
-                            )
-                          </Nav.Link>
-                        </Nav.Item>
-                        <Nav.Item>
-                          <Nav.Link eventKey="closed">
-                            Closed (
-                            {data?.data?.filter(
-                              (item) => item.status === "closed"
-                            ).length || 0}
-                            )
-                          </Nav.Link>
-                        </Nav.Item>
-                      </Nav>
+                      <div className="flex space-x-4 border-b border-gray-200 global-navs nav nav-tabs">
+                        {[
+                          { key: "", label: `All (${data?.data?.length || 0})` },
+                          {
+                            key: "active",
+                            label: `Active (${
+                              data?.data?.filter(
+                                (item) => item.status === "active"
+                              ).length || 0
+                            })`,
+                          },
+                          {
+                            key: "closed",
+                            label: `Closed (${
+                              data?.data?.filter(
+                                (item) => item.status === "closed"
+                              ).length || 0
+                            })`,
+                          },
+                        ].map((tab) => (
+                          <button
+                            key={tab.key}
+                            onClick={() =>
+                              _onFilterChange("status", tab.key)
+                            }
+                            className={`px-3 py-2 text-sm font-medium ${
+                              filter.status === tab.key
+                                ? "border-b-2 border-primary text-primary"
+                                : "text-gray-500 hover:text-gray-700"
+                            }`}
+                          >
+                            {tab.label}
+                          </button>
+                        ))}
+                      </div>
                     )}
                   </div>
                 }
                 filters={
                   <>
-                    <DropdownMenu >
-                      <DropdownMenuTrigger className="w-full flex filter-dropdown p-2  items-center justify-between rounded-lg py-1 px-3 !border-[#dee2e6] border h-[36px] border-secondary">
+                    <DropdownMenu>
+                      <DropdownMenuTrigger className="w-full flex filter-dropdown items-center justify-between rounded-lg py-1 px-3 border border-gray-300 h-9">
                         <span className="flex items-center justify-between gap-2 w-full">
                           <Funnel size={14} /> Filters
                         </span>
                       </DropdownMenuTrigger>
                       <DropdownMenuContent className="w-[400px] p-3">
-                        <div className="filter-dropdown-heading d-flex justify-content-between w-100">
-                          <h4>Filter</h4>
-                          <div className="d-flex align-items-center justify-md-content-center">
-                            <Button
-                              onClick={() => setFilter(intitialFilter)}
-                              variant={
-                                areTwoObjEqual(intitialFilter, filter)
-                                  ? "light"
-                                  : "primary"
-                              }
-                              style={{
-                                fontSize: 14,
-                              }}
-                            >
-                              Reset Filters
-                            </Button>
-                          </div>
+                        <div className="flex justify-between w-full mb-3">
+                          <h4 className="text-lg font-semibold">Filter</h4>
+                          <button
+                            onClick={() => setFilter(intitialFilter)}
+                            className={`px-3 py-1 rounded text-sm ${
+                              areTwoObjEqual(intitialFilter, filter)
+                                ? "bg-gray-100 text-gray-700"
+                                : "bg-primary text-white"
+                            }`}
+                          >
+                            Reset Filters
+                          </button>
                         </div>
-                        <div className="select-filter">
+                        <div className="space-y-4">
                           <FilterSelect
                             currentValue={filter.user_id}
                             data={!isCustomerLoading && Customers.data}
@@ -298,11 +286,11 @@ const Issues = () => {
                             idx="related_to"
                             onFilterChange={_onFilterChange}
                           />
-                          <Form.Group>
-                            <Form.Label className="text-muted">
+                          <div className="flex flex-col space-y-1">
+                            <label className="text-gray-500 text-sm">
                               Raised At
-                            </Form.Label>
-                            <Form.Control
+                            </label>
+                            <input
                               type="date"
                               value={filter.created_at}
                               onChange={(e) => {
@@ -311,17 +299,13 @@ const Issues = () => {
                                 );
                                 _onFilterChange("created_at", value);
                               }}
-                              style={{
-                                fontSize: 14,
-                                width: 150,
-                                height: 35,
-                              }}
+                              className="text-sm w-40 h-9 border border-gray-300 rounded px-2"
                             />
-                          </Form.Group>
+                          </div>
                         </div>
                       </DropdownMenuContent>
-                    </DropdownMenu></>
-
+                    </DropdownMenu>
+                  </>
                 }
                 columns={columns}
                 setSelectedRows={setSelectedRows}
@@ -332,7 +316,7 @@ const Issues = () => {
                 searchPlaceHolder="Search using title,ref_id"
               />
             )}
-            {!error && data.length > 0 ? (
+            {!error && data?.length > 0 ? (
               <TablePagination
                 currentPage={data?.current_page}
                 lastPage={data?.last_page}
@@ -355,11 +339,13 @@ const Issues = () => {
       </Flyout>
 
       {selectedRows.length > 0 && (
-        <div className="delete-button rounded">
-          <span>
-            <b>Delete {selectedRows.length} rows</b>
+        <div className="fixed bottom-4 left-1/2 transform -translate-x-1/2 bg-red-100 border border-red-300 rounded px-4 py-2 flex items-center space-x-3 shadow-lg">
+          <span className="font-bold">
+            Delete {selectedRows.length} rows
           </span>
-          <Button variant="danger">Delete</Button>
+          <button className="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded">
+            Delete
+          </button>
         </div>
       )}
     </>

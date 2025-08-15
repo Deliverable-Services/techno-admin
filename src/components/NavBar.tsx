@@ -1,3 +1,5 @@
+// NavBar.tsx
+
 import { useContext, useState } from "react";
 import OrganizationSwitcher from "./OrganizationSwitcher";
 import { IsDesktopContext } from "../context/IsDesktopContext";
@@ -47,7 +49,6 @@ import {
 } from "lucide-react";
 
 // === Main Navigation Sections ===
-// # TODO: Fix all the permissions and introduce the list in the permissions table
 const mainLinks: Array<INavLink> = [
   {
     title: "Orders",
@@ -283,7 +284,6 @@ const googleLinks: Array<INavLink> = [
 ];
 
 // === Hidden Routes Logic ===
-
 const hiddenRoutesForCRM = [
   "/orders",
   "/cart",
@@ -296,7 +296,6 @@ const hiddenRoutesForCRM = [
   "/product-variants",
 ];
 const hiddenRoutesForEcommerce = ["/crm", "/crm-bookings", "/services"];
-
 const key = "organisations";
 
 const NavBar = ({ isNavOpen, setIsNavOpen }: INavBar) => {
@@ -304,12 +303,9 @@ const NavBar = ({ isNavOpen, setIsNavOpen }: INavBar) => {
   const isDesktop = useContext(IsDesktopContext);
   const [activeMenu, setActiveMenu] = useState<string | null>(null);
 
-  const { selectedOrg, setSelectedOrg, organisations, switchOrganisation } =
-    useOrganisation();
-  const { isConnected: isGoogleBusinessConnected } =
-    useGoogleBusinessConnection();
-  const { isConnected: isGoogleAnalyticsConnected } =
-    useGoogleAnalyticsConnection();
+  const { selectedOrg, organisations, switchOrganisation } = useOrganisation();
+  const { isConnected: isGoogleBusinessConnected } = useGoogleBusinessConnection();
+  const { isConnected: isGoogleAnalyticsConnected } = useGoogleAnalyticsConnection();
 
   const closeNavBar = () => {
     if (!isDesktop && setIsNavOpen) setIsNavOpen(false);
@@ -318,9 +314,7 @@ const NavBar = ({ isNavOpen, setIsNavOpen }: INavBar) => {
   const storeType = selectedOrg?.store_type.toLowerCase();
 
   const filterLinks = (links: INavLink[]): INavLink[] => {
-    const hiddenRoutes =
-      storeType === "ecommerce" ? hiddenRoutesForEcommerce : hiddenRoutesForCRM;
-
+    const hiddenRoutes = storeType === "ecommerce" ? hiddenRoutesForEcommerce : hiddenRoutesForCRM;
     return links
       .filter((link) => !hiddenRoutes.includes(link.path || ""))
       .map((link) => {
@@ -330,22 +324,15 @@ const NavBar = ({ isNavOpen, setIsNavOpen }: INavBar) => {
         }
         return link;
       })
-      .filter((link) => {
-        if (!link.path && (!link.children || link.children.length === 0)) {
-          return false;
-        }
-        return true;
-      });
+      .filter((link) => link.path || (link.children && link.children.length > 0));
   };
 
   const filteredMainLinks = filterLinks(mainLinks);
   const filteredOrganisationLinks = filterLinks(organisationLinks);
 
   const filteredGoogleLinks = googleLinks.filter((link) => {
-    if (link.path === "/google-business" && !isGoogleBusinessConnected)
-      return false;
-    if (link.path === "/google-analytics" && !isGoogleAnalyticsConnected)
-      return false;
+    if (link.path === "/google-business" && !isGoogleBusinessConnected) return false;
+    if (link.path === "/google-analytics" && !isGoogleAnalyticsConnected) return false;
     return storeType === "ecommerce"
       ? !hiddenRoutesForEcommerce.includes(link.path!)
       : !hiddenRoutesForCRM.includes(link.path!);
@@ -366,20 +353,17 @@ const NavBar = ({ isNavOpen, setIsNavOpen }: INavBar) => {
         className={`
           flex flex-col justify-start overflow-auto py-2 px-0 bg-sidebar h-screen
           transition-transform duration-300 ease-in-out
-          ${
-            isDesktop
-              ? `fixed top-0 left-0 w-[250px] z-10 ${
-                  isNavOpen ? "translate-x-0" : "-translate-x-full"
-                }`
-              : `fixed inset-y-0 left-0 w-[250px] z-40 ${
-                  isNavOpen ? "translate-x-0" : "-translate-x-full"
-                }`
+          ${isDesktop
+            ? `fixed top-0 left-0 w-[250px] z-10 ${isNavOpen ? "translate-x-0" : "-translate-x-full"
+            }`
+            : `fixed inset-y-0 left-0 w-[250px] z-40 ${isNavOpen ? "translate-x-0" : "-translate-x-full"
+            }`
           }
           ${isNavOpen ? "active pb-0" : ""}
         `}
       >
         {isDesktop && (
-          <div className="flex justify-between items-center">
+          <div className="flex justify-between items-center px-4">
             <Logo />
           </div>
         )}
@@ -403,17 +387,19 @@ const NavBar = ({ isNavOpen, setIsNavOpen }: INavBar) => {
               activeMenu={activeMenu}
               setActiveMenu={setActiveMenu}
             />
-            {filteredMainLinks.map((link) => (
-              <Navlink
-                key={link.title}
-                {...link}
-                onClick={closeNavBar}
-                isNavOpen={isNavOpen}
-                activeMenu={activeMenu}
-                setActiveMenu={setActiveMenu}
-              />
-            ))}
-          </ul>
+            {
+              filteredMainLinks.map((link) => (
+                <Navlink
+                  key={link.title}
+                  {...link}
+                  onClick={closeNavBar}
+                  isNavOpen={isNavOpen}
+                  activeMenu={activeMenu}
+                  setActiveMenu={setActiveMenu}
+                />
+              ))
+            }
+          </ul >
           <p className="text-xs text-muted font-medium">CONFIGURATIONS</p>
           <ul className="mb-4 mt-2">
             {filteredOrganisationLinks.map((link) => (
@@ -430,7 +416,7 @@ const NavBar = ({ isNavOpen, setIsNavOpen }: INavBar) => {
 
           {filteredGoogleLinks.length > 0 && (
             <>
-              <p className="text-muted mb-2">Integrations</p>
+              <p className="text-gray-500 mb-2 text-xs uppercase tracking-wide">Integrations</p>
               <ul className="mb-4">
                 {filteredGoogleLinks.map((link) => (
                   <Navlink
@@ -446,7 +432,7 @@ const NavBar = ({ isNavOpen, setIsNavOpen }: INavBar) => {
             </>
           )}
         </div>
-      </nav>
+      </nav >
       {isNavOpen && !isDesktop && <Overlay onClick={closeNavBar} />}
     </>
   );

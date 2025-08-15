@@ -1,6 +1,5 @@
 import { AxiosError } from "axios";
 import { useMemo, useState } from "react";
-import { Button, Container, Dropdown, Nav } from "../ui/bootstrap-compat";
 import { useMutation, useQuery } from "react-query";
 import { useHistory } from "react-router-dom";
 import { Cell } from "react-table";
@@ -23,15 +22,13 @@ import { showMsgToast } from "../../utils/showMsgToast";
 import { useFlyout } from "../../hooks/useFlyout";
 import Flyout from "../../shared-components/Flyout";
 import CouponCreateUpdateForm from "./CouponsCreateUpdateForm";
-import { Hammer } from "../ui/icon";
-import { Funnel } from 'lucide-react';
-
+import { Hammer, Funnel } from 'lucide-react';
+import { DropdownMenu, DropdownMenuContent, DropdownMenuTrigger } from "../ui/dropdown-menu";
 
 const key = "coupons";
 
-const deleteCoupons = (id: Array<any>) => {
-  return API.post(`${key}/delete`, { id });
-};
+const deleteCoupons = (id: Array<any>) => API.post(`${key}/delete`, { id });
+
 const intitialFilter = {
   q: "",
   page: null,
@@ -45,12 +42,11 @@ const Coupons = () => {
   const [selectedRows, setSelectedRows] = useState([]);
   const [filter, setFilter] = useState(intitialFilter);
   const { isOpen: showFlyout, openFlyout, closeFlyout } = useFlyout();
+
   const { data, isLoading, isFetching, error } = useQuery<any>(
     [key, , filter],
     {
-      onError: (error: AxiosError) => {
-        handleApiError(error, history);
-      },
+      onError: (error: AxiosError) => handleApiError(error, history),
     }
   );
 
@@ -59,103 +55,62 @@ const Coupons = () => {
       queryClient.invalidateQueries(key);
       showMsgToast("Coupons deleted successfully");
     },
-    onError: (error: AxiosError) => {
-      handleApiError(error, history);
-    },
+    onError: (error: AxiosError) => handleApiError(error, history),
   });
 
-  const _onCreateClick = () => {
-    // history.push("/coupons/create-edit");
-    openFlyout();
-  };
-  const _onEditClick = (id: string) => {
-    history.push("/coupons/create-edit", { id });
-  };
+  const _onCreateClick = () => openFlyout();
+  const _onEditClick = (id: string) => history.push("/coupons/create-edit", { id });
 
   const _onFilterChange = (idx: string, value: any) => {
-    setFilter((prev) => ({
-      ...prev,
-      [idx]: value,
-    }));
+    setFilter((prev) => ({ ...prev, [idx]: value }));
   };
 
   const columns = useMemo(
     () => [
-      {
-        Header: "#Id",
-        accessor: "id", //accessor is the "key" in the data
-      },
-      {
-        Header: "Title",
-        accessor: "title",
-      },
+      { Header: "#Id", accessor: "id" },
+      { Header: "Title", accessor: "title" },
       {
         Header: "Coupon Code",
         accessor: "coupon_code",
-        Cell: (data: Cell) => {
-          return (
-            <CustomBadge
-              title={data.row.values.coupon_code}
-              variant="primary"
-            />
-          );
-        },
+        Cell: (data: Cell) => (
+          <CustomBadge title={data.row.values.coupon_code} variant="primary" />
+        ),
       },
-      {
-        Header: "Condition",
-        accessor: "condition",
-      },
-      {
-        Header: "Conditioin Type",
-        accessor: "condition_type",
-      },
+      { Header: "Condition", accessor: "condition" },
+      { Header: "Condition Type", accessor: "condition_type" },
       {
         Header: "Valid From",
         accessor: "valid_from",
-        Cell: (data: Cell) => {
-          return <CreatedUpdatedAt date={data.row.values.valid_from} />;
-        },
+        Cell: (data: Cell) => <CreatedUpdatedAt date={data.row.values.valid_from} />,
       },
       {
         Header: "Valid To",
         accessor: "valid_to",
-        Cell: (data: Cell) => {
-          return <CreatedUpdatedAt date={data.row.values.valid_to} />;
-        },
+        Cell: (data: Cell) => <CreatedUpdatedAt date={data.row.values.valid_to} />,
       },
       {
         Header: "Is Active?",
         accessor: "is_active",
-        Cell: (data: Cell) => {
-          return <IsActiveBadge value={data.row.values.is_active} />;
-        },
+        Cell: (data: Cell) => <IsActiveBadge value={data.row.values.is_active} />,
       },
       {
         Header: "Created At",
         accessor: "created_at",
-        Cell: (data: Cell) => {
-          return <CreatedUpdatedAt date={data.row.values.created_at} />;
-        },
+        Cell: (data: Cell) => <CreatedUpdatedAt date={data.row.values.created_at} />,
       },
       {
         Header: "Updated At",
         accessor: "updated_at",
-        Cell: (data: Cell) => {
-          return <CreatedUpdatedAt date={data.row.values.updated_at} />;
-        },
+        Cell: (data: Cell) => <CreatedUpdatedAt date={data.row.values.updated_at} />,
       },
       {
         Header: "Actions",
-        Cell: (data: Cell) => {
-          return (
-            <EditButton
-              onClick={() => {
-                _onEditClick(data.row.values.id);
-              }}
-              permissionReq="update_coupon"
-            />
-          );
-        },
+        Cell: (data: Cell) => (
+          <EditButton
+            onClick={() => _onEditClick(data.row.values.id)}
+            permissionReq="update_coupon"
+          />
+        ),
       },
     ],
     []
@@ -163,18 +118,18 @@ const Coupons = () => {
 
   if (!data && (!isLoading || !isFetching)) {
     return (
-      <Container fluid className="d-flex justify-content-center display-3">
-        <div className="d-flex flex-column align-items-center">
+      <div className="flex justify-center py-10">
+        <div className="flex flex-col items-center">
           <Hammer color={primaryColor} />
-          <span className="text-primary display-3">Something went wrong</span>
+          <span className="text-primary text-2xl">Something went wrong</span>
         </div>
-      </Container>
+      </div>
     );
   }
 
   return (
     <>
-      <div className="view-padding">
+      <div className="px-4 py-3">
         <PageHeading
           title="Coupons"
           description="Create and manage coupons"
@@ -185,97 +140,85 @@ const Coupons = () => {
         />
       </div>
       <hr />
-      <div className="h-100 p-0 ">
+
+      <div className="h-full p-0">
         {isLoading ? (
           <IsLoading />
         ) : (
           <>
             {!error && (
-              <>
-                <ReactTable
-                  data={data?.data}
-                  tabs={
-                    <div className="d-flex justify-content-between">
-                      <Nav
-                        className="global-navs"
-                        variant="tabs"
-                        activeKey={filter.active}
-                        onSelect={(selectedKey) =>
-                          _onFilterChange("active", selectedKey)
-                        }
+              <ReactTable
+                data={data?.data}
+                tabs={
+                  <div className="flex justify-between border-b border-gray-200">
+                    {[
+                      { key: "", label: `All (${data?.data?.length || 0})` },
+                      {
+                        key: "1",
+                        label: `Active (${data?.data?.filter((item) => item.status === "1").length || 0})`,
+                      },
+                      {
+                        key: "0",
+                        label: `Not Active (${data?.data?.filter((item) => item.status === "0").length || 0})`,
+                      },
+                    ].map((tab) => (
+                      <button
+                        key={tab.key}
+                        onClick={() => _onFilterChange("active", tab.key)}
+                        className={`px-4 py-2 text-sm font-medium ${
+                          filter.active === tab.key
+                            ? "border-b-2 border-primary text-primary"
+                            : "text-gray-500 hover:text-primary"
+                        }`}
                       >
-                        <Nav.Item>
-                          <Nav.Link eventKey="">
-                            All ({data?.data?.length || 0})
-                          </Nav.Link>
-                        </Nav.Item>
-
-                        <Nav.Item>
-                          <Nav.Link eventKey="1">
-                            Active (
-                            {data?.data?.filter((item) => item.status === "1")
-                              .length || 0}
-                            )
-                          </Nav.Link>
-                        </Nav.Item>
-
-                        <Nav.Item>
-                          <Nav.Link eventKey="0">
-                            Not Active (
-                            {data?.data?.filter((item) => item.status === "0")
-                              .length || 0}
-                            )
-                          </Nav.Link>
-                        </Nav.Item>
-                      </Nav>
-                    </div>
-                  }
-                  columns={columns}
-                  filters={
-                    <Dropdown className="search-filters-div filter-dropdown mr-2">
-                      <Dropdown.Toggle as={Button} variant="primary">
-                        <Funnel /> Filters
-                      </Dropdown.Toggle>
-                      <Dropdown.Menu>
-                        <div className="filter-dropdown-heading d-flex justify-content-between w-100">
-                          <h4>Filter</h4>
-                          <div className="d-flex align-items-center justify-md-content-center">
-                            <Button
-                              variant={
-                                areTwoObjEqual(intitialFilter, filter)
-                                  ? "light"
-                                  : "primary"
-                              }
-                              style={{
-                                fontSize: 14,
-                              }}
-                              onClick={() => setFilter(intitialFilter)}
-                            >
-                              Reset Filters
-                            </Button>
-                          </div>
-                        </div>
-                        <div className="select-filter">
-                          <FilterSelect
-                            currentValue={filter.condition_type}
-                            data={conditionType}
-                            label="Condition Type"
-                            idx="condition_type"
-                            onFilterChange={_onFilterChange}
-                          />
-                        </div>
-                      </Dropdown.Menu>
-                    </Dropdown>
-                  }
-                  setSelectedRows={setSelectedRows}
-                  filter={filter}
-                  onFilterChange={_onFilterChange}
-                  isDataLoading={isFetching}
-                  deletePermissionReq="delete_coupon"
-                />
-              </>
+                        {tab.label}
+                      </button>
+                    ))}
+                  </div>
+                }
+                columns={columns}
+                filters={
+                  <DropdownMenu>
+                    <DropdownMenuTrigger className="w-full flex items-center justify-between rounded-lg border border-gray-300 px-3 py-1 h-9">
+                      <span className="flex items-center gap-2 w-full">
+                        <Funnel size={14} /> Filters
+                      </span>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent className="w-[400px] p-3">
+                      <div className="flex justify-between items-center mb-3">
+                        <h4 className="font-semibold">Filter</h4>
+                        <button
+                          className={`px-3 py-1 rounded text-sm ${
+                            areTwoObjEqual(intitialFilter, filter)
+                              ? "bg-gray-100 text-gray-500"
+                              : "bg-primary text-white"
+                          }`}
+                          onClick={() => setFilter(intitialFilter)}
+                        >
+                          Reset Filters
+                        </button>
+                      </div>
+                      <div>
+                        <FilterSelect
+                          currentValue={filter.condition_type}
+                          data={conditionType}
+                          label="Condition Type"
+                          idx="condition_type"
+                          onFilterChange={_onFilterChange}
+                        />
+                      </div>
+                    </DropdownMenuContent>
+                  </DropdownMenu>
+                }
+                setSelectedRows={setSelectedRows}
+                filter={filter}
+                onFilterChange={_onFilterChange}
+                isDataLoading={isFetching}
+                deletePermissionReq="delete_coupon"
+              />
             )}
-            {!error && data?.data?.length > 0 ? (
+
+            {!error && data?.data?.length > 0 && (
               <TablePagination
                 currentPage={data?.current_page}
                 lastPage={data?.last_page}
@@ -283,31 +226,29 @@ const Coupons = () => {
                 hasNextPage={!!data?.next_page_url}
                 hasPrevPage={!!data?.prev_page_url}
               />
-            ) : null}{" "}
+            )}
           </>
         )}
       </div>
 
       {selectedRows.length > 0 && (
-        <div className="delete-button rounded">
+        <div className="fixed bottom-4 right-4 bg-red-100 px-4 py-2 rounded shadow flex items-center gap-3">
           <span>
             <b>Delete {selectedRows.length} rows</b>
           </span>
-          <Button
-            variant="danger"
-            onClick={() => {
-              mutate(selectedRows.map((i) => i.id));
-            }}
+          <button
+            onClick={() => mutate(selectedRows.map((i) => i.id))}
+            className="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded"
           >
             {isDeleteLoading ? "Loading..." : "Delete"}
-          </Button>
+          </button>
         </div>
       )}
 
       <Flyout
         isOpen={showFlyout}
         onClose={closeFlyout}
-        title={"Create Coupons"}
+        title="Create Coupons"
         cancelText="Cancel"
         width="800px"
       >

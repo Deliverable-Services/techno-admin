@@ -63,7 +63,7 @@ const WebsitePages = () => {
       <div className="h-full mt-4">
         {/* Tab Navigation */}
         <div className="px-4 pb-3 mt-3 border-b border-gray-200">
-          <div className="flex space-x-6">
+          <div className="flex space-x-6 ">
             <button
               onClick={() => _onFilterChange("active", "static")}
               className={`pb-2 text-sm font-medium transition-colors border-b-2 ${
